@@ -1,7 +1,8 @@
 ---
 title: "useCallback"
 description: "useCallback hook for memoizing functions in React."
-sort: 5
+sidebar:
+  order: 5
 ---
 
 # 🔹 5. useCallback → “Keep same function”

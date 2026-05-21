@@ -1,6 +1,8 @@
 ---
 title: "Graphs"
 description: "Graph data structure notes, traversal algorithms, BFS, DFS, and graph problems."
+sidebar:
+  order: 38
 ---
 
 # 📊 Graph Data Structures — Complete Guide for Interview Preparation

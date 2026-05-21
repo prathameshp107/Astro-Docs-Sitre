@@ -1,7 +1,8 @@
 ---
 title: "Two Sum Problem"
 description: "---"
-sort: 35
+sidebar:
+  order: 35
 ---
 
 # Two Sum Problem

@@ -1,7 +1,8 @@
 ---
 title: "The History of JavaScript"
 description: "JavaScript (often abbreviated as JS) is a widely used programming language that was initially developed for the web. It has evolved from a simple scripting"
-sort: 1
+sidebar:
+  order: 1
 ---
 
 ## The History of JavaScript

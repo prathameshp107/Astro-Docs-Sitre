@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const projectRoot = process.cwd();
-const sourceRoot = path.resolve(projectRoot, '..');
+const sourceRoot = path.resolve(projectRoot, '..', 'AllDocs');
 const docsRoot = path.join(projectRoot, 'src', 'content', 'docs');
 
 function ensureDir(dir) {
@@ -37,7 +37,7 @@ function rewriteAssetLinks(content, assetGroup) {
   return rewritten;
 }
 
-function copyFileWithFrontmatter(sourceRel, targetRel, title, desc) {
+function copyFileWithFrontmatter(sourceRel, targetRel, title, desc, sidebarOrder) {
   const sourcePath = path.join(sourceRoot, sourceRel);
   const targetPath = path.join(docsRoot, targetRel);
   
@@ -45,7 +45,7 @@ function copyFileWithFrontmatter(sourceRel, targetRel, title, desc) {
   
   let content = fs.readFileSync(sourcePath, 'utf8').replace(/^\uFEFF/, '');
   
-  const finalContent = '---\ntitle: ' + yamlQuote(title) + '\ndescription: ' + yamlQuote(desc) + '\n---\n\n' + rewriteAssetLinks(content, path.dirname(targetRel).split('/')[0]);
+  const finalContent = '---\ntitle: ' + yamlQuote(title) + '\ndescription: ' + yamlQuote(desc) + '\nsidebar:\n  order: ' + sidebarOrder + '\n---\n\n' + rewriteAssetLinks(content, path.dirname(targetRel).split('/')[0]);
   
   ensureDir(path.dirname(targetPath));
   fs.writeFileSync(targetPath, finalContent, 'utf8');
@@ -57,63 +57,72 @@ copyFileWithFrontmatter(
   'Data_Structure/Array/Array_Problems.md',
   'data-structures/array-problems.md',
   'Array Problems',
-  'Array problem-solving practice questions and solutions for coding interviews.'
+  'Array problem-solving practice questions and solutions for coding interviews.',
+  37
 );
 
 copyFileWithFrontmatter(
   'Data_Structure/Graphs/Graphs.md',
   'data-structures/graphs.md',
   'Graphs',
-  'Graph data structure notes, traversal algorithms, BFS, DFS, and graph problems.'
+  'Graph data structure notes, traversal algorithms, BFS, DFS, and graph problems.',
+  38
 );
 
 copyFileWithFrontmatter(
   'Data_Structure/LinkedList/Linkedlist.md',
   'data-structures/linked-list.md',
   'Linked List',
-  'Linked list data structure notes, operations, and interview problems.'
+  'Linked list data structure notes, operations, and interview problems.',
+  39
 );
 
 copyFileWithFrontmatter(
   'Data_Structure/Recursion & Backtracking/Recursion & Backtracking.md',
   'data-structures/recursion-and-backtracking.md',
   'Recursion & Backtracking',
-  'Recursion and backtracking concepts, patterns, and problem-solving examples.'
+  'Recursion and backtracking concepts, patterns, and problem-solving examples.',
+  40
 );
 
 copyFileWithFrontmatter(
   'Data_Structure/Tree/Tree.md',
   'data-structures/tree.md',
   'Tree',
-  'Tree data structure notes, traversal, BST, AVL trees, and interview problems.'
+  'Tree data structure notes, traversal, BST, AVL trees, and interview problems.',
+  41
 );
 
 copyFileWithFrontmatter(
   'JavaScript/JavaScript_Interview_Questions.md',
   'javascript/interview-questions.md',
   'JavaScript Interview Questions',
-  'Common JavaScript interview questions and answers covering core concepts, async, closures, and more.'
+  'Common JavaScript interview questions and answers covering core concepts, async, closures, and more.',
+  9
 );
 
 copyFileWithFrontmatter(
   'MYSQL/MySQL_Interview_Prep.md',
   'sql/interview-prep.md',
   'MySQL Interview Prep',
-  'MySQL interview preparation questions and answers for database and SQL concepts.'
+  'MySQL interview preparation questions and answers for database and SQL concepts.',
+  30
 );
 
 copyFileWithFrontmatter(
   'MongoDb/mongodb_top100_interview_qa.md',
   'mongodb/top-100-interview-questions.md',
   'MongoDB Top 100 Interview Questions',
-  'Top 100 MongoDB interview questions and answers covering queries, aggregation, and administration.'
+  'Top 100 MongoDB interview questions and answers covering queries, aggregation, and administration.',
+  9
 );
 
 copyFileWithFrontmatter(
   'fullstack_interview_questions.md',
   'interview/fullstack.md',
   'Fullstack Interview Questions',
-  'Fullstack interview questions and answers covering frontend, backend, databases, and system design.'
+  'Fullstack interview questions and answers covering frontend, backend, databases, and system design.',
+  1
 );
 
 console.log('✅ All remaining files copied!');

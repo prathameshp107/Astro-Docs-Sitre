@@ -1,7 +1,8 @@
 ---
 title: "Set in JavaScript"
 description: "A Set stores unique values only."
-sort: 29
+sidebar:
+  order: 29
 ---
 
 # Set in JavaScript

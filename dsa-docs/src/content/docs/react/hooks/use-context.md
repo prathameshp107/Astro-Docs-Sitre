@@ -1,7 +1,8 @@
 ---
 title: "useContext"
 description: "useContext hook for global data sharing in React."
-sort: 6
+sidebar:
+  order: 6
 ---
 
 # 🔹 6. useContext → “Global data”

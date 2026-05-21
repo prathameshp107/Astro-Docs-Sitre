@@ -1,7 +1,8 @@
 ---
 title: "Stored Procedures & Functions"
 description: "CREATE PROCEDURE giveraise( IN deptnameparam VARCHAR(100), IN raisepercent DECIMAL(5,2), OUT affectedrows INT ) BEGIN DECLARE deptidval INT;"
-sort: 22
+sidebar:
+  order: 22
 ---
 
 ## 12. Stored Procedures & Functions

@@ -1,6 +1,8 @@
 ---
 title: "Tree"
 description: "Tree data structure notes, traversal, BST, AVL trees, and interview problems."
+sidebar:
+  order: 41
 ---
 
 # 🌳 Tree Data Structures — Comprehensive Interview Guide

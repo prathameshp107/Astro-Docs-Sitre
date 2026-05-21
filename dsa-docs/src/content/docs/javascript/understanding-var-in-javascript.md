@@ -1,7 +1,8 @@
 ---
 title: "Understanding \"var\" in JavaScript"
 description: "In JavaScript, var is a keyword that helps us create variables. Think of variables like labeled boxes where you can put different things, like numbers or w"
-sort: 6
+sidebar:
+  order: 6
 ---
 
 ## Understanding "var" in JavaScript

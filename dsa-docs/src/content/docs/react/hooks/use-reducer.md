@@ -1,7 +1,8 @@
 ---
 title: "useReducer"
 description: "useReducer hook for complex state management."
-sort: 7
+sidebar:
+  order: 7
 ---
 
 # 🔹 7. useReducer → “Advanced state”

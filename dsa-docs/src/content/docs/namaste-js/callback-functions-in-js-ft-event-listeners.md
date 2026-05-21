@@ -1,7 +1,8 @@
 ---
 title: "Callback Functions in JS ft. Event Listeners"
 description: "- Functions are first class citizens ie. take a function A and pass it to another function B. Here, A is a callback function. So basically I am giving acce"
-sort: 14
+sidebar:
+  order: 14
 ---
 
 # Episode 14 : Callback Functions in JS ft. Event Listeners

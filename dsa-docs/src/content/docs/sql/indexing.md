@@ -1,7 +1,8 @@
 ---
 title: "Indexing"
 description: "NON-CLUSTERED INDEX (Secondary Index) ┌───────────────────────────────────────┐ │ B-Tree leaf nodes = (key, PK value) │ │ Points back to clustered index │"
-sort: 17
+sidebar:
+  order: 17
 ---
 
 ## 7. Indexing

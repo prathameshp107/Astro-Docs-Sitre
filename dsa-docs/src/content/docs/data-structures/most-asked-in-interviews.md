@@ -1,7 +1,8 @@
 ---
 title: "Most Asked in Interviews"
 description: "If you must prioritize:"
-sort: 24
+sidebar:
+  order: 24
 ---
 
 # Most Asked in Interviews

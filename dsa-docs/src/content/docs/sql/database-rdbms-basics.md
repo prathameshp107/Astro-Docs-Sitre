@@ -1,7 +1,8 @@
 ---
 title: "Database & RDBMS Basics"
 description: "---"
-sort: 1
+sidebar:
+  order: 1
 ---
 
 ## 1. Database & RDBMS Basics

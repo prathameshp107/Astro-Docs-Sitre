@@ -1,7 +1,8 @@
 ---
 title: "React Project Structure"
 description: "Learn about React project structure and the mental model for how React works."
-sort: 2
+sidebar:
+  order: 2
 ---
 
 ## React Project Structure

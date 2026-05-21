@@ -1,7 +1,8 @@
 ---
 title: "Quick Reference Cheat Sheet"
 description: "// ─── FIND ───────────────────────────────── db.col.find() // all docs db.col.find({ field: \"value\" }) // with filter db.col.findOne({ field: \"value\" }) /"
-sort: 8
+sidebar:
+  order: 8
 ---
 
 ## 8. Quick Reference Cheat Sheet

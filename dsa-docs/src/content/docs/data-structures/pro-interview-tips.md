@@ -1,7 +1,8 @@
 ---
 title: "Pro Interview Tips"
 description: "frequency counter index lookup pair problems caching"
-sort: 33
+sidebar:
+  order: 33
 ---
 
 # Pro Interview Tips

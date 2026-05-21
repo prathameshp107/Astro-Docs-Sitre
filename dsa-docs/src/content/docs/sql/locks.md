@@ -1,7 +1,8 @@
 ---
 title: "Locks"
 description: "TABLE-LEVEL LOCK (MyISAM / InnoDB DDL) ├── READ LOCK → all sessions can read, no writes └── WRITE LOCK → only lock holder can read/write"
-sort: 20
+sidebar:
+  order: 20
 ---
 
 ## 10. Locks

@@ -1,7 +1,8 @@
 ---
 title: "Custom Hooks"
 description: "Creating custom hooks for reusable logic in React."
-sort: 8
+sidebar:
+  order: 8
 ---
 
 # 🔹 8. Custom Hook → “Reuse logic”

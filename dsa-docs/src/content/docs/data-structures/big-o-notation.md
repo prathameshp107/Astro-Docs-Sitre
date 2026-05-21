@@ -1,7 +1,8 @@
 ---
 title: "Big-O Notation"
 description: "Big-O describes worst-case runtime."
-sort: 5
+sidebar:
+  order: 5
 ---
 
 # Big-O Notation

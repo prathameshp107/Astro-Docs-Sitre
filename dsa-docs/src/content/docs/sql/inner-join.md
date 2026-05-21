@@ -1,7 +1,8 @@
 ---
 title: "INNER JOIN"
 description: "Think of it as the strictest join — it requires both sides to agree."
-sort: 7
+sidebar:
+  order: 7
 ---
 
 ## 1. INNER JOIN

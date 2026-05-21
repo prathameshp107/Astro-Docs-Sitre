@@ -1,7 +1,8 @@
 ---
 title: "O(1) Constant Time"
 description: "---"
-sort: 6
+sidebar:
+  order: 6
 ---
 
 # O(1) Constant Time

@@ -1,7 +1,8 @@
 ---
 title: "Interview Questions (Must Practice)"
 description: "---"
-sort: 32
+sidebar:
+  order: 32
 ---
 
 #  Interview Questions (Must Practice)

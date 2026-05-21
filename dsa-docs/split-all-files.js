@@ -99,7 +99,7 @@ function splitFile(sourcePath, targetDir, assetGroup, sectionPattern, indexTitle
     const slug = toSlug(title);
     const description = firstParagraph(sectionContent);
     
-    const finalContent = '---\ntitle: ' + yamlQuote(title) + '\ndescription: ' + yamlQuote(description || 'Study notes for ' + title) + '\nsort: ' + (i + 1) + '\n---\n\n' + rewriteAssetLinks(sectionContent, assetGroup);
+    const finalContent = '---\ntitle: ' + yamlQuote(title) + '\ndescription: ' + yamlQuote(description || 'Study notes for ' + title) + '\nsidebar:\n  order: ' + (i + 1) + '\n---\n\n' + rewriteAssetLinks(sectionContent, assetGroup);
     
     fs.writeFileSync(path.join(targetDir, slug + '.md'), finalContent, 'utf8');
     files.push({ title, slug });

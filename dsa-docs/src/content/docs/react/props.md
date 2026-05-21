@@ -1,7 +1,8 @@
 ---
 title: "Props"
 description: "Learn about React props, how to use them, and common patterns with props."
-sort: 5
+sidebar:
+  order: 5
 ---
 
 # ⚛️ What are Props?

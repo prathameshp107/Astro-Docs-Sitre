@@ -1,7 +1,8 @@
 ---
 title: "JS Compilation Techniques"
 description: "Compiling is the process of translating source code written in a high-level programming language into machine-readable code, which can be executed by a com"
-sort: 2
+sidebar:
+  order: 2
 ---
 
 ## JS Compilation Techniques

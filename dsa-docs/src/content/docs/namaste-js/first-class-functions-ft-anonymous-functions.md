@@ -1,7 +1,8 @@
 ---
 title: "First Class Functions ft. Anonymous Functions"
 description: "Functions are heart ♥ of Javascript."
-sort: 13
+sidebar:
+  order: 13
 ---
 
 # Episode 13 : First Class Functions ft. Anonymous Functions

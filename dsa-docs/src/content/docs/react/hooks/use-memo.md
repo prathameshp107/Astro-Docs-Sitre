@@ -1,7 +1,8 @@
 ---
 title: "useMemo"
 description: "useMemo hook for caching calculations in React."
-sort: 4
+sidebar:
+  order: 4
 ---
 
 # 🔹 4. useMemo → “Cache calculation”

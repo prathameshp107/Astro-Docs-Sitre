@@ -1,7 +1,8 @@
 ---
 title: "Views"
 description: "-- Use view like a table SELECT FROM employeesummary WHERE deptname = 'Engineering'; SELECT deptname, AVG(salary) FROM employeesummary GROUP BY deptname;"
-sort: 21
+sidebar:
+  order: 21
 ---
 
 ## 11. Views

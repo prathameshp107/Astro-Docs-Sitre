@@ -1,7 +1,8 @@
 ---
 title: "Famous Interview Questions ft. Closures"
 description: "Ans: A function along with reference to its outer environment together forms a closure. Or in other words, A Closure is a combination of a function and its"
-sort: 12
+sidebar:
+  order: 12
 ---
 
 # Episode 12 : Famous Interview Questions ft. Closures

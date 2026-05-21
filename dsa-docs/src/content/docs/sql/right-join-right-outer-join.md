@@ -1,7 +1,8 @@
 ---
 title: "RIGHT JOIN (RIGHT OUTER JOIN)"
 description: "!useState diagram"
-sort: 9
+sidebar:
+  order: 9
 ---
 
 ## 3. RIGHT JOIN (RIGHT OUTER JOIN)

@@ -1,7 +1,8 @@
 ---
 title: "JSX"
 description: "Learn about JSX, React's JavaScript XML syntax for writing UI components."
-sort: 3
+sidebar:
+  order: 3
 ---
 
 # JSX

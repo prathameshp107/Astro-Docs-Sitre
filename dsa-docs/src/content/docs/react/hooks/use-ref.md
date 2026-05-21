@@ -1,7 +1,8 @@
 ---
 title: "useRef"
 description: "useRef hook for storing values without re-render and accessing DOM."
-sort: 3
+sidebar:
+  order: 3
 ---
 
 # 🔹 3. useRef → “Store value without re-render”

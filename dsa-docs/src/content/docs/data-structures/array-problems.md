@@ -1,6 +1,8 @@
 ---
 title: "Array Problems"
 description: "Array problem-solving practice questions and solutions for coding interviews."
+sidebar:
+  order: 37
 ---
 
 # Array Problems - Complete Index

@@ -1,7 +1,8 @@
 ---
 title: "How JS is executed & Call Stack"
 description: "- When a JS program is ran, a global execution context is created."
-sort: 2
+sidebar:
+  order: 2
 ---
 
 # Episode 2 : How JS is executed & Call Stack

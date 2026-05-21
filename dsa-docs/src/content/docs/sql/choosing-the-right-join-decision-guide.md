@@ -1,7 +1,8 @@
 ---
 title: "Choosing the Right Join — Decision Guide"
 description: "Are you working with one table that references itself? └─ Yes → SELF JOIN (with LEFT or INNER depending on above)"
-sort: 16
+sidebar:
+  order: 16
 ---
 
 ## 10. Choosing the Right Join — Decision Guide

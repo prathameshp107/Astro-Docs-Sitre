@@ -1,7 +1,8 @@
 ---
 title: "Data Modeling"
 description: "Data modeling is the most critical skill in MongoDB. Good schema design = fast, scalable app. Bad schema = performance nightmares."
-sort: 3
+sidebar:
+  order: 3
 ---
 
 ## 3. Data Modeling

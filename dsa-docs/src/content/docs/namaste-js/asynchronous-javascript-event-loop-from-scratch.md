@@ -1,7 +1,8 @@
 ---
 title: "Asynchronous JavaScript & EVENT LOOP from scratch"
 description: "Note: Call stack will execeute any execeution context which enters it. Time, tide and JS waits for none. TLDR; Call stack has no timer."
-sort: 15
+sidebar:
+  order: 15
 ---
 
 # Episode 15 : Asynchronous JavaScript & EVENT LOOP from scratch

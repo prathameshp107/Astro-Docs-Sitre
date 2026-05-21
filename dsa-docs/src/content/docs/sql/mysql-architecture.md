@@ -1,7 +1,8 @@
 ---
 title: "MySQL Architecture"
 description: "Interview Tip: InnoDB is the default and preferred engine. Always use InnoDB unless you have a specific reason."
-sort: 2
+sidebar:
+  order: 2
 ---
 
 ## 2. MySQL Architecture

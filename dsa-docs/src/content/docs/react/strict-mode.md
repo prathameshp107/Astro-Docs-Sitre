@@ -1,7 +1,8 @@
 ---
 title: "React Strict Mode"
 description: "Learn about React Strict Mode and how it helps identify potential problems in your application."
-sort: 6
+sidebar:
+  order: 6
 ---
 
 ## React.StrictMode

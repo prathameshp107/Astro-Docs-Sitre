@@ -1,7 +1,8 @@
 ---
 title: "Introduction to React"
 description: "Learn what React is, how it works, and its core features like Virtual DOM and Reconciliation."
-sort: 1
+sidebar:
+  order: 1
 ---
 
 ## What React Is

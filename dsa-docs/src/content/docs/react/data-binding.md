@@ -1,7 +1,8 @@
 ---
 title: "Data Binding"
 description: "Learn about data binding in React, including one-way and two-way binding patterns."
-sort: 8
+sidebar:
+  order: 8
 ---
 
 # Data Binding

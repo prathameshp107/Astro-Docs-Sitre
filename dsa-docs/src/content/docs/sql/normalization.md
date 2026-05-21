@@ -1,7 +1,8 @@
 ---
 title: "Normalization"
 description: "---"
-sort: 18
+sidebar:
+  order: 18
 ---
 
 ## 8. Normalization

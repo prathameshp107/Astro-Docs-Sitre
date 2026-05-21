@@ -1,7 +1,8 @@
 ---
 title: "setTimeout + Closures Interview Question"
 description: "Time, tide and Javascript wait for none."
-sort: 11
+sidebar:
+  order: 11
 ---
 
 # Episode 11 : setTimeout + Closures Interview Question

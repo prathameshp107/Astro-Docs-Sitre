@@ -33,7 +33,8 @@ function writeFile(filename, title, description, content, sortNumber) {
   const finalContent = `---
 title: ${yamlQuote(title)}
 description: ${yamlQuote(description)}
-sort: ${sortNumber}
+sidebar:
+  order: ${sortNumber}
 ---
 
 ${rewriteAssetLinks(content)}

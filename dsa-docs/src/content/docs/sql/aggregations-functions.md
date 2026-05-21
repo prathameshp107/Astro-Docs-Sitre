@@ -1,7 +1,8 @@
 ---
 title: "Aggregations & Functions"
 description: "-- GROUP BY SELECT deptid, COUNT(), AVG(salary) FROM employees GROUP BY deptid;"
-sort: 24
+sidebar:
+  order: 24
 ---
 
 ## 14. Aggregations & Functions

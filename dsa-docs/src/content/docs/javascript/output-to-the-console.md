@@ -1,7 +1,8 @@
 ---
 title: "Output to the Console:"
 description: "1. Using console.log(): The console.log() method is a powerful tool for debugging and development. It outputs messages to the browser's console, which can"
-sort: 4
+sidebar:
+  order: 4
 ---
 
 ## Output to the Console:

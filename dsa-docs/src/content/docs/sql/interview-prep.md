@@ -1,6 +1,8 @@
 ---
 title: "MySQL Interview Prep"
 description: "MySQL interview preparation questions and answers for database and SQL concepts."
+sidebar:
+  order: 30
 ---
 
 # 🗄️ MySQL Interview Preparation Guide

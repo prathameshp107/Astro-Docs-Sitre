@@ -1,7 +1,8 @@
 ---
 title: "Components"
 description: "Learn about React components, types of components, and component patterns."
-sort: 4
+sidebar:
+  order: 4
 ---
 
 # Components

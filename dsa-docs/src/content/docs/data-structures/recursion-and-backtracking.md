@@ -1,6 +1,8 @@
 ---
 title: "Recursion & Backtracking"
 description: "Recursion and backtracking concepts, patterns, and problem-solving examples."
+sidebar:
+  order: 40
 ---
 
 

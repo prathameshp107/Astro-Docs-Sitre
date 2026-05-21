@@ -1,7 +1,8 @@
 ---
 title: "Keys & Constraints"
 description: "UNIQUE KEY ├── Ensures all values in column are unique ├── Can be NULL (multiple NULLs allowed) └── Multiple per table allowed"
-sort: 5
+sidebar:
+  order: 5
 ---
 
 ## 5. Keys & Constraints

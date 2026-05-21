@@ -1,7 +1,8 @@
 ---
 title: "Quick Pattern Recognition"
 description: "---"
-sort: 11
+sidebar:
+  order: 11
 ---
 
 #  Quick Pattern Recognition

@@ -1,7 +1,8 @@
 ---
 title: "Fragments"
 description: "Learn about React Fragments and how to group elements without adding extra DOM nodes."
-sort: 7
+sidebar:
+  order: 7
 ---
 
 # Fragments

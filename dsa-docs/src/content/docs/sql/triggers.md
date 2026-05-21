@@ -1,7 +1,8 @@
 ---
 title: "Triggers"
 description: "DELIMITER $$"
-sort: 23
+sidebar:
+  order: 23
 ---
 
 ## 13. Triggers

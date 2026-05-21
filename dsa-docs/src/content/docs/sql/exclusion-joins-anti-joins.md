@@ -1,7 +1,8 @@
 ---
 title: "Exclusion Joins (Anti-Joins)"
 description: "These are not a separate join type — they're a pattern built on top of LEFT or FULL OUTER JOIN. The goal is to find rows that have no match in the other ta"
-sort: 13
+sidebar:
+  order: 13
 ---
 
 ## 7. Exclusion Joins (Anti-Joins)

@@ -1,7 +1,8 @@
 ---
 title: "Shortest JS Program, window & this keyword"
 description: "- The shortest JS program is empty file. Because even then, JS engine does a lot of things. As always, even in this case, it creates the GEC which has memo"
-sort: 5
+sidebar:
+  order: 5
 ---
 
 # Episode 5 : Shortest JS Program, window & this keyword

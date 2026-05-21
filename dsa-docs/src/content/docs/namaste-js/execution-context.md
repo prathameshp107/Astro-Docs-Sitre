@@ -1,7 +1,8 @@
 ---
 title: "Execution Context"
 description: "- Everything in JS happens inside the execution context. Imagine a sealed-off container inside which JS runs. It is an abstract concept that hold info abou"
-sort: 1
+sidebar:
+  order: 1
 ---
 
 # Episode 1 : Execution Context

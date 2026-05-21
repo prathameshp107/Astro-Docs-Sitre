@@ -1,7 +1,8 @@
 ---
 title: "O(n) Linear"
 description: "---"
-sort: 8
+sidebar:
+  order: 8
 ---
 
 # O(n) Linear

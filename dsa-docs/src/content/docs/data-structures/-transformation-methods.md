@@ -1,7 +1,8 @@
 ---
 title: "­ Transformation Methods"
 description: "<a id=\"map\"</a map()"
-sort: 18
+sidebar:
+  order: 18
 ---
 
 # ­ Transformation Methods

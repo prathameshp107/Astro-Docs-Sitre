@@ -1,7 +1,8 @@
 ---
 title: "The Scope Chain, Scope & Lexical Environment"
 description: "- Scope in Javascript is directly related to Lexical Environment."
-sort: 7
+sidebar:
+  order: 7
 ---
 
 # Episode 7 : The Scope Chain, Scope & Lexical Environment

@@ -1,7 +1,8 @@
 ---
 title: "Functions and Variable Environments"
 description: "function a() { var x = 10; // local scope because of separate execution context console.log(x); }"
-sort: 4
+sidebar:
+  order: 4
 ---
 
 # Episode 4 : Functions and Variable Environments

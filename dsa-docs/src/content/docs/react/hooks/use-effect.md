@@ -1,7 +1,8 @@
 ---
 title: "useEffect"
 description: "useEffect hook for side effects in React components."
-sort: 2
+sidebar:
+  order: 2
 ---
 
 # 🔹 2. useEffect → “Do something after render”

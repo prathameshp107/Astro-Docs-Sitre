@@ -1,7 +1,8 @@
 ---
 title: "useState"
 description: "useState hook for managing state in React components."
-sort: 1
+sidebar:
+  order: 1
 ---
 
 # 🔹 1. useState → “Memory”

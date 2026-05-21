@@ -1,7 +1,8 @@
 ---
 title: "JOIN Conditions & Pitfalls"
 description: "---"
-sort: 14
+sidebar:
+  order: 14
 ---
 
 ## 8. JOIN Conditions & Pitfalls

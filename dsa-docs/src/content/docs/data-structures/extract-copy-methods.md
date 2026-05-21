@@ -1,7 +1,8 @@
 ---
 title: "Extract / Copy Methods"
 description: "<a id=\"slice\"</a slice()"
-sort: 19
+sidebar:
+  order: 19
 ---
 
 #  Extract / Copy Methods

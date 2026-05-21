@@ -1,7 +1,8 @@
 ---
 title: "Performance Optimization"
 description: "-- ✅ Use indexes for filtering, avoid functions on indexed columns -- ❌ Bad: SELECT FROM employees WHERE UPPER(email) = 'ALICE@COMPANY.COM'; -- ✅ Good: SEL"
-sort: 27
+sidebar:
+  order: 27
 ---
 
 ## 17. Performance Optimization

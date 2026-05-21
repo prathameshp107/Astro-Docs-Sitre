@@ -1,7 +1,8 @@
 ---
 title: "Utility Methods"
 description: "<a id=\"join\"</a join()"
-sort: 22
+sidebar:
+  order: 22
 ---
 
 # Utility Methods

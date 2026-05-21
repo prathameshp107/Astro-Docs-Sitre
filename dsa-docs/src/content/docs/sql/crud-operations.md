@@ -1,7 +1,8 @@
 ---
 title: "CRUD Operations"
 description: "USE companydb;"
-sort: 4
+sidebar:
+  order: 4
 ---
 
 ## 4. CRUD Operations

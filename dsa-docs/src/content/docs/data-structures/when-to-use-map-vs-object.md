@@ -1,7 +1,8 @@
 ---
 title: "When to Use Map vs Object"
 description: "keys are not strings need guaranteed insertion order frequent additions/deletions want better performance semantics"
-sort: 28
+sidebar:
+  order: 28
 ---
 
 # When to Use Map vs Object

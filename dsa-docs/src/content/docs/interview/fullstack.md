@@ -1,6 +1,8 @@
 ---
 title: "Fullstack Interview Questions"
 description: "Fullstack interview questions and answers covering frontend, backend, databases, and system design."
+sidebar:
+  order: 1
 ---
 
 # 🚀 Top 100 Full Stack Developer Interview Questions & Answers

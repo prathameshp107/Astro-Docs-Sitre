@@ -1,7 +1,8 @@
 ---
 title: "map, filter & reduce"
 description: "map, filter & reducer are Higher Order Functions."
-sort: 19
+sidebar:
+  order: 19
 ---
 
 # Episode 19 : map, filter & reduce

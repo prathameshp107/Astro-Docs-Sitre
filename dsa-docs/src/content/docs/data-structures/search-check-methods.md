@@ -1,7 +1,8 @@
 ---
 title: "Search / Check Methods"
 description: "<a id=\"includes\"</a includes()"
-sort: 21
+sidebar:
+  order: 21
 ---
 
 # Search / Check Methods

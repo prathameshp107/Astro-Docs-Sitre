@@ -1,6 +1,8 @@
 ---
 title: "Linked List"
 description: "Linked list data structure notes, operations, and interview problems."
+sidebar:
+  order: 39
 ---
 
 # 🔗 Linked Lists: A Beginner-Friendly Complete Guide

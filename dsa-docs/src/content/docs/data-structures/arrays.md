@@ -1,7 +1,8 @@
 ---
 title: "Arrays"
 description: "Access ’ O(1) Search ’ O(n) Insert End ’ O(1) Insert Start ’ O(n)"
-sort: 14
+sidebar:
+  order: 14
 ---
 
 #  Arrays
