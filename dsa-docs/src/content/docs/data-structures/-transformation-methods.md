@@ -1,6 +1,7 @@
 ---
 title: "­ Transformation Methods"
 description: "<a id=\"map\"</a map()"
+sort: 18
 ---
 
 # ­ Transformation Methods

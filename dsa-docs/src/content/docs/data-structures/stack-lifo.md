@@ -1,6 +1,7 @@
 ---
 title: "Stack (LIFO)"
 description: "Last In, First Out."
+sort: 15
 ---
 
 #  Stack (LIFO)

@@ -1,6 +1,7 @@
 ---
 title: "JavaScript Uses and Application Areas"
 description: "JavaScript (JS) is a versatile programming language with a wide range of applications beyond its original role as a client-side scripting language for web"
+sort: 3
 ---
 
 ## JavaScript Uses and Application Areas

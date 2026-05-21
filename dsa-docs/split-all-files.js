@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const projectRoot = process.cwd();
-const sourceRoot = path.resolve(projectRoot, '..');
+const sourceRoot = path.resolve(projectRoot, '..', 'AllDocs');
 const docsRoot = path.join(projectRoot, 'src', 'content', 'docs');
 
 function ensureDir(dir) {
@@ -42,7 +42,13 @@ function firstParagraph(body) {
 function rewriteAssetLinks(content, assetGroup) {
   let rewritten = content
     .replace(/\]\(\/assets\//g, '](/DSA-Notes-Problems/assets/')
-    .replace(/src="\/assets\//g, 'src="/DSA-Notes-Problems/assets/');
+    .replace(/src="\/assets\//g, 'src="/DSA-Notes-Problems/assets/')
+    .replace(/!\[([^\]]*)\]\(\.\.\/dsa-docs\/public\/assets\/([^)]+)\)/g, function(match, alt, assetPath) {
+      return `![${alt}](/DSA-Notes-Problems/assets/${assetPath})`;
+    })
+    .replace(/!\[([^\]]*)\]\(\.\.\/dsa-docs\/public\/assets\/([^)]+)\s*"[^"]*"\)/g, function(match, alt, assetPath) {
+      return `![${alt}](/DSA-Notes-Problems/assets/${assetPath})`;
+    });
   
   if (assetGroup) {
     rewritten = rewritten.replace(
@@ -93,7 +99,7 @@ function splitFile(sourcePath, targetDir, assetGroup, sectionPattern, indexTitle
     const slug = toSlug(title);
     const description = firstParagraph(sectionContent);
     
-    const finalContent = '---\ntitle: ' + yamlQuote(title) + '\ndescription: ' + yamlQuote(description || 'Study notes for ' + title) + '\n---\n\n' + rewriteAssetLinks(sectionContent, assetGroup);
+    const finalContent = '---\ntitle: ' + yamlQuote(title) + '\ndescription: ' + yamlQuote(description || 'Study notes for ' + title) + '\nsort: ' + (i + 1) + '\n---\n\n' + rewriteAssetLinks(sectionContent, assetGroup);
     
     fs.writeFileSync(path.join(targetDir, slug + '.md'), finalContent, 'utf8');
     files.push({ title, slug });

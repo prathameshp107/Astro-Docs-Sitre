@@ -1,6 +1,7 @@
 ---
 title: "Data Types"
 description: "Interview Tip: Use TIMESTAMP for audit fields (createdat, updatedat) — it auto-converts to server timezone. Use DATETIME when timezone-independence is nee"
+sort: 3
 ---
 
 ## 3. Data Types

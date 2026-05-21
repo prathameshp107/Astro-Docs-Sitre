@@ -1,7 +1,9 @@
 ---
 title: "React Setup Guideline"
-description: "1. Download and install Node.js: https://nodejs.org/en/download/"
+description: "Guidelines for setting up React projects"
+sort: 9
 ---
+
 
 ## React Local Setup
 

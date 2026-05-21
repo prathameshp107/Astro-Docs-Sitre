@@ -1,6 +1,7 @@
 ---
 title: "Complexity Summary"
 description: "Worst case can be O(n), but interviews assume O(1) average."
+sort: 34
 ---
 
 # Complexity Summary

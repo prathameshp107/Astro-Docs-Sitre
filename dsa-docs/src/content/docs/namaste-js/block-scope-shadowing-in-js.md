@@ -1,6 +1,7 @@
 ---
 title: "Block Scope & Shadowing in JS"
 description: "What is a Block?"
+sort: 9
 ---
 
 # Episode 9 : Block Scope & Shadowing in JS

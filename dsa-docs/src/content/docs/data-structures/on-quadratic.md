@@ -1,6 +1,7 @@
 ---
 title: "O(n²) Quadratic"
 description: "<a id=\"how-to-find-time-complexity\"</a"
+sort: 9
 ---
 
 # O(n²) Quadratic

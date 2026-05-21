@@ -1,6 +1,7 @@
 ---
 title: "Trust issues with setTimeout()"
 description: "- setTimeout with timer of 5 secs sometimes does not exactly guarantees that the callback function will execute exactly after 5s."
+sort: 17
 ---
 
 # Episode 17 : Trust issues with setTimeout()

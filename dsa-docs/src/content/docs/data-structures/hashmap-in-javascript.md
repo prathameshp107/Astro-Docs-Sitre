@@ -1,6 +1,7 @@
 ---
 title: "HashMap in JavaScript"
 description: "In JS, a HashMap is implemented using:"
+sort: 27
 ---
 
 # HashMap in JavaScript

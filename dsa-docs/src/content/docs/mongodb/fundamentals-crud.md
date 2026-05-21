@@ -1,6 +1,7 @@
 ---
 title: "Fundamentals & CRUD"
 description: "MongoDB is a NoSQL, document-oriented database. Instead of storing data in rows and columns like SQL, it stores data as JSON-like documents."
+sort: 1
 ---
 
 ## 1. Fundamentals & CRUD

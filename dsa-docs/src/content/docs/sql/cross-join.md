@@ -1,6 +1,7 @@
 ---
 title: "CROSS JOIN"
 description: "!useState diagram"
+sort: 11
 ---
 
 ## 5. CROSS JOIN

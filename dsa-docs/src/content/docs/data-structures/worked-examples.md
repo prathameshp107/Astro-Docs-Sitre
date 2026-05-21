@@ -1,6 +1,7 @@
 ---
 title: "Worked Examples"
 description: "’ O(n)"
+sort: 12
 ---
 
 # Worked Examples

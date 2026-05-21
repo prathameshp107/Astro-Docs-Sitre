@@ -1,6 +1,7 @@
 ---
 title: "undefined vs not defined in JS"
 description: "- In first phase (memory allocation) JS assigns each variable a placeholder called undefined."
+sort: 6
 ---
 
 # Episode 6 : undefined vs not defined in JS

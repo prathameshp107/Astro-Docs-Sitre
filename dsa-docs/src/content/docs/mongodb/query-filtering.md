@@ -1,6 +1,7 @@
 ---
 title: "Query & Filtering"
 description: "Used to compare field values."
+sort: 2
 ---
 
 ## 2. Query & Filtering

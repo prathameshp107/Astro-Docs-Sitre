@@ -1,6 +1,7 @@
 ---
 title: "Aggregation Framework"
 description: "Aggregation is MongoDB's way to transform and analyze data — like a pipeline where documents flow through stages, each stage modifying the output."
+sort: 5
 ---
 
 ## 5. Aggregation Framework

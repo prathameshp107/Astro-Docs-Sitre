@@ -1,6 +1,7 @@
 ---
 title: "Hoisting in JavaScript (variables & functions)"
 description: "- Let's observe the below code and it's explaination:"
+sort: 3
 ---
 
 # Episode 3 : Hoisting in JavaScript (variables & functions)

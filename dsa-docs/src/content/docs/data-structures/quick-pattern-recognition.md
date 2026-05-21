@@ -1,6 +1,7 @@
 ---
 title: "Quick Pattern Recognition"
 description: "---"
+sort: 11
 ---
 
 #  Quick Pattern Recognition

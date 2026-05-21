@@ -1,6 +1,7 @@
 ---
 title: "Indexing"
 description: "Without an index, MongoDB does a Collection Scan — it reads every document to find matching ones. This is fine for small collections but becomes catastroph"
+sort: 4
 ---
 
 ## 4. Indexing

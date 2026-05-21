@@ -1,6 +1,7 @@
 ---
 title: "FULL OUTER JOIN"
 description: "!useState diagram"
+sort: 10
 ---
 
 ## 4. FULL OUTER JOIN

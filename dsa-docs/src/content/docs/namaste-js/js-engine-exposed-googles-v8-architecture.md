@@ -1,6 +1,7 @@
 ---
 title: "JS Engine Exposed, Google's V8 Architecture"
 description: "- JS runs literally everywhere from smart watch to robots to browsers because of Javascript Runtime Environment (JRE)."
+sort: 16
 ---
 
 # Episode 16 : JS Engine Exposed, Google's V8 Architecture

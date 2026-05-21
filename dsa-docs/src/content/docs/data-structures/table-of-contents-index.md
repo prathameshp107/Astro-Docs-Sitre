@@ -1,6 +1,7 @@
 ---
 title: "Table of Contents (Index)"
 description: "Click on any topic below to jump directly to that section:"
+sort: 2
 ---
 
 # Table of Contents (Index)

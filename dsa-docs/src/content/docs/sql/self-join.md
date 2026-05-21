@@ -1,6 +1,7 @@
 ---
 title: "SELF JOIN"
 description: "!useState diagram"
+sort: 12
 ---
 
 ## 6. SELF JOIN

@@ -1,6 +1,7 @@
 ---
 title: "Recommended Next Topics"
 description: "Linked Lists Trees Graphs Recursion Sliding Window Dynamic Programming"
+sort: 36
 ---
 
 #  Recommended Next Topics

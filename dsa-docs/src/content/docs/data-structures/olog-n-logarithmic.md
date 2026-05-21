@@ -1,6 +1,7 @@
 ---
 title: "O(log n)  Logarithmic"
 description: "while (left <= right) { let mid = Math.floor((left + right) / 2);"
+sort: 7
 ---
 
 # O(log n)  Logarithmic

@@ -1,6 +1,7 @@
 ---
 title: "Modify (Mutating) Methods"
 description: "These change the original array (important in interviews)"
+sort: 20
 ---
 
 # Modify (Mutating) Methods

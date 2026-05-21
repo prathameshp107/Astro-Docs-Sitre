@@ -1,6 +1,7 @@
 ---
 title: "Space Complexity"
 description: "Measures extra memory used by an algorithm."
+sort: 13
 ---
 
 # Space Complexity

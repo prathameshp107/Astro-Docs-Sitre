@@ -1,6 +1,7 @@
 ---
 title: "Queue (FIFO)"
 description: "First In, First Out."
+sort: 16
 ---
 
 # Queue (FIFO)

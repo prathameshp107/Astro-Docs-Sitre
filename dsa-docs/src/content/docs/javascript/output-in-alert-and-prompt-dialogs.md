@@ -1,6 +1,7 @@
 ---
 title: "Output in Alert and Prompt Dialogs:"
 description: "1. Using alert(): The alert() method displays a simple dialog box with a message. It's used to provide information or alerts to users. However, it can be i"
+sort: 5
 ---
 
 ## Output in Alert and Prompt Dialogs:

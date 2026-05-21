@@ -1,6 +1,7 @@
 ---
-title: "⚛️ React Complete Interview Guide — Easy → Medium → Hard"
-description: "Covers all levels: Fresher → Junior → Mid → Senior React 16.8+ (Hooks era) → React 18 → React 19 Total: 60 Questions with expanded explanations and code e"
+title: "React Full Interview Questions"
+description: "Complete collection of React interview questions and answers"
+sort: 10
 ---
 
 # ⚛️ React Complete Interview Guide — Easy → Medium → Hard
@@ -2269,3 +2270,4 @@ Structure every answer using this format for maximum clarity:
 
 *React 16.8 (Hooks) → React 18 (Concurrent) → React 19 (Actions & Compiler)*
 *Updated: 2025–26 | 60 Questions — Easy → Medium → Hard*
+

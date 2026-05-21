@@ -1,6 +1,7 @@
 ---
 title: "Transactions & ACID Properties"
 description: "UPDATE accounts SET balance = balance - 500 WHERE id = 1; -- debit UPDATE accounts SET balance = balance + 500 WHERE id = 2; -- credit"
+sort: 19
 ---
 
 ## 9. Transactions & ACID Properties

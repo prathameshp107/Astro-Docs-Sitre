@@ -1,6 +1,7 @@
 ---
 title: "Triggers"
 description: "DELIMITER $$"
+sort: 23
 ---
 
 ## 13. Triggers

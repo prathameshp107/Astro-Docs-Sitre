@@ -1,6 +1,7 @@
 ---
 title: "Algorithm Basics"
 description: "An algorithm is a finite sequence of steps used to solve a problem."
+sort: 3
 ---
 
 # Algorithm Basics

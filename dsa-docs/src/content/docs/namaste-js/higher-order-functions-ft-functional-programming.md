@@ -1,6 +1,7 @@
 ---
 title: "Higher-Order Functions ft. Functional Programming"
 description: "Ans: A Higher-order functions are regular functions that take other functions as arguments or return functions as their results. Eg:"
+sort: 18
 ---
 
 # Episode 18 : Higher-Order Functions ft. Functional Programming

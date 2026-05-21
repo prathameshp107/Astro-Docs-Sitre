@@ -1,6 +1,7 @@
 ---
 title: "What is a Hash?"
 description: "A hash is a technique that converts a key into an index using a hash function."
+sort: 26
 ---
 
 # What is a Hash?

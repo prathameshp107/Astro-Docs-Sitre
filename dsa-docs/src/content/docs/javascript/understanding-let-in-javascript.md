@@ -1,6 +1,7 @@
 ---
 title: "Understanding \"let\" in JavaScript"
 description: "In JavaScript, let is a keyword that offers more controlled variable management compared to the older var. Let's dive deeper into how let works:"
+sort: 7
 ---
 
 ## Understanding "let" in JavaScript

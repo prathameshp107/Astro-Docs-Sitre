@@ -1,6 +1,7 @@
 ---
 title: "How to Find Time Complexity (Step-by-Step)"
 description: "Runs n times O(n)"
+sort: 10
 ---
 
 #  How to Find Time Complexity (Step-by-Step)

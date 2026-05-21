@@ -1,6 +1,7 @@
 ---
 title: "LEFT JOIN (LEFT OUTER JOIN)"
 description: "The left table is never filtered. It is the \"anchor.\""
+sort: 8
 ---
 
 ## 2. LEFT JOIN (LEFT OUTER JOIN)

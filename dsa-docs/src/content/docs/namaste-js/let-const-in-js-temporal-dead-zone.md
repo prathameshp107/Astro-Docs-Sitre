@@ -1,6 +1,7 @@
 ---
 title: "let & const in JS, Temporal Dead Zone"
 description: "- let and const declarations are hoisted. But its different from var"
+sort: 8
 ---
 
 # Episode 8 : let & const in JS, Temporal Dead Zone

@@ -1,6 +1,7 @@
 ---
 title: "Understanding \"const\" in JavaScript"
 description: "In JavaScript, const is a keyword that introduces the concept of constants, which are variables with fixed, unchanging values. Let's delve deeper into how"
+sort: 8
 ---
 
 ## Understanding "const" in JavaScript

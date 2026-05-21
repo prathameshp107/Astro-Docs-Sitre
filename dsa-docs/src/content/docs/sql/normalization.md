@@ -1,6 +1,7 @@
 ---
 title: "Normalization"
 description: "---"
+sort: 18
 ---
 
 ## 8. Normalization

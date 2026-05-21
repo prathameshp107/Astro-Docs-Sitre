@@ -1,6 +1,7 @@
 ---
 title: "Time Complexity"
 description: "Time complexity measures how execution time grows relative to input size n."
+sort: 4
 ---
 
 # Time Complexity

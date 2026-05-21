@@ -1,6 +1,7 @@
 ---
 title: "Closures in JS"
 description: "- Function bundled along with it's lexical scope is closure."
+sort: 10
 ---
 
 # Episode 10 : Closures in JS

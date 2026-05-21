@@ -1,6 +1,7 @@
 ---
 title: "Subqueries & CTEs"
 description: "-- Row subquery SELECT FROM employees WHERE (deptid, salary) = (SELECT deptid, MAX(salary) FROM employees WHERE deptid = 1);"
+sort: 25
 ---
 
 ## 15. Subqueries & CTEs

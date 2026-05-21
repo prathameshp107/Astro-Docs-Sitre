@@ -1,6 +1,7 @@
 ---
 title: "Most Important Set Pattern (Interview Favorite)"
 description: "console.log(unique); // [1, 2, 3, 4]"
+sort: 30
 ---
 
 # Most Important Set Pattern (Interview Favorite)

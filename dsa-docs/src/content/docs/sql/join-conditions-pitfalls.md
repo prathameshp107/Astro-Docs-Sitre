@@ -1,6 +1,7 @@
 ---
 title: "JOIN Conditions & Pitfalls"
 description: "---"
+sort: 14
 ---
 
 ## 8. JOIN Conditions & Pitfalls

@@ -17,7 +17,13 @@ function yamlQuote(value) {
 function rewriteAssetLinks(content, assetGroup) {
   let rewritten = content
     .replace(/\]\(\/assets\//g, '](/DSA-Notes-Problems/assets/')
-    .replace(/src="\/assets\//g, 'src="/DSA-Notes-Problems/assets/');
+    .replace(/src="\/assets\//g, 'src="/DSA-Notes-Problems/assets/')
+    .replace(/!\[([^\]]*)\]\(\.\.\/dsa-docs\/public\/assets\/([^)]+)\)/g, function(match, alt, assetPath) {
+      return `![${alt}](/DSA-Notes-Problems/assets/${assetPath})`;
+    })
+    .replace(/!\[([^\]]*)\]\(\.\.\/dsa-docs\/public\/assets\/([^)]+)\s*"[^"]*"\)/g, function(match, alt, assetPath) {
+      return `![${alt}](/DSA-Notes-Problems/assets/${assetPath})`;
+    });
   
   if (assetGroup) {
     rewritten = rewritten.replace(

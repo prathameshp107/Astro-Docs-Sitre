@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const projectRoot = process.cwd();
-const sourceFilePath = path.resolve(projectRoot, '..', 'REACT.js', 'React_Notes.md');
+const sourceFilePath = path.resolve(projectRoot, '..', 'AllDocs', 'REACT.js', 'React_Notes.md');
 const targetDir = path.join(projectRoot, 'src', 'content', 'docs', 'react');
 
 function ensureDir(dir) {
@@ -18,9 +18,27 @@ function rewriteAssetLinks(content) {
   return content
     .replace(/\]\(\/assets\//g, '](/DSA-Notes-Problems/assets/')
     .replace(/src="\/assets\//g, 'src="/DSA-Notes-Problems/assets/')
+    .replace(/!\[([^\]]*)\]\(\.\.\/dsa-docs\/public\/assets\/([^)]+)\)/g, function(match, alt, assetPath) {
+      return `![${alt}](/DSA-Notes-Problems/assets/${assetPath})`;
+    })
+    .replace(/!\[([^\]]*)\]\(\.\.\/dsa-docs\/public\/assets\/([^)]+)\s*"[^"]*"\)/g, function(match, alt, assetPath) {
+      return `![${alt}](/DSA-Notes-Problems/assets/${assetPath})`;
+    })
     .replace(/\]\((\.\/)?public\/([^)]+)\)/g, function(match, dotSlash, assetPath) {
       return '](/DSA-Notes-Problems/assets/react/' + assetPath.toLowerCase().replace(/_/g, '-') + ')';
     });
+}
+
+function writeFile(filename, title, description, content, sortNumber) {
+  const finalContent = `---
+title: ${yamlQuote(title)}
+description: ${yamlQuote(description)}
+sort: ${sortNumber}
+---
+
+${rewriteAssetLinks(content)}
+`;
+  fs.writeFileSync(path.join(targetDir, filename), finalContent, 'utf8');
 }
 
 // Read source file
@@ -43,24 +61,10 @@ description: "React setup guidance, notes, hooks, component patterns, and interv
 # React
 
 React setup guidance, notes, hooks, component patterns, and interview preparation.
-
-## Sections
-
-- [Introduction to React](/DSA-Notes-Problems/react/introduction)
-- [React Project Structure](/DSA-Notes-Problems/react/project-structure)
-- [JSX](/DSA-Notes-Problems/react/jsx)
-- [Components](/DSA-Notes-Problems/react/components)
-- [Props](/DSA-Notes-Problems/react/props)
-- [Hooks](/DSA-Notes-Problems/react/hooks)
-- [React Strict Mode](/DSA-Notes-Problems/react/strict-mode)
-- [Fragments](/DSA-Notes-Problems/react/fragments)
-- [Data Binding](/DSA-Notes-Problems/react/data-binding)
-- [React Setup Guideline](/DSA-Notes-Problems/react/react-setup-guideline)
-- [React Full Interview Questions](/DSA-Notes-Problems/react/react-full-interview-questions)
 `;
 fs.writeFileSync(path.join(targetDir, 'index.md'), indexContent, 'utf8');
 
-// Define sections to extract with simple string slicing for reliability
+// Define all section positions
 const introStart = content.indexOf('## What React Is');
 const projectStructureStart = content.indexOf('## React Project Structure');
 const jsxStart = content.indexOf('# JSX');
@@ -73,112 +77,107 @@ const dataBindingStart = content.indexOf('# Data Binding');
 
 // 1. Introduction to React
 let sectionContent = content.slice(introStart, projectStructureStart).trim();
-let finalContent = `---
-title: "Introduction to React"
-description: "Learn what React is, how it works, and its core features like Virtual DOM and Reconciliation."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'introduction.md'), finalContent, 'utf8');
+writeFile('introduction.md', 'Introduction to React', 'Learn what React is, how it works, and its core features like Virtual DOM and Reconciliation.', sectionContent, 1);
 
 // 2. React Project Structure
 sectionContent = content.slice(projectStructureStart, jsxStart).trim();
-finalContent = `---
-title: "React Project Structure"
-description: "Learn about React project structure and the mental model for how React works."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'project-structure.md'), finalContent, 'utf8');
+writeFile('project-structure.md', 'React Project Structure', 'Learn about React project structure and the mental model for how React works.', sectionContent, 2);
 
 // 3. JSX
 sectionContent = content.slice(jsxStart, componentsStart).trim();
-finalContent = `---
-title: "JSX"
-description: "Learn about JSX, React's JavaScript XML syntax for writing UI components."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'jsx.md'), finalContent, 'utf8');
+writeFile('jsx.md', 'JSX', 'Learn about JSX, React\'s JavaScript XML syntax for writing UI components.', sectionContent, 3);
 
 // 4. Components
 sectionContent = content.slice(componentsStart, propsStart).trim();
-finalContent = `---
-title: "Components"
-description: "Learn about React components, types of components, and component patterns."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'components.md'), finalContent, 'utf8');
+writeFile('components.md', 'Components', 'Learn about React components, types of components, and component patterns.', sectionContent, 4);
 
 // 5. Props
 sectionContent = content.slice(propsStart, hooksStart).trim();
-finalContent = `---
-title: "Props"
-description: "Learn about React props, how to use them, and common patterns with props."
----
+writeFile('props.md', 'Props', 'Learn about React props, how to use them, and common patterns with props.', sectionContent, 5);
 
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'props.md'), finalContent, 'utf8');
+// Hooks - split into individual files
+const hooksContent = content.slice(hooksStart, strictModeStart);
+const useStateStart = hooksContent.indexOf('# 🔹 1. useState');
+const useEffectStart = hooksContent.indexOf('# 🔹 2. useEffect');
+const useRefStart = hooksContent.indexOf('# 🔹 3. useRef');
+const useMemoStart = hooksContent.indexOf('# 🔹 4. useMemo');
+const useCallbackStart = hooksContent.indexOf('# 🔹 5. useCallback');
+const useContextStart = hooksContent.indexOf('# 🔹 6. useContext');
+const useReducerStart = hooksContent.indexOf('# 🔹 7. useReducer');
+const customHookStart = hooksContent.indexOf('# 🔹 8. Custom Hook');
+const rulesStart = hooksContent.indexOf('# 🧠 Very Important Rule');
 
-// 6. Hooks
-sectionContent = content.slice(hooksStart, strictModeStart).trim();
-finalContent = `---
+// Create hooks directory first
+const hooksDir = path.join(targetDir, 'hooks');
+ensureDir(hooksDir);
+
+// Hooks index file
+const hooksIndexContent = `---
 title: "Hooks"
 description: "Complete guide to React Hooks including useState, useEffect, useRef, useMemo, useCallback, useContext, useReducer, and custom hooks."
 ---
 
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'hooks.md'), finalContent, 'utf8');
+# Hooks
 
-// 7. React Strict Mode
+Complete guide to React Hooks including useState, useEffect, useRef, useMemo, useCallback, useContext, useReducer, and custom hooks.
+`;
+fs.writeFileSync(path.join(targetDir, 'hooks', 'index.md'), hooksIndexContent, 'utf8');
+
+// useState
+sectionContent = hooksContent.slice(useStateStart, useEffectStart).trim();
+writeFile('hooks/use-state.md', 'useState', 'useState hook for managing state in React components.', sectionContent, 1);
+
+// useEffect
+sectionContent = hooksContent.slice(useEffectStart, useRefStart).trim();
+writeFile('hooks/use-effect.md', 'useEffect', 'useEffect hook for side effects in React components.', sectionContent, 2);
+
+// useRef
+sectionContent = hooksContent.slice(useRefStart, useMemoStart).trim();
+writeFile('hooks/use-ref.md', 'useRef', 'useRef hook for storing values without re-render and accessing DOM.', sectionContent, 3);
+
+// useMemo
+sectionContent = hooksContent.slice(useMemoStart, useCallbackStart).trim();
+writeFile('hooks/use-memo.md', 'useMemo', 'useMemo hook for caching calculations in React.', sectionContent, 4);
+
+// useCallback
+sectionContent = hooksContent.slice(useCallbackStart, useContextStart).trim();
+writeFile('hooks/use-callback.md', 'useCallback', 'useCallback hook for memoizing functions in React.', sectionContent, 5);
+
+// useContext
+sectionContent = hooksContent.slice(useContextStart, useReducerStart).trim();
+writeFile('hooks/use-context.md', 'useContext', 'useContext hook for global data sharing in React.', sectionContent, 6);
+
+// useReducer
+sectionContent = hooksContent.slice(useReducerStart, customHookStart).trim();
+writeFile('hooks/use-reducer.md', 'useReducer', 'useReducer hook for complex state management.', sectionContent, 7);
+
+// Custom Hook & remaining hooks content
+sectionContent = hooksContent.slice(customHookStart).trim();
+writeFile('hooks/custom-hooks.md', 'Custom Hooks', 'Creating custom hooks for reusable logic in React.', sectionContent, 8);
+
+// 7. React Strict Mode (sort 6 because hooks are a submenu)
 sectionContent = content.slice(strictModeStart, fragmentsStart).trim();
-finalContent = `---
-title: "React Strict Mode"
-description: "Learn about React Strict Mode and how it helps identify potential problems in your application."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'strict-mode.md'), finalContent, 'utf8');
+writeFile('strict-mode.md', 'React Strict Mode', 'Learn about React Strict Mode and how it helps identify potential problems in your application.', sectionContent, 6);
 
 // 8. Fragments
 sectionContent = content.slice(fragmentsStart, dataBindingStart).trim();
-finalContent = `---
-title: "Fragments"
-description: "Learn about React Fragments and how to group elements without adding extra DOM nodes."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'fragments.md'), finalContent, 'utf8');
+writeFile('fragments.md', 'Fragments', 'Learn about React Fragments and how to group elements without adding extra DOM nodes.', sectionContent, 7);
 
 // 9. Data Binding
 sectionContent = content.slice(dataBindingStart).trim();
-finalContent = `---
-title: "Data Binding"
-description: "Learn about data binding in React, including one-way and two-way binding patterns."
----
-
-${rewriteAssetLinks(sectionContent)}
-`;
-fs.writeFileSync(path.join(targetDir, 'data-binding.md'), finalContent, 'utf8');
+writeFile('data-binding.md', 'Data Binding', 'Learn about data binding in React, including one-way and two-way binding patterns.', sectionContent, 8);
 
 // Copy existing files
 const existingFiles = [
   {
-    source: path.resolve(projectRoot, '..', 'REACT.js', 'React_setup_guideline.md'),
-    target: path.join(targetDir, 'react-setup-guideline.md')
+    source: path.resolve(projectRoot, '..', 'AllDocs', 'REACT.js', 'React_setup_guideline.md'),
+    target: path.join(targetDir, 'react-setup-guideline.md'),
+    sort: 9
   },
   {
-    source: path.resolve(projectRoot, '..', 'REACT.js', 'React-Full-Interview_Questions.md'),
-    target: path.join(targetDir, 'react-full-interview-questions.md')
+    source: path.resolve(projectRoot, '..', 'AllDocs', 'REACT.js', 'React-Full-Interview_Questions.md'),
+    target: path.join(targetDir, 'react-full-interview-questions.md'),
+    sort: 10
   }
 ];
 
@@ -194,6 +193,7 @@ for (const file of existingFiles) {
     let finalContent = `---
 title: ${yamlQuote(title)}
 description: ${yamlQuote(description)}
+sort: ${file.sort}
 ---
 
 ${rewriteAssetLinks(content)}
@@ -203,4 +203,3 @@ ${rewriteAssetLinks(content)}
 }
 
 console.log('React notes split successfully!');
-

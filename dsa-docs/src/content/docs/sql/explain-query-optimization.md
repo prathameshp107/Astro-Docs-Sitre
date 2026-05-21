@@ -1,6 +1,7 @@
 ---
 title: "EXPLAIN & Query Optimization"
 description: "EXPLAIN output columns:"
+sort: 26
 ---
 
 ## 16. EXPLAIN & Query Optimization

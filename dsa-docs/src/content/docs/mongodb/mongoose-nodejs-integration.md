@@ -1,6 +1,7 @@
 ---
 title: "Mongoose — Node.js Integration"
 description: "Mongoose is an ODM (Object Data Modeling) library for MongoDB in Node.js. It adds: - Schemas (structure for documents) - Validation (enforce rules before s"
+sort: 6
 ---
 
 ## 6. Mongoose — Node.js Integration

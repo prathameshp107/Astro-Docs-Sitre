@@ -1,6 +1,7 @@
 ---
 title: "Interview Cheat Sheet"
 description: "map filter reduce slice concat includes find"
+sort: 23
 ---
 
 #  Interview Cheat Sheet
