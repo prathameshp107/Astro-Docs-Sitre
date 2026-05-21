@@ -1,0 +1,44 @@
+<svg width="600" height="420" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="600" height="420" fill="#f4f7f9" rx="12"/>
+  
+  <text x="300" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#2c3e50">SQL LEFT JOIN</text>
+  <text x="300" y="65" text-anchor="middle" font-size="14" fill="#546e7a">All rows from Left table + matching rows from Right table</text>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <circle cx="360" cy="180" r="90" fill="white" stroke="#e67e22" stroke-width="3" stroke-dasharray="4,4"/>
+  <text x="340" y="150" font-size="15" font-weight="bold" fill="#d35400">Departments</text>
+  <text x="360" y="170" font-size="11" fill="#d35400">(Table B)</text>
+
+  <circle cx="240" cy="180" r="90" fill="#3498db" fill-opacity="0.8" stroke="#2980b9" stroke-width="4" filter="url(#shadow)"/>
+  <text x="170" y="150" font-size="15" font-weight="bold" fill="white">Employees</text>
+  <text x="170" y="170" font-size="11" fill="white">(Table A - Source)</text>
+
+  <text x="300" y="185" text-anchor="middle" font-size="12" font-weight="bold" fill="white">MATCH</text>
+
+  <path d="M 450,180 L 480,180" stroke="#d35400" stroke-width="2" fill="none" marker-end="url(#dot)"/>
+  <text x="490" y="185" font-size="12" fill="#e67e22" font-style="italic">Unmatched → NULL</text>
+
+  <rect x="80" y="300" width="440" height="90" rx="8" fill="white" stroke="#3498db" stroke-width="2"/>
+  <text x="95" y="325" font-size="13" font-weight="bold" fill="#2c3e50">Resulting Dataset:</text>
+  
+  <line x1="95" y1="335" x2="505" y2="335" stroke="#eee" stroke-width="1"/>
+  
+  <text x="95" y="355" font-size="12" fill="#2c3e50">Alice</text>
+  <text x="200" y="355" font-size="12" fill="#27ae60">✓ Matched</text>
+  <text x="320" y="355" font-size="12" fill="#7f8c8d">Dept: Engineering</text>
+  
+  <text x="95" y="375" font-size="12" fill="#2c3e50">Carol</text>
+  <text x="200" y="375" font-size="12" fill="#e74c3c">✗ No Match</text>
+  <text x="320" y="375" font-size="12" fill="#e67e22" font-weight="bold">Dept: NULL</text>
+
+  <defs>
+    <marker id="dot" markerWidth="10" markerHeight="10" refX="5" refY="5">
+      <circle cx="5" cy="5" r="3" fill="#e67e22" />
+    </marker>
+  </defs>
+</svg>

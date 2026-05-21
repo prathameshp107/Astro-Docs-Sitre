@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Complete Interview Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f13;
+    --bg2: #16161d;
+    --bg3: #1e1e28;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8e6f0;
+    --text2: #9b98b0;
+    --text3: #6b6880;
+    --accent-green: #4ade80;
+    --accent-yellow: #fbbf24;
+    --accent-red: #f87171;
+    --accent-blue: #60a5fa;
+    --accent-purple: #a78bfa;
+    --tag-easy: #052e16;
+    --tag-easy-text: #4ade80;
+    --tag-medium: #1c1500;
+    --tag-medium-text: #fbbf24;
+    --tag-hard: #1f0d0d;
+    --tag-hard-text: #f87171;
+    --code-bg: #12121a;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  a { color: var(--accent-blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .wrapper { display: flex; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 300px;
+    min-width: 300px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    padding: 0 0 2rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  .sidebar-header {
+    padding: 1.5rem 1.25rem 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg2);
+    z-index: 10;
+  }
+
+  .sidebar-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .search-box {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 12px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-box:focus { border-color: var(--border2); }
+  .search-box::placeholder { color: var(--text3); }
+
+  .level-section { padding: 0.75rem 0; }
+
+  .level-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.4rem 1.25rem;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .level-label .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-easy   { background: var(--accent-green); }
+  .dot-medium { background: var(--accent-yellow); }
+  .dot-hard   { background: var(--accent-red); }
+
+  .nav-item {
+    display: block;
+    padding: 5px 1.25rem 5px 2.5rem;
+    font-size: 12.5px;
+    color: var(--text2);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-item.active {
+    color: var(--text);
+    border-left-color: var(--accent-purple);
+    background: rgba(167,139,250,0.08);
+  }
+
+  .q-num {
+    display: inline-block;
+    width: 26px;
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+  }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2.5rem 3rem 4rem;
+    max-width: 860px;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: rgba(167,139,250,0.12);
+    color: var(--accent-purple);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-subtitle {
+    color: var(--text2);
+    font-size: 15px;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .stat-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* Level section header */
+  .level-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .level-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 5px;
+  }
+
+  .badge-easy   { background: var(--tag-easy);   color: var(--tag-easy-text); }
+  .badge-medium { background: var(--tag-medium);  color: var(--tag-medium-text); }
+  .badge-hard   { background: var(--tag-hard);    color: var(--tag-hard-text); }
+
+  .level-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  /* Question card */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    scroll-margin-top: 2rem;
+  }
+
+  .q-card:hover { border-color: var(--border2); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    padding-top: 3px;
+    min-width: 30px;
+  }
+
+  .q-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .q-toggle {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text3);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+
+  .q-card.open .q-toggle {
+    background: rgba(167,139,250,0.12);
+    border-color: rgba(167,139,250,0.3);
+    color: var(--accent-purple);
+    transform: rotate(45deg);
+  }
+
+  .q-body {
+    display: none;
+    padding: 0 1.4rem 1.4rem 3.3rem;
+  }
+
+  .q-card.open .q-body { display: block; }
+
+  /* Content styles inside answers */
+  .q-body p { color: var(--text2); margin-bottom: 0.9rem; font-size: 14.5px; }
+  .q-body p strong { color: var(--text); font-weight: 500; }
+  .q-body ul, .q-body ol { padding-left: 1.25rem; margin-bottom: 0.9rem; }
+  .q-body li { color: var(--text2); margin-bottom: 0.35rem; font-size: 14.5px; line-height: 1.6; }
+  .q-body li strong { color: var(--text); font-weight: 500; }
+  .q-body h4 { color: var(--text); font-size: 13.5px; font-weight: 600; margin: 1.2rem 0 0.5rem; letter-spacing: 0.01em; }
+
+  .insight-box {
+    background: rgba(96,165,250,0.07);
+    border: 1px solid rgba(96,165,250,0.18);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    font-size: 13.5px;
+    color: var(--text2);
+  }
+  .insight-box .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  .tip-box {
+    background: rgba(74,222,128,0.07);
+    border: 1px solid rgba(74,222,128,0.18);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    font-size: 13.5px;
+    color: var(--text2);
+  }
+  .tip-box .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-green);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  .warn-box {
+    background: rgba(251,191,36,0.07);
+    border: 1px solid rgba(251,191,36,0.18);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    font-size: 13.5px;
+    color: var(--text2);
+  }
+  .warn-box .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-yellow);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  /* Code block */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0 1rem;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    color: #c9c2e8;
+  }
+
+  .keyword  { color: #a78bfa; }
+  .func     { color: #60a5fa; }
+  .string   { color: #4ade80; }
+  .comment  { color: #4b4869; font-style: italic; }
+  .tag-c    { color: #f87171; }
+  .prop     { color: #fbbf24; }
+
+  /* Comparison table */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 13.5px;
+  }
+  .cmp-table th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--bg3);
+    color: var(--text2);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .cmp-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table td:first-child { color: var(--text); font-weight: 500; }
+
+  /* Tags row */
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-weight: 500;
+    background: rgba(167,139,250,0.1);
+    color: var(--accent-purple);
+    border: 1px solid rgba(167,139,250,0.2);
+  }
+
+  /* Sticky top bar */
+  .topbar {
+    display: none;
+    position: sticky;
+    top: 0;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1.5rem;
+    z-index: 20;
+    font-size: 12.5px;
+    color: var(--text2);
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { padding: 1.5rem 1.25rem 3rem; }
+    .page-title { font-size: 26px; }
+    .topbar { display: flex; }
+  }
+
+  /* Scrollbar */
+  .main::-webkit-scrollbar,
+  .sidebar::-webkit-scrollbar { width: 5px; }
+  .main::-webkit-scrollbar-track,
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .main::-webkit-scrollbar-thumb,
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  .divider { height: 1px; background: var(--border); margin: 2rem 0; }
+
+  /* Quick ref cheatsheet */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin: 1rem 0;
+  }
+
+  .cheat-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+  }
+
+  .cheat-hook {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent-purple);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .cheat-desc {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+<!-- Sidebar Index -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title">⚛ React Interview Guide</div>
+    <input class="search-box" type="text" id="searchBox" placeholder="Search questions..." oninput="filterNav(this.value)">
+  </div>
+
+  <div class="level-section">
+    <div class="level-label"><span class="dot dot-easy"></span>Easy — Q1–Q25</div>
+    <div id="nav-easy"></div>
+  </div>
+
+  <div class="level-section">
+    <div class="level-label"><span class="dot dot-medium"></span>Medium — Q26–Q47</div>
+    <div id="nav-medium"></div>
+  </div>
+
+  <div class="level-section">
+    <div class="level-label"><span class="dot dot-hard"></span>Hard — Q48–Q60</div>
+    <div id="nav-hard"></div>
+  </div>
+
+  <div class="level-section">
+    <div class="level-label">⚡ Cheatsheet</div>
+    <div class="nav-item" onclick="scrollTo('cheatsheet')">All hooks summary</div>
+    <div class="nav-item" onclick="scrollTo('comparisons')">Comparison tables</div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main" id="mainContent">
+
+  <div class="page-header">
+    <div class="hero-tag">2025–26 Edition</div>
+    <h1 class="page-title">React Complete<br>Interview Guide</h1>
+    <p class="page-subtitle">From Fresher to Senior — 60 questions covering React 16.8 → React 19, with expanded explanations, code examples, and interview tips.</p>
+    <div class="stats-row">
+      <div class="stat"><span class="stat-dot" style="background:var(--accent-green)"></span> 25 Easy questions</div>
+      <div class="stat"><span class="stat-dot" style="background:var(--accent-yellow)"></span> 22 Medium questions</div>
+      <div class="stat"><span class="stat-dot" style="background:var(--accent-red)"></span> 13 Hard questions</div>
+    </div>
+  </div>
+
+  <!-- EASY SECTION -->
+  <div class="level-header" id="easy-section">
+    <span class="level-badge badge-easy">Easy</span>
+    <h2 class="level-title">Fresher / Junior</h2>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card" id="q1">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q1</span>
+      <span class="q-title">What is React? Why do we use it?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Core</span><span class="tag">Basics</span></div>
+      <p>React is an <strong>open-source JavaScript library</strong> created by Meta (Facebook) for building user interfaces. It focuses entirely on the <strong>View layer</strong> — what the user sees and interacts with. It is not a framework; it doesn't dictate how you handle routing, HTTP calls, or styling. You pick and combine tools you like.</p>
+      <table class="cmp-table">
+        <tr><th>Problem without React</th><th>How React solves it</th></tr>
+        <tr><td>Manually updating DOM is slow and error-prone</td><td>Virtual DOM handles updates efficiently</td></tr>
+        <tr><td>Code gets messy in large apps</td><td>Component-based — break UI into small reusable pieces</td></tr>
+        <tr><td>Hard to share UI logic</td><td>Props + custom hooks allow reuse across components</td></tr>
+        <tr><td>Hard to manage app state</td><td>useState, useReducer, Context built-in</td></tr>
+      </table>
+      <pre><code><span class="comment">// Without React — imperative (tell browser HOW to update)</span>
+document.getElementById(<span class="string">'count'</span>).innerText = count;
+document.getElementById(<span class="string">'btn'</span>).addEventListener(<span class="string">'click'</span>, () => { ... });
+
+<span class="comment">// With React — declarative (describe WHAT you want)</span>
+<span class="keyword">function</span> <span class="func">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="func">useState</span>(<span class="string">0</span>);
+  <span class="keyword">return</span> &lt;<span class="tag-c">button</span> onClick={() => setCount(count + <span class="string">1</span>)}&gt;{count}&lt;/<span class="tag-c">button</span>&gt;;
+}</code></pre>
+      <div class="insight-box">
+        <div class="label">Interview tip</div>
+        React is a <strong>library</strong>, not a framework. The key distinction: with a library, <em>you</em> are in control and call it. With a framework like Angular, it calls your code. Next.js is a framework built on top of React.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="q2">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q2</span>
+      <span class="q-title">What is the difference between a Library and a Framework?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Basics</span></div>
+      <p>The core difference is about <strong>who is in control</strong> — known as the "Inversion of Control" principle.</p>
+      <table class="cmp-table">
+        <tr><th></th><th>Library (React)</th><th>Framework (Angular)</th></tr>
+        <tr><td>Control</td><td>You call the library when needed</td><td>Framework calls your code at designated points</td></tr>
+        <tr><td>Flexibility</td><td>Pick any tools alongside it</td><td>Follows framework conventions and structure</td></tr>
+        <tr><td>Size/Scope</td><td>Small — just the view layer</td><td>Full package: routing, HTTP, forms, etc.</td></tr>
+        <tr><td>Learning curve</td><td>Easier to start, compose yourself</td><td>Steeper but more structured and opinionated</td></tr>
+      </table>
+      <div class="tip-box">
+        <div class="label">Real-world analogy</div>
+        A library is like a toolbox — you pick the hammer, the screwdriver, whatever you need. A framework is like a pre-built construction system — everything is already decided for you, you just follow the workflow.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="q3">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q3</span>
+      <span class="q-title">What is JSX?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Core</span><span class="tag">JSX</span></div>
+      <p>JSX stands for <strong>JavaScript XML</strong>. It's a syntax extension that lets you write HTML-like code directly inside JavaScript. Babel (a transpiler) converts it into regular JavaScript before it runs in the browser.</p>
+      <p>JSX is not mandatory — you could write <code>React.createElement()</code> calls manually — but JSX makes code far more readable and is used in virtually every React codebase.</p>
+      <pre><code><span class="comment">// JSX (what you write)</span>
+<span class="keyword">const</span> element = &lt;<span class="tag-c">h1</span> <span class="prop">className</span>=<span class="string">"title"</span>&gt;Hello World&lt;/<span class="tag-c">h1</span>&gt;;
+
+<span class="comment">// What Babel compiles it to</span>
+<span class="keyword">const</span> element = React.<span class="func">createElement</span>(<span class="string">'h1'</span>, { <span class="prop">className</span>: <span class="string">'title'</span> }, <span class="string">'Hello World'</span>);</code></pre>
+      <h4>Key JSX rules to remember:</h4>
+      <ul>
+        <li>Must return <strong>one root element</strong> — wrap siblings in <code>&lt;&gt;&lt;/&gt;</code> (Fragment) if needed</li>
+        <li>Use <code>className</code> instead of <code>class</code> (since <code>class</code> is a JS keyword)</li>
+        <li>All tags must be closed — even self-closing ones: <code>&lt;img /&gt;</code>, <code>&lt;br /&gt;</code></li>
+        <li>JavaScript expressions go inside <code>{ }</code> curly braces</li>
+        <li>Attributes use camelCase: <code>onClick</code>, <code>onChange</code>, <code>maxLength</code></li>
+      </ul>
+      <div class="warn-box">
+        <div class="label">Common gotcha</div>
+        JSX is not HTML. <code>class</code> → <code>className</code>, <code>for</code> → <code>htmlFor</code>, and event names are camelCase (<code>onclick</code> → <code>onClick</code>). These trip up many beginners.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="q4">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q4</span>
+      <span class="q-title">What is a Component in React?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Core</span><span class="tag">Components</span></div>
+      <p>A component is an <strong>independent, reusable piece of UI</strong>. Think of it like a LEGO brick — you build complex interfaces by combining small, focused components. Each component manages its own structure, style, and behavior.</p>
+      <p>React has two types: <strong>Functional components</strong> (modern, use these always) and <strong>Class components</strong> (legacy, avoid in new code). Since React 16.8 introduced Hooks, functional components can do everything class components can.</p>
+      <pre><code><span class="comment">// Functional Component — modern standard</span>
+<span class="keyword">function</span> <span class="func">Welcome</span>({ name }) {
+  <span class="keyword">return</span> &lt;<span class="tag-c">h1</span>&gt;Hello, {name}!&lt;/<span class="tag-c">h1</span>&gt;;
+}
+
+<span class="comment">// Use it like an HTML element</span>
+&lt;<span class="tag-c">Welcome</span> <span class="prop">name</span>=<span class="string">"Prathamesh"</span> /&gt;
+<span class="comment">// Renders: Hello, Prathamesh!</span></code></pre>
+      <div class="tip-box">
+        <div class="label">Naming rule</div>
+        Component names must start with a capital letter. <code>&lt;button&gt;</code> is a native HTML element; <code>&lt;Button&gt;</code> is your custom React component. This is how React tells them apart.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="q5">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q5</span>
+      <span class="q-title">What are Props?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Core</span><span class="tag">Props</span></div>
+      <p>Props (short for <strong>Properties</strong>) are the mechanism for passing data <strong>from a parent component to a child component</strong>. They flow in one direction only: top-down. A child component receives props as its function arguments.</p>
+      <p><strong>Props are read-only</strong> — a child should never try to modify its own props. This one-way data flow makes React apps predictable and easy to debug. If you need to update data, it must happen in the parent.</p>
+      <pre><code><span class="keyword">function</span> <span class="func">App</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">UserCard</span>
+      <span class="prop">name</span>=<span class="string">"Prathamesh"</span>
+      <span class="prop">age</span>={<span class="string">22</span>}
+      <span class="prop">isAdmin</span>={<span class="keyword">true</span>}
+      <span class="prop">onClick</span>={() => alert(<span class="string">'clicked'</span>)}
+    /&gt;
+  );
+}
+
+<span class="keyword">function</span> <span class="func">UserCard</span>({ name, age, isAdmin, onClick }) {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span> onClick={onClick}&gt;
+      &lt;<span class="tag-c">h2</span>&gt;{name}&lt;/<span class="tag-c">h2</span>&gt;
+      &lt;<span class="tag-c">p</span>&gt;Age: {age}&lt;/<span class="tag-c">p</span>&gt;
+      {isAdmin &amp;&amp; &lt;<span class="tag-c">span</span>&gt;Admin&lt;/<span class="tag-c">span</span>&gt;}
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+}</code></pre>
+      <div class="insight-box">
+        <div class="label">Default props</div>
+        You can set default values directly in the function signature: <code>function Button({ label = 'Click me', color = 'blue' })</code>. If the parent doesn't pass that prop, the default is used.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="q-card" id="q6">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q6</span>
+      <span class="q-title">What is State?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">State</span><span class="tag">useState</span></div>
+      <p>State is a component's <strong>own internal data that can change over time</strong>. Unlike props (which come from the parent), state is created and owned by the component itself. Crucially, when state changes, React <strong>automatically re-renders</strong> the component to reflect the new data in the UI.</p>
+      <p>In functional components, state is managed using the <code>useState</code> hook. It returns a pair: the current value and a setter function. You must always use the setter — never mutate state directly.</p>
+      <pre><code><span class="keyword">import</span> { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="keyword">function</span> <span class="func">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="func">useState</span>(<span class="string">0</span>); <span class="comment">// initial value = 0</span>
+
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span>&gt;
+      &lt;<span class="tag-c">p</span>&gt;Count: {count}&lt;/<span class="tag-c">p</span>&gt;
+      &lt;<span class="tag-c">button</span> onClick={() => setCount(count + <span class="string">1</span>)}&gt;+&lt;/<span class="tag-c">button</span>&gt;
+      &lt;<span class="tag-c">button</span> onClick={() => setCount(count - <span class="string">1</span>)}&gt;-&lt;/<span class="tag-c">button</span>&gt;
+      &lt;<span class="tag-c">button</span> onClick={() => setCount(<span class="string">0</span>)}&gt;Reset&lt;/<span class="tag-c">button</span>&gt;
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+}</code></pre>
+      <div class="warn-box">
+        <div class="label">Never mutate state directly</div>
+        <code>count = count + 1</code> ❌ — this changes the variable but doesn't trigger a re-render.<br>
+        <code>setCount(count + 1)</code> ✅ — this tells React state changed, triggering a re-render.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="q7">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q7</span>
+      <span class="q-title">What is the difference between Props and State?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Props</span><span class="tag">State</span></div>
+      <table class="cmp-table">
+        <tr><th>Aspect</th><th>Props</th><th>State</th></tr>
+        <tr><td>Who owns it</td><td>Parent component</td><td>The component itself</td></tr>
+        <tr><td>Can it change</td><td>❌ Read-only from child's view</td><td>✅ Yes, via the setter function</td></tr>
+        <tr><td>Who changes it</td><td>Only the parent (source component)</td><td>Only the component that owns it</td></tr>
+        <tr><td>How to access</td><td>Function parameter / destructure</td><td>useState hook</td></tr>
+        <tr><td>Triggers re-render</td><td>Yes, when parent re-renders with new value</td><td>Yes, when setter is called</td></tr>
+      </table>
+      <p>A simple mental model: <strong>props are like function arguments</strong> — passed in from outside. <strong>State is like local variables</strong> — defined and managed inside the function.</p>
+      <div class="tip-box">
+        <div class="label">Key insight</div>
+        The same piece of data can be <em>state</em> in one component and a <em>prop</em> in another. A parent stores it as state (can change it), then passes it as a prop to children (who read it but can't change it).
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="q8">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q8</span>
+      <span class="q-title">What is the Virtual DOM?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Internals</span><span class="tag">Performance</span></div>
+      <p>The Virtual DOM is a <strong>lightweight JavaScript object representation</strong> of the real DOM, kept in memory by React. Instead of updating the real DOM every time something changes, React first updates its virtual copy, compares old vs. new (called <strong>diffing</strong>), and then makes the minimum necessary changes to the real DOM.</p>
+      <pre><code><span class="comment">// The update flow:</span>
+<span class="comment">// 1. State changes → React re-renders component (creates new Virtual DOM)</span>
+<span class="comment">// 2. React DIFFS: new Virtual DOM vs old Virtual DOM</span>
+<span class="comment">// 3. React calculates minimal set of real DOM updates needed</span>
+<span class="comment">// 4. React updates only those parts of the real DOM</span>
+<span class="comment">// 5. Browser paints the minimal changes</span></code></pre>
+      <p>Real DOM operations (adding, removing, modifying elements) are expensive because they trigger browser <strong>reflows and repaints</strong>. Comparing plain JavaScript objects (virtual DOM) is extremely fast by comparison. React also <strong>batches multiple updates</strong> into a single DOM pass.</p>
+      <div class="insight-box">
+        <div class="label">Misconception</div>
+        The Virtual DOM isn't universally faster — for very simple updates, it adds overhead. Its real benefit is providing a <strong>declarative programming model</strong> (you describe what the UI should look like, React figures out how to get there) while being fast enough for complex UIs.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="q9">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q9</span>
+      <span class="q-title">What is the difference between React.createElement and JSX?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">JSX</span><span class="tag">Internals</span></div>
+      <p>They produce <strong>exactly the same result</strong>. JSX is just syntactic sugar — Babel transforms every JSX element into a <code>React.createElement()</code> call at build time. In React 17+, the import is automatic, so you no longer need <code>import React from 'react'</code> just to use JSX.</p>
+      <pre><code><span class="comment">// JSX (what you write)</span>
+<span class="keyword">const</span> element = (
+  &lt;<span class="tag-c">div</span> <span class="prop">className</span>=<span class="string">"card"</span>&gt;
+    &lt;<span class="tag-c">h1</span>&gt;Hello&lt;/<span class="tag-c">h1</span>&gt;
+  &lt;/<span class="tag-c">div</span>&gt;
+);
+
+<span class="comment">// What Babel compiles it to (React 16 and below)</span>
+<span class="keyword">const</span> element = React.<span class="func">createElement</span>(
+  <span class="string">'div'</span>,
+  { <span class="prop">className</span>: <span class="string">'card'</span> },
+  React.<span class="func">createElement</span>(<span class="string">'h1'</span>, <span class="keyword">null</span>, <span class="string">'Hello'</span>)
+);
+
+<span class="comment">// Both produce the same React element object:</span>
+<span class="comment">// { type: 'div', props: { className: 'card', children: [...] } }</span></code></pre>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="q10">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q10</span>
+      <span class="q-title">How do you render a list in React?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Lists</span><span class="tag">Keys</span></div>
+      <p>Use JavaScript's <code>.map()</code> method to transform an array of data into an array of JSX elements. React renders arrays of elements natively. Always provide a unique <code>key</code> prop for each item — React uses it for efficient updates.</p>
+      <pre><code><span class="keyword">const</span> users = [
+  { id: <span class="string">1</span>, name: <span class="string">'Prathamesh'</span> },
+  { id: <span class="string">2</span>, name: <span class="string">'Rahul'</span> },
+  { id: <span class="string">3</span>, name: <span class="string">'Priya'</span> },
+];
+
+<span class="keyword">function</span> <span class="func">UserList</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">ul</span>&gt;
+      {users.<span class="func">map</span>(user =&gt; (
+        &lt;<span class="tag-c">li</span> <span class="prop">key</span>={user.id}&gt;{user.name}&lt;/<span class="tag-c">li</span>&gt;
+      ))}
+    &lt;/<span class="tag-c">ul</span>&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card" id="q11">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q11</span>
+      <span class="q-title">What is the key prop and why is it needed?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Lists</span><span class="tag">Reconciliation</span></div>
+      <p>The <code>key</code> prop helps React identify <strong>which specific list items changed, were added, or were removed</strong> between renders. Without keys, React has to re-render every item in the list any time one item changes.</p>
+      <pre><code><span class="comment">// ❌ Using index — causes bugs when list order changes</span>
+{todos.map((todo, i) =&gt; &lt;<span class="tag-c">TodoItem</span> <span class="prop">key</span>={i} <span class="prop">todo</span>={todo} /&gt;)}
+
+<span class="comment">// ✅ Using stable unique ID — always correct</span>
+{todos.map(todo =&gt; &lt;<span class="tag-c">TodoItem</span> <span class="prop">key</span>={todo.id} <span class="prop">todo</span>={todo} /&gt;)}</code></pre>
+      <p><strong>Why index-as-key is harmful:</strong> When you delete an item at position 0, all remaining items shift — their index-based keys change. React sees key=0 as "changed" (not deleted), so it updates 2 items instead of removing 1. With ID-based keys, React correctly removes just the deleted item's DOM node.</p>
+      <div class="warn-box">
+        <div class="label">Key rules</div>
+        Keys must be <strong>unique among siblings</strong> (not globally). Keys must be <strong>stable</strong> — using <code>Math.random()</code> as a key is even worse than index because it generates a new key every render, causing every component to remount.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="q12">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q12</span>
+      <span class="q-title">What is Conditional Rendering?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">JSX</span><span class="tag">Patterns</span></div>
+      <p>Conditional rendering means showing or hiding UI elements <strong>based on a condition</strong> — like showing a login button only when the user is logged out. React uses standard JavaScript conditionals since JSX compiles to JS.</p>
+      <pre><code><span class="keyword">function</span> <span class="func">UserGreeting</span>({ isLoggedIn, name }) {
+  <span class="comment">// Method 1: if/else — good for large blocks</span>
+  <span class="keyword">if</span> (!isLoggedIn) <span class="keyword">return</span> &lt;<span class="tag-c">p</span>&gt;Please log in&lt;/<span class="tag-c">p</span>&gt;;
+
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span>&gt;
+      {<span class="comment">/* Method 2: Ternary — great for either/or */</span>}
+      &lt;<span class="tag-c">h1</span>&gt;{isLoggedIn ? <span class="string">`Welcome, ${name}!`</span> : <span class="string">'Stranger'</span>}&lt;/<span class="tag-c">h1</span>&gt;
+
+      {<span class="comment">/* Method 3: && — show only when true */</span>}
+      {isLoggedIn &amp;&amp; &lt;<span class="tag-c">button</span>&gt;Logout&lt;/<span class="tag-c">button</span>&gt;}
+
+      {<span class="comment">/* Method 4: Nullish fallback */</span>}
+      &lt;<span class="tag-c">p</span>&gt;{name || <span class="string">'Anonymous'</span>}&lt;/<span class="tag-c">p</span>&gt;
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+}</code></pre>
+      <div class="warn-box">
+        <div class="label">Classic gotcha — the 0 bug</div>
+        <code>{count && &lt;Badge /&gt;}</code> renders <strong>"0"</strong> when count is 0 because 0 is a falsy value that JSX renders as text.<br>
+        Fix: <code>{count &gt; 0 && &lt;Badge /&gt;}</code> — use an explicit comparison that returns a boolean.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="q13">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q13</span>
+      <span class="q-title">How do you handle events in React?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Events</span><span class="tag">Handlers</span></div>
+      <p>React uses <strong>synthetic events</strong> — wrappers around native browser events that normalize behavior across browsers. Event names are written in camelCase (<code>onClick</code>, not <code>onclick</code>), and you pass a function reference, not a string.</p>
+      <pre><code><span class="keyword">function</span> <span class="func">Form</span>() {
+  <span class="keyword">const</span> <span class="func">handleSubmit</span> = (e) => {
+    e.<span class="func">preventDefault</span>(); <span class="comment">// prevent page reload</span>
+    console.<span class="func">log</span>(<span class="string">'submitted'</span>);
+  };
+
+  <span class="keyword">const</span> <span class="func">handleChange</span> = (e) => {
+    console.<span class="func">log</span>(e.target.value); <span class="comment">// get input value</span>
+  };
+
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">form</span> onSubmit={handleSubmit}&gt;
+      &lt;<span class="tag-c">input</span> onChange={handleChange} /&gt;
+      &lt;<span class="tag-c">button</span> <span class="prop">type</span>=<span class="string">"submit"</span>&gt;Submit&lt;/<span class="tag-c">button</span>&gt;
+    &lt;/<span class="tag-c">form</span>&gt;
+  );
+}
+
+<span class="comment">// Passing arguments — wrap in arrow function</span>
+&lt;<span class="tag-c">button</span> onClick={() => handleDelete(item.id)}&gt;Delete&lt;/<span class="tag-c">button</span>&gt;
+<span class="comment">// ❌ Wrong: onClick={handleDelete(item.id)} — calls immediately on render!</span></code></pre>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="q14">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q14</span>
+      <span class="q-title">What is a Fragment in React?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">JSX</span></div>
+      <p>A Fragment lets you <strong>return multiple sibling elements without adding an extra wrapper node to the DOM</strong>. This matters because extra wrappers can break CSS layouts (flexbox/grid parent rules), create invalid HTML (e.g., table rows), or add unnecessary nesting.</p>
+      <pre><code><span class="comment">// ❌ Extra div pollutes DOM and can break flex/grid layouts</span>
+<span class="keyword">return</span> (&lt;<span class="tag-c">div</span>&gt;&lt;<span class="tag-c">h1</span>&gt;Title&lt;/<span class="tag-c">h1</span>&gt;&lt;<span class="tag-c">p</span>&gt;Content&lt;/<span class="tag-c">p</span>&gt;&lt;/<span class="tag-c">div</span>&gt;);
+
+<span class="comment">// ✅ Short syntax Fragment — renders nothing in DOM</span>
+<span class="keyword">return</span> (&lt;&gt;&lt;<span class="tag-c">h1</span>&gt;Title&lt;/<span class="tag-c">h1</span>&gt;&lt;<span class="tag-c">p</span>&gt;Content&lt;/<span class="tag-c">p</span>&gt;&lt;/&gt;);
+
+<span class="comment">// ✅ Explicit syntax — use when you need a key prop (in lists)</span>
+<span class="keyword">return</span> (
+  &lt;<span class="tag-c">React.Fragment</span> <span class="prop">key</span>={item.id}&gt;
+    &lt;<span class="tag-c">dt</span>&gt;{item.term}&lt;/<span class="tag-c">dt</span>&gt;
+    &lt;<span class="tag-c">dd</span>&gt;{item.description}&lt;/<span class="tag-c">dd</span>&gt;
+  &lt;/<span class="tag-c">React.Fragment</span>&gt;
+);</code></pre>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="q15">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q15</span>
+      <span class="q-title">What is useState?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">State</span></div>
+      <p><code>useState</code> is the foundational React hook for adding local state to functional components. It returns a tuple: <strong>[currentValue, setterFunction]</strong>. The setter can accept either a new value directly, or a <strong>function</strong> that receives the previous state (the functional update form — use this when the new state depends on the old one, especially in async contexts).</p>
+      <pre><code><span class="keyword">const</span> [count, setCount] = <span class="func">useState</span>(<span class="string">0</span>);
+
+<span class="comment">// Direct update</span>
+<span class="func">setCount</span>(<span class="string">5</span>);
+
+<span class="comment">// Functional update — safe in async / closures</span>
+<span class="func">setCount</span>(prev => prev + <span class="string">1</span>);
+
+<span class="comment">// Updating object state — always spread old state first!</span>
+<span class="keyword">const</span> [user, setUser] = <span class="func">useState</span>({ name: <span class="string">''</span>, age: <span class="string">0</span> });
+<span class="func">setUser</span>(prev => ({ ...prev, name: <span class="string">'Prathamesh'</span> })); <span class="comment">// keeps age</span>
+
+<span class="comment">// Lazy initialization — pass a function for expensive initial value</span>
+<span class="keyword">const</span> [data, setData] = <span class="func">useState</span>(() => <span class="func">parseExpensiveData</span>());
+<span class="comment">// parseExpensiveData only runs once, not on every render</span></code></pre>
+      <div class="warn-box">
+        <div class="label">State updates are asynchronous</div>
+        Calling <code>setCount(count + 1)</code> three times in a row won't give you +3 — all three calls see the same stale <code>count</code>. Use the functional form <code>setCount(c => c + 1)</code> to chain correctly.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card" id="q16">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q16</span>
+      <span class="q-title">What is useEffect?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">Side Effects</span></div>
+      <p><code>useEffect</code> lets you perform <strong>side effects</strong> in functional components — anything that reaches outside React's render cycle: API calls, timers, DOM manipulation, event listener setup, localStorage reads, etc.</p>
+      <p>It accepts two arguments: a callback function (the effect) and an optional <strong>dependency array</strong> that controls when the effect re-runs. Optionally, the callback can return a <strong>cleanup function</strong> that runs before the next effect execution or on component unmount.</p>
+      <pre><code><span class="comment">// 1. Runs after EVERY render (no array) — rarely needed</span>
+<span class="func">useEffect</span>(() => { document.title = <span class="string">'Updated'</span>; });
+
+<span class="comment">// 2. Runs ONCE after mount (empty array) — like componentDidMount</span>
+<span class="func">useEffect</span>(() => { <span class="func">fetchInitialData</span>(); }, []);
+
+<span class="comment">// 3. Runs when dependency changes</span>
+<span class="func">useEffect</span>(() => {
+  <span class="func">fetchUser</span>(userId);
+}, [userId]);
+
+<span class="comment">// 4. With cleanup — prevents memory leaks</span>
+<span class="func">useEffect</span>(() => {
+  <span class="keyword">const</span> timer = <span class="func">setInterval</span>(() => setCount(c => c + <span class="string">1</span>), <span class="string">1000</span>);
+  <span class="keyword">return</span> () => <span class="func">clearInterval</span>(timer); <span class="comment">// runs on unmount!</span>
+}, []);</code></pre>
+      <div class="tip-box">
+        <div class="label">The isMounted pattern</div>
+        In async effects, always guard state updates with an <code>isMounted</code> flag or <code>AbortController</code> to prevent "can't perform state update on unmounted component" warnings when a component unmounts before a fetch completes.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card" id="q17">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q17</span>
+      <span class="q-title">What is useRef?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">DOM</span></div>
+      <p><code>useRef</code> returns a mutable object <code>{ current: value }</code> that persists across renders. The key difference from state: <strong>changing <code>.current</code> does NOT trigger a re-render</strong>. This makes it perfect for two use cases: accessing DOM nodes directly, and storing values that need to persist but shouldn't cause re-renders (like timer IDs, previous values, or flags).</p>
+      <pre><code><span class="comment">// Use case 1: DOM access</span>
+<span class="keyword">function</span> <span class="func">TextInput</span>() {
+  <span class="keyword">const</span> inputRef = <span class="func">useRef</span>(<span class="keyword">null</span>);
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="tag-c">input</span> <span class="prop">ref</span>={inputRef} /&gt;
+      &lt;<span class="tag-c">button</span> onClick={() => inputRef.current.<span class="func">focus</span>()}&gt;Focus&lt;/<span class="tag-c">button</span>&gt;
+    &lt;/&gt;
+  );
+}
+
+<span class="comment">// Use case 2: Persist value without re-render</span>
+<span class="keyword">function</span> <span class="func">Timer</span>() {
+  <span class="keyword">const</span> intervalRef = <span class="func">useRef</span>(<span class="keyword">null</span>);
+  <span class="keyword">const</span> <span class="func">start</span> = () => {
+    intervalRef.current = <span class="func">setInterval</span>(() => console.<span class="func">log</span>(<span class="string">'tick'</span>), <span class="string">1000</span>);
+  };
+  <span class="keyword">const</span> <span class="func">stop</span> = () => <span class="func">clearInterval</span>(intervalRef.current);
+}</code></pre>
+      <div class="insight-box">
+        <div class="label">Ref vs State</div>
+        Use <strong>state</strong> when the value should be displayed in the UI (needs re-render). Use <strong>ref</strong> when you need to track something internally but the UI doesn't depend on it directly (e.g., tracking whether a component mounted, storing the previous value).
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card" id="q18">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q18</span>
+      <span class="q-title">What is useContext?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">Context</span></div>
+      <p><code>useContext</code> lets any component in a tree <strong>read from a Context without prop drilling</strong>. Context provides a way to share data globally across a component tree — like the current theme, authenticated user, or locale. Three steps: create → provide → consume.</p>
+      <pre><code><span class="comment">// 1. Create context (with a default value)</span>
+<span class="keyword">const</span> ThemeContext = <span class="func">createContext</span>(<span class="string">'light'</span>);
+
+<span class="comment">// 2. Wrap your component tree in the Provider</span>
+<span class="keyword">function</span> <span class="func">App</span>() {
+  <span class="keyword">const</span> [theme, setTheme] = <span class="func">useState</span>(<span class="string">'light'</span>);
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">ThemeContext.Provider</span> <span class="prop">value</span>={{ theme, setTheme }}&gt;
+      &lt;<span class="tag-c">Header</span> /&gt; <span class="comment">// can access theme without props!</span>
+      &lt;<span class="tag-c">Main</span> /&gt;
+    &lt;/<span class="tag-c">ThemeContext.Provider</span>&gt;
+  );
+}
+
+<span class="comment">// 3. Read it anywhere in the tree — no prop threading needed</span>
+<span class="keyword">function</span> <span class="func">Header</span>() {
+  <span class="keyword">const</span> { theme, setTheme } = <span class="func">useContext</span>(ThemeContext);
+  <span class="keyword">return</span> &lt;<span class="tag-c">header</span> <span class="prop">className</span>={theme}&gt;...&lt;/<span class="tag-c">header</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="q-card" id="q19">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q19</span>
+      <span class="q-title">What is Prop Drilling and why is it a problem?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Patterns</span><span class="tag">Context</span></div>
+      <p>Prop drilling is when you pass data through <strong>multiple intermediate component layers</strong> that don't actually use the data — just to get it to a deeply nested child that needs it. It makes code harder to maintain: if the data shape changes, you must update every component in the chain.</p>
+      <pre><code><span class="comment">// ❌ Prop drilling — Layout and Sidebar don't use 'user'</span>
+<span class="func">App</span>({ user }) → &lt;<span class="tag-c">Layout</span> user={user}/&gt; → &lt;<span class="tag-c">Sidebar</span> user={user}/&gt; → &lt;<span class="tag-c">UserAvatar</span> user={user}/&gt;
+
+<span class="comment">// ✅ Context — UserAvatar reads directly, no drilling</span>
+<span class="keyword">function</span> <span class="func">UserAvatar</span>() {
+  <span class="keyword">const</span> { user } = <span class="func">useContext</span>(UserContext); <span class="comment">// reads directly!</span>
+  <span class="keyword">return</span> &lt;<span class="tag-c">img</span> <span class="prop">alt</span>={user.name} /&gt;;
+}</code></pre>
+      <div class="tip-box">
+        <div class="label">When prop drilling is OK</div>
+        1-2 levels of passing props is completely fine — don't over-engineer with Context for shallow trees. Context adds indirection and makes components harder to reuse in isolation. Use it for truly global data (auth, theme, locale) or data shared across distant parts of the tree.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="q-card" id="q20">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q20</span>
+      <span class="q-title">What is the difference between null, undefined, and false in JSX?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">JSX</span><span class="tag">Gotchas</span></div>
+      <p><code>null</code>, <code>undefined</code>, <code>false</code>, and <code>true</code> are all <strong>valid JSX children that render nothing</strong>. This is intentional — it enables conditional rendering patterns like <code>{isLoggedIn && &lt;Menu /&gt;}</code>.</p>
+      <pre><code>{<span class="keyword">null</span>}       <span class="comment">// renders nothing</span>
+{<span class="keyword">undefined</span>}  <span class="comment">// renders nothing</span>
+{<span class="keyword">false</span>}      <span class="comment">// renders nothing</span>
+{<span class="keyword">true</span>}       <span class="comment">// renders nothing</span>
+{<span class="string">0</span>}          <span class="comment">// ⚠️ renders "0" — common bug!</span>
+{<span class="string">''</span>}         <span class="comment">// renders empty string (invisible)</span>
+
+<span class="comment">// Classic 0 bug — always use boolean condition with &&</span>
+<span class="keyword">const</span> count = <span class="string">0</span>;
+{count &amp;&amp; &lt;<span class="tag-c">Badge</span> /&gt;}      <span class="comment">// ❌ renders "0" on screen!</span>
+{count &gt; <span class="string">0</span> &amp;&amp; &lt;<span class="tag-c">Badge</span> /&gt;}  <span class="comment">// ✅ renders nothing</span>
+{!!count &amp;&amp; &lt;<span class="tag-c">Badge</span> /&gt;}    <span class="comment">// ✅ also works (double negation)</span></code></pre>
+    </div>
+  </div>
+
+  <!-- Q21-Q25 condensed -->
+  <div class="q-card" id="q21">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q21</span>
+      <span class="q-title">How do you pass data from Child to Parent?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Patterns</span><span class="tag">Callbacks</span></div>
+      <p>React's data flow is <strong>unidirectional</strong> — parent to child only. To send data upward, the parent passes a <strong>callback function as a prop</strong>. The child calls that function with the data it wants to send up. This pattern preserves React's one-way data flow.</p>
+      <pre><code><span class="keyword">function</span> <span class="func">Parent</span>() {
+  <span class="keyword">const</span> [msg, setMsg] = <span class="func">useState</span>(<span class="string">''</span>);
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span>&gt;
+      &lt;<span class="tag-c">p</span>&gt;Child said: {msg}&lt;/<span class="tag-c">p</span>&gt;
+      &lt;<span class="tag-c">Child</span> <span class="prop">onSend</span>={setMsg} /&gt; <span class="comment">// pass setter as callback</span>
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+}
+
+<span class="keyword">function</span> <span class="func">Child</span>({ onSend }) {
+  <span class="keyword">const</span> [input, setInput] = <span class="func">useState</span>(<span class="string">''</span>);
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="tag-c">input</span> <span class="prop">value</span>={input} onChange={e => setInput(e.target.value)} /&gt;
+      &lt;<span class="tag-c">button</span> onClick={() => <span class="func">onSend</span>(input)}&gt;Send&lt;/<span class="tag-c">button</span>&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q22">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q22</span>
+      <span class="q-title">What are Controlled and Uncontrolled Components?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Forms</span><span class="tag">Patterns</span></div>
+      <p>A <strong>controlled component</strong> is an input whose value is driven by React state — React is the "single source of truth." An <strong>uncontrolled component</strong> lets the DOM manage its own state; you read it when needed via a ref.</p>
+      <table class="cmp-table">
+        <tr><th></th><th>Controlled</th><th>Uncontrolled</th></tr>
+        <tr><td>Source of truth</td><td>React state</td><td>DOM itself</td></tr>
+        <tr><td>Access value</td><td><code>value</code> prop + <code>onChange</code></td><td><code>ref.current.value</code></td></tr>
+        <tr><td>Best for</td><td>Validation, formatting, dependent fields</td><td>File inputs, simple forms</td></tr>
+      </table>
+      <pre><code><span class="comment">// Controlled — React owns the value</span>
+<span class="keyword">const</span> [val, setVal] = <span class="func">useState</span>(<span class="string">''</span>);
+&lt;<span class="tag-c">input</span> <span class="prop">value</span>={val} onChange={e => setVal(e.target.value)} /&gt;
+
+<span class="comment">// Uncontrolled — DOM owns the value, read on demand</span>
+<span class="keyword">const</span> ref = <span class="func">useRef</span>();
+&lt;<span class="tag-c">input</span> <span class="prop">defaultValue</span>=<span class="string">"initial"</span> <span class="prop">ref</span>={ref} /&gt;
+<span class="comment">// Read on submit: ref.current.value</span></code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q23">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q23</span>
+      <span class="q-title">What is React.StrictMode?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Dev Tools</span><span class="tag">Debugging</span></div>
+      <p><code>React.StrictMode</code> is a development-only wrapper that activates extra checks and warnings to help you write better React code. It has <strong>no effect in production</strong>.</p>
+      <p>Most notably in React 18, it intentionally <strong>mounts every component twice</strong> (mount → unmount → mount) to surface bugs from missing cleanup functions in effects. If your app breaks on double-mount, you have a cleanup problem.</p>
+      <pre><code>ReactDOM.<span class="func">createRoot</span>(document.<span class="func">getElementById</span>(<span class="string">'root'</span>)).<span class="func">render</span>(
+  &lt;<span class="tag-c">React.StrictMode</span>&gt;
+    &lt;<span class="tag-c">App</span> /&gt;
+  &lt;/<span class="tag-c">React.StrictMode</span>&gt;
+);</code></pre>
+      <p><strong>What StrictMode detects:</strong> deprecated API usage, missing cleanup in effects, impure render functions, legacy context usage, and deprecated findDOMNode.</p>
+    </div>
+  </div>
+
+  <div class="q-card" id="q24">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q24</span>
+      <span class="q-title">What is the difference between export default and named export?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">JavaScript</span><span class="tag">Modules</span></div>
+      <pre><code><span class="comment">// Named export — exact name required when importing</span>
+<span class="keyword">export function</span> <span class="func">Button</span>() { ... }
+<span class="keyword">export const</span> API_URL = <span class="string">'https://api.example.com'</span>;
+<span class="keyword">import</span> { Button, API_URL } <span class="keyword">from</span> <span class="string">'./components'</span>; <span class="comment">// must match</span>
+
+<span class="comment">// Default export — can import with any name</span>
+<span class="keyword">export default function</span> <span class="func">App</span>() { ... }
+<span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./App'</span>;
+<span class="keyword">import</span> MyApp <span class="keyword">from</span> <span class="string">'./App'</span>;  <span class="comment">// same — any name works</span>
+
+<span class="comment">// A file can have ONE default + MANY named exports</span></code></pre>
+      <div class="tip-box">
+        <div class="label">Convention</div>
+        Most React projects use default exports for page/component files, and named exports for utility functions and constants. Consistency matters more than which you pick.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q25">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q25</span>
+      <span class="q-title">What is the children prop?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Props</span><span class="tag">Composition</span></div>
+      <p><code>children</code> is a special built-in prop that contains <strong>whatever is placed between a component's opening and closing tags</strong>. It's the foundation of React's composition model — building "container" components that wrap other content.</p>
+      <pre><code><span class="keyword">function</span> <span class="func">Card</span>({ title, children }) {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span> <span class="prop">className</span>=<span class="string">"card"</span>&gt;
+      &lt;<span class="tag-c">h2</span>&gt;{title}&lt;/<span class="tag-c">h2</span>&gt;
+      &lt;<span class="tag-c">div</span> <span class="prop">className</span>=<span class="string">"card-body"</span>&gt;{children}&lt;/<span class="tag-c">div</span>&gt;
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+}
+
+<span class="comment">// Everything between the tags becomes children</span>
+&lt;<span class="tag-c">Card</span> <span class="prop">title</span>=<span class="string">"User Profile"</span>&gt;
+  &lt;<span class="tag-c">img</span> <span class="prop">src</span>=<span class="string">"avatar.jpg"</span> /&gt;
+  &lt;<span class="tag-c">p</span>&gt;Name: Prathamesh&lt;/<span class="tag-c">p</span>&gt;
+  &lt;<span class="tag-c">button</span>&gt;Edit&lt;/<span class="tag-c">button</span>&gt;
+&lt;/<span class="tag-c">Card</span>&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- MEDIUM SECTION -->
+  <div class="level-header" id="medium-section">
+    <span class="level-badge badge-medium">Medium</span>
+    <h2 class="level-title">Mid Level — 1–3 Years</h2>
+  </div>
+
+  <div class="q-card" id="q26">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q26</span>
+      <span class="q-title">Explain all useEffect dependency array cases</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">useEffect</span></div>
+      <p>The dependency array is the most nuanced part of <code>useEffect</code>. It controls <em>when</em> the effect runs — not just whether it runs. ESLint's exhaustive-deps rule will tell you if you're missing dependencies.</p>
+      <pre><code><span class="comment">// No array — runs after EVERY render. Usually a bug.</span>
+<span class="func">useEffect</span>(() => { console.<span class="func">log</span>(<span class="string">'every render'</span>); });
+
+<span class="comment">// Empty array — runs ONCE after mount (like componentDidMount)</span>
+<span class="func">useEffect</span>(() => { <span class="func">setupListeners</span>(); <span class="keyword">return</span> () => <span class="func">cleanup</span>(); }, []);
+
+<span class="comment">// With dependencies — runs on mount AND when dep changes</span>
+<span class="func">useEffect</span>(() => { <span class="func">fetchUser</span>(userId); }, [userId]);
+
+<span class="comment">// ⚠️ Object dependency — always a new reference = always runs!</span>
+<span class="keyword">const</span> options = { page: <span class="string">1</span> }; <span class="comment">// new object every render</span>
+<span class="func">useEffect</span>(() => { <span class="func">fetchData</span>(options); }, [options]); <span class="comment">// ❌ infinite loop risk</span>
+
+<span class="comment">// ✅ Use primitive value OR useMemo for objects</span>
+<span class="func">useEffect</span>(() => { <span class="func">fetchData</span>({ page }); }, [page]); <span class="comment">// only runs when page changes</span></code></pre>
+      <div class="warn-box">
+        <div class="label">Missing dependencies trap</div>
+        If you read a prop or state variable inside <code>useEffect</code> but don't add it to the deps array, the effect will run with a <strong>stale closure</strong> — seeing old values. Always follow the exhaustive-deps ESLint rule. If adding a dep causes infinite loops, the real fix is usually <code>useMemo</code> or <code>useCallback</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q27">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q27</span>
+      <span class="q-title">What is useMemo?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">Performance</span></div>
+      <p><code>useMemo</code> <strong>caches the result of an expensive calculation</strong> between renders. It only recalculates when one of its dependencies changes. Think of it as memoization for values.</p>
+      <pre><code><span class="comment">// Without useMemo — filters on EVERY render</span>
+<span class="keyword">const</span> filtered = products.<span class="func">filter</span>(p =>
+  p.name.<span class="func">toLowerCase</span>().<span class="func">includes</span>(query.<span class="func">toLowerCase</span>())
+);
+
+<span class="comment">// With useMemo — only recalculates when products or query changes</span>
+<span class="keyword">const</span> filteredProducts = <span class="func">useMemo</span>(() =>
+  products.<span class="func">filter</span>(p => p.name.<span class="func">toLowerCase</span>().<span class="func">includes</span>(query)),
+  [products, query]
+);</code></pre>
+      <div class="tip-box">
+        <div class="label">When to NOT use useMemo</div>
+        For simple operations (string concatenation, basic math), <code>useMemo</code> overhead (dependency comparison) often costs <em>more</em> than just recomputing. Profile first. Use it for: complex array filtering/sorting, expensive object creation, values passed as deps to other hooks or to memoized children.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q28">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q28</span>
+      <span class="q-title">What is useCallback?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">Performance</span></div>
+      <p><code>useCallback</code> returns a <strong>memoized function reference</strong> — the same function object between renders unless its dependencies change. Without it, a new function is created every render, which breaks <code>React.memo</code> on child components (since they'd see a "new" prop every time).</p>
+      <pre><code><span class="comment">// ❌ Without useCallback — new function every render</span>
+<span class="comment">// → memo on child is useless, child always re-renders</span>
+<span class="keyword">const</span> handleDelete = (id) => setTodos(prev => prev.<span class="func">filter</span>(t => t.id !== id));
+
+<span class="comment">// ✅ With useCallback — stable reference</span>
+<span class="comment">// → memo on child works, only re-renders when todo data changes</span>
+<span class="keyword">const</span> handleDelete = <span class="func">useCallback</span>((id) => {
+  setTodos(prev => prev.<span class="func">filter</span>(t => t.id !== id));
+}, []); <span class="comment">// empty array — setTodos is stable</span></code></pre>
+      <div class="insight-box">
+        <div class="label">useMemo vs useCallback</div>
+        They solve the same problem for different things. <code>useMemo</code> caches a computed <em>value</em>. <code>useCallback</code> caches a <em>function</em>. In fact, <code>useCallback(fn, deps)</code> is equivalent to <code>useMemo(() => fn, deps)</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q29">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q29</span>
+      <span class="q-title">What is useReducer?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">State Management</span></div>
+      <p><code>useReducer</code> is an alternative to <code>useState</code> for managing <strong>complex state logic with multiple sub-values or state transitions that depend on the previous state</strong>. The pattern: all state transitions are described as "actions" dispatched to a pure reducer function.</p>
+      <pre><code><span class="keyword">function</span> <span class="func">cartReducer</span>(state, action) {
+  <span class="keyword">switch</span> (action.type) {
+    <span class="keyword">case</span> <span class="string">'ADD'</span>:    <span class="keyword">return</span> { ...state, items: [...state.items, action.payload] };
+    <span class="keyword">case</span> <span class="string">'REMOVE'</span>: <span class="keyword">return</span> { ...state, items: state.items.<span class="func">filter</span>(i => i.id !== action.payload) };
+    <span class="keyword">case</span> <span class="string">'CLEAR'</span>:  <span class="keyword">return</span> { items: [], total: <span class="string">0</span> };
+    <span class="keyword">default</span>:      <span class="keyword">return</span> state;
+  }
+}
+
+<span class="keyword">const</span> [state, dispatch] = <span class="func">useReducer</span>(cartReducer, { items: [], total: <span class="string">0</span> });
+
+<span class="comment">// Dispatch actions instead of calling setters</span>
+dispatch({ type: <span class="string">'ADD'</span>, payload: { id: <span class="string">1</span>, name: <span class="string">'Shirt'</span> } });
+dispatch({ type: <span class="string">'CLEAR'</span> });</code></pre>
+      <div class="tip-box">
+        <div class="label">useState vs useReducer</div>
+        Use <code>useState</code> when: simple primitive values, independent fields. Use <code>useReducer</code> when: multiple related values that change together, next state depends on previous, complex transitions, or you want Redux-like testability (reducers are pure functions — easy to test in isolation).
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q30">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q30</span>
+      <span class="q-title">What are Custom Hooks?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">Patterns</span></div>
+      <p>A custom hook is a <strong>regular JavaScript function whose name starts with <code>use</code></strong> and that calls one or more React hooks. It's the primary mechanism for <strong>extracting and reusing stateful logic</strong> across multiple components — without changing their UI or component hierarchy.</p>
+      <pre><code><span class="comment">// Custom hook — encapsulates fetch logic</span>
+<span class="keyword">function</span> <span class="func">useFetch</span>(url) {
+  <span class="keyword">const</span> [data, setData]       = <span class="func">useState</span>(<span class="keyword">null</span>);
+  <span class="keyword">const</span> [loading, setLoading] = <span class="func">useState</span>(<span class="keyword">true</span>);
+  <span class="keyword">const</span> [error, setError]     = <span class="func">useState</span>(<span class="keyword">null</span>);
+
+  <span class="func">useEffect</span>(() => {
+    <span class="keyword">let</span> mounted = <span class="keyword">true</span>;
+    <span class="func">fetch</span>(url)
+      .<span class="func">then</span>(r => r.<span class="func">json</span>())
+      .<span class="func">then</span>(d => { <span class="keyword">if</span> (mounted) <span class="func">setData</span>(d); })
+      .<span class="func">catch</span>(e => { <span class="keyword">if</span> (mounted) <span class="func">setError</span>(e.message); })
+      .<span class="func">finally</span>(() => { <span class="keyword">if</span> (mounted) <span class="func">setLoading</span>(<span class="keyword">false</span>); });
+    <span class="keyword">return</span> () => { mounted = <span class="keyword">false</span>; };
+  }, [url]);
+
+  <span class="keyword">return</span> { data, loading, error };
+}
+
+<span class="comment">// Now reuse in any component cleanly</span>
+<span class="keyword">const</span> { data: user, loading } = <span class="func">useFetch</span>(<span class="string">`/api/users/${id}`</span>);</code></pre>
+      <div class="insight-box">
+        <div class="label">Good custom hook candidates</div>
+        Data fetching, form state + validation, debouncing, local storage sync, window resize/scroll tracking, websocket connection, infinite scroll, media query matching. Anything you find yourself copy-pasting between components is a custom hook waiting to be born.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q31">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q31</span>
+      <span class="q-title">Rules of Hooks — what are they and why do they exist?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">Rules</span></div>
+      <p>There are two rules: (1) Only call hooks <strong>at the top level</strong> of a function — never inside conditionals, loops, or nested functions. (2) Only call hooks from <strong>React function components or custom hooks</strong> — not regular JS functions.</p>
+      <pre><code><span class="comment">// ❌ WRONG — hook inside condition (breaks call order)</span>
+<span class="keyword">if</span> (isLoggedIn) { <span class="keyword">const</span> [data] = <span class="func">useState</span>(<span class="keyword">null</span>); }
+
+<span class="comment">// ❌ WRONG — hook inside loop</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="string">0</span>; i &lt; count; i++) { <span class="keyword">const</span> [val] = <span class="func">useState</span>(i); }
+
+<span class="comment">// ✅ Correct — hooks at top level, conditions go inside</span>
+<span class="keyword">const</span> [data, setData] = <span class="func">useState</span>(<span class="keyword">null</span>);
+<span class="func">useEffect</span>(() => { <span class="keyword">if</span> (isLoggedIn) <span class="func">fetchData</span>(); }, [isLoggedIn]);</code></pre>
+      <p><strong>Why this rule?</strong> React tracks hooks internally by their <strong>call order in an array</strong>. Every render must call the same hooks in the same order. If a conditional skips a hook, the array index shifts and React maps the wrong state to the wrong hook — corrupting all subsequent state.</p>
+    </div>
+  </div>
+
+  <div class="q-card" id="q32">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q32</span>
+      <span class="q-title">What is React.memo?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Performance</span><span class="tag">Memoization</span></div>
+      <p><code>React.memo</code> is a Higher Order Component that wraps your component and <strong>skips re-rendering if the props haven't changed</strong> (shallow comparison by default). Without it, a child re-renders any time its parent re-renders — even if the child's props are identical.</p>
+      <pre><code><span class="keyword">import</span> { memo } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Wrapped with memo — skips re-render if name + email unchanged</span>
+<span class="keyword">const</span> UserCard = <span class="func">memo</span>(<span class="keyword">function</span>({ name, email }) {
+  return &lt;<span class="tag-c">div</span>&gt;{name} — {email}&lt;/<span class="tag-c">div</span>&gt;;
+});
+
+<span class="comment">// Custom comparison (optional) — for complex objects</span>
+<span class="keyword">const</span> UserCard = <span class="func">memo</span>(
+  ({ user }) =&gt; &lt;<span class="tag-c">div</span>&gt;{user.name}&lt;/<span class="tag-c">div</span>&gt;,
+  (prev, next) =&gt; prev.user.id === next.user.id <span class="comment">// true = skip</span>
+);</code></pre>
+      <div class="warn-box">
+        <div class="label">memo only works with stable props</div>
+        <code>memo</code> is useless if the parent passes a new object literal or arrow function every render (e.g. <code>&lt;Child style=&#123;&#123; color: 'red' &#125;&#125; /&gt;</code>). Always pair with <code>useMemo</code> and <code>useCallback</code> for object/function props.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q33">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q33</span>
+      <span class="q-title">What is the difference between useEffect and useLayoutEffect?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Hooks</span><span class="tag">DOM</span></div>
+      <p>Both run after React updates the DOM. The timing difference: <code>useLayoutEffect</code> runs <strong>synchronously before the browser has a chance to paint</strong>, while <code>useEffect</code> runs asynchronously after the paint.</p>
+      <pre><code><span class="comment">// Timeline:</span>
+<span class="comment">// React updates DOM</span>
+<span class="comment">// → useLayoutEffect fires (sync) ← DOM measurements here</span>
+<span class="comment">// → Browser paints (user sees change)</span>
+<span class="comment">// → useEffect fires (async)</span>
+
+<span class="comment">// Use useLayoutEffect when measuring DOM before paint</span>
+<span class="func">useLayoutEffect</span>(() => {
+  <span class="keyword">const</span> height = elementRef.current.offsetHeight;
+  setTooltipPosition(height); <span class="comment">// no flash — browser hasn't painted yet</span>
+}, []);</code></pre>
+      <div class="tip-box">
+        <div class="label">Default to useEffect</div>
+        Use <code>useLayoutEffect</code> only when you see a visual flicker or need to measure DOM layout synchronously. Because it's synchronous, it blocks the browser from painting — overuse hurts performance.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q34">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q34</span>
+      <span class="q-title">What is Lifting State Up?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Patterns</span><span class="tag">State</span></div>
+      <p>When two or more sibling components need to share the same state, the solution is to <strong>move the state up to their closest common ancestor</strong> (parent). The parent owns the state and passes it down as props. This creates a "single source of truth."</p>
+      <pre><code><span class="comment">// ❌ Two independent states — they never sync</span>
+<span class="keyword">function</span> <span class="func">Celsius</span>()    { <span class="keyword">const</span> [temp] = <span class="func">useState</span>(<span class="string">0</span>); ... }
+<span class="keyword">function</span> <span class="func">Fahrenheit</span>() { <span class="keyword">const</span> [temp] = <span class="func">useState</span>(<span class="string">32</span>); ... }
+
+<span class="comment">// ✅ Lifted state — parent is the single source of truth</span>
+<span class="keyword">function</span> <span class="func">Converter</span>() {
+  <span class="keyword">const</span> [celsius, setCelsius] = <span class="func">useState</span>(<span class="string">0</span>);
+  <span class="keyword">const</span> fahrenheit = celsius * <span class="string">9</span>/<span class="string">5</span> + <span class="string">32</span>;
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="tag-c">CelsiusInput</span> <span class="prop">value</span>={celsius} onChange={setCelsius} /&gt;
+      &lt;<span class="tag-c">FahrenheitDisplay</span> <span class="prop">value</span>={fahrenheit} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q35">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q35</span>
+      <span class="q-title">What are Error Boundaries?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Error Handling</span><span class="tag">Patterns</span></div>
+      <p>Error Boundaries are <strong>class components that catch JavaScript errors in their child component tree</strong> and display a fallback UI instead of crashing the entire app. Without them, a single component error unmounts the entire React tree.</p>
+      <pre><code><span class="keyword">class</span> <span class="func">ErrorBoundary</span> <span class="keyword">extends</span> React.Component {
+  state = { hasError: <span class="keyword">false</span> };
+
+  <span class="keyword">static</span> <span class="func">getDerivedStateFromError</span>() { <span class="keyword">return</span> { hasError: <span class="keyword">true</span> }; }
+
+  <span class="func">componentDidCatch</span>(error, info) { <span class="func">logErrorToService</span>(error, info); }
+
+  <span class="func">render</span>() {
+    <span class="keyword">if</span> (this.state.hasError) <span class="keyword">return</span> &lt;<span class="tag-c">h1</span>&gt;Something went wrong.&lt;/<span class="tag-c">h1</span>&gt;;
+    <span class="keyword">return</span> this.props.children;
+  }
+}</code></pre>
+      <div class="warn-box">
+        <div class="label">What Error Boundaries do NOT catch</div>
+        Event handler errors (use try/catch), async errors (setTimeout, Promise rejections), server-side rendering errors, and errors in the boundary itself. React 19 is improving this with a new <code>onCaughtError</code> option for <code>createRoot</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q36">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q36</span>
+      <span class="q-title">What is React.lazy and Code Splitting?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Performance</span><span class="tag">Bundling</span></div>
+      <p>By default, all your JavaScript is bundled into one file that loads upfront. Code splitting <strong>breaks the bundle into smaller chunks</strong> that are loaded on demand — reducing initial load time. <code>React.lazy</code> enables lazy loading components, and <code>Suspense</code> shows a fallback while the chunk downloads.</p>
+      <pre><code><span class="keyword">import</span> { lazy, Suspense } <span class="keyword">from</span> <span class="string">'react'</span>;
+
+<span class="comment">// Dashboard.js only downloads when user visits /dashboard</span>
+<span class="keyword">const</span> Dashboard = <span class="func">lazy</span>(() => <span class="func">import</span>(<span class="string">'./pages/Dashboard'</span>));
+<span class="keyword">const</span> Settings  = <span class="func">lazy</span>(() => <span class="func">import</span>(<span class="string">'./pages/Settings'</span>));
+
+<span class="keyword">function</span> <span class="func">App</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">Suspense</span> <span class="prop">fallback</span>={&lt;<span class="tag-c">Spinner</span> /&gt;}&gt;
+      &lt;<span class="tag-c">Routes</span>&gt;
+        &lt;<span class="tag-c">Route</span> <span class="prop">path</span>=<span class="string">"/dashboard"</span> <span class="prop">element</span>={&lt;<span class="tag-c">Dashboard</span> /&gt;} /&gt;
+        &lt;<span class="tag-c">Route</span> <span class="prop">path</span>=<span class="string">"/settings"</span>  <span class="prop">element</span>={&lt;<span class="tag-c">Settings</span> /&gt;} /&gt;
+      &lt;/<span class="tag-c">Routes</span>&gt;
+    &lt;/<span class="tag-c">Suspense</span>&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q37">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q37</span>
+      <span class="q-title">Context API vs Redux — when to use which?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">State Management</span><span class="tag">Architecture</span></div>
+      <table class="cmp-table">
+        <tr><th>Use Context for</th><th>Use Redux/Zustand for</th></tr>
+        <tr><td>Theme (light/dark)</td><td>Complex state with many transitions</td></tr>
+        <tr><td>Authenticated user</td><td>State updated from many unrelated places</td></tr>
+        <tr><td>Language / locale</td><td>Need time-travel debugging (Redux DevTools)</td></tr>
+        <tr><td>Data shared at many levels</td><td>Large team — predictability matters</td></tr>
+        <tr><td>Rarely-changing global data</td><td>Caching, offline support, optimistic updates</td></tr>
+      </table>
+      <div class="warn-box">
+        <div class="label">Context performance caveat</div>
+        Every component that calls <code>useContext(MyContext)</code> re-renders when the context value changes. If many components consume a frequently-changing context, split it into multiple contexts by update frequency, or use a state manager like Zustand which has built-in selector support.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q38">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q38</span>
+      <span class="q-title">What is forwardRef?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Refs</span><span class="tag">Patterns</span></div>
+      <p>By default, refs only work on native DOM elements. When you try to attach a <code>ref</code> to a custom component, React ignores it. <code>forwardRef</code> is the opt-in mechanism that lets a component <strong>pass a ref it receives down to an internal DOM element</strong>.</p>
+      <pre><code><span class="keyword">const</span> CustomInput = <span class="func">forwardRef</span>(<span class="keyword">function</span>(props, ref) {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span> <span class="prop">className</span>=<span class="string">"input-wrapper"</span>&gt;
+      &lt;<span class="tag-c">input</span> <span class="prop">ref</span>={ref} {...props} /&gt; <span class="comment">// forwards the ref down</span>
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+});
+
+<span class="keyword">function</span> <span class="func">Form</span>() {
+  <span class="keyword">const</span> inputRef = <span class="func">useRef</span>(<span class="keyword">null</span>);
+  <span class="keyword">return</span> (
+    &lt;&gt;
+      &lt;<span class="tag-c">CustomInput</span> <span class="prop">ref</span>={inputRef} /&gt; <span class="comment">// ref reaches the actual input!</span>
+      &lt;<span class="tag-c">button</span> onClick={() => inputRef.current.<span class="func">focus</span>()}&gt;Focus&lt;/<span class="tag-c">button</span>&gt;
+    &lt;/&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q39">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q39</span>
+      <span class="q-title">Why does StrictMode call components twice?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">StrictMode</span><span class="tag">Debugging</span></div>
+      <p>In React 18 StrictMode (development only), React intentionally <strong>mounts, unmounts, then remounts</strong> every component. This simulates what would happen with features like Fast Refresh or future React optimizations that reuse component instances. The goal: <strong>surface bugs from missing cleanup in effects</strong>.</p>
+      <pre><code><span class="comment">// If your app breaks on double-mount, you have a cleanup bug</span>
+<span class="func">useEffect</span>(() => {
+  <span class="keyword">const</span> sub = <span class="func">subscribe</span>(); <span class="comment">// second mount creates duplicate!</span>
+  <span class="comment">// ❌ No cleanup = leaks on remount</span>
+}, []);
+
+<span class="func">useEffect</span>(() => {
+  <span class="keyword">const</span> sub = <span class="func">subscribe</span>();
+  <span class="keyword">return</span> () => sub.<span class="func">unsubscribe</span>(); <span class="comment">// ✅ cleanup = remount is safe</span>
+}, []);</code></pre>
+    </div>
+  </div>
+
+  <!-- Q40-Q47 -->
+  <div class="q-card" id="q40">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q40</span>
+      <span class="q-title">What is the difference between Link and NavLink in React Router?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React Router</span></div>
+      <p><code>Link</code> renders an anchor tag for client-side navigation (no page reload). <code>NavLink</code> does the same but also provides an <strong>active state</strong> — knowing whether its <code>to</code> path matches the current URL — so you can style active navigation links.</p>
+      <pre><code><span class="comment">// NavLink — provides isActive for styling</span>
+&lt;<span class="tag-c">NavLink</span>
+  <span class="prop">to</span>=<span class="string">"/dashboard"</span>
+  <span class="prop">className</span>={({ isActive }) =&gt; isActive ? <span class="string">'nav-active'</span> : <span class="string">'nav-link'</span>}
+&gt;
+  Dashboard
+&lt;/<span class="tag-c">NavLink</span>&gt;
+
+<span class="comment">// Also works with inline styles</span>
+&lt;<span class="tag-c">NavLink</span>
+  <span class="prop">to</span>=<span class="string">"/profile"</span>
+  <span class="prop">style</span>={({ isActive }) =&gt; ({ fontWeight: isActive ? <span class="string">'bold'</span> : <span class="string">'normal'</span> })}
+&gt;
+  Profile
+&lt;/<span class="tag-c">NavLink</span>&gt;</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q41">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q41</span>
+      <span class="q-title">What is Outlet in React Router v6?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React Router</span><span class="tag">Layouts</span></div>
+      <p><code>Outlet</code> is a placeholder component in a parent layout route where its <strong>matched child route renders</strong>. This enables "nested routing" — a persistent shell (navbar, sidebar, footer) that stays mounted while only the inner page content swaps out.</p>
+      <pre><code><span class="comment">// Route config</span>
+&lt;<span class="tag-c">Route</span> <span class="prop">path</span>=<span class="string">"/"</span> <span class="prop">element</span>={&lt;<span class="tag-c">Layout</span> /&gt;}&gt;
+  &lt;<span class="tag-c">Route</span> <span class="prop">path</span>=<span class="string">"home"</span>      <span class="prop">element</span>={&lt;<span class="tag-c">Home</span> /&gt;} /&gt;
+  &lt;<span class="tag-c">Route</span> <span class="prop">path</span>=<span class="string">"dashboard"</span> <span class="prop">element</span>={&lt;<span class="tag-c">Dashboard</span> /&gt;} /&gt;
+&lt;/<span class="tag-c">Route</span>&gt;
+
+<span class="comment">// Layout.jsx — the persistent shell</span>
+<span class="keyword">function</span> <span class="func">Layout</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">div</span>&gt;
+      &lt;<span class="tag-c">Navbar</span> /&gt;
+      &lt;<span class="tag-c">main</span>&gt;&lt;<span class="tag-c">Outlet</span> /&gt;&lt;/<span class="tag-c">main</span>&gt; <span class="comment">// child page renders here</span>
+      &lt;<span class="tag-c">Footer</span> /&gt;
+    &lt;/<span class="tag-c">div</span>&gt;
+  );
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q42">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q42</span>
+      <span class="q-title">How do you do programmatic navigation in React Router v6?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React Router</span><span class="tag">Navigation</span></div>
+      <pre><code><span class="keyword">const</span> navigate = <span class="func">useNavigate</span>();
+
+navigate(<span class="string">'/dashboard'</span>);                     <span class="comment">// go to route</span>
+navigate(-<span class="string">1</span>);                               <span class="comment">// browser back</span>
+navigate(<span class="string">'/login'</span>, { replace: <span class="keyword">true</span> });     <span class="comment">// replace history entry</span>
+navigate(<span class="string">'/profile'</span>, { state: { from: <span class="string">'login'</span> } }); <span class="comment">// pass state</span>
+
+<span class="comment">// Read state in destination component</span>
+<span class="keyword">const</span> location = <span class="func">useLocation</span>();
+console.<span class="func">log</span>(location.state?.from); <span class="comment">// 'login'</span>
+
+<span class="comment">// URL params and query strings</span>
+<span class="keyword">const</span> { id } = <span class="func">useParams</span>();        <span class="comment">// /users/:id</span>
+<span class="keyword">const</span> [params] = <span class="func">useSearchParams</span>(); <span class="comment">// ?tab=settings</span>
+<span class="keyword">const</span> tab = params.<span class="func">get</span>(<span class="string">'tab'</span>);</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q43">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q43</span>
+      <span class="q-title">What is Redux? Explain its core concepts.</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Redux</span><span class="tag">State Management</span></div>
+      <p>Redux is a <strong>predictable state container</strong> — a single centralized store for your entire application's state. All state changes happen through a strict unidirectional flow. Today, use <strong>Redux Toolkit</strong> — it eliminates the boilerplate of old Redux.</p>
+      <pre><code><span class="comment">// 1. Slice — state + reducers + actions bundled together</span>
+<span class="keyword">const</span> counterSlice = <span class="func">createSlice</span>({
+  name: <span class="string">'counter'</span>,
+  initialState: { value: <span class="string">0</span> },
+  reducers: {
+    increment: state => { state.value += <span class="string">1</span>; }, <span class="comment">// Immer allows mutation</span>
+    incrementBy: (state, action) => { state.value += action.payload; },
+  },
+});
+
+<span class="comment">// 2. In component</span>
+<span class="keyword">const</span> count    = <span class="func">useSelector</span>(state => state.counter.value);
+<span class="keyword">const</span> dispatch = <span class="func">useDispatch</span>();
+dispatch(counterSlice.actions.<span class="func">increment</span>());
+dispatch(counterSlice.actions.<span class="func">incrementBy</span>(<span class="string">5</span>));</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q44">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q44</span>
+      <span class="q-title">What is Zustand and how is it different from Redux?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Zustand</span><span class="tag">State Management</span></div>
+      <p>Zustand is a minimal, unopinionated state manager. No actions, no reducers, no Provider needed — just a store you create and import anywhere. It's dramatically less boilerplate than Redux for most apps.</p>
+      <pre><code><span class="keyword">const</span> useStore = <span class="func">create</span>((set) => ({
+  count: <span class="string">0</span>,
+  user: <span class="keyword">null</span>,
+  increment: () => <span class="func">set</span>(state => ({ count: state.count + <span class="string">1</span> })),
+  setUser:   (user) => <span class="func">set</span>({ user }),
+}));
+
+<span class="comment">// No Provider — just import and use, with selector for performance</span>
+<span class="keyword">const</span> count     = <span class="func">useStore</span>(state => state.count);
+<span class="keyword">const</span> increment = <span class="func">useStore</span>(state => state.increment);</code></pre>
+      <table class="cmp-table">
+        <tr><th></th><th>Redux Toolkit</th><th>Zustand</th></tr>
+        <tr><td>Setup</td><td>Store + slices + Provider</td><td>One create() call</td></tr>
+        <tr><td>Boilerplate</td><td>Moderate</td><td>Minimal</td></tr>
+        <tr><td>DevTools</td><td>Excellent Redux DevTools</td><td>Built-in middleware</td></tr>
+        <tr><td>Best for</td><td>Large apps, teams</td><td>Small–medium apps</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="q-card" id="q45">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q45</span>
+      <span class="q-title">What causes unnecessary re-renders and how do you fix them?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Performance</span><span class="tag">Optimization</span></div>
+      <pre><code><span class="comment">// Cause 1: Object/array created fresh each render</span>
+&lt;<span class="tag-c">Child</span> options={{ theme: <span class="string">'dark'</span> }} /&gt; <span class="comment">// ❌ new object every render</span>
+<span class="keyword">const</span> opts = <span class="func">useMemo</span>(() => ({ theme: <span class="string">'dark'</span> }), []);
+&lt;<span class="tag-c">Child</span> <span class="prop">options</span>={opts} /&gt; <span class="comment">// ✅</span>
+
+<span class="comment">// Cause 2: Inline function in JSX</span>
+&lt;<span class="tag-c">Child</span> onClick={() => <span class="func">handle</span>(id)} /&gt; <span class="comment">// ❌ new fn every render</span>
+<span class="keyword">const</span> handle = <span class="func">useCallback</span>(() => <span class="func">handle</span>(id), [id]); <span class="comment">// ✅</span>
+
+<span class="comment">// Cause 3: Context value — memoize to prevent all consumers re-rendering</span>
+<span class="keyword">const</span> val = <span class="func">useMemo</span>(() => ({ user, setUser }), [user]);
+&lt;<span class="tag-c">MyCtx.Provider</span> <span class="prop">value</span>={val}&gt;
+
+<span class="comment">// Cause 4: Derived state stored in useState</span>
+<span class="keyword">const</span> [items] = <span class="func">useState</span>([]);
+<span class="keyword">const</span> [count, setCount] = <span class="func">useState</span>(<span class="string">0</span>); <span class="comment">// ❌ redundant</span>
+<span class="keyword">const</span> count = items.length; <span class="comment">// ✅ derived, not stored</span></code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q46">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q46</span>
+      <span class="q-title">What is Reconciliation in React?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Internals</span><span class="tag">Performance</span></div>
+      <p>Reconciliation is React's algorithm for <strong>efficiently computing the minimum set of DOM changes</strong> needed when the virtual DOM changes. React follows three key heuristics:</p>
+      <ol>
+        <li><strong>Different types = full rebuild.</strong> If a <code>&lt;div&gt;</code> becomes a <code>&lt;span&gt;</code>, React destroys the subtree and builds fresh (all child state is lost).</li>
+        <li><strong>Same type = update attributes only.</strong> If an element type stays the same, React patches only what changed.</li>
+        <li><strong>Lists use keys.</strong> Keys let React match items between old and new lists — enabling moves, insertions, and deletions without re-rendering untouched items.</li>
+      </ol>
+      <div class="warn-box">
+        <div class="label">Type-change gotcha</div>
+        Conditionally rendering a different component type at the same position <em>resets all child state</em>. If you need to preserve state, keep the same component type and conditionally change its content/props instead.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q47">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q47</span>
+      <span class="q-title">What happens when a component's key prop changes?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Keys</span><span class="tag">Patterns</span></div>
+      <p>When a <code>key</code> changes, React treats the component as a <strong>completely different instance</strong> — it unmounts the old one (clearing all state) and mounts a fresh one. This is a deliberate pattern used to <strong>force reset a component's internal state</strong> without lifting that state up.</p>
+      <pre><code><span class="comment">// Problem: switching users, but form shows old user's data</span>
+&lt;<span class="tag-c">UserForm</span> <span class="prop">userId</span>={userId} /&gt; <span class="comment">// ❌ form state persists across users</span>
+
+<span class="comment">// Solution: key change forces full remount = all state reset</span>
+&lt;<span class="tag-c">UserForm</span> <span class="prop">key</span>={userId} <span class="prop">userId</span>={userId} /&gt; <span class="comment">// ✅</span>
+
+<span class="comment">// Useful patterns:
+// - Reset form when switching records
+// - Force re-fetch when ID changes
+// - Clear animation state</span></code></pre>
+    </div>
+  </div>
+
+  <!-- HARD SECTION -->
+  <div class="level-header" id="hard-section">
+    <span class="level-badge badge-hard">Hard</span>
+    <h2 class="level-title">Senior / Expert — 3+ Years</h2>
+  </div>
+
+  <div class="q-card" id="q48">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q48</span>
+      <span class="q-title">What is the React Fiber architecture?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Internals</span><span class="tag">Fiber</span></div>
+      <p>Fiber is React's <strong>complete rewrite of its internal reconciliation engine</strong>, shipped in React 16. Before Fiber, React's reconciliation was recursive and synchronous — once started, it couldn't be interrupted. A massive tree update would block the main thread for hundreds of milliseconds, making UIs janky.</p>
+      <p>Fiber reimplements the algorithm as a <strong>linked list of "units of work"</strong> (one Fiber node per component). This data structure allows React to pause after processing each unit, yield control back to the browser, and resume later — making reconciliation <strong>incremental and interruptible</strong>.</p>
+      <pre><code><span class="comment">// What Fiber enables:</span>
+<span class="comment">// 1. Pause reconciliation → browser handles urgent input</span>
+<span class="comment">// 2. Resume from where it stopped</span>
+<span class="comment">// 3. Abort work that became stale (user typed again)</span>
+<span class="comment">// 4. Assign priority levels to different updates</span>
+<span class="comment">//    - User input → HIGH priority (immediate)</span>
+<span class="comment">//    - Data fetch result → LOW priority (can defer)</span>
+<span class="comment">//
+<span class="comment">// This is the foundation for: Suspense, useTransition,</span>
+<span class="comment">// Concurrent rendering, Server Components</span></code></pre>
+      <div class="insight-box">
+        <div class="label">Two phases</div>
+        Fiber splits work into the <strong>render phase</strong> (interruptible — builds a "work-in-progress" fiber tree, diffs old vs new) and the <strong>commit phase</strong> (non-interruptible — applies the minimal DOM mutations, runs effects). Only the commit phase touches the real DOM.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q49">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q49</span>
+      <span class="q-title">What is Concurrent Mode / Concurrent Rendering?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 18</span><span class="tag">Concurrent</span></div>
+      <p>Concurrent rendering (React 18) is the ability to <strong>prepare multiple versions of the UI simultaneously in the background</strong> without blocking the browser's main thread. React can start rendering an update, pause if a more urgent update arrives, handle the urgent one first, then return to the background work.</p>
+      <pre><code><span class="comment">// Opt in with createRoot (React 18)</span>
+<span class="keyword">const</span> root = ReactDOM.<span class="func">createRoot</span>(document.<span class="func">getElementById</span>(<span class="string">'root'</span>));
+root.<span class="func">render</span>(&lt;<span class="tag-c">App</span> /&gt;);
+
+<span class="comment">// React can now:</span>
+<span class="comment">// - Interrupt a low-priority render (search results) for</span>
+<span class="comment">//   a high-priority render (keypress, click)</span>
+<span class="comment">// - Reuse rendered work if nothing changed</span>
+<span class="comment">// - Throw away stale renders (user typed new query)</span>
+<span class="comment">// - Show consistent UI snapshots — no tearing</span></code></pre>
+      <div class="tip-box">
+        <div class="label">Opt-out</div>
+        Only <code>createRoot</code> enables concurrent features. If you use the old <code>ReactDOM.render()</code>, you get legacy synchronous rendering — no concurrent features. All third-party library updates for React 18 involve ensuring compatibility with the new concurrent model.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q50">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q50</span>
+      <span class="q-title">What is useTransition and useDeferredValue? When to use each?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 18</span><span class="tag">Concurrent</span><span class="tag">Performance</span></div>
+      <p>Both hooks mark updates as <strong>non-urgent</strong> so React can defer them while keeping the UI responsive. The difference is about ownership: use <code>useTransition</code> when you <em>own</em> the state setter; use <code>useDeferredValue</code> when you receive a value as a prop and don't control its setter.</p>
+      <pre><code><span class="comment">// useTransition — you control the state setter</span>
+<span class="keyword">const</span> [isPending, startTransition] = <span class="func">useTransition</span>();
+<span class="keyword">const</span> <span class="func">handleChange</span> = (e) => {
+  setInput(e.target.value);         <span class="comment">// urgent — updates immediately</span>
+  <span class="func">startTransition</span>(() => {
+    setSearchQuery(e.target.value); <span class="comment">// non-urgent — can be interrupted</span>
+  });
+};
+{isPending ? &lt;<span class="tag-c">Spinner</span> /&gt; : &lt;<span class="tag-c">Results</span> <span class="prop">query</span>={query} /&gt;}
+
+<span class="comment">// useDeferredValue — you receive the value, can't wrap the setter</span>
+<span class="keyword">function</span> <span class="func">Results</span>({ query }) {
+  <span class="keyword">const</span> deferredQuery = <span class="func">useDeferredValue</span>(query);
+  <span class="comment">// deferredQuery lags behind query</span>
+  <span class="comment">// Shows stale results (slightly faded) while fresh ones compute</span>
+  <span class="keyword">const</span> isStale = query !== deferredQuery;
+  <span class="keyword">return</span> &lt;<span class="tag-c">div</span> style={{ opacity: isStale ? <span class="string">0.7</span> : <span class="string">1</span> }}&gt;...&lt;/<span class="tag-c">div</span>&gt;;
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q51">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q51</span>
+      <span class="q-title">What are React Server Components (RSC)?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 18+</span><span class="tag">Next.js</span><span class="tag">Advanced</span></div>
+      <p>Server Components are React components that <strong>run exclusively on the server</strong> — they render to HTML (or a special RSC payload), and <strong>zero JavaScript is shipped to the browser</strong> for them. They can directly access databases, file systems, and environment variables. They cannot use state, effects, or browser APIs.</p>
+      <pre><code><span class="comment">// Server Component (default in Next.js app dir)</span>
+<span class="comment">// Can be async! Runs only on server.</span>
+<span class="keyword">async function</span> <span class="func">ProductList</span>() {
+  <span class="keyword">const</span> products = <span class="keyword">await</span> db.<span class="func">query</span>(<span class="string">'SELECT * FROM products'</span>);
+  <span class="keyword">return</span> (
+    &lt;<span class="tag-c">ul</span>&gt;
+      {products.<span class="func">map</span>(p => (
+        &lt;<span class="tag-c">li</span> <span class="prop">key</span>={p.id}&gt;
+          {p.name}
+          &lt;<span class="tag-c">AddToCartButton</span> <span class="prop">id</span>={p.id} /&gt; <span class="comment">// Client Component for interactivity</span>
+        &lt;/<span class="tag-c">li</span>&gt;
+      ))}
+    &lt;/<span class="tag-c">ul</span>&gt;
+  );
+}
+
+<span class="comment">// Client Component — interactive</span>
+<span class="string">'use client'</span>;
+<span class="keyword">function</span> <span class="func">AddToCartButton</span>({ id }) {
+  <span class="keyword">const</span> [added, setAdded] = <span class="func">useState</span>(<span class="keyword">false</span>);
+  <span class="keyword">return</span> &lt;<span class="tag-c">button</span> onClick={() => setAdded(<span class="keyword">true</span>)}&gt;{added ? <span class="string">'Added!'</span> : <span class="string">'Add'</span>}&lt;/<span class="tag-c">button</span>&gt;;
+}</code></pre>
+      <table class="cmp-table">
+        <tr><th></th><th>Server Component</th><th>Client Component</th></tr>
+        <tr><td>Runs on</td><td>Server only</td><td>Server (SSR) + client</td></tr>
+        <tr><td>JS to browser</td><td>None</td><td>Yes, full bundle</td></tr>
+        <tr><td>Can use hooks</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Can access DB</td><td>✅ directly</td><td>❌ (via API)</td></tr>
+        <tr><td>Can be async</td><td>✅</td><td>❌ at component level</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="q-card" id="q52">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q52</span>
+      <span class="q-title">What is useOptimistic? (React 19)</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 19</span><span class="tag">UX Patterns</span></div>
+      <p><code>useOptimistic</code> lets you <strong>show the expected UI state immediately</strong>, before an async operation (like an API call) completes, and automatically revert if the operation fails. It dramatically improves perceived performance for write operations.</p>
+      <pre><code><span class="keyword">const</span> [optimisticMessages, addOptimistic] = <span class="func">useOptimistic</span>(
+  messages, <span class="comment">// real state</span>
+  (state, newMsg) => [...state, { ...newMsg, pending: <span class="keyword">true</span> }] <span class="comment">// optimistic updater</span>
+);
+
+<span class="keyword">async function</span> <span class="func">handleSend</span>(text) {
+  <span class="func">addOptimistic</span>({ id: Date.<span class="func">now</span>(), text }); <span class="comment">// shown instantly</span>
+  <span class="keyword">await</span> <span class="func">sendMessage</span>(text);           <span class="comment">// if fails → reverts automatically</span>
+}
+
+<span class="comment">// pending: true means "not yet confirmed by server"</span>
+{optimisticMessages.<span class="func">map</span>(msg => (
+  &lt;<span class="tag-c">div</span> style={{ opacity: msg.pending ? <span class="string">0.6</span> : <span class="string">1</span> }}&gt;{msg.text}&lt;/<span class="tag-c">div</span>&gt;
+))}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q53">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q53</span>
+      <span class="q-title">What is useActionState? (React 19)</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 19</span><span class="tag">Forms</span></div>
+      <p><code>useActionState</code> replaces the common pattern of manually managing <code>loading</code>, <code>error</code>, and <code>result</code> state for form submissions. It wires a server action (or async function) directly to a form's <code>action</code> prop and returns the pending state and latest result.</p>
+      <pre><code><span class="keyword">async function</span> <span class="func">submitForm</span>(prevState, formData) {
+  <span class="keyword">const</span> email = formData.<span class="func">get</span>(<span class="string">'email'</span>);
+  <span class="keyword">if</span> (!email.<span class="func">includes</span>(<span class="string">'@'</span>)) <span class="keyword">return</span> { error: <span class="string">'Invalid email'</span> };
+  <span class="keyword">await</span> <span class="func">save</span>({ email });
+  <span class="keyword">return</span> { success: <span class="keyword">true</span> };
+}
+
+<span class="keyword">const</span> [state, formAction, isPending] = <span class="func">useActionState</span>(submitForm, {});
+
+<span class="keyword">return</span> (
+  &lt;<span class="tag-c">form</span> <span class="prop">action</span>={formAction}&gt;
+    &lt;<span class="tag-c">input</span> <span class="prop">name</span>=<span class="string">"email"</span> /&gt;
+    {state.error &amp;&amp; &lt;<span class="tag-c">p</span>&gt;{state.error}&lt;/<span class="tag-c">p</span>&gt;}
+    &lt;<span class="tag-c">button</span> <span class="prop">disabled</span>={isPending}&gt;{isPending ? <span class="string">'Saving...'</span> : <span class="string">'Save'</span>}&lt;/<span class="tag-c">button</span>&gt;
+  &lt;/<span class="tag-c">form</span>&gt;
+);</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q54">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q54</span>
+      <span class="q-title">What is Automatic Batching in React 18?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 18</span><span class="tag">Performance</span></div>
+      <p>Batching means React groups multiple state updates together into a single re-render. In React 17, batching only happened inside React event handlers. In React 18 with <code>createRoot</code>, <strong>all state updates are batched automatically</strong> — including inside <code>setTimeout</code>, Promises, and native event handlers.</p>
+      <pre><code><span class="comment">// React 17 — NOT batched in async context (2 renders)</span>
+<span class="func">setTimeout</span>(() => {
+  setCount(c => c + <span class="string">1</span>); <span class="comment">// render 1</span>
+  setFlag(f => !f);      <span class="comment">// render 2</span>
+}, <span class="string">1000</span>);
+
+<span class="comment">// React 18 — batched everywhere (1 render) ✅</span>
+<span class="func">setTimeout</span>(() => {
+  setCount(c => c + <span class="string">1</span>);
+  setFlag(f => !f);      <span class="comment">// only 1 render total</span>
+}, <span class="string">1000</span>);
+
+<span class="comment">// Opt out when needed (force immediate render)</span>
+<span class="keyword">import</span> { flushSync } <span class="keyword">from</span> <span class="string">'react-dom'</span>;
+<span class="func">flushSync</span>(() => setCount(c => c + <span class="string">1</span>)); <span class="comment">// immediate render</span>
+<span class="func">flushSync</span>(() => setFlag(f => !f));      <span class="comment">// immediate render</span></code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q55">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q55</span>
+      <span class="q-title">What is the React Compiler (React Forget)?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 19</span><span class="tag">Build Tools</span></div>
+      <p>The React Compiler is a <strong>build-time Babel plugin that automatically inserts memoization</strong> — eliminating the need to write <code>useMemo</code>, <code>useCallback</code>, and <code>React.memo</code> manually. It statically analyzes your component's data flow and inserts the right optimizations at compile time.</p>
+      <pre><code><span class="comment">// What you write:</span>
+<span class="keyword">function</span> <span class="func">Component</span>({ items, filter }) {
+  <span class="keyword">const</span> sorted = items.<span class="func">filter</span>(i => i.type === filter).<span class="func">sort</span>();
+  <span class="keyword">return</span> &lt;<span class="tag-c">List</span> <span class="prop">data</span>={sorted} /&gt;;
+}
+
+<span class="comment">// What the compiler produces (conceptually):</span>
+<span class="keyword">function</span> <span class="func">Component</span>({ items, filter }) {
+  <span class="keyword">const</span> sorted = <span class="func">useMemo</span>(() => items.<span class="func">filter</span>(i => i.type === filter).<span class="func">sort</span>(), [items, filter]);
+  <span class="keyword">return</span> &lt;<span class="tag-c">MemoizedList</span> <span class="prop">data</span>={sorted} /&gt;;
+}</code></pre>
+      <div class="tip-box">
+        <div class="label">Status (2025)</div>
+        Available as opt-in, in production at Meta, and shipping with React 19. Install: <code>npm install babel-plugin-react-compiler</code>. The compiler requires your components to follow React's rules (pure renders, no mutations) — it won't optimize code that breaks the rules.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q56">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q56</span>
+      <span class="q-title">What is the use() hook? (React 19)</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">React 19</span><span class="tag">Suspense</span></div>
+      <p><code>use()</code> is a new hook (React 19) that can read either a <strong>Promise</strong> (integrating with Suspense) or a <strong>Context</strong>. The key difference from existing hooks: it can be called <strong>conditionally</strong> — inside if/else blocks — which no other hook allows.</p>
+      <pre><code><span class="comment">// Reading a Promise — suspends until resolved</span>
+<span class="keyword">function</span> <span class="func">UserProfile</span>({ userPromise }) {
+  <span class="keyword">const</span> user = <span class="func">use</span>(userPromise); <span class="comment">// suspends; parent Suspense shows fallback</span>
+  <span class="keyword">return</span> &lt;<span class="tag-c">h1</span>&gt;{user.name}&lt;/<span class="tag-c">h1</span>&gt;;
+}
+
+<span class="comment">// Start fetching BEFORE the component renders</span>
+<span class="keyword">const</span> promise = <span class="func">fetchUser</span>(<span class="string">1</span>); <span class="comment">// begins immediately in parent</span>
+&lt;<span class="tag-c">Suspense</span> <span class="prop">fallback</span>={&lt;<span class="tag-c">Spinner</span> /&gt;}&gt;
+  &lt;<span class="tag-c">UserProfile</span> <span class="prop">userPromise</span>={promise} /&gt;
+&lt;/<span class="tag-c">Suspense</span>&gt;
+
+<span class="comment">// Conditional Context reading — unique to use()</span>
+<span class="keyword">if</span> (isAdmin) {
+  <span class="keyword">const</span> { theme } = <span class="func">use</span>(ThemeContext); <span class="comment">// ✅ conditional is allowed!</span>
+}</code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q57">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q57</span>
+      <span class="q-title">Explain the complete rendering lifecycle in React 18</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Internals</span><span class="tag">Lifecycle</span></div>
+      <pre><code><span class="comment">// 1. TRIGGER — what starts a render</span>
+<span class="comment">//    - setState / dispatch</span>
+<span class="comment">//    - Parent re-renders (new props)</span>
+<span class="comment">//    - Context value changed</span>
+
+<span class="comment">// 2. RENDER PHASE — pure, no side effects, can be interrupted</span>
+<span class="comment">//    React calls your component function</span>
+<span class="comment">//    Returns new virtual DOM</span>
+<span class="comment">//    Diffs against previous virtual DOM</span>
+
+<span class="comment">// 3. COMMIT PHASE — non-interruptible, updates real DOM</span>
+<span class="comment">//    Before mutation: useLayoutEffect cleanups run</span>
+<span class="comment">//    Mutation:        React applies DOM changes</span>
+<span class="comment">//    After mutation:  useLayoutEffect callbacks run (sync)</span>
+
+<span class="comment">// 4. BROWSER PAINT — user sees the update</span>
+
+<span class="comment">// 5. PASSIVE EFFECTS (async, after paint)</span>
+<span class="comment">//    useEffect cleanups from previous render run</span>
+<span class="comment">//    useEffect callbacks run</span></code></pre>
+      <div class="insight-box">
+        <div class="label">Why effects run after paint</div>
+        By design — effects can trigger more state updates, which would cause more renders. Running them after paint means the user already sees a consistent UI before any cascading updates happen. This avoids the "flash" of intermediate states.
+      </div>
+    </div>
+  </div>
+
+  <div class="q-card" id="q58">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q58</span>
+      <span class="q-title">What is Hydration in React?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">SSR</span><span class="tag">Next.js</span><span class="tag">Performance</span></div>
+      <p>Hydration is the process of <strong>attaching React's event handlers and interactivity to server-rendered HTML</strong>. The server generates plain HTML (which loads fast, no JS needed), then when the JS bundle arrives, React "hydrates" — it reconciles its virtual DOM with the existing HTML and wires up all the event listeners.</p>
+      <pre><code><span class="comment">// Server sends: &lt;button data-reactroot&gt;0&lt;/button&gt;</span>
+<span class="comment">// React hydrates: attaches onClick, useState, etc.</span>
+<span class="comment">// Now: &lt;button onClick={fn}&gt;0&lt;/button&gt; — interactive</span>
+
+<span class="comment">// Hydration mismatch — server HTML != client render = error</span>
+<span class="keyword">function</span> <span class="func">BadComponent</span>() {
+  <span class="keyword">return</span> &lt;<span class="tag-c">div</span>&gt;{Math.<span class="func">random</span>()}&lt;/<span class="tag-c">div</span>&gt;; <span class="comment">// ❌ server vs client differ</span>
+}
+
+<span class="comment">// ✅ Fix — client-only values in useEffect</span>
+<span class="keyword">const</span> [rand, setRand] = <span class="func">useState</span>(<span class="keyword">null</span>);
+<span class="func">useEffect</span>(() => <span class="func">setRand</span>(Math.<span class="func">random</span>()), []); <span class="comment">// runs only on client</span>
+<span class="keyword">return</span> &lt;<span class="tag-c">div</span>&gt;{rand ?? <span class="string">'loading...'</span>}&lt;/<span class="tag-c">div</span>&gt;; <span class="comment">// stable during SSR</span></code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q59">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q59</span>
+      <span class="q-title">What are common React performance anti-patterns?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">Performance</span><span class="tag">Anti-patterns</span></div>
+      <pre><code><span class="comment">// 1. Anonymous functions as props → new fn every render</span>
+&lt;<span class="tag-c">Btn</span> onClick={() => <span class="func">handle</span>(id)} /&gt; <span class="comment">// ❌</span>
+<span class="keyword">const</span> cb = <span class="func">useCallback</span>(() => <span class="func">handle</span>(id), [id]);
+&lt;<span class="tag-c">Btn</span> <span class="prop">onClick</span>={cb} /&gt; <span class="comment">// ✅</span>
+
+<span class="comment">// 2. Object literals as props</span>
+&lt;<span class="tag-c">C</span> <span class="prop">style</span>={{ color: <span class="string">'red'</span> }} /&gt; <span class="comment">// ❌ new obj every render</span>
+<span class="keyword">const</span> s = { color: <span class="string">'red'</span> };  &lt;<span class="tag-c">C</span> <span class="prop">style</span>={s} /&gt; <span class="comment">// ✅ stable</span>
+
+<span class="comment">// 3. Index as key in dynamic lists (see Q11)</span>
+
+<span class="comment">// 4. useEffect without cleanup</span>
+<span class="func">useEffect</span>(() => {
+  window.<span class="func">addEventListener</span>(<span class="string">'resize'</span>, fn);
+  <span class="keyword">return</span> () => window.<span class="func">removeEventListener</span>(<span class="string">'resize'</span>, fn); <span class="comment">// ✅</span>
+}, []);
+
+<span class="comment">// 5. Derived state stored in useState</span>
+<span class="keyword">const</span> [items] = <span class="func">useState</span>([]); <span class="keyword">const</span> [count] = <span class="func">useState</span>(<span class="string">0</span>); <span class="comment">// ❌</span>
+<span class="keyword">const</span> count = items.length; <span class="comment">// ✅ derive it</span>
+
+<span class="comment">// 6. useEffect for data transformation (no async needed)</span>
+<span class="comment">// ❌ setFilteredItems in useEffect causes extra render</span>
+<span class="comment">// ✅ const filtered = useMemo(() => ..., [items, filter])</span></code></pre>
+    </div>
+  </div>
+
+  <div class="q-card" id="q60">
+    <div class="q-header" onclick="toggle(this)">
+      <span class="q-number">Q60</span>
+      <span class="q-title">What is the difference between useEffect and server-side code?</span>
+      <span class="q-toggle">+</span>
+    </div>
+    <div class="q-body">
+      <div class="tags-row"><span class="tag">SSR</span><span class="tag">useEffect</span></div>
+      <p><code>useEffect</code> <strong>never runs on the server</strong> — it's a client-only hook. This is by design: servers don't have browser APIs (localStorage, window, document). Effects are skipped during SSR, which means any browser-specific code must live inside an effect (or check for window).</p>
+      <pre><code><span class="comment">// ✅ Safe — browser APIs inside useEffect (client-only)</span>
+<span class="func">useEffect</span>(() => {
+  localStorage.<span class="func">setItem</span>(<span class="string">'key'</span>, value);
+  window.<span class="func">scrollTo</span>(<span class="string">0</span>, <span class="string">0</span>);
+  document.title = <span class="string">'Updated'</span>;
+}, [value]);
+
+<span class="comment">// ❌ Server crash — localStorage undefined on server!</span>
+<span class="keyword">function</span> <span class="func">Component</span>() {
+  <span class="keyword">const</span> theme = localStorage.<span class="func">getItem</span>(<span class="string">'theme'</span>); <span class="comment">// crashes SSR</span>
+  <span class="keyword">return</span> &lt;<span class="tag-c">div</span> <span class="prop">className</span>={theme}&gt;...&lt;/<span class="tag-c">div</span>&gt;;
+}
+
+<span class="comment">// ✅ SSR-safe — read in effect, show fallback during SSR</span>
+<span class="keyword">const</span> [theme, setTheme] = <span class="func">useState</span>(<span class="string">'light'</span>); <span class="comment">// safe default for SSR</span>
+<span class="func">useEffect</span>(() => {
+  <span class="keyword">const</span> saved = localStorage.<span class="func">getItem</span>(<span class="string">'theme'</span>);
+  <span class="keyword">if</span> (saved) <span class="func">setTheme</span>(saved);
+}, []);</code></pre>
+    </div>
+  </div>
+
+  <!-- CHEATSHEET -->
+  <div class="divider" id="cheatsheet"></div>
+  <h2 class="level-title" style="margin: 2rem 0 1rem; font-family: 'Fraunces', serif;">⚡ All Hooks Cheatsheet</h2>
+  <div class="cheat-grid">
+    <div class="cheat-card"><div class="cheat-hook">useState</div><div class="cheat-desc">Local state. Triggers re-render on change.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useEffect</div><div class="cheat-desc">Side effects after render. API calls, timers, subscriptions.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useRef</div><div class="cheat-desc">DOM access or persist value — no re-render on change.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useContext</div><div class="cheat-desc">Read context value. Re-renders when context changes.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useMemo</div><div class="cheat-desc">Cache computed value. Avoids expensive recalculation.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useCallback</div><div class="cheat-hook" style="font-size:11px;color:var(--accent-blue)"></div><div class="cheat-desc">Cache function reference. Pair with React.memo.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useReducer</div><div class="cheat-desc">Complex state logic. Like a local Redux store.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useLayoutEffect</div><div class="cheat-desc">Sync DOM measurements. Runs before browser paint.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useTransition</div><div class="cheat-desc">Mark state update as non-urgent. React 18+.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useDeferredValue</div><div class="cheat-desc">Defer a value. Use when you don't own the setter. React 18+.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useOptimistic</div><div class="cheat-desc">Instant UI before server confirms. React 19+.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">useActionState</div><div class="cheat-desc">Async form state — pending, result, error. React 19+.</div></div>
+    <div class="cheat-card"><div class="cheat-hook">use()</div><div class="cheat-desc">Read Promise or Context. Can be conditional. React 19+.</div></div>
+  </div>
+
+  <div class="divider" id="comparisons"></div>
+  <h2 class="level-title" style="margin: 2rem 0 1rem; font-family: 'Fraunces', serif;">📊 Key Comparisons</h2>
+  <table class="cmp-table">
+    <tr><th>Question</th><th>A</th><th>B</th></tr>
+    <tr><td>Props vs State</td><td>From parent, read-only</td><td>Own data, settable</td></tr>
+    <tr><td>useMemo vs useCallback</td><td>Caches a value</td><td>Caches a function</td></tr>
+    <tr><td>useEffect vs useLayoutEffect</td><td>After paint (async)</td><td>Before paint (sync)</td></tr>
+    <tr><td>Controlled vs Uncontrolled</td><td>React drives value</td><td>DOM drives value</td></tr>
+    <tr><td>useState vs useReducer</td><td>Simple values</td><td>Complex logic/transitions</td></tr>
+    <tr><td>Context vs Redux</td><td>Simple sharing, global data</td><td>Complex state machine</td></tr>
+    <tr><td>Link vs NavLink</td><td>Basic navigation</td><td>Nav with active state</td></tr>
+    <tr><td>Server vs Client Component</td><td>Zero JS, async, DB access</td><td>Interactive, hooks</td></tr>
+    <tr><td>useTransition vs useDeferredValue</td><td>You own the setter</td><td>You receive the value</td></tr>
+  </table>
+
+</main>
+
+</div>
+
+<script>
+const questions = [
+  { id: 'q1',  level: 'easy',   title: 'What is React? Why do we use it?' },
+  { id: 'q2',  level: 'easy',   title: 'Library vs Framework difference' },
+  { id: 'q3',  level: 'easy',   title: 'What is JSX?' },
+  { id: 'q4',  level: 'easy',   title: 'What is a Component in React?' },
+  { id: 'q5',  level: 'easy',   title: 'What are Props?' },
+  { id: 'q6',  level: 'easy',   title: 'What is State?' },
+  { id: 'q7',  level: 'easy',   title: 'Props vs State difference' },
+  { id: 'q8',  level: 'easy',   title: 'What is the Virtual DOM?' },
+  { id: 'q9',  level: 'easy',   title: 'React.createElement vs JSX' },
+  { id: 'q10', level: 'easy',   title: 'How do you render a list?' },
+  { id: 'q11', level: 'easy',   title: 'What is the key prop?' },
+  { id: 'q12', level: 'easy',   title: 'What is Conditional Rendering?' },
+  { id: 'q13', level: 'easy',   title: 'How to handle events in React?' },
+  { id: 'q14', level: 'easy',   title: 'What is a Fragment?' },
+  { id: 'q15', level: 'easy',   title: 'What is useState?' },
+  { id: 'q16', level: 'easy',   title: 'What is useEffect?' },
+  { id: 'q17', level: 'easy',   title: 'What is useRef?' },
+  { id: 'q18', level: 'easy',   title: 'What is useContext?' },
+  { id: 'q19', level: 'easy',   title: 'What is Prop Drilling?' },
+  { id: 'q20', level: 'easy',   title: 'null vs undefined vs false in JSX' },
+  { id: 'q21', level: 'easy',   title: 'Child to Parent data passing' },
+  { id: 'q22', level: 'easy',   title: 'Controlled vs Uncontrolled Components' },
+  { id: 'q23', level: 'easy',   title: 'What is React.StrictMode?' },
+  { id: 'q24', level: 'easy',   title: 'export default vs named export' },
+  { id: 'q25', level: 'easy',   title: 'What is the children prop?' },
+  { id: 'q26', level: 'medium', title: 'useEffect dependency array cases' },
+  { id: 'q27', level: 'medium', title: 'What is useMemo?' },
+  { id: 'q28', level: 'medium', title: 'What is useCallback?' },
+  { id: 'q29', level: 'medium', title: 'What is useReducer?' },
+  { id: 'q30', level: 'medium', title: 'What are Custom Hooks?' },
+  { id: 'q31', level: 'medium', title: 'Rules of Hooks — explained' },
+  { id: 'q32', level: 'medium', title: 'What is React.memo?' },
+  { id: 'q33', level: 'medium', title: 'useEffect vs useLayoutEffect' },
+  { id: 'q34', level: 'medium', title: 'What is Lifting State Up?' },
+  { id: 'q35', level: 'medium', title: 'What are Error Boundaries?' },
+  { id: 'q36', level: 'medium', title: 'React.lazy and Code Splitting' },
+  { id: 'q37', level: 'medium', title: 'Context API vs Redux' },
+  { id: 'q38', level: 'medium', title: 'What is forwardRef?' },
+  { id: 'q39', level: 'medium', title: 'Why StrictMode calls components twice?' },
+  { id: 'q40', level: 'medium', title: 'Link vs NavLink in React Router' },
+  { id: 'q41', level: 'medium', title: 'What is Outlet in React Router v6?' },
+  { id: 'q42', level: 'medium', title: 'Programmatic navigation in React Router' },
+  { id: 'q43', level: 'medium', title: 'What is Redux and its core concepts?' },
+  { id: 'q44', level: 'medium', title: 'What is Zustand vs Redux?' },
+  { id: 'q45', level: 'medium', title: 'What causes unnecessary re-renders?' },
+  { id: 'q46', level: 'medium', title: 'What is Reconciliation?' },
+  { id: 'q47', level: 'medium', title: 'What happens when key prop changes?' },
+  { id: 'q48', level: 'hard',   title: 'What is React Fiber architecture?' },
+  { id: 'q49', level: 'hard',   title: 'What is Concurrent Rendering?' },
+  { id: 'q50', level: 'hard',   title: 'useTransition vs useDeferredValue' },
+  { id: 'q51', level: 'hard',   title: 'What are React Server Components?' },
+  { id: 'q52', level: 'hard',   title: 'What is useOptimistic? (React 19)' },
+  { id: 'q53', level: 'hard',   title: 'What is useActionState? (React 19)' },
+  { id: 'q54', level: 'hard',   title: 'What is Automatic Batching?' },
+  { id: 'q55', level: 'hard',   title: 'What is the React Compiler?' },
+  { id: 'q56', level: 'hard',   title: 'What is the use() hook? (React 19)' },
+  { id: 'q57', level: 'hard',   title: 'Complete rendering lifecycle in React 18' },
+  { id: 'q58', level: 'hard',   title: 'What is Hydration in React?' },
+  { id: 'q59', level: 'hard',   title: 'Common React performance anti-patterns' },
+  { id: 'q60', level: 'hard',   title: 'useEffect vs server-side code' },
+];
+
+function buildNav() {
+  const containers = { easy: 'nav-easy', medium: 'nav-medium', hard: 'nav-hard' };
+  const nums = { easy: 0, medium: 0, hard: 0 };
+  questions.forEach(q => {
+    const el = document.createElement('div');
+    el.className = 'nav-item';
+    el.dataset.id = q.id;
+    el.dataset.title = q.title.toLowerCase();
+    const num = ++nums[q.level];
+    el.innerHTML = `<span class="q-num">Q${q.id.replace('q','')}</span> ${q.title}`;
+    el.onclick = () => scrollTo(q.id);
+    document.getElementById(containers[q.level]).appendChild(el);
+  });
+}
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setActive(id);
+    if (!el.classList.contains('open')) el.querySelector('.q-header').click();
+  }
+}
+
+function setActive(id) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const nav = document.querySelector(`.nav-item[data-id="${id}"]`);
+  if (nav) { nav.classList.add('active'); nav.scrollIntoView({ block: 'nearest' }); }
+}
+
+function toggle(header) {
+  const card = header.parentElement;
+  card.classList.toggle('open');
+}
+
+function filterNav(q) {
+  const search = q.toLowerCase();
+  document.querySelectorAll('.nav-item[data-title]').forEach(el => {
+    el.style.display = el.dataset.title.includes(search) ? '' : 'none';
+  });
+}
+
+// Intersection observer to highlight active nav item
+function setupObserver() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) setActive(e.target.id);
+    });
+  }, { threshold: 0.3 });
+  questions.forEach(q => {
+    const el = document.getElementById(q.id);
+    if (el) observer.observe(el);
+  });
+}
+
+buildNav();
+setupObserver();
+</script>
+
+</body>
+</html>

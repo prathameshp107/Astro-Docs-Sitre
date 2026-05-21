@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" width="100%">
+  <defs>
+    <marker orient="auto-start-reverse" markerHeight="6" markerWidth="6" refY="5" refX="8" viewBox="0 0 10 10" id="arr2">
+      <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#0F6E56" fill="none" d="M2 1L8 5L2 9"></path>
+    </marker>
+  </defs>
+  
+  <rect stroke-width="1.5" stroke="#0F6E56" fill="#E1F5EE" rx="12" height="80" width="170" y="110" x="255"></rect>
+  <text font-weight="500" fill="#085041" font-size="14" font-family="monospace" text-anchor="middle" y="138" x="340">STORE</text>
+  <text fill="#0F6E56" font-size="11" font-family="monospace" text-anchor="middle" y="156" x="340">{ user, cart, theme }</text>
+  <text fill="#0F6E56" font-size="11" font-family="monospace" text-anchor="middle" y="174" x="340">single source of truth</text>
+
+  
+  <rect stroke-width="0.5" stroke="#534AB7" fill="#EEEDFE" rx="8" height="50" width="160" y="20" x="30"></rect>
+  <text font-weight="500" fill="#3C3489" font-size="13" font-family="monospace" text-anchor="middle" y="40" x="110">Header</text>
+  <text fill="#534AB7" font-size="11" font-family="monospace" text-anchor="middle" y="58" x="110">reads cart count</text>
+  <line marker-end="url(#arr2)" stroke-dasharray="4 3" stroke-width="1" stroke="#1D9E75" y2="130" x2="252" y1="45" x1="190"></line>
+
+  
+  <rect stroke-width="0.5" stroke="#534AB7" fill="#EEEDFE" rx="8" height="50" width="160" y="20" x="490"></rect>
+  <text font-weight="500" fill="#3C3489" font-size="13" font-family="monospace" text-anchor="middle" y="40" x="570">UserCard</text>
+  <text fill="#534AB7" font-size="11" font-family="monospace" text-anchor="middle" y="58" x="570">reads user name</text>
+  <line marker-end="url(#arr2)" stroke-dasharray="4 3" stroke-width="1" stroke="#1D9E75" y2="130" x2="428" y1="45" x1="490"></line>
+
+  
+  <rect stroke-width="0.5" stroke="#534AB7" fill="#EEEDFE" rx="8" height="50" width="160" y="220" x="30"></rect>
+  <text font-weight="500" fill="#3C3489" font-size="13" font-family="monospace" text-anchor="middle" y="240" x="110">CartPage</text>
+  <text fill="#534AB7" font-size="11" font-family="monospace" text-anchor="middle" y="258" x="110">reads + updates cart</text>
+  <line marker-end="url(#arr2)" stroke-dasharray="4 3" stroke-width="1" stroke="#1D9E75" y2="192" x2="252" y1="245" x1="190"></line>
+
+  
+  <rect stroke-width="0.5" stroke="#534AB7" fill="#EEEDFE" rx="8" height="50" width="160" y="220" x="490"></rect>
+  <text font-weight="500" fill="#3C3489" font-size="13" font-family="monospace" text-anchor="middle" y="240" x="570">Settings</text>
+  <text fill="#534AB7" font-size="11" font-family="monospace" text-anchor="middle" y="258" x="570">reads + updates theme</text>
+  <line marker-end="url(#arr2)" stroke-dasharray="4 3" stroke-width="1" stroke="#1D9E75" y2="192" x2="428" y1="245" x1="490"></line>
+
+  <text fill="#888780" font-size="11" font-family="monospace" text-anchor="middle" y="290" x="340">Any component connects directly — no prop drilling needed</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" width="100%">
+  <defs>
+    <marker orient="auto-start-reverse" markerHeight="6" markerWidth="6" refY="5" refX="8" viewBox="0 0 10 10" id="arr">
+      <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#888780" fill="none" d="M2 1L8 5L2 9"></path>
+    </marker>
+  </defs>
+  
+  <rect stroke-width="0.5" stroke="#854F0B" fill="#FAEEDA" rx="8" height="50" width="200" y="20" x="240"></rect>
+  <text font-weight="500" fill="#633806" font-size="13" font-family="monospace" text-anchor="middle" y="40" x="340">App</text>
+  <text fill="#854F0B" font-size="11" font-family="monospace" text-anchor="middle" y="58" x="340">has user data</text>
+
+  
+  <line marker-end="url(#arr)" stroke-width="1" stroke="#888780" y2="100" x2="340" y1="70" x1="340"></line>
+  <text fill="#888780" font-size="10" font-family="monospace" y="90" x="360">passes user</text>
+
+  
+  <rect stroke-width="0.5" stroke="#5F5E5A" fill="#F1EFE8" rx="8" height="50" width="280" y="100" x="200"></rect>
+  <text font-weight="500" fill="#444441" font-size="13" font-family="monospace" text-anchor="middle" y="120" x="340">Layout</text>
+  <text fill="#5F5E5A" font-size="11" font-family="monospace" text-anchor="middle" y="138" x="340">doesn't need it, just passes it</text>
+
+  
+  <line marker-end="url(#arr)" stroke-width="1" stroke="#888780" y2="180" x2="200" y1="150" x1="280"></line>
+  <text fill="#888780" font-size="10" font-family="monospace" text-anchor="end" y="172" x="195">passes user</text>
+
+  
+  <line marker-end="url(#arr)" stroke-width="1" stroke="#888780" y2="180" x2="480" y1="150" x1="400"></line>
+  <text fill="#888780" font-size="10" font-family="monospace" y="172" x="485">passes user</text>
+
+  
+  <rect stroke-width="0.5" stroke="#5F5E5A" fill="#F1EFE8" rx="8" height="50" width="220" y="180" x="80"></rect>
+  <text font-weight="500" fill="#444441" font-size="13" font-family="monospace" text-anchor="middle" y="200" x="190">Sidebar</text>
+  <text fill="#5F5E5A" font-size="11" font-family="monospace" text-anchor="middle" y="218" x="190">doesn't need it, passes again</text>
+
+  
+  <rect stroke-width="0.5" stroke="#5F5E5A" fill="#F1EFE8" rx="8" height="50" width="240" y="180" x="370"></rect>
+  <text font-weight="500" fill="#444441" font-size="13" font-family="monospace" text-anchor="middle" y="200" x="490">MainContent</text>
+  <text fill="#5F5E5A" font-size="11" font-family="monospace" text-anchor="middle" y="218" x="490">doesn't need it, passes again</text>
+
+  
+  <line marker-end="url(#arr)" stroke-width="1" stroke="#888780" y2="260" x2="160" y1="230" x1="160"></line>
+
+  
+  <rect stroke-width="0.5" stroke="#993C1D" fill="#FAECE7" rx="8" height="50" width="200" y="260" x="60"></rect>
+  <text font-weight="500" fill="#712B13" font-size="13" font-family="monospace" text-anchor="middle" y="280" x="160">UserCard</text>
+  <text fill="#993C1D" font-size="11" font-family="monospace" text-anchor="middle" y="298" x="160">FINALLY uses user 😤</text>
+
+  
+  <rect stroke-width="0.5" stroke="#A32D2D" fill="#FCEBEB" rx="8" height="50" width="250" y="260" x="390"></rect>
+  <text font-weight="500" fill="#791F1F" font-size="12" font-family="monospace" text-anchor="middle" y="280" x="515">This is "Prop Drilling"</text>
+  <text fill="#A32D2D" font-size="11" font-family="monospace" text-anchor="middle" y="298" x="515">3 layers just to pass data 😩</text>
+</svg>

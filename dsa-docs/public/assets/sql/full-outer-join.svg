@@ -1,0 +1,41 @@
+<svg width="600" height="430" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="600" height="420" fill="#fafafa" rx="10"/>
+  
+  <text x="300" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#2c3e50">SQL FULL OUTER JOIN</text>
+  <text x="300" y="65" text-anchor="middle" font-size="14" fill="#7f8c8d">Returns all rows from both tables, filling with NULL where no match exists</text>
+
+  <circle cx="240" cy="180" r="90" fill="#3498db" fill-opacity="0.6" stroke="#2980b9" stroke-width="4"/>
+  <text x="170" y="160" font-size="16" font-weight="bold" fill="#2980b9">Employees</text>
+  <text x="170" y="180" font-size="12" fill="#2980b9">(Table A)</text>
+
+  <circle cx="360" cy="180" r="90" fill="#e67e22" fill-opacity="0.6" stroke="#d35400" stroke-width="4"/>
+  <text x="340" y="160" font-size="16" font-weight="bold" fill="#d35400">Departments</text>
+  <text x="350" y="180" font-size="12" fill="#d35400">(Table B)</text>
+
+  <text x="300" y="185" text-anchor="middle" font-size="14" font-weight="bold" fill="white">MATCH</text>
+  
+  <path d="M 300,275 L 300,310" stroke="#bdc3c7" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+  <rect x="100" y="320" width="400" height="95" rx="8" fill="white" stroke="#2c3e50" stroke-width="2"/>
+  <text x="115" y="340" font-size="13" font-weight="bold" fill="#2c3e50">Resulting Dataset (ALL Records Combined)</text>
+  
+  <line x1="115" y1="350" x2="485" y2="350" stroke="#eee" stroke-width="1"/>
+  
+  <text x="115" y="370" font-size="12" fill="#2c3e50">Alice / Bob</text>
+  <text x="210" y="370" font-size="12" fill="#27ae60">✓ Matched</text>
+  <text x="340" y="370" font-size="12" fill="#7f8c8d">Dept: Engineering/HR</text>
+  
+  <text x="115" y="390" font-size="12" fill="#2c3e50">Carol / David</text>
+  <text x="210" y="390" font-size="12" fill="#3498db">(A Only)</text>
+  <text x="340" y="390" font-size="12" fill="#e67e22" font-weight="bold">Dept: NULL</text>
+  
+  <text x="115" y="410" font-size="12" fill="#e67e22">Finance</text>
+  <text x="210" y="410" font-size="12" fill="#e67e22">(B Only)</text>
+  <text x="340" y="410" font-size="12" fill="#3498db" font-weight="bold">Emp: NULL</text>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#bdc3c7" />
+    </marker>
+  </defs>
+</svg>

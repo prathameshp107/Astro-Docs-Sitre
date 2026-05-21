@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Abstract code and data structure illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef2ff"/>
+      <stop offset="1" stop-color="#c4b5fd"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="1" stop-color="#312e81"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" rx="28" fill="url(#bg)"/>
+  <rect x="46" y="42" width="210" height="156" rx="14" fill="url(#panel)"/>
+  <circle cx="70" cy="66" r="5" fill="#f87171"/>
+  <circle cx="88" cy="66" r="5" fill="#fbbf24"/>
+  <circle cx="106" cy="66" r="5" fill="#34d399"/>
+  <path d="M75 100h84M75 126h132M75 152h104" stroke="#a5b4fc" stroke-width="9" stroke-linecap="round"/>
+  <path d="M75 179h58" stroke="#67e8f9" stroke-width="9" stroke-linecap="round"/>
+  <g fill="#ffffff" stroke="#6366f1" stroke-width="5">
+    <circle cx="300" cy="88" r="24"/>
+    <circle cx="338" cy="160" r="24"/>
+    <circle cx="266" cy="184" r="24"/>
+    <circle cx="318" cy="236" r="24"/>
+  </g>
+  <g stroke="#6366f1" stroke-width="5" stroke-linecap="round">
+    <path d="M311 110l16 28"/>
+    <path d="M316 168l-28 9"/>
+    <path d="M283 201l18 18"/>
+    <path d="M328 181l-8 32"/>
+  </g>
+  <g fill="#4f46e5" font-family="Arial, sans-serif" font-size="19" font-weight="700">
+    <text x="291" y="95">A</text>
+    <text x="331" y="167">B</text>
+    <text x="259" y="191">C</text>
+    <text x="311" y="243">D</text>
+  </g>
+</svg>

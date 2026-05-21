@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 200" width="100%">
+  <defs>
+    <marker orient="auto-start-reverse" markerHeight="6" markerWidth="6" refY="5" refX="8" viewBox="0 0 10 10" id="arr3">
+      <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#888780" fill="none" d="M2 1L8 5L2 9"></path>
+    </marker>
+  </defs>
+  
+  <rect stroke-width="0.5" stroke="#534AB7" fill="#EEEDFE" rx="10" height="80" width="150" y="60" x="20"></rect>
+  <text font-weight="500" fill="#3C3489" font-size="13" font-family="monospace" text-anchor="middle" y="90" x="95">Component</text>
+  <text fill="#534AB7" font-size="11" font-family="monospace" text-anchor="middle" y="110" x="95">dispatches</text>
+  <text fill="#534AB7" font-size="11" font-family="monospace" text-anchor="middle" y="126" x="95">an action</text>
+
+  
+  <line marker-end="url(#arr3)" stroke-width="1" stroke="#888780" y2="100" x2="210" y1="100" x1="170"></line>
+  <text fill="#888780" font-size="10" font-family="monospace" text-anchor="middle" y="92" x="190">dispatch</text>
+
+  
+  <rect stroke-width="0.5" stroke="#854F0B" fill="#FAEEDA" rx="10" height="80" width="150" y="60" x="210"></rect>
+  <text font-weight="500" fill="#633806" font-size="13" font-family="monospace" text-anchor="middle" y="90" x="285">Action</text>
+  <text fill="#854F0B" font-size="11" font-family="monospace" text-anchor="middle" y="110" x="285">{ type: "ADD",</text>
+  <text fill="#854F0B" font-size="11" font-family="monospace" text-anchor="middle" y="126" x="285">  payload: item }</text>
+
+  
+  <line marker-end="url(#arr3)" stroke-width="1" stroke="#888780" y2="100" x2="400" y1="100" x1="360"></line>
+  <text fill="#888780" font-size="10" font-family="monospace" text-anchor="middle" y="92" x="380">sent to</text>
+
+  
+  <rect stroke-width="0.5" stroke="#993C1D" fill="#FAECE7" rx="10" height="80" width="140" y="60" x="400"></rect>
+  <text font-weight="500" fill="#712B13" font-size="13" font-family="monospace" text-anchor="middle" y="90" x="470">Reducer</text>
+  <text fill="#993C1D" font-size="11" font-family="monospace" text-anchor="middle" y="110" x="470">pure function</text>
+  <text fill="#993C1D" font-size="11" font-family="monospace" text-anchor="middle" y="126" x="470">returns new state</text>
+
+  
+  <line marker-end="url(#arr3)" stroke-width="1" stroke="#888780" y2="100" x2="580" y1="100" x1="540"></line>
+  <text fill="#888780" font-size="10" font-family="monospace" text-anchor="middle" y="92" x="560">updates</text>
+
+  
+  <rect stroke-width="0.5" stroke="#0F6E56" fill="#E1F5EE" rx="10" height="80" width="80" y="60" x="580"></rect>
+  <text font-weight="500" fill="#085041" font-size="13" font-family="monospace" text-anchor="middle" y="90" x="620">Store</text>
+  <text fill="#0F6E56" font-size="11" font-family="monospace" text-anchor="middle" y="110" x="620">new</text>
+  <text fill="#0F6E56" font-size="11" font-family="monospace" text-anchor="middle" y="126" x="620">state</text>
+
+  
+  <text fill="#888780" font-size="11" font-family="monospace" text-anchor="middle" y="175" x="95">1. Trigger</text>
+  <text fill="#888780" font-size="11" font-family="monospace" text-anchor="middle" y="175" x="285">2. Describe what happened</text>
+  <text fill="#888780" font-size="11" font-family="monospace" text-anchor="middle" y="175" x="470">3. Calculate new state</text>
+  <text fill="#888780" font-size="11" font-family="monospace" text-anchor="middle" y="175" x="620">4. Save it</text>
+</svg>

@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Hooks Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Primary Colors */
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #e0e7ff;
+      
+      /* State Colors */
+      --state-bg: #dbeafe;
+      --state-text: #1d4ed8;
+      --effect-bg: #fef3c7;
+      --effect-text: #b45309;
+      --ref-bg: #d1fae5;
+      --ref-text: #047857;
+      --perf-bg: #f3f4f6;
+      --perf-text: #6b7280;
+      --context-bg: #fce7f3;
+      --context-text: #be185d;
+      --advanced-bg: #ede9fe;
+      --advanced-text: #7c3aed;
+      
+      /* Neutral Colors */
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-sidebar: #1e293b;
+      --bg-hover: #334155;
+      --border: #334155;
+      --border-light: #475569;
+      
+      /* Text Colors */
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      /* Code Colors */
+      --code-bg: #0d1117;
+      --kw: #c792ea;
+      --fn: #82aaff;
+      --str: #c3e88d;
+      --cmt: #546e7a;
+      --tag: #f07178;
+      --attr: #ffcb6b;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.5);
+      
+      /* Spacing */
+      --sidebar-width: 260px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Layout */
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 0 0.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.625rem 1rem 0.625rem 2.5rem;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Category Groups */
+    .category {
+      margin-bottom: 1.5rem;
+    }
+
+    .category-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      margin-bottom: 2px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 0.75rem;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .nav-dot.state { background: var(--state-text); }
+    .nav-dot.effect { background: var(--effect-text); }
+    .nav-dot.ref { background: var(--ref-text); }
+    .nav-dot.perf { background: var(--perf-text); }
+    .nav-dot.context { background: var(--context-text); }
+    .nav-dot.advanced { background: var(--advanced-text); }
+
+    /* Main Content */
+    .main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+      max-width: 900px;
+    }
+
+    /* Header */
+    .content-header {
+      margin-bottom: 2rem;
+    }
+
+    .hook-badge-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.875rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .hook-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.025em;
+    }
+
+    .hook-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Card */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .copy-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .copy-btn.copied {
+      background: var(--ref-bg);
+      color: var(--ref-text);
+      border-color: var(--ref-text);
+    }
+
+    /* Code Block */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+    }
+
+    .code-block .kw { color: var(--kw); }
+    .code-block .fn { color: var(--fn); }
+    .code-block .str { color: var(--str); }
+    .code-block .cmt { color: var(--cmt); font-style: italic; }
+    .code-block .tag { color: var(--tag); }
+    .code-block .attr { color: var(--attr); }
+
+    /* Use When Section */
+    .use-when {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .use-when-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .use-when-text {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+
+    .use-when-text strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Demo Area */
+    .demo-area {
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .demo-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .demo-badge {
+      font-size: 0.6875rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Demo Components */
+    .demo-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .demo-val {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-width: 60px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--bg-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+
+    .demo-input {
+      padding: 0.5rem 0.875rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .demo-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .demo-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-card);
+      border-radius: 6px;
+    }
+
+    .demo-note.success {
+      background: var(--ref-bg);
+      color: var(--ref-text);
+    }
+
+    /* Theme Box */
+    .theme-box {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: all 0.3s ease;
+    }
+
+    .theme-box.light {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      color: #0369a1;
+    }
+
+    .theme-box.dark {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #94a3b8;
+    }
+
+    /* Status Indicators */
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .status-dot.online { background: #22c55e; }
+    .status-dot.offline { background: #ef4444; }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Tab Component */
+    .tab-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .tab-content {
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      min-height: 60px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      
+      .main {
+        margin-left: 0;
+        padding: 1.5rem;
+      }
+      
+      .hook-title {
+        font-size: 1.75rem;
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-main);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--border-light);
+    }
+
+    /* Keyboard shortcut hint */
+    .kbd {
+      display: inline-block;
+      padding: 0.125rem 0.375rem;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+
+    /* Syntax highlighting animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in {
+      animation: fadeIn 0.3s ease forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">⚛</div>
+          <span>React Hooks</span>
+        </div>
+      </div>
+      
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Search hooks..." id="searchInput">
+      </div>
+      
+      <nav id="sidebarNav"></nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main" id="mainContent">
+      <!-- Content rendered by JavaScript -->
+    </main>
+  </div>
+
+<script>
+const hooks = [
+  {
+    id: 'useState',
+    title: 'useState',
+    category: 'state',
+    badge: 'state',
+    badgeLabel: 'State Management',
+    desc: 'The most fundamental hook. It lets you add state to functional components. Think of it as "remembering" a value that changes over time.',
+    code: `<span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(<span class="str">0</span>)
+
+<span class="cmt">// Update directly:</span>
+<span class="fn">setCount</span>(count + <span class="str">1</span>)
+
+<span class="cmt">// Update with function (recommended):</span>
+<span class="fn">setCount</span>(prev => prev + <span class="str">1</span>)`,
+    demo: 'useState',
+    useWhen: '<strong>Use when:</strong> you need to store and update any value — numbers, strings, booleans, objects, or arrays. It\'s the go-to hook for local component state.'
+  },
+  {
+    id: 'useEffect',
+    title: 'useEffect',
+    category: 'effect',
+    badge: 'effect',
+    badgeLabel: 'Side Effects',
+    desc: 'Runs side effects after rendering. Perfect for fetching data, setting timers, subscribing to services, or interacting with the DOM.',
+    code: `<span class="kw">const</span> [time, setTime] = <span class="fn">useState</span>(<span class="kw">new</span> <span class="fn">Date</span>())
+
+<span class="fn">useEffect</span>(() => {
+  <span class="cmt">// Run after every render</span>
+  <span class="kw">const</span> id = <span class="fn">setInterval</span>(() => {
+    <span class="fn">setTime</span>(<span class="kw">new</span> <span class="fn">Date</span>())
+  }, <span class="str">1000</span>)
+
+  <span class="cmt">// Cleanup on unmount:</span>
+  <span class="kw">return</span> () => <span class="fn">clearInterval</span>(id)
+}, []) <span class="cmt">// [] = run once on mount</span>`,
+    demo: 'useEffect',
+    useWhen: '<strong>Use when:</strong> you need to sync with something outside React — APIs, WebSocket subscriptions, timers, event listeners, or localStorage.'
+  },
+  {
+    id: 'useContext',
+    title: 'useContext',
+    category: 'context',
+    badge: 'context',
+    badgeLabel: 'Context',
+    desc: 'Reads a value from React Context without prop drilling. Share data globally across your component tree.',
+    code: `<span class="cmt">// 1. Create context</span>
+<span class="kw">const</span> ThemeCtx = <span class="fn">createContext</span>(<span class="str">'light'</span>)
+
+<span class="cmt">// 2. Provide value</span>
+&lt;ThemeCtx.Provider value=<span class="str">"dark"</span>&gt;
+  &lt;App /&gt;
+&lt;/ThemeCtx.Provider&gt;
+
+<span class="cmt">// 3. Read anywhere</span>
+<span class="kw">const</span> theme = <span class="fn">useContext</span>(ThemeCtx)`,
+    demo: 'useContext',
+    useWhen: '<strong>Use when:</strong> many components need the same data — themes, user authentication, language preferences, or any global app state.'
+  },
+  {
+    id: 'useReducer',
+    title: 'useReducer',
+    category: 'state',
+    badge: 'state',
+    badgeLabel: 'State Management',
+    desc: 'A powerful alternative to useState for complex state logic. Like Redux but local to your component.',
+    code: `<span class="kw">function</span> <span class="fn">reducer</span>(state, action) {
+  <span class="kw">switch</span> (action.type) {
+    <span class="kw">case</span> <span class="str">'inc'</span>: <span class="kw">return</span> state + <span class="str">1</span>
+    <span class="kw">case</span> <span class="str">'dec'</span>: <span class="kw">return</span> state - <span class="str">1</span>
+    <span class="kw">case</span> <span class="str">'reset'</span>: <span class="kw">return</span> <span class="str">0</span>
+  }
+}
+
+<span class="kw">const</span> [state, dispatch] = <span class="fn">useReducer</span>(reducer, <span class="str">0</span>)
+<span class="fn">dispatch</span>({ type: <span class="str">'inc'</span> })`,
+    demo: 'useReducer',
+    useWhen: '<strong>Use when:</strong> state logic is complex with multiple actions, or when the next state depends on multiple values. Great for forms!'
+  },
+  {
+    id: 'useRef',
+    title: 'useRef',
+    category: 'ref',
+    badge: 'ref',
+    badgeLabel: 'References',
+    desc: 'Stores a mutable value that doesn\'t trigger re-renders. Perfect for accessing DOM elements or holding values across renders.',
+    code: `<span class="cmt">// Access DOM element</span>
+<span class="kw">const</span> inputRef = <span class="fn">useRef</span>(<span class="kw">null</span>)
+&lt;input ref={inputRef} /&gt;
+inputRef.current.<span class="fn">focus</span>()
+
+<span class="cmt">// Store value without re-render</span>
+<span class="kw">const</span> renderCount = <span class="fn">useRef</span>(<span class="str">0</span>)
+renderCount.current++`,
+    demo: 'useRef',
+    useWhen: '<strong>Use when:</strong> you need to focus inputs, store timers, track previous values, or hold any value without causing re-renders.'
+  },
+  {
+    id: 'useMemo',
+    title: 'useMemo',
+    category: 'perf',
+    badge: 'perf',
+    badgeLabel: 'Performance',
+    desc: 'Caches expensive calculations. Only recomputes when dependencies change, preventing unnecessary recalculations.',
+    code: `<span class="kw">const</span> result = <span class="fn">useMemo</span>(() => {
+  <span class="cmt">// Only recalculates when items changes</span>
+  <span class="kw">return</span> items
+    .<span class="fn">filter</span>(i => i.active)
+    .<span class="fn">map</span>(i => i.value * <span class="str">2</span>)
+    .<span class="fn">reduce</span>((a, b) => a + b, <span class="str">0</span>)
+}, [items])`,
+    demo: 'useMemo',
+    useWhen: '<strong>Use when:</strong> you have expensive computations (filtering large arrays, complex math) that run on every render unnecessarily.'
+  },
+  {
+    id: 'useCallback',
+    title: 'useCallback',
+    category: 'perf',
+    badge: 'perf',
+    badgeLabel: 'Performance',
+    desc: 'Caches a function so it keeps the same reference. Prevents unnecessary re-renders of child components.',
+    code: `<span class="cmt">// New function every render:</span>
+<span class="kw">const</span> handleClick = () => <span class="fn">doSomething</span>(id)
+
+<span class="cmt">// Same function reference:</span>
+<span class="kw">const</span> handleClick = <span class="fn">useCallback</span>(() => {
+  <span class="fn">doSomething</span>(id)
+}, [id])`,
+    demo: 'useCallback',
+    useWhen: '<strong>Use when:</strong> passing callbacks to memoized children (React.memo) or as dependencies in useEffect/useMemo.'
+  },
+  {
+    id: 'useLayoutEffect',
+    title: 'useLayoutEffect',
+    category: 'effect',
+    badge: 'effect',
+    badgeLabel: 'Side Effects',
+    desc: 'Like useEffect but runs synchronously after DOM mutations — before the browser paints. Use for DOM measurements.',
+    code: `<span class="fn">useLayoutEffect</span>(() => {
+  <span class="cmt">// Runs BEFORE browser paint</span>
+  <span class="kw">const</span> rect = ref.current
+    .<span class="fn">getBoundingClientRect</span>()
+  <span class="fn">setWidth</span>(rect.width)
+}, [])
+
+<span class="cmt">// useEffect = after paint (async)</span>
+<span class="cmt">// useLayoutEffect = before paint (sync)</span>`,
+    demo: 'useLayoutEffect',
+    useWhen: '<strong>Use when:</strong> you need to read DOM layout (measurements) and update state to avoid visual flickering.'
+  },
+  {
+    id: 'useImperativeHandle',
+    title: 'useImperativeHandle',
+    category: 'ref',
+    badge: 'ref',
+    badgeLabel: 'References',
+    desc: 'Exposes custom methods from a child component to its parent via ref. Works with forwardRef.',
+    code: `<span class="kw">const</span> MyInput = <span class="fn">forwardRef</span>((props, ref) => {
+  <span class="kw">const</span> inputRef = <span class="fn">useRef</span>()
+
+  <span class="fn">useImperativeHandle</span>(ref, () => ({
+    <span class="fn">focus</span>: () => inputRef.current.<span class="fn">focus</span>(),
+    <span class="fn">clear</span>: () => inputRef.current.value = <span class="str">''</span>
+  }))
+
+  <span class="kw">return</span> &lt;input ref={inputRef} /&gt;
+})`,
+    demo: null,
+    useWhen: '<strong>Use when:</strong> building reusable component libraries where parents need to trigger child actions (focus, scroll, animate).'
+  },
+  {
+    id: 'useId',
+    title: 'useId',
+    category: 'advanced',
+    badge: 'advanced',
+    badgeLabel: 'Advanced',
+    desc: 'Generates unique, stable IDs that work with SSR. Essential for accessibility (form labels, ARIA attributes).',
+    code: `<span class="kw">const</span> id = <span class="fn">useId</span>()
+<span class="cmt">// Example output: ":</span><span class="str">r0:</span><span class="cmt">"</span>
+
+<span class="kw">return</span> (
+  &lt;&gt;
+    &lt;label htmlFor={id}&gt;Name&lt;/label&gt;
+    &lt;input id={id} /&gt;
+  &lt;/&gt;
+)`,
+    demo: 'useId',
+    useWhen: '<strong>Use when:</strong> you need unique IDs for accessible form elements, ARIA attributes, or to link labels to inputs.'
+  },
+  {
+    id: 'useDebugValue',
+    title: 'useDebugValue',
+    category: 'advanced',
+    badge: 'advanced',
+    badgeLabel: 'Advanced',
+    desc: 'Displays custom labels in React DevTools for your custom hooks. Only affects debugging — no runtime impact.',
+    code: `<span class="kw">function</span> <span class="fn">useOnlineStatus</span>() {
+  <span class="kw">const</span> [online, setOnline] = <span class="fn">useState</span>(<span class="kw">true</span>)
+
+  <span class="cmt">// Shows in DevTools:</span>
+  <span class="fn">useDebugValue</span>(online 
+    ? <span class="str">'Online'</span> 
+    : <span class="str">'Offline'</span>)
+
+  <span class="kw">return</span> online
+}`,
+    demo: null,
+    useWhen: '<strong>Use when:</strong> building custom hooks and wanting easier debugging in React DevTools for you and your team.'
+  },
+  {
+    id: 'useDeferredValue',
+    title: 'useDeferredValue',
+    category: 'advanced',
+    badge: 'advanced',
+    badgeLabel: 'Advanced',
+    desc: 'Defers updating a value so urgent UI updates feel instant while expensive renders happen in the background.',
+    code: `<span class="kw">const</span> [query, setQuery] = <span class="fn">useState</span>(<span class="str">''</span>)
+<span class="kw">const</span> deferredQuery = <span class="fn">useDeferredValue</span>(query)
+
+<span class="cmt">// Input updates instantly</span>
+<span class="cmt">// List catches up when ready</span>
+<span class="kw">return</span> &lt;List filter={deferredQuery} /&gt;`,
+    demo: 'useDeferredValue',
+    useWhen: '<strong>Use when:</strong> filtering/searching large lists — keep input responsive while the list catches up.'
+  },
+  {
+    id: 'useTransition',
+    title: 'useTransition',
+    category: 'advanced',
+    badge: 'advanced',
+    badgeLabel: 'Advanced',
+    desc: 'Marks state updates as non-urgent "transitions". React can interrupt them to handle urgent updates first.',
+    code: `<span class="kw">const</span> [isPending, startTransition] = 
+  <span class="fn">useTransition</span>()
+
+<span class="fn">startTransition</span>(() => {
+  <span class="cmt">// Low priority update</span>
+  <span class="fn">setTab</span>(newTab)
+})
+
+<span class="cmt">// Show loading state:</span>
+{isPending && &lt;Spinner /&gt;}`,
+    demo: 'useTransition',
+    useWhen: '<strong>Use when:</strong> switching tabs, navigation, or any update that triggers a slow render you don\'t want to block the UI.'
+  },
+  {
+    id: 'useSyncExternalStore',
+    title: 'useSyncExternalStore',
+    category: 'advanced',
+    badge: 'advanced',
+    badgeLabel: 'Advanced',
+    desc: 'Subscribes to external stores (Redux, Zustand, browser APIs) in a concurrent-mode-safe way.',
+    code: `<span class="kw">const</span> isOnline = <span class="fn">useSyncExternalStore</span>(
+  <span class="cmt">// Subscribe function</span>
+  (cb) => {
+    addEventListener(<span class="str">'online'</span>, cb)
+    <span class="kw">return</span> () => removeEventListener(<span class="str">'online'</span>, cb)
+  },
+  <span class="cmt">// Client snapshot</span>
+  () => navigator.onLine,
+  <span class="cmt">// Server snapshot</span>
+  () => <span class="kw">true</span>
+)`,
+    demo: 'useSyncExternalStore',
+    useWhen: '<strong>Use when:</strong> building custom hooks that read from external data sources (Redux, global stores) in a React-safe way.'
+  }
+]
+
+// State
+let countState = 0
+let reducerState = 0
+let contextTheme = 'light'
+let memoItems = [10, 20, 30]
+let callbackCallCount = 0
+
+// Categories
+const categories = [
+  { id: 'state', name: 'State Management', hooks: ['useState', 'useReducer'] },
+  { id: 'effect', name: 'Side Effects', hooks: ['useEffect', 'useLayoutEffect'] },
+  { id: 'ref', name: 'References', hooks: ['useRef', 'useImperativeHandle'] },
+  { id: 'perf', name: 'Performance', hooks: ['useMemo', 'useCallback'] },
+  { id: 'context', name: 'Context', hooks: ['useContext'] },
+  { id: 'advanced', name: 'Advanced', hooks: ['useId', 'useDebugValue', 'useDeferredValue', 'useTransition', 'useSyncExternalStore'] }
+]
+
+let activeHook = 'useState'
+
+// Render Sidebar
+function renderSidebar(filter = '') {
+  const nav = document.getElementById('sidebarNav')
+  const filteredCategories = categories.map(cat => ({
+    ...cat,
+    hooks: cat.hooks.filter(h => {
+      const hook = hooks.find(hook => hook.id === h)
+      return hook && hook.title.toLowerCase().includes(filter.toLowerCase())
+    })
+  })).filter(cat => cat.hooks.length > 0)
+
+  nav.innerHTML = filteredCategories.map(cat => `
+    <div class="category">
+      <div class="category-title">${cat.name}</div>
+      <ul class="nav-list">
+        ${cat.hooks.map(h => `
+          <li class="nav-item">
+            <a class="nav-link ${activeHook === h ? 'active' : ''}" onclick="showHook('${h}')">
+              <span class="nav-dot ${h === 'useState' || h === 'useReducer' ? 'state' : 
+                h === 'useEffect' || h === 'useLayoutEffect' ? 'effect' : 
+                h === 'useRef' || h === 'useImperativeHandle' ? 'ref' :
+                h === 'useMemo' || h === 'useCallback' ? 'perf' :
+                h === 'useContext' ? 'context' : 'advanced'}"></span>
+              ${h}
+            </a>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `).join('')
+}
+
+// Render Main Content
+function showHook(id) {
+  activeHook = id
+  renderSidebar(document.getElementById('searchInput').value)
+  renderContent()
+}
+
+function renderContent() {
+  const hook = hooks.find(h => h.id === activeHook)
+  if (!hook) return
+
+  const badgeColors = {
+    state: { bg: 'var(--state-bg)', text: 'var(--state-text)' },
+    effect: { bg: 'var(--effect-bg)', text: 'var(--effect-text)' },
+    ref: { bg: 'var(--ref-bg)', text: 'var(--ref-text)' },
+    perf: { bg: 'var(--perf-bg)', text: 'var(--perf-text)' },
+    context: { bg: 'var(--context-bg)', text: 'var(--context-text)' },
+    advanced: { bg: 'var(--advanced-bg)', text: 'var(--advanced-text)' }
+  }
+  const colors = badgeColors[hook.badge]
+
+  const demo = renderDemo(hook)
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="content-header animate-in">
+      <div class="hook-badge-header" style="background: ${colors.bg}; color: ${colors.text}">
+        <span>${hook.badgeLabel}</span>
+      </div>
+      <h1 class="hook-title">${hook.title}</h1>
+      <p class="hook-subtitle">${hook.desc}</p>
+    </div>
+
+    <div class="card animate-in">
+      <div class="card-header">
+        <div class="card-title">
+          <span>📝</span>
+          <span>Syntax</span>
+        </div>
+        <button class="copy-btn" onclick="copyCode(this)">
+          <span>📋</span>
+          <span>Copy</span>
+        </button>
+      </div>
+      <div class="code-block">${hook.code}</div>
+      
+      <div class="use-when">
+        <div class="use-when-title">💡 When to use</div>
+        <div class="use-when-text">${hook.useWhen}</div>
+      </div>
+    </div>
+
+    ${demo ? `
+    <div class="card animate-in">
+      <div class="demo-area" style="margin: 0; border: none; padding: 0; background: transparent;">
+        ${demo}
+      </div>
+    </div>
+    ` : ''}
+  `
+
+  afterRender(hook.id)
+}
+
+// Render Demo
+function renderDemo(hook) {
+  switch(hook.id) {
+    case 'useState': return `
+      <div class="demo-header">
+        <span class="demo-label">Live Demo</span>
+        <span class="demo-badge">Interactive</span>
+      </div>
+      <div class="demo-row">
+        <button class="btn" onclick="updateCount(-1)">−</button>
+        <span class="demo-val" id="count-val">${countState}</span>
+        <button class="btn" onclick="updateCount(1)">+</button>
+        <button class="btn" onclick="updateCount(-countState)">Reset</button>
+      </div>`
+
+    case 'useEffect': return `
+      <div class="demo-header">
+        <span class="demo-label">Live Clock</span>
+        <span class="demo-badge">useEffect + setInterval</span>
+      </div>
+      <div class="demo-row">
+        <span class="demo-val" id="clock-val" style="font-size: 1.5rem;">--:--:--</span>
+      </div>`
+
+    case 'useContext': return `
+      <div class="demo-header">
+        <span class="demo-label">Theme Context</span>
+        <span class="demo-badge">Global State</span>
+      </div>
+      <div class="demo-row">
+        <button class="btn" onclick="toggleTheme()">Toggle Theme</button>
+        <div class="theme-box ${contextTheme}" id="ctx-box">
+          Theme: ${contextTheme}
+        </div>
+      </div>`
+
+    case 'useReducer': return `
+      <div class="demo-header">
+        <span class="demo-label">Reducer Dispatch</span>
+        <span class="demo-badge">Complex State</span>
+      </div>
+      <div class="demo-row">
+        <button class="btn" onclick="dispatchAction('dec')">dispatch(dec)</button>
+        <span class="demo-val" id="reducer-val">${reducerState}</span>
+        <button class="btn" onclick="dispatchAction('inc')">dispatch(inc)</button>
+        <button class="btn" onclick="dispatchAction('reset')">Reset</button>
+      </div>`
+
+    case 'useRef': return `
+      <div class="demo-header">
+        <span class="demo-label">Focus Input</span>
+        <span class="demo-badge">DOM Access</span>
+      </div>
+      <div class="demo-row">
+        <input type="text" class="demo-input" id="ref-input" placeholder="Click focus →" style="flex:1">
+        <button class="btn" onclick="focusInput()">Focus</button>
+        <span class="demo-note" id="ref-render-count">renders: 0 (no re-render!)</span>
+      </div>`
+
+    case 'useMemo': return `
+      <div class="demo-header">
+        <span class="demo-label">Memoized Calculation</span>
+        <span class="demo-badge">Performance</span>
+      </div>
+      <div class="demo-row" style="flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem">
+        ${memoItems.map(v => `<span class="pill">${v}</span>`).join('')}
+      </div>
+      <div class="demo-row">
+        <span style="color: var(--text-secondary); font-size: 0.875rem">Sum of doubles:</span>
+        <span class="demo-val" id="memo-val">${memoItems.reduce((a,b)=>a+b*2,0)}</span>
+        <button class="btn" onclick="addMemoItem()">+ Add Item</button>
+      </div>
+      <div class="demo-note" id="memo-note">✓ Using cached result</div>`
+
+    case 'useCallback': return `
+      <div class="demo-header">
+        <span class="demo-label">Callback Reference</span>
+        <span class="demo-badge">Performance</span>
+      </div>
+      <div class="demo-row">
+        <button class="btn btn-primary" onclick="callCallback()">Call Callback</button>
+        <span style="color: var(--text-secondary); font-size: 0.875rem">
+          Called <strong id="cb-count" style="color: var(--text-primary)">0</strong> times — same reference ✓
+        </span>
+      </div>`
+
+    case 'useLayoutEffect': return `
+      <div class="demo-header">
+        <span class="demo-label">DOM Measurement</span>
+        <span class="demo-badge">Before Paint</span>
+      </div>
+      <div style="background: var(--primary-light); border-radius: 8px; padding: 1rem; text-align: center;" id="measure-box">
+        <span style="font-size: 0.875rem; color: var(--primary)">
+          Width measured: <strong id="box-width" style="font-size: 1.25rem">—</strong>px
+        </span>
+      </div>`
+
+    case 'useId': return `
+      <div class="demo-header">
+        <span class="demo-label">Unique IDs</span>
+        <span class="demo-badge">Accessibility</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem">
+          <label style="font-size: 0.8125rem; color: var(--text-muted); min-width: 70px">Name</label>
+          <input type="text" class="demo-input" placeholder="Your name" style="flex:1">
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem">
+          <label style="font-size: 0.8125rem; color: var(--text-muted); min-width: 70px">Email</label>
+          <input type="text" class="demo-input" placeholder="Your email" style="flex:1">
+        </div>
+        <div class="demo-note">IDs are unique and stable across server/client</div>
+      </div>`
+
+    case 'useDeferredValue': return `
+      <div class="demo-header">
+        <span class="demo-label">Deferred Search</span>
+        <span class="demo-badge">Responsive UI</span>
+      </div>
+      <input type="text" class="demo-input" id="deferred-input" placeholder="Type to search..." style="width: 100%; margin-bottom: 1rem" oninput="deferredSearch(this.value)">
+      <div style="font-size: 0.8125rem; color: var(--text-muted)">
+        <div>Instant: <strong id="deferred-instant" style="color: var(--primary)"></strong></div>
+        <div>Deferred: <strong id="deferred-lagged" style="color: var(--effect-text)"></strong></div>
+      </div>`
+
+    case 'useTransition': return `
+      <div class="demo-header">
+        <span class="demo-label">Transition Demo</span>
+        <span class="demo-badge">Non-blocking</span>
+      </div>
+      <div class="tab-group">
+        ${['Home', 'About', 'Contact'].map(t => `
+          <button class="tab-btn" id="tab-${t}" onclick="switchTab('${t}')">${t}</button>
+        `).join('')}
+      </div>
+      <div class="tab-content" id="tab-content">Click a tab to switch</div>
+      <div class="demo-note" id="pending-indicator" style="display: none">
+        <span class="spinner"></span> Transitioning...
+      </div>`
+
+    case 'useSyncExternalStore': return `
+      <div class="demo-header">
+        <span class="demo-label">Online Status</span>
+        <span class="demo-badge">External Store</span>
+      </div>
+      <div class="demo-row">
+        <span class="status-dot ${navigator.onLine ? 'online' : 'offline'}" id="online-indicator"></span>
+        <span style="font-size: 0.9375rem">Browser is: <strong id="online-status">${navigator.onLine ? 'Online' : 'Offline'}</strong></span>
+      </div>
+      <div class="demo-note">Toggle your WiFi to see live updates</div>`
+
+    default: return ''
+  }
+}
+
+function afterRender(id) {
+  if (id === 'useEffect') {
+    clearInterval(window._clockInterval)
+    window._clockInterval = setInterval(() => {
+      const el = document.getElementById('clock-val')
+      if (el) el.textContent = new Date().toLocaleTimeString()
+    }, 1000)
+    const el = document.getElementById('clock-val')
+    if (el) el.textContent = new Date().toLocaleTimeString()
+  }
+  
+  if (id === 'useLayoutEffect') {
+    setTimeout(() => {
+      const box = document.getElementById('measure-box')
+      const w = document.getElementById('box-width')
+      if (box && w) w.textContent = Math.round(box.getBoundingClientRect().width)
+    }, 50)
+  }
+  
+  if (id === 'useSyncExternalStore') {
+    const update = () => {
+      const ind = document.getElementById('online-indicator')
+      const st = document.getElementById('online-status')
+      if (ind) {
+        ind.classList.toggle('online', navigator.onLine)
+        ind.classList.toggle('offline', !navigator.onLine)
+      }
+      if (st) st.textContent = navigator.onLine ? 'Online' : 'Offline'
+    }
+    window.addEventListener('online', update)
+    window.addEventListener('offline', update)
+  }
+}
+
+// Demo Actions
+window.updateCount = function(delta) {
+  countState = Math.max(-99, Math.min(99, countState + delta))
+  document.getElementById('count-val').textContent = countState
+}
+
+window.toggleTheme = function() {
+  contextTheme = contextTheme === 'light' ? 'dark' : 'light'
+  const box = document.getElementById('ctx-box')
+  box.className = `theme-box ${contextTheme}`
+  box.textContent = `Theme: ${contextTheme}`
+}
+
+window.dispatchAction = function(type) {
+  if (type === 'inc') reducerState++
+  else if (type === 'dec') reducerState--
+  else reducerState = 0
+  document.getElementById('reducer-val').textContent = reducerState
+}
+
+window.focusInput = function() {
+  const inp = document.getElementById('ref-input')
+  if (inp) inp.focus()
+  const rc = document.getElementById('ref-render-count')
+  if (rc) {
+    let n = parseInt(rc.textContent.replace(/\D/g,'')) || 0
+    rc.textContent = `renders: ${n} (no re-render!)`
+  }
+}
+
+window.addMemoItem = function() {
+  const v = Math.floor(Math.random() * 50) + 5
+  memoItems.push(v)
+  const sum = memoItems.reduce((a,b)=>a+b*2,0)
+  document.getElementById('memo-val').textContent = sum
+  
+  const note = document.getElementById('memo-note')
+  note.textContent = '♻ Recalculated (items changed)'
+  note.classList.add('success')
+  
+  setTimeout(() => {
+    note.textContent = '✓ Using cached result'
+    note.classList.remove('success')
+  }, 1500)
+  
+  const container = document.querySelector('.demo-row')
+  if (container) {
+    const pill = document.createElement('span')
+    pill.className = 'pill'
+    pill.textContent = v
+    container.insertBefore(pill, container.children[container.children.length - 2])
+  }
+}
+
+window.callCallback = function() {
+  callbackCallCount++
+  const el = document.getElementById('cb-count')
+  if (el) el.textContent = callbackCallCount
+}
+
+let deferTimeout = null
+window.deferredSearch = function(v) {
+  document.getElementById('deferred-instant').textContent = v
+  clearTimeout(deferTimeout)
+  deferTimeout = setTimeout(() => {
+    const el = document.getElementById('deferred-lagged')
+    if (el) el.textContent = v
+  }, 300)
+}
+
+window.switchTab = function(tab) {
+  const ind = document.getElementById('pending-indicator')
+  const content = document.getElementById('tab-content')
+  const tabs = document.querySelectorAll('.tab-btn')
+  
+  if (!ind || !content) return
+  
+  tabs.forEach(t => t.classList.remove('active'))
+  document.getElementById(`tab-${tab}`).classList.add('active')
+  
+  ind.style.display = 'block'
+  content.textContent = '...'
+  
+  setTimeout(() => {
+    ind.style.display = 'none'
+    content.textContent = `You are now viewing the ${tab} tab`
+  }, 600)
+}
+
+// Copy Code
+window.copyCode = function(btn) {
+  const hook = hooks.find(h => h.id === activeHook)
+  if (!hook) return
+  
+  const text = hook.code.replace(/<[^>]+>/g, '')
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied')
+    btn.querySelector('span:last-child').textContent = 'Copied!'
+    setTimeout(() => {
+      btn.classList.remove('copied')
+      btn.querySelector('span:last-child').textContent = 'Copy'
+    }, 2000)
+  })
+}
+
+// Search
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  renderSidebar(e.target.value)
+})
+
+// Initialize
+renderSidebar()
+renderContent()
+</script>
+</body>
+</html>

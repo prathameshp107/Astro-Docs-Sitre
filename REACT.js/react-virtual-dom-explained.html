@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>React Virtual DOM vs Real DOM — In Depth</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f6f8fa;
+    --bg3: #f0f2f5;
+    --text: #1a1a1a;
+    --text2: #57606a;
+    --text3: #8c959f;
+    --border: #d0d7de;
+    --purple50: #f3f0ff;
+    --purple400: #7c3aed;
+    --purple600: #5b21b6;
+    --teal50: #f0fdfa;
+    --teal400: #0d9488;
+    --teal600: #0f766e;
+    --amber50: #fffbeb;
+    --amber400: #f59e0b;
+    --amber600: #d97706;
+    --blue50: #eff6ff;
+    --blue400: #3b82f6;
+    --blue600: #2563eb;
+    --coral50: #fff1ee;
+    --coral400: #f97316;
+    --coral600: #ea580c;
+    --green50: #f0fdf4;
+    --green400: #22c55e;
+    --green600: #16a34a;
+    --red50: #fff1f2;
+    --red400: #f43f5e;
+    --red600: #e11d48;
+    --gray50: #f9fafb;
+    --gray200: #e5e7eb;
+    --gray400: #9ca3af;
+    --code-bg: #f6f8fa;
+    --code-border: #d0d7de;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #21262d;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #6e7681;
+      --border: #30363d;
+      --purple50: #1e1030;
+      --purple400: #a78bfa;
+      --purple600: #c4b5fd;
+      --teal50: #0d2420;
+      --teal400: #2dd4bf;
+      --teal600: #5eead4;
+      --amber50: #2a1a00;
+      --amber400: #fbbf24;
+      --amber600: #fcd34d;
+      --blue50: #0d1f3c;
+      --blue400: #60a5fa;
+      --blue600: #93c5fd;
+      --coral50: #2a1200;
+      --coral400: #fb923c;
+      --coral600: #fdba74;
+      --green50: #0a2218;
+      --green400: #4ade80;
+      --green600: #86efac;
+      --red50: #2a0a14;
+      --red400: #fb7185;
+      --red600: #fda4af;
+      --gray50: #161b22;
+      --gray200: #30363d;
+      --gray400: #6e7681;
+      --code-bg: #161b22;
+      --code-border: #30363d;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+  h2 { font-size: 1.4rem; font-weight: 600; margin-top: 48px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 1.1rem; font-weight: 600; margin-top: 28px; margin-bottom: 10px; }
+  p  { margin-bottom: 14px; color: var(--text); }
+  ul, ol { padding-left: 24px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; }
+  strong { font-weight: 600; }
+  em { font-style: italic; color: var(--text2); }
+
+  .subtitle { color: var(--text2); font-size: 1.05rem; margin-bottom: 32px; }
+
+  .badge {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    padding: 2px 10px; border-radius: 20px; margin-right: 6px;
+    background: var(--purple50); color: var(--purple600);
+    border: 1px solid var(--purple400);
+  }
+  .badge.teal  { background: var(--teal50); color: var(--teal600); border-color: var(--teal400); }
+  .badge.amber { background: var(--amber50); color: var(--amber600); border-color: var(--amber400); }
+
+  /* ── Code blocks ── */
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.875em;
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: var(--text);
+  }
+  .kw  { color: #d73a49; }
+  .fn  { color: #6f42c1; }
+  .str { color: #032f62; }
+  .cmt { color: #6a737d; font-style: italic; }
+  @media (prefers-color-scheme: dark) {
+    .kw  { color: #ff7b72; }
+    .fn  { color: #d2a8ff; }
+    .str { color: #a5d6ff; }
+    .cmt { color: #8b949e; }
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-left: 4px solid var(--blue400);
+    background: var(--blue50);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 0.95rem;
+  }
+  .callout.warning { border-color: var(--amber400); background: var(--amber50); }
+  .callout.success { border-color: var(--green400); background: var(--green50); }
+  .callout.danger  { border-color: var(--red400);   background: var(--red50); }
+  .callout strong  { color: var(--text); }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem; }
+  th { background: var(--bg2); font-weight: 600; text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+  td { padding: 9px 14px; border: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--bg2); }
+
+  /* ── SVG diagram card ── */
+  .diagram-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg2);
+    padding: 24px;
+    margin: 24px 0;
+    overflow: hidden;
+  }
+  .diagram-card svg text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+  /* ── Interactive demo ── */
+  .demo-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg);
+    margin: 24px 0;
+    overflow: hidden;
+  }
+  .demo-header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-header span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .demo-header .dot-r { background: #ff5f57; }
+  .demo-header .dot-y { background: #febc2e; }
+  .demo-header .dot-g { background: #28c840; }
+  .demo-body { padding: 20px; }
+
+  .dom-node {
+    transition: background 0.3s, border-color 0.3s, opacity 0.3s;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    background: var(--bg2);
+    color: var(--text);
+    margin: 4px 0;
+  }
+  .dom-node.changed { background: var(--amber50); border-color: var(--amber400); }
+  .dom-node.added   { background: var(--green50);  border-color: var(--green400); }
+  .dom-node.removed { background: var(--red50);    border-color: var(--red400); opacity: 0.65; }
+
+  .col-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+
+  .scenario-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: inherit;
+  }
+  .scenario-btn:hover { background: var(--bg3); border-color: var(--purple400); }
+  .scenario-btn.active { background: var(--purple50); border-color: var(--purple400); color: var(--purple600); font-weight: 600; }
+
+  .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; font-size: 12px; color: var(--text2); }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: middle; }
+
+  .desc-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 14px;
+    min-height: 56px;
+    line-height: 1.6;
+  }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* ── Footer ── */
+  .footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text3); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <span class="badge">React</span>
+    <span class="badge teal">Internals</span>
+    <span class="badge amber">Deep Dive</span>
+  </div>
+
+  <h1>Virtual DOM vs Real DOM in React</h1>
+  <p class="subtitle">A complete visual guide to how React's reconciliation engine works — from state change to screen update.</p>
+
+  <hr>
+
+  <!-- ── 1. What is the Real DOM ── -->
+  <h2>1. What is the Real DOM?</h2>
+
+  <p>The <strong>Real DOM</strong> (Document Object Model) is the browser's live, in-memory tree representation of your HTML page. Every HTML tag becomes a node, every node is a JavaScript object, and the browser uses this tree to decide which pixels to paint on screen.</p>
+
+  <div class="callout warning">
+    <strong>The problem:</strong> The Real DOM is expensive to update. Every change — even a single text node — can trigger the browser's full rendering pipeline: style recalculation → layout reflow → repaint. Doing this 10 times for 10 list updates is 10× the cost.
+  </div>
+
+  <p>The full browser rendering pipeline on every Real DOM write:</p>
+
+  <!-- SVG: Browser Rendering Pipeline -->
+  <div class="diagram-card">
+    <svg width="100%" viewBox="0 0 780 90" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Boxes -->
+      <rect x="10"  y="20" width="120" height="44" rx="8" fill="#f3f0ff" stroke="#7c3aed" stroke-width="1"/>
+      <text x="70"  y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#5b21b6">DOM change</text>
+      <text x="70"  y="55" text-anchor="middle" font-size="11" fill="#7c3aed">setAttribute etc.</text>
+
+      <rect x="165" y="20" width="120" height="44" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1"/>
+      <text x="225" y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#d97706">Style calc</text>
+      <text x="225" y="55" text-anchor="middle" font-size="11" fill="#f59e0b">CSS cascade</text>
+
+      <rect x="320" y="20" width="120" height="44" rx="8" fill="#fff1ee" stroke="#f97316" stroke-width="1"/>
+      <text x="380" y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#ea580c">Layout reflow</text>
+      <text x="380" y="55" text-anchor="middle" font-size="11" fill="#f97316">Positions &amp; sizes</text>
+
+      <rect x="475" y="20" width="120" height="44" rx="8" fill="#fff1f2" stroke="#f43f5e" stroke-width="1"/>
+      <text x="535" y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#e11d48">Repaint</text>
+      <text x="535" y="55" text-anchor="middle" font-size="11" fill="#f43f5e">Pixels to screen</text>
+
+      <rect x="630" y="20" width="120" height="44" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1"/>
+      <text x="690" y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#16a34a">Compositing</text>
+      <text x="690" y="55" text-anchor="middle" font-size="11" fill="#22c55e">Layers merged</text>
+
+      <!-- Arrows -->
+      <line x1="130" y1="42" x2="163" y2="42" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr1)"/>
+      <line x1="285" y1="42" x2="318" y2="42" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr1)"/>
+      <line x1="440" y1="42" x2="473" y2="42" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr1)"/>
+      <line x1="595" y1="42" x2="628" y2="42" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr1)"/>
+    </svg>
+  </div>
+
+  <!-- ── 2. What is the Virtual DOM ── -->
+  <h2>2. What is the Virtual DOM?</h2>
+
+  <p>The <strong>Virtual DOM</strong> is React's lightweight JavaScript copy of the Real DOM — a plain object tree that lives entirely in memory. It costs almost nothing to create, and can be thrown away and rebuilt in microseconds.</p>
+
+  <p>When state changes, React doesn't touch the Real DOM immediately. Instead it builds a new Virtual DOM, compares it to the previous one (<em>diffing</em>), and figures out the minimum Real DOM changes needed. This process is called <strong>reconciliation</strong>.</p>
+
+  <p>Here's what a Virtual DOM node actually looks like under the hood:</p>
+
+  <pre><code><span class="cmt">// What JSX compiles to — just a plain JS object</span>
+<span class="cmt">// &lt;div className="card"&gt;&lt;h1&gt;Hello&lt;/h1&gt;&lt;/div&gt;</span>
+{
+  <span class="str">type</span>: <span class="str">"div"</span>,
+  <span class="str">props</span>: { <span class="str">className</span>: <span class="str">"card"</span> },
+  <span class="str">children</span>: [
+    {
+      <span class="str">type</span>: <span class="str">"h1"</span>,
+      <span class="str">props</span>: {},
+      <span class="str">children</span>: [<span class="str">"Hello"</span>]
+    }
+  ]
+}</code></pre>
+
+  <div class="callout success">
+    <strong>Key insight:</strong> The Virtual DOM is just a JavaScript object. No browser APIs, no reflows, no repaints. Comparing two plain objects is orders of magnitude cheaper than mutating the Real DOM.
+  </div>
+
+  <!-- ── 3. The Full Update Cycle ── -->
+  <h2>3. The full update cycle</h2>
+
+  <p>Here's exactly what happens from the moment you call <code>setState()</code> to the moment the screen updates:</p>
+
+  <!-- SVG: Full Update Cycle -->
+  <div class="diagram-card">
+    <svg width="100%" viewBox="0 0 780 440" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Step 1: State change -->
+      <rect x="280" y="10" width="220" height="54" rx="10" fill="#f3f0ff" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="390" y="32" text-anchor="middle" font-size="13" font-weight="600" fill="#5b21b6">1. State / props change</text>
+      <text x="390" y="50" text-anchor="middle" font-size="11" fill="#7c3aed">setState(), new prop received</text>
+      <line x1="390" y1="64" x2="390" y2="90" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr2)"/>
+      <text x="440" y="82" font-size="11" fill="#9ca3af">triggers re-render</text>
+
+      <!-- Step 2: Two VDOMs -->
+      <rect x="30"  y="98" width="230" height="70" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5"/>
+      <text x="145" y="119" text-anchor="middle" font-size="13" font-weight="600" fill="#0f766e">2a. Virtual DOM (prev)</text>
+      <text x="145" y="137" text-anchor="middle" font-size="11" fill="#0d9488">&lt;li&gt;Item A&lt;/li&gt;</text>
+      <text x="145" y="153" text-anchor="middle" font-size="11" fill="#0d9488">&lt;li&gt;Item B — $20&lt;/li&gt;</text>
+
+      <rect x="520" y="98" width="230" height="70" rx="10" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5"/>
+      <text x="635" y="119" text-anchor="middle" font-size="13" font-weight="600" fill="#0f766e">2b. Virtual DOM (next)</text>
+      <text x="635" y="137" text-anchor="middle" font-size="11" fill="#0d9488">&lt;li&gt;Item A&lt;/li&gt;</text>
+      <text x="635" y="153" text-anchor="middle" font-size="11" fill="#f97316">&lt;li&gt;Item B — $25&lt;/li&gt;</text>
+
+      <!-- Fan lines from step 1 to both VDOMs -->
+      <path d="M390 64 L390 84 L145 84 L145 96" fill="none" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+      <path d="M390 64 L390 84 L635 84 L635 96" fill="none" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+
+      <!-- Diff arrow -->
+      <line x1="262" y1="132" x2="518" y2="132" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr2)"/>
+      <rect x="318" y="120" width="144" height="26" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1"/>
+      <text x="390" y="133" text-anchor="middle" font-size="12" font-weight="600" fill="#d97706">3. Diff (reconcile)</text>
+
+      <!-- Step 4: Patch -->
+      <line x1="390" y1="170" x2="390" y2="208" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr2)"/>
+      <text x="440" y="196" font-size="11" fill="#9ca3af">minimal patch</text>
+      <rect x="250" y="216" width="280" height="54" rx="10" fill="#fff1ee" stroke="#f97316" stroke-width="1.5"/>
+      <text x="390" y="238" text-anchor="middle" font-size="13" font-weight="600" fill="#ea580c">4. Patch calculated</text>
+      <text x="390" y="256" text-anchor="middle" font-size="11" fill="#f97316">Only "Item B" text node differs</text>
+
+      <!-- Step 5: Real DOM -->
+      <line x1="390" y1="270" x2="390" y2="308" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr2)"/>
+      <text x="440" y="296" font-size="11" fill="#9ca3af">batch update</text>
+      <rect x="200" y="316" width="380" height="54" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="390" y="338" text-anchor="middle" font-size="13" font-weight="600" fill="#2563eb">5. Real DOM update (single batch)</text>
+      <text x="390" y="356" text-anchor="middle" font-size="11" fill="#3b82f6">Browser repaints only changed node</text>
+
+      <!-- Step 6: Screen -->
+      <line x1="390" y1="370" x2="390" y2="408" stroke="#9ca3af" stroke-width="1" marker-end="url(#arr2)"/>
+      <rect x="300" y="416" width="180" height="40" rx="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="390" y="431" text-anchor="middle" font-size="13" font-weight="600" fill="#16a34a">Screen updated</text>
+      <text x="390" y="447" text-anchor="middle" font-size="11" fill="#22c55e">User sees new UI</text>
+    </svg>
+  </div>
+
+  <!-- ── 4. The Diffing Algorithm ── -->
+  <h2>4. The diffing algorithm (reconciliation)</h2>
+
+  <p>React's diffing has three rules that make it O(n) instead of the theoretical O(n³) of a naive tree comparison:</p>
+
+  <h3>Rule 1 — Different element types = full subtree replace</h3>
+  <p>If a <code>&lt;div&gt;</code> changes to a <code>&lt;span&gt;</code>, React tears out the entire subtree and rebuilds from scratch. The child component unmounts and remounts — all state is lost.</p>
+
+  <pre><code><span class="cmt">// Before</span>
+&lt;<span class="kw">div</span>&gt;&lt;<span class="fn">Counter</span> /&gt;&lt;/<span class="kw">div</span>&gt;
+
+<span class="cmt">// After — div → span means Counter unmounts and remounts fresh</span>
+&lt;<span class="kw">span</span>&gt;&lt;<span class="fn">Counter</span> /&gt;&lt;/<span class="kw">span</span>&gt;</code></pre>
+
+  <h3>Rule 2 — Same type = update in place</h3>
+  <p>If the element type stays the same, React only updates the changed attributes/props. The DOM node itself is reused.</p>
+
+  <pre><code><span class="cmt">// Before</span>
+&lt;<span class="kw">button</span> className=<span class="str">"btn"</span> disabled={<span class="kw">false</span>}&gt;Save&lt;/<span class="kw">button</span>&gt;
+
+<span class="cmt">// After — React patches only the className attribute</span>
+&lt;<span class="kw">button</span> className=<span class="str">"btn active"</span> disabled={<span class="kw">false</span>}&gt;Save&lt;/<span class="kw">button</span>&gt;
+<span class="cmt">// Real DOM patch: element.className = "btn active"</span></code></pre>
+
+  <h3>Rule 3 — Lists need <code>key</code> props</h3>
+  <p>Without keys, React can't tell which list item moved vs. which was deleted. With keys, it tracks identity across renders — moving DOM nodes instead of recreating them.</p>
+
+  <pre><code><span class="cmt">// Bad — React re-renders everything on sort/reorder</span>
+{items.<span class="fn">map</span>(item =&gt; &lt;<span class="kw">li</span>&gt;{item.name}&lt;/<span class="kw">li</span>&gt;)}
+
+<span class="cmt">// Good — React moves existing DOM nodes, doesn't recreate them</span>
+{items.<span class="fn">map</span>(item =&gt; &lt;<span class="kw">li</span> key={item.id}&gt;{item.name}&lt;/<span class="kw">li</span>&gt;)}</code></pre>
+
+  <!-- ── 5. Interactive Demo ── -->
+  <h2>5. Interactive demo — watch the diff happen</h2>
+
+  <p>Select a scenario to see which Virtual DOM nodes changed and exactly what React writes to the Real DOM:</p>
+
+  <div class="demo-card">
+    <div class="demo-header">
+      <span class="dot-r"></span>
+      <span class="dot-y"></span>
+      <span class="dot-g"></span>
+      React reconciliation — live diff viewer
+    </div>
+    <div class="demo-body">
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;" id="btn-row">
+        <button class="scenario-btn active" onclick="runScenario('update',this)">Update one item</button>
+        <button class="scenario-btn" onclick="runScenario('add',this)">Add new item</button>
+        <button class="scenario-btn" onclick="runScenario('remove',this)">Remove item</button>
+        <button class="scenario-btn" onclick="runScenario('reorder',this)">Reorder list</button>
+        <button class="scenario-btn" onclick="runScenario('type',this)">Change element type</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <div>
+          <div class="col-label">Virtual DOM — before</div>
+          <div id="vdom-before"></div>
+        </div>
+        <div>
+          <div class="col-label">Virtual DOM — after (new render)</div>
+          <div id="vdom-after"></div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border); padding-top:14px; margin-bottom:4px;">
+        <div class="col-label">Real DOM — what React actually writes</div>
+        <div id="real-dom"></div>
+      </div>
+
+      <div class="legend-row">
+        <span><span class="legend-dot" style="background:var(--bg2);border:1px solid var(--border)"></span>Unchanged</span>
+        <span><span class="legend-dot" style="background:var(--amber50);border:1px solid var(--amber400)"></span>Updated</span>
+        <span><span class="legend-dot" style="background:var(--green50);border:1px solid var(--green400)"></span>Added</span>
+        <span><span class="legend-dot" style="background:var(--red50);border:1px solid var(--red400)"></span>Removed / rebuilt</span>
+      </div>
+
+      <div class="desc-box" id="desc-box"></div>
+    </div>
+  </div>
+
+  <!-- ── 6. Real vs Virtual comparison table ── -->
+  <h2>6. Real DOM vs Virtual DOM — side by side</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Real DOM</th>
+        <th>Virtual DOM</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Lives in</strong></td>
+        <td>Browser memory</td>
+        <td>JavaScript heap</td>
+      </tr>
+      <tr>
+        <td><strong>Created by</strong></td>
+        <td>HTML parser / browser</td>
+        <td>React (<code>React.createElement</code>)</td>
+      </tr>
+      <tr>
+        <td><strong>Update cost</strong></td>
+        <td>Expensive — triggers reflow, repaint</td>
+        <td>Cheap — plain object comparison</td>
+      </tr>
+      <tr>
+        <td><strong>Direct access</strong></td>
+        <td><code>document.getElementById()</code></td>
+        <td>React reads it internally</td>
+      </tr>
+      <tr>
+        <td><strong>When touched</strong></td>
+        <td>Only after reconciliation</td>
+        <td>Every render</td>
+      </tr>
+      <tr>
+        <td><strong>Mutation</strong></td>
+        <td>Slow — browser syncs to screen</td>
+        <td>Free — throw away old object</td>
+      </tr>
+      <tr>
+        <td><strong>State loss risk</strong></td>
+        <td>None (persistent)</td>
+        <td>On type change, subtree rebuilds</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ── 7. Code example ── -->
+  <h2>7. A concrete code example</h2>
+
+  <pre><code><span class="kw">function</span> <span class="fn">PriceTag</span>({ price }) {
+  <span class="kw">return</span> &lt;<span class="kw">span</span> className=<span class="str">"price"</span>&gt;${price}&lt;/<span class="kw">span</span>&gt;;
+}
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">const</span> [price, setPrice] = <span class="fn">useState</span>(<span class="str">10</span>);
+
+  <span class="kw">return</span> (
+    &lt;<span class="kw">div</span>&gt;
+      &lt;<span class="kw">h1</span>&gt;Product&lt;/<span class="kw">h1</span>&gt;               <span class="cmt">{/* never changes */}</span>
+      &lt;<span class="fn">PriceTag</span> price={price} /&gt;     <span class="cmt">{/* only this re-renders */}</span>
+      &lt;<span class="kw">button</span> onClick={() =&gt; <span class="fn">setPrice</span>(p =&gt; p + <span class="str">1</span>)}&gt;
+        Increase price
+      &lt;/<span class="kw">button</span>&gt;
+    &lt;/<span class="kw">div</span>&gt;
+  );
+}</code></pre>
+
+  <p>When you click the button, React builds a new Virtual DOM for the whole <code>&lt;div&gt;</code> — but after diffing, it makes exactly <strong>one Real DOM write</strong>: updating the text content of the <code>&lt;span&gt;</code>. The <code>&lt;h1&gt;</code> and <code>&lt;button&gt;</code> are never touched in the Real DOM.</p>
+
+  <!-- ── 8. Why not direct DOM manipulation ── -->
+  <h2>8. Why not just use the Real DOM directly?</h2>
+
+  <p>You could — and before React, jQuery apps did exactly this:</p>
+
+  <pre><code><span class="cmt">// jQuery style — you manually track everything</span>
+$(<span class="str">'#price'</span>).<span class="fn">text</span>(newPrice);
+$(<span class="str">'#badge'</span>).<span class="fn">addClass</span>(<span class="str">'updated'</span>);
+$(<span class="str">'#count'</span>).<span class="fn">text</span>(<span class="fn">parseInt</span>($(<span class="str">'#count'</span>).<span class="fn">text</span>()) + <span class="str">1</span>);</code></pre>
+
+  <div class="callout danger">
+    <strong>The problem:</strong> As your app grows, manually tracking which DOM nodes need updating for each state change becomes impossibly complex. UI goes out of sync with data. React flips this: you describe what the UI <em>should look like</em> given the current state, and React figures out the minimum changes to get there.
+  </div>
+
+  <!-- ── 9. Key Takeaways ── -->
+  <h2>9. Key takeaways</h2>
+
+  <ul>
+    <li>The <strong>Real DOM</strong> is expensive — every change can trigger style recalculation, layout reflow, and repaint.</li>
+    <li>The <strong>Virtual DOM</strong> is just a JavaScript object tree — near-zero cost to create and compare.</li>
+    <li><strong>Reconciliation</strong> (diffing) finds the minimum diff between old and new Virtual DOM trees.</li>
+    <li>Only the diffed changes get applied to the Real DOM in a <strong>single batch</strong>.</li>
+    <li><code>key</code> props are critical for list reconciliation — without them React can't track element identity.</li>
+    <li>Changing an element's <strong>type</strong> (e.g. <code>div</code> → <code>span</code>) always destroys and remounts the full subtree.</li>
+    <li>React Fiber (the modern engine) can <strong>pause and resume</strong> reconciliation, prioritising user interactions over background updates.</li>
+  </ul>
+
+  <!-- ── SVG: Mental Model ── -->
+  <h2>10. The mental model — illustrated</h2>
+
+  <p>Think of the Virtual DOM as a blueprint and the Real DOM as the actual building. React is the architect who diffs blueprints and only tells the construction crew exactly which bricks to move:</p>
+
+  <div class="diagram-card">
+    <svg width="100%" viewBox="0 0 780 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- React/JS world -->
+      <rect x="10" y="10" width="330" height="175" rx="12" fill="#f3f0ff" stroke="#7c3aed" stroke-width="1" stroke-dasharray="6 3"/>
+      <text x="175" y="34" text-anchor="middle" font-size="12" font-weight="600" fill="#5b21b6">JavaScript world (cheap)</text>
+
+      <rect x="30"  y="48" width="130" height="120" rx="8" fill="#ffffff" stroke="#0d9488" stroke-width="1"/>
+      <text x="95"  y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#0f766e">VDOM (prev)</text>
+      <rect x="42"  y="78" width="106" height="18" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="0.5"/>
+      <text x="95"  y="91" text-anchor="middle" font-size="10" fill="#0d9488">&lt;App&gt;</text>
+      <rect x="42"  y="100" width="106" height="18" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="0.5"/>
+      <text x="95"  y="113" text-anchor="middle" font-size="10" fill="#0d9488">&lt;Header&gt;</text>
+      <rect x="42"  y="122" width="106" height="18" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="0.5"/>
+      <text x="95"  y="135" text-anchor="middle" font-size="10" fill="#0d9488">&lt;List&gt;</text>
+      <rect x="42"  y="144" width="106" height="18" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="0.5"/>
+      <text x="95"  y="157" text-anchor="middle" font-size="10" fill="#d97706">&lt;Item price=$25&gt;</text>
+
+      <rect x="180" y="48" width="130" height="120" rx="8" fill="#ffffff" stroke="#0d9488" stroke-width="1"/>
+      <text x="245" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#0f766e">VDOM (next)</text>
+      <rect x="192" y="78" width="106" height="18" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="0.5"/>
+      <text x="245" y="91" text-anchor="middle" font-size="10" fill="#0d9488">&lt;App&gt;</text>
+      <rect x="192" y="100" width="106" height="18" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="0.5"/>
+      <text x="245" y="113" text-anchor="middle" font-size="10" fill="#0d9488">&lt;Header&gt;</text>
+      <rect x="192" y="122" width="106" height="18" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="0.5"/>
+      <text x="245" y="135" text-anchor="middle" font-size="10" fill="#0d9488">&lt;List&gt;</text>
+      <rect x="192" y="144" width="106" height="18" rx="4" fill="#fff1ee" stroke="#f97316" stroke-width="1.5"/>
+      <text x="245" y="157" text-anchor="middle" font-size="10" fill="#ea580c">&lt;Item price=$30&gt;</text>
+
+      <!-- Diff label -->
+      <text x="175" y="185" text-anchor="middle" font-size="11" fill="#7c3aed">diff finds 1 change</text>
+
+      <!-- Arrow to Real DOM -->
+      <line x1="342" y1="100" x2="390" y2="100" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#arr3)"/>
+      <text x="366" y="92" text-anchor="middle" font-size="10" fill="#9ca3af">patch</text>
+
+      <!-- Browser/Real DOM world -->
+      <rect x="400" y="10" width="370" height="175" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="1" stroke-dasharray="6 3"/>
+      <text x="585" y="34" text-anchor="middle" font-size="12" font-weight="600" fill="#2563eb">Browser world (expensive)</text>
+
+      <rect x="420" y="48" width="330" height="120" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="1"/>
+      <text x="585" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#2563eb">Real DOM</text>
+      <rect x="432" y="78" width="306" height="18" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.5"/>
+      <text x="585" y="91" text-anchor="middle" font-size="10" fill="#2563eb">&lt;div id="root"&gt;</text>
+      <rect x="432" y="100" width="306" height="18" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.5"/>
+      <text x="585" y="113" text-anchor="middle" font-size="10" fill="#2563eb">&lt;header&gt;...&lt;/header&gt;</text>
+      <rect x="432" y="122" width="306" height="18" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="0.5"/>
+      <text x="585" y="135" text-anchor="middle" font-size="10" fill="#2563eb">&lt;ul&gt;...&lt;/ul&gt;</text>
+      <rect x="432" y="144" width="306" height="18" rx="4" fill="#fff1ee" stroke="#f97316" stroke-width="1.5"/>
+      <text x="585" y="157" text-anchor="middle" font-size="10" fill="#ea580c">textContent = "$30" ← only this write</text>
+    </svg>
+  </div>
+
+  <hr>
+
+  <div class="footer">
+    <p>React Virtual DOM &amp; Real DOM — Deep Dive &nbsp;·&nbsp; Generated with Claude &nbsp;·&nbsp; React 18+ / Fiber reconciler</p>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+const scenarios = {
+  update: {
+    before: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item A — price: $10&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item B — price: $20&lt;/li&gt;', status:'changed' },
+      { tag:'  &lt;li&gt;Item C — price: $30&lt;/li&gt;', status:'same' },
+    ],
+    after: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item A — price: $10&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item B — price: $25&lt;/li&gt;', status:'changed' },
+      { tag:'  &lt;li&gt;Item C — price: $30&lt;/li&gt;', status:'same' },
+    ],
+    real: [
+      { tag:'textContent = "$25"  ← Item B text node only', status:'changed', note:'1 Real DOM write' },
+    ],
+    desc: 'Only Item B changed. React diffs the two Virtual DOMs, finds one text node different, and makes exactly one Real DOM update. Item A and Item C are never touched in the Real DOM.'
+  },
+  add: {
+    before: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item A&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item B&lt;/li&gt;', status:'same' },
+    ],
+    after: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item A&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item B&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item C (new)&lt;/li&gt;', status:'added' },
+    ],
+    real: [
+      { tag:'ul.appendChild(li "Item C")', status:'added', note:'1 appendChild call' },
+    ],
+    desc: 'React sees a new node at the end of the list. It calls appendChild() exactly once. The existing Item A and Item B nodes are completely untouched — no unmount, no remount.'
+  },
+  remove: {
+    before: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item A&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item B&lt;/li&gt;', status:'removed' },
+      { tag:'  &lt;li&gt;Item C&lt;/li&gt;', status:'same' },
+    ],
+    after: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item A&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li&gt;Item C&lt;/li&gt;', status:'same' },
+    ],
+    real: [
+      { tag:'ul.removeChild(li "Item B")', status:'removed', note:'1 removeChild call' },
+    ],
+    desc: 'React detects Item B is absent in the new tree. It calls removeChild() once. Item A and Item C stay mounted — their DOM nodes are never touched.'
+  },
+  reorder: {
+    before: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li key="a"&gt;Alice&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li key="b"&gt;Bob&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li key="c"&gt;Carol&lt;/li&gt;', status:'same' },
+    ],
+    after: [
+      { tag:'&lt;ul&gt;', status:'same' },
+      { tag:'  &lt;li key="c"&gt;Carol&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li key="a"&gt;Alice&lt;/li&gt;', status:'same' },
+      { tag:'  &lt;li key="b"&gt;Bob&lt;/li&gt;', status:'same' },
+    ],
+    real: [
+      { tag:'insertBefore(li#c, li#a)  — moves Carol to front', status:'same', note:'DOM nodes moved, not recreated' },
+    ],
+    desc: 'With key props, React tracks each node by identity across renders. It moves existing DOM nodes into position — no unmount, no remount, no state loss. Without keys, React would recreate all three nodes unnecessarily, destroying any component state (scroll position, input focus, etc.).'
+  },
+  type: {
+    before: [
+      { tag:'&lt;div&gt;', status:'same' },
+      { tag:'  &lt;Counter count=5 /&gt;  ← state lives here', status:'removed' },
+      { tag:'&lt;/div&gt;', status:'same' },
+    ],
+    after: [
+      { tag:'&lt;span&gt;', status:'added' },
+      { tag:'  &lt;Counter count=0 /&gt;  ← fresh mount, state reset', status:'added' },
+      { tag:'&lt;/span&gt;', status:'added' },
+    ],
+    real: [
+      { tag:'removeChild(div + subtree)   — full unmount', status:'removed', note:'componentWillUnmount fires' },
+      { tag:'appendChild(span + subtree)  — fresh mount', status:'added', note:'componentDidMount fires, state = 0' },
+    ],
+    desc: 'The container changed from <div> to <span>. React treats this as a completely different tree and tears everything out — including Counter with its count=5 state. A fresh Counter mounts with count=0. This is why changing container type is destructive and should be avoided when children have state.'
+  }
+};
+
+function renderNodes(id, nodes) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  nodes.forEach(n => {
+    const d = document.createElement('div');
+    d.className = 'dom-node ' + (n.status || 'same');
+    let html = n.tag;
+    if (n.note) html += ' <span style="color:var(--text3);font-style:italic;font-size:11px">  // ' + n.note + '</span>';
+    d.innerHTML = html;
+    el.appendChild(d);
+  });
+}
+
+function runScenario(name, btn) {
+  document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const s = scenarios[name];
+  renderNodes('vdom-before', s.before);
+  renderNodes('vdom-after', s.after);
+  renderNodes('real-dom', s.real);
+  document.getElementById('desc-box').textContent = s.desc;
+}
+
+runScenario('update', document.querySelector('.scenario-btn.active'));
+</script>
+</body>
+</html>

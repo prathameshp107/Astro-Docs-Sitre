@@ -1,0 +1,45 @@
+<svg width="600" height="420" viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="600" height="420" fill="#f8f9fa" rx="12"/>
+  
+  <text x="300" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#2c3e50">SQL EXCLUSION JOIN</text>
+  <text x="300" y="65" text-anchor="middle" font-size="14" fill="#7f8c8d">Finds rows from Table A that have no match in Table B (Anti-Join)</text>
+  <text x="300" y="85" text-anchor="middle" font-size="16" font-weight="bold" fill="#e74c3c">Concept: Employees without valid Departments</text>
+
+  <circle cx="240" cy="180" r="90" fill="#3498db" fill-opacity="0.1" stroke="#2980b9" stroke-width="3"/>
+  <text x="170" y="155" font-size="15" font-weight="bold" fill="#2980b9">Employees</text>
+  <text x="170" y="175" font-size="11" fill="#2980b9">(Table A - All)</text>
+
+  <circle cx="360" cy="180" r="90" fill="#e67e22" fill-opacity="0.1" stroke="#d35400" stroke-width="3" stroke-dasharray="5,3"/>
+  <text x="390" y="155" font-size="15" font-weight="bold" fill="#d35400">Departments</text>
+  <text x="390" y="175" font-size="11" fill="#d35400">(Table B - Reference)</text>
+
+  <path d="M 240,90 A 90,90 0 1,0 240,270 A 90,90 0 0,1 240,90" fill="#e74c3c" fill-opacity="0.75" stroke="#c0392b" stroke-width="2"/>
+  
+  <text x="180" y="195" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Result Set</text>
+  <text x="180" y="210" text-anchor="middle" font-size="11" fill="white">(Table A Only)</text>
+
+  <text x="300" y="185" text-anchor="middle" font-size="12" fill="#7f8c8d">MATCHES</text>
+  
+  <line x1="330" y1="180" x2="350" y2="180" stroke="#7f8c8d" stroke-width="1.5" marker-end="url(#dot)"/>
+  <text x="355" y="185" font-size="11" fill="#7f8c8d" font-style="italic">(These rows are excluded)</text>
+  
+  <path d="M 180,225 L 180,265" stroke="#bdc3c7" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+  <rect x="50" y="280" width="300" height="90" rx="8" fill="white" stroke="#e74c3c" stroke-width="3"/>
+  <text x="65" y="305" font-size="13" font-weight="bold" fill="#2c3e50">Output: Employees with NO Department</text>
+  
+  <text x="65" y="330" font-size="12" fill="#333">Carol (Manager 2)</text>
+  <text x="65" y="350" font-size="12" fill="#333">David (Manager 1)</text>
+  <text x="65" y="370" font-size="12" fill="#333">Frank (New Hires Dept: NULL)</text>
+  
+  <text x="335" y="370" text-anchor="end" font-size="11" fill="#e74c3c" font-style="italic">Table B.id IS NULL</text>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#bdc3c7" />
+    </marker>
+    <marker id="dot" markerWidth="10" markerHeight="10" refX="5" refY="5">
+      <circle cx="5" cy="5" r="3" fill="#7f8c8d" />
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,210 @@
+/* Brand Colors */
+:root {
+  --sl-color-accent-low: #e0f2fe;
+  --sl-color-accent: #0f766e;
+  --sl-color-accent-high: #134e4a;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #f8fafc;
+  --sl-color-gray-2: #e5e7eb;
+  --sl-color-gray-3: #d1d5db;
+  --sl-color-gray-6: #374151;
+  --sl-color-black: #111827;
+}
+
+[data-theme='dark'] {
+  --sl-color-accent-low: #12312f;
+  --sl-color-accent: #2dd4bf;
+  --sl-color-accent-high: #99f6e4;
+  --sl-color-bg: #111827;
+  --sl-color-bg-sidebar: #0b1220;
+  --sl-color-bg-nav: #111827;
+  --sl-color-hairline: #263244;
+}
+
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+  font-weight: 700;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+.sl-markdown-content h2 {
+  border-bottom: 1px solid var(--sl-color-hairline);
+  padding-bottom: 0.4rem;
+  margin-top: 3rem;
+}
+
+.sl-markdown-content h2::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-bottom: 0.7rem;
+  border-radius: 999px;
+  background: var(--sl-color-accent);
+}
+
+.sl-markdown-content h3 {
+  margin-top: 2rem;
+}
+
+.sl-markdown-content pre {
+  border: 1px solid var(--sl-color-gray-2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  white-space: pre;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.05);
+}
+
+[data-theme='dark'] .sl-markdown-content pre {
+  border-color: #263244;
+  background: #0b1220 !important;
+}
+
+.sl-markdown-content p {
+  line-height: 1.75;
+}
+
+.sl-markdown-content ul,
+.sl-markdown-content ol {
+  line-height: 1.7;
+}
+
+.sl-markdown-content table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 1.5rem 0;
+  border: 1px solid var(--sl-color-gray-2);
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.sl-markdown-content th {
+  background: var(--sl-color-accent);
+  color: var(--sl-color-white);
+  padding: 0.6rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sl-markdown-content td {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--sl-color-gray-2);
+  vertical-align: top;
+}
+
+.sl-markdown-content tr:last-child td {
+  border-bottom: 0;
+}
+
+[data-theme='dark'] .sl-markdown-content td {
+  border-color: #263244;
+}
+
+[data-theme='dark'] .sl-markdown-content table {
+  border-color: #263244;
+}
+
+.sl-markdown-content tr:hover td {
+  background: rgba(20, 184, 166, 0.08);
+}
+
+.sl-markdown-content img {
+  display: block;
+  max-width: min(100%, 720px);
+  height: auto;
+  margin: 1.25rem auto 1.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--sl-color-gray-2);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+}
+
+[data-theme='dark'] .sl-markdown-content img {
+  border-color: #263244;
+  background: #f8fafc;
+}
+
+.sl-markdown-content blockquote + .sl-heading-wrapper,
+.sl-markdown-content table + .sl-heading-wrapper,
+.sl-markdown-content pre + .sl-heading-wrapper {
+  margin-top: 2.25rem;
+}
+
+.sidebar-content {
+  font-size: 0.9rem;
+}
+
+nav.sidebar a[aria-current='page'] {
+  background: rgba(20, 184, 166, 0.12);
+  color: var(--sl-color-accent-high);
+  border-left: 3px solid var(--sl-color-accent);
+  font-weight: 600;
+}
+
+.sl-markdown-content code:not(pre code) {
+  background: rgba(20, 184, 166, 0.12);
+  color: var(--sl-color-accent-high);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.85em;
+}
+
+.sl-markdown-content blockquote {
+  border-left: 4px solid var(--sl-color-accent);
+  background: rgba(20, 184, 166, 0.08);
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.5rem 0;
+}
+
+.hero {
+  padding: 3rem 0;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.4rem) !important;
+  background: linear-gradient(135deg, #0f766e, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.card {
+  border: 1px solid var(--sl-color-gray-2);
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(15, 118, 110, 0.16);
+}
+
+[data-theme='dark'] .card {
+  border-color: #263244;
+  background: #0b1220;
+}
+
+@media (max-width: 48rem) {
+  .sl-markdown-content table {
+    font-size: 0.84rem;
+  }
+
+  .sl-markdown-content th,
+  .sl-markdown-content td {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .sl-markdown-content img {
+    padding: 0.5rem;
+    margin-inline: 0;
+  }
+}
