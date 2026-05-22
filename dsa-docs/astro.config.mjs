@@ -27,16 +27,12 @@ export default defineConfig({
           link: '/',
         },
         {
-          label: 'Data Structures',
-          items: [{ autogenerate: { directory: 'data-structures' } }],
+          label: 'Namaste JavaScript',
+          items: [{ autogenerate: { directory: 'namaste-js' } }],
         },
         {
           label: 'JavaScript',
           items: [{ autogenerate: { directory: 'javascript' } }],
-        },
-        {
-          label: 'Namaste JavaScript',
-          items: [{ autogenerate: { directory: 'namaste-js' } }],
         },
         {
           label: 'React',
@@ -78,18 +74,151 @@ export default defineConfig({
             },
             { label: 'React Strict Mode', link: '/react/strict-mode' },
             { label: 'Fragments', link: '/react/fragments' },
-            { label: 'Data Binding', link: '/react/data-binding' },
+            {
+              label: 'Data Binding & Core Concepts',
+              items: [
+                { label: 'Overview', link: '/react/data-binding' },
+                { label: 'Data Binding Concepts', link: '/react/data-binding/data-binding-concepts' },
+                { label: 'Conditional Rendering', link: '/react/data-binding/conditional-rendering' },
+                { label: 'Lists and Keys', link: '/react/data-binding/lists-and-keys' },
+                { label: 'React Events', link: '/react/data-binding/events' },
+                { label: 'Lifecycle Hooks', link: '/react/data-binding/lifecycle-hooks' },
+                { label: 'Forms', link: '/react/data-binding/forms' },
+                { label: 'HTTP Methods & Axios', link: '/react/data-binding/http-methods-axios' },
+                { label: 'Higher Order Components', link: '/react/data-binding/higher-order-components' },
+                { label: 'Routing', link: '/react/data-binding/routing' },
+                { label: 'State Management', link: '/react/data-binding/state-management' },
+              ],
+            },
             { label: 'React Setup Guideline', link: '/react/react-setup-guideline' },
-            { label: 'React Full Interview Questions', link: '/react/react-full-interview-questions' },
+            {
+              label: 'React Interview Questions',
+              items: [
+                { label: 'Overview', link: '/react/interview-questions' },
+                { label: 'Easy Questions', link: '/react/interview-questions/easy-questions' },
+                { label: 'Medium Questions', link: '/react/interview-questions/medium-questions' },
+                { label: 'Hard Questions', link: '/react/interview-questions/hard-questions' },
+                { label: 'Quick Cheatsheet', link: '/react/interview-questions/quick-cheatsheet' },
+              ],
+            },
           ],
         },
         {
           label: 'SQL / MySQL',
-          items: [{ autogenerate: { directory: 'sql' } }],
+          items: [
+            { label: 'SQL / MySQL Overview', link: '/sql' },
+            {
+              label: 'Database Basics',
+              items: [
+                { label: 'Database & RDBMS Basics', link: '/sql/database-rdbms-basics' },
+                { label: 'MySQL Architecture', link: '/sql/mysql-architecture' },
+                { label: 'Data Types', link: '/sql/data-types' },
+                { label: 'Keys & Constraints', link: '/sql/keys-constraints' },
+                { label: 'Normalization', link: '/sql/normalization' },
+              ],
+            },
+            {
+              label: 'Querying Data',
+              items: [
+                { label: 'CRUD Operations', link: '/sql/crud-operations' },
+                { label: 'Aggregations & Functions', link: '/sql/aggregations-functions' },
+                { label: 'Subqueries & CTEs', link: '/sql/subqueries-ctes' },
+                { label: 'Views', link: '/sql/views' },
+              ],
+            },
+            {
+              label: 'Joins',
+              items: [
+                { label: 'Joins Overview', link: '/sql/joins' },
+                { label: 'INNER JOIN', link: '/sql/inner-join' },
+                { label: 'LEFT JOIN', link: '/sql/left-join-left-outer-join' },
+                { label: 'RIGHT JOIN', link: '/sql/right-join-right-outer-join' },
+                { label: 'FULL OUTER JOIN', link: '/sql/full-outer-join' },
+                { label: 'CROSS JOIN', link: '/sql/cross-join' },
+                { label: 'SELF JOIN', link: '/sql/self-join' },
+                { label: 'Exclusion Joins', link: '/sql/exclusion-joins-anti-joins' },
+                { label: 'JOIN Conditions & Pitfalls', link: '/sql/join-conditions-pitfalls' },
+                { label: 'Choosing the Right Join', link: '/sql/choosing-the-right-join-decision-guide' },
+              ],
+            },
+            {
+              label: 'Performance & Transactions',
+              items: [
+                { label: 'Indexing', link: '/sql/indexing' },
+                { label: 'EXPLAIN & Query Optimization', link: '/sql/explain-query-optimization' },
+                { label: 'Performance Optimization', link: '/sql/performance-optimization' },
+                { label: 'Transactions & ACID', link: '/sql/transactions-acid-properties' },
+                { label: 'Locks', link: '/sql/locks' },
+              ],
+            },
+            {
+              label: 'Programmability',
+              items: [
+                { label: 'Stored Procedures & Functions', link: '/sql/stored-procedures-functions' },
+                { label: 'Triggers', link: '/sql/triggers' },
+              ],
+            },
+            {
+              label: 'Interview & Revision',
+              items: [
+                { label: 'MySQL Interview Prep', link: '/sql/interview-prep' },
+                { label: 'Common Interview Questions', link: '/sql/common-interview-questions-answers' },
+                { label: 'Quick Revision Cheat Sheet', link: '/sql/quick-revision-cheat-sheet' },
+                { label: 'Quick Reference Summary', link: '/sql/quick-reference-summary' },
+              ],
+            },
+          ],
         },
         {
           label: 'MongoDB',
-          items: [{ autogenerate: { directory: 'mongodb' } }],
+          items: [
+            { label: 'MongoDB Overview', link: '/mongodb' },
+            {
+              label: 'Core MongoDB',
+              items: [
+                { label: 'Fundamentals & CRUD', link: '/mongodb/fundamentals-crud' },
+                { label: 'Data Modeling', link: '/mongodb/data-modeling' },
+                { label: 'Query & Filtering', link: '/mongodb/query-filtering' },
+              ],
+            },
+            {
+              label: 'Aggregation Framework',
+              items: [
+                { label: 'Aggregation Overview', link: '/mongodb/aggregation-framework' },
+                { label: 'Pipeline Basics & Stages', link: '/mongodb/aggregation-framework/pipeline-basics-stages' },
+                { label: '$match, $project, $sort', link: '/mongodb/aggregation-framework/filter-project-sort-pagination' },
+                { label: '$group & Accumulators', link: '/mongodb/aggregation-framework/group-accumulators' },
+                { label: '$lookup & $unwind', link: '/mongodb/aggregation-framework/lookup-unwind' },
+                { label: 'Expressions & Computed Fields', link: '/mongodb/aggregation-framework/expressions-computed-fields' },
+                { label: 'Real-World Examples', link: '/mongodb/aggregation-framework/real-world-examples' },
+                { label: 'Aggregation Optimization', link: '/mongodb/aggregation-framework/aggregation-optimization' },
+              ],
+            },
+            {
+              label: 'Performance',
+              items: [
+                { label: 'Indexing', link: '/mongodb/indexing' },
+              ],
+            },
+            {
+              label: 'Advanced & Integration',
+              items: [
+                { label: 'Advanced Topics', link: '/mongodb/advanced-topics' },
+                { label: 'Mongoose Node.js Integration', link: '/mongodb/mongoose-nodejs-integration' },
+              ],
+            },
+            {
+              label: 'Interview & Revision',
+              items: [
+                { label: 'Top 100 Interview Questions', link: '/mongodb/top-100-interview-questions' },
+                { label: 'Quick Reference Cheat Sheet', link: '/mongodb/quick-reference-cheat-sheet' },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Data Structures',
+          items: [{ autogenerate: { directory: 'data-structures' } }],
         },
         {
           label: 'Interview Prep',
