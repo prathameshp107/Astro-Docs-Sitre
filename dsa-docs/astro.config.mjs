@@ -221,6 +221,53 @@ export default defineConfig({
           items: [{ autogenerate: { directory: 'data-structures' } }],
         },
         {
+          label: 'Node.js',
+          items: [
+            { label: 'Node.js Overview', link: '/nodejs' },
+            {
+              label: 'Core Concepts',
+              items: [
+                { label: 'Introduction to Node.js', link: '/nodejs/introduction' },
+                { label: 'Node.js Architecture', link: '/nodejs/architecture' },
+                { label: 'Core Modules', link: '/nodejs/core-modules' },
+                { label: 'Async Programming', link: '/nodejs/async-programming' },
+              ],
+            },
+            {
+              label: 'Building Applications',
+              items: [
+                { label: 'Building APIs', link: '/nodejs/building-apis' },
+                { label: 'Express.js Framework', link: '/nodejs/express-framework' },
+                { label: 'Authentication & Security', link: '/nodejs/authentication-security' },
+                { label: 'Databases', link: '/nodejs/databases' },
+              ],
+            },
+            {
+              label: 'Advanced Topics',
+              items: [
+                { label: 'Advanced Node.js', link: '/nodejs/advanced' },
+                { label: 'Production Architecture', link: '/nodejs/production-architecture' },
+                { label: 'Design Patterns', link: '/nodejs/design-patterns' },
+                { label: 'Performance Optimization', link: '/nodejs/performance' },
+              ],
+            },
+            {
+              label: 'Testing & Deployment',
+              items: [
+                { label: 'Testing', link: '/nodejs/testing' },
+                { label: 'Deployment', link: '/nodejs/deployment' },
+              ],
+            },
+            {
+              label: 'Architecture & Interview',
+              items: [
+                { label: 'Project Architecture', link: '/nodejs/project-architecture' },
+                { label: 'Interview Questions', link: '/nodejs/interview-questions' },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Interview Prep',
           items: [{ autogenerate: { directory: 'interview' } }],
         },
