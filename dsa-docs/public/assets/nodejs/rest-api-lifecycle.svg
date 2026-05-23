@@ -1,0 +1,65 @@
+<svg width="700" height="260" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <rect width="700" height="260" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">REST API Request Lifecycle</text>
+
+  <!-- Client -->
+  <rect x="20" y="55" width="110" height="150" fill="#1e293b" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="75" y="80" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">CLIENT</text>
+  <text x="75" y="100" text-anchor="middle" fill="#64748b" font-size="10">React App</text>
+  <text x="75" y="118" text-anchor="middle" fill="#64748b" font-size="10">Mobile App</text>
+  <text x="75" y="136" text-anchor="middle" fill="#64748b" font-size="10">Third-party</text>
+  <text x="75" y="185" text-anchor="middle" fill="#3b82f6" font-size="10">HTTP Request</text>
+
+  <!-- Arrow 1 -->
+  <line x1="132" y1="130" x2="175" y2="130" stroke="#3b82f6" stroke-width="2" marker-end="url(#a3)"/>
+  <text x="155" y="120" text-anchor="middle" fill="#64748b" font-size="9">POST /login</text>
+  
+  <!-- Middleware Stack -->
+  <rect x="175" y="55" width="120" height="150" fill="#1e293b" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="235" y="78" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="bold">MIDDLEWARE</text>
+  <rect x="185" y="88" width="100" height="22" fill="#2d2a1a" rx="4" stroke="#f59e0b" stroke-width="1"/>
+  <text x="235" y="104" text-anchor="middle" fill="#fbbf24" font-size="10">Auth check</text>
+  <rect x="185" y="115" width="100" height="22" fill="#2d2a1a" rx="4" stroke="#f59e0b" stroke-width="1"/>
+  <text x="235" y="131" text-anchor="middle" fill="#fbbf24" font-size="10">Rate limit</text>
+  <rect x="185" y="142" width="100" height="22" fill="#2d2a1a" rx="4" stroke="#f59e0b" stroke-width="1"/>
+  <text x="235" y="158" text-anchor="middle" fill="#fbbf24" font-size="10">Validate body</text>
+  <rect x="185" y="169" width="100" height="22" fill="#2d2a1a" rx="4" stroke="#f59e0b" stroke-width="1"/>
+  <text x="235" y="185" text-anchor="middle" fill="#fbbf24" font-size="10">Log request</text>
+  
+  <!-- Arrow 2 -->
+  <line x1="297" y1="130" x2="335" y2="130" stroke="#22c55e" stroke-width="2" marker-end="url(#a3)"/>
+  
+  <!-- Route Handler -->
+  <rect x="335" y="55" width="120" height="150" fill="#1e293b" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="395" y="78" text-anchor="middle" fill="#86efac" font-size="12" font-weight="bold">CONTROLLER</text>
+  <text x="395" y="100" text-anchor="middle" fill="#64748b" font-size="10">loginController()</text>
+  <rect x="345" y="110" width="100" height="22" fill="#1a3326" rx="4" stroke="#22c55e" stroke-width="1"/>
+  <text x="395" y="126" text-anchor="middle" fill="#4ade80" font-size="10">Parse request</text>
+  <rect x="345" y="137" width="100" height="22" fill="#1a3326" rx="4" stroke="#22c55e" stroke-width="1"/>
+  <text x="395" y="153" text-anchor="middle" fill="#4ade80" font-size="10">Call service</text>
+  <rect x="345" y="164" width="100" height="22" fill="#1a3326" rx="4" stroke="#22c55e" stroke-width="1"/>
+  <text x="395" y="180" text-anchor="middle" fill="#4ade80" font-size="10">Return response</text>
+  
+  <!-- Arrow 3 -->
+  <line x1="457" y1="130" x2="495" y2="130" stroke="#a855f7" stroke-width="2" marker-end="url(#a3)"/>
+  
+  <!-- Database -->
+  <rect x="495" y="55" width="180" height="150" fill="#1e293b" rx="8" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="585" y="78" text-anchor="middle" fill="#d8b4fe" font-size="12" font-weight="bold">SERVICE + DATABASE</text>
+  <rect x="510" y="88" width="150" height="35" fill="#2d1a3a" rx="4" stroke="#a855f7" stroke-width="1"/>
+  <text x="585" y="103" text-anchor="middle" fill="#c084fc" font-size="10">AuthService.login()</text>
+  <text x="585" y="117" text-anchor="middle" fill="#c084fc" font-size="9">bcrypt.compare(password)</text>
+  <rect x="510" y="130" width="150" height="35" fill="#2d1a3a" rx="4" stroke="#a855f7" stroke-width="1"/>
+  <text x="585" y="145" text-anchor="middle" fill="#c084fc" font-size="10">MongoDB / PostgreSQL</text>
+  <text x="585" y="160" text-anchor="middle" fill="#c084fc" font-size="9">db.users.findOne({email})</text>
+  <rect x="510" y="172" width="150" height="22" fill="#2d1a3a" rx="4" stroke="#22c55e" stroke-width="1"/>
+  <text x="585" y="187" text-anchor="middle" fill="#86efac" font-size="9">Returns JWT token ✅</text>
+
+  <text x="350" y="235" text-anchor="middle" fill="#94a3b8" font-size="10">Response flows back: Database → Controller → Client with HTTP status code</text>
+
+  <defs>
+    <marker id="a3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#475569"/>
+    </marker>
+  </defs>
+</svg>

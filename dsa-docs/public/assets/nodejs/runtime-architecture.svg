@@ -1,0 +1,48 @@
+<svg width="700" height="380" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <!-- Background -->
+  <rect width="700" height="380" fill="#0f172a" rx="12"/>
+  
+  <!-- Title -->
+  <text x="350" y="32" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="bold">Node.js Runtime Architecture</text>
+  
+  <!-- Your Application Layer -->
+  <rect x="30" y="50" width="640" height="60" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="350" y="76" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Your Application Code (JavaScript)</text>
+  <text x="350" y="97" text-anchor="middle" fill="#64748b" font-size="11">app.js, routes, controllers, services...</text>
+  
+  <!-- Arrow down -->
+  <line x1="350" y1="110" x2="350" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- V8 Engine -->
+  <rect x="30" y="130" width="300" height="60" fill="#1a3326" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="180" y="156" text-anchor="middle" fill="#86efac" font-size="13" font-weight="bold">V8 Engine (Google)</text>
+  <text x="180" y="178" text-anchor="middle" fill="#64748b" font-size="11">Compiles JS to machine code</text>
+  
+  <!-- libuv -->
+  <rect x="370" y="130" width="300" height="60" fill="#2d1a3a" rx="8" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="520" y="156" text-anchor="middle" fill="#d8b4fe" font-size="13" font-weight="bold">libuv (C Library)</text>
+  <text x="520" y="178" text-anchor="middle" fill="#64748b" font-size="11">Event Loop, Thread Pool, I/O</text>
+  
+  <!-- Arrow down -->
+  <line x1="350" y1="190" x2="350" y2="210" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Node.js APIs -->
+  <rect x="30" y="210" width="640" height="60" fill="#1e293b" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="350" y="236" text-anchor="middle" fill="#fcd34d" font-size="13" font-weight="bold">Node.js Built-in APIs</text>
+  <text x="350" y="257" text-anchor="middle" fill="#64748b" font-size="11">fs, http, crypto, path, os, events, stream, buffer...</text>
+  
+  <!-- Arrow down -->
+  <line x1="350" y1="270" x2="350" y2="290" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- OS Layer -->
+  <rect x="30" y="290" width="640" height="60" fill="#1a1a2e" rx="8" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="350" y="316" text-anchor="middle" fill="#fca5a5" font-size="13" font-weight="bold">Operating System</text>
+  <text x="350" y="337" text-anchor="middle" fill="#64748b" font-size="11">Linux / Windows / macOS — File system, Network, Processes</text>
+  
+  <!-- Arrow definitions -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+    </marker>
+  </defs>
+</svg>

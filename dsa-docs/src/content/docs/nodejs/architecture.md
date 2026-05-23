@@ -16,6 +16,8 @@ Node.js uses a **single thread** for JavaScript execution. But it's smarter — 
 | Multi-Thread (Apache) | ~2MB per thread → 20GB for 10K users | Limited by RAM |
 | Single-Thread (Node.js) | Very low memory | Handles 10K+ easily |
 
+![Multi-Thread vs Single-Thread](/assets/nodejs/multi-thread-vs-single-thread.svg)
+
 ---
 
 ## ⚡ Event-Driven Architecture
@@ -56,6 +58,8 @@ console.log('This prints IMMEDIATELY, without waiting!');
 ## 🔁 The Event Loop — The Heart of Node.js
 
 The **Event Loop** is the mechanism that makes Node.js non-blocking. It constantly checks: "Is there anything to do?" and executes tasks one by one.
+
+![Node.js Event Loop Architecture](/assets/nodejs/event-loop-architecture.svg)
 
 ### 🔢 Event Loop Phases Explained
 

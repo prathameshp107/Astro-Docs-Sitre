@@ -1,0 +1,73 @@
+<svg width="700" height="480" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <rect width="700" height="480" fill="#0f172a" rx="12"/>
+  <text x="350" y="30" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Production Node.js Architecture</text>
+
+  <!-- Users -->
+  <rect x="270" y="50" width="160" height="40" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="350" y="75" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">👥 Users (Millions)</text>
+  
+  <line x1="350" y1="92" x2="350" y2="112" stroke="#475569" stroke-width="1.5" marker-end="url(#a5)"/>
+  
+  <!-- CDN -->
+  <rect x="130" y="112" width="480" height="40" fill="#2d2a1a" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="370" y="137" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="bold">CDN (Cloudflare / CloudFront) — Static assets, DDoS protection</text>
+  
+  <line x1="350" y1="154" x2="350" y2="174" stroke="#475569" stroke-width="1.5" marker-end="url(#a5)"/>
+  
+  <!-- Load Balancer -->
+  <rect x="200" y="174" width="300" height="40" fill="#1a3326" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="350" y="199" text-anchor="middle" fill="#86efac" font-size="12" font-weight="bold">⚖️ Load Balancer (Nginx / AWS ALB)</text>
+  
+  <!-- Fan out to servers -->
+  <line x1="270" y1="216" x2="180" y2="250" stroke="#475569" stroke-width="1.5" marker-end="url(#a5)"/>
+  <line x1="350" y1="216" x2="350" y2="250" stroke="#475569" stroke-width="1.5" marker-end="url(#a5)"/>
+  <line x1="430" y1="216" x2="520" y2="250" stroke="#475569" stroke-width="1.5" marker-end="url(#a5)"/>
+  
+  <!-- Node Servers -->
+  <rect x="110" y="250" width="130" height="50" fill="#1a1a3a" rx="8" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="175" y="271" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="bold">Node.js #1</text>
+  <text x="175" y="288" text-anchor="middle" fill="#64748b" font-size="9">Port 3001 | 8 CPUs</text>
+  
+  <rect x="285" y="250" width="130" height="50" fill="#1a1a3a" rx="8" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="350" y="271" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="bold">Node.js #2</text>
+  <text x="350" y="288" text-anchor="middle" fill="#64748b" font-size="9">Port 3002 | 8 CPUs</text>
+  
+  <rect x="460" y="250" width="130" height="50" fill="#1a1a3a" rx="8" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="525" y="271" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="bold">Node.js #3</text>
+  <text x="525" y="288" text-anchor="middle" fill="#64748b" font-size="9">Port 3003 | 8 CPUs</text>
+  
+  <!-- Shared services below -->
+  <line x1="350" y1="302" x2="350" y2="325" stroke="#475569" stroke-width="1.5" marker-end="url(#a5)"/>
+  
+  <!-- Data Layer -->
+  <rect x="30" y="325" width="150" height="55" fill="#1a3326" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="105" y="347" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">🍃 MongoDB</text>
+  <text x="105" y="364" text-anchor="middle" fill="#64748b" font-size="9">Primary + 2 Replicas</text>
+  <text x="105" y="374" text-anchor="middle" fill="#64748b" font-size="9">Auto-failover</text>
+  
+  <rect x="200" y="325" width="150" height="55" fill="#2d1a1a" rx="8" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="275" y="347" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="bold">🔴 Redis</text>
+  <text x="275" y="364" text-anchor="middle" fill="#64748b" font-size="9">Cache + Sessions</text>
+  <text x="275" y="374" text-anchor="middle" fill="#64748b" font-size="9">Pub/Sub</text>
+  
+  <rect x="370" y="325" width="150" height="55" fill="#1a1a3a" rx="8" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="445" y="347" text-anchor="middle" fill="#a5b4fc" font-size="11" font-weight="bold">📨 Message Queue</text>
+  <text x="445" y="364" text-anchor="middle" fill="#64748b" font-size="9">RabbitMQ / Bull</text>
+  <text x="445" y="374" text-anchor="middle" fill="#64748b" font-size="9">Async jobs</text>
+  
+  <rect x="540" y="325" width="140" height="55" fill="#2d2a1a" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="610" y="347" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="bold">☁️ Object Store</text>
+  <text x="610" y="364" text-anchor="middle" fill="#64748b" font-size="9">S3 / GCS</text>
+  <text x="610" y="374" text-anchor="middle" fill="#64748b" font-size="9">Files, images</text>
+  
+  <!-- Monitoring -->
+  <rect x="30" y="402" width="640" height="50" fill="#1e293b" rx="8" stroke="#475569" stroke-width="1.5"/>
+  <text x="350" y="420" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="bold">🔍 Monitoring: Datadog | Prometheus + Grafana | Sentry (Error tracking) | ELK Stack (Logs)</text>
+  <text x="350" y="440" text-anchor="middle" fill="#64748b" font-size="10">Alerts &#8226; Dashboards &#8226; APM &#8226; Distributed Tracing</text>
+
+  <defs>
+    <marker id="a5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#475569"/>
+    </marker>
+  </defs>
+</svg>

@@ -17,6 +17,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9    ← Header (base64)
 .SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c  ← Signature (HMAC)
 ```
 
+![JWT Authentication Flow](/assets/nodejs/jwt-auth-flow.svg)
+
 ```javascript
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');

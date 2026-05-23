@@ -89,7 +89,7 @@ With Node.js:
 
 ## 🏗️ Node.js Runtime Architecture Overview
 
-![Node.js Runtime Architecture](/DSA-Notes-Problems/images/nodejs-runtime-architecture.svg)
+![Node.js Runtime Architecture](/assets/nodejs/runtime-architecture.svg)
 
 Node.js consists of three main layers:
 

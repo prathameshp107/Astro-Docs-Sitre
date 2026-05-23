@@ -1,0 +1,41 @@
+<svg width="700" height="260" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <rect width="700" height="260" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SQL vs MongoDB: Data Organization</text>
+
+  <!-- SQL Side -->
+  <rect x="20" y="45" width="310" height="195" fill="#1e293b" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="175" y="68" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">SQL (PostgreSQL/MySQL)</text>
+  
+  <rect x="35" y="80" width="280" height="140" fill="#1e3a5f" rx="5"/>
+  <text x="175" y="98" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="bold">users TABLE</text>
+  <line x1="35" y1="104" x2="315" y2="104" stroke="#334155" stroke-width="1"/>
+  <text x="65" y="120" fill="#94a3b8" font-size="10">id</text>
+  <text x="115" y="120" fill="#94a3b8" font-size="10">name</text>
+  <text x="190" y="120" fill="#94a3b8" font-size="10">email</text>
+  <text x="265" y="120" fill="#94a3b8" font-size="10">age</text>
+  <line x1="35" y1="126" x2="315" y2="126" stroke="#1e293b" stroke-width="1"/>
+  <text x="65" y="143" fill="#e2e8f0" font-size="10">1</text>
+  <text x="115" y="143" fill="#e2e8f0" font-size="10">Alice</text>
+  <text x="190" y="143" fill="#e2e8f0" font-size="10">alice@..</text>
+  <text x="265" y="143" fill="#e2e8f0" font-size="10">25</text>
+  <text x="65" y="160" fill="#e2e8f0" font-size="10">2</text>
+  <text x="115" y="160" fill="#e2e8f0" font-size="10">Bob</text>
+  <text x="190" y="160" fill="#e2e8f0" font-size="10">bob@..</text>
+  <text x="265" y="160" fill="#e2e8f0" font-size="10">30</text>
+  <text x="175" y="200" text-anchor="middle" fill="#64748b" font-size="10">Fixed schema &#8226; JOINs &#8226; ACID transactions</text>
+
+  <!-- MongoDB Side -->
+  <rect x="370" y="45" width="310" height="195" fill="#1e293b" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="525" y="68" text-anchor="middle" fill="#86efac" font-size="13" font-weight="bold">MongoDB</text>
+  
+  <rect x="385" y="80" width="280" height="140" fill="#1a3326" rx="5"/>
+  <text x="525" y="98" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">users COLLECTION</text>
+  <line x1="385" y1="104" x2="665" y2="104" stroke="#334155" stroke-width="1"/>
+  <text x="525" y="122" text-anchor="middle" fill="#94a3b8" font-size="9">Document 1:</text>
+  <text x="525" y="136" text-anchor="middle" fill="#e2e8f0" font-size="9">{ _id: "abc123", name: "Alice", email: "alice@..",</text>
+  <text x="525" y="150" text-anchor="middle" fill="#e2e8f0" font-size="9">  address: { city: "NY", zip: "10001" },</text>
+  <text x="525" y="164" text-anchor="middle" fill="#e2e8f0" font-size="9">  hobbies: ["coding", "reading"] }</text>
+  <line x1="385" y1="170" x2="665" y2="170" stroke="#334155" stroke-width="1"/>
+  <text x="525" y="185" text-anchor="middle" fill="#94a3b8" font-size="9">Document 2 can have DIFFERENT fields!</text>
+  <text x="525" y="200" text-anchor="middle" fill="#64748b" font-size="10">Flexible schema &#8226; Embedded docs &#8226; Horizontal scale</text>
+</svg>

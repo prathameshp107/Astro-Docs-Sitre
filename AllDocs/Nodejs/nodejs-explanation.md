@@ -2546,7 +2546,7 @@ server {
 ## 🏢 Microservices Architecture
 
 ```svg
-<svg width="700" height="520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+<we habe  width="700" height="520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
   <rect width="700" height="520" fill="#0f172a" rx="12"/>
   <text x="350" y="30" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">E-Commerce Microservices Architecture</text>
 

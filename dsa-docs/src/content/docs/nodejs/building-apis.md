@@ -11,6 +11,8 @@ An **API** (Application Programming Interface) is a way for different software s
 
 > **Real-world analogy**: A restaurant menu is an API. You (client) look at the menu (API docs), place an order (make a request), and the kitchen (server) prepares and returns your food (response).
 
+![REST API Request Lifecycle](/assets/nodejs/rest-api-lifecycle.svg)
+
 ---
 
 ## 📋 HTTP Methods
