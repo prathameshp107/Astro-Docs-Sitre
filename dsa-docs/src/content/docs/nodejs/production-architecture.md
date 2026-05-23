@@ -9,7 +9,7 @@ description: "Production-ready Node.js architecture, Docker, and PM2 process man
 
 A production Node.js setup typically includes:
 
-![Production Node.js Architecture](/assets/nodejs/production-architecture.svg)
+![Production Node.js Architecture](/DSA-Notes-Problems/assets/nodejs/production-architecture.svg)
 
 ```
 Users → CDN (Cloudflare) → Load Balancer (Nginx/ALB) → Node.js Servers (clustered)

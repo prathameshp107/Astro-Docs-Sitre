@@ -15,51 +15,7 @@ Angular has three types:
 2. **Attribute Directives** — Change the appearance/behavior of elements
 3. **Components** — Are technically directives with templates
 
-```svg
-<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
-  <rect width="760" height="360" fill="#0f172a" rx="12"/>
-  <text x="380" y="30" text-anchor="middle" fill="#e2e8f0" font-size="17" font-weight="bold">Types of Angular Directives</text>
-
-  <!-- Component box -->
-  <rect x="40" y="50" width="200" height="130" rx="10" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
-  <text x="140" y="75" text-anchor="middle" fill="#93c5fd" font-size="13" font-weight="bold">Components</text>
-  <text x="140" y="95" text-anchor="middle" fill="#64748b" font-size="10">Directives with a template</text>
-  <rect x="60" y="105" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="140" y="122" text-anchor="middle" fill="#bfdbfe" font-size="11">&lt;app-user-card&gt;</text>
-  <rect x="60" y="135" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="140" y="152" text-anchor="middle" fill="#bfdbfe" font-size="11">&lt;app-header&gt;</text>
-
-  <!-- Structural box -->
-  <rect x="280" y="50" width="200" height="200" rx="10" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
-  <text x="380" y="75" text-anchor="middle" fill="#86efac" font-size="13" font-weight="bold">Structural Directives</text>
-  <text x="380" y="95" text-anchor="middle" fill="#64748b" font-size="10">Change the DOM structure</text>
-  <rect x="300" y="105" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="380" y="122" text-anchor="middle" fill="#dcfce7" font-size="11">*ngIf — add/remove</text>
-  <rect x="300" y="135" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="380" y="152" text-anchor="middle" fill="#dcfce7" font-size="11">*ngFor — repeat</text>
-  <rect x="300" y="165" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="380" y="182" text-anchor="middle" fill="#dcfce7" font-size="11">*ngSwitch — choose</text>
-  <text x="380" y="240" text-anchor="middle" fill="#86efac" font-size="11">Prefix: * (asterisk)</text>
-
-  <!-- Attribute box -->
-  <rect x="520" y="50" width="200" height="200" rx="10" fill="#4c1d95" stroke="#a855f7" stroke-width="2"/>
-  <text x="620" y="75" text-anchor="middle" fill="#d8b4fe" font-size="13" font-weight="bold">Attribute Directives</text>
-  <text x="620" y="95" text-anchor="middle" fill="#64748b" font-size="10">Change look or behavior</text>
-  <rect x="540" y="105" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="620" y="122" text-anchor="middle" fill="#ede9fe" font-size="11">ngClass — add classes</text>
-  <rect x="540" y="135" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="620" y="152" text-anchor="middle" fill="#ede9fe" font-size="11">ngStyle — add styles</text>
-  <rect x="540" y="165" width="160" height="25" rx="4" fill="#0f172a"/>
-  <text x="620" y="182" text-anchor="middle" fill="#ede9fe" font-size="11">ngModel — two-way bind</text>
-  <text x="620" y="240" text-anchor="middle" fill="#d8b4fe" font-size="11">No * prefix</text>
-
-  <!-- Comparison row -->
-  <rect x="40" y="270" width="680" height="70" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
-  <text x="380" y="292" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="bold">Key Difference</text>
-  <text x="380" y="312" text-anchor="middle" fill="#64748b" font-size="10">Structural (*) = Adds or REMOVES elements from the DOM</text>
-  <text x="380" y="330" text-anchor="middle" fill="#64748b" font-size="10">Attribute = Elements STAY in DOM, only appearance/behavior changes</text>
-</svg>
-```
+![Types of Angular Directives](/DSA-Notes-Problems/assets/angular/phase-1-5-types-of-angular-directives.svg)
 
 ---
 

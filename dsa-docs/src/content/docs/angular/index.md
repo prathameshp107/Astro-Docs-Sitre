@@ -5,7 +5,7 @@ description: "Structured Angular documentation covering fundamentals, components
 
 # Angular Complete Guide
 
-Welcome to the comprehensive, topic-wise Angular study and reference notes. This documentation is organized into four main phases, going from absolute basics to advanced enterprise-level patterns.
+Welcome to the comprehensive, topic-wise Angular study and reference notes. Organized into four phases from beginner to enterprise level.
 
 ## Phase 1: Fundamentals
 
@@ -15,7 +15,7 @@ Welcome to the comprehensive, topic-wise Angular study and reference notes. This
 
 ---
 
-### Topics in this Phase:
+### Topics:
 
 - [1. Introduction to Angular](/DSA-Notes-Problems/angular/phase-1/phase-1-introduction-to-angular)
 - [2. Development Environment Setup](/DSA-Notes-Problems/angular/phase-1/phase-1-development-environment-setup)
@@ -41,7 +41,7 @@ Welcome to the comprehensive, topic-wise Angular study and reference notes. This
 
 ---
 
-### Topics in this Phase:
+### Topics:
 
 - [1. Components Deep Dive](/DSA-Notes-Problems/angular/phase-2/phase-2-components-deep-dive)
 - [2. Dependency Injection](/DSA-Notes-Problems/angular/phase-2/phase-2-dependency-injection)
@@ -61,7 +61,7 @@ Welcome to the comprehensive, topic-wise Angular study and reference notes. This
 
 ---
 
-### Topics in this Phase:
+### Topics:
 
 - [1. Change Detection](/DSA-Notes-Problems/angular/phase-3/phase-3-change-detection)
 - [2. RxJS Complete Guide](/DSA-Notes-Problems/angular/phase-3/phase-3-rxjs-complete-guide)
@@ -82,7 +82,7 @@ Welcome to the comprehensive, topic-wise Angular study and reference notes. This
 
 ---
 
-### Topics in this Phase:
+### Topics:
 
 - [1. Angular Architecture Patterns](/DSA-Notes-Problems/angular/phase-4/phase-4-angular-architecture-patterns)
 - [2. Authentication & Authorization](/DSA-Notes-Problems/angular/phase-4/phase-4-authentication-authorization)

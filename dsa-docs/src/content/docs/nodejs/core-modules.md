@@ -154,7 +154,7 @@ Streams are one of Node.js's most powerful features. Instead of loading an entir
 
 **Used in**: Netflix video streaming, file uploads/downloads, log processing
 
-![Stream Flow](/assets/nodejs/stream-flow.svg)
+![Stream Flow](/DSA-Notes-Problems/assets/nodejs/stream-flow.svg)
 
 ```javascript
 const fs = require('fs');

@@ -9,7 +9,7 @@ description: "Microservices architecture, API Gateway design, and service commun
 
 A typical e-commerce microservices architecture:
 
-![E-Commerce Microservices Architecture](/assets/nodejs/microservices-architecture.svg)
+![E-Commerce Microservices Architecture](/DSA-Notes-Problems/assets/nodejs/microservices-architecture.svg)
 
 - **API Gateway** — Auth, Rate Limit, Routing, Load Balance
 - **Auth Service** — JWT, OAuth2 (Port 3001)

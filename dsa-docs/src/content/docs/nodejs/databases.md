@@ -9,7 +9,7 @@ description: "MongoDB with Mongoose, SQL with PostgreSQL/MySQL, and comparisons 
 
 MongoDB stores data as **documents** (like JSON objects) in **collections** (like tables).
 
-![SQL vs MongoDB: Data Organization](/assets/nodejs/sql-vs-mongodb.svg)
+![SQL vs MongoDB: Data Organization](/DSA-Notes-Problems/assets/nodejs/sql-vs-mongodb.svg)
 
 ### Mongoose — MongoDB ODM for Node.js
 

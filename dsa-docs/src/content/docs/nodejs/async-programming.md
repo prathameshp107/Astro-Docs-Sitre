@@ -7,7 +7,7 @@ description: "Callbacks, Promises, and Async/Await — the evolution of asynchro
 
 Async programming is how Node.js handles operations that take time (file reading, database queries, API calls) **without blocking** the rest of the program.
 
-![Evolution of Async Programming](/assets/nodejs/async-evolution.svg)
+![Evolution of Async Programming](/DSA-Notes-Problems/assets/nodejs/async-evolution.svg)
 
 ## 1️⃣ Callbacks
 
