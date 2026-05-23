@@ -7,7 +7,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'DSA & Dev Notes',
-      description: 'Personal knowledge base for DSA, JavaScript, React, SQL, MongoDB and Interview Prep',
+      description: 'Personal knowledge base for DSA, JavaScript, React, SQL, MongoDB, Docker and Interview Prep',
       defaultLocale: 'en',
       social: [
         {
@@ -290,6 +290,20 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Docker',
+          items: [
+            { label: 'Docker Overview', link: '/docker' },
+            {
+              label: 'Fundamentals',
+              items: [{ autogenerate: { directory: 'docker/fundamentals' } }],
+            },
+            {
+              label: 'Advanced Docker',
+              items: [{ autogenerate: { directory: 'docker/advanced' } }],
+            },
+          ],
+        },
+        {
           label: 'Interview Prep',
           items: [{ autogenerate: { directory: 'interview' } }],
         },
@@ -299,7 +313,7 @@ export default defineConfig({
           tag: 'meta',
           attrs: {
             name: 'keywords',
-            content: 'DSA, JavaScript, React, MongoDB, SQL, Interview Prep',
+            content: 'DSA, JavaScript, React, MongoDB, SQL, Docker, Interview Prep',
           },
         },
       ],
