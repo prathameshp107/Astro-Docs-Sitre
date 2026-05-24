@@ -107,13 +107,70 @@ export default defineConfig({
           label: 'Next.js',
           items: [
             { label: 'Next.js Overview', link: '/nextjs' },
-            { label: 'Fundamentals, Routing & Layouts', link: '/nextjs/fundamentals-routing-layouts' },
-            { label: 'Components, Styling & Data Fetching', link: '/nextjs/components-styling-data-fetching' },
-            { label: 'Middleware & Authentication', link: '/nextjs/middleware-authentication' },
-            { label: 'Database, State Management & Forms', link: '/nextjs/database-state-forms' },
-            { label: 'Performance Optimization & SEO', link: '/nextjs/performance-seo' },
-            { label: 'Error Handling, Deployment & Testing', link: '/nextjs/error-handling-deployment-testing' },
-            { label: 'Security & Advanced Concepts', link: '/nextjs/security-advanced-concepts' },
+            {
+              label: 'Fundamentals',
+              items: [
+                { label: 'Introduction to Next.js', link: '/nextjs/fundamentals/introduction' },
+                { label: 'Installing Next.js', link: '/nextjs/fundamentals/installing-nextjs' },
+                { label: 'Folder Structure', link: '/nextjs/fundamentals/folder-structure' },
+                { label: 'Routing', link: '/nextjs/fundamentals/routing' },
+                { label: 'Layouts and Templates', link: '/nextjs/fundamentals/layouts-and-templates' },
+                { label: 'Review & Practice', link: '/nextjs/fundamentals/review-practice-interview' },
+              ],
+            },
+            {
+              label: 'Core Concepts',
+              items: [
+                { label: 'Components', link: '/nextjs/core-concepts/components' },
+                { label: 'Styling', link: '/nextjs/core-concepts/styling' },
+                { label: 'Data Fetching', link: '/nextjs/core-concepts/data-fetching' },
+                { label: 'Rendering Methods', link: '/nextjs/core-concepts/rendering-methods' },
+                { label: 'API Routes and Backend', link: '/nextjs/core-concepts/api-routes-backend' },
+                { label: 'Review & Practice', link: '/nextjs/core-concepts/review-practice-interview' },
+              ],
+            },
+            {
+              label: 'Middleware & Authentication',
+              items: [
+                { label: 'Middleware', link: '/nextjs/auth/middleware' },
+                { label: 'Authentication', link: '/nextjs/auth/authentication' },
+                { label: 'Review & Practice', link: '/nextjs/auth/review-practice-interview' },
+              ],
+            },
+            {
+              label: 'Data, State & Forms',
+              items: [
+                { label: 'Database Integration', link: '/nextjs/data-and-forms/database-integration' },
+                { label: 'State Management', link: '/nextjs/data-and-forms/state-management' },
+                { label: 'Forms and Validation', link: '/nextjs/data-and-forms/forms-and-validation' },
+                { label: 'Review & Practice', link: '/nextjs/data-and-forms/review-practice-interview' },
+              ],
+            },
+            {
+              label: 'Performance & SEO',
+              items: [
+                { label: 'Performance Optimization', link: '/nextjs/performance-seo/performance-optimization' },
+                { label: 'SEO in Next.js', link: '/nextjs/performance-seo/seo' },
+                { label: 'Review & Practice', link: '/nextjs/performance-seo/review-practice-interview' },
+              ],
+            },
+            {
+              label: 'Production',
+              items: [
+                { label: 'Error Handling', link: '/nextjs/production/error-handling' },
+                { label: 'Deployment', link: '/nextjs/production/deployment' },
+                { label: 'Testing', link: '/nextjs/production/testing' },
+                { label: 'Review & Practice', link: '/nextjs/production/review-practice-interview' },
+              ],
+            },
+            {
+              label: 'Advanced',
+              items: [
+                { label: 'Security Best Practices', link: '/nextjs/advanced/security-best-practices' },
+                { label: 'Advanced Concepts', link: '/nextjs/advanced/advanced-concepts' },
+                { label: 'Review & Practice', link: '/nextjs/advanced/review-practice-interview' },
+              ],
+            },
           ],
         },
         {
