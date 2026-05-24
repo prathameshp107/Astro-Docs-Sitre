@@ -1,0 +1,64 @@
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="700" height="260" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Streaming vs Traditional SSR</text>
+
+  <!-- Traditional SSR -->
+  <text x="175" y="55" text-anchor="middle" fill="#f87171" font-size="12">Traditional SSR (No Streaming)</text>
+  
+  <!-- Timeline bar -->
+  <rect x="30" y="65" width="290" height="20" fill="#1e293b" rx="3"/>
+  
+  <!-- Steps sequential -->
+  <rect x="30" y="65" width="70" height="20" fill="#7c3aed" rx="3 0 0 3"/>
+  <text x="65" y="79" text-anchor="middle" fill="white" font-size="8">Fetch all data</text>
+  
+  <rect x="103" y="65" width="60" height="20" fill="#0369a1"/>
+  <text x="133" y="79" text-anchor="middle" fill="white" font-size="8">Render HTML</text>
+  
+  <rect x="166" y="65" width="60" height="20" fill="#0f766e"/>
+  <text x="196" y="79" text-anchor="middle" fill="white" font-size="8">Send to browser</text>
+  
+  <rect x="229" y="65" width="60" height="20" fill="#b45309"/>
+  <text x="259" y="79" text-anchor="middle" fill="white" font-size="8">Hydrate JS</text>
+  
+  <rect x="292" y="65" width="28" height="20" fill="#16a34a" rx="0 3 3 0"/>
+  <text x="306" y="79" text-anchor="middle" fill="white" font-size="7">Interactive</text>
+
+  <text x="175" y="105" text-anchor="middle" fill="#94a3b8" font-size="9">User sees blank screen for 2.4 seconds total</text>
+  <text x="175" y="120" text-anchor="middle" fill="#f87171" font-size="9">❌ Slow API blocks entire page</text>
+
+  <!-- Streaming -->
+  <text x="530" y="55" text-anchor="middle" fill="#4ade80" font-size="12">With Streaming + Suspense</text>
+
+  <!-- Row 1: Shell -->
+  <text x="385" y="80" text-anchor="start" fill="#94a3b8" font-size="9">Shell:</text>
+  <rect x="415" y="68" width="40" height="16" fill="#7c3aed" rx="2"/>
+  <text x="435" y="79" text-anchor="middle" fill="white" font-size="7">Render</text>
+  <rect x="458" y="68" width="35" height="16" fill="#0f766e" rx="2"/>
+  <text x="475" y="79" text-anchor="middle" fill="white" font-size="7">Send</text>
+  <text x="500" y="79" text-anchor="start" fill="#4ade80" font-size="9">← Instant (0.2s)</text>
+
+  <!-- Row 2: Component A -->
+  <text x="385" y="105" text-anchor="start" fill="#94a3b8" font-size="9">Posts:</text>
+  <rect x="415" y="93" width="70" height="16" fill="#1e293b" rx="2" stroke="#475569" stroke-dasharray="3,2" stroke-width="1"/>
+  <text x="450" y="104" text-anchor="middle" fill="#475569" font-size="7">...fetching...</text>
+  <rect x="488" y="93" width="40" height="16" fill="#0369a1" rx="2"/>
+  <text x="508" y="104" text-anchor="middle" fill="white" font-size="7">Stream in</text>
+  <text x="535" y="104" text-anchor="start" fill="#4ade80" font-size="9">← 0.8s</text>
+
+  <!-- Row 3: Component B -->
+  <text x="385" y="130" text-anchor="start" fill="#94a3b8" font-size="9">Analytics:</text>
+  <rect x="415" y="118" width="110" height="16" fill="#1e293b" rx="2" stroke="#475569" stroke-dasharray="3,2" stroke-width="1"/>
+  <text x="470" y="129" text-anchor="middle" fill="#475569" font-size="7">...fetching...</text>
+  <rect x="528" y="118" width="40" height="16" fill="#0369a1" rx="2"/>
+  <text x="548" y="129" text-anchor="middle" fill="white" font-size="7">Stream in</text>
+  <text x="575" y="129" text-anchor="start" fill="#4ade80" font-size="9">← 1.8s</text>
+
+  <text x="530" y="160" text-anchor="middle" fill="#4ade80" font-size="9">✅ User sees page shell in 0.2s, content streams in progressively</text>
+
+  <!-- Legend -->
+  <line x1="30" y1="200" x2="670" y2="200" stroke="#1e293b" stroke-width="1"/>
+  <text x="350" y="220" text-anchor="middle" fill="#475569" font-size="10" font-weight="bold">Comparison</text>
+  <text x="175" y="240" text-anchor="middle" fill="#f87171" font-size="9">Total wait: 2.4s | Nothing visible until fully ready</text>
+  <text x="530" y="240" text-anchor="middle" fill="#4ade80" font-size="9">First visible: 0.2s | Content appears as each part loads</text>
+</svg>

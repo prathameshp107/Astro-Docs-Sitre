@@ -1,0 +1,63 @@
+<svg viewBox="0 0 740 300" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
+  <rect width="740" height="300" fill="#0f1117" rx="12"/>
+  <text x="370" y="30" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Data Fetching Lifecycle</text>
+
+  <!-- Client fetch flow -->
+  <rect x="20" y="50" width="680" height="100" fill="#1e293b" rx="8" stroke="#f59e0b" stroke-width="1"/>
+  <text x="36" y="72" fill="#fcd34d" font-weight="bold" font-size="12">CLIENT-SIDE FETCHING (useEffect / SWR / React Query)</text>
+
+  <rect x="36" y="82" width="110" height="50" fill="#92400e" rx="6"/>
+  <text x="91" y="103" text-anchor="middle" fill="#fff" font-size="11">1. Page loads</text>
+  <text x="91" y="119" text-anchor="middle" fill="#fde68a" font-size="10">Empty UI shown</text>
+
+  <line x1="146" y1="107" x2="166" y2="107" stroke="#f59e0b" stroke-width="1.5"/>
+  <polygon points="164,103 174,107 164,111" fill="#f59e0b"/>
+
+  <rect x="174" y="82" width="120" height="50" fill="#92400e" rx="6"/>
+  <text x="234" y="103" text-anchor="middle" fill="#fff" font-size="11">2. useEffect</text>
+  <text x="234" y="119" text-anchor="middle" fill="#fde68a" font-size="10">fires after render</text>
+
+  <line x1="294" y1="107" x2="314" y2="107" stroke="#f59e0b" stroke-width="1.5"/>
+  <polygon points="312,103 322,107 312,111" fill="#f59e0b"/>
+
+  <rect x="322" y="82" width="120" height="50" fill="#92400e" rx="6"/>
+  <text x="382" y="103" text-anchor="middle" fill="#fff" font-size="11">3. API call</text>
+  <text x="382" y="119" text-anchor="middle" fill="#fde68a" font-size="10">Loading spinner</text>
+
+  <line x1="442" y1="107" x2="462" y2="107" stroke="#f59e0b" stroke-width="1.5"/>
+  <polygon points="460,103 470,107 460,111" fill="#f59e0b"/>
+
+  <rect x="470" y="82" width="110" height="50" fill="#92400e" rx="6"/>
+  <text x="525" y="103" text-anchor="middle" fill="#fff" font-size="11">4. Data arrives</text>
+  <text x="525" y="119" text-anchor="middle" fill="#fde68a" font-size="10">UI re-renders</text>
+
+  <!-- Server fetch flow -->
+  <rect x="20" y="170" width="680" height="100" fill="#1e293b" rx="8" stroke="#22c55e" stroke-width="1"/>
+  <text x="36" y="192" fill="#86efac" font-weight="bold" font-size="12">SERVER-SIDE FETCHING (async Server Component)</text>
+
+  <rect x="36" y="202" width="110" height="50" fill="#14532d" rx="6"/>
+  <text x="91" y="223" text-anchor="middle" fill="#fff" font-size="11">1. Request</text>
+  <text x="91" y="239" text-anchor="middle" fill="#bbf7d0" font-size="10">Server receives</text>
+
+  <line x1="146" y1="227" x2="166" y2="227" stroke="#22c55e" stroke-width="1.5"/>
+  <polygon points="164,223 174,227 164,231" fill="#22c55e"/>
+
+  <rect x="174" y="202" width="120" height="50" fill="#14532d" rx="6"/>
+  <text x="234" y="223" text-anchor="middle" fill="#fff" font-size="11">2. Fetch data</text>
+  <text x="234" y="239" text-anchor="middle" fill="#bbf7d0" font-size="10">DB/API on server</text>
+
+  <line x1="294" y1="227" x2="314" y2="227" stroke="#22c55e" stroke-width="1.5"/>
+  <polygon points="312,223 322,227 312,231" fill="#22c55e"/>
+
+  <rect x="322" y="202" width="120" height="50" fill="#14532d" rx="6"/>
+  <text x="382" y="223" text-anchor="middle" fill="#fff" font-size="11">3. Render HTML</text>
+  <text x="382" y="239" text-anchor="middle" fill="#bbf7d0" font-size="10">With data included</text>
+
+  <line x1="442" y1="227" x2="462" y2="227" stroke="#22c55e" stroke-width="1.5"/>
+  <polygon points="460,223 470,227 460,231" fill="#22c55e"/>
+
+  <rect x="470" y="202" width="110" height="50" fill="#14532d" rx="6"/>
+  <text x="525" y="220" text-anchor="middle" fill="#fff" font-size="11">4. Browser gets</text>
+  <text x="525" y="236" text-anchor="middle" fill="#bbf7d0" font-size="10">complete HTML</text>
+  <text x="525" y="249" text-anchor="middle" fill="#86efac" font-size="10">✅ No loading state</text>
+</svg>

@@ -1,0 +1,109 @@
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Arial, sans-serif">
+  <rect width="700" height="420" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" fill="#e2e8f0" font-size="14" font-weight="700" text-anchor="middle">Full Authentication Workflow</text>
+
+  <defs>
+    <marker id="aw" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="awg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#4ade80"/>
+    </marker>
+    <marker id="awr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
+    </marker>
+  </defs>
+
+  <!-- Registration path -->
+  <text x="40" y="58" fill="#c084fc" font-size="11" font-weight="700">REGISTRATION</text>
+  <rect x="30" y="65" width="100" height="35" rx="6" fill="#1e293b" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="80" y="80" fill="#c084fc" font-size="10" font-weight="700" text-anchor="middle">Register</text>
+  <text x="80" y="93" fill="#64748b" font-size="9" text-anchor="middle">name/email/pass</text>
+
+  <line x1="130" y1="82" x2="165" y2="82" stroke="#c084fc" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <rect x="165" y="65" width="100" height="35" rx="6" fill="#1e293b" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="215" y="80" fill="#c084fc" font-size="10" font-weight="700" text-anchor="middle">Hash Password</text>
+  <text x="215" y="93" fill="#64748b" font-size="9" text-anchor="middle">bcrypt(pass, 12)</text>
+
+  <line x1="265" y1="82" x2="300" y2="82" stroke="#c084fc" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <rect x="300" y="65" width="100" height="35" rx="6" fill="#1e293b" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="350" y="80" fill="#c084fc" font-size="10" font-weight="700" text-anchor="middle">Save to DB</text>
+  <text x="350" y="93" fill="#64748b" font-size="9" text-anchor="middle">user + hash</text>
+
+  <line x1="400" y1="82" x2="435" y2="82" stroke="#c084fc" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <rect x="435" y="65" width="110" height="35" rx="6" fill="#1e293b" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="490" y="80" fill="#c084fc" font-size="10" font-weight="700" text-anchor="middle">201 Created</text>
+  <text x="490" y="93" fill="#64748b" font-size="9" text-anchor="middle">→ auto sign in</text>
+
+  <!-- Login path -->
+  <text x="40" y="138" fill="#3b82f6" font-size="11" font-weight="700">LOGIN</text>
+  <rect x="30" y="145" width="100" height="35" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="80" y="160" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">Login Form</text>
+  <text x="80" y="173" fill="#64748b" font-size="9" text-anchor="middle">email + password</text>
+
+  <line x1="130" y1="162" x2="165" y2="162" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <rect x="165" y="145" width="100" height="35" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="215" y="160" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">Find User</text>
+  <text x="215" y="173" fill="#64748b" font-size="9" text-anchor="middle">by email in DB</text>
+
+  <line x1="265" y1="162" x2="300" y2="162" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <rect x="300" y="145" width="100" height="35" rx="6" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="350" y="160" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">bcrypt.compare</text>
+  <text x="350" y="173" fill="#64748b" font-size="9" text-anchor="middle">pass vs hash</text>
+
+  <!-- Match / No match -->
+  <line x1="400" y1="162" x2="435" y2="162" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <polygon points="490,145 540,162 490,179 440,162" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="490" y="158" fill="#93c5fd" font-size="10" font-weight="700" text-anchor="middle">Match?</text>
+
+  <!-- Yes path -->
+  <line x1="540" y1="162" x2="575" y2="162" stroke="#4ade80" stroke-width="1.5" marker-end="url(#awg)"/>
+  <text x="557" y="156" fill="#4ade80" font-size="9">Yes</text>
+  <rect x="575" y="145" width="100" height="35" rx="6" fill="#052e16" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="625" y="160" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">Issue JWT</text>
+  <text x="625" y="173" fill="#64748b" font-size="9" text-anchor="middle">set cookie</text>
+
+  <!-- No path -->
+  <line x1="490" y1="179" x2="490" y2="210" stroke="#f87171" stroke-width="1.5" marker-end="url(#awr)"/>
+  <text x="505" y="200" fill="#f87171" font-size="9">No</text>
+  <rect x="435" y="210" width="110" height="35" rx="6" fill="#450a0a" stroke="#f87171" stroke-width="1.5"/>
+  <text x="490" y="225" fill="#f87171" font-size="10" font-weight="700" text-anchor="middle">401 Error</text>
+  <text x="490" y="238" fill="#64748b" font-size="9" text-anchor="middle">Invalid credentials</text>
+
+  <!-- Accessing protected route -->
+  <text x="40" y="285" fill="#f59e0b" font-size="11" font-weight="700">PROTECTED ROUTE ACCESS</text>
+  <rect x="30" y="293" width="110" height="35" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="85" y="308" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">Request with</text>
+  <text x="85" y="321" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">auth cookie</text>
+
+  <line x1="140" y1="310" x2="175" y2="310" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <rect x="175" y="293" width="110" height="35" rx="6" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="230" y="308" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">Middleware</text>
+  <text x="230" y="321" fill="#64748b" font-size="9" text-anchor="middle">verify JWT</text>
+
+  <line x1="285" y1="310" x2="320" y2="310" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#aw)"/>
+
+  <polygon points="375,293 425,310 375,327 325,310" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="375" y="306" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">Valid</text>
+  <text x="375" y="318" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">Token?</text>
+
+  <!-- Yes allow -->
+  <line x1="425" y1="310" x2="460" y2="310" stroke="#4ade80" stroke-width="1.5" marker-end="url(#awg)"/>
+  <text x="442" y="304" fill="#4ade80" font-size="9">Yes</text>
+  <rect x="460" y="293" width="110" height="35" rx="6" fill="#052e16" stroke="#4ade80" stroke-width="1.5"/>
+  <text x="515" y="308" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">Render Page</text>
+  <text x="515" y="321" fill="#64748b" font-size="9" text-anchor="middle">with session data</text>
+
+  <!-- No block -->
+  <line x1="375" y1="327" x2="375" y2="357" stroke="#f87171" stroke-width="1.5" marker-end="url(#awr)"/>
+  <rect x="315" y="358" width="120" height="35" rx="6" fill="#450a0a" stroke="#f87171" stroke-width="1.5"/>
+  <text x="375" y="373" fill="#f87171" font-size="10" font-weight="700" text-anchor="middle">Redirect /login</text>
+  <text x="375" y="386" fill="#64748b" font-size="9" text-anchor="middle">401 / 403</text>
+</svg>

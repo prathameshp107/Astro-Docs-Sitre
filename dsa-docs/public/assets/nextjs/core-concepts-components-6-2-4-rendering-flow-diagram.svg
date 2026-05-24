@@ -1,0 +1,61 @@
+<svg viewBox="0 0 820 420" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="13">
+  <!-- Background -->
+  <rect width="820" height="420" fill="#0f1117" rx="12"/>
+
+  <!-- Title -->
+  <text x="410" y="35" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="bold">Server vs Client Component Rendering Flow</text>
+
+  <!-- SERVER SIDE box -->
+  <rect x="30" y="60" width="340" height="320" fill="#1e293b" rx="10" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="200" y="88" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="bold">🖥️ SERVER SIDE</text>
+
+  <!-- Steps on server -->
+  <rect x="55" y="100" width="290" height="44" fill="#1d4ed8" rx="7"/>
+  <text x="200" y="118" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1. Request arrives from browser</text>
+  <text x="200" y="134" text-anchor="middle" fill="#bfdbfe" font-size="11">User visits /products</text>
+
+  <rect x="55" y="158" width="290" height="44" fill="#1d4ed8" rx="7"/>
+  <text x="200" y="176" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2. Server Component renders</text>
+  <text x="200" y="192" text-anchor="middle" fill="#bfdbfe" font-size="11">Fetches data, builds HTML</text>
+
+  <rect x="55" y="216" width="290" height="44" fill="#1d4ed8" rx="7"/>
+  <text x="200" y="234" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3. HTML + JSON payload</text>
+  <text x="200" y="250" text-anchor="middle" fill="#bfdbfe" font-size="11">Sent to browser</text>
+
+  <!-- Arrow down -->
+  <line x1="200" y1="270" x2="200" y2="310" stroke="#3b82f6" stroke-width="2" stroke-dasharray="4"/>
+  <polygon points="194,308 200,320 206,308" fill="#3b82f6"/>
+
+  <rect x="55" y="318" width="290" height="44" fill="#0f4e00" rx="7" stroke="#22c55e" stroke-width="1"/>
+  <text x="200" y="336" text-anchor="middle" fill="#86efac" font-size="12" font-weight="bold">✅ Zero JS in bundle</text>
+  <text x="200" y="352" text-anchor="middle" fill="#86efac" font-size="11">Server component code stays on server</text>
+
+  <!-- Arrow between sections -->
+  <line x1="370" y1="220" x2="450" y2="220" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="448,214 460,220 448,226" fill="#94a3b8"/>
+  <text x="410" y="212" text-anchor="middle" fill="#94a3b8" font-size="11">HTTP</text>
+
+  <!-- CLIENT SIDE box -->
+  <rect x="460" y="60" width="330" height="320" fill="#1e293b" rx="10" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="625" y="88" text-anchor="middle" fill="#f59e0b" font-size="14" font-weight="bold">🌐 CLIENT SIDE</text>
+
+  <rect x="485" y="100" width="280" height="44" fill="#92400e" rx="7"/>
+  <text x="625" y="118" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1. Browser receives HTML</text>
+  <text x="625" y="134" text-anchor="middle" fill="#fde68a" font-size="11">Instantly visible (good FCP)</text>
+
+  <rect x="485" y="158" width="280" height="44" fill="#92400e" rx="7"/>
+  <text x="625" y="176" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">2. JS bundle downloads</text>
+  <text x="625" y="192" text-anchor="middle" fill="#fde68a" font-size="11">Client component code loads</text>
+
+  <rect x="485" y="216" width="280" height="44" fill="#92400e" rx="7"/>
+  <text x="625" y="234" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">3. Hydration occurs</text>
+  <text x="625" y="250" text-anchor="middle" fill="#fde68a" font-size="11">React attaches event listeners</text>
+
+  <rect x="485" y="318" width="280" height="44" fill="#1a0005" rx="7" stroke="#f87171" stroke-width="1"/>
+  <text x="625" y="336" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">⚡ Now interactive</text>
+  <text x="625" y="352" text-anchor="middle" fill="#fca5a5" font-size="11">useState, onClick etc. work</text>
+
+  <!-- Down arrow -->
+  <line x1="625" y1="270" x2="625" y2="310" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4"/>
+  <polygon points="619,308 625,320 631,308" fill="#f59e0b"/>
+</svg>

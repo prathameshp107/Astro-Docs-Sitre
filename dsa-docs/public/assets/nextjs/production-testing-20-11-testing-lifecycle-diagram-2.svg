@@ -1,0 +1,65 @@
+<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+  <rect width="700" height="280" rx="14" fill="#0f172a"/>
+  <text x="350" y="28" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Testing Lifecycle in Next.js</text>
+
+  <!-- Boxes in sequence -->
+  <!-- Write component -->
+  <rect x="20" y="60" width="120" height="60" rx="8" fill="#1e40af"/>
+  <text x="80" y="84" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Write</text>
+  <text x="80" y="100" text-anchor="middle" fill="#93c5fd" font-size="10">Component</text>
+  <text x="80" y="114" text-anchor="middle" fill="#93c5fd" font-size="9">+ Logic</text>
+
+  <line x1="140" y1="90" x2="170" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#tc1)"/>
+
+  <!-- Write test -->
+  <rect x="170" y="60" width="120" height="60" rx="8" fill="#1e40af"/>
+  <text x="230" y="84" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Write Test</text>
+  <text x="230" y="100" text-anchor="middle" fill="#93c5fd" font-size="10">describe()</text>
+  <text x="230" y="114" text-anchor="middle" fill="#93c5fd" font-size="9">it() · expect()</text>
+
+  <line x1="290" y1="90" x2="320" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#tc1)"/>
+
+  <!-- Run tests -->
+  <rect x="320" y="60" width="120" height="60" rx="8" fill="#1e40af"/>
+  <text x="380" y="84" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Run Tests</text>
+  <text x="380" y="100" text-anchor="middle" fill="#93c5fd" font-size="10">jest --watch</text>
+  <text x="380" y="114" text-anchor="middle" fill="#93c5fd" font-size="9">npm test</text>
+
+  <line x1="440" y1="90" x2="470" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#tc1)"/>
+
+  <!-- Pass/Fail -->
+  <polygon points="560,65 640,90 560,115 480,90" fill="#374151" stroke="#6b7280"/>
+  <text x="560" y="87" text-anchor="middle" fill="#f9fafb" font-size="10" font-weight="600">All</text>
+  <text x="560" y="101" text-anchor="middle" fill="#f9fafb" font-size="10" font-weight="600">Pass?</text>
+
+  <!-- Yes: deploy -->
+  <line x1="640" y1="90" x2="670" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#tc2)"/>
+  <rect x="650" y="65" width="40" height="50" rx="8" fill="#065f46"/>
+  <text x="670" y="92" text-anchor="middle" fill="#6ee7b7" font-size="9">✅ CI</text>
+
+  <!-- No: fix -->
+  <line x1="560" y1="115" x2="560" y2="165" stroke="#f87171" stroke-width="2" marker-end="url(#tc3)"/>
+  <rect x="480" y="165" width="160" height="50" rx="8" fill="#7f1d1d"/>
+  <text x="560" y="185" text-anchor="middle" fill="#fecaca" font-size="11" font-weight="600">❌ Fix Code</text>
+  <text x="560" y="201" text-anchor="middle" fill="#fca5a5" font-size="10">Debug failing test</text>
+
+  <!-- Loop back -->
+  <path d="M480 190 Q400 190 380 150" stroke="#f87171" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#tc3)"/>
+
+  <!-- Bottom: coverage -->
+  <rect x="130" y="235" width="440" height="35" rx="8" fill="#1e293b" stroke="#475569"/>
+  <text x="350" y="249" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">Code Coverage Report</text>
+  <text x="350" y="263" text-anchor="middle" fill="#64748b" font-size="9">Statements · Branches · Functions · Lines → jest --coverage</text>
+
+  <defs>
+    <marker id="tc1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+    <marker id="tc2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#34d399"/>
+    </marker>
+    <marker id="tc3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
+    </marker>
+  </defs>
+</svg>

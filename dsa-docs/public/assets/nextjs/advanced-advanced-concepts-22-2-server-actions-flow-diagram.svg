@@ -1,0 +1,70 @@
+<svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+  <rect width="720" height="360" rx="14" fill="#0f172a"/>
+  <text x="360" y="30" text-anchor="middle" fill="#f1f5f9" font-size="16" font-weight="700">Server Actions Workflow</text>
+
+  <!-- Client side background -->
+  <rect x="15" y="48" width="320" height="290" rx="10" fill="#0c1a3a" stroke="#1e40af" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="175" y="67" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">CLIENT BOUNDARY</text>
+
+  <!-- Server side background -->
+  <rect x="385" y="48" width="320" height="290" rx="10" fill="#0c2918" stroke="#065f46" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="545" y="67" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">SERVER BOUNDARY</text>
+
+  <!-- Client: User interacts -->
+  <rect x="35" y="85" width="150" height="50" rx="8" fill="#1e40af"/>
+  <text x="110" y="106" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">User Interaction</text>
+  <text x="110" y="122" text-anchor="middle" fill="#93c5fd" font-size="10">Form submit / button click</text>
+
+  <!-- Client: Form state -->
+  <rect x="35" y="165" width="150" height="50" rx="8" fill="#1e40af"/>
+  <text x="110" y="186" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">useFormState</text>
+  <text x="110" y="202" text-anchor="middle" fill="#93c5fd" font-size="10">Pending / result state</text>
+
+  <!-- Client: Optimistic UI -->
+  <rect x="35" y="250" width="150" height="50" rx="8" fill="#1e3a5f"/>
+  <text x="110" y="271" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Optimistic Update</text>
+  <text x="110" y="287" text-anchor="middle" fill="#93c5fd" font-size="10">useOptimistic()</text>
+
+  <!-- Arrows between client items -->
+  <line x1="110" y1="135" x2="110" y2="165" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#sa1)"/>
+  <line x1="110" y1="215" x2="110" y2="250" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#sa1)"/>
+
+  <!-- Client → Server: Action call -->
+  <line x1="185" y1="110" x2="400" y2="110" stroke="#a78bfa" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#sa3)"/>
+  <text x="292" y="105" text-anchor="middle" fill="#c4b5fd" font-size="9">action(formData)</text>
+
+  <!-- Server: Auth check -->
+  <rect x="410" y="85" width="150" height="50" rx="8" fill="#065f46"/>
+  <text x="485" y="106" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">Auth + Validate</text>
+  <text x="485" y="122" text-anchor="middle" fill="#34d399" font-size="10">Session · Zod schema</text>
+
+  <!-- Server: DB mutation -->
+  <rect x="410" y="165" width="150" height="50" rx="8" fill="#065f46"/>
+  <text x="485" y="186" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">DB Mutation</text>
+  <text x="485" y="202" text-anchor="middle" fill="#34d399" font-size="10">Prisma · SQL · ORM</text>
+
+  <!-- Server: Revalidate -->
+  <rect x="410" y="250" width="150" height="50" rx="8" fill="#065f46"/>
+  <text x="485" y="271" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">revalidatePath()</text>
+  <text x="485" y="287" text-anchor="middle" fill="#34d399" font-size="10">Purge cached data</text>
+
+  <!-- Arrows between server items -->
+  <line x1="485" y1="135" x2="485" y2="165" stroke="#10b981" stroke-width="1.5" marker-end="url(#sa2)"/>
+  <line x1="485" y1="215" x2="485" y2="250" stroke="#10b981" stroke-width="1.5" marker-end="url(#sa2)"/>
+
+  <!-- Server → Client: Result -->
+  <line x1="410" y1="185" x2="185" y2="185" stroke="#a78bfa" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#sa3)"/>
+  <text x="297" y="180" text-anchor="middle" fill="#c4b5fd" font-size="9">{ error } | redirect()</text>
+
+  <defs>
+    <marker id="sa1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="sa2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+    </marker>
+    <marker id="sa3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,54 @@
+<svg viewBox="0 0 700 310" xmlns="http://www.w3.org/2000/svg" font-family="monospace, sans-serif">
+  <rect width="700" height="310" fill="#0f172a" rx="12"/>
+  <text x="350" y="26" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">Client + Server Validation Strategy</text>
+
+  <!-- Client side -->
+  <rect x="20" y="45" width="310" height="230" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="175" y="68" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">Client-Side Validation</text>
+  <text x="175" y="84" text-anchor="middle" fill="#64748b" font-size="10">Immediate feedback — no network needed</text>
+
+  <rect x="40" y="95" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="175" y="113" text-anchor="middle" fill="#4ade80" font-size="10">1. HTML5 built-in: required, type, min, max</text>
+
+  <rect x="40" y="130" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="175" y="148" text-anchor="middle" fill="#4ade80" font-size="10">2. React Hook Form: register() validation</text>
+
+  <rect x="40" y="165" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="175" y="183" text-anchor="middle" fill="#4ade80" font-size="10">3. Zod schema: zodResolver(schema)</text>
+
+  <rect x="40" y="200" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="175" y="218" text-anchor="middle" fill="#4ade80" font-size="10">4. Custom: validate field in register()</text>
+
+  <text x="175" y="258" text-anchor="middle" fill="#64748b" font-size="9">✅ Fast UX  ⚠️ Can be bypassed!</text>
+
+  <!-- Arrow between -->
+  <line x1="330" y1="160" x2="370" y2="160" stroke="#334155" stroke-width="1.5" marker-end="url(#av)"/>
+  <text x="350" y="152" text-anchor="middle" fill="#475569" font-size="9">always</text>
+  <text x="350" y="175" text-anchor="middle" fill="#475569" font-size="9">validate</text>
+  <text x="350" y="188" text-anchor="middle" fill="#475569" font-size="9">both!</text>
+
+  <!-- Server side -->
+  <rect x="370" y="45" width="310" height="230" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="525" y="68" text-anchor="middle" fill="#86efac" font-size="12" font-weight="bold">Server-Side Validation</text>
+  <text x="525" y="84" text-anchor="middle" fill="#64748b" font-size="10">The real security layer</text>
+
+  <rect x="390" y="95" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="525" y="113" text-anchor="middle" fill="#4ade80" font-size="10">1. Re-validate with same Zod schema</text>
+
+  <rect x="390" y="130" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="525" y="148" text-anchor="middle" fill="#4ade80" font-size="10">2. Check business rules (email unique?)</text>
+
+  <rect x="390" y="165" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="525" y="183" text-anchor="middle" fill="#4ade80" font-size="10">3. Sanitize input (trim, escape HTML)</text>
+
+  <rect x="390" y="200" width="270" height="28" rx="5" fill="#0f172a"/>
+  <text x="525" y="218" text-anchor="middle" fill="#4ade80" font-size="10">4. Rate limit form submissions</text>
+
+  <text x="525" y="258" text-anchor="middle" fill="#64748b" font-size="9">✅ Secure  ✅ Cannot be bypassed!</text>
+
+  <defs>
+    <marker id="av" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+</svg>

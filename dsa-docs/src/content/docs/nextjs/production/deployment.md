@@ -27,63 +27,7 @@ Deployment is the process of **taking your application from development to produ
 
 ## 19.3 Deployment Lifecycle
 
-```txt
-<svg viewBox="0 0 740 130" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
-  <rect width="740" height="130" rx="12" fill="#0f172a"/>
-  <text x="370" y="24" text-anchor="middle" fill="#f1f5f9" font-size="14" font-weight="700">Next.js Deployment Lifecycle</text>
-
-  <!-- Stages -->
-  <!-- 1 -->
-  <rect x="20" y="45" width="100" height="55" rx="8" fill="#1e40af"/>
-  <text x="70" y="66" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Code</text>
-  <text x="70" y="82" text-anchor="middle" fill="#93c5fd" font-size="10">Write &amp;</text>
-  <text x="70" y="96" text-anchor="middle" fill="#93c5fd" font-size="10">Commit</text>
-
-  <line x1="120" y1="72" x2="155" y2="72" stroke="#475569" stroke-width="2" marker-end="url(#dp1)"/>
-
-  <!-- 2 -->
-  <rect x="155" y="45" width="100" height="55" rx="8" fill="#1e40af"/>
-  <text x="205" y="66" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">CI/CD</text>
-  <text x="205" y="82" text-anchor="middle" fill="#93c5fd" font-size="10">Test &amp;</text>
-  <text x="205" y="96" text-anchor="middle" fill="#93c5fd" font-size="10">Lint</text>
-
-  <line x1="255" y1="72" x2="290" y2="72" stroke="#475569" stroke-width="2" marker-end="url(#dp1)"/>
-
-  <!-- 3 -->
-  <rect x="290" y="45" width="100" height="55" rx="8" fill="#1e40af"/>
-  <text x="340" y="66" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Build</text>
-  <text x="340" y="82" text-anchor="middle" fill="#93c5fd" font-size="10">next build</text>
-  <text x="340" y="96" text-anchor="middle" fill="#93c5fd" font-size="10">Optimize</text>
-
-  <line x1="390" y1="72" x2="425" y2="72" stroke="#475569" stroke-width="2" marker-end="url(#dp1)"/>
-
-  <!-- 4 -->
-  <rect x="425" y="45" width="100" height="55" rx="8" fill="#1e40af"/>
-  <text x="475" y="66" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Deploy</text>
-  <text x="475" y="82" text-anchor="middle" fill="#93c5fd" font-size="10">Push to</text>
-  <text x="475" y="96" text-anchor="middle" fill="#93c5fd" font-size="10">Host</text>
-
-  <line x1="525" y1="72" x2="560" y2="72" stroke="#475569" stroke-width="2" marker-end="url(#dp1)"/>
-
-  <!-- 5 -->
-  <rect x="560" y="45" width="100" height="55" rx="8" fill="#065f46"/>
-  <text x="610" y="66" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">Monitor</text>
-  <text x="610" y="82" text-anchor="middle" fill="#34d399" font-size="10">Logs &amp;</text>
-  <text x="610" y="96" text-anchor="middle" fill="#34d399" font-size="10">Alerts</text>
-
-  <!-- Feedback loop -->
-  <path d="M610 100 Q610 118 370 118 Q130 118 70 100" stroke="#a78bfa" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#dp2)"/>
-
-  <defs>
-    <marker id="dp1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-    <marker id="dp2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa"/>
-    </marker>
-  </defs>
-</svg>
-```
+![19.3 Deployment Lifecycle diagram](/DSA-Notes-Problems/assets/nextjs/production-deployment-19-3-deployment-lifecycle.svg)
 
 ---
 
@@ -271,65 +215,7 @@ pm2 monit
 
 ## 19.9 Deployment Architecture Diagram
 
-```txt
-<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
-  <rect width="700" height="400" rx="14" fill="#0f172a"/>
-  <text x="350" y="28" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Next.js Production Deployment Architecture</text>
-
-  <!-- Internet / User -->
-  <rect x="280" y="50" width="140" height="44" rx="8" fill="#1e3a5f"/>
-  <text x="350" y="68" text-anchor="middle" fill="#bfdbfe" font-size="12" font-weight="600">🌐 User Browser</text>
-  <text x="350" y="85" text-anchor="middle" fill="#93c5fd" font-size="10">Internet</text>
-
-  <line x1="350" y1="94" x2="350" y2="120" stroke="#475569" stroke-width="2" marker-end="url(#dp3)"/>
-
-  <!-- CDN Layer -->
-  <rect x="180" y="120" width="340" height="44" rx="8" fill="#065f46"/>
-  <text x="350" y="138" text-anchor="middle" fill="#6ee7b7" font-size="12" font-weight="600">☁️ CDN / Edge Network</text>
-  <text x="350" y="155" text-anchor="middle" fill="#34d399" font-size="10">Static assets · Caching · SSL termination</text>
-
-  <line x1="350" y1="164" x2="350" y2="190" stroke="#475569" stroke-width="2" marker-end="url(#dp3)"/>
-
-  <!-- Load Balancer -->
-  <rect x="230" y="190" width="240" height="44" rx="8" fill="#1e40af"/>
-  <text x="350" y="208" text-anchor="middle" fill="#bfdbfe" font-size="12" font-weight="600">⚖️ Load Balancer</text>
-  <text x="350" y="225" text-anchor="middle" fill="#93c5fd" font-size="10">Nginx · Route traffic</text>
-
-  <!-- Distribute to instances -->
-  <line x1="280" y1="234" x2="160" y2="265" stroke="#475569" stroke-width="1.5" marker-end="url(#dp3)"/>
-  <line x1="350" y1="234" x2="350" y2="265" stroke="#475569" stroke-width="1.5" marker-end="url(#dp3)"/>
-  <line x1="420" y1="234" x2="540" y2="265" stroke="#475569" stroke-width="1.5" marker-end="url(#dp3)"/>
-
-  <!-- App instances -->
-  <rect x="80" y="265" width="140" height="50" rx="8" fill="#1e3a5f"/>
-  <text x="150" y="285" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Next.js Instance 1</text>
-  <text x="150" y="301" text-anchor="middle" fill="#93c5fd" font-size="10">Port 3000</text>
-
-  <rect x="270" y="265" width="160" height="50" rx="8" fill="#1e3a5f"/>
-  <text x="350" y="285" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Next.js Instance 2</text>
-  <text x="350" y="301" text-anchor="middle" fill="#93c5fd" font-size="10">Port 3001</text>
-
-  <rect x="480" y="265" width="140" height="50" rx="8" fill="#1e3a5f"/>
-  <text x="550" y="285" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Next.js Instance 3</text>
-  <text x="550" y="301" text-anchor="middle" fill="#93c5fd" font-size="10">Port 3002</text>
-
-  <!-- Database layer -->
-  <line x1="350" y1="315" x2="350" y2="345" stroke="#475569" stroke-width="1.5" marker-end="url(#dp3)"/>
-  <rect x="180" y="345" width="140" height="40" rx="8" fill="#312e81"/>
-  <text x="250" y="361" text-anchor="middle" fill="#c4b5fd" font-size="11" font-weight="600">🗄️ Database</text>
-  <text x="250" y="377" text-anchor="middle" fill="#a78bfa" font-size="10">PostgreSQL / MongoDB</text>
-
-  <rect x="380" y="345" width="140" height="40" rx="8" fill="#312e81"/>
-  <text x="450" y="361" text-anchor="middle" fill="#c4b5fd" font-size="11" font-weight="600">⚡ Redis Cache</text>
-  <text x="450" y="377" text-anchor="middle" fill="#a78bfa" font-size="10">Session / Cache</text>
-
-  <defs>
-    <marker id="dp3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-  </defs>
-</svg>
-```
+![19.9 Deployment Architecture Diagram diagram](/DSA-Notes-Problems/assets/nextjs/production-deployment-19-9-deployment-architecture-diagram-2.svg)
 
 ---
 
@@ -361,66 +247,7 @@ const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY; // Client + Server
 
 ## 19.11 CI/CD Workflow
 
-```txt
-<svg viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
-  <rect width="720" height="200" rx="12" fill="#0f172a"/>
-  <text x="360" y="26" text-anchor="middle" fill="#f1f5f9" font-size="14" font-weight="700">CI/CD Pipeline (GitHub Actions)</text>
-
-  <!-- Steps -->
-  <rect x="20" y="50" width="90" height="90" rx="8" fill="#1e40af"/>
-  <text x="65" y="88" text-anchor="middle" fill="#bfdbfe" font-size="22">📝</text>
-  <text x="65" y="110" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Push Code</text>
-  <text x="65" y="126" text-anchor="middle" fill="#93c5fd" font-size="9">git push</text>
-
-  <line x1="110" y1="95" x2="135" y2="95" stroke="#475569" stroke-width="2" marker-end="url(#ci1)"/>
-
-  <rect x="135" y="50" width="90" height="90" rx="8" fill="#1e40af"/>
-  <text x="180" y="88" text-anchor="middle" fill="#bfdbfe" font-size="22">🔍</text>
-  <text x="180" y="110" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Lint &amp; Type</text>
-  <text x="180" y="126" text-anchor="middle" fill="#93c5fd" font-size="9">ESLint + tsc</text>
-
-  <line x1="225" y1="95" x2="250" y2="95" stroke="#475569" stroke-width="2" marker-end="url(#ci1)"/>
-
-  <rect x="250" y="50" width="90" height="90" rx="8" fill="#1e40af"/>
-  <text x="295" y="88" text-anchor="middle" fill="#bfdbfe" font-size="22">🧪</text>
-  <text x="295" y="110" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Run Tests</text>
-  <text x="295" y="126" text-anchor="middle" fill="#93c5fd" font-size="9">Jest + Playwright</text>
-
-  <line x1="340" y1="95" x2="365" y2="95" stroke="#475569" stroke-width="2" marker-end="url(#ci1)"/>
-
-  <rect x="365" y="50" width="90" height="90" rx="8" fill="#1e40af"/>
-  <text x="410" y="88" text-anchor="middle" fill="#bfdbfe" font-size="22">🏗️</text>
-  <text x="410" y="110" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Build</text>
-  <text x="410" y="126" text-anchor="middle" fill="#93c5fd" font-size="9">next build</text>
-
-  <line x1="455" y1="95" x2="480" y2="95" stroke="#475569" stroke-width="2" marker-end="url(#ci1)"/>
-
-  <rect x="480" y="50" width="90" height="90" rx="8" fill="#1e40af"/>
-  <text x="525" y="88" text-anchor="middle" fill="#bfdbfe" font-size="22">🚀</text>
-  <text x="525" y="110" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Deploy</text>
-  <text x="525" y="126" text-anchor="middle" fill="#93c5fd" font-size="9">Vercel / AWS</text>
-
-  <line x1="570" y1="95" x2="595" y2="95" stroke="#475569" stroke-width="2" marker-end="url(#ci1)"/>
-
-  <rect x="595" y="50" width="100" height="90" rx="8" fill="#065f46"/>
-  <text x="645" y="88" text-anchor="middle" fill="#6ee7b7" font-size="22">✅</text>
-  <text x="645" y="110" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">Live!</text>
-  <text x="645" y="126" text-anchor="middle" fill="#34d399" font-size="9">Monitor</text>
-
-  <!-- Fail arrow -->
-  <path d="M295 140 Q295 175 180 175 Q65 175 65 140" stroke="#f87171" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#ci2)"/>
-  <text x="180" y="172" text-anchor="middle" fill="#fca5a5" font-size="9">❌ Tests fail → Notify developer</text>
-
-  <defs>
-    <marker id="ci1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-    <marker id="ci2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
-    </marker>
-  </defs>
-</svg>
-```
+![19.11 CI/CD Workflow diagram](/DSA-Notes-Problems/assets/nextjs/production-deployment-19-11-ci-cd-workflow-3.svg)
 
 **GitHub Actions example:**
 

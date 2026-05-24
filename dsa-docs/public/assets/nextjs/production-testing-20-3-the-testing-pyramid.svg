@@ -1,0 +1,26 @@
+<svg viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+  <rect width="500" height="340" rx="12" fill="#0f172a"/>
+  <text x="250" y="28" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Testing Pyramid</text>
+
+  <!-- E2E layer (top - small) -->
+  <polygon points="250,55 175,155 325,155" fill="#7c3aed"/>
+  <text x="250" y="108" text-anchor="middle" fill="#ede9fe" font-size="11" font-weight="700">E2E Tests</text>
+  <text x="250" y="124" text-anchor="middle" fill="#c4b5fd" font-size="9">Cypress / Playwright</text>
+  <text x="250" y="140" text-anchor="middle" fill="#c4b5fd" font-size="9">Slow · Expensive · Few</text>
+
+  <!-- Integration layer (middle) -->
+  <polygon points="175,165 100,255 400,255" fill="#1d4ed8"/>
+  <text x="250" y="205" text-anchor="middle" fill="#dbeafe" font-size="11" font-weight="700">Integration Tests</text>
+  <text x="250" y="220" text-anchor="middle" fill="#93c5fd" font-size="9">React Testing Library</text>
+  <text x="250" y="236" text-anchor="middle" fill="#93c5fd" font-size="9">Medium speed · Medium count</text>
+
+  <!-- Unit layer (bottom - wide) -->
+  <polygon points="100,265 50,315 450,315" fill="#065f46"/>
+  <text x="250" y="293" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">Unit Tests</text>
+  <text x="250" y="308" text-anchor="middle" fill="#34d399" font-size="9">Jest · Fast · Cheap · Many</text>
+
+  <!-- Labels right -->
+  <text x="350" y="108" fill="#a78bfa" font-size="10">5–10%</text>
+  <text x="418" y="210" fill="#93c5fd" font-size="10">20–30%</text>
+  <text x="455" y="295" fill="#34d399" font-size="10">60–70%</text>
+</svg>

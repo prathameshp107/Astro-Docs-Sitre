@@ -13,68 +13,7 @@ Think of it like this: if the internet is a massive library and your website is 
 
 ### How Search Engines Work
 
-```txt
-<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="300" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Search Engine Crawling Lifecycle</text>
-
-  <!-- Steps -->
-  <!-- 1 Discover -->
-  <circle cx="80" cy="130" r="45" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
-  <text x="80" y="118" text-anchor="middle" fill="#93c5fd" font-size="20">🔍</text>
-  <text x="80" y="138" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="bold">1. Discover</text>
-  <text x="80" y="152" text-anchor="middle" fill="#93c5fd" font-size="8">Crawler finds</text>
-  <text x="80" y="162" text-anchor="middle" fill="#93c5fd" font-size="8">your page</text>
-
-  <line x1="128" y1="130" x2="158" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrowW)"/>
-
-  <!-- 2 Crawl -->
-  <circle cx="205" cy="130" r="45" fill="#0f3320" stroke="#22c55e" stroke-width="2"/>
-  <text x="205" y="118" text-anchor="middle" fill="#4ade80" font-size="20">🕷️</text>
-  <text x="205" y="138" text-anchor="middle" fill="#22c55e" font-size="10" font-weight="bold">2. Crawl</text>
-  <text x="205" y="152" text-anchor="middle" fill="#4ade80" font-size="8">Downloads HTML,</text>
-  <text x="205" y="162" text-anchor="middle" fill="#4ade80" font-size="8">reads metadata</text>
-
-  <line x1="253" y1="130" x2="283" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrowW)"/>
-
-  <!-- 3 Index -->
-  <circle cx="330" cy="130" r="45" fill="#2d1b69" stroke="#8b5cf6" stroke-width="2"/>
-  <text x="330" y="118" text-anchor="middle" fill="#c4b5fd" font-size="20">📚</text>
-  <text x="330" y="138" text-anchor="middle" fill="#a78bfa" font-size="10" font-weight="bold">3. Index</text>
-  <text x="330" y="152" text-anchor="middle" fill="#c4b5fd" font-size="8">Stores page in</text>
-  <text x="330" y="162" text-anchor="middle" fill="#c4b5fd" font-size="8">search database</text>
-
-  <line x1="378" y1="130" x2="408" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrowW)"/>
-
-  <!-- 4 Rank -->
-  <circle cx="455" cy="130" r="45" fill="#1c0a00" stroke="#f97316" stroke-width="2"/>
-  <text x="455" y="118" text-anchor="middle" fill="#fdba74" font-size="20">📊</text>
-  <text x="455" y="138" text-anchor="middle" fill="#f97316" font-size="10" font-weight="bold">4. Rank</text>
-  <text x="455" y="152" text-anchor="middle" fill="#fdba74" font-size="8">Scores relevance,</text>
-  <text x="455" y="162" text-anchor="middle" fill="#fdba74" font-size="8">authority, quality</text>
-
-  <line x1="503" y1="130" x2="533" y2="130" stroke="#475569" stroke-width="2" marker-end="url(#arrowW)"/>
-
-  <!-- 5 Serve -->
-  <circle cx="595" cy="130" r="45" fill="#14532d" stroke="#16a34a" stroke-width="2"/>
-  <text x="595" y="118" text-anchor="middle" fill="#86efac" font-size="20">🎯</text>
-  <text x="595" y="138" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="bold">5. Serve</text>
-  <text x="595" y="152" text-anchor="middle" fill="#86efac" font-size="8">Shows in search</text>
-  <text x="595" y="162" text-anchor="middle" fill="#86efac" font-size="8">results for queries</text>
-
-  <defs>
-    <marker id="arrowW" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-  </defs>
-
-  <!-- Next.js impact -->
-  <rect x="30" y="205" width="640" height="60" fill="#0c1824" rx="8" stroke="#1e3a5f" stroke-width="1"/>
-  <text x="350" y="225" text-anchor="middle" fill="#7dd3fc" font-size="11" font-weight="bold">Next.js's Role in SEO</text>
-  <text x="350" y="245" text-anchor="middle" fill="#94a3b8" font-size="9">Server-side rendering ensures crawler sees fully-rendered HTML with all metadata → better indexing</text>
-  <text x="350" y="258" text-anchor="middle" fill="#94a3b8" font-size="9">Metadata API provides structured title/description/OG tags → better ranking signals and rich snippets</text>
-</svg>
-```
+![How Search Engines Work diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-seo-how-search-engines-work.svg)
 
 ---
 
@@ -322,80 +261,7 @@ export default async function BlogPostPage({ params }: Props) {
 
 ### Metadata Flow Diagram
 
-```txt
-<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="340" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Metadata Flow in Next.js</text>
-
-  <!-- Source: Page Component -->
-  <rect x="20" y="50" width="150" height="60" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="95" y="73" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="bold">Page / Layout</text>
-  <text x="95" y="88" text-anchor="middle" fill="#93c5fd" font-size="9">exports metadata</text>
-  <text x="95" y="101" text-anchor="middle" fill="#93c5fd" font-size="9">or generateMetadata()</text>
-
-  <!-- Arrow -->
-  <line x1="170" y1="80" x2="220" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowB)"/>
-
-  <!-- Next.js Metadata Resolver -->
-  <rect x="220" y="50" width="160" height="60" fill="#1a1a3e" rx="8" stroke="#818cf8" stroke-width="1.5"/>
-  <text x="300" y="68" text-anchor="middle" fill="#a5b4fc" font-size="10" font-weight="bold">Next.js Resolver</text>
-  <text x="300" y="83" text-anchor="middle" fill="#818cf8" font-size="9">Merges layout +</text>
-  <text x="300" y="96" text-anchor="middle" fill="#818cf8" font-size="9">page metadata</text>
-  <text x="300" y="108" text-anchor="middle" fill="#6366f1" font-size="8">(page overrides layout)</text>
-
-  <!-- Arrow -->
-  <line x1="380" y1="80" x2="430" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowB)"/>
-
-  <!-- HTML Head -->
-  <rect x="430" y="50" width="240" height="60" fill="#052e16" rx="8" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="550" y="68" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="bold">Rendered HTML &lt;head&gt;</text>
-  <text x="550" y="83" text-anchor="middle" fill="#86efac" font-size="9">&lt;title&gt;, &lt;meta&gt;, &lt;link&gt; tags</text>
-  <text x="550" y="96" text-anchor="middle" fill="#4ade80" font-size="9">og:title, og:image, etc.</text>
-
-  <!-- Who reads it -->
-  <text x="350" y="135" text-anchor="middle" fill="#475569" font-size="11">Who reads the &lt;head&gt; metadata?</text>
-
-  <!-- Google -->
-  <rect x="20" y="150" width="135" height="80" fill="#1c0a00" rx="8" stroke="#f97316" stroke-width="1.5"/>
-  <text x="87" y="172" text-anchor="middle" fill="#fb923c" font-size="22">🔍</text>
-  <text x="87" y="195" text-anchor="middle" fill="#fdba74" font-size="11" font-weight="bold">Google</text>
-  <text x="87" y="210" text-anchor="middle" fill="#f97316" font-size="9">title, description,</text>
-  <text x="87" y="222" text-anchor="middle" fill="#f97316" font-size="9">robots, canonical</text>
-
-  <!-- Facebook/LinkedIn -->
-  <rect x="170" y="150" width="135" height="80" fill="#0c1f5c" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="237" y="172" text-anchor="middle" fill="#60a5fa" font-size="22">👥</text>
-  <text x="237" y="195" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="bold">FB / LinkedIn</text>
-  <text x="237" y="210" text-anchor="middle" fill="#60a5fa" font-size="9">og:title, og:image</text>
-  <text x="237" y="222" text-anchor="middle" fill="#60a5fa" font-size="9">og:description</text>
-
-  <!-- Twitter/X -->
-  <rect x="320" y="150" width="135" height="80" fill="#0a1628" rx="8" stroke="#38bdf8" stroke-width="1.5"/>
-  <text x="387" y="172" text-anchor="middle" fill="#7dd3fc" font-size="22">𝕏</text>
-  <text x="387" y="195" text-anchor="middle" fill="#bae6fd" font-size="11" font-weight="bold">Twitter / X</text>
-  <text x="387" y="210" text-anchor="middle" fill="#7dd3fc" font-size="9">twitter:card,</text>
-  <text x="387" y="222" text-anchor="middle" fill="#7dd3fc" font-size="9">twitter:image</text>
-
-  <!-- Slack/WhatsApp -->
-  <rect x="470" y="150" width="135" height="80" fill="#0f2d1a" rx="8" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="537" y="172" text-anchor="middle" fill="#4ade80" font-size="22">💬</text>
-  <text x="537" y="195" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Slack / WhatsApp</text>
-  <text x="537" y="210" text-anchor="middle" fill="#4ade80" font-size="9">og:title, og:image</text>
-  <text x="537" y="222" text-anchor="middle" fill="#4ade80" font-size="9">og:description</text>
-
-  <!-- Schema -->
-  <rect x="30" y="255" width="640" height="60" fill="#0c1a2e" rx="8" stroke="#475569" stroke-width="1"/>
-  <text x="350" y="275" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold">Metadata Hierarchy (page overrides layout overrides root)</text>
-  <text x="350" y="293" text-anchor="middle" fill="#64748b" font-size="9">app/layout.tsx → app/blog/layout.tsx → app/blog/[slug]/page.tsx</text>
-  <text x="350" y="306" text-anchor="middle" fill="#64748b" font-size="9">Fields merge; conflicting fields use the most-specific (deepest) value</text>
-
-  <defs>
-    <marker id="arrowB" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-  </defs>
-</svg>
-```
+![Metadata Flow Diagram diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-seo-metadata-flow-diagram-2.svg)
 
 ### OG Image Generation with `ImageResponse`
 
@@ -565,32 +431,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 
 **Structured data** (JSON-LD) is a way to tell search engines explicitly what type of content your page contains. It can unlock **rich snippets** in search results — like star ratings, prices, FAQ dropdowns, and recipe details.
 
-```txt
-<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="200" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">JSON-LD Structured Data → Rich Snippets</text>
-
-  <!-- Normal result -->
-  <rect x="20" y="50" width="300" height="120" fill="#0c1824" rx="8" stroke="#334155" stroke-width="1"/>
-  <text x="170" y="72" text-anchor="middle" fill="#60a5fa" font-size="11">myapp.com/products/widget</text>
-  <text x="40" y="92" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">Premium Widget — $49.99</text>
-  <text x="40" y="110" text-anchor="start" fill="#94a3b8" font-size="10">The best widget for all your needs. Shop now and get...</text>
-  <text x="170" y="145" text-anchor="middle" fill="#64748b" font-size="9">Without JSON-LD: Basic result</text>
-
-  <!-- Rich result -->
-  <rect x="360" y="50" width="320" height="120" fill="#0c1824" rx="8" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="520" y="72" text-anchor="middle" fill="#60a5fa" font-size="11">myapp.com/products/widget</text>
-  <text x="380" y="92" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">Premium Widget — $49.99</text>
-  <!-- Stars -->
-  <text x="380" y="112" text-anchor="start" fill="#fbbf24" font-size="14">★★★★★</text>
-  <text x="450" y="112" text-anchor="start" fill="#94a3b8" font-size="10">4.8 (247 reviews)</text>
-  <!-- Price badge -->
-  <rect x="380" y="118" width="80" height="16" fill="#14532d" rx="3"/>
-  <text x="420" y="130" text-anchor="middle" fill="#86efac" font-size="9">✅ In Stock</text>
-  <text x="380" y="152" text-anchor="start" fill="#94a3b8" font-size="10">The best widget for all your needs...</text>
-  <text x="520" y="165" text-anchor="middle" fill="#4ade80" font-size="9">With JSON-LD: Rich Snippet ✅</text>
-</svg>
-```
+![17.8 Structured Data & JSON-LD diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-seo-17-8-structured-data-and-json-ld-3.svg)
 
 ```tsx
 // app/products/[id]/page.tsx

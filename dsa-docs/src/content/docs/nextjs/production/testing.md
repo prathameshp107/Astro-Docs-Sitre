@@ -27,34 +27,7 @@ Testing is the practice of **verifying that your application behaves as expected
 
 ## 20.3 The Testing Pyramid
 
-```txt
-<svg viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
-  <rect width="500" height="340" rx="12" fill="#0f172a"/>
-  <text x="250" y="28" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Testing Pyramid</text>
-
-  <!-- E2E layer (top - small) -->
-  <polygon points="250,55 175,155 325,155" fill="#7c3aed"/>
-  <text x="250" y="108" text-anchor="middle" fill="#ede9fe" font-size="11" font-weight="700">E2E Tests</text>
-  <text x="250" y="124" text-anchor="middle" fill="#c4b5fd" font-size="9">Cypress / Playwright</text>
-  <text x="250" y="140" text-anchor="middle" fill="#c4b5fd" font-size="9">Slow · Expensive · Few</text>
-
-  <!-- Integration layer (middle) -->
-  <polygon points="175,165 100,255 400,255" fill="#1d4ed8"/>
-  <text x="250" y="205" text-anchor="middle" fill="#dbeafe" font-size="11" font-weight="700">Integration Tests</text>
-  <text x="250" y="220" text-anchor="middle" fill="#93c5fd" font-size="9">React Testing Library</text>
-  <text x="250" y="236" text-anchor="middle" fill="#93c5fd" font-size="9">Medium speed · Medium count</text>
-
-  <!-- Unit layer (bottom - wide) -->
-  <polygon points="100,265 50,315 450,315" fill="#065f46"/>
-  <text x="250" y="293" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="700">Unit Tests</text>
-  <text x="250" y="308" text-anchor="middle" fill="#34d399" font-size="9">Jest · Fast · Cheap · Many</text>
-
-  <!-- Labels right -->
-  <text x="350" y="108" fill="#a78bfa" font-size="10">5–10%</text>
-  <text x="418" y="210" fill="#93c5fd" font-size="10">20–30%</text>
-  <text x="455" y="295" fill="#34d399" font-size="10">60–70%</text>
-</svg>
-```
+![20.3 The Testing Pyramid diagram](/DSA-Notes-Problems/assets/nextjs/production-testing-20-3-the-testing-pyramid.svg)
 
 ---
 
@@ -296,73 +269,7 @@ describe('LoginForm', () => {
 
 ## 20.11 Testing Lifecycle Diagram
 
-```txt
-<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
-  <rect width="700" height="280" rx="14" fill="#0f172a"/>
-  <text x="350" y="28" text-anchor="middle" fill="#f1f5f9" font-size="15" font-weight="700">Testing Lifecycle in Next.js</text>
-
-  <!-- Boxes in sequence -->
-  <!-- Write component -->
-  <rect x="20" y="60" width="120" height="60" rx="8" fill="#1e40af"/>
-  <text x="80" y="84" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Write</text>
-  <text x="80" y="100" text-anchor="middle" fill="#93c5fd" font-size="10">Component</text>
-  <text x="80" y="114" text-anchor="middle" fill="#93c5fd" font-size="9">+ Logic</text>
-
-  <line x1="140" y1="90" x2="170" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#tc1)"/>
-
-  <!-- Write test -->
-  <rect x="170" y="60" width="120" height="60" rx="8" fill="#1e40af"/>
-  <text x="230" y="84" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Write Test</text>
-  <text x="230" y="100" text-anchor="middle" fill="#93c5fd" font-size="10">describe()</text>
-  <text x="230" y="114" text-anchor="middle" fill="#93c5fd" font-size="9">it() · expect()</text>
-
-  <line x1="290" y1="90" x2="320" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#tc1)"/>
-
-  <!-- Run tests -->
-  <rect x="320" y="60" width="120" height="60" rx="8" fill="#1e40af"/>
-  <text x="380" y="84" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Run Tests</text>
-  <text x="380" y="100" text-anchor="middle" fill="#93c5fd" font-size="10">jest --watch</text>
-  <text x="380" y="114" text-anchor="middle" fill="#93c5fd" font-size="9">npm test</text>
-
-  <line x1="440" y1="90" x2="470" y2="90" stroke="#475569" stroke-width="2" marker-end="url(#tc1)"/>
-
-  <!-- Pass/Fail -->
-  <polygon points="560,65 640,90 560,115 480,90" fill="#374151" stroke="#6b7280"/>
-  <text x="560" y="87" text-anchor="middle" fill="#f9fafb" font-size="10" font-weight="600">All</text>
-  <text x="560" y="101" text-anchor="middle" fill="#f9fafb" font-size="10" font-weight="600">Pass?</text>
-
-  <!-- Yes: deploy -->
-  <line x1="640" y1="90" x2="670" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#tc2)"/>
-  <rect x="650" y="65" width="40" height="50" rx="8" fill="#065f46"/>
-  <text x="670" y="92" text-anchor="middle" fill="#6ee7b7" font-size="9">✅ CI</text>
-
-  <!-- No: fix -->
-  <line x1="560" y1="115" x2="560" y2="165" stroke="#f87171" stroke-width="2" marker-end="url(#tc3)"/>
-  <rect x="480" y="165" width="160" height="50" rx="8" fill="#7f1d1d"/>
-  <text x="560" y="185" text-anchor="middle" fill="#fecaca" font-size="11" font-weight="600">❌ Fix Code</text>
-  <text x="560" y="201" text-anchor="middle" fill="#fca5a5" font-size="10">Debug failing test</text>
-
-  <!-- Loop back -->
-  <path d="M480 190 Q400 190 380 150" stroke="#f87171" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#tc3)"/>
-
-  <!-- Bottom: coverage -->
-  <rect x="130" y="235" width="440" height="35" rx="8" fill="#1e293b" stroke="#475569"/>
-  <text x="350" y="249" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">Code Coverage Report</text>
-  <text x="350" y="263" text-anchor="middle" fill="#64748b" font-size="9">Statements · Branches · Functions · Lines → jest --coverage</text>
-
-  <defs>
-    <marker id="tc1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-    <marker id="tc2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#34d399"/>
-    </marker>
-    <marker id="tc3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
-    </marker>
-  </defs>
-</svg>
-```
+![20.11 Testing Lifecycle Diagram diagram](/DSA-Notes-Problems/assets/nextjs/production-testing-20-11-testing-lifecycle-diagram-2.svg)
 
 ---
 
@@ -458,54 +365,7 @@ test.describe('Authentication Flow', () => {
 
 ## 20.15 Component Testing Workflow
 
-```txt
-<svg viewBox="0 0 660 240" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
-  <rect width="660" height="240" rx="12" fill="#0f172a"/>
-  <text x="330" y="26" text-anchor="middle" fill="#f1f5f9" font-size="14" font-weight="700">Component Testing Workflow</text>
-
-  <!-- render() -->
-  <rect x="20" y="55" width="120" height="55" rx="8" fill="#1e40af"/>
-  <text x="80" y="78" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">1. render()</text>
-  <text x="80" y="95" text-anchor="middle" fill="#93c5fd" font-size="9">Mount component</text>
-  <text x="80" y="108" text-anchor="middle" fill="#93c5fd" font-size="9">into DOM</text>
-
-  <line x1="140" y1="82" x2="170" y2="82" stroke="#475569" stroke-width="2" marker-end="url(#cw1)"/>
-
-  <!-- query DOM -->
-  <rect x="170" y="55" width="120" height="55" rx="8" fill="#1e40af"/>
-  <text x="230" y="78" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">2. Query DOM</text>
-  <text x="230" y="95" text-anchor="middle" fill="#93c5fd" font-size="9">getByRole()</text>
-  <text x="230" y="108" text-anchor="middle" fill="#93c5fd" font-size="9">getByText()</text>
-
-  <line x1="290" y1="82" x2="320" y2="82" stroke="#475569" stroke-width="2" marker-end="url(#cw1)"/>
-
-  <!-- user interaction -->
-  <rect x="320" y="55" width="120" height="55" rx="8" fill="#1e40af"/>
-  <text x="380" y="78" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">3. Interact</text>
-  <text x="380" y="95" text-anchor="middle" fill="#93c5fd" font-size="9">userEvent.click()</text>
-  <text x="380" y="108" text-anchor="middle" fill="#93c5fd" font-size="9">userEvent.type()</text>
-
-  <line x1="440" y1="82" x2="470" y2="82" stroke="#475569" stroke-width="2" marker-end="url(#cw1)"/>
-
-  <!-- Assert -->
-  <rect x="470" y="55" width="160" height="55" rx="8" fill="#065f46"/>
-  <text x="550" y="78" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">4. Assert</text>
-  <text x="550" y="95" text-anchor="middle" fill="#34d399" font-size="9">expect().toBeInTheDocument()</text>
-  <text x="550" y="108" text-anchor="middle" fill="#34d399" font-size="9">expect().toHaveValue()</text>
-
-  <!-- Key principle box -->
-  <rect x="100" y="150" width="460" height="70" rx="10" fill="#1e293b" stroke="#334155"/>
-  <text x="330" y="172" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="700">💡 Key Principle: Test behavior, not implementation</text>
-  <text x="330" y="192" text-anchor="middle" fill="#64748b" font-size="10">✅ "User sees 'Welcome Alice'" — ❌ "state.userName === 'Alice'"</text>
-  <text x="330" y="208" text-anchor="middle" fill="#64748b" font-size="10">Query by role/label (a11y) — not by CSS class or internal IDs</text>
-
-  <defs>
-    <marker id="cw1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-  </defs>
-</svg>
-```
+![20.15 Component Testing Workflow diagram](/DSA-Notes-Problems/assets/nextjs/production-testing-20-15-component-testing-workflow-3.svg)
 
 ---
 

@@ -367,90 +367,13 @@ export default async function ProductPage({
 
 ## SVG: Routing Flow Diagram
 
-```txt
-<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="11">
-  <rect width="760" height="320" fill="#0f172a" rx="10"/>
-  <text x="380" y="25" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">Next.js App Router — Routing Flow</text>
-
-  <!-- URL input -->
-  <rect x="300" y="45" width="160" height="40" fill="#1e3a5f" rx="6" stroke="#3b82f6" stroke-width="2"/>
-  <text x="380" y="65" text-anchor="middle" fill="#93c5fd">URL Request</text>
-  <text x="380" y="79" text-anchor="middle" fill="#60a5fa" font-size="10">/dashboard/settings</text>
-
-  <!-- Middleware -->
-  <line x1="380" y1="85" x2="380" y2="105" stroke="#475569" stroke-width="1.5"/>
-  <rect x="305" y="105" width="150" height="38" fill="#1e293b" rx="6" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="380" y="122" text-anchor="middle" fill="#fcd34d">middleware.ts</text>
-  <text x="380" y="136" text-anchor="middle" fill="#fbbf24" font-size="10">Auth check, rewrites</text>
-
-  <!-- Branch: Auth fail -->
-  <line x1="305" y1="124" x2="200" y2="124" stroke="#ef4444" stroke-width="1" stroke-dasharray="4,3"/>
-  <rect x="60" y="108" width="140" height="32" fill="#450a0a" rx="5" stroke="#991b1b" stroke-width="1"/>
-  <text x="130" y="128" text-anchor="middle" fill="#fca5a5">redirect('/login')</text>
-
-  <!-- App Router -->
-  <line x1="380" y1="143" x2="380" y2="163" stroke="#475569" stroke-width="1.5"/>
-  <rect x="280" y="163" width="200" height="38" fill="#1e293b" rx="6" stroke="#8b5cf6" stroke-width="1.5"/>
-  <text x="380" y="180" text-anchor="middle" fill="#c4b5fd">App Router Matches</text>
-  <text x="380" y="194" text-anchor="middle" fill="#a78bfa" font-size="10">app/dashboard/settings/page.tsx</text>
-
-  <!-- Layout tree -->
-  <line x1="380" y1="201" x2="380" y2="221" stroke="#475569" stroke-width="1.5"/>
-  <rect x="270" y="221" width="220" height="55" fill="#1e293b" rx="6" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="380" y="238" text-anchor="middle" fill="#86efac">Layout Hierarchy</text>
-  <text x="380" y="252" text-anchor="middle" fill="#4ade80" font-size="10">app/layout.tsx (root)</text>
-  <text x="380" y="265" text-anchor="middle" fill="#4ade80" font-size="10">app/dashboard/layout.tsx</text>
-
-  <!-- Page render -->
-  <line x1="380" y1="276" x2="380" y2="296" stroke="#475569" stroke-width="1.5"/>
-  <rect x="295" y="296" width="170" height="18" fill="#052e16" rx="4" stroke="#166534" stroke-width="1"/>
-  <text x="380" y="309" text-anchor="middle" fill="#86efac">Page Component Renders</text>
-</svg>
-```
+![SVG: Routing Flow Diagram diagram](/DSA-Notes-Problems/assets/nextjs/fundamentals-routing-svg-routing-flow-diagram.svg)
 
 ---
 
 ## SVG: URL Mapping Diagram
 
-```txt
-<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="11">
-  <rect width="760" height="280" fill="#0f172a" rx="10"/>
-  <text x="380" y="24" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">File System → URL Mapping</text>
-
-  <!-- Headers -->
-  <text x="190" y="48" text-anchor="middle" fill="#64748b" font-size="12">File Path</text>
-  <text x="570" y="48" text-anchor="middle" fill="#64748b" font-size="12">URL Route</text>
-  <line x1="380" y1="35" x2="380" y2="270" stroke="#1e293b" stroke-width="1.5"/>
-
-  <!-- Rows -->
-  <text x="190" y="75" text-anchor="middle" fill="#93c5fd">app/page.tsx</text>
-  <text x="570" y="75" text-anchor="middle" fill="#86efac">/</text>
-  <line x1="20" y1="83" x2="740" y2="83" stroke="#1e293b" stroke-width="1"/>
-
-  <text x="190" y="105" text-anchor="middle" fill="#93c5fd">app/about/page.tsx</text>
-  <text x="570" y="105" text-anchor="middle" fill="#86efac">/about</text>
-  <line x1="20" y1="113" x2="740" y2="113" stroke="#1e293b" stroke-width="1"/>
-
-  <text x="190" y="135" text-anchor="middle" fill="#93c5fd">app/blog/[slug]/page.tsx</text>
-  <text x="570" y="135" text-anchor="middle" fill="#86efac">/blog/:slug</text>
-  <line x1="20" y1="143" x2="740" y2="143" stroke="#1e293b" stroke-width="1"/>
-
-  <text x="190" y="165" text-anchor="middle" fill="#93c5fd">app/docs/[...slug]/page.tsx</text>
-  <text x="570" y="165" text-anchor="middle" fill="#86efac">/docs/*</text>
-  <line x1="20" y1="173" x2="740" y2="173" stroke="#1e293b" stroke-width="1"/>
-
-  <text x="190" y="195" text-anchor="middle" fill="#93c5fd">app/(auth)/login/page.tsx</text>
-  <text x="570" y="195" text-anchor="middle" fill="#86efac">/login</text>
-  <line x1="20" y1="203" x2="740" y2="203" stroke="#1e293b" stroke-width="1"/>
-
-  <text x="190" y="225" text-anchor="middle" fill="#93c5fd">app/api/users/route.ts</text>
-  <text x="570" y="225" text-anchor="middle" fill="#fcd34d">GET /api/users</text>
-  <line x1="20" y1="233" x2="740" y2="233" stroke="#1e293b" stroke-width="1"/>
-
-  <text x="190" y="258" text-anchor="middle" fill="#93c5fd">app/blog/[[...cat]]/page.tsx</text>
-  <text x="570" y="258" text-anchor="middle" fill="#86efac">/blog or /blog/*</text>
-</svg>
-```
+![SVG: URL Mapping Diagram diagram](/DSA-Notes-Problems/assets/nextjs/fundamentals-routing-svg-url-mapping-diagram-2.svg)
 
 ---
 

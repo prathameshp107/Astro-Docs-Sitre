@@ -1,0 +1,36 @@
+<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
+  <rect width="680" height="240" fill="#0f1117" rx="12"/>
+  <text x="340" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SSR Request Flow</text>
+
+  <rect x="20" y="50" width="110" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="75" y="72" text-anchor="middle" fill="#93c5fd" font-weight="bold">User</text>
+  <text x="75" y="88" text-anchor="middle" fill="#93c5fd" font-weight="bold">Request</text>
+
+  <line x1="130" y1="75" x2="160" y2="75" stroke="#475569" stroke-width="2"/>
+  <polygon points="158,71 168,75 158,79" fill="#475569"/>
+
+  <rect x="168" y="50" width="110" height="50" fill="#450a0a" rx="8" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="223" y="70" text-anchor="middle" fill="#fca5a5" font-weight="bold">Next.js</text>
+  <text x="223" y="86" text-anchor="middle" fill="#fca5a5" font-weight="bold">Server</text>
+
+  <line x1="278" y1="75" x2="308" y2="75" stroke="#475569" stroke-width="2"/>
+  <polygon points="306,71 316,75 306,79" fill="#475569"/>
+
+  <rect x="316" y="50" width="110" height="50" fill="#3b1f00" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="371" y="70" text-anchor="middle" fill="#fcd34d" font-weight="bold">Fetch Data</text>
+  <text x="371" y="86" text-anchor="middle" fill="#fde68a" font-size="11">DB / API call</text>
+
+  <line x1="426" y1="75" x2="456" y2="75" stroke="#475569" stroke-width="2"/>
+  <polygon points="454,71 464,75 454,79" fill="#475569"/>
+
+  <rect x="464" y="50" width="110" height="50" fill="#14532d" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="519" y="70" text-anchor="middle" fill="#86efac" font-weight="bold">Render &</text>
+  <text x="519" y="86" text-anchor="middle" fill="#bbf7d0" font-size="11">Send HTML</text>
+
+  <!-- Notes -->
+  <rect x="20" y="130" width="640" height="90" fill="#1e293b" rx="8"/>
+  <text x="340" y="150" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="12">SSR Characteristics</text>
+  <text x="36" y="170" fill="#64748b" font-size="11">✅ Always fresh — data fetched on every single request</text>
+  <text x="36" y="188" fill="#64748b" font-size="11">✅ Best for: user dashboards, e-commerce product pages, real-time data</text>
+  <text x="36" y="206" fill="#64748b" font-size="11">⚠️ Slower than SSG — server must render before responding; no CDN caching of HTML</text>
+</svg>

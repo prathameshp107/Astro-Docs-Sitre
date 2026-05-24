@@ -1,0 +1,37 @@
+<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="11">
+  <rect width="760" height="280" fill="#0f172a" rx="10"/>
+  <text x="380" y="24" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">File System → URL Mapping</text>
+
+  <!-- Headers -->
+  <text x="190" y="48" text-anchor="middle" fill="#64748b" font-size="12">File Path</text>
+  <text x="570" y="48" text-anchor="middle" fill="#64748b" font-size="12">URL Route</text>
+  <line x1="380" y1="35" x2="380" y2="270" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Rows -->
+  <text x="190" y="75" text-anchor="middle" fill="#93c5fd">app/page.tsx</text>
+  <text x="570" y="75" text-anchor="middle" fill="#86efac">/</text>
+  <line x1="20" y1="83" x2="740" y2="83" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="190" y="105" text-anchor="middle" fill="#93c5fd">app/about/page.tsx</text>
+  <text x="570" y="105" text-anchor="middle" fill="#86efac">/about</text>
+  <line x1="20" y1="113" x2="740" y2="113" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="190" y="135" text-anchor="middle" fill="#93c5fd">app/blog/[slug]/page.tsx</text>
+  <text x="570" y="135" text-anchor="middle" fill="#86efac">/blog/:slug</text>
+  <line x1="20" y1="143" x2="740" y2="143" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="190" y="165" text-anchor="middle" fill="#93c5fd">app/docs/[...slug]/page.tsx</text>
+  <text x="570" y="165" text-anchor="middle" fill="#86efac">/docs/*</text>
+  <line x1="20" y1="173" x2="740" y2="173" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="190" y="195" text-anchor="middle" fill="#93c5fd">app/(auth)/login/page.tsx</text>
+  <text x="570" y="195" text-anchor="middle" fill="#86efac">/login</text>
+  <line x1="20" y1="203" x2="740" y2="203" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="190" y="225" text-anchor="middle" fill="#93c5fd">app/api/users/route.ts</text>
+  <text x="570" y="225" text-anchor="middle" fill="#fcd34d">GET /api/users</text>
+  <line x1="20" y1="233" x2="740" y2="233" stroke="#1e293b" stroke-width="1"/>
+
+  <text x="190" y="258" text-anchor="middle" fill="#93c5fd">app/blog/[[...cat]]/page.tsx</text>
+  <text x="570" y="258" text-anchor="middle" fill="#86efac">/blog or /blog/*</text>
+</svg>

@@ -15,71 +15,7 @@ Data fetching is how your application **gets data** — from your own server, a 
 
 ## 8.2 Client-Side vs Server-Side Fetching
 
-```txt
-<svg viewBox="0 0 740 300" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
-  <rect width="740" height="300" fill="#0f1117" rx="12"/>
-  <text x="370" y="30" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Data Fetching Lifecycle</text>
-
-  <!-- Client fetch flow -->
-  <rect x="20" y="50" width="680" height="100" fill="#1e293b" rx="8" stroke="#f59e0b" stroke-width="1"/>
-  <text x="36" y="72" fill="#fcd34d" font-weight="bold" font-size="12">CLIENT-SIDE FETCHING (useEffect / SWR / React Query)</text>
-
-  <rect x="36" y="82" width="110" height="50" fill="#92400e" rx="6"/>
-  <text x="91" y="103" text-anchor="middle" fill="#fff" font-size="11">1. Page loads</text>
-  <text x="91" y="119" text-anchor="middle" fill="#fde68a" font-size="10">Empty UI shown</text>
-
-  <line x1="146" y1="107" x2="166" y2="107" stroke="#f59e0b" stroke-width="1.5"/>
-  <polygon points="164,103 174,107 164,111" fill="#f59e0b"/>
-
-  <rect x="174" y="82" width="120" height="50" fill="#92400e" rx="6"/>
-  <text x="234" y="103" text-anchor="middle" fill="#fff" font-size="11">2. useEffect</text>
-  <text x="234" y="119" text-anchor="middle" fill="#fde68a" font-size="10">fires after render</text>
-
-  <line x1="294" y1="107" x2="314" y2="107" stroke="#f59e0b" stroke-width="1.5"/>
-  <polygon points="312,103 322,107 312,111" fill="#f59e0b"/>
-
-  <rect x="322" y="82" width="120" height="50" fill="#92400e" rx="6"/>
-  <text x="382" y="103" text-anchor="middle" fill="#fff" font-size="11">3. API call</text>
-  <text x="382" y="119" text-anchor="middle" fill="#fde68a" font-size="10">Loading spinner</text>
-
-  <line x1="442" y1="107" x2="462" y2="107" stroke="#f59e0b" stroke-width="1.5"/>
-  <polygon points="460,103 470,107 460,111" fill="#f59e0b"/>
-
-  <rect x="470" y="82" width="110" height="50" fill="#92400e" rx="6"/>
-  <text x="525" y="103" text-anchor="middle" fill="#fff" font-size="11">4. Data arrives</text>
-  <text x="525" y="119" text-anchor="middle" fill="#fde68a" font-size="10">UI re-renders</text>
-
-  <!-- Server fetch flow -->
-  <rect x="20" y="170" width="680" height="100" fill="#1e293b" rx="8" stroke="#22c55e" stroke-width="1"/>
-  <text x="36" y="192" fill="#86efac" font-weight="bold" font-size="12">SERVER-SIDE FETCHING (async Server Component)</text>
-
-  <rect x="36" y="202" width="110" height="50" fill="#14532d" rx="6"/>
-  <text x="91" y="223" text-anchor="middle" fill="#fff" font-size="11">1. Request</text>
-  <text x="91" y="239" text-anchor="middle" fill="#bbf7d0" font-size="10">Server receives</text>
-
-  <line x1="146" y1="227" x2="166" y2="227" stroke="#22c55e" stroke-width="1.5"/>
-  <polygon points="164,223 174,227 164,231" fill="#22c55e"/>
-
-  <rect x="174" y="202" width="120" height="50" fill="#14532d" rx="6"/>
-  <text x="234" y="223" text-anchor="middle" fill="#fff" font-size="11">2. Fetch data</text>
-  <text x="234" y="239" text-anchor="middle" fill="#bbf7d0" font-size="10">DB/API on server</text>
-
-  <line x1="294" y1="227" x2="314" y2="227" stroke="#22c55e" stroke-width="1.5"/>
-  <polygon points="312,223 322,227 312,231" fill="#22c55e"/>
-
-  <rect x="322" y="202" width="120" height="50" fill="#14532d" rx="6"/>
-  <text x="382" y="223" text-anchor="middle" fill="#fff" font-size="11">3. Render HTML</text>
-  <text x="382" y="239" text-anchor="middle" fill="#bbf7d0" font-size="10">With data included</text>
-
-  <line x1="442" y1="227" x2="462" y2="227" stroke="#22c55e" stroke-width="1.5"/>
-  <polygon points="460,223 470,227 460,231" fill="#22c55e"/>
-
-  <rect x="470" y="202" width="110" height="50" fill="#14532d" rx="6"/>
-  <text x="525" y="220" text-anchor="middle" fill="#fff" font-size="11">4. Browser gets</text>
-  <text x="525" y="236" text-anchor="middle" fill="#bbf7d0" font-size="10">complete HTML</text>
-  <text x="525" y="249" text-anchor="middle" fill="#86efac" font-size="10">✅ No loading state</text>
-</svg>
-```
+![8.2 Client-Side vs Server-Side Fetching diagram](/DSA-Notes-Problems/assets/nextjs/core-concepts-data-fetching-8-2-client-side-vs-server-side-fetching.svg)
 
 ---
 
@@ -221,54 +157,7 @@ async function RecentOrders() {
 
 ## 8.6 Caching and Revalidation
 
-```txt
-<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
-  <rect width="700" height="280" fill="#0f1117" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Next.js Cache Workflow</text>
-
-  <rect x="20" y="50" width="120" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="80" y="72" text-anchor="middle" fill="#93c5fd" font-weight="bold">Request</text>
-  <text x="80" y="88" text-anchor="middle" fill="#bfdbfe" font-size="11">User visits page</text>
-
-  <line x1="140" y1="75" x2="180" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="178,71 188,75 178,79" fill="#475569"/>
-
-  <rect x="188" y="50" width="130" height="50" fill="#3b1f00" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="253" y="70" text-anchor="middle" fill="#fcd34d" font-weight="bold">Cache Check</text>
-  <text x="253" y="86" text-anchor="middle" fill="#fde68a" font-size="11">Is data cached?</text>
-
-  <!-- Yes path -->
-  <line x1="318" y1="65" x2="380" y2="65" stroke="#22c55e" stroke-width="1.5"/>
-  <polygon points="378,61 388,65 378,69" fill="#22c55e"/>
-  <text x="348" y="58" fill="#86efac" font-size="11">✅ HIT</text>
-
-  <rect x="388" y="45" width="130" height="40" fill="#14532d" rx="8"/>
-  <text x="453" y="62" text-anchor="middle" fill="#86efac" font-weight="bold">Serve from Cache</text>
-  <text x="453" y="76" text-anchor="middle" fill="#bbf7d0" font-size="10">Instant response</text>
-
-  <!-- No path -->
-  <line x1="253" y1="100" x2="253" y2="135" stroke="#ef4444" stroke-width="1.5"/>
-  <polygon points="249,133 253,143 257,133" fill="#ef4444"/>
-  <text x="264" y="122" fill="#fca5a5" font-size="11">❌ MISS</text>
-
-  <rect x="150" y="143" width="200" height="50" fill="#450a0a" rx="8" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="250" y="165" text-anchor="middle" fill="#fca5a5" font-weight="bold">Fetch Fresh Data</text>
-  <text x="250" y="181" text-anchor="middle" fill="#fca5a5" font-size="11">Call API/DB</text>
-
-  <!-- Store in cache -->
-  <line x1="350" y1="168" x2="390" y2="168" stroke="#a78bfa" stroke-width="1.5"/>
-  <polygon points="388,164 398,168 388,172" fill="#a78bfa"/>
-
-  <rect x="398" y="148" width="150" height="40" fill="#2d1b69" rx="8" stroke="#a78bfa" stroke-width="1"/>
-  <text x="473" y="165" text-anchor="middle" fill="#c4b5fd" font-weight="bold">Store in Cache</text>
-  <text x="473" y="179" text-anchor="middle" fill="#a78bfa" font-size="10">With TTL / revalidate</text>
-
-  <!-- Revalidation -->
-  <rect x="20" y="220" width="660" height="45" fill="#1e293b" rx="8"/>
-  <text x="350" y="240" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="bold">Revalidation Strategies</text>
-  <text x="30" y="256" fill="#64748b" font-size="11">Time-based: next: { revalidate: 60 }   |   On-demand: revalidatePath('/blog')   |   Tag-based: revalidateTag('posts')</text>
-</svg>
-```
+![8.6 Caching and Revalidation diagram](/DSA-Notes-Problems/assets/nextjs/core-concepts-data-fetching-8-6-caching-and-revalidation-2.svg)
 
 ### On-Demand Revalidation
 

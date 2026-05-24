@@ -51,51 +51,7 @@ Performance is not just a technical concern — it directly impacts **business o
 
 ### The Three Pillars of Performance
 
-```txt
-<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <!-- Background -->
-  <rect width="700" height="280" fill="#0f172a" rx="12"/>
-  
-  <!-- Title -->
-  <text x="350" y="35" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="bold">Three Pillars of Web Performance</text>
-  
-  <!-- Pillar 1: Loading Performance -->
-  <rect x="50" y="60" width="180" height="180" fill="#1e3a5f" rx="10" stroke="#3b82f6" stroke-width="2"/>
-  <text x="140" y="90" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="bold">Loading</text>
-  <text x="140" y="110" text-anchor="middle" fill="#3b82f6" font-size="11">Performance</text>
-  <circle cx="140" cy="145" r="28" fill="#1d4ed8" opacity="0.6"/>
-  <text x="140" y="140" text-anchor="middle" fill="#93c5fd" font-size="20">⚡</text>
-  <text x="140" y="158" text-anchor="middle" fill="#60a5fa" font-size="10">FCP, LCP</text>
-  <text x="140" y="185" text-anchor="middle" fill="#94a3b8" font-size="10">How fast content</text>
-  <text x="140" y="198" text-anchor="middle" fill="#94a3b8" font-size="10">first appears</text>
-  <text x="140" y="225" text-anchor="middle" fill="#64748b" font-size="9">Code splitting, lazy</text>
-  <text x="140" y="238" text-anchor="middle" fill="#64748b" font-size="9">loading, caching</text>
-  
-  <!-- Pillar 2: Interactivity -->
-  <rect x="260" y="60" width="180" height="180" fill="#1e3a2f" rx="10" stroke="#10b981" stroke-width="2"/>
-  <text x="350" y="90" text-anchor="middle" fill="#10b981" font-size="14" font-weight="bold">Interactivity</text>
-  <text x="350" y="110" text-anchor="middle" fill="#10b981" font-size="11">Performance</text>
-  <circle cx="350" cy="145" r="28" fill="#065f46" opacity="0.6"/>
-  <text x="350" y="140" text-anchor="middle" fill="#6ee7b7" font-size="20">🖱️</text>
-  <text x="350" y="158" text-anchor="middle" fill="#34d399" font-size="10">FID, INP, TBT</text>
-  <text x="350" y="185" text-anchor="middle" fill="#94a3b8" font-size="10">How fast UI responds</text>
-  <text x="350" y="198" text-anchor="middle" fill="#94a3b8" font-size="10">to user input</text>
-  <text x="350" y="225" text-anchor="middle" fill="#64748b" font-size="9">Memoization, reducing</text>
-  <text x="350" y="238" text-anchor="middle" fill="#64748b" font-size="9">re-renders</text>
-  
-  <!-- Pillar 3: Visual Stability -->
-  <rect x="470" y="60" width="180" height="180" fill="#3a1e2f" rx="10" stroke="#a855f7" stroke-width="2"/>
-  <text x="560" y="90" text-anchor="middle" fill="#a855f7" font-size="14" font-weight="bold">Visual</text>
-  <text x="560" y="110" text-anchor="middle" fill="#a855f7" font-size="11">Stability</text>
-  <circle cx="560" cy="145" r="28" fill="#581c87" opacity="0.6"/>
-  <text x="560" y="140" text-anchor="middle" fill="#d8b4fe" font-size="20">📐</text>
-  <text x="560" y="158" text-anchor="middle" fill="#c084fc" font-size="10">CLS</text>
-  <text x="560" y="185" text-anchor="middle" fill="#94a3b8" font-size="10">How stable layout</text>
-  <text x="560" y="198" text-anchor="middle" fill="#94a3b8" font-size="10">is while loading</text>
-  <text x="560" y="225" text-anchor="middle" fill="#64748b" font-size="9">Image dimensions,</text>
-  <text x="560" y="238" text-anchor="middle" fill="#64748b" font-size="9">font display swap</text>
-</svg>
-```
+![The Three Pillars of Performance diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-performance-optimization-the-three-pillars-of-performance.svg)
 
 ---
 
@@ -103,68 +59,7 @@ Performance is not just a technical concern — it directly impacts **business o
 
 **Core Web Vitals** are Google's set of specific measurements that define what a good user experience looks like. They are used directly in Google's search ranking algorithm.
 
-```txt
-<svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="320" fill="#0f172a" rx="12"/>
-  <text x="350" y="30" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Core Web Vitals — At a Glance</text>
-
-  <!-- LCP -->
-  <rect x="30" y="50" width="195" height="240" fill="#0c1a2e" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <rect x="30" y="50" width="195" height="40" fill="#1d4ed8" rx="8"/>
-  <rect x="30" y="70" width="195" height="20" fill="#1d4ed8"/>
-  <text x="127" y="76" text-anchor="middle" fill="white" font-size="13" font-weight="bold">LCP</text>
-  <text x="127" y="102" text-anchor="middle" fill="#93c5fd" font-size="10">Largest Contentful Paint</text>
-  <text x="127" y="122" text-anchor="middle" fill="#64748b" font-size="9">Measures: Loading</text>
-  
-  <rect x="50" y="135" width="155" height="28" fill="#14532d" rx="4"/>
-  <text x="127" y="153" text-anchor="middle" fill="#86efac" font-size="11">Good: ≤ 2.5s</text>
-  <rect x="50" y="170" width="155" height="28" fill="#713f12" rx="4"/>
-  <text x="127" y="188" text-anchor="middle" fill="#fde68a" font-size="11">Needs Work: ≤ 4s</text>
-  <rect x="50" y="205" width="155" height="28" fill="#7f1d1d" rx="4"/>
-  <text x="127" y="223" text-anchor="middle" fill="#fca5a5" font-size="11">Poor: &gt; 4s</text>
-  
-  <text x="127" y="258" text-anchor="middle" fill="#94a3b8" font-size="9">Time until largest visible</text>
-  <text x="127" y="271" text-anchor="middle" fill="#94a3b8" font-size="9">image or text block loads</text>
-  
-  <!-- INP -->
-  <rect x="253" y="50" width="195" height="240" fill="#0c1a2e" rx="8" stroke="#10b981" stroke-width="1.5"/>
-  <rect x="253" y="50" width="195" height="40" fill="#065f46" rx="8"/>
-  <rect x="253" y="70" width="195" height="20" fill="#065f46"/>
-  <text x="350" y="76" text-anchor="middle" fill="white" font-size="13" font-weight="bold">INP</text>
-  <text x="350" y="102" text-anchor="middle" fill="#6ee7b7" font-size="10">Interaction to Next Paint</text>
-  <text x="350" y="122" text-anchor="middle" fill="#64748b" font-size="9">Measures: Interactivity</text>
-  
-  <rect x="273" y="135" width="155" height="28" fill="#14532d" rx="4"/>
-  <text x="350" y="153" text-anchor="middle" fill="#86efac" font-size="11">Good: ≤ 200ms</text>
-  <rect x="273" y="170" width="155" height="28" fill="#713f12" rx="4"/>
-  <text x="350" y="188" text-anchor="middle" fill="#fde68a" font-size="11">Needs Work: ≤ 500ms</text>
-  <rect x="273" y="205" width="155" height="28" fill="#7f1d1d" rx="4"/>
-  <text x="350" y="223" text-anchor="middle" fill="#fca5a5" font-size="11">Poor: &gt; 500ms</text>
-  
-  <text x="350" y="258" text-anchor="middle" fill="#94a3b8" font-size="9">Time from user interaction</text>
-  <text x="350" y="271" text-anchor="middle" fill="#94a3b8" font-size="9">to visual feedback</text>
-  
-  <!-- CLS -->
-  <rect x="476" y="50" width="195" height="240" fill="#0c1a2e" rx="8" stroke="#a855f7" stroke-width="1.5"/>
-  <rect x="476" y="50" width="195" height="40" fill="#581c87" rx="8"/>
-  <rect x="476" y="70" width="195" height="20" fill="#581c87"/>
-  <text x="573" y="76" text-anchor="middle" fill="white" font-size="13" font-weight="bold">CLS</text>
-  <text x="573" y="102" text-anchor="middle" fill="#d8b4fe" font-size="10">Cumulative Layout Shift</text>
-  <text x="573" y="122" text-anchor="middle" fill="#64748b" font-size="9">Measures: Visual Stability</text>
-  
-  <rect x="496" y="135" width="155" height="28" fill="#14532d" rx="4"/>
-  <text x="573" y="153" text-anchor="middle" fill="#86efac" font-size="11">Good: ≤ 0.1</text>
-  <rect x="496" y="170" width="155" height="28" fill="#713f12" rx="4"/>
-  <text x="573" y="188" text-anchor="middle" fill="#fde68a" font-size="11">Needs Work: ≤ 0.25</text>
-  <rect x="496" y="205" width="155" height="28" fill="#7f1d1d" rx="4"/>
-  <text x="573" y="223" text-anchor="middle" fill="#fca5a5" font-size="11">Poor: &gt; 0.25</text>
-  
-  <text x="573" y="258" text-anchor="middle" fill="#94a3b8" font-size="9">How much page layout</text>
-  <text x="573" y="271" text-anchor="middle" fill="#94a3b8" font-size="9">shifts unexpectedly</text>
-
-  <text x="350" y="308" text-anchor="middle" fill="#475569" font-size="9">Replaced FID (First Input Delay) — INP became official Core Web Vital in March 2024</text>
-</svg>
-```
+![16.3 Core Web Vitals diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-performance-optimization-16-3-core-web-vitals-2.svg)
 
 ---
 
@@ -212,48 +107,7 @@ ANALYZE=true npm run build
 
 **Code splitting** means breaking your JavaScript bundle into smaller chunks that are loaded only when needed, rather than loading everything upfront.
 
-```txt
-<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="300" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Code Splitting Workflow</text>
-
-  <!-- Without splitting -->
-  <text x="175" y="55" text-anchor="middle" fill="#f87171" font-size="12" font-weight="bold">❌ Without Code Splitting</text>
-  <rect x="50" y="65" width="250" height="50" fill="#7f1d1d" rx="6" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="175" y="87" text-anchor="middle" fill="#fca5a5" font-size="11" font-weight="bold">main.js — 4.2 MB</text>
-  <text x="175" y="103" text-anchor="middle" fill="#f87171" font-size="10">All pages + libs loaded upfront</text>
-
-  <text x="175" y="135" text-anchor="middle" fill="#94a3b8" font-size="10">User visits /home</text>
-  <text x="175" y="152" text-anchor="middle" fill="#f87171" font-size="10">Waits 8s for everything to load</text>
-  <rect x="80" y="160" width="190" height="25" fill="#450a0a" rx="4"/>
-  <text x="175" y="177" text-anchor="middle" fill="#fca5a5" font-size="10">LCP: 8.2s ❌ Poor</text>
-
-  <!-- Separator -->
-  <line x1="340" y1="50" x2="340" y2="250" stroke="#334155" stroke-width="1.5" stroke-dasharray="6,3"/>
-
-  <!-- With splitting -->
-  <text x="525" y="55" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="bold">✅ With Code Splitting</text>
-  
-  <rect x="390" y="65" width="115" height="35" fill="#14532d" rx="5" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="447" y="85" text-anchor="middle" fill="#86efac" font-size="10">home.js 120KB</text>
-  
-  <rect x="515" y="65" width="115" height="35" fill="#1e3a5f" rx="5" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="572" y="85" text-anchor="middle" fill="#93c5fd" font-size="10">about.js 80KB</text>
-
-  <rect x="390" y="115" width="115" height="35" fill="#312e81" rx="5" stroke="#818cf8" stroke-width="1.5"/>
-  <text x="447" y="135" text-anchor="middle" fill="#c7d2fe" font-size="10">dashboard.js 340KB</text>
-  
-  <rect x="515" y="115" width="115" height="35" fill="#3f1f5a" rx="5" stroke="#a855f7" stroke-width="1.5"/>
-  <text x="572" y="135" text-anchor="middle" fill="#d8b4fe" font-size="10">cart.js 95KB</text>
-
-  <text x="525" y="170" text-anchor="middle" fill="#94a3b8" font-size="10">User visits /home</text>
-  <text x="525" y="186" text-anchor="middle" fill="#4ade80" font-size="10">Only loads home.js (120KB)</text>
-  <rect x="420" y="195" width="210" height="25" fill="#052e16" rx="4"/>
-  <text x="525" y="212" text-anchor="middle" fill="#86efac" font-size="10">LCP: 1.1s ✅ Good</text>
-
-  <text x="350" y="270" text-anchor="middle" fill="#475569" font-size="9">Next.js performs automatic code splitting per page/route by default</text>
-</svg>
-```
+![16.5 Code Splitting diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-performance-optimization-16-5-code-splitting-3.svg)
 
 Next.js does **automatic code splitting** — each page gets its own bundle. But you can go further with manual code splitting using dynamic imports.
 
@@ -403,82 +257,7 @@ import { Home, Settings, User } from 'lucide-react'; // only these 3
 
 Caching stores a copy of data so future requests can be served faster without re-fetching or re-computing.
 
-```txt
-<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="340" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Next.js Caching Workflow</text>
-
-  <!-- Browser -->
-  <rect x="20" y="50" width="120" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="80" y="72" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="bold">Browser</text>
-  <text x="80" y="88" text-anchor="middle" fill="#60a5fa" font-size="9">HTTP Cache</text>
-
-  <!-- CDN/Edge -->
-  <rect x="200" y="50" width="120" height="50" fill="#0f3320" rx="8" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="260" y="72" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">CDN / Edge</text>
-  <text x="260" y="88" text-anchor="middle" fill="#4ade80" font-size="9">Vercel Edge Cache</text>
-
-  <!-- Next.js Server -->
-  <rect x="380" y="50" width="140" height="50" fill="#2d1b69" rx="8" stroke="#8b5cf6" stroke-width="1.5"/>
-  <text x="450" y="72" text-anchor="middle" fill="#c4b5fd" font-size="11" font-weight="bold">Next.js Server</text>
-  <text x="450" y="88" text-anchor="middle" fill="#a78bfa" font-size="9">Data Cache + Router Cache</text>
-
-  <!-- Database/API -->
-  <rect x="575" y="50" width="110" height="50" fill="#1c0a00" rx="8" stroke="#f97316" stroke-width="1.5"/>
-  <text x="630" y="72" text-anchor="middle" fill="#fdba74" font-size="11" font-weight="bold">Database</text>
-  <text x="630" y="88" text-anchor="middle" fill="#fb923c" font-size="9">/ External API</text>
-
-  <!-- Arrows top row -->
-  <line x1="140" y1="75" x2="198" y2="75" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <line x1="320" y1="75" x2="378" y2="75" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <line x1="520" y1="75" x2="573" y2="75" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
-
-  <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
-    </marker>
-  </defs>
-
-  <!-- Cache types -->
-  <text x="350" y="130" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="bold">Cache Layers in Next.js</text>
-
-  <!-- 4 cache cards -->
-  <rect x="20" y="145" width="150" height="110" fill="#0c1a2e" rx="8" stroke="#3b82f6" stroke-width="1"/>
-  <text x="95" y="168" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="bold">Request Memoization</text>
-  <text x="95" y="185" text-anchor="middle" fill="#94a3b8" font-size="9">Deduplicates identical</text>
-  <text x="95" y="197" text-anchor="middle" fill="#94a3b8" font-size="9">fetch() calls in one</text>
-  <text x="95" y="209" text-anchor="middle" fill="#94a3b8" font-size="9">render pass</text>
-  <rect x="40" y="220" width="110" height="20" fill="#1e3a5f" rx="3"/>
-  <text x="95" y="233" text-anchor="middle" fill="#93c5fd" font-size="9">Scope: Per Request</text>
-
-  <rect x="185" y="145" width="150" height="110" fill="#0c1a2e" rx="8" stroke="#22c55e" stroke-width="1"/>
-  <text x="260" y="168" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="bold">Data Cache</text>
-  <text x="260" y="185" text-anchor="middle" fill="#94a3b8" font-size="9">Persists fetch() results</text>
-  <text x="260" y="197" text-anchor="middle" fill="#94a3b8" font-size="9">across requests and</text>
-  <text x="260" y="209" text-anchor="middle" fill="#94a3b8" font-size="9">deployments</text>
-  <rect x="205" y="220" width="110" height="20" fill="#052e16" rx="3"/>
-  <text x="260" y="233" text-anchor="middle" fill="#86efac" font-size="9">Scope: Persistent</text>
-
-  <rect x="350" y="145" width="150" height="110" fill="#0c1a2e" rx="8" stroke="#f59e0b" stroke-width="1"/>
-  <text x="425" y="168" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold">Full Route Cache</text>
-  <text x="425" y="185" text-anchor="middle" fill="#94a3b8" font-size="9">Stores rendered HTML</text>
-  <text x="425" y="197" text-anchor="middle" fill="#94a3b8" font-size="9">+ RSC payload at</text>
-  <text x="425" y="209" text-anchor="middle" fill="#94a3b8" font-size="9">build time</text>
-  <rect x="370" y="220" width="110" height="20" fill="#451a03" rx="3"/>
-  <text x="425" y="233" text-anchor="middle" fill="#fde68a" font-size="9">Scope: Per Deploy</text>
-
-  <rect x="515" y="145" width="165" height="110" fill="#0c1a2e" rx="8" stroke="#a855f7" stroke-width="1"/>
-  <text x="597" y="168" text-anchor="middle" fill="#c084fc" font-size="11" font-weight="bold">Router Cache</text>
-  <text x="597" y="185" text-anchor="middle" fill="#94a3b8" font-size="9">Client-side cache of</text>
-  <text x="597" y="197" text-anchor="middle" fill="#94a3b8" font-size="9">visited route segments</text>
-  <text x="597" y="209" text-anchor="middle" fill="#94a3b8" font-size="9">in browser memory</text>
-  <rect x="535" y="220" width="125" height="20" fill="#2e1065" rx="3"/>
-  <text x="597" y="233" text-anchor="middle" fill="#d8b4fe" font-size="9">Scope: Per Session</text>
-
-  <text x="350" y="290" text-anchor="middle" fill="#475569" font-size="9">Caches are checked in order: Router → Full Route → Data → Origin</text>
-  <text x="350" y="308" text-anchor="middle" fill="#334155" font-size="9">Use revalidatePath() or revalidateTag() to purge specific cache entries</text>
-</svg>
-```
+![16.8 Caching Strategies diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-performance-optimization-16-8-caching-strategies-4.svg)
 
 ### Fetch Caching in Next.js App Router
 
@@ -889,73 +668,7 @@ const RichTextEditor = dynamic(() => import('some-heavy-editor'), {
 
 ### Rendering Optimization Flow
 
-```txt
-<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="380" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Rendering Optimization Decision Flow</text>
-
-  <!-- Start -->
-  <rect x="280" y="45" width="140" height="35" fill="#1e40af" rx="17"/>
-  <text x="350" y="67" text-anchor="middle" fill="white" font-size="11" font-weight="bold">New Component</text>
-
-  <!-- Q1 -->
-  <polygon points="350,105 460,140 350,175 240,140" fill="#0f2d4a" stroke="#38bdf8" stroke-width="1.5"/>
-  <text x="350" y="135" text-anchor="middle" fill="#7dd3fc" font-size="10">Needs user</text>
-  <text x="350" y="150" text-anchor="middle" fill="#7dd3fc" font-size="10">interaction?</text>
-
-  <!-- No → Server Component -->
-  <line x1="240" y1="140" x2="100" y2="140" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="170" y="132" text-anchor="middle" fill="#4ade80" font-size="9">No</text>
-  <rect x="20" y="115" width="80" height="50" fill="#052e16" rx="6" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="60" y="138" text-anchor="middle" fill="#86efac" font-size="10" font-weight="bold">Server</text>
-  <text x="60" y="152" text-anchor="middle" fill="#4ade80" font-size="10">Component</text>
-
-  <!-- Yes → Client Component -->
-  <line x1="460" y1="140" x2="580" y2="140" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowR)"/>
-  <text x="520" y="132" text-anchor="middle" fill="#f87171" font-size="9">Yes</text>
-  <rect x="580" y="115" width="90" height="50" fill="#2d0a0a" rx="6" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="625" y="138" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="bold">Client</text>
-  <text x="625" y="152" text-anchor="middle" fill="#f87171" font-size="10">Component</text>
-
-  <!-- Down from Q1 -->
-  <line x1="350" y1="175" x2="350" y2="205" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowG)"/>
-
-  <!-- Q2 -->
-  <polygon points="350,205 460,240 350,275 240,240" fill="#0f2d4a" stroke="#38bdf8" stroke-width="1.5"/>
-  <text x="350" y="235" text-anchor="middle" fill="#7dd3fc" font-size="10">Renders</text>
-  <text x="350" y="250" text-anchor="middle" fill="#7dd3fc" font-size="10">too often?</text>
-
-  <!-- No → Done -->
-  <line x1="240" y1="240" x2="140" y2="240" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="190" y="232" text-anchor="middle" fill="#4ade80" font-size="9">No</text>
-  <rect x="60" y="220" width="80" height="40" fill="#052e16" rx="6" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="100" y="244" text-anchor="middle" fill="#86efac" font-size="10">✅ Done</text>
-
-  <!-- Yes → Memoize -->
-  <line x1="460" y1="240" x2="560" y2="240" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowR)"/>
-  <text x="510" y="232" text-anchor="middle" fill="#f87171" font-size="9">Yes</text>
-  <rect x="560" y="215" width="120" height="50" fill="#2d0a0a" rx="6" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="620" y="238" text-anchor="middle" fill="#fca5a5" font-size="10">Use React.memo</text>
-  <text x="620" y="252" text-anchor="middle" fill="#f87171" font-size="10">useMemo/useCallback</text>
-
-  <!-- Down arrow -->
-  <line x1="350" y1="275" x2="350" y2="305" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowG)"/>
-
-  <!-- Q3 -->
-  <polygon points="350,305 455,335 350,365 245,335" fill="#0f2d4a" stroke="#38bdf8" stroke-width="1.5"/>
-  <text x="350" y="330" text-anchor="middle" fill="#7dd3fc" font-size="10">Heavy</text>
-  <text x="350" y="345" text-anchor="middle" fill="#7dd3fc" font-size="10">computation?</text>
-
-  <defs>
-    <marker id="arrowG" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/>
-    </marker>
-    <marker id="arrowR" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
-    </marker>
-  </defs>
-</svg>
-```
+![Rendering Optimization Flow diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-performance-optimization-rendering-optimization-flow-5.svg)
 
 ### Server vs Client Rendering Performance
 
@@ -1068,72 +781,7 @@ const getUser = cache(async (id: string) => {
 
 **Streaming** allows Next.js to send pieces of the HTML to the browser progressively, rather than waiting for all data to be ready.
 
-```txt
-<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
-  <rect width="700" height="260" fill="#0f172a" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Streaming vs Traditional SSR</text>
-
-  <!-- Traditional SSR -->
-  <text x="175" y="55" text-anchor="middle" fill="#f87171" font-size="12">Traditional SSR (No Streaming)</text>
-  
-  <!-- Timeline bar -->
-  <rect x="30" y="65" width="290" height="20" fill="#1e293b" rx="3"/>
-  
-  <!-- Steps sequential -->
-  <rect x="30" y="65" width="70" height="20" fill="#7c3aed" rx="3 0 0 3"/>
-  <text x="65" y="79" text-anchor="middle" fill="white" font-size="8">Fetch all data</text>
-  
-  <rect x="103" y="65" width="60" height="20" fill="#0369a1"/>
-  <text x="133" y="79" text-anchor="middle" fill="white" font-size="8">Render HTML</text>
-  
-  <rect x="166" y="65" width="60" height="20" fill="#0f766e"/>
-  <text x="196" y="79" text-anchor="middle" fill="white" font-size="8">Send to browser</text>
-  
-  <rect x="229" y="65" width="60" height="20" fill="#b45309"/>
-  <text x="259" y="79" text-anchor="middle" fill="white" font-size="8">Hydrate JS</text>
-  
-  <rect x="292" y="65" width="28" height="20" fill="#16a34a" rx="0 3 3 0"/>
-  <text x="306" y="79" text-anchor="middle" fill="white" font-size="7">Interactive</text>
-
-  <text x="175" y="105" text-anchor="middle" fill="#94a3b8" font-size="9">User sees blank screen for 2.4 seconds total</text>
-  <text x="175" y="120" text-anchor="middle" fill="#f87171" font-size="9">❌ Slow API blocks entire page</text>
-
-  <!-- Streaming -->
-  <text x="530" y="55" text-anchor="middle" fill="#4ade80" font-size="12">With Streaming + Suspense</text>
-
-  <!-- Row 1: Shell -->
-  <text x="385" y="80" text-anchor="start" fill="#94a3b8" font-size="9">Shell:</text>
-  <rect x="415" y="68" width="40" height="16" fill="#7c3aed" rx="2"/>
-  <text x="435" y="79" text-anchor="middle" fill="white" font-size="7">Render</text>
-  <rect x="458" y="68" width="35" height="16" fill="#0f766e" rx="2"/>
-  <text x="475" y="79" text-anchor="middle" fill="white" font-size="7">Send</text>
-  <text x="500" y="79" text-anchor="start" fill="#4ade80" font-size="9">← Instant (0.2s)</text>
-
-  <!-- Row 2: Component A -->
-  <text x="385" y="105" text-anchor="start" fill="#94a3b8" font-size="9">Posts:</text>
-  <rect x="415" y="93" width="70" height="16" fill="#1e293b" rx="2" stroke="#475569" stroke-dasharray="3,2" stroke-width="1"/>
-  <text x="450" y="104" text-anchor="middle" fill="#475569" font-size="7">...fetching...</text>
-  <rect x="488" y="93" width="40" height="16" fill="#0369a1" rx="2"/>
-  <text x="508" y="104" text-anchor="middle" fill="white" font-size="7">Stream in</text>
-  <text x="535" y="104" text-anchor="start" fill="#4ade80" font-size="9">← 0.8s</text>
-
-  <!-- Row 3: Component B -->
-  <text x="385" y="130" text-anchor="start" fill="#94a3b8" font-size="9">Analytics:</text>
-  <rect x="415" y="118" width="110" height="16" fill="#1e293b" rx="2" stroke="#475569" stroke-dasharray="3,2" stroke-width="1"/>
-  <text x="470" y="129" text-anchor="middle" fill="#475569" font-size="7">...fetching...</text>
-  <rect x="528" y="118" width="40" height="16" fill="#0369a1" rx="2"/>
-  <text x="548" y="129" text-anchor="middle" fill="white" font-size="7">Stream in</text>
-  <text x="575" y="129" text-anchor="start" fill="#4ade80" font-size="9">← 1.8s</text>
-
-  <text x="530" y="160" text-anchor="middle" fill="#4ade80" font-size="9">✅ User sees page shell in 0.2s, content streams in progressively</text>
-
-  <!-- Legend -->
-  <line x1="30" y1="200" x2="670" y2="200" stroke="#1e293b" stroke-width="1"/>
-  <text x="350" y="220" text-anchor="middle" fill="#475569" font-size="10" font-weight="bold">Comparison</text>
-  <text x="175" y="240" text-anchor="middle" fill="#f87171" font-size="9">Total wait: 2.4s | Nothing visible until fully ready</text>
-  <text x="530" y="240" text-anchor="middle" fill="#4ade80" font-size="9">First visible: 0.2s | Content appears as each part loads</text>
-</svg>
-```
+![16.15 Suspense & Streaming diagram](/DSA-Notes-Problems/assets/nextjs/performance-seo-performance-optimization-16-15-suspense-and-streaming-6.svg)
 
 ```tsx
 // app/dashboard/page.tsx

@@ -1,0 +1,48 @@
+<svg viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg" font-family="Inter, Arial, sans-serif">
+  <rect width="680" height="220" fill="#0f172a" rx="12"/>
+  <text x="340" y="28" fill="#e2e8f0" font-size="13" font-weight="700" text-anchor="middle">Authentication vs Authorization</text>
+
+  <!-- User -->
+  <circle cx="60" cy="110" r="30" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+  <text x="60" y="106" fill="#93c5fd" font-size="11" font-weight="700" text-anchor="middle">User</text>
+  <text x="60" y="120" fill="#94a3b8" font-size="9" text-anchor="middle">Alice</text>
+
+  <!-- Arrow 1 -->
+  <line x1="92" y1="110" x2="145" y2="110" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="118" y="104" fill="#94a3b8" font-size="9" text-anchor="middle">login</text>
+
+  <!-- AuthN box -->
+  <rect x="145" y="78" width="160" height="64" rx="8" fill="#1e3a5f" stroke="#3b82f6" stroke-width="2"/>
+  <text x="225" y="99" fill="#93c5fd" font-size="12" font-weight="700" text-anchor="middle">Authentication</text>
+  <text x="225" y="114" fill="#94a3b8" font-size="10" text-anchor="middle">"Who are you?"</text>
+  <text x="225" y="128" fill="#64748b" font-size="9" text-anchor="middle">verify password / token</text>
+
+  <!-- Arrow 2 -->
+  <line x1="305" y1="110" x2="360" y2="110" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="332" y="104" fill="#4ade80" font-size="9" text-anchor="middle">✓ identity</text>
+
+  <!-- AuthZ box -->
+  <rect x="360" y="78" width="160" height="64" rx="8" fill="#1a2e1a" stroke="#4ade80" stroke-width="2"/>
+  <text x="440" y="99" fill="#4ade80" font-size="12" font-weight="700" text-anchor="middle">Authorization</text>
+  <text x="440" y="114" fill="#94a3b8" font-size="10" text-anchor="middle">"What can you do?"</text>
+  <text x="440" y="128" fill="#64748b" font-size="9" text-anchor="middle">check role / permissions</text>
+
+  <!-- Arrow 3 -->
+  <line x1="520" y1="110" x2="575" y2="110" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+  <text x="547" y="104" fill="#94a3b8" font-size="9" text-anchor="middle">access</text>
+
+  <!-- Resource -->
+  <rect x="575" y="88" width="80" height="44" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="615" y="106" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">Protected</text>
+  <text x="615" y="120" fill="#fcd34d" font-size="10" font-weight="700" text-anchor="middle">Resource</text>
+
+  <!-- Legend -->
+  <text x="40" y="175" fill="#64748b" font-size="10">401 Unauthorized → Authentication failed (not logged in)</text>
+  <text x="40" y="193" fill="#64748b" font-size="10">403 Forbidden → Authorization failed (logged in, but no permission)</text>
+
+  <defs>
+    <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+</svg>

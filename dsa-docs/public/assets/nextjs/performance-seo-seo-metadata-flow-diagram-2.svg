@@ -1,0 +1,72 @@
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="700" height="340" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Metadata Flow in Next.js</text>
+
+  <!-- Source: Page Component -->
+  <rect x="20" y="50" width="150" height="60" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="95" y="73" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="bold">Page / Layout</text>
+  <text x="95" y="88" text-anchor="middle" fill="#93c5fd" font-size="9">exports metadata</text>
+  <text x="95" y="101" text-anchor="middle" fill="#93c5fd" font-size="9">or generateMetadata()</text>
+
+  <!-- Arrow -->
+  <line x1="170" y1="80" x2="220" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowB)"/>
+
+  <!-- Next.js Metadata Resolver -->
+  <rect x="220" y="50" width="160" height="60" fill="#1a1a3e" rx="8" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="300" y="68" text-anchor="middle" fill="#a5b4fc" font-size="10" font-weight="bold">Next.js Resolver</text>
+  <text x="300" y="83" text-anchor="middle" fill="#818cf8" font-size="9">Merges layout +</text>
+  <text x="300" y="96" text-anchor="middle" fill="#818cf8" font-size="9">page metadata</text>
+  <text x="300" y="108" text-anchor="middle" fill="#6366f1" font-size="8">(page overrides layout)</text>
+
+  <!-- Arrow -->
+  <line x1="380" y1="80" x2="430" y2="80" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowB)"/>
+
+  <!-- HTML Head -->
+  <rect x="430" y="50" width="240" height="60" fill="#052e16" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="550" y="68" text-anchor="middle" fill="#4ade80" font-size="10" font-weight="bold">Rendered HTML &lt;head&gt;</text>
+  <text x="550" y="83" text-anchor="middle" fill="#86efac" font-size="9">&lt;title&gt;, &lt;meta&gt;, &lt;link&gt; tags</text>
+  <text x="550" y="96" text-anchor="middle" fill="#4ade80" font-size="9">og:title, og:image, etc.</text>
+
+  <!-- Who reads it -->
+  <text x="350" y="135" text-anchor="middle" fill="#475569" font-size="11">Who reads the &lt;head&gt; metadata?</text>
+
+  <!-- Google -->
+  <rect x="20" y="150" width="135" height="80" fill="#1c0a00" rx="8" stroke="#f97316" stroke-width="1.5"/>
+  <text x="87" y="172" text-anchor="middle" fill="#fb923c" font-size="22">🔍</text>
+  <text x="87" y="195" text-anchor="middle" fill="#fdba74" font-size="11" font-weight="bold">Google</text>
+  <text x="87" y="210" text-anchor="middle" fill="#f97316" font-size="9">title, description,</text>
+  <text x="87" y="222" text-anchor="middle" fill="#f97316" font-size="9">robots, canonical</text>
+
+  <!-- Facebook/LinkedIn -->
+  <rect x="170" y="150" width="135" height="80" fill="#0c1f5c" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="237" y="172" text-anchor="middle" fill="#60a5fa" font-size="22">👥</text>
+  <text x="237" y="195" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="bold">FB / LinkedIn</text>
+  <text x="237" y="210" text-anchor="middle" fill="#60a5fa" font-size="9">og:title, og:image</text>
+  <text x="237" y="222" text-anchor="middle" fill="#60a5fa" font-size="9">og:description</text>
+
+  <!-- Twitter/X -->
+  <rect x="320" y="150" width="135" height="80" fill="#0a1628" rx="8" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="387" y="172" text-anchor="middle" fill="#7dd3fc" font-size="22">𝕏</text>
+  <text x="387" y="195" text-anchor="middle" fill="#bae6fd" font-size="11" font-weight="bold">Twitter / X</text>
+  <text x="387" y="210" text-anchor="middle" fill="#7dd3fc" font-size="9">twitter:card,</text>
+  <text x="387" y="222" text-anchor="middle" fill="#7dd3fc" font-size="9">twitter:image</text>
+
+  <!-- Slack/WhatsApp -->
+  <rect x="470" y="150" width="135" height="80" fill="#0f2d1a" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="537" y="172" text-anchor="middle" fill="#4ade80" font-size="22">💬</text>
+  <text x="537" y="195" text-anchor="middle" fill="#86efac" font-size="11" font-weight="bold">Slack / WhatsApp</text>
+  <text x="537" y="210" text-anchor="middle" fill="#4ade80" font-size="9">og:title, og:image</text>
+  <text x="537" y="222" text-anchor="middle" fill="#4ade80" font-size="9">og:description</text>
+
+  <!-- Schema -->
+  <rect x="30" y="255" width="640" height="60" fill="#0c1a2e" rx="8" stroke="#475569" stroke-width="1"/>
+  <text x="350" y="275" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="bold">Metadata Hierarchy (page overrides layout overrides root)</text>
+  <text x="350" y="293" text-anchor="middle" fill="#64748b" font-size="9">app/layout.tsx → app/blog/layout.tsx → app/blog/[slug]/page.tsx</text>
+  <text x="350" y="306" text-anchor="middle" fill="#64748b" font-size="9">Fields merge; conflicting fields use the most-specific (deepest) value</text>
+
+  <defs>
+    <marker id="arrowB" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+  </defs>
+</svg>

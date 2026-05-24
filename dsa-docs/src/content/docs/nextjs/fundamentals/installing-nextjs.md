@@ -219,47 +219,7 @@ export default nextConfig;
 
 ## SVG: Development Workflow
 
-```txt
-<svg viewBox="0 0 760 160" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
-  <rect width="760" height="160" fill="#0f172a" rx="10"/>
-  <text x="380" y="25" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">Next.js Development Workflow</text>
-
-  <rect x="20" y="45" width="120" height="45" fill="#1e293b" rx="6" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="80" y="65" text-anchor="middle" fill="#93c5fd">Write Code</text>
-  <text x="80" y="81" text-anchor="middle" fill="#60a5fa" font-size="10">.tsx / .ts files</text>
-
-  <rect x="180" y="45" width="120" height="45" fill="#1e293b" rx="6" stroke="#8b5cf6" stroke-width="1.5"/>
-  <text x="240" y="65" text-anchor="middle" fill="#c4b5fd">Turbopack</text>
-  <text x="240" y="81" text-anchor="middle" fill="#a78bfa" font-size="10">Compiles instantly</text>
-
-  <rect x="340" y="45" width="120" height="45" fill="#1e293b" rx="6" stroke="#ec4899" stroke-width="1.5"/>
-  <text x="400" y="65" text-anchor="middle" fill="#f9a8d4">Hot Reload</text>
-  <text x="400" y="81" text-anchor="middle" fill="#f472b6" font-size="10">Browser updates</text>
-
-  <rect x="500" y="45" width="120" height="45" fill="#1e293b" rx="6" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="560" y="65" text-anchor="middle" fill="#fcd34d">npm run build</text>
-  <text x="560" y="81" text-anchor="middle" fill="#fbbf24" font-size="10">Optimized output</text>
-
-  <rect x="650" y="45" width="90" height="45" fill="#052e16" rx="6" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="695" y="65" text-anchor="middle" fill="#86efac">Deploy</text>
-  <text x="695" y="81" text-anchor="middle" fill="#4ade80" font-size="10">Vercel / VPS</text>
-
-  <line x1="140" y1="67" x2="180" y2="67" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#bl)"/>
-  <line x1="300" y1="67" x2="340" y2="67" stroke="#8b5cf6" stroke-width="1.5" marker-end="url(#bl)"/>
-  <line x1="460" y1="67" x2="500" y2="67" stroke="#ec4899" stroke-width="1.5" marker-end="url(#bl)"/>
-  <line x1="620" y1="67" x2="650" y2="67" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#bl)"/>
-
-  <!-- Loop back -->
-  <path d="M400 90 Q400 130 240 130 Q150 130 80 130 L80 90" fill="none" stroke="#475569" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#bl)"/>
-  <text x="240" y="148" text-anchor="middle" fill="#64748b" font-size="10">Iterate until ready to build</text>
-
-  <defs>
-    <marker id="bl" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L7,3 z" fill="#94a3b8"/>
-    </marker>
-  </defs>
-</svg>
-```
+![SVG: Development Workflow diagram](/DSA-Notes-Problems/assets/nextjs/fundamentals-installing-nextjs-svg-development-workflow.svg)
 
 ---
 

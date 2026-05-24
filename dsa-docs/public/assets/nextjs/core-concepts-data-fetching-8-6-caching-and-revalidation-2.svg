@@ -1,0 +1,46 @@
+<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
+  <rect width="700" height="280" fill="#0f1117" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Next.js Cache Workflow</text>
+
+  <rect x="20" y="50" width="120" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="80" y="72" text-anchor="middle" fill="#93c5fd" font-weight="bold">Request</text>
+  <text x="80" y="88" text-anchor="middle" fill="#bfdbfe" font-size="11">User visits page</text>
+
+  <line x1="140" y1="75" x2="180" y2="75" stroke="#475569" stroke-width="2"/>
+  <polygon points="178,71 188,75 178,79" fill="#475569"/>
+
+  <rect x="188" y="50" width="130" height="50" fill="#3b1f00" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="253" y="70" text-anchor="middle" fill="#fcd34d" font-weight="bold">Cache Check</text>
+  <text x="253" y="86" text-anchor="middle" fill="#fde68a" font-size="11">Is data cached?</text>
+
+  <!-- Yes path -->
+  <line x1="318" y1="65" x2="380" y2="65" stroke="#22c55e" stroke-width="1.5"/>
+  <polygon points="378,61 388,65 378,69" fill="#22c55e"/>
+  <text x="348" y="58" fill="#86efac" font-size="11">✅ HIT</text>
+
+  <rect x="388" y="45" width="130" height="40" fill="#14532d" rx="8"/>
+  <text x="453" y="62" text-anchor="middle" fill="#86efac" font-weight="bold">Serve from Cache</text>
+  <text x="453" y="76" text-anchor="middle" fill="#bbf7d0" font-size="10">Instant response</text>
+
+  <!-- No path -->
+  <line x1="253" y1="100" x2="253" y2="135" stroke="#ef4444" stroke-width="1.5"/>
+  <polygon points="249,133 253,143 257,133" fill="#ef4444"/>
+  <text x="264" y="122" fill="#fca5a5" font-size="11">❌ MISS</text>
+
+  <rect x="150" y="143" width="200" height="50" fill="#450a0a" rx="8" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="250" y="165" text-anchor="middle" fill="#fca5a5" font-weight="bold">Fetch Fresh Data</text>
+  <text x="250" y="181" text-anchor="middle" fill="#fca5a5" font-size="11">Call API/DB</text>
+
+  <!-- Store in cache -->
+  <line x1="350" y1="168" x2="390" y2="168" stroke="#a78bfa" stroke-width="1.5"/>
+  <polygon points="388,164 398,168 388,172" fill="#a78bfa"/>
+
+  <rect x="398" y="148" width="150" height="40" fill="#2d1b69" rx="8" stroke="#a78bfa" stroke-width="1"/>
+  <text x="473" y="165" text-anchor="middle" fill="#c4b5fd" font-weight="bold">Store in Cache</text>
+  <text x="473" y="179" text-anchor="middle" fill="#a78bfa" font-size="10">With TTL / revalidate</text>
+
+  <!-- Revalidation -->
+  <rect x="20" y="220" width="660" height="45" fill="#1e293b" rx="8"/>
+  <text x="350" y="240" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="bold">Revalidation Strategies</text>
+  <text x="30" y="256" fill="#64748b" font-size="11">Time-based: next: { revalidate: 60 }   |   On-demand: revalidatePath('/blog')   |   Tag-based: revalidateTag('posts')</text>
+</svg>

@@ -53,43 +53,7 @@ async function BlogPost({ params }: { params: { slug: string } }) {
 export default BlogPost;
 ```
 
-```txt
-<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
-  <rect width="680" height="240" fill="#0f1117" rx="12"/>
-  <text x="340" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SSG Build Flow</text>
-
-  <rect x="20" y="50" width="110" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="75" y="72" text-anchor="middle" fill="#93c5fd" font-weight="bold">npm run</text>
-  <text x="75" y="88" text-anchor="middle" fill="#93c5fd" font-weight="bold">build</text>
-
-  <line x1="130" y1="75" x2="160" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="158,71 168,75 158,79" fill="#475569"/>
-
-  <rect x="168" y="50" width="120" height="50" fill="#3b1f00" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="228" y="70" text-anchor="middle" fill="#fcd34d" font-weight="bold">Fetch all data</text>
-  <text x="228" y="86" text-anchor="middle" fill="#fde68a" font-size="11">API calls run once</text>
-
-  <line x1="288" y1="75" x2="318" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="316,71 326,75 316,79" fill="#475569"/>
-
-  <rect x="326" y="50" width="130" height="50" fill="#14532d" rx="8" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="391" y="70" text-anchor="middle" fill="#86efac" font-weight="bold">Generate HTML</text>
-  <text x="391" y="86" text-anchor="middle" fill="#bbf7d0" font-size="11">One file per page</text>
-
-  <line x1="456" y1="75" x2="486" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="484,71 494,75 484,79" fill="#475569"/>
-
-  <rect x="494" y="50" width="120" height="50" fill="#2d1057" rx="8" stroke="#a855f7" stroke-width="1.5"/>
-  <text x="554" y="70" text-anchor="middle" fill="#d8b4fe" font-weight="bold">Deploy to CDN</text>
-  <text x="554" y="86" text-anchor="middle" fill="#e9d5ff" font-size="11">Global distribution</text>
-
-  <rect x="20" y="130" width="640" height="90" fill="#1e293b" rx="8"/>
-  <text x="340" y="150" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="12">SSG Characteristics</text>
-  <text x="36" y="170" fill="#64748b" font-size="11">✅ Fastest possible load time (HTML served from CDN edge)</text>
-  <text x="36" y="188" fill="#64748b" font-size="11">✅ Best for: blogs, docs, marketing pages, portfolios</text>
-  <text x="36" y="206" fill="#64748b" font-size="11">❌ Not for: real-time data, user-specific content, dashboards requiring fresh data</text>
-</svg>
-```
+![9.2 Static Site Generation (SSG) diagram](/DSA-Notes-Problems/assets/nextjs/core-concepts-rendering-methods-9-2-static-site-generation-ssg.svg)
 
 ---
 
@@ -123,44 +87,7 @@ async function DashboardPage() {
 export default DashboardPage;
 ```
 
-```txt
-<svg viewBox="0 0 680 240" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
-  <rect width="680" height="240" fill="#0f1117" rx="12"/>
-  <text x="340" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">SSR Request Flow</text>
-
-  <rect x="20" y="50" width="110" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
-  <text x="75" y="72" text-anchor="middle" fill="#93c5fd" font-weight="bold">User</text>
-  <text x="75" y="88" text-anchor="middle" fill="#93c5fd" font-weight="bold">Request</text>
-
-  <line x1="130" y1="75" x2="160" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="158,71 168,75 158,79" fill="#475569"/>
-
-  <rect x="168" y="50" width="110" height="50" fill="#450a0a" rx="8" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="223" y="70" text-anchor="middle" fill="#fca5a5" font-weight="bold">Next.js</text>
-  <text x="223" y="86" text-anchor="middle" fill="#fca5a5" font-weight="bold">Server</text>
-
-  <line x1="278" y1="75" x2="308" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="306,71 316,75 306,79" fill="#475569"/>
-
-  <rect x="316" y="50" width="110" height="50" fill="#3b1f00" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="371" y="70" text-anchor="middle" fill="#fcd34d" font-weight="bold">Fetch Data</text>
-  <text x="371" y="86" text-anchor="middle" fill="#fde68a" font-size="11">DB / API call</text>
-
-  <line x1="426" y1="75" x2="456" y2="75" stroke="#475569" stroke-width="2"/>
-  <polygon points="454,71 464,75 454,79" fill="#475569"/>
-
-  <rect x="464" y="50" width="110" height="50" fill="#14532d" rx="8" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="519" y="70" text-anchor="middle" fill="#86efac" font-weight="bold">Render &</text>
-  <text x="519" y="86" text-anchor="middle" fill="#bbf7d0" font-size="11">Send HTML</text>
-
-  <!-- Notes -->
-  <rect x="20" y="130" width="640" height="90" fill="#1e293b" rx="8"/>
-  <text x="340" y="150" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="12">SSR Characteristics</text>
-  <text x="36" y="170" fill="#64748b" font-size="11">✅ Always fresh — data fetched on every single request</text>
-  <text x="36" y="188" fill="#64748b" font-size="11">✅ Best for: user dashboards, e-commerce product pages, real-time data</text>
-  <text x="36" y="206" fill="#64748b" font-size="11">⚠️ Slower than SSG — server must render before responding; no CDN caching of HTML</text>
-</svg>
-```
+![9.3 Server-Side Rendering (SSR) diagram](/DSA-Notes-Problems/assets/nextjs/core-concepts-rendering-methods-9-3-server-side-rendering-ssr-2.svg)
 
 ---
 
@@ -191,54 +118,7 @@ async function ProductPage({ params }: { params: { id: string } }) {
 export default ProductPage;
 ```
 
-```txt
-<svg viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
-  <rect width="700" height="290" fill="#0f1117" rx="12"/>
-  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">ISR Regeneration Flow</text>
-
-  <!-- Build -->
-  <rect x="20" y="55" width="100" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1"/>
-  <text x="70" y="76" text-anchor="middle" fill="#93c5fd" font-weight="bold">Build</text>
-  <text x="70" y="92" text-anchor="middle" fill="#bfdbfe" font-size="10">Static HTML</text>
-
-  <line x1="120" y1="80" x2="155" y2="80" stroke="#475569" stroke-width="1.5"/>
-  <polygon points="153,76 163,80 153,84" fill="#475569"/>
-
-  <!-- CDN -->
-  <rect x="163" y="55" width="100" height="50" fill="#14532d" rx="8" stroke="#22c55e" stroke-width="1"/>
-  <text x="213" y="76" text-anchor="middle" fill="#86efac" font-weight="bold">CDN Serves</text>
-  <text x="213" y="92" text-anchor="middle" fill="#bbf7d0" font-size="10">Fast responses</text>
-
-  <!-- User arrow -->
-  <line x1="263" y1="80" x2="298" y2="80" stroke="#475569" stroke-width="1.5"/>
-  <polygon points="296,76 306,80 296,84" fill="#475569"/>
-
-  <rect x="306" y="55" width="100" height="50" fill="#2d1057" rx="8" stroke="#a855f7" stroke-width="1"/>
-  <text x="356" y="76" text-anchor="middle" fill="#d8b4fe" font-weight="bold">User gets</text>
-  <text x="356" y="92" text-anchor="middle" fill="#e9d5ff" font-size="10">cached page</text>
-
-  <!-- Timer -->
-  <line x1="356" y1="105" x2="356" y2="140" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4"/>
-  <rect x="290" y="140" width="130" height="40" fill="#3b1f00" rx="6" stroke="#f59e0b" stroke-width="1"/>
-  <text x="355" y="158" text-anchor="middle" fill="#fcd34d" font-weight="bold">⏰ Revalidate time</text>
-  <text x="355" y="172" text-anchor="middle" fill="#fde68a" font-size="10">e.g. 60 seconds passed</text>
-
-  <!-- Background regen -->
-  <line x1="355" y1="180" x2="355" y2="210" stroke="#475569" stroke-width="1.5"/>
-  <polygon points="351,208 355,218 359,208" fill="#475569"/>
-
-  <rect x="260" y="218" width="190" height="40" fill="#450a0a" rx="8" stroke="#ef4444" stroke-width="1"/>
-  <text x="355" y="235" text-anchor="middle" fill="#fca5a5" font-weight="bold">Background regen</text>
-  <text x="355" y="251" text-anchor="middle" fill="#fca5a5" font-size="10">New HTML built silently</text>
-
-  <!-- Note -->
-  <rect x="480" y="140" width="195" height="80" fill="#1e293b" rx="8"/>
-  <text x="578" y="160" text-anchor="middle" fill="#94a3b8" font-weight="bold" font-size="11">Key Behavior:</text>
-  <text x="490" y="178" fill="#64748b" font-size="10">Old page served until</text>
-  <text x="490" y="193" fill="#64748b" font-size="10">new one is ready.</text>
-  <text x="490" y="208" fill="#86efac" font-size="10">✅ Zero downtime updates</text>
-</svg>
-```
+![9.4 Incremental Static Regeneration (ISR) diagram](/DSA-Notes-Problems/assets/nextjs/core-concepts-rendering-methods-9-4-incremental-static-regeneration-isr-3.svg)
 
 ---
 

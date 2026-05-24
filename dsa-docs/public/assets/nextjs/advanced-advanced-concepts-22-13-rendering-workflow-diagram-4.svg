@@ -1,0 +1,69 @@
+<svg viewBox="0 0 720 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif">
+  <rect width="720" height="360" rx="14" fill="#0f172a"/>
+  <text x="360" y="28" text-anchor="middle" fill="#f1f5f9" font-size="16" font-weight="700">Next.js Rendering Decision Flow</text>
+
+  <!-- Start -->
+  <rect x="290" y="50" width="140" height="45" rx="8" fill="#1e40af"/>
+  <text x="360" y="70" text-anchor="middle" fill="#bfdbfe" font-size="12" font-weight="600">Page Request</text>
+  <text x="360" y="86" text-anchor="middle" fill="#93c5fd" font-size="10">User visits URL</text>
+
+  <line x1="360" y1="95" x2="360" y2="120" stroke="#475569" stroke-width="1.5" marker-end="url(#rd1)"/>
+
+  <!-- Decision: Static params? -->
+  <polygon points="360,120 460,150 360,180 260,150" fill="#374151" stroke="#6b7280"/>
+  <text x="360" y="147" text-anchor="middle" fill="#f9fafb" font-size="10" font-weight="600">Uses dynamic</text>
+  <text x="360" y="162" text-anchor="middle" fill="#f9fafb" font-size="10" font-weight="600">functions?</text>
+
+  <!-- No → Static -->
+  <line x1="260" y1="150" x2="150" y2="150" stroke="#34d399" stroke-width="1.5" marker-end="url(#rd2)"/>
+  <text x="205" y="143" text-anchor="middle" fill="#6ee7b7" font-size="10">NO</text>
+  <rect x="30" y="125" width="120" height="50" rx="8" fill="#065f46"/>
+  <text x="90" y="145" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">Static Cache</text>
+  <text x="90" y="162" text-anchor="middle" fill="#34d399" font-size="9">Pre-built HTML</text>
+
+  <!-- Yes → Dynamic -->
+  <line x1="460" y1="150" x2="570" y2="150" stroke="#f87171" stroke-width="1.5" marker-end="url(#rd3)"/>
+  <text x="515" y="143" text-anchor="middle" fill="#fca5a5" font-size="10">YES</text>
+  <rect x="570" y="125" width="120" height="50" rx="8" fill="#1e40af"/>
+  <text x="630" y="145" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Dynamic Render</text>
+  <text x="630" y="162" text-anchor="middle" fill="#93c5fd" font-size="9">Per-request</text>
+
+  <!-- Static → CDN -->
+  <line x1="90" y1="175" x2="90" y2="215" stroke="#34d399" stroke-width="1.5" marker-end="url(#rd2)"/>
+  <rect x="30" y="215" width="120" height="50" rx="8" fill="#065f46"/>
+  <text x="90" y="236" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="600">Serve from CDN</text>
+  <text x="90" y="252" text-anchor="middle" fill="#34d399" font-size="9">~1ms response</text>
+
+  <!-- Dynamic → Server -->
+  <line x1="630" y1="175" x2="630" y2="215" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#rd1)"/>
+  <rect x="570" y="215" width="120" height="50" rx="8" fill="#1e3a5f"/>
+  <text x="630" y="236" text-anchor="middle" fill="#bfdbfe" font-size="11" font-weight="600">Server Render</text>
+  <text x="630" y="252" text-anchor="middle" fill="#93c5fd" font-size="9">Auth + DB access</text>
+
+  <!-- Streaming check -->
+  <line x1="360" y1="180" x2="360" y2="210" stroke="#475569" stroke-width="1.5" marker-end="url(#rd1)"/>
+  <rect x="280" y="210" width="160" height="50" rx="8" fill="#312e81"/>
+  <text x="360" y="230" text-anchor="middle" fill="#c4b5fd" font-size="11" font-weight="600">Suspense?</text>
+  <text x="360" y="246" text-anchor="middle" fill="#a78bfa" font-size="9">Streaming enabled</text>
+
+  <!-- Stream → Progressive HTML -->
+  <line x1="360" y1="260" x2="360" y2="295" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#rd4)"/>
+  <rect x="250" y="295" width="220" height="45" rx="8" fill="#1e293b" stroke="#334155"/>
+  <text x="360" y="314" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">Progressive HTML Stream</text>
+  <text x="360" y="330" text-anchor="middle" fill="#64748b" font-size="9">Shell → Components as data resolves</text>
+
+  <defs>
+    <marker id="rd1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+    <marker id="rd2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#34d399"/>
+    </marker>
+    <marker id="rd3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
+    </marker>
+    <marker id="rd4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#a78bfa"/>
+    </marker>
+  </defs>
+</svg>

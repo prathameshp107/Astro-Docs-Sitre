@@ -1,0 +1,68 @@
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="monospace, sans-serif">
+  <rect width="700" height="400" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">State Management Options in React/Next.js</text>
+
+  <!-- Local State -->
+  <rect x="20" y="50" width="150" height="140" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="95" y="72" text-anchor="middle" fill="#93c5fd" font-size="11" font-weight="bold">Local State</text>
+  <text x="95" y="90" text-anchor="middle" fill="#64748b" font-size="9">Component-scoped</text>
+  <rect x="35" y="98" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="95" y="113" text-anchor="middle" fill="#4ade80" font-size="10">useState()</text>
+  <rect x="35" y="125" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="95" y="140" text-anchor="middle" fill="#4ade80" font-size="10">useReducer()</text>
+  <rect x="35" y="152" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="95" y="167" text-anchor="middle" fill="#4ade80" font-size="10">useRef()</text>
+
+  <!-- Global State -->
+  <rect x="190" y="50" width="150" height="140" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="265" y="72" text-anchor="middle" fill="#d8b4fe" font-size="11" font-weight="bold">Global State</text>
+  <text x="265" y="90" text-anchor="middle" fill="#64748b" font-size="9">Cross-component</text>
+  <rect x="205" y="98" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="265" y="113" text-anchor="middle" fill="#c084fc" font-size="10">Context API</text>
+  <rect x="205" y="125" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="265" y="140" text-anchor="middle" fill="#c084fc" font-size="10">Redux Toolkit</text>
+  <rect x="205" y="152" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="265" y="167" text-anchor="middle" fill="#c084fc" font-size="10">Zustand</text>
+
+  <!-- Server State -->
+  <rect x="360" y="50" width="150" height="140" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="435" y="72" text-anchor="middle" fill="#fcd34d" font-size="11" font-weight="bold">Server State</text>
+  <text x="435" y="90" text-anchor="middle" fill="#64748b" font-size="9">Remote/async data</text>
+  <rect x="375" y="98" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="435" y="113" text-anchor="middle" fill="#fbbf24" font-size="10">TanStack Query</text>
+  <rect x="375" y="125" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="435" y="140" text-anchor="middle" fill="#fbbf24" font-size="10">SWR</text>
+  <rect x="375" y="152" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="435" y="167" text-anchor="middle" fill="#fbbf24" font-size="10">Apollo (GraphQL)</text>
+
+  <!-- URL State -->
+  <rect x="530" y="50" width="150" height="140" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+  <text x="605" y="72" text-anchor="middle" fill="#6ee7b7" font-size="11" font-weight="bold">URL State</text>
+  <text x="605" y="90" text-anchor="middle" fill="#64748b" font-size="9">In URL params</text>
+  <rect x="545" y="98" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="605" y="113" text-anchor="middle" fill="#4ade80" font-size="10">useSearchParams()</text>
+  <rect x="545" y="125" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="605" y="140" text-anchor="middle" fill="#4ade80" font-size="10">useRouter()</text>
+  <rect x="545" y="152" width="120" height="22" rx="4" fill="#0f172a"/>
+  <text x="605" y="167" text-anchor="middle" fill="#4ade80" font-size="10">usePathname()</text>
+
+  <!-- Decision guide -->
+  <rect x="20" y="215" width="660" height="160" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="350" y="237" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="bold">When to Use What?</text>
+
+  <text x="40" y="260" fill="#3b82f6" font-size="11" font-weight="bold">useState</text>
+  <text x="130" y="260" fill="#64748b" font-size="10">→ Toggle, counter, single component form input</text>
+
+  <text x="40" y="282" fill="#a855f7" font-size="11" font-weight="bold">useReducer</text>
+  <text x="130" y="282" fill="#64748b" font-size="10">→ Complex state with multiple actions (like cart)</text>
+
+  <text x="40" y="304" fill="#6366f1" font-size="11" font-weight="bold">Context API</text>
+  <text x="130" y="304" fill="#64748b" font-size="10">→ Theme, auth, small-medium global state</text>
+
+  <text x="40" y="326" fill="#f59e0b" font-size="11" font-weight="bold">Redux / Zustand</text>
+  <text x="130" y="326" fill="#64748b" font-size="10">→ Large-scale app, many slices of state, team project</text>
+
+  <text x="40" y="348" fill="#10b981" font-size="11" font-weight="bold">TanStack Query</text>
+  <text x="130" y="348" fill="#64748b" font-size="10">→ API data fetching, caching, refetching, mutations</text>
+  <text x="40" y="366" fill="#64748b" font-size="10">→ Any server-side data that needs to stay in sync</text>
+</svg>

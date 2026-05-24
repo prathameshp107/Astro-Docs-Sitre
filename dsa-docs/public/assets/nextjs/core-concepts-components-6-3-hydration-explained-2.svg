@@ -1,0 +1,51 @@
+<svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="12">
+  <rect width="760" height="280" fill="#0f1117" rx="12"/>
+  <text x="380" y="30" text-anchor="middle" fill="#e2e8f0" font-size="15" font-weight="bold">Hydration Workflow</text>
+
+  <!-- Step 1 -->
+  <rect x="20" y="55" width="160" height="80" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="100" y="80" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">1. Server</text>
+  <text x="100" y="98" text-anchor="middle" fill="#bfdbfe" font-size="11">Renders HTML</text>
+  <text x="100" y="114" text-anchor="middle" fill="#bfdbfe" font-size="11">Sends to browser</text>
+  <text x="100" y="128" text-anchor="middle" fill="#64748b" font-size="10">Static, no events</text>
+
+  <!-- Arrow -->
+  <line x1="180" y1="95" x2="220" y2="95" stroke="#475569" stroke-width="2"/>
+  <polygon points="218,89 230,95 218,101" fill="#475569"/>
+
+  <!-- Step 2 -->
+  <rect x="230" y="55" width="160" height="80" fill="#3b1f00" rx="8" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="310" y="80" text-anchor="middle" fill="#fcd34d" font-size="12" font-weight="bold">2. Browser</text>
+  <text x="310" y="98" text-anchor="middle" fill="#fde68a" font-size="11">Displays HTML</text>
+  <text x="310" y="114" text-anchor="middle" fill="#fde68a" font-size="11">Instantly visible</text>
+  <text x="310" y="128" text-anchor="middle" fill="#64748b" font-size="10">Not yet interactive</text>
+
+  <!-- Arrow -->
+  <line x1="390" y1="95" x2="430" y2="95" stroke="#475569" stroke-width="2"/>
+  <polygon points="428,89 440,95 428,101" fill="#475569"/>
+
+  <!-- Step 3 -->
+  <rect x="440" y="55" width="160" height="80" fill="#1a3300" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="520" y="80" text-anchor="middle" fill="#86efac" font-size="12" font-weight="bold">3. React</text>
+  <text x="520" y="98" text-anchor="middle" fill="#bbf7d0" font-size="11">JS bundle loads</text>
+  <text x="520" y="114" text-anchor="middle" fill="#bbf7d0" font-size="11">Attaches events</text>
+  <text x="520" y="128" text-anchor="middle" fill="#64748b" font-size="10">Hydration complete</text>
+
+  <!-- Arrow -->
+  <line x1="600" y1="95" x2="640" y2="95" stroke="#475569" stroke-width="2"/>
+  <polygon points="638,89 650,95 638,101" fill="#475569"/>
+
+  <!-- Step 4 -->
+  <rect x="650" y="55" width="90" height="80" fill="#2d1057" rx="8" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="695" y="82" text-anchor="middle" fill="#d8b4fe" font-size="12" font-weight="bold">4. ✅</text>
+  <text x="695" y="100" text-anchor="middle" fill="#e9d5ff" font-size="11">Interactive</text>
+  <text x="695" y="118" text-anchor="middle" fill="#e9d5ff" font-size="11">App is</text>
+  <text x="695" y="133" text-anchor="middle" fill="#e9d5ff" font-size="11">fully alive</text>
+
+  <!-- Key info -->
+  <rect x="20" y="165" width="720" height="90" fill="#1e293b" rx="8"/>
+  <text x="370" y="188" text-anchor="middle" fill="#94a3b8" font-size="12" font-weight="bold">⚠️ Hydration Key Facts</text>
+  <text x="40" y="210" fill="#64748b" font-size="11">• Server HTML and client render must match — mismatch causes "hydration error"</text>
+  <text x="40" y="228" fill="#64748b" font-size="11">• Only Client Components (with "use client") go through hydration</text>
+  <text x="40" y="246" fill="#64748b" font-size="11">• Server Components never hydrate — their code stays on the server permanently</text>
+</svg>

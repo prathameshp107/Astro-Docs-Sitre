@@ -1,0 +1,65 @@
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="700" height="380" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">Rendering Optimization Decision Flow</text>
+
+  <!-- Start -->
+  <rect x="280" y="45" width="140" height="35" fill="#1e40af" rx="17"/>
+  <text x="350" y="67" text-anchor="middle" fill="white" font-size="11" font-weight="bold">New Component</text>
+
+  <!-- Q1 -->
+  <polygon points="350,105 460,140 350,175 240,140" fill="#0f2d4a" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="350" y="135" text-anchor="middle" fill="#7dd3fc" font-size="10">Needs user</text>
+  <text x="350" y="150" text-anchor="middle" fill="#7dd3fc" font-size="10">interaction?</text>
+
+  <!-- No → Server Component -->
+  <line x1="240" y1="140" x2="100" y2="140" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowG)"/>
+  <text x="170" y="132" text-anchor="middle" fill="#4ade80" font-size="9">No</text>
+  <rect x="20" y="115" width="80" height="50" fill="#052e16" rx="6" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="60" y="138" text-anchor="middle" fill="#86efac" font-size="10" font-weight="bold">Server</text>
+  <text x="60" y="152" text-anchor="middle" fill="#4ade80" font-size="10">Component</text>
+
+  <!-- Yes → Client Component -->
+  <line x1="460" y1="140" x2="580" y2="140" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowR)"/>
+  <text x="520" y="132" text-anchor="middle" fill="#f87171" font-size="9">Yes</text>
+  <rect x="580" y="115" width="90" height="50" fill="#2d0a0a" rx="6" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="625" y="138" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="bold">Client</text>
+  <text x="625" y="152" text-anchor="middle" fill="#f87171" font-size="10">Component</text>
+
+  <!-- Down from Q1 -->
+  <line x1="350" y1="175" x2="350" y2="205" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+  <!-- Q2 -->
+  <polygon points="350,205 460,240 350,275 240,240" fill="#0f2d4a" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="350" y="235" text-anchor="middle" fill="#7dd3fc" font-size="10">Renders</text>
+  <text x="350" y="250" text-anchor="middle" fill="#7dd3fc" font-size="10">too often?</text>
+
+  <!-- No → Done -->
+  <line x1="240" y1="240" x2="140" y2="240" stroke="#22c55e" stroke-width="1.5" marker-end="url(#arrowG)"/>
+  <text x="190" y="232" text-anchor="middle" fill="#4ade80" font-size="9">No</text>
+  <rect x="60" y="220" width="80" height="40" fill="#052e16" rx="6" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="100" y="244" text-anchor="middle" fill="#86efac" font-size="10">✅ Done</text>
+
+  <!-- Yes → Memoize -->
+  <line x1="460" y1="240" x2="560" y2="240" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowR)"/>
+  <text x="510" y="232" text-anchor="middle" fill="#f87171" font-size="9">Yes</text>
+  <rect x="560" y="215" width="120" height="50" fill="#2d0a0a" rx="6" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="620" y="238" text-anchor="middle" fill="#fca5a5" font-size="10">Use React.memo</text>
+  <text x="620" y="252" text-anchor="middle" fill="#f87171" font-size="10">useMemo/useCallback</text>
+
+  <!-- Down arrow -->
+  <line x1="350" y1="275" x2="350" y2="305" stroke="#475569" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+  <!-- Q3 -->
+  <polygon points="350,305 455,335 350,365 245,335" fill="#0f2d4a" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="350" y="330" text-anchor="middle" fill="#7dd3fc" font-size="10">Heavy</text>
+  <text x="350" y="345" text-anchor="middle" fill="#7dd3fc" font-size="10">computation?</text>
+
+  <defs>
+    <marker id="arrowG" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/>
+    </marker>
+    <marker id="arrowR" markerWidth="8" markerHeight="8" refX="4" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/>
+    </marker>
+  </defs>
+</svg>

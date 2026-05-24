@@ -217,62 +217,7 @@ my-app/
 
 ## SVG: Folder Relationships
 
-```txt
-<svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" font-family="monospace" font-size="11">
-  <rect width="760" height="380" fill="#0f172a" rx="10"/>
-  <text x="380" y="25" text-anchor="middle" fill="#94a3b8" font-size="13" font-weight="bold">Next.js Folder Architecture</text>
-
-  <!-- app/ center -->
-  <rect x="300" y="50" width="160" height="50" fill="#1e3a5f" rx="8" stroke="#3b82f6" stroke-width="2"/>
-  <text x="380" y="73" text-anchor="middle" fill="#93c5fd" font-size="13">app/</text>
-  <text x="380" y="89" text-anchor="middle" fill="#60a5fa" font-size="10">Pages + API Routes</text>
-
-  <!-- Surrounding folders -->
-  <rect x="30" y="180" width="130" height="45" fill="#1e293b" rx="6" stroke="#8b5cf6" stroke-width="1.5"/>
-  <text x="95" y="200" text-anchor="middle" fill="#c4b5fd">components/</text>
-  <text x="95" y="215" text-anchor="middle" fill="#a78bfa" font-size="10">UI Components</text>
-
-  <rect x="190" y="180" width="120" height="45" fill="#1e293b" rx="6" stroke="#06b6d4" stroke-width="1.5"/>
-  <text x="250" y="200" text-anchor="middle" fill="#67e8f9">lib/</text>
-  <text x="250" y="215" text-anchor="middle" fill="#22d3ee" font-size="10">DB, Auth, Config</text>
-
-  <rect x="330" y="180" width="100" height="45" fill="#1e293b" rx="6" stroke="#f59e0b" stroke-width="1.5"/>
-  <text x="380" y="200" text-anchor="middle" fill="#fcd34d">hooks/</text>
-  <text x="380" y="215" text-anchor="middle" fill="#fbbf24" font-size="10">Custom Hooks</text>
-
-  <rect x="450" y="180" width="110" height="45" fill="#1e293b" rx="6" stroke="#ec4899" stroke-width="1.5"/>
-  <text x="505" y="200" text-anchor="middle" fill="#f9a8d4">services/</text>
-  <text x="505" y="215" text-anchor="middle" fill="#f472b6" font-size="10">External APIs</text>
-
-  <rect x="580" y="180" width="110" height="45" fill="#1e293b" rx="6" stroke="#22c55e" stroke-width="1.5"/>
-  <text x="635" y="200" text-anchor="middle" fill="#86efac">utils/</text>
-  <text x="635" y="215" text-anchor="middle" fill="#4ade80" font-size="10">Helper Functions</text>
-
-  <!-- Bottom row -->
-  <rect x="100" y="295" width="110" height="45" fill="#1e293b" rx="6" stroke="#f97316" stroke-width="1.5"/>
-  <text x="155" y="315" text-anchor="middle" fill="#fed7aa">types/</text>
-  <text x="155" y="330" text-anchor="middle" fill="#fb923c" font-size="10">TypeScript Types</text>
-
-  <rect x="240" y="295" width="110" height="45" fill="#1e293b" rx="6" stroke="#a855f7" stroke-width="1.5"/>
-  <text x="295" y="315" text-anchor="middle" fill="#d8b4fe">features/</text>
-  <text x="295" y="330" text-anchor="middle" fill="#c084fc" font-size="10">Feature Modules</text>
-
-  <rect x="380" y="295" width="110" height="45" fill="#1e293b" rx="6" stroke="#64748b" stroke-width="1.5"/>
-  <text x="435" y="315" text-anchor="middle" fill="#cbd5e1">public/</text>
-  <text x="435" y="330" text-anchor="middle" fill="#94a3b8" font-size="10">Static Assets</text>
-
-  <rect x="520" y="295" width="130" height="45" fill="#1e293b" rx="6" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="585" y="315" text-anchor="middle" fill="#fca5a5">middleware.ts</text>
-  <text x="585" y="330" text-anchor="middle" fill="#f87171" font-size="10">Edge Guards</text>
-
-  <!-- Lines from app/ down -->
-  <line x1="320" y1="100" x2="95" y2="180" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="4,3"/>
-  <line x1="350" y1="100" x2="250" y2="180" stroke="#06b6d4" stroke-width="1" stroke-dasharray="4,3"/>
-  <line x1="380" y1="100" x2="380" y2="180" stroke="#f59e0b" stroke-width="1" stroke-dasharray="4,3"/>
-  <line x1="410" y1="100" x2="505" y2="180" stroke="#ec4899" stroke-width="1" stroke-dasharray="4,3"/>
-  <line x1="440" y1="100" x2="635" y2="180" stroke="#22c55e" stroke-width="1" stroke-dasharray="4,3"/>
-</svg>
-```
+![SVG: Folder Relationships diagram](/DSA-Notes-Problems/assets/nextjs/fundamentals-folder-structure-svg-folder-relationships.svg)
 
 ---
 

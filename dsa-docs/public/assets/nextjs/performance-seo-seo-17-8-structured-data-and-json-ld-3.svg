@@ -1,0 +1,24 @@
+<svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="700" height="200" fill="#0f172a" rx="12"/>
+  <text x="350" y="28" text-anchor="middle" fill="#e2e8f0" font-size="14" font-weight="bold">JSON-LD Structured Data → Rich Snippets</text>
+
+  <!-- Normal result -->
+  <rect x="20" y="50" width="300" height="120" fill="#0c1824" rx="8" stroke="#334155" stroke-width="1"/>
+  <text x="170" y="72" text-anchor="middle" fill="#60a5fa" font-size="11">myapp.com/products/widget</text>
+  <text x="40" y="92" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">Premium Widget — $49.99</text>
+  <text x="40" y="110" text-anchor="start" fill="#94a3b8" font-size="10">The best widget for all your needs. Shop now and get...</text>
+  <text x="170" y="145" text-anchor="middle" fill="#64748b" font-size="9">Without JSON-LD: Basic result</text>
+
+  <!-- Rich result -->
+  <rect x="360" y="50" width="320" height="120" fill="#0c1824" rx="8" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="520" y="72" text-anchor="middle" fill="#60a5fa" font-size="11">myapp.com/products/widget</text>
+  <text x="380" y="92" text-anchor="start" fill="#e2e8f0" font-size="12" font-weight="bold">Premium Widget — $49.99</text>
+  <!-- Stars -->
+  <text x="380" y="112" text-anchor="start" fill="#fbbf24" font-size="14">★★★★★</text>
+  <text x="450" y="112" text-anchor="start" fill="#94a3b8" font-size="10">4.8 (247 reviews)</text>
+  <!-- Price badge -->
+  <rect x="380" y="118" width="80" height="16" fill="#14532d" rx="3"/>
+  <text x="420" y="130" text-anchor="middle" fill="#86efac" font-size="9">✅ In Stock</text>
+  <text x="380" y="152" text-anchor="start" fill="#94a3b8" font-size="10">The best widget for all your needs...</text>
+  <text x="520" y="165" text-anchor="middle" fill="#4ade80" font-size="9">With JSON-LD: Rich Snippet ✅</text>
+</svg>
