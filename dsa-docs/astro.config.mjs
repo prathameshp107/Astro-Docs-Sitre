@@ -104,6 +104,19 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Next.js',
+          items: [
+            { label: 'Next.js Overview', link: '/nextjs' },
+            { label: 'Fundamentals, Routing & Layouts', link: '/nextjs/fundamentals-routing-layouts' },
+            { label: 'Components, Styling & Data Fetching', link: '/nextjs/components-styling-data-fetching' },
+            { label: 'Middleware & Authentication', link: '/nextjs/middleware-authentication' },
+            { label: 'Database, State Management & Forms', link: '/nextjs/database-state-forms' },
+            { label: 'Performance Optimization & SEO', link: '/nextjs/performance-seo' },
+            { label: 'Error Handling, Deployment & Testing', link: '/nextjs/error-handling-deployment-testing' },
+            { label: 'Security & Advanced Concepts', link: '/nextjs/security-advanced-concepts' },
+          ],
+        },
+        {
           label: 'Angular',
           items: [
             { label: 'Overview', link: '/angular' },
