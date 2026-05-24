@@ -1,0 +1,81 @@
+<svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="720" height="400" rx="12" fill="#f8fafc"/>
+  <text x="360" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">Redis Data Types</text>
+
+  <!-- Root -->
+  <rect x="290" y="55" width="140" height="44" rx="8" fill="#1e293b"/>
+  <text x="360" y="82" text-anchor="middle" font-size="13" font-weight="bold" fill="#f8fafc">Redis Key-Value</text>
+
+  <!-- Lines from root -->
+  <line x1="360" y1="99" x2="80" y2="155" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="360" y1="99" x2="210" y2="155" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="360" y1="99" x2="360" y2="155" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="360" y1="99" x2="510" y2="155" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="360" y1="99" x2="640" y2="155" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- STRING -->
+  <rect x="30" y="155" width="100" height="44" rx="8" fill="#3b82f6"/>
+  <text x="80" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">String</text>
+
+  <!-- LIST -->
+  <rect x="160" y="155" width="100" height="44" rx="8" fill="#f97316"/>
+  <text x="210" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">List</text>
+
+  <!-- SET -->
+  <rect x="310" y="155" width="100" height="44" rx="8" fill="#10b981"/>
+  <text x="360" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Set</text>
+
+  <!-- SORTED SET -->
+  <rect x="460" y="155" width="100" height="44" rx="8" fill="#8b5cf6"/>
+  <text x="510" y="173" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Sorted</text>
+  <text x="510" y="190" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Set</text>
+
+  <!-- HASH -->
+  <rect x="590" y="155" width="100" height="44" rx="8" fill="#ef4444"/>
+  <text x="640" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Hash</text>
+
+  <!-- Level 2 lines -->
+  <line x1="80" y1="199" x2="80" y2="255" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="210" y1="199" x2="210" y2="255" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="360" y1="199" x2="360" y2="255" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="510" y1="199" x2="510" y2="255" stroke="#94a3b8" stroke-width="1.5"/>
+  <line x1="640" y1="199" x2="640" y2="255" stroke="#94a3b8" stroke-width="1.5"/>
+
+  <!-- String description -->
+  <rect x="20" y="255" width="120" height="80" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="80" y="276" text-anchor="middle" font-size="10" fill="#1e40af">Text, numbers</text>
+  <text x="80" y="292" text-anchor="middle" font-size="10" fill="#1e40af">Counters</text>
+  <text x="80" y="308" text-anchor="middle" font-size="10" fill="#1e40af">Session tokens</text>
+  <text x="80" y="324" text-anchor="middle" font-size="10" fill="#1e40af">Cached HTML</text>
+
+  <!-- List description -->
+  <rect x="150" y="255" width="120" height="80" rx="6" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+  <text x="210" y="276" text-anchor="middle" font-size="10" fill="#9a3412">Ordered items</text>
+  <text x="210" y="292" text-anchor="middle" font-size="10" fill="#9a3412">Task queues</text>
+  <text x="210" y="308" text-anchor="middle" font-size="10" fill="#9a3412">Activity feeds</text>
+  <text x="210" y="324" text-anchor="middle" font-size="10" fill="#9a3412">Stack / Queue</text>
+
+  <!-- Set description -->
+  <rect x="300" y="255" width="120" height="80" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="360" y="276" text-anchor="middle" font-size="10" fill="#14532d">Unique items</text>
+  <text x="360" y="292" text-anchor="middle" font-size="10" fill="#14532d">Tags</text>
+  <text x="360" y="308" text-anchor="middle" font-size="10" fill="#14532d">Unique visitors</text>
+  <text x="360" y="324" text-anchor="middle" font-size="10" fill="#14532d">Friends list</text>
+
+  <!-- Sorted Set description -->
+  <rect x="450" y="255" width="120" height="80" rx="6" fill="#faf5ff" stroke="#ddd6fe" stroke-width="1"/>
+  <text x="510" y="276" text-anchor="middle" font-size="10" fill="#5b21b6">Scored items</text>
+  <text x="510" y="292" text-anchor="middle" font-size="10" fill="#5b21b6">Leaderboards</text>
+  <text x="510" y="308" text-anchor="middle" font-size="10" fill="#5b21b6">Rankings</text>
+  <text x="510" y="324" text-anchor="middle" font-size="10" fill="#5b21b6">Priority queues</text>
+
+  <!-- Hash description -->
+  <rect x="580" y="255" width="120" height="80" rx="6" fill="#fff1f2" stroke="#fecdd3" stroke-width="1"/>
+  <text x="640" y="276" text-anchor="middle" font-size="10" fill="#9f1239">Field:Value</text>
+  <text x="640" y="292" text-anchor="middle" font-size="10" fill="#9f1239">User profiles</text>
+  <text x="640" y="308" text-anchor="middle" font-size="10" fill="#9f1239">Product data</text>
+  <text x="640" y="324" text-anchor="middle" font-size="10" fill="#9f1239">Config objects</text>
+
+  <!-- Special types row -->
+  <text x="360" y="362" text-anchor="middle" font-size="11" fill="#64748b">Advanced types: Bitmap · HyperLogLog · Stream · Geospatial</text>
+</svg>

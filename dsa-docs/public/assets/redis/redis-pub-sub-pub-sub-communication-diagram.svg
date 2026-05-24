@@ -1,0 +1,59 @@
+<svg viewBox="0 0 680 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="680" height="340" rx="12" fill="#f8fafc"/>
+  <text x="340" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">Redis Pub/Sub — Message Flow</text>
+
+  <!-- Publishers -->
+  <rect x="20" y="70" width="130" height="50" rx="8" fill="#f97316"/>
+  <text x="85" y="92" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Publisher</text>
+  <text x="85" y="110" text-anchor="middle" font-size="10" fill="#ffedd5">Order Service</text>
+
+  <rect x="20" y="145" width="130" height="50" rx="8" fill="#f97316"/>
+  <text x="85" y="167" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Publisher</text>
+  <text x="85" y="185" text-anchor="middle" font-size="10" fill="#ffedd5">User Service</text>
+
+  <!-- Redis Channel -->
+  <rect x="240" y="80" width="200" height="140" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="340" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">Redis Channel</text>
+  <text x="340" y="132" text-anchor="middle" font-size="11" fill="#92400e">"notifications"</text>
+  <text x="340" y="160" text-anchor="middle" font-size="10" fill="#78350f">Message queue</text>
+  <text x="340" y="178" text-anchor="middle" font-size="10" fill="#78350f">fan-out delivery</text>
+  <text x="340" y="196" text-anchor="middle" font-size="10" fill="#78350f">real-time broadcast</text>
+
+  <!-- Subscribers -->
+  <rect x="530" y="60" width="130" height="50" rx="8" fill="#6366f1"/>
+  <text x="595" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Subscriber</text>
+  <text x="595" y="100" text-anchor="middle" font-size="10" fill="#e0e7ff">Email Service</text>
+
+  <rect x="530" y="130" width="130" height="50" rx="8" fill="#6366f1"/>
+  <text x="595" y="152" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Subscriber</text>
+  <text x="595" y="170" text-anchor="middle" font-size="10" fill="#e0e7ff">Push Notification</text>
+
+  <rect x="530" y="200" width="130" height="50" rx="8" fill="#6366f1"/>
+  <text x="595" y="222" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Subscriber</text>
+  <text x="595" y="240" text-anchor="middle" font-size="10" fill="#e0e7ff">Analytics Service</text>
+
+  <!-- Arrows: Publishers → Channel -->
+  <line x1="150" y1="95" x2="238" y2="130" stroke="#f97316" stroke-width="2" marker-end="url(#arrowO2)"/>
+  <text x="184" y="107" font-size="10" fill="#f97316">PUBLISH</text>
+  <line x1="150" y1="170" x2="238" y2="165" stroke="#f97316" stroke-width="2" marker-end="url(#arrowO2)"/>
+  <text x="184" y="162" font-size="10" fill="#f97316">PUBLISH</text>
+
+  <!-- Arrows: Channel → Subscribers -->
+  <line x1="440" y1="130" x2="528" y2="85" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowI)"/>
+  <line x1="440" y1="150" x2="528" y2="155" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowI)"/>
+  <line x1="440" y1="170" x2="528" y2="215" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowI)"/>
+  <text x="488" y="120" font-size="10" fill="#6366f1">fan-out</text>
+
+  <!-- Note -->
+  <rect x="20" y="280" width="640" height="44" rx="8" fill="#f1f5f9" stroke="#e2e8f0"/>
+  <text x="340" y="304" text-anchor="middle" font-size="12" fill="#475569">⚠️  Pub/Sub is fire-and-forget — if a subscriber is offline, it misses the message. Use Redis Streams for durability.</text>
+
+  <defs>
+    <marker id="arrowO2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#f97316"/>
+    </marker>
+    <marker id="arrowI" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#6366f1"/>
+    </marker>
+  </defs>
+</svg>

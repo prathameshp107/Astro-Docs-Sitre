@@ -1,0 +1,86 @@
+<svg viewBox="0 0 740 420" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+
+  <!-- Background -->
+  <rect width="740" height="420" rx="12" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="370" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">Redis Cache Layer — Request Flow</text>
+
+  <!-- CLIENT -->
+  <rect x="30" y="80" width="130" height="60" rx="8" fill="#3b82f6" />
+  <text x="95" y="107" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">Client / Browser</text>
+  <text x="95" y="125" text-anchor="middle" font-size="11" fill="#dbeafe">User Request</text>
+
+  <!-- APPLICATION SERVER -->
+  <rect x="290" y="80" width="150" height="60" rx="8" fill="#6366f1"/>
+  <text x="365" y="107" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">App Server</text>
+  <text x="365" y="125" text-anchor="middle" font-size="11" fill="#e0e7ff">Node.js / Express</text>
+
+  <!-- REDIS -->
+  <rect x="570" y="60" width="140" height="60" rx="8" fill="#ef4444"/>
+  <text x="640" y="87" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">Redis Cache</text>
+  <text x="640" y="105" text-anchor="middle" font-size="11" fill="#fee2e2">In-Memory Store</text>
+
+  <!-- DATABASE -->
+  <rect x="570" y="200" width="140" height="60" rx="8" fill="#10b981"/>
+  <text x="640" y="227" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">Database</text>
+  <text x="640" y="245" text-anchor="middle" font-size="11" fill="#d1fae5">MySQL / MongoDB</text>
+
+  <!-- Arrows: Client → App -->
+  <line x1="160" y1="110" x2="288" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="224" y="102" text-anchor="middle" font-size="10" fill="#3b82f6">HTTP Request</text>
+
+  <!-- Arrows: App → Redis -->
+  <line x1="440" y1="97" x2="568" y2="87" stroke="#ef4444" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="504" y="82" text-anchor="middle" font-size="10" fill="#ef4444">Cache lookup</text>
+
+  <!-- Cache HIT arrow: Redis → App -->
+  <line x1="568" y1="100" x2="440" y2="115" stroke="#f97316" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowOrange)"/>
+  <text x="504" y="120" text-anchor="middle" font-size="10" fill="#f97316">Cache HIT ✓</text>
+
+  <!-- Arrows: App → Database (cache miss) -->
+  <line x1="440" y1="125" x2="568" y2="210" stroke="#10b981" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowGreen)"/>
+  <text x="500" y="185" text-anchor="middle" font-size="10" fill="#10b981">Cache MISS →</text>
+  <text x="500" y="197" text-anchor="middle" font-size="10" fill="#10b981">Query DB</text>
+
+  <!-- Database → Redis (store result) -->
+  <line x1="640" y1="200" x2="640" y2="122" stroke="#6366f1" stroke-width="2" marker-end="url(#arrowPurple)"/>
+  <text x="658" y="165" font-size="10" fill="#6366f1">Store in</text>
+  <text x="658" y="177" font-size="10" fill="#6366f1">cache</text>
+
+  <!-- App → Client (response) -->
+  <line x1="290" y1="125" x2="162" y2="125" stroke="#3b82f6" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="226" y="140" text-anchor="middle" font-size="10" fill="#3b82f6">Response</text>
+
+  <!-- Legend -->
+  <rect x="30" y="310" width="680" height="90" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="50" y="333" font-size="12" font-weight="bold" fill="#334155">Legend</text>
+
+  <line x1="50" y1="352" x2="90" y2="352" stroke="#ef4444" stroke-width="2"/>
+  <text x="96" y="356" font-size="11" fill="#334155">Cache Lookup (always first)</text>
+
+  <line x1="50" y1="372" x2="90" y2="372" stroke="#f97316" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="96" y="376" font-size="11" fill="#334155">Cache HIT — data returned from Redis instantly</text>
+
+  <line x1="300" y1="352" x2="340" y2="352" stroke="#10b981" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="346" y="356" font-size="11" fill="#334155">Cache MISS — fallback to database</text>
+
+  <line x1="300" y1="372" x2="340" y2="372" stroke="#6366f1" stroke-width="2"/>
+  <text x="346" y="376" font-size="11" fill="#334155">Store result in Redis for future requests</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f97316"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#10b981"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#6366f1"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,0 +1,82 @@
+<svg viewBox="0 0 720 480" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="720" height="480" rx="12" fill="#f8fafc"/>
+  <text x="360" y="32" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">Redis Internal Architecture</text>
+
+  <!-- Clients -->
+  <rect x="20" y="60" width="100" height="40" rx="6" fill="#3b82f6"/>
+  <text x="70" y="85" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Client 1</text>
+  <rect x="20" y="115" width="100" height="40" rx="6" fill="#3b82f6"/>
+  <text x="70" y="140" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Client 2</text>
+  <rect x="20" y="170" width="100" height="40" rx="6" fill="#3b82f6"/>
+  <text x="70" y="195" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Client N</text>
+
+  <!-- TCP Connection box -->
+  <rect x="160" y="90" width="120" height="90" rx="8" fill="#e0e7ff" stroke="#6366f1" stroke-width="2"/>
+  <text x="220" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#4338ca">TCP Layer</text>
+  <text x="220" y="140" text-anchor="middle" font-size="10" fill="#4338ca">Port 6379</text>
+  <text x="220" y="158" text-anchor="middle" font-size="10" fill="#4338ca">RESP Protocol</text>
+
+  <!-- Event Loop -->
+  <rect x="330" y="75" width="160" height="120" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="410" y="105" text-anchor="middle" font-size="13" font-weight="bold" fill="#92400e">Event Loop</text>
+  <text x="410" y="125" text-anchor="middle" font-size="10" fill="#92400e">Single-threaded</text>
+  <text x="410" y="143" text-anchor="middle" font-size="10" fill="#92400e">epoll / kqueue</text>
+  <text x="410" y="161" text-anchor="middle" font-size="10" fill="#92400e">Non-blocking I/O</text>
+  <text x="410" y="179" text-anchor="middle" font-size="10" fill="#92400e">Command Queue</text>
+
+  <!-- In-Memory Store -->
+  <rect x="540" y="60" width="155" height="150" rx="8" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+  <text x="617" y="90" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">In-Memory</text>
+  <text x="617" y="108" text-anchor="middle" font-size="13" font-weight="bold" fill="#065f46">Data Store</text>
+  <text x="617" y="128" text-anchor="middle" font-size="10" fill="#065f46">Hash Table</text>
+  <text x="617" y="146" text-anchor="middle" font-size="10" fill="#065f46">Strings / Lists</text>
+  <text x="617" y="164" text-anchor="middle" font-size="10" fill="#065f46">Sets / Hashes</text>
+  <text x="617" y="182" text-anchor="middle" font-size="10" fill="#065f46">Sorted Sets</text>
+  <text x="617" y="200" text-anchor="middle" font-size="10" fill="#065f46">Streams</text>
+
+  <!-- Persistence Engine -->
+  <rect x="330" y="240" width="365" height="90" rx="8" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+  <text x="512" y="270" text-anchor="middle" font-size="13" font-weight="bold" fill="#5b21b6">Persistence Engine</text>
+  <rect x="355" y="284" width="140" height="36" rx="6" fill="#8b5cf6"/>
+  <text x="425" y="300" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">RDB Snapshots</text>
+  <text x="425" y="314" text-anchor="middle" font-size="9" fill="#ede9fe">Point-in-time backup</text>
+  <rect x="520" y="284" width="140" height="36" rx="6" fill="#8b5cf6"/>
+  <text x="590" y="300" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">AOF Logs</text>
+  <text x="590" y="314" text-anchor="middle" font-size="9" fill="#ede9fe">Append every command</text>
+
+  <!-- Replication -->
+  <rect x="30" y="355" width="280" height="80" rx="8" fill="#fce7f3" stroke="#ec4899" stroke-width="2"/>
+  <text x="170" y="382" text-anchor="middle" font-size="13" font-weight="bold" fill="#9d174d">Replication</text>
+  <rect x="50" y="394" width="100" height="30" rx="6" fill="#ec4899"/>
+  <text x="100" y="413" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Master Node</text>
+  <rect x="190" y="394" width="100" height="30" rx="6" fill="#f9a8d4"/>
+  <text x="240" y="413" text-anchor="middle" font-size="10" font-weight="bold" fill="#9d174d">Replica Node</text>
+
+  <!-- Disk -->
+  <rect x="330" y="355" width="365" height="55" rx="8" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+  <text x="512" y="388" text-anchor="middle" font-size="13" font-weight="bold" fill="#475569">💾 Disk Storage (dump.rdb / appendonly.aof)</text>
+
+  <!-- Arrows -->
+  <line x1="120" y1="80" x2="158" y2="125" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowB)"/>
+  <line x1="120" y1="135" x2="158" y2="135" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowB)"/>
+  <line x1="120" y1="190" x2="158" y2="155" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowB)"/>
+  <line x1="280" y1="135" x2="328" y2="135" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowY)"/>
+  <line x1="490" y1="135" x2="538" y2="135" stroke="#10b981" stroke-width="2" marker-end="url(#arrowG3)"/>
+  <line x1="617" y1="210" x2="617" y2="238" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowP)"/>
+  <line x1="512" y1="330" x2="512" y2="353" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowP)"/>
+
+  <defs>
+    <marker id="arrowB" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrowY" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#f59e0b"/>
+    </marker>
+    <marker id="arrowG3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#10b981"/>
+    </marker>
+    <marker id="arrowP" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#8b5cf6"/>
+    </marker>
+  </defs>
+</svg>
