@@ -1,0 +1,11 @@
+{
+  "installCommand": "cd dsa-docs && npm install",
+  "buildCommand": "cd dsa-docs && npm run build",
+  "outputDirectory": "dsa-docs/dist",
+  "rewrites": [
+    {
+      "source": "/DSA-Notes-Problems/:path*",
+      "destination": "/:path*"
+    }
+  ]
+}

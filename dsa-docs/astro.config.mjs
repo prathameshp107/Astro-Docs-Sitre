@@ -1,9 +1,14 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+const isVercel = !!process.env.VERCEL;
+const site = isVercel && process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : 'https://prathameshp107.github.io';
+
 export default defineConfig({
-  site: 'https://prathameshp107.github.io',
-  base: '/DSA-Notes-Problems',
+  site,
+  ...(isVercel ? {} : { base: '/DSA-Notes-Problems' }),
   integrations: [
     starlight({
       title: 'DSA & Dev Notes',
