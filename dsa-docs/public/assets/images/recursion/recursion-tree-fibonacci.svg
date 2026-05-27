@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" font-family="'Courier New', monospace">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="nodeNorm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f3460;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1a5276;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="nodeBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1e8449;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="nodeOverlap" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="560" fill="url(#bg)" rx="12"/>
+
+  <text x="400" y="35" text-anchor="middle" fill="#ecf0f1" font-size="22" font-weight="bold" font-family="Arial">Recursion Tree: fib(5)</text>
+  <text x="400" y="55" text-anchor="middle" fill="#bdc3c7" font-size="13" font-family="Arial">Tree Recursion — Two recursive calls per node → <tspan fill="#e74c3c">O(2ⁿ)</tspan> complexity</text>
+
+  <!-- Tree structure -->
+  <!-- Level 0: root -->
+  <ellipse cx="400" cy="90" rx="48" ry="20" fill="url(#nodeNorm)" filter="url(#glow)"/>
+  <text x="400" y="95" text-anchor="middle" fill="#ecf0f1" font-size="15" font-weight="bold">fib(5)</text>
+
+  <!-- Level 0 → Level 1 connectors -->
+  <line x1="365" y1="108" x2="270" y2="147" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="435" y1="108" x2="530" y2="147" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <!-- Level 1 -->
+  <ellipse cx="260" cy="165" rx="48" ry="20" fill="url(#nodeNorm)"/>
+  <text x="260" y="170" text-anchor="middle" fill="#ecf0f1" font-size="14" font-weight="bold">fib(4)</text>
+
+  <ellipse cx="540" cy="165" rx="48" ry="20" fill="url(#nodeOverlap)" filter="url(#glow)"/>
+  <text x="540" y="170" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">fib(3)</text>
+  <text x="540" y="195" text-anchor="middle" fill="#f5b7b1" font-size="9">⚠ recomputed</text>
+
+  <!-- Level 1 → Level 2 connectors -->
+  <line x1="225" y1="183" x2="150" y2="222" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="295" y1="183" x2="360" y2="222" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <line x1="505" y1="183" x2="445" y2="222" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="575" y1="183" x2="635" y2="222" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <!-- Level 2 -->
+  <ellipse cx="140" cy="240" rx="48" ry="20" fill="url(#nodeNorm)"/>
+  <text x="140" y="245" text-anchor="middle" fill="#ecf0f1" font-size="13" font-weight="bold">fib(3)</text>
+
+  <ellipse cx="355" cy="240" rx="48" ry="20" fill="url(#nodeNorm)"/>
+  <text x="355" y="245" text-anchor="middle" fill="#ecf0f1" font-size="13" font-weight="bold">fib(2)</text>
+
+  <ellipse cx="440" cy="240" rx="48" ry="20" fill="url(#nodeOverlap)" filter="url(#glow)"/>
+  <text x="440" y="245" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">fib(2)</text>
+  <text x="440" y="270" text-anchor="middle" fill="#f5b7b1" font-size="9">⚠ recomputed</text>
+
+  <ellipse cx="640" cy="240" rx="22" ry="18" fill="url(#nodeBase)"/>
+  <text x="640" y="245" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text>
+
+  <!-- Level 2 → Level 3 connectors (left branch only to avoid clutter) -->
+  <line x1="108" y1="258" x2="62" y2="297" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="172" y1="258" x2="218" y2="297" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <line x1="325" y1="258" x2="275" y2="297" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="385" y1="258" x2="410" y2="297" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <line x1="412" y1="258" x2="370" y2="297" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="468" y1="258" x2="505" y2="297" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <!-- Level 3 -->
+  <ellipse cx="55" cy="315" rx="22" ry="18" fill="url(#nodeNorm)"/>
+  <text x="55" y="320" text-anchor="middle" fill="#ecf0f1" font-size="12" font-weight="bold">fib(2)</text>
+
+  <ellipse cx="220" cy="315" rx="22" ry="18" fill="url(#nodeBase)"/>
+  <text x="220" y="320" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text>
+
+  <ellipse cx="270" cy="315" rx="22" ry="18" fill="url(#nodeBase)"/>
+  <text x="270" y="320" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text>
+
+  <ellipse cx="410" cy="315" rx="22" ry="18" fill="url(#nodeBase)"/>
+  <text x="410" y="320" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">1</text>
+
+  <ellipse cx="505" cy="315" rx="22" ry="18" fill="url(#nodeBase)"/>
+  <text x="505" y="320" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">0</text>
+
+  <!-- Level 3 → Level 4 connector -->
+  <line x1="35" y1="332" x2="25" y2="362" stroke="#7f8c8d" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="75" y1="332" x2="85" y2="362" stroke="#7f8c8d" stroke-width="1.5" stroke-dasharray="3,2"/>
+
+  <!-- Level 4 - base cases -->
+  <ellipse cx="22" cy="378" rx="18" ry="15" fill="url(#nodeBase)"/>
+  <text x="22" y="382" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">1</text>
+
+  <ellipse cx="88" cy="378" rx="18" ry="15" fill="url(#nodeBase)"/>
+  <text x="88" y="382" text-anchor="middle" fill="#fff" font-size="10" font-weight="bold">0</text>
+
+  <!-- Information panel -->
+  <rect x="580" y="340" width="200" height="130" rx="8" fill="#0a1628" stroke="#34495e" stroke-width="1"/>
+  <text x="680" y="362" text-anchor="middle" fill="#f1c40f" font-size="13" font-weight="bold" font-family="Arial">⚠ Overlapping Subproblems</text>
+  <text x="590" y="382" fill="#bdc3c7" font-size="11" font-family="Arial">• fib(3) computed <tspan fill="#e74c3c">x2</tspan></text>
+  <text x="590" y="400" fill="#bdc3c7" font-size="11" font-family="Arial">• fib(2) computed <tspan fill="#e74c3c">x3</tspan></text>
+  <text x="590" y="425" fill="#3498db" font-size="12" font-family="Arial">With MEMOIZATION:</text>
+  <text x="590" y="445" fill="#2ecc71" font-size="11" font-family="Arial">✅ Each computed once → O(n)</text>
+  <text x="590" y="462" fill="#2ecc71" font-size="11" font-family="Arial">✅ From 2ⁿ to n operations!</text>
+
+  <!-- Summary at bottom -->
+  <text x="400" y="520" text-anchor="middle" fill="#7f8c8d" font-size="12" font-family="Arial">Nodes: fib(5) → fib(4) + fib(3) → fib(3) + fib(2) + fib(2) + fib(1) → ...</text>
+  <text x="400" y="540" text-anchor="middle" fill="#95a5a6" font-size="11" font-family="Arial">Total recursive calls without memo: 15 | With memo: 5 | Depth: O(n), Nodes: O(2ⁿ)</text>
+</svg>

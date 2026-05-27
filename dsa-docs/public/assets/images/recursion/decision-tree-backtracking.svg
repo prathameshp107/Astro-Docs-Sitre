@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" font-family="'Courier New', monospace">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="nodeEmpty" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f3460;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1a5276;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="nodePartial" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e67e22;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#d35400;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="nodeSolution" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1e8449;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrowDown" markerWidth="8" markerHeight="6" refX="4" refY="6" orient="auto">
+      <polygon points="0 0, 8 0, 4 6" fill="#7f8c8d"/>
+    </marker>
+  </defs>
+  <rect width="800" height="560" fill="url(#bg)" rx="12"/>
+
+  <text x="400" y="35" text-anchor="middle" fill="#ecf0f1" font-size="22" font-weight="bold" font-family="Arial">Backtracking Decision Tree</text>
+  <text x="400" y="55" text-anchor="middle" fill="#bdc3c7" font-size="13" font-family="Arial">Permutations of [1, 2, 3] — Choose → Explore → Un-choose</text>
+
+  <!-- Root: empty -->
+  <ellipse cx="400" cy="85" rx="30" ry="16" fill="url(#nodeEmpty)" filter="url(#glow)"/>
+  <text x="400" y="89" text-anchor="middle" fill="#ecf0f1" font-size="14" font-weight="bold">[ ]</text>
+
+  <!-- Level 0 → Level 1 -->
+  <line x1="380" y1="99" x2="155" y2="138" stroke="#7f8c8d" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+  <line x1="410" y1="99" x2="400" y2="138" stroke="#7f8c8d" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+  <line x1="430" y1="101" x2="645" y2="138" stroke="#7f8c8d" stroke-width="1.5" marker-end="url(#arrowDown)"/>
+
+  <text x="270" y="128" text-anchor="middle" fill="#3498db" font-size="11" font-family="Arial">pick 1</text>
+  <text x="400" y="128" text-anchor="middle" fill="#3498db" font-size="11" font-family="Arial">pick 2</text>
+  <text x="530" y="128" text-anchor="middle" fill="#3498db" font-size="11" font-family="Arial">pick 3</text>
+
+  <!-- Level 1 -->
+  <ellipse cx="140" cy="150" rx="30" ry="16" fill="url(#nodePartial)"/>
+  <text x="140" y="154" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">[1]</text>
+
+  <ellipse cx="400" cy="150" rx="30" ry="16" fill="url(#nodePartial)"/>
+  <text x="400" y="154" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">[2]</text>
+
+  <ellipse cx="660" cy="150" rx="30" ry="16" fill="url(#nodePartial)"/>
+  <text x="660" y="154" text-anchor="middle" fill="#fff" font-size="13" font-weight="bold">[3]</text>
+
+  <!-- Level 1 → Level 2 -->
+  <line x1="120" y1="164" x2="70" y2="208" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="155" y1="164" x2="200" y2="208" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <line x1="380" y1="164" x2="320" y2="208" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="420" y1="164" x2="480" y2="208" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <line x1="640" y1="164" x2="590" y2="208" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="680" y1="164" x2="730" y2="208" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <text x="85" y="200" text-anchor="middle" fill="#3498db" font-size="10">pick 2</text>
+  <text x="185" y="200" text-anchor="middle" fill="#3498db" font-size="10">pick 3</text>
+  <text x="345" y="200" text-anchor="middle" fill="#3498db" font-size="10">pick 1</text>
+  <text x="455" y="200" text-anchor="middle" fill="#3498db" font-size="10">pick 3</text>
+  <text x="615" y="200" text-anchor="middle" fill="#3498db" font-size="10">pick 1</text>
+  <text x="705" y="200" text-anchor="middle" fill="#3498db" font-size="10">pick 2</text>
+
+  <!-- Level 2 -->
+  <ellipse cx="65" cy="225" rx="35" ry="16" fill="url(#nodePartial)"/>
+  <text x="65" y="229" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[1,2]</text>
+
+  <ellipse cx="205" cy="225" rx="35" ry="16" fill="url(#nodePartial)"/>
+  <text x="205" y="229" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[1,3]</text>
+
+  <ellipse cx="315" cy="225" rx="35" ry="16" fill="url(#nodePartial)"/>
+  <text x="315" y="229" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[2,1]</text>
+
+  <ellipse cx="485" cy="225" rx="35" ry="16" fill="url(#nodePartial)"/>
+  <text x="485" y="229" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[2,3]</text>
+
+  <ellipse cx="590" cy="225" rx="35" ry="16" fill="url(#nodePartial)"/>
+  <text x="590" y="229" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[3,1]</text>
+
+  <ellipse cx="735" cy="225" rx="35" ry="16" fill="url(#nodePartial)"/>
+  <text x="735" y="229" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[3,2]</text>
+
+  <!-- Level 2 → Level 3 -->
+  <line x1="65" y1="239" x2="65" y2="280" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="205" y1="239" x2="205" y2="280" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="315" y1="239" x2="315" y2="280" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="485" y1="239" x2="485" y2="280" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="590" y1="239" x2="590" y2="280" stroke="#7f8c8d" stroke-width="1.5"/>
+  <line x1="735" y1="239" x2="735" y2="280" stroke="#7f8c8d" stroke-width="1.5"/>
+
+  <text x="65" y="275" text-anchor="middle" fill="#2ecc71" font-size="10">pick 3</text>
+  <text x="205" y="275" text-anchor="middle" fill="#2ecc71" font-size="10">pick 2</text>
+  <text x="315" y="275" text-anchor="middle" fill="#2ecc71" font-size="10">pick 3</text>
+  <text x="485" y="275" text-anchor="middle" fill="#2ecc71" font-size="10">pick 1</text>
+  <text x="590" y="275" text-anchor="middle" fill="#2ecc71" font-size="10">pick 2</text>
+  <text x="735" y="275" text-anchor="middle" fill="#2ecc71" font-size="10">pick 1</text>
+
+  <!-- Level 3 - Solutions! -->
+  <ellipse cx="65" cy="298" rx="45" ry="18" fill="url(#nodeSolution)" filter="url(#glow)"/>
+  <text x="65" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[1,2,3] ✅</text>
+
+  <ellipse cx="205" cy="298" rx="45" ry="18" fill="url(#nodeSolution)" filter="url(#glow)"/>
+  <text x="205" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[1,3,2] ✅</text>
+
+  <ellipse cx="315" cy="298" rx="45" ry="18" fill="url(#nodeSolution)" filter="url(#glow)"/>
+  <text x="315" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[2,1,3] ✅</text>
+
+  <ellipse cx="485" cy="298" rx="45" ry="18" fill="url(#nodeSolution)" filter="url(#glow)"/>
+  <text x="485" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[2,3,1] ✅</text>
+
+  <ellipse cx="590" cy="298" rx="45" ry="18" fill="url(#nodeSolution)" filter="url(#glow)"/>
+  <text x="590" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[3,1,2] ✅</text>
+
+  <ellipse cx="735" cy="298" rx="45" ry="18" fill="url(#nodeSolution)" filter="url(#glow)"/>
+  <text x="735" y="302" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">[3,2,1] ✅</text>
+
+  <!-- Pseudocode panel -->
+  <rect x="50" y="335" width="700" height="115" rx="8" fill="#0a1628" stroke="#34495e" stroke-width="1"/>
+  <text x="70" y="358" fill="#f1c40f" font-size="14" font-weight="bold" font-family="Arial">Backtracking Template</text>
+  <text x="70" y="380" fill="#e8daef" font-size="12" font-family="'Courier New', monospace">function backtrack(</text>
+  <text x="70" y="398" fill="#3498db" font-size="12" font-family="'Courier New', monospace">  for each CHOICE in available choices {</text>
+  <text x="90" y="416" fill="#e67e22" font-size="12" font-family="'Courier New', monospace">    MAKE the choice       // Choose</text>
+  <text x="90" y="434" fill="#2ecc71" font-size="12" font-family="'Courier New', monospace">    backtrack(state)      // Explore</text>
+  <text x="90" y="452" fill="#e74c3c" font-size="12" font-family="'Courier New', monospace">    UNDO the choice       // Backtrack ← KEY!</text>
+  <text x="70" y="470" fill="#3498db" font-size="12" font-family="'Courier New', monospace">  }</text>
+
+  <!-- Stats -->
+  <text x="400" y="515" text-anchor="middle" fill="#7f8c8d" font-size="12" font-family="Arial">Total Solutions: <tspan fill="#f1c40f" font-weight="bold">6</tspan> = 3! = n! permutations</text>
+  <text x="400" y="540" text-anchor="middle" fill="#95a5a6" font-size="11" font-family="Arial">Leaf nodes represent complete solutions | Internal nodes = recursive calls with partial state</text>
+</svg>

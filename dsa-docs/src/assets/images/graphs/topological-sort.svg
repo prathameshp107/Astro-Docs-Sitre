@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrowT" markerWidth="7" markerHeight="5" refX="7" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#2563eb"/></marker>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+  </defs>
+
+  <rect width="800" height="420" fill="url(#bg)" rx="12"/>
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">Topological Sort — Course Prerequisites (Kahn's Algorithm)</text>
+
+  <!-- DAG -->
+  <rect x="20" y="45" width="360" height="210" fill="white" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="200" y="68" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">DAG: Course Dependencies</text>
+
+  <circle cx="80" cy="110" r="20" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="115" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">Math</text>
+  <circle cx="200" cy="105" r="20" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="200" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">CS1</text>
+  <circle cx="320" cy="100" r="20" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="320" y="105" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">CS2</text>
+  <circle cx="80" cy="220" r="20" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="80" y="225" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">Stats</text>
+  <circle cx="320" cy="220" r="20" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="320" y="225" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">AI</text>
+
+  <line x1="100" y1="108" x2="180" y2="107" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowT)"/>
+  <line x1="220" y1="105" x2="300" y2="102" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowT)"/>
+  <line x1="80" y1="130" x2="80" y2="200" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowT)"/>
+  <line x1="300" y1="114" x2="80" y2="206" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowT)"/>
+  <line x1="200" y1="125" x2="306" y2="208" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowT)"/>
+
+  <text x="60" y="88" font-size="9" fill="#2563eb">→</text>
+  <text x="195" y="88" font-size="9" fill="#2563eb">→</text>
+
+  <!-- In-degree labels -->
+  <g font-size="9" fill="#64748b">
+    <text x="110" y="85">in=0</text>
+    <text x="230" y="85">in=1 (Math)</text>
+    <text x="350" y="78">in=1 (CS1)</text>
+    <text x="110" y="248">in=2 (Math,CS1)</text>
+    <text x="350" y="248">in=2 (CS2,Stats)</text>
+  </g>
+
+  <!-- Kahn's Algorithm Steps -->
+  <rect x="410" y="45" width="370" height="210" fill="white" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="595" y="68" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Kahn's Algorithm Steps</text>
+
+  <g font-size="11">
+    <text x="425" y="95" font-weight="bold" fill="#16a34a">Step 1:</text>
+    <text x="480" y="95" fill="#334155">Find all nodes with in-degree=0</text>
+    <rect x="425" y="105" width="130" height="22" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <text x="490" y="120" text-anchor="middle" fill="#16a34a" font-weight="bold">Queue: [Math]</text>
+
+    <text x="425" y="152" font-weight="bold" fill="#2563eb">Step 2:</text>
+    <text x="480" y="152" fill="#334155">Dequeue Math → remove its edges</text>
+    <text x="480" y="168" fill="#64748b">CS1.in-degree: 1→0 (add to queue)</text>
+    <rect x="425" y="178" width="250" height="22" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+    <text x="550" y="193" text-anchor="middle" fill="#2563eb" font-weight="bold">Queue: [CS1]</text>
+
+    <text x="425" y="215" font-weight="bold" fill="#2563eb">Step 3:</text>
+    <text x="480" y="215" fill="#334155">Continue... CS2 and Stats join queue</text>
+    <text x="480" y="231" fill="#64748b">Result: Math → CS1 → CS2 → Stats → AI</text>
+    <rect x="425" y="241" width="250" height="22" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+    <text x="550" y="256" text-anchor="middle" fill="#16a34a" font-weight="bold">✓ Result length = 5 (no cycle)</text>
+  </g>
+
+  <!-- Bottom: CS Code -->
+  <rect x="20" y="270" width="760" height="140" fill="#1e293b" rx="8"/>
+  <text x="35" y="295" font-family="monospace" font-size="11" fill="#e2e8f0">function topologicalSort(numNodes, edges) {</text>
+  <text x="45" y="315" font-family="monospace" font-size="11" fill="#a5f3fc">  const inDegree = new Array(numNodes).fill(0);</text>
+  <text x="45" y="332" font-family="monospace" font-size="11" fill="#a5f3fc">  const graph = buildGraph(numNodes, edges);</text>
+  <text x="45" y="349" font-family="monospace" font-size="11" fill="#fde68a">  const queue = [];</text>
+  <text x="55" y="366" font-family="monospace" font-size="11" fill="#fde68a">  for (let i = 0; i &lt; numNodes; i++)</text>
+  <text x="65" y="383" font-family="monospace" font-size="11" fill="#fde68a">    if (inDegree[i] === 0) queue.push(i);</text>
+  <text x="45" y="400" font-family="monospace" font-size="11" fill="#a5f3fc">  // ...dequeue, reduce in-degrees, add to result</text>
+  <text x="35" y="420" font-family="monospace" font-size="11" fill="#e2e8f0">}</text>
+</svg>

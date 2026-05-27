@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+  </defs>
+
+  <rect width="800" height="420" fill="url(#bg)" rx="12"/>
+  <text x="400" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">DFS — Deep-First Traversal (Stack / Recursion)</text>
+
+  <!-- Graph tree same as BFS for comparison -->
+  <circle cx="400" cy="70" r="20" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="400" y="75" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">1</text>
+
+  <circle cx="280" cy="140" r="20" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="280" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">2</text>
+  <circle cx="520" cy="140" r="20" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="520" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">6</text>
+
+  <circle cx="180" cy="220" r="20" fill="#fecaca" stroke="#dc2626" stroke-width="2"/>
+  <text x="180" y="225" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">4</text>
+  <circle cx="350" cy="220" r="20" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="350" y="225" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">5</text>
+  <circle cx="520" cy="220" r="20" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="520" y="225" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">3</text>
+
+  <!-- Edges -->
+  <line x1="390" y1="86" x2="296" y2="126" stroke="#dc2626" stroke-width="2"/>
+  <line x1="410" y1="86" x2="504" y2="126" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="270" y1="156" x2="194" y2="206" stroke="#dc2626" stroke-width="2"/>
+  <line x1="290" y1="156" x2="340" y2="206" stroke="#dc2626" stroke-width="2"/>
+  <line x1="520" y1="160" x2="520" y2="200" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Recursion path -->
+  <path d="M90,55 C60,70 60,140 90,140 C120,140 120,220 90,220" fill="none" stroke="#ec4899" stroke-width="2" stroke-dasharray="5,3"/>
+  <rect x="40" y="55" width="145" height="24" rx="12" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="112" y="72" text-anchor="middle" font-size="10" font-weight="bold" fill="#ec4899">DFS(1) → DFS(2) → DFS(4)</text>
+  <rect x="40" y="85" width="145" height="24" rx="12" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="112" y="102" text-anchor="middle" font-size="10" font-weight="bold" fill="#ec4899">↩ backtrack to 2 → DFS(5)</text>
+  <rect x="40" y="115" width="145" height="24" rx="12" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="112" y="132" text-anchor="middle" font-size="10" font-weight="bold" fill="#ec4899">↩ backtrack to 1 → DFS(6)</text>
+  <rect x="40" y="145" width="145" height="24" rx="12" fill="#fdf2f8" stroke="#ec4899" stroke-width="1.5"/>
+  <text x="112" y="162" text-anchor="middle" font-size="10" font-weight="bold" fill="#ec4899">↩ backtrack → DFS(3) → done</text>
+
+  <!-- Stack visualization -->
+  <rect x="630" y="50" width="150" height="185" fill="white" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="705" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">Call Stack</text>
+
+  <g font-size="11">
+    <rect x="650" y="145" width="110" height="22" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="1"/><text x="705" y="160" text-anchor="middle" fill="#1e293b">DFS(4) ← top</text>
+    <rect x="650" y="170" width="110" height="22" rx="4" fill="#fee2e2" stroke="#dc2626" stroke-width="1"/><text x="705" y="185" text-anchor="middle" fill="#1e293b">DFS(2)</text>
+    <rect x="650" y="195" width="110" height="22" rx="4" fill="#fecaca" stroke="#dc2626" stroke-width="1"/><text x="705" y="210" text-anchor="middle" fill="#1e293b">DFS(1)</text>
+    <text x="705" y="232" text-anchor="middle" font-size="10" fill="#64748b">(max depth = 3)</text>
+  </g>
+
+  <!-- Visit order -->
+  <rect x="160" y="260" width="480" height="35" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="400" y="283" text-anchor="middle" font-size="13" font-weight="bold" fill="#16a34a">Visit Order: 1 → 2 → 4 → 5 → 6 → 3</text>
+
+  <!-- Code snippet -->
+  <rect x="30" y="305" width="740" height="105" fill="#1e293b" rx="8"/>
+  <text x="45" y="328" font-family="monospace" font-size="11" fill="#e2e8f0">function dfs(node, visited = new Set()) {</text>
+  <text x="55" y="348" font-family="monospace" font-size="11" fill="#a5f3fc">  visited.add(node);</text>
+  <text x="55" y="365" font-family="monospace" font-size="11" fill="#a5f3fc">  for (neighbor of graph[node]) {</text>
+  <text x="65" y="382" font-family="monospace" font-size="11" fill="#fde68a">    if (!visited.has(neighbor)) {</text>
+  <text x="75" y="399" font-family="monospace" font-size="11" fill="#fde68a">      dfs(neighbor, visited); // Recursive call → stack push</text>
+  <text x="65" y="416" font-family="monospace" font-size="11" fill="#fde68a">    }</text>
+  <text x="55" y="433" font-family="monospace" font-size="11" fill="#a5f3fc">  }</text>
+  <text x="45" y="450" font-family="monospace" font-size="11" fill="#e2e8f0">}</text>
+</svg>

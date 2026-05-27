@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4 Z" fill="#64748b"/></marker>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+  </defs>
+
+  <rect width="800" height="420" fill="url(#bg)" rx="12"/>
+
+  <text x="400" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">Graph Representations</text>
+
+  <!-- Graph reference in center -->
+  <rect x="330" y="45" width="140" height="120" fill="white" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="400" y="65" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">Sample Graph</text>
+
+  <circle cx="360" cy="95" r="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="360" y="100" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">0</text>
+  <circle cx="440" cy="85" r="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="440" y="90" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">1</text>
+  <circle cx="350" cy="145" r="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="350" y="150" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">2</text>
+  <circle cx="440" cy="150" r="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="440" y="155" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">3</text>
+
+  <line x1="374" y1="92" x2="426" y2="87" stroke="#2563eb" stroke-width="1.5"/>
+  <line x1="360" y1="109" x2="350" y2="131" stroke="#2563eb" stroke-width="1.5"/>
+  <line x1="438" y1="99" x2="352" y2="138" stroke="#2563eb" stroke-width="1.5"/>
+  <line x1="362" y1="149" x2="426" y2="145" stroke="#2563eb" stroke-width="1.5"/>
+
+  <!-- Adjacency Matrix -->
+  <rect x="15" y="175" width="370" height="230" fill="white" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="200" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Adjacency Matrix (V×V)</text>
+  <text x="200" y="212" text-anchor="middle" font-size="10" fill="#64748b">O(1) edge lookup · O(V²) space</text>
+
+  <!-- Matrix grid -->
+  <rect x="112" y="222" width="180" height="160" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+  <!-- Row labels -->
+  <text x="105" y="240" text-anchor="end" font-size="11" fill="#64748b">0</text>
+  <text x="105" y="280" text-anchor="end" font-size="11" fill="#64748b">1</text>
+  <text x="105" y="320" text-anchor="end" font-size="11" fill="#64748b">2</text>
+  <text x="105" y="360" text-anchor="end" font-size="11" fill="#64748b">3</text>
+  <!-- Col labels -->
+  <text x="130" y="218" text-anchor="middle" font-size="11" fill="#64748b">0</text>
+  <text x="170" y="218" text-anchor="middle" font-size="11" fill="#64748b">1</text>
+  <text x="210" y="218" text-anchor="middle" font-size="11" fill="#64748b">2</text>
+  <text x="250" y="218" text-anchor="middle" font-size="11" fill="#64748b">3</text>
+  <!-- Grid cells -->
+  <g font-size="11" text-anchor="middle" fill="#334155">
+    <rect x="112" y="225" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="132" y="249" fill="#2563eb">0</text>
+    <rect x="152" y="225" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="172" y="249" fill="#2563eb">1</text>
+    <rect x="192" y="225" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="212" y="249" fill="#2563eb">1</text>
+    <rect x="232" y="225" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="252" y="249">0</text>
+
+    <rect x="112" y="262" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="132" y="285" fill="#2563eb">1</text>
+    <rect x="152" y="262" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="172" y="285">0</text>
+    <rect x="192" y="262" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="212" y="285" fill="#2563eb">1</text>
+    <rect x="232" y="262" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="252" y="285" fill="#2563eb">1</text>
+
+    <rect x="112" y="299" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="132" y="323" fill="#2563eb">1</text>
+    <rect x="152" y="299" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="172" y="323" fill="#2563eb">1</text>
+    <rect x="192" y="299" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="212" y="323">0</text>
+    <rect x="232" y="299" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="252" y="323" fill="#2563eb">1</text>
+
+    <rect x="112" y="336" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="132" y="359">0</text>
+    <rect x="152" y="336" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="172" y="359" fill="#2563eb">1</text>
+    <rect x="192" y="336" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="212" y="359" fill="#2563eb">1</text>
+    <rect x="232" y="336" width="40" height="37" fill="none" stroke="#e2e8f0"/><text x="252" y="359">0</text>
+  </g>
+
+  <!-- Adjacency List -->
+  <rect x="415" y="175" width="370" height="230" fill="white" stroke="#cbd5e1" stroke-width="1.5" rx="8"/>
+  <text x="600" y="198" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Adjacency List</text>
+  <text x="600" y="212" text-anchor="middle" font-size="10" fill="#64748b">O(V+E) space · Most common in interviews</text>
+
+  <!-- List entries -->
+  <g font-size="12">
+    <rect x="440" y="225" width="40" height="28" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/><text x="460" y="244" text-anchor="middle" font-weight="bold" fill="#1e293b">0</text>
+    <text x="487" y="244" fill="#334155">→ [1] → [2]</text>
+
+    <rect x="440" y="262" width="40" height="28" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/><text x="460" y="281" text-anchor="middle" font-weight="bold" fill="#1e293b">1</text>
+    <text x="487" y="281" fill="#334155">→ [0] → [2] → [3]</text>
+
+    <rect x="440" y="299" width="40" height="28" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/><text x="460" y="318" text-anchor="middle" font-weight="bold" fill="#1e293b">2</text>
+    <text x="487" y="318" fill="#334155">→ [0] → [1] → [3]</text>
+
+    <rect x="440" y="336" width="40" height="28" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/><text x="460" y="355" text-anchor="middle" font-weight="bold" fill="#1e293b">3</text>
+    <text x="487" y="355" fill="#334155">→ [1] → [2]</text>
+  </g>
+
+  <!-- Badge: Best for interviews -->
+  <rect x="440" y="372" width="110" height="22" rx="11" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="495" y="387" text-anchor="middle" font-size="10" fill="#16a34a" font-weight="bold">★ Interview Favorite</text>
+</svg>

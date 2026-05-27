@@ -97,20 +97,50 @@ Linear data structures and their operations.
 
 ## 📊 Graphs
 
-- [Graphs](/DSA-Notes-Problems/data-structures/graphs/graphs)
+- [Graphs Overview](/DSA-Notes-Problems/data-structures/graphs)
+- [Introduction](/DSA-Notes-Problems/data-structures/graphs/01-introduction) — Definition, terminologies, types of graphs
+- [Representations](/DSA-Notes-Problems/data-structures/graphs/02-representations) — Adjacency matrix, list, edge list
+- [Complexity](/DSA-Notes-Problems/data-structures/graphs/03-complexity) — Time & space analysis by representation
+- [Traversals (BFS & DFS)](/DSA-Notes-Problems/data-structures/graphs/04-traversals) — Breadth-First & Depth-First Search
+- [Patterns](/DSA-Notes-Problems/data-structures/graphs/05-patterns) — Shortest path, components, cycles, topo sort, union-find
+- [Algorithms](/DSA-Notes-Problems/data-structures/graphs/06-algorithms) — Dijkstra, Bellman-Ford, Kruskal, Prim
+- [Problem Solving](/DSA-Notes-Problems/data-structures/graphs/07-problem-solving) — Decision framework & identification guide
+- [Code Examples](/DSA-Notes-Problems/data-structures/graphs/08-code-examples) — Full implementations in JavaScript
+- [Interview Questions](/DSA-Notes-Problems/data-structures/graphs/09-interview-questions) — LeetCode Easy/Medium/Hard
+- [Tips & Mistakes](/DSA-Notes-Problems/data-structures/graphs/10-tips) — Expert advice, optimization, cheat sheet
+- [Real-World Apps](/DSA-Notes-Problems/data-structures/graphs/11-applications) — Networks, maps, social media, games
 
 ---
 
 ## 🔄 Recursion & Backtracking
 
-- [Recursion & Backtracking](/DSA-Notes-Problems/data-structures/recursion/recursion-and-backtracking)
+- [Recursion Overview](/DSA-Notes-Problems/data-structures/recursion)
+- [Introduction](/DSA-Notes-Problems/data-structures/recursion/01-introduction) — Definition, base case & recursive case, anatomy
+- [Call Stack](/DSA-Notes-Problems/data-structures/recursion/02-call-stack) — How recursion uses the call stack visually
+- [Types of Recursion](/DSA-Notes-Problems/data-structures/recursion/03-types) — Tail, head, tree, indirect, mutual recursion
+- [Basic Problems](/DSA-Notes-Problems/data-structures/recursion/04-basic-problems) — Factorial, Fibonacci, power, GCD, string reversal
+- [Patterns](/DSA-Notes-Problems/data-structures/recursion/05-patterns) — Subsequences, subsets, permutations, combinations
+- [Backtracking Intro](/DSA-Notes-Problems/data-structures/recursion/06-backtracking-intro) — Explore-decide-undo template, pruning
+- [Backtracking Patterns](/DSA-Notes-Problems/data-structures/recursion/07-backtracking-patterns) — N-Queens, Sudoku, rat in a maze
+- [Advanced Backtracking](/DSA-Notes-Problems/data-structures/recursion/08-backtracking-advanced) — Word search, graph coloring, combination sum
+- [Problem Solving](/DSA-Notes-Problems/data-structures/recursion/09-problem-solving) — Decision framework, top-down vs bottom-up
+- [Complexity Analysis](/DSA-Notes-Problems/data-structures/recursion/10-complexity) — Time & space, recurrence relations, Master Theorem
+- [Code Examples](/DSA-Notes-Problems/data-structures/recursion/11-code-examples) — Full implementations in JavaScript
+- [Interview Questions](/DSA-Notes-Problems/data-structures/recursion/12-interview-questions) — LeetCode by difficulty
+- [Common Mistakes](/DSA-Notes-Problems/data-structures/recursion/13-mistakes-tips) — Infinite recursion, stack overflow, debugging
+- [Real-World Apps](/DSA-Notes-Problems/data-structures/recursion/14-applications) — File systems, parsing, AI, fractals
 
 ---
 
 ## 🎯 Interview Prep
 
-- [Interview Cheat Sheet](/DSA-Notes-Problems/data-structures/interview-prep/interview-cheat-sheet)
-- [Most Asked in Interviews](/DSA-Notes-Problems/data-structures/interview-prep/most-asked-in-interviews)
-- [Interview Questions (Must Practice)](/DSA-Notes-Problems/data-structures/interview-prep/interview-questions-must-practice)
-- [Pro Interview Tips](/DSA-Notes-Problems/data-structures/interview-prep/pro-interview-tips)
-- [Recommended Next Topics](/DSA-Notes-Problems/data-structures/interview-prep/recommended-next-topics)
+- [Interview Prep Overview](/DSA-Notes-Problems/data-structures/interview-prep)
+- [Array Methods (Quick Reference)](/DSA-Notes-Problems/data-structures/interview-prep/01-array-methods) — Map, filter, reduce, slice, splice & more
+- [Map & Set Patterns](/DSA-Notes-Problems/data-structures/interview-prep/02-map-set-patterns) — Frequency counter, complement lookup, deduplication
+- [Two Pointer Technique](/DSA-Notes-Problems/data-structures/interview-prep/03-two-pointer) — Pair problems, in-place reversal, partitioning
+- [Sliding Window](/DSA-Notes-Problems/data-structures/interview-prep/04-sliding-window) — Fixed & variable window, substring problems
+- [Frequency Counter Pattern](/DSA-Notes-Problems/data-structures/interview-prep/05-frequency-counter) — Counting, anagram check, element comparison
+- [Recursion & Backtracking Review](/DSA-Notes-Problems/data-structures/interview-prep/06-recursion-backtracking) — Quick review & practice
+- [Coding Problems](/DSA-Notes-Problems/data-structures/interview-prep/07-coding-problems) — Two Sum, anagrams, intersection & more
+- [Pro Tips](/DSA-Notes-Problems/data-structures/interview-prep/08-pro-tips) — When to use Map vs Set, common pitfalls
+- [Study Plan & Cheat Sheet](/DSA-Notes-Problems/data-structures/interview-prep/09-study-plan) — Prioritized topics & learning path
