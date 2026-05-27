@@ -62,13 +62,36 @@ Linear data structures and their operations.
 
 ## 🔗 Linked List
 
-- [Linked List](/DSA-Notes-Problems/data-structures/linked-list/linked-list)
+- [Linked List Overview](/DSA-Notes-Problems/data-structures/linked-list)
+- [Introduction](/DSA-Notes-Problems/data-structures/linked-list/01-introduction) — Definition, analogy, arrays vs linked lists
+- [Types](/DSA-Notes-Problems/data-structures/linked-list/02-types) — Singly, Doubly, Circular
+- [Complexity](/DSA-Notes-Problems/data-structures/linked-list/03-complexity) — Time & space analysis
+- [Core Operations](/DSA-Notes-Problems/data-structures/linked-list/04-operations) — Insert, delete, traverse, search
+- [Patterns](/DSA-Notes-Problems/data-structures/linked-list/05-patterns) — Fast & slow pointer, reversal, cycle detection
+- [Algorithms](/DSA-Notes-Problems/data-structures/linked-list/06-algorithms) — Code: reverse, merge, palindrome
+- [Problem Solving](/DSA-Notes-Problems/data-structures/linked-list/07-problem-solving) — Approach & edge cases
+- [Interview Questions](/DSA-Notes-Problems/data-structures/linked-list/08-interview-questions) — LeetCode by difficulty
+- [Tips & Mistakes](/DSA-Notes-Problems/data-structures/linked-list/09-tips) — Expert advice & cheat sheet
 
 ---
 
 ## 🌳 Trees
 
-- [Trees](/DSA-Notes-Problems/data-structures/trees/tree)
+- [Trees Overview](/DSA-Notes-Problems/data-structures/trees)
+- [Introduction](/DSA-Notes-Problems/data-structures/trees/01-introduction) — Definition, terminologies, properties
+- [Types](/DSA-Notes-Problems/data-structures/trees/02-types) — Binary, BST, AVL, Red-Black, Full/Complete/Perfect
+- [Special Trees](/DSA-Notes-Problems/data-structures/trees/03-special-trees) — Trie, Heap, Segment Tree
+- [Representation](/DSA-Notes-Problems/data-structures/trees/04-representation) — Pointer-based & array-based
+- [Complexity](/DSA-Notes-Problems/data-structures/trees/05-complexity) — Time & space analysis
+- [Traversals](/DSA-Notes-Problems/data-structures/trees/06-traversals) — DFS (Inorder/Preorder/Postorder) & BFS
+- [Patterns](/DSA-Notes-Problems/data-structures/trees/07-patterns) — LCA, path sum, diameter, balanced check
+- [BST Operations](/DSA-Notes-Problems/data-structures/trees/08-bst) — Search, Insert, Delete
+- [Heap Operations](/DSA-Notes-Problems/data-structures/trees/09-heap) — Insert, Delete, Heapify
+- [Problem Solving](/DSA-Notes-Problems/data-structures/trees/10-problem-solving) — DFS vs BFS, recursive patterns
+- [Code Examples](/DSA-Notes-Problems/data-structures/trees/11-code-examples) — Full implementations in JS
+- [Interview Questions](/DSA-Notes-Problems/data-structures/trees/12-interview-questions) — LeetCode by difficulty
+- [Tips & Mistakes](/DSA-Notes-Problems/data-structures/trees/13-tips) — Expert advice & edge cases
+- [Real-World Apps](/DSA-Notes-Problems/data-structures/trees/14-applications) — File systems, databases, autocomplete
 
 ---
 
