@@ -1,0 +1,189 @@
+---
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+
+const { sidebar } = Astro.locals.starlightRoute;
+
+// Extract top-level category labels for filter chips
+const filterLabels = sidebar.map(entry => entry.label);
+---
+
+<div class="sidebar-header">
+  <button id="expand-all" class="sidebar-toggle" type="button" title="Expand All">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="7 13 12 18 17 13"/>
+      <polyline points="7 6 12 11 17 6"/>
+    </svg>
+  </button>
+  <button id="shrink-all" class="sidebar-toggle" type="button" title="Collapse All">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="7 11 12 6 17 11"/>
+      <polyline points="7 18 12 13 17 18"/>
+    </svg>
+  </button>
+</div>
+
+<div class="sidebar-filter-dropdown">
+  <button id="filter-toggle" class="sidebar-filter-btn" type="button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="8" y1="12" x2="20" y2="12"/>
+      <line x1="12" y1="18" x2="20" y2="18"/>
+    </svg>
+    <span id="filter-summary">All Topics</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-chevron">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+  <div id="filter-dropdown" class="sidebar-filter-dropdown-menu">
+    <label class="filter-option">
+      <input type="checkbox" class="filter-checkbox" data-label="all" checked />
+      <span>All Topics</span>
+    </label>
+    {
+      filterLabels.map((label) => (
+        <label class="filter-option">
+          <input type="checkbox" class="filter-checkbox" data-label={label} checked />
+          <span>{label}</span>
+        </label>
+      ))
+    }
+  </div>
+</div>
+
+<SidebarPersister>
+  <SidebarSublist sublist={sidebar} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+  <MobileMenuFooter />
+</div>
+
+<script>
+  function setupSidebarFilter() {
+    const toggleBtn = document.getElementById('filter-toggle');
+    const dropdown = document.getElementById('filter-dropdown');
+    const checkboxes = document.querySelectorAll('.filter-checkbox');
+    const summary = document.getElementById('filter-summary');
+    const topLevelItems = document.querySelectorAll('nav.sidebar ul.top-level > li');
+
+    if (!toggleBtn || !dropdown) return;
+
+    // Extract labels from each top-level item
+    const itemLabels = [];
+    topLevelItems.forEach((li) => {
+      const groupLabel = li.querySelector('details > summary .group-label .large');
+      const linkLabel = li.querySelector('a > span');
+      itemLabels.push((groupLabel || linkLabel)?.textContent?.trim() || '');
+    });
+
+    // Toggle dropdown open/close
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.toggle('open');
+      toggleBtn.classList.toggle('active', isOpen);
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+        toggleBtn.classList.remove('active');
+      }
+    });
+
+    // Restore saved state
+    const savedState = (() => {
+      try { return JSON.parse(sessionStorage.getItem('sl-sidebar-filter-state') || 'null'); }
+      catch { return null; }
+    })();
+
+    function getSelectedLabels() {
+      const selected = [];
+      checkboxes.forEach((cb) => {
+        if (cb.checked) selected.push(cb.dataset.label);
+      });
+      return selected;
+    }
+
+    function applyFilter() {
+      const selected = getSelectedLabels();
+      const allChecked = selected.includes('all');
+
+      // Sync "All Topics" checkbox
+      const allCheckbox = document.querySelector('.filter-checkbox[data-label="all"]');
+
+      topLevelItems.forEach((li, i) => {
+        const label = itemLabels[i];
+        const match = allChecked || selected.includes(label);
+        li.classList.toggle('sidebar-filter-hidden', !match);
+      });
+
+      // Update summary text (count selected categories excluding 'all')
+      const topicCount = selected.filter(l => l !== 'all').length;
+      if (topicCount === 0 || allChecked) {
+        summary.textContent = 'All Topics';
+      } else {
+        summary.textContent = `${topicCount} Topic${topicCount > 1 ? 's' : ''}`;
+      }
+
+      // Persist
+      sessionStorage.setItem('sl-sidebar-filter-state', JSON.stringify(selected));
+    }
+
+    // Handle checkbox changes
+    checkboxes.forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const isAll = cb.dataset.label === 'all';
+
+        if (isAll) {
+          // Toggling "All Topics" checks/unchecks everything
+          checkboxes.forEach((c) => { c.checked = cb.checked; });
+        } else {
+          // If a specific topic is unchecked, uncheck "All Topics"
+          const allCheck = document.querySelector('.filter-checkbox[data-label="all"]');
+          if (allCheck) {
+            const allSelected = [...checkboxes].every(c => c.checked || c.dataset.label === 'all');
+            allCheck.checked = allSelected;
+          }
+        }
+
+        applyFilter();
+      });
+    });
+
+    // Restore saved state
+    if (savedState && savedState.length > 0) {
+      checkboxes.forEach((cb) => {
+        cb.checked = savedState.includes(cb.dataset.label);
+      });
+    }
+
+    applyFilter();
+  }
+
+  function setupExpandCollapse() {
+    const expandAll = document.getElementById('expand-all');
+    const shrinkAll = document.getElementById('shrink-all');
+
+    if (expandAll && shrinkAll) {
+      expandAll.addEventListener('click', () => {
+        const details = document.querySelectorAll('nav.sidebar details');
+        details.forEach(detail => detail.setAttribute('open', ''));
+      });
+
+      shrinkAll.addEventListener('click', () => {
+        const details = document.querySelectorAll('nav.sidebar details');
+        details.forEach(detail => detail.removeAttribute('open'));
+      });
+    }
+  }
+
+  setupSidebarFilter();
+  setupExpandCollapse();
+  document.addEventListener('astro:after-swap', () => {
+    setupSidebarFilter();
+    setupExpandCollapse();
+  });
+</script>

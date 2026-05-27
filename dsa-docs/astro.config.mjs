@@ -14,6 +14,9 @@ export default defineConfig({
       title: 'DSA & Dev Notes',
       description: 'Personal knowledge base for DSA, JavaScript, React, SQL, MongoDB, Docker and Interview Prep',
       defaultLocale: 'en',
+      components: {
+        Sidebar: './src/components/Sidebar.astro',
+      },
       social: [
         {
           icon: 'github',
