@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="500">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="800" height="500" fill="url(#bg)" rx="12"/>
+  
+  <text x="400" y="35" text-anchor="middle" fill="#2dd4bf" font-size="20" font-family="system-ui,sans-serif" font-weight="700" filter="url(#glow)">Python Memory Representation</text>
+  <line x1="160" y1="47" x2="640" y2="47" stroke="#2dd4bf" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Stack Section -->
+  <rect x="50" y="70" width="320" height="180" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+  <rect x="50" y="70" width="320" height="30" rx="10" fill="#0284c7" opacity="0.3"/>
+  <text x="210" y="90" text-anchor="middle" fill="#38bdf8" font-size="13" font-family="system-ui,sans-serif" font-weight="600">Stack (Function Calls & References)</text>
+  
+  <text x="70" y="120" fill="#94a3b8" font-size="11" font-family="monospace">main():</text>
+  <text x="90" y="140" fill="#6ee7b7" font-size="11" font-family="monospace">x → references int 42</text>
+  <rect x="230" y="130" width="80" height="20" rx="4" fill="#0d9488" opacity="0.3"/>
+  <text x="270" y="144" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="monospace">0x7ff1</text>
+  
+  <text x="90" y="165" fill="#7dd3fc" font-size="11" font-family="monospace">my_list → references list</text>
+  <rect x="230" y="155" width="80" height="20" rx="4" fill="#0d9488" opacity="0.3"/>
+  <text x="270" y="169" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="monospace">0x9a2e</text>
+  
+  <text x="90" y="190" fill="#c4b5fd" font-size="11" font-family="monospace">greeting → references str</text>
+  <rect x="230" y="180" width="80" height="20" rx="4" fill="#0d9488" opacity="0.3"/>
+  <text x="270" y="194" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="monospace">0x3b8f</text>
+  
+  <text x="90" y="215" fill="#fda4af" font-size="11" font-family="monospace">func() → return address</text>
+  <rect x="235" y="205" width="70" height="20" rx="4" fill="#0d9488" opacity="0.3"/>
+  <text x="270" y="219" text-anchor="middle" fill="#2dd4bf" font-size="10" font-family="monospace">0x1204</text>
+  
+  <!-- Heap Section -->
+  <rect x="420" y="70" width="340" height="180" rx="10" fill="#1e293b" stroke="#34d399" stroke-width="1.5"/>
+  <rect x="420" y="70" width="340" height="30" rx="10" fill="#0d9488" opacity="0.3"/>
+  <text x="590" y="90" text-anchor="middle" fill="#34d399" font-size="13" font-family="system-ui,sans-serif" font-weight="600">Heap (Actual Objects)</text>
+  
+  <rect x="440" y="110" width="120" height="45" rx="6" fill="#064e3b" stroke="#34d399" stroke-width="1"/>
+  <text x="500" y="130" text-anchor="middle" fill="#6ee7b7" font-size="11" font-family="monospace">int: 42</text>
+  <text x="500" y="145" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">addr: 0x7ff1</text>
+  
+  <rect x="580" y="110" width="160" height="45" rx="6" fill="#1e3a8a" stroke="#38bdf8" stroke-width="1"/>
+  <text x="660" y="128" text-anchor="middle" fill="#7dd3fc" font-size="11" font-family="monospace">list [1, 2, 3]</text>
+  <text x="660" y="145" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">addr: 0x9a2e</text>
+  
+  <rect x="440" y="170" width="160" height="45" rx="6" fill="#4c1d95" stroke="#a78bfa" stroke-width="1"/>
+  <text x="520" y="190" text-anchor="middle" fill="#c4b5fd" font-size="11" font-family="monospace">str: \"Hello\"</text>
+  <text x="520" y="205" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">addr: 0x3b8f</text>
+  
+  <rect x="620" y="170" width="120" height="45" rx="6" fill="#701a75" stroke="#f472b6" stroke-width="1"/>
+  <text x="680" y="190" text-anchor="middle" fill="#f9a8d4" font-size="11" font-family="monospace">NoneType</text>
+  <text x="680" y="205" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace">(singleton)</text>
+  
+  <!-- Arrows from stack to heap -->
+  <line x1="310" y1="142" x2="435" y2="132" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <line x1="310" y1="167" x2="575" y2="132" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <line x1="310" y1="192" x2="435" y2="192" stroke="#2dd4bf" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  
+  <!-- Key insight -->
+  <rect x="50" y="280" width="710" height="100" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="405" y="305" text-anchor="middle" fill="#fbbf24" font-size="14" font-family="system-ui,sans-serif" font-weight="600">💡 How Python Variables Work</text>
+  <text x="70" y="328" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• Variables in Python are <tspan fill="#2dd4bf" font-weight="600">labels/pointers</tspan> to objects, not memory containers</text>
+  <text x="70" y="348" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• Stack stores references (addresses) → Heap stores actual data</text>
+  <text x="70" y="368" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• When you assign x = y, both <tspan fill="#2dd4bf" font-weight="600">reference the same object</tspan> (no copying!)</text>
+  
+  <!-- Reference counting -->
+  <rect x="50" y="400" width="710" height="80" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="405" y="425" text-anchor="middle" fill="#fbbf24" font-size="14" font-family="system-ui,sans-serif" font-weight="600">📊 Reference Counting</text>
+  <text x="70" y="448" fill="#94a3b8" font-size="12" font-family="monospace">x = [1,2,3]   # ref count = 1</text>
+  <text x="70" y="468" fill="#94a3b8" font-size="12" font-family="monospace">y = x         # ref count = 2</text>
+  <text x="400" y="448" fill="#94a3b8" font-size="12" font-family="monospace">del x         # ref count = 1</text>
+  <text x="400" y="468" fill="#94a3b8" font-size="12" font-family="monospace">del y         # ref count = 0 → GC frees memory 🗑️</text>
+</svg>

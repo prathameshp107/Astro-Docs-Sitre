@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="520">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow-tri" viewBox="0 0 16 10" refX="16" refY="5" markerWidth="12" markerHeight="8" orient="auto">
+      <path d="M0,0 L16,5 L0,10 Z" fill="#2dd4bf"/>
+    </marker>
+  </defs>
+  
+  <rect width="800" height="520" fill="url(#bg)" rx="12"/>
+  
+  <text x="400" y="40" text-anchor="middle" fill="#2dd4bf" font-size="22" font-family="system-ui,sans-serif" font-weight="700" filter="url(#glow)">Inheritance Hierarchy</text>
+  <line x1="200" y1="52" x2="600" y2="52" stroke="#2dd4bf" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Base class -->
+  <rect x="280" y="80" width="240" height="60" rx="10" fill="#0d9488" stroke="#2dd4bf" stroke-width="2"/>
+  <text x="400" y="106" text-anchor="middle" fill="#fff" font-size="15" font-family="system-ui,sans-serif" font-weight="700">Animal (Base)</text>
+  <text x="400" y="126" text-anchor="middle" fill="#99f6e4" font-size="11" font-family="monospace">+speak() +move() +eat()</text>
+  
+  <!-- Arrows -->
+  <line x1="340" y1="140" x2="250" y2="190" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrow-tri)"/>
+  <line x1="400" y1="140" x2="400" y2="190" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrow-tri)"/>
+  <line x1="460" y1="140" x2="550" y2="190" stroke="#2dd4bf" stroke-width="2" marker-end="url(#arrow-tri)"/>
+  
+  <!-- Subclasses -->
+  <rect x="140" y="195" width="200" height="70" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+  <rect x="140" y="195" width="200" height="5" rx="10" fill="#38bdf8"/>
+  <text x="240" y="225" text-anchor="middle" fill="#7dd3fc" font-size="14" font-family="system-ui,sans-serif" font-weight="600">🐕 Dog</text>
+  <text x="240" y="248" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">+speak() → \"Woof!\"</text>
+  
+  <rect x="300" y="195" width="200" height="70" rx="10" fill="#1e293b" stroke="#a78bfa" stroke-width="2"/>
+  <rect x="300" y="195" width="200" height="5" rx="10" fill="#a78bfa"/>
+  <text x="400" y="225" text-anchor="middle" fill="#c4b5fd" font-size="14" font-family="system-ui,sans-serif" font-weight="600">🐱 Cat</text>
+  <text x="400" y="248" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">+speak() → \"Meow!\"</text>
+  
+  <rect x="460" y="195" width="200" height="70" rx="10" fill="#1e293b" stroke="#f472b6" stroke-width="2"/>
+  <rect x="460" y="195" width="200" height="5" rx="10" fill="#f472b6"/>
+  <text x="560" y="225" text-anchor="middle" fill="#f9a8d4" font-size="14" font-family="system-ui,sans-serif" font-weight="600">🐦 Bird</text>
+  <text x="560" y="248" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="monospace">+speak() → \"Chirp!\"</text>
+  
+  <!-- Multi-level -->
+  <line x1="240" y1="265" x2="240" y2="300" stroke="#38bdf8" stroke-width="1.5" marker-end="url(#arrow-tri)"/>
+  <line x1="560" y1="265" x2="560" y2="300" stroke="#f472b6" stroke-width="1.5" marker-end="url(#arrow-tri)"/>
+  
+  <!-- Third level -->
+  <rect x="150" y="305" width="180" height="60" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="240" y="332" text-anchor="middle" fill="#7dd3fc" font-size="13" font-family="system-ui,sans-serif">🐩 Poodle</text>
+  <text x="240" y="350" text-anchor="middle" fill="#64748b" font-size="10" font-family="monospace">+groom()</text>
+  
+  <rect x="470" y="305" width="180" height="60" rx="10" fill="#1e293b" stroke="#f472b6" stroke-width="1.5" stroke-dasharray="4"/>
+  <text x="560" y="332" text-anchor="middle" fill="#f9a8d4" font-size="13" font-family="system-ui,sans-serif">🦜 Parrot</text>
+  <text x="560" y="350" text-anchor="middle" fill="#64748b" font-size="10" font-family="monospace">+talk()</text>
+  
+  <!-- Code example -->
+  <rect x="80" y="400" width="640" height="100" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="100" y="422" fill="#fbbf24" font-size="12" font-family="monospace">class Animal:</text>
+  <text x="100" y="440" fill="#94a3b8" font-size="12" font-family="monospace">    def speak(self): raise NotImplementedError</text>
+  <text x="100" y="458" fill="#6ee7b7" font-size="12" font-family="monospace">class Dog(Animal):</text>
+  <text x="120" y="476" fill="#6ee7b7" font-size="12" font-family="monospace">def speak(self): return \"Woof!\"</text>
+  <text x="100" y="494" fill="#fda4af" font-size="12" font-family="monospace">class Poodle(Dog):</text>
+  <text x="120" y="510" fill="#fda4af" font-size="12" font-family="monospace">pass  # Inherits everything from Dog</text>
+</svg>

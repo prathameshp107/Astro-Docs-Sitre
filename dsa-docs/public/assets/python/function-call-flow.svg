@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="800" y2="520">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2dd4bf"/>
+    </marker>
+  </defs>
+  
+  <rect width="800" height="520" fill="url(#bg)" rx="12"/>
+  
+  <text x="400" y="35" text-anchor="middle" fill="#2dd4bf" font-size="20" font-family="system-ui,sans-serif" font-weight="700" filter="url(#glow)">Function Call Flow — Call Stack</text>
+  <line x1="160" y1="47" x2="640" y2="47" stroke="#2dd4bf" stroke-width="1" opacity="0.3"/>
+  
+  <!-- Stack diagram -->
+  <rect x="60" y="70" width="300" height="40" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="210" y="95" text-anchor="middle" fill="#64748b" font-size="12" font-family="system-ui,sans-serif">Call Stack</text>
+  
+  <!-- Stack frames -->
+  <rect x="60" y="110" width="300" height="35" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  
+  <rect x="60" y="145" width="300" height="35" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  
+  <rect x="60" y="180" width="300" height="35" rx="4" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+  <text x="210" y="202" text-anchor="middle" fill="#6ee7b7" font-size="13" font-family="monospace">factorial(3)  ←  n = 3</text>
+  
+  <rect x="60" y="215" width="300" height="35" rx="4" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2"/>
+  <text x="210" y="237" text-anchor="middle" fill="#7dd3fc" font-size="13" font-family="monospace">factorial(2)  ←  n = 2</text>
+  
+  <rect x="60" y="250" width="300" height="35" rx="4" fill="#4c1d95" stroke="#a78bfa" stroke-width="2"/>
+  <text x="210" y="272" text-anchor="middle" fill="#c4b5fd" font-size="13" font-family="monospace">factorial(1)  ←  n = 1</text>
+  
+  <text x="60" y="320" fill="#fbbf24" font-size="12" font-family="monospace">⏰ Time →</text>
+  
+  <!-- Code panel -->
+  <rect x="420" y="70" width="340" height="230" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="440" y="95" fill="#fbbf24" font-size="13" font-family="monospace" font-weight="600">def factorial(n):</text>
+  <text x="440" y="118" fill="#94a3b8" font-size="12" font-family="monospace">    if n <= 1: return 1</text>
+  <text x="440" y="141" fill="#6ee7b7" font-size="12" font-family="monospace">    return n * factorial(n - 1)</text>
+  
+  <line x1="440" y1="158" x2="740" y2="158" stroke="#334155" stroke-width="1"/>
+  
+  <text x="440" y="178" fill="#94a3b8" font-size="12" font-family="monospace">factorial(3) called</text>
+  <text x="440" y="198" fill="#64748b" font-size="11" font-family="monospace">3 * factorial(2) → push frame</text>
+  <text x="440" y="215" fill="#64748b" font-size="11" font-family="monospace">2 * factorial(1) → push frame</text>
+  <text x="440" y="235" fill="#fda4af" font-size="11" font-family="monospace">factorial(1) = 1 → pop frame</text>
+  <text x="440" y="252" fill="#fda4af" font-size="11" font-family="monospace">factorial(2) = 2 * 1 = 2 → pop</text>
+  <text x="440" y="272" fill="#6ee7b7" font-size="11" font-family="monospace">factorial(3) = 3 * 2 = 6 ✅</text>
+  
+  <!-- Return arrows -->
+  <line x1="360" y1="268" x2="415" y2="268" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  <text x="385" y="262" text-anchor="middle" fill="#a78bfa" font-size="10" font-family="monospace">return</text>
+  
+  <line x1="360" y1="233" x2="415" y2="233" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  
+  <line x1="360" y1="198" x2="415" y2="198" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4" marker-end="url(#arrow)"/>
+  
+  <!-- Summary -->
+  <rect x="60" y="350" width="680" height="140" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="378" text-anchor="middle" fill="#fbbf24" font-size="14" font-family="system-ui,sans-serif" font-weight="600">🧠 Key Concepts</text>
+  <text x="80" y="405" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• Each function call creates a new stack frame (activation record)</text>
+  <text x="80" y="425" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• Stack frames store: local variables, return address, parameters</text>
+  <text x="80" y="445" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• Recursion uses depth proportional to n (risk: StackOverflow!)</text>
+  <text x="80" y="465" fill="#94a3b8" font-size="12" font-family="system-ui,sans-serif">• Default recursion limit: 1000 — use sys.setrecursionlimit() to change</text>
+  <text x="400" y="488" text-anchor="middle" fill="#64748b" font-size="11" font-family="system-ui,sans-serif">factorial(3) → 3 × factorial(2) → 2 × factorial(1) → 1 → 2 → 6</text>
+</svg>
