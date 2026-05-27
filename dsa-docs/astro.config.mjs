@@ -371,7 +371,53 @@ export default defineConfig({
         },
         {
           label: 'Data Structures',
-          items: [{ autogenerate: { directory: 'data-structures' } }],
+          items: [
+            { label: 'Home', link: '/data-structures' },
+            {
+              label: 'Fundamentals',
+              items: [{ autogenerate: { directory: 'data-structures/fundamentals' } }],
+            },
+            {
+              label: 'Arrays',
+              items: [
+                { label: 'Arrays Overview', link: '/data-structures/arrays/arrays' },
+                { label: 'Two Sum Problem', link: '/data-structures/arrays/two-sum-problem' },
+                { label: 'Array Problems', link: '/data-structures/arrays/array-problems' },
+                {
+                  label: 'Array Methods',
+                  items: [{ autogenerate: { directory: 'data-structures/arrays/array-methods' } }],
+                },
+              ],
+            },
+            {
+              label: 'Stacks & Queues',
+              items: [{ autogenerate: { directory: 'data-structures/stacks-queues' } }],
+            },
+            {
+              label: 'Hashing',
+              items: [{ autogenerate: { directory: 'data-structures/hashing' } }],
+            },
+            {
+              label: 'Linked List',
+              items: [{ autogenerate: { directory: 'data-structures/linked-list' } }],
+            },
+            {
+              label: 'Trees',
+              items: [{ autogenerate: { directory: 'data-structures/trees' } }],
+            },
+            {
+              label: 'Graphs',
+              items: [{ autogenerate: { directory: 'data-structures/graphs' } }],
+            },
+            {
+              label: 'Recursion & Backtracking',
+              items: [{ autogenerate: { directory: 'data-structures/recursion' } }],
+            },
+            {
+              label: 'Interview Prep',
+              items: [{ autogenerate: { directory: 'data-structures/interview-prep' } }],
+            },
+          ],
         },
         {
           label: 'Node.js',
