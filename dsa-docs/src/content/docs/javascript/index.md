@@ -17,3 +17,14 @@ Complete JavaScript notes covering language fundamentals, features, and advanced
 - [Understanding "var" in JavaScript](/DSA-Notes-Problems/javascript/understanding-var-in-javascript)
 - [Understanding "let" in JavaScript](/DSA-Notes-Problems/javascript/understanding-let-in-javascript)
 - [Understanding "const" in JavaScript](/DSA-Notes-Problems/javascript/understanding-const-in-javascript)
+
+## 🎯 Interview Preparation
+
+- [JavaScript Interview Questions (200+)](/DSA-Notes-Problems/javascript/interview) — Comprehensive collection organized by topic
+  - [Fundamentals](/DSA-Notes-Problems/javascript/interview/fundamentals) — Data types, closures, `this`, hoisting, functions
+  - [Objects, Prototypes & Classes](/DSA-Notes-Problems/javascript/interview/objects-prototypes) — Prototype chain, classes, inheritance
+  - [Arrays & Collections](/DSA-Notes-Problems/javascript/interview/arrays-collections) — Array methods, Map, Set, iterators
+  - [ES6+ & Modern JS](/DSA-Notes-Problems/javascript/interview/es6-modern) — Destructuring, modules, Proxy, Symbol
+  - [Async JavaScript](/DSA-Notes-Problems/javascript/interview/async-js) — Event loop, promises, async/await
+  - [DOM & Browser APIs](/DSA-Notes-Problems/javascript/interview/dom-browser-apis) — Events, delegation, storage, Service Workers
+  - [Advanced & System Design](/DSA-Notes-Problems/javascript/interview/advanced-topics) — V8 internals, patterns, performance

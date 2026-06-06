@@ -40,7 +40,22 @@ export default defineConfig({
         },
         {
           label: 'JavaScript',
-          items: [{ autogenerate: { directory: 'javascript' } }],
+          items: [
+            { autogenerate: { directory: 'javascript' } },
+            {
+              label: 'Interview Questions',
+              items: [
+                { label: 'Overview', link: '/javascript/interview' },
+                { label: 'Fundamentals', link: '/javascript/interview/fundamentals' },
+                { label: 'Objects, Prototypes & Classes', link: '/javascript/interview/objects-prototypes' },
+                { label: 'Arrays & Collections', link: '/javascript/interview/arrays-collections' },
+                { label: 'ES6+ & Modern JS', link: '/javascript/interview/es6-modern' },
+                { label: 'Async JavaScript', link: '/javascript/interview/async-js' },
+                { label: 'DOM & Browser APIs', link: '/javascript/interview/dom-browser-apis' },
+                { label: 'Advanced & System Design', link: '/javascript/interview/advanced-topics' },
+              ],
+            },
+          ],
         },
         {
           label: 'React',
