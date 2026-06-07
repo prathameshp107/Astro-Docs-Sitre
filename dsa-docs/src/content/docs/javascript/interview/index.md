@@ -20,6 +20,7 @@ A comprehensive collection of **200+ JavaScript interview questions** organized 
 | 5 | [Asynchronous JavaScript](/DSA-Notes-Problems/javascript/interview/async-js) | Event loop, promises, async/await, microtasks vs macrotasks, AbortController |
 | 6 | [DOM & Browser APIs](/DSA-Notes-Problems/javascript/interview/dom-browser-apis) | Event delegation, localStorage, requestAnimationFrame, Service Workers, Web APIs |
 | 7 | [Advanced Topics & System Design](/DSA-Notes-Problems/javascript/interview/advanced-topics) | Memory management, V8 internals, design patterns, architecture, performance |
+| 8 | [Trick Questions — Code Output](/DSA-Notes-Problems/javascript/interview/js-code-tricky-questions) | 40+ tricky JS code output questions — type coercion, equality, hoisting, references, closures, event loop |
 
 ## 💡 Interview Tips
 

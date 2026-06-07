@@ -53,6 +53,7 @@ export default defineConfig({
                 { label: 'Async JavaScript', link: '/javascript/interview/async-js' },
                 { label: 'DOM & Browser APIs', link: '/javascript/interview/dom-browser-apis' },
                 { label: 'Advanced & System Design', link: '/javascript/interview/advanced-topics' },
+                { label: 'Trick Questions — Code Output', link: '/javascript/interview/js-code-tricky-questions' },
               ],
             },
           ],
