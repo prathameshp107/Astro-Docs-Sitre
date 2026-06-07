@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+    <linearGradient id="barBlue" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#1d4ed8"/><stop offset="100%" style="stop-color:#3b82f6"/></linearGradient>
+    <linearGradient id="barGreen" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#15803d"/><stop offset="100%" style="stop-color:#22c55e"/></linearGradient>
+    <linearGradient id="barRed" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#b91c1c"/><stop offset="100%" style="stop-color:#ef4444"/></linearGradient>
+    <linearGradient id="barOrange" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#c2410c"/><stop offset="100%" style="stop-color:#f97316"/></linearGradient>
+    <linearGradient id="barPurple" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#6d28d9"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
+    <linearGradient id="barTeal" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#0f766e"/><stop offset="100%" style="stop-color:#14b8a6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+    <marker id="arrowSwap" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f59e0b"/></marker>
+    <marker id="arrowMin" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#ef4444"/></marker>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">Selection Sort — Find Minimum, Place at Front</text>
+  <text x="400" y="50" text-anchor="middle" font-size="12" fill="#64748b">Each pass scans the unsorted portion to find the minimum, then swaps it to the correct position</text>
+
+  <!-- === Step 1: Initial unsorted array === -->
+  <text x="60" y="75" font-size="11" font-weight="bold" fill="#475569">Initial:</text>
+
+  <rect x="60" y="85" width="440" height="38" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  
+  <rect x="70" y="93" width="50" height="22" rx="4" fill="url(#barBlue)"/>
+  <text x="95" y="109" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">64</text>
+  <rect x="130" y="93" width="50" height="22" rx="4" fill="url(#barOrange)"/>
+  <text x="155" y="109" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">25</text>
+  <rect x="190" y="93" width="50" height="22" rx="4" fill="url(#barPurple)"/>
+  <text x="215" y="109" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">12</text>
+  <rect x="250" y="93" width="50" height="22" rx="4" fill="url(#barGreen)"/>
+  <text x="275" y="109" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">22</text>
+  <rect x="310" y="93" width="50" height="22" rx="4" fill="url(#barRed)"/>
+  <text x="335" y="109" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">11</text>
+
+  <text x="430" y="110" font-size="11" fill="#64748b">↑ unsorted</text>
+
+  <!-- Arrow for pass 1 -->
+  <path d="M 85,130 L 85,150" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowSwap)"/>
+
+  <!-- === Step 2: Pass 1 - Find min (11 at index 4) and swap with index 0 === -->
+  <text x="60" y="155" font-size="11" font-weight="bold" fill="#475569">Pass 1:</text>
+  <text x="60" y="170" font-size="10" fill="#ef4444">Scan for minimum...</text>
+
+  <rect x="60" y="178" width="440" height="38" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+
+  <rect x="70" y="186" width="50" height="22" rx="4" fill="url(#barOrange)"/>
+  <text x="95" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">25</text>
+  <rect x="130" y="186" width="50" height="22" rx="4" fill="url(#barPurple)"/>
+  <text x="155" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">12</text>
+  <rect x="190" y="186" width="50" height="22" rx="4" fill="url(#barBlue)"/>
+  <text x="215" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">64</text>
+  <rect x="250" y="186" width="50" height="22" rx="4" fill="url(#barGreen)"/>
+  <text x="275" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">22</text>
+  
+  <rect x="310" y="186" width="50" height="22" rx="4" fill="url(#barRed)" stroke="#ef4444" stroke-width="2"/>
+  <text x="335" y="202" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">11</text>
+  
+  <!-- Min label -->
+  <text x="335" y="225" text-anchor="middle" font-size="10" font-weight="bold" fill="#ef4444">min!</text>
+  <line x1="335" y1="215" x2="335" y2="210" stroke="#ef4444" stroke-width="1.5"/>
+
+  <!-- Swap arrow -->
+  <path d="M 95,230 L 95,248 L 335,248 L 335,235" fill="none" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowSwap)" stroke-dasharray="4,2"/>
+  <text x="215" y="256" text-anchor="middle" font-size="10" fill="#d97706">Swap 64 ↔ 11</text>
+
+  <!-- === Step 3: After Pass 1 - 11 is in position === -->
+  <text x="60" y="275" font-size="11" font-weight="bold" fill="#475569">After Pass 1:</text>
+
+  <rect x="60" y="283" width="440" height="38" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+
+  <rect x="70" y="291" width="50" height="22" rx="4" fill="url(#barGreen)"/>
+  <text x="95" y="307" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">11</text>
+  <rect x="130" y="291" width="50" height="22" rx="4" fill="url(#barOrange)"/>
+  <text x="155" y="307" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">25</text>
+  <rect x="190" y="291" width="50" height="22" rx="4" fill="url(#barPurple)"/>
+  <text x="215" y="307" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">12</text>
+  <rect x="250" y="291" width="50" height="22" rx="4" fill="url(#barBlue)"/>
+  <text x="275" y="307" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">64</text>
+  <rect x="310" y="291" width="50" height="22" rx="4" fill="url(#barRed)"/>
+  <text x="335" y="307" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">22</text>
+
+  <text x="85" y="332" text-anchor="middle" font-size="10" fill="#16a34a">✅ In final position</text>
+  <text x="430" y="310" font-size="11" fill="#64748b">↑ unsorted</text>
+
+  <!-- === Step 4: Pass 2 - Find min (12 at index 2) === -->
+  <text x="60" y="350" font-size="11" font-weight="bold" fill="#475569">Pass 2:</text>
+
+  <rect x="60" y="358" width="440" height="38" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+
+  <rect x="130" y="366" width="50" height="22" rx="4" fill="url(#barOrange)"/>
+  <text x="155" y="382" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">25</text>
+  
+  <rect x="190" y="366" width="50" height="22" rx="4" fill="url(#barPurple)" stroke="#ef4444" stroke-width="2"/>
+  <text x="215" y="382" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">12</text>
+  <text x="215" y="405" text-anchor="middle" font-size="10" font-weight="bold" fill="#ef4444">min!</text>
+
+  <rect x="250" y="366" width="50" height="22" rx="4" fill="url(#barBlue)"/>
+  <text x="275" y="382" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">64</text>
+  <rect x="310" y="366" width="50" height="22" rx="4" fill="url(#barRed)"/>
+  <text x="335" y="382" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">22</text>
+
+  <!-- === Step 5: After Pass 2 === -->
+  <text x="60" y="430" font-size="11" font-weight="bold" fill="#475569">After Pass 2:</text>
+
+  <rect x="60" y="438" width="440" height="38" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+
+  <rect x="70" y="446" width="50" height="22" rx="4" fill="url(#barGreen)"/>
+  <text x="95" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">11</text>
+  <rect x="130" y="446" width="50" height="22" rx="4" fill="url(#barPurple)"/>
+  <text x="155" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">12</text>
+  <rect x="190" y="446" width="50" height="22" rx="4" fill="url(#barOrange)"/>
+  <text x="215" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">25</text>
+  <rect x="250" y="446" width="50" height="22" rx="4" fill="url(#barBlue)"/>
+  <text x="275" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">64</text>
+  <rect x="310" y="446" width="50" height="22" rx="4" fill="url(#barRed)"/>
+  <text x="335" y="462" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">22</text>
+
+  <text x="95" y="487" text-anchor="middle" font-size="10" fill="#16a34a">✅ Sorted</text>
+  <text x="155" y="487" text-anchor="middle" font-size="10" fill="#16a34a">✅ Sorted</text>
+
+  <!-- Info panel -->
+  <rect x="540" y="80" width="230" height="200" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="655" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Key Properties</text>
+  <text x="555" y="122" font-size="11" fill="#475569">• At most n-1 swaps total</text>
+  <text x="555" y="142" font-size="11" fill="#475569">• Always O(n²) comparisons</text>
+  <text x="555" y="162" font-size="11" fill="#475569">  regardless of input order</text>
+  <text x="555" y="182" font-size="11" fill="#475569">• Unstable — long-range swaps</text>
+  <text x="555" y="202" font-size="11" fill="#475569">  can reorder equal elements</text>
+  <text x="555" y="222" font-size="11" fill="#475569">• In-place: O(1) extra space</text>
+  <text x="555" y="250" font-size="11" font-weight="bold" fill="#1e293b">Swaps vs Comparisons:</text>
+  <text x="555" y="268" font-size="11" fill="#64748b">Comparisons: n(n-1)/2 = 10</text>
+  <text x="555" y="286" font-size="11" fill="#64748b">Swaps: ≤ n-1 = 4</text>
+
+  <!-- Summary box -->
+  <rect x="60" y="510" width="710" height="55" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="532" text-anchor="middle" font-size="12" fill="#94a3b8">Selection Sort makes fewer writes (swaps) than Bubble Sort, but the same number of comparisons.</text>
+  <text x="400" y="550" text-anchor="middle" font-size="12" fill="#64748b">Best for: When write operations are expensive (flash memory, large records).</text>
+</svg>

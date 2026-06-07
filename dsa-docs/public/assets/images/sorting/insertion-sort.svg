@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+    <linearGradient id="barSorted" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#15803d"/><stop offset="100%" style="stop-color:#22c55e"/></linearGradient>
+    <linearGradient id="barUnsorted" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#1d4ed8"/><stop offset="100%" style="stop-color:#3b82f6"/></linearGradient>
+    <linearGradient id="barKey" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#c2410c"/><stop offset="100%" style="stop-color:#f97316"/></linearGradient>
+    <linearGradient id="barShift" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#6d28d9"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+    <marker id="arrowDown" markerWidth="8" markerHeight="6" refX="4" refY="6" orient="auto"><path d="M0,0 L4,6 L8,0 Z" fill="#f59e0b"/></marker>
+    <marker id="arrowRight" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8b5cf6"/></marker>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">Insertion Sort — Shifting &amp; Inserting</text>
+  <text x="400" y="52" text-anchor="middle" font-size="12" fill="#64748b">Like sorting playing cards: pick a card, shift larger cards right, insert at correct position</text>
+
+  <!-- Initial state -->
+  <text x="60" y="80" font-size="12" font-weight="bold" fill="#475569">Initial:</text>
+  <rect x="60" y="88" width="450" height="40" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="68" y="95" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="90" y="113" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">5</text>
+  <rect x="118" y="95" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="140" y="113" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">2</text>
+  <rect x="168" y="95" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="190" y="113" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">4</text>
+  <rect x="218" y="95" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="240" y="113" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">6</text>
+  <rect x="268" y="95" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="290" y="113" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1</text>
+  <rect x="318" y="95" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="340" y="113" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">3</text>
+  <text x="85" y="140" text-anchor="middle" font-size="10" fill="#16a34a">sorted</text>
+  <text x="435" y="113" font-size="11" fill="#64748b">↑ unsorted</text>
+
+  <!-- Step description: Pick key -->
+  <rect x="60" y="155" width="700" height="80" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/>
+  
+  <text x="80" y="178" font-size="12" font-weight="bold" fill="#c2410c">Step 1: Pick key = arr[i]</text>
+  <text x="80" y="198" font-size="11" fill="#475569">• arr[1] = <tspan fill="#ea580c" font-weight="bold">2</tspan> is the key to insert</text>
+  <text x="80" y="215" font-size="11" fill="#475569">• Compare with sorted portion [5]</text>
+  <text x="80" y="232" font-size="11" fill="#475569">• 2 &lt; 5 → shift 5 right, insert 2 at position 0</text>
+
+  <!-- After step 1 -->
+  <text x="60" y="260" font-size="12" font-weight="bold" fill="#475569">After Step 1:</text>
+  <rect x="60" y="268" width="450" height="40" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <rect x="68" y="275" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="90" y="293" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">2</text>
+  <rect x="118" y="275" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="140" y="293" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">5</text>
+  <rect x="168" y="275" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="190" y="293" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">4</text>
+  <rect x="218" y="275" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="240" y="293" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">6</text>
+  <rect x="268" y="275" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="290" y="293" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1</text>
+  <rect x="318" y="275" width="44" height="26" rx="4" fill="url(#barUnsorted)"/><text x="340" y="293" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">3</text>
+  <text x="85" y="320" text-anchor="middle" font-size="10" fill="#16a34a">sorted ↑</text>
+  <text x="435" y="293" font-size="11" fill="#64748b">↑ unsorted</text>
+
+  <!-- Step 2 -->
+  <rect x="60" y="335" width="700" height="80" rx="8" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/>
+  
+  <text x="80" y="358" font-size="12" font-weight="bold" fill="#c2410c">Step 2: Insert arr[2] = 4</text>
+  <text x="80" y="378" font-size="11" fill="#475569">• Key = <tspan fill="#ea580c" font-weight="bold">4</tspan>, compare with sorted [2, 5]</text>
+  <text x="80" y="395" font-size="11" fill="#475569">• 4 &gt; 2 (stop), 4 &lt; 5 → shift 5 right, insert 4</text>
+  <text x="80" y="412" font-size="11" fill="#475569">• Result: [2, 4, 5 | 6, 1, 3]</text>
+
+  <!-- Step 3 -->
+  <rect x="60" y="425" width="700" height="80" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+  
+  <text x="80" y="448" font-size="12" font-weight="bold" fill="#dc2626">Special Case: Insertion at the Beginning</text>
+  <text x="80" y="468" font-size="11" fill="#475569">• When arr[4] = <tspan fill="#dc2626" font-weight="bold">1</tspan> is the key, it is smaller than ALL sorted elements</text>
+  <text x="80" y="485" font-size="11" fill="#475569">• Shift all sorted elements right: 2→4→5→6 all move one position</text>
+  <text x="80" y="502" font-size="11" fill="#475569">• Insert 1 at position 0 → This is the MAXIMUM work needed (worst case)</text>
+
+  <!-- Properties panel -->
+  <rect x="540" y="80" width="230" height="230" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="655" y="100" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Key Properties</text>
+  
+  <text x="555" y="122" font-size="11" fill="#475569">• <tspan font-weight="bold" fill="#16a34a">Adaptive:</tspan> O(n) on sorted data</text>
+  <text x="555" y="142" font-size="11" fill="#475569">• <tspan font-weight="bold" fill="#16a34a">Stable:</tspan> equal elements preserved</text>
+  <text x="555" y="162" font-size="11" fill="#475569">• <tspan font-weight="bold" fill="#16a34a">Online:</tspan> sorts as elements arrive</text>
+  <text x="555" y="190" font-size="11" fill="#64748b">Best case: O(n) — already sorted</text>
+  <text x="555" y="210" font-size="11" fill="#64748b">Worst case: O(n²) — reverse sorted</text>
+  <text x="555" y="230" font-size="11" fill="#64748b">Space: O(1) — in-place</text>
+  <text x="555" y="258" font-size="11" font-weight="bold" fill="#1e293b">Uses SHIFTS, not swaps:</text>
+  <text x="555" y="276" font-size="11" fill="#64748b">1 shift = 1 write (vs 3 for swap)</text>
+  <text x="555" y="296" font-size="11" fill="#64748b">Excellent cache performance</text>
+
+  <!-- Final array -->
+  <rect x="60" y="525" width="450" height="40" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+  <rect x="68" y="532" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="90" y="550" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">1</text>
+  <rect x="118" y="532" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="140" y="550" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">2</text>
+  <rect x="168" y="532" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="190" y="550" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">3</text>
+  <rect x="218" y="532" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="240" y="550" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">4</text>
+  <rect x="268" y="532" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="290" y="550" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">5</text>
+  <rect x="318" y="532" width="44" height="26" rx="4" fill="url(#barSorted)"/><text x="340" y="550" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">6</text>
+  
+  <text x="400" y="570" text-anchor="middle" font-size="14" fill="#16a34a">✅ Final sorted array!</text>
+</svg>

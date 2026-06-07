@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 540" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+    <linearGradient id="gradStable" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#15803d"/><stop offset="100%" style="stop-color:#22c55e"/></linearGradient>
+    <linearGradient id="gradUnstable" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#b91c1c"/><stop offset="100%" style="stop-color:#ef4444"/></linearGradient>
+    <linearGradient id="gradElement" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#1d4ed8"/><stop offset="100%" style="stop-color:#3b82f6"/></linearGradient>
+    <linearGradient id="gradElement2" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#6d28d9"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
+    <linearGradient id="gradEqual" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#c2410c"/><stop offset="100%" style="stop-color:#f97316"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+  </defs>
+
+  <rect width="800" height="540" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">Stable vs Unstable Sorting</text>
+  <text x="400" y="55" text-anchor="middle" font-size="12" fill="#64748b">Stable sorts preserve the original relative order of equal elements</text>
+
+  <!-- === Original Data === -->
+  <rect x="60" y="70" width="680" height="45" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="400" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">Original Data (sorted by name):</text>
+  
+  <rect x="80" y="98" width="70" height="28" rx="4" fill="url(#gradEqual)"/><text x="115" y="117" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:3</text>
+  <text x="125" y="140" text-anchor="middle" font-size="10" fill="#c2410c">Alice</text>
+
+  <rect x="160" y="98" width="70" height="28" rx="4" fill="url(#gradElement)"/><text x="195" y="117" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:1</text>
+  <text x="195" y="140" text-anchor="middle" font-size="10" fill="#1d4ed8">Bob</text>
+
+  <rect x="240" y="98" width="70" height="28" rx="4" fill="url(#gradEqual)"/><text x="275" y="117" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:3</text>
+  <text x="275" y="140" text-anchor="middle" font-size="10" fill="#c2410c">Carol</text>
+
+  <rect x="320" y="98" width="70" height="28" rx="4" fill="url(#gradElement2)"/><text x="355" y="117" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:2</text>
+  <text x="355" y="140" text-anchor="middle" font-size="10" fill="#6d28d9">Dave</text>
+
+  <rect x="400" y="98" width="70" height="28" rx="4" fill="url(#gradElement)"/><text x="435" y="117" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:1</text>
+  <text x="435" y="140" text-anchor="middle" font-size="10" fill="#1d4ed8">Eve</text>
+
+  <!-- Arrow down -->
+  <line x1="400" y1="155" x2="400" y2="175" stroke="#64748b" stroke-width="2"/>
+  <polygon points="400,178 395,172 405,172" fill="#64748b"/>
+
+  <!-- Now sort by score -->
+  <text x="400" y="195" text-anchor="middle" font-size="13" font-weight="bold" fill="#475569">Sort by Score (ascending)</text>
+
+  <!-- === STABLE SORT RESULT === -->
+  <rect x="60" y="210" width="330" height="130" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+  <text x="225" y="232" text-anchor="middle" font-size="14" font-weight="bold" fill="#16a34a">✅ Stable Sort Result</text>
+  <text x="225" y="248" text-anchor="middle" font-size="10" fill="#64748b">(Bubble, Insertion, Merge Sort)</text>
+
+  <!-- Row 1: score=1 -->
+  <rect x="80" y="258" width="70" height="28" rx="4" fill="url(#gradElement)"/><text x="115" y="277" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:1</text>
+  <text x="115" y="296" text-anchor="middle" font-size="10" fill="#1d4ed8">Bob</text>
+
+  <rect x="160" y="258" width="70" height="28" rx="4" fill="url(#gradElement)"/><text x="195" y="277" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:1</text>
+  <text x="195" y="296" text-anchor="middle" font-size="10" fill="#1d4ed8">Eve</text>
+
+  <!-- Row 2: score=2 -->
+  <rect x="240" y="258" width="70" height="28" rx="4" fill="url(#gradElement2)"/><text x="275" y="277" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:2</text>
+  <text x="275" y="296" text-anchor="middle" font-size="10" fill="#6d28d9">Dave</text>
+
+  <!-- Row 3: score=3 -->
+  <rect x="80" y="305" width="70" height="28" rx="4" fill="url(#gradEqual)"/><text x="115" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:3</text>
+  <text x="115" y="343" text-anchor="middle" font-size="10" fill="#c2410c">Alice</text>
+
+  <rect x="160" y="305" width="70" height="28" rx="4" fill="url(#gradEqual)"/><text x="195" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:3</text>
+  <text x="195" y="343" text-anchor="middle" font-size="10" fill="#c2410c">Carol</text>
+
+  <!-- Checkmark annotation -->
+  <text x="300" y="320" font-size="22" fill="#16a34a">✅</text>
+  <text x="300" y="340" font-size="10" fill="#16a34a">Alice before Carol</text>
+  <text x="300" y="355" font-size="10" fill="#16a34a">original order</text>
+  <text x="300" y="370" font-size="10" fill="#16a34a">preserved ✓</text>
+
+  <!-- === UNSTABLE SORT RESULT === -->
+  <rect x="410" y="210" width="330" height="130" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+  <text x="575" y="232" text-anchor="middle" font-size="14" font-weight="bold" fill="#dc2626">❌ Unstable Sort Result</text>
+  <text x="575" y="248" text-anchor="middle" font-size="10" fill="#64748b">(Selection, Quick, Heap Sort)</text>
+
+  <!-- Row 1: score=1 -->
+  <rect x="430" y="258" width="70" height="28" rx="4" fill="url(#gradElement)"/><text x="465" y="277" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:1</text>
+  <text x="465" y="296" text-anchor="middle" font-size="10" fill="#1d4ed8">Eve</text>
+
+  <rect x="510" y="258" width="70" height="28" rx="4" fill="url(#gradElement)"/><text x="545" y="277" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:1</text>
+  <text x="545" y="296" text-anchor="middle" font-size="10" fill="#1d4ed8">Bob</text>
+
+  <!-- Row 2: score=2 -->
+  <rect x="590" y="258" width="70" height="28" rx="4" fill="url(#gradElement2)"/><text x="625" y="277" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:2</text>
+  <text x="625" y="296" text-anchor="middle" font-size="10" fill="#6d28d9">Dave</text>
+
+  <!-- Row 3: score=3 -->
+  <rect x="430" y="305" width="70" height="28" rx="4" fill="url(#gradEqual)"/><text x="465" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:3</text>
+  <text x="465" y="343" text-anchor="middle" font-size="10" fill="#c2410c">Carol</text>
+
+  <rect x="510" y="305" width="70" height="28" rx="4" fill="url(#gradEqual)"/><text x="545" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">score:3</text>
+  <text x="545" y="343" text-anchor="middle" font-size="10" fill="#c2410c">Alice</text>
+
+  <!-- Cross annotation -->
+  <text x="650" y="320" font-size="22" fill="#dc2626">❌</text>
+  <text x="650" y="340" font-size="10" fill="#dc2626">Carol before Alice</text>
+  <text x="650" y="355" font-size="10" fill="#dc2626">original order</text>
+  <text x="650" y="370" font-size="10" fill="#dc2626">destroyed ✗</text>
+
+  <!-- Why it matters section -->
+  <rect x="60" y="360" width="680" height="55" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="400" y="380" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e293b">🤔 Why Does Stability Matter?</text>
+  <text x="400" y="398" text-anchor="middle" font-size="11" fill="#475569">When sorting by multiple keys (e.g., sort by department, then salary within department), a stable sort</text>
+  <text x="400" y="412" text-anchor="middle" font-size="11" fill="#475569">preserves the secondary ordering. Unstable sorts would lose the secondary sort information.</text>
+
+  <!-- Algorithm Classification -->
+  <rect x="60" y="430" width="680" height="90" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="452" text-anchor="middle" font-size="13" font-weight="bold" fill="#94a3b8">Algorithm Stability Classification</text>
+
+  <rect x="75" y="462" width="150" height="48" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+  <text x="150" y="480" text-anchor="middle" font-size="11" font-weight="bold" fill="#34d399">Stable ✅</text>
+  <text x="150" y="498" text-anchor="middle" font-size="10" fill="#6ee7b7">Bubble · Insertion · Merge</text>
+
+  <rect x="240" y="462" width="150" height="48" rx="6" fill="#450a0a" stroke="#f87171" stroke-width="1"/>
+  <text x="315" y="480" text-anchor="middle" font-size="11" font-weight="bold" fill="#fca5a5">Unstable ❌</text>
+  <text x="315" y="498" text-anchor="middle" font-size="10" fill="#fecaca">Selection · Quick · Heap</text>
+
+  <rect x="405" y="462" width="310" height="48" rx="6" fill="#1e1b4b" stroke="#a78bfa" stroke-width="1"/>
+  <text x="560" y="480" text-anchor="middle" font-size="11" font-weight="bold" fill="#c4b5fd">Tip for Interviews</text>
+  <text x="560" y="498" text-anchor="middle" font-size="10" fill="#ddd6fe">Stable = adjacent comparisons only | Unstable = long-range swaps</text>
+</svg>

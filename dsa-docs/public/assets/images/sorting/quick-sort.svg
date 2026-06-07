@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 620" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+    <linearGradient id="gradPivot" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#c2410c"/><stop offset="100%" style="stop-color:#f97316"/></linearGradient>
+    <linearGradient id="gradSmall" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#15803d"/><stop offset="100%" style="stop-color:#22c55e"/></linearGradient>
+    <linearGradient id="gradLarge" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#b91c1c"/><stop offset="100%" style="stop-color:#ef4444"/></linearGradient>
+    <linearGradient id="gradUnsorted" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#1d4ed8"/><stop offset="100%" style="stop-color:#3b82f6"/></linearGradient>
+    <linearGradient id="gradSorted" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#6d28d9"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#64748b"/></marker>
+    <marker id="arrowSwap" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f59e0b"/></marker>
+  </defs>
+
+  <rect width="800" height="620" fill="url(#bgGrad)" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#1e293b">Quick Sort — Pivot &amp; Partition</text>
+  <text x="400" y="52" text-anchor="middle" font-size="12" fill="#64748b">Choose a pivot, partition the array so smaller elements go left and larger elements go right</text>
+
+  <!-- === Step 1: Initial array with pivot === -->
+  <text x="60" y="78" font-size="12" font-weight="bold" fill="#475569">Step 1: Choose pivot (last element)</text>
+
+  <rect x="60" y="86" width="480" height="38" rx="6" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="68" y="93" width="52" height="24" rx="3" fill="url(#gradUnsorted)"/><text x="94" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">10</text>
+  <rect x="126" y="93" width="52" height="24" rx="3" fill="url(#gradUnsorted)"/><text x="152" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">80</text>
+  <rect x="184" y="93" width="52" height="24" rx="3" fill="url(#gradUnsorted)"/><text x="210" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">30</text>
+  <rect x="242" y="93" width="52" height="24" rx="3" fill="url(#gradUnsorted)"/><text x="268" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">90</text>
+  <rect x="300" y="93" width="52" height="24" rx="3" fill="url(#gradUnsorted)"/><text x="326" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">40</text>
+  <rect x="358" y="93" width="52" height="24" rx="3" fill="url(#gradUnsorted)"/><text x="384" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">50</text>
+  <rect x="416" y="93" width="52" height="24" rx="3" fill="url(#gradPivot)" stroke="#ea580c" stroke-width="2"/><text x="442" y="110" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">70</text>
+
+  <text x="442" y="135" text-anchor="middle" font-size="10" font-weight="bold" fill="#ea580c">PIVOT</text>
+
+  <!-- === Step 2: Partition process === -->
+  <text x="60" y="155" font-size="12" font-weight="bold" fill="#475569">Step 2: Partition — swap elements &lt; pivot to left side</text>
+
+  <!-- Partition visualization -->
+  <rect x="60" y="163" width="480" height="38" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/>
+  
+  <rect x="68" y="170" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="94" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">10</text>
+  <rect x="126" y="170" width="52" height="24" rx="3" fill="url(#gradLarge)"/><text x="152" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">80</text>
+  <rect x="184" y="170" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="210" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">30</text>
+  <rect x="242" y="170" width="52" height="24" rx="3" fill="url(#gradLarge)"/><text x="268" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">90</text>
+  <rect x="300" y="170" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="326" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">40</text>
+  <rect x="358" y="170" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="384" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">50</text>
+  <rect x="416" y="170" width="52" height="24" rx="3" fill="url(#gradPivot)" stroke="#ea580c" stroke-width="2"/><text x="442" y="187" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">70</text>
+
+  <!-- Swap arrows showing the process -->
+  <path d="M 152,210 L 152,225 L 384,225 L 384,212" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrowSwap)"/>
+  <text x="268" y="240" text-anchor="middle" font-size="10" fill="#d97706">Smaller elements swap into position</text>
+
+  <!-- === Step 3: After partition === -->
+  <text x="60" y="260" font-size="12" font-weight="bold" fill="#475569">Step 3: After partition — pivot is in its FINAL position</text>
+
+  <rect x="60" y="268" width="480" height="38" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+  <rect x="68" y="275" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="94" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">10</text>
+  <rect x="126" y="275" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="152" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">30</text>
+  <rect x="184" y="275" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="210" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">40</text>
+  <rect x="242" y="275" width="52" height="24" rx="3" fill="url(#gradSmall)"/><text x="268" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">50</text>
+  <rect x="300" y="275" width="52" height="24" rx="3" fill="url(#gradPivot)" stroke="#ea580c" stroke-width="2"/><text x="326" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">70</text>
+  <rect x="358" y="275" width="52" height="24" rx="3" fill="url(#gradLarge)"/><text x="384" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">80</text>
+  <rect x="416" y="275" width="52" height="24" rx="3" fill="url(#gradLarge)"/><text x="442" y="292" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">90</text>
+
+  <text x="326" y="320" text-anchor="middle" font-size="11" font-weight="bold" fill="#ea580c">✅ Pivot in final position!</text>
+
+  <!-- === Step 4: Recursive calls === -->
+  <text x="60" y="345" font-size="12" font-weight="bold" fill="#475569">Step 4: Recursively sort left &amp; right partitions</text>
+
+  <rect x="60" y="353" width="480" height="38" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+  
+  <rect x="68" y="360" width="200" height="24" rx="4" fill="url(#gradSmall)" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="168" y="377" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Left: [10, 30, 40, 50]</text>
+
+  <rect x="316" y="360" width="200" height="24" rx="4" fill="url(#gradLarge)" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="416" y="377" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Right: [80, 90]</text>
+
+  <text x="168" y="405" text-anchor="middle" font-size="10" fill="#16a34a">All &lt; 70 (already sorted)</text>
+  <text x="416" y="405" text-anchor="middle" font-size="10" fill="#dc2626">All &gt; 70 (sort recursively)</text>
+
+  <!-- === Pivot Strategies Comparison === -->
+  <rect x="60" y="420" width="710" height="130" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="415" y="442" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e293b">Pivot Selection Strategies Comparison</text>
+
+  <!-- Strategy 1: Last Element -->
+  <rect x="75" y="455" width="160" height="80" rx="6" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+  <text x="155" y="474" text-anchor="middle" font-size="11" font-weight="bold" fill="#dc2626">Last Element</text>
+  <text x="85" y="492" font-size="10" fill="#475569">arr[high]</text>
+  <text x="85" y="508" font-size="10" fill="#64748b">Simple but O(n²) on</text>
+  <text x="85" y="524" font-size="10" fill="#64748b">sorted arrays</text>
+
+  <!-- Strategy 2: Random -->
+  <rect x="250" y="455" width="160" height="80" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+  <text x="330" y="474" text-anchor="middle" font-size="11" font-weight="bold" fill="#16a34a">Random Pivot</text>
+  <text x="260" y="492" font-size="10" fill="#475569">Random index</text>
+  <text x="260" y="508" font-size="10" fill="#64748b">✅ Makes O(n²)</text>
+  <text x="260" y="524" font-size="10" fill="#64748b">extremely unlikely</text>
+
+  <!-- Strategy 3: Median-of-3 -->
+  <rect x="425" y="455" width="160" height="80" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1.5"/>
+  <text x="505" y="474" text-anchor="middle" font-size="11" font-weight="bold" fill="#ea580c">Median of 3</text>
+  <text x="435" y="492" font-size="10" fill="#475569">First, middle, last</text>
+  <text x="435" y="508" font-size="10" fill="#64748b">✅ Good perf on</text>
+  <text x="435" y="524" font-size="10" fill="#64748b">sorted data</text>
+
+  <!-- Strategy 4: Lomuto vs Hoare -->
+  <rect x="600" y="455" width="155" height="80" rx="6" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1.5"/>
+  <text x="677" y="474" text-anchor="middle" font-size="11" font-weight="bold" fill="#7c3aed">Hoare Partition</text>
+  <text x="610" y="492" font-size="10" fill="#475569">Two pointers from</text>
+  <text x="610" y="508" font-size="10" fill="#64748b">both ends</text>
+  <text x="610" y="524" font-size="10" fill="#64748b">~3× fewer swaps</text>
+
+  <!-- Complexity footer -->
+  <rect x="60" y="560" width="710" height="40" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="415" y="578" text-anchor="middle" font-size="11" fill="#94a3b8">⏱ Time: O(n log n) average, O(n²) worst case  |  💾 Space: O(log n) average (recursion stack)  |  ❌ Not stable</text>
+  <text x="415" y="594" text-anchor="middle" font-size="11" fill="#64748b">Fastest comparison sort in practice due to excellent cache locality</text>
+</svg>

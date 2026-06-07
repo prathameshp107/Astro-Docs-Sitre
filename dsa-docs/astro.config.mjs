@@ -421,6 +421,10 @@ export default defineConfig({
               items: [{ autogenerate: { directory: 'data-structures/trees' } }],
             },
             {
+              label: 'Sorting',
+              items: [{ autogenerate: { directory: 'data-structures/sorting' } }],
+            },
+            {
               label: 'Graphs',
               items: [{ autogenerate: { directory: 'data-structures/graphs' } }],
             },
