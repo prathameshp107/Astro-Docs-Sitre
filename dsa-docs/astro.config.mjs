@@ -425,6 +425,28 @@ export default defineConfig({
               items: [{ autogenerate: { directory: 'data-structures/sorting' } }],
             },
             {
+              label: 'Binary Search',
+              items: [
+                { autogenerate: { directory: 'data-structures/binary-search' } },
+                {
+                  label: '5 Core Patterns',
+                  items: [{ autogenerate: { directory: 'data-structures/binary-search/02-patterns' } }],
+                },
+                {
+                  label: '10 Classic Problems',
+                  items: [{ autogenerate: { directory: 'data-structures/binary-search/03-problems' } }],
+                },
+                {
+                  label: 'Advanced Topics',
+                  items: [{ autogenerate: { directory: 'data-structures/binary-search/04-advanced' } }],
+                },
+                {
+                  label: 'Interview Questions',
+                  items: [{ autogenerate: { directory: 'data-structures/binary-search/05-interview-questions' } }],
+                },
+              ],
+            },
+            {
               label: 'Graphs',
               items: [{ autogenerate: { directory: 'data-structures/graphs' } }],
             },

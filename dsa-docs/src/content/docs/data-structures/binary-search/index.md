@@ -28,22 +28,36 @@ That is the power of logarithmic time.
 
 ---
 
-## 📖 Topics Covered
+## 📖 Learning Path
 
 ### 🎯 Introduction
-- [Binary Search — Introduction](/DSA-Notes-Problems/data-structures/binary-search/01-introduction) — What it is, prerequisites, ASCII walkthrough, iterative vs recursive, off-by-one bugs
+- [Binary Search — Introduction](/DSA-Notes-Problems/data-structures/binary-search/01-introduction) — Algorithm walkthrough, iterative vs recursive, off-by-one bugs
 
-### 🔹 Patterns
-- [Binary Search Patterns](/DSA-Notes-Problems/data-structures/binary-search/02-patterns) — Classic, first/last occurrence, search on answer space, rotated array, monotonic function
+### 🔹 5 Core Patterns
+- [Patterns Overview](/DSA-Notes-Problems/data-structures/binary-search/02-patterns) — Decision flowchart to pick the right pattern
+  - [Classic Search](/DSA-Notes-Problems/data-structures/binary-search/02-patterns/01-classic-search) — Find exact value in sorted array
+  - [First/Last Occurrence](/DSA-Notes-Problems/data-structures/binary-search/02-patterns/02-first-last-occurrence) — Handle duplicates
+  - [Search on Answer](/DSA-Notes-Problems/data-structures/binary-search/02-patterns/03-search-on-answer) — Min/max feasible value
+  - [Rotated Array](/DSA-Notes-Problems/data-structures/binary-search/02-patterns/04-rotated-array) — Search in rotated sorted array
+  - [Monotonic Function](/DSA-Notes-Problems/data-structures/binary-search/02-patterns/05-monotonic-function) — Boundary search
 
-### 💻 Problems
-- [Binary Search Problems](/DSA-Notes-Problems/data-structures/binary-search/03-problems) — 10 classic LeetCode problems with full JavaScript solutions
+### 💻 10 Classic Problems
+- [Problems Overview](/DSA-Notes-Problems/data-structures/binary-search/03-problems) — 10 problems from easy to hard
+  - Search Rotated Sorted Array, Find Min Rotated, 2D Matrix, Peak Element,
+    Koko Bananas, Ship Packages, Split Array, Sqrt(x), First Bad Version, Time-Based KV
 
 ### 🚀 Advanced
-- [Advanced Applications](/DSA-Notes-Problems/data-structures/binary-search/04-advanced) — Floating-point search, BST search, exponential search, min/max answer problems
+- [Advanced Overview](/DSA-Notes-Problems/data-structures/binary-search/04-advanced) — Beyond the basics
+  - [Floating-Point Search](/DSA-Notes-Problems/data-structures/binary-search/04-advanced/01-floating-point-search) — Continuous ranges with precision
+  - [Median of Two Arrays](/DSA-Notes-Problems/data-structures/binary-search/04-advanced/02-find-median) — The hardest BS problem
+  - [Exponential/Interpolation](/DSA-Notes-Problems/data-structures/binary-search/04-advanced/03-exponential-interpolation) — When log n isn't enough
+  - [Real-World Problems](/DSA-Notes-Problems/data-structures/binary-search/04-advanced/04-real-world-problems) — Painter, Cows, Force, Trips
 
 ### 🧠 Interview Prep
-- [Interview Questions](/DSA-Notes-Problems/data-structures/binary-search/05-interview-questions) — 12+ common questions with detailed answers
+- [Interview Questions Overview](/DSA-Notes-Problems/data-structures/binary-search/05-interview-questions) — 12+ questions
+  - [Theory & Fundamentals](/DSA-Notes-Problems/data-structures/binary-search/05-interview-questions/01-theory-fundamentals)
+  - [Pattern Recognition](/DSA-Notes-Problems/data-structures/binary-search/05-interview-questions/02-pattern-recognition)
+  - [Tricky Variations](/DSA-Notes-Problems/data-structures/binary-search/05-interview-questions/03-tricky-variations)
 
 ---
 
@@ -52,16 +66,14 @@ That is the power of logarithmic time.
 | Step | Focus | Topic |
 |------|-------|-------|
 | 1 | **Understand** | [Introduction](/DSA-Notes-Problems/data-structures/binary-search/01-introduction) — algorithm walkthrough and complexity |
-| 2 | **Patterns** | [Patterns](/DSA-Notes-Problems/data-structures/binary-search/02-patterns) — learn the 5 core templates |
-| 3 | **Practice** | [Problems](/DSA-Notes-Problems/data-structures/binary-search/03-problems) — solve 10 classic problems |
-| 4 | **Deepen** | [Advanced](/DSA-Notes-Problems/data-structures/binary-search/04-advanced) — floating-point, BST, exponential search |
+| 2 | **Learn Patterns** | [5 Patterns](/DSA-Notes-Problems/data-structures/binary-search/02-patterns) — templates for 95% of problems |
+| 3 | **Practice** | [10 Problems](/DSA-Notes-Problems/data-structures/binary-search/03-problems) — apply patterns to classic problems |
+| 4 | **Deepen** | [Advanced](/DSA-Notes-Problems/data-structures/binary-search/04-advanced) — floating-point, median, exponential |
 | 5 | **Prepare** | [Interview Questions](/DSA-Notes-Problems/data-structures/binary-search/05-interview-questions) — nail the verbal explanations |
 
 ---
 
 ## 🧩 When Does Binary Search Apply?
-
-Binary search is not limited to searching in sorted arrays. It applies **whenever the search space can be halved** at each step:
 
 | Scenario | Example |
 |----------|---------|
@@ -71,7 +83,6 @@ Binary search is not limited to searching in sorted arrays. It applies **wheneve
 | Answer space | "Find minimum X such that condition(X) is true" |
 | 2D matrix with sorted rows | Search in row-major sorted grid |
 | Floating-point precision | Find square root, cube root |
-| BST | Search, insert, delete in O(log n) |
 
 **The golden rule:** If you can say *"I can eliminate half the candidates"* after one comparison, binary search applies.
 
@@ -91,6 +102,5 @@ Binary search is not limited to searching in sorted arrays. It applies **wheneve
 ## 🔗 Related Topics
 
 - [Arrays](/DSA-Notes-Problems/data-structures/arrays/arrays) — Binary search operates on arrays
-- [Trees — BST](/DSA-Notes-Problems/data-structures/trees/08-bst) — BST is binary search on a tree structure
 - [Recursion](/DSA-Notes-Problems/data-structures/recursion/01-introduction) — Recursive binary search and divide-and-conquer
-- [Interview Prep](/DSA-Notes-Problems/data-structures/interview-prep/) — General patterns and coding strategies
+- [Sorting](/DSA-Notes-Problems/data-structures/sorting) — Many sorting algorithms complement binary search

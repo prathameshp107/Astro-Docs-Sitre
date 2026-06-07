@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 540" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <filter id="shadow2">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="540" fill="url(#bgGrad2)" rx="12"/>
+
+  <text x="450" y="35" text-anchor="middle" fill="#dfe6e9" font-size="20" font-weight="bold">🐛 Common Off-By-One Pitfalls</text>
+  <text x="450" y="55" text-anchor="middle" fill="#b2bec3" font-size="13">The 4 most common binary search bugs and how to fix them</text>
+
+  <!-- Bug 1 -->
+  <g transform="translate(30, 80)">
+    <rect x="0" y="0" width="400" height="95" rx="8" fill="#2d3436" opacity="0.7"/>
+    <rect x="0" y="0" width="400" height="28" rx="8" fill="#e17055" opacity="0.3"/>
+    <text x="12" y="19" fill="#fab1a0" font-size="13" font-weight="bold">⚠ Bug 1: Loop Condition (lo &lt;= hi vs lo &lt; hi)</text>
+
+    <text x="12" y="45" fill="#b2bec3" font-size="11">lo &lt;= hi → classic exact match search</text>
+    <text x="12" y="60" fill="#b2bec3" font-size="11">  lo === hi means 1 element left to check ✓</text>
+    <text x="12" y="80" fill="#b2bec3" font-size="11">lo &lt; hi → boundary finding (Pattern 2, 5)</text>
+    <text x="12" y="92" fill="#b2bec3" font-size="11">  Used when lo and hi converge to the answer</text>
+  </g>
+
+  <!-- Bug 2 -->
+  <g transform="translate(460, 80)">
+    <rect x="0" y="0" width="410" height="95" rx="8" fill="#2d3436" opacity="0.7"/>
+    <rect x="0" y="0" width="410" height="28" rx="8" fill="#e17055" opacity="0.3"/>
+    <text x="12" y="19" fill="#fab1a0" font-size="13" font-weight="bold">⚠ Bug 2: Updating lo / hi Wrong</text>
+
+    <text x="12" y="45" fill="#00b894" font-size="11">✅ lo = mid + 1  |  hi = mid - 1  → always move past mid</text>
+    <text x="12" y="65" fill="#e17055" font-size="11">❌ lo = mid  |  hi = mid  → INFINITE LOOP</text>
+    <text x="12" y="82" fill="#b2bec3" font-size="11">Exception: when lo &lt; hi, hi = mid is correct for</text>
+    <text x="12" y="92" fill="#b2bec3" font-size="11">boundary search (keeps mid in range as candidate)</text>
+  </g>
+
+  <!-- Bug 3 -->
+  <g transform="translate(30, 195)">
+    <rect x="0" y="0" width="400" height="95" rx="8" fill="#2d3436" opacity="0.7"/>
+    <rect x="0" y="0" width="400" height="28" rx="8" fill="#e17055" opacity="0.3"/>
+    <text x="12" y="19" fill="#fab1a0" font-size="13" font-weight="bold">⚠ Bug 3: Midpoint Calculation Overflow</text>
+
+    <text x="12" y="45" fill="#e17055" font-size="11">❌ (lo + hi) / 2  → overflows in Java/C++ for large arrays</text>
+    <text x="12" y="65" fill="#00b894" font-size="11">✅ lo + (hi - lo) / 2  → mathematically equivalent, safe</text>
+    <text x="12" y="85" fill="#b2bec3" font-size="11">Safe in JS (64-bit floats) but good habit for interviews</text>
+    <text x="12" y="95" fill="#b2bec3" font-size="11">Interviewers notice the safe form!</text>
+  </g>
+
+  <!-- Bug 4 -->
+  <g transform="translate(460, 195)">
+    <rect x="0" y="0" width="410" height="95" rx="8" fill="#2d3436" opacity="0.7"/>
+    <rect x="0" y="0" width="410" height="28" rx="8" fill="#e17055" opacity="0.3"/>
+    <text x="12" y="19" fill="#fab1a0" font-size="13" font-weight="bold">⚠ Bug 4: Wrong Return Value / Off-By-One Index</text>
+
+    <text x="12" y="45" fill="#b2bec3" font-size="11">When loop exits without finding target:</text>
+    <text x="12" y="62" fill="#e17055" font-size="11">❌ return mid  → mid is stale, could be anything</text>
+    <text x="12" y="80" fill="#00b894" font-size="11">✅ return -1  → standard "not found" sentinel</text>
+    <text x="12" y="95" fill="#b2bec3" font-size="11">Some problems want lo (insertion point) instead of -1</text>
+  </g>
+
+  <!-- Decision Flow -->
+  <g transform="translate(30, 310)">
+    <rect x="0" y="0" width="840" height="210" rx="8" fill="#2d3436" opacity="0.7"/>
+    <text x="15" y="25" fill="#74b9ff" font-size="14" font-weight="bold">🧭 Quick Decision Guide — Which Loop Pattern to Use?</text>
+
+    <text x="20" y="55" fill="#dfe6e9" font-size="12">Find exact match?</text>
+    <rect x="260" y="40" width="120" height="24" rx="12" fill="#0984e3"/>
+    <text x="320" y="56" text-anchor="middle" fill="#dfe6e9" font-size="11">while (lo &lt;= hi)</text>
+    <text x="400" y="56" fill="#b2bec3" font-size="11">return mid;  /  return -1;</text>
+
+    <text x="20" y="95" fill="#dfe6e9" font-size="12">Find first/last occurrence?</text>
+    <rect x="260" y="80" width="120" height="24" rx="12" fill="#0984e3"/>
+    <text x="320" y="96" text-anchor="middle" fill="#dfe6e9" font-size="11">while (lo &lt;= hi)</text>
+    <text x="400" y="96" fill="#b2bec3" font-size="11">record on match, shrink to boundary</text>
+
+    <text x="20" y="135" fill="#dfe6e9" font-size="12">Find boundary (first true)?</text>
+    <rect x="260" y="120" width="120" height="24" rx="12" fill="#0984e3"/>
+    <text x="320" y="136" text-anchor="middle" fill="#dfe6e9" font-size="11">while (lo &lt; hi)</text>
+    <text x="400" y="136" fill="#b2bec3" font-size="11">hi = mid for true, lo = mid+1 for false</text>
+
+    <text x="20" y="175" fill="#dfe6e9" font-size="12">Float precision search?</text>
+    <rect x="260" y="160" width="120" height="24" rx="12" fill="#0984e3"/>
+    <text x="320" y="176" text-anchor="middle" fill="#dfe6e9" font-size="11">while (hi - lo &gt; 1e-6)</text>
+    <text x="400" y="176" fill="#b2bec3" font-size="11">converge to 6 decimal places</text>
+
+    <!-- Arrow -->
+    <text x="600" y="110" text-anchor="middle" fill="#636e72" font-size="30">→</text>
+    <text x="640" y="95" fill="#b2bec3" font-size="11">If stuck, start with</text>
+    <text x="640" y="110" fill="#b2bec3" font-size="11">while (lo &lt;= hi)</text>
+    <text x="640" y="125" fill="#b2bec3" font-size="11">and lo=mid+1, hi=mid-1</text>
+    <text x="640" y="140" fill="#b2bec3" font-size="11">as your default template</text>
+  </g>
+</svg>
