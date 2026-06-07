@@ -38,8 +38,8 @@ Dynamic Programming:
 | 1 | [Introduction to DP](/DSA-Notes-Problems/data-structures/dynamic-programming/01-introduction) | What is DP, overlapping subproblems, optimal substructure |
 | 2 | [Memoization (Top-Down)](/DSA-Notes-Problems/data-structures/dynamic-programming/02-memoization) | Cache results of recursive calls, call tree pruning |
 | 3 | [Tabulation (Bottom-Up)](/DSA-Notes-Problems/data-structures/dynamic-programming/03-tabulation) | Fill a DP table iteratively, space optimization |
-| 4 | [1D DP Problems](/DSA-Notes-Problems/data-structures/dynamic-programming/04-1d-dp-problems) | Climbing Stairs, House Robber, Coin Change, Kadane's |
-| 5 | [2D DP Problems](/DSA-Notes-Problems/data-structures/dynamic-programming/05-2d-dp-problems) | Unique Paths, Knapsack, LCS, Edit Distance |
+| 4 | [1D DP Problems](/DSA-Notes-Problems/data-structures/dynamic-programming/04-1d-dp) | Climbing Stairs, House Robber, Coin Change, Kadane's |
+| 5 | [2D DP Problems](/DSA-Notes-Problems/data-structures/dynamic-programming/05-2d-dp) | Unique Paths, Knapsack, LCS, Edit Distance |
 | 6 | [String DP Problems](/DSA-Notes-Problems/data-structures/dynamic-programming/06-string-dp) | Palindromes, Word Break, Interleaving Strings |
 | 7 | [DP Patterns Guide](/DSA-Notes-Problems/data-structures/dynamic-programming/07-patterns) | How to recognize & categorize any DP problem |
 | 8 | [Complexity Analysis](/DSA-Notes-Problems/data-structures/dynamic-programming/08-complexity-analysis) | Time/space analysis, space optimization tricks |

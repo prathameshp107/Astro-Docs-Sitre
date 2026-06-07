@@ -429,6 +429,24 @@ export default defineConfig({
               items: [{ autogenerate: { directory: 'data-structures/graphs' } }],
             },
             {
+              label: 'Dynamic Programming',
+              items: [
+                { autogenerate: { directory: 'data-structures/dynamic-programming' } },
+                {
+                  label: '1D DP Problems',
+                  items: [{ autogenerate: { directory: 'data-structures/dynamic-programming/04-1d-dp' } }],
+                },
+                {
+                  label: '2D DP Problems',
+                  items: [{ autogenerate: { directory: 'data-structures/dynamic-programming/05-2d-dp' } }],
+                },
+                {
+                  label: 'String DP Problems',
+                  items: [{ autogenerate: { directory: 'data-structures/dynamic-programming/06-string-dp' } }],
+                },
+              ],
+            },
+            {
               label: 'Recursion & Backtracking',
               items: [{ autogenerate: { directory: 'data-structures/recursion' } }],
             },

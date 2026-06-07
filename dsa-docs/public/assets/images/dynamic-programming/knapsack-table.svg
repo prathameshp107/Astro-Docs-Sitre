@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f8fafc"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+    <linearGradient id="cellBase" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#cbd5e1"/><stop offset="100%" style="stop-color:#e2e8f0"/></linearGradient>
+    <linearGradient id="cellComputed" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#1d4ed8"/><stop offset="100%" style="stop-color:#3b82f6"/></linearGradient>
+    <linearGradient id="cellPath" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#c2410c"/><stop offset="100%" style="stop-color:#f97316"/></linearGradient>
+    <linearGradient id="cellAnswer" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#15803d"/><stop offset="100%" style="stop-color:#22c55e"/></linearGradient>
+    <linearGradient id="gradItem" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#6d28d9"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.15"/></filter>
+  </defs>
+  <rect width="800" height="520" fill="url(#bgGrad)" rx="12"/>
+
+  <text x="400" y="30" font-size="17" font-weight="bold" fill="#1e293b" text-anchor="middle">0/1 Knapsack — DP Table Filling</text>
+  <text x="400" y="48" font-size="10" fill="#64748b" text-anchor="middle">Items: (wt=2,val=3), (wt=3,val=4), (wt=4,val=5), (wt=5,val=6)  |  Capacity W=8</text>
+
+  <!-- Items column labels -->
+  <text x="50" y="95" font-size="11" font-weight="bold" fill="#475569">Items</text>
+  <text x="50" y="115" font-size="10" fill="#6d28d9">0 (none)</text>
+  <text x="50" y="145" font-size="10" fill="#6d28d9">1 (w=2,v=3)</text>
+  <text x="50" y="175" font-size="10" fill="#6d28d9">2 (w=3,v=4)</text>
+  <text x="50" y="205" font-size="10" fill="#6d28d9">3 (w=4,v=5)</text>
+  <text x="50" y="235" font-size="10" fill="#6d28d9">4 (w=5,v=6)</text>
+
+  <!-- Capacity header -->
+  <text x="180" y="75" font-size="11" font-weight="bold" fill="#475569">Capacity W →</text>
+
+  <!-- Table header row -->
+  <rect x="80" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="100" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">0</text>
+  <rect x="125" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="145" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">1</text>
+  <rect x="170" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="190" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">2</text>
+  <rect x="215" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="235" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">3</text>
+  <rect x="260" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="280" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">4</text>
+  <rect x="305" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="325" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">5</text>
+  <rect x="350" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="370" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">6</text>
+  <rect x="395" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="415" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">7</text>
+  <rect x="440" y="80" width="40" height="24" rx="2" fill="#1e293b"/><text x="460" y="96" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">8</text>
+
+  <!-- Row 0: No items -->
+  <rect x="80" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="100" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="125" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="145" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="170" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="190" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="215" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="235" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="260" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="280" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="305" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="325" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="350" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="370" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="395" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="415" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="440" y="105" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="460" y="121" text-anchor="middle" font-size="11" fill="#475569">0</text>
+
+  <!-- Row 1: Item 1 (w=2,v=3) -->
+  <rect x="80" y="130" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="100" y="146" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="125" y="130" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="145" y="146" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="170" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="190" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="215" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="235" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="260" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="280" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="305" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="325" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="350" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="370" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="395" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="415" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="440" y="130" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="460" y="146" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+
+  <!-- Row 2: Item 2 (w=3,v=4) -->
+  <rect x="80" y="155" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="100" y="171" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="125" y="155" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="145" y="171" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="170" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="190" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="215" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="235" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">4</text>
+  <rect x="260" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="280" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">4</text>
+  <rect x="305" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="325" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">7</text>
+  <rect x="350" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="370" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">7</text>
+  <rect x="395" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="415" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">7</text>
+  <rect x="440" y="155" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="460" y="171" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">7</text>
+
+  <!-- Row 3: Item 3 (w=4,v=5) -->
+  <rect x="80" y="180" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="100" y="196" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="125" y="180" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="145" y="196" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="170" y="180" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="190" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="215" y="180" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="235" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">4</text>
+  <rect x="260" y="180" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="280" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">5</text>
+  <rect x="305" y="180" width="40" height="24" rx="2" fill="url(#cellPath)" stroke="#f97316" stroke-width="2"/><text x="325" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">7</text>
+  <rect x="350" y="180" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="370" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">8</text>
+  <rect x="395" y="180" width="40" height="24" rx="2" fill="url(#cellPath)" stroke="#f97316" stroke-width="2"/><text x="415" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">9</text>
+  <rect x="440" y="180" width="40" height="24" rx="2" fill="url(#cellPath)" stroke="#f97316" stroke-width="2"/><text x="460" y="196" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">9</text>
+
+  <!-- Row 4: Item 4 (w=5,v=6) -->
+  <rect x="80" y="205" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="100" y="221" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="125" y="205" width="40" height="24" rx="2" fill="url(#cellBase)" stroke="#cbd5e1" stroke-width="1"/><text x="145" y="221" text-anchor="middle" font-size="11" fill="#475569">0</text>
+  <rect x="170" y="205" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="190" y="221" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">3</text>
+  <rect x="215" y="205" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="235" y="221" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">4</text>
+  <rect x="260" y="205" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="280" y="221" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">5</text>
+  <rect x="305" y="205" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="325" y="221" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">7</text>
+  <rect x="350" y="205" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="370" y="221" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">8</text>
+  <rect x="395" y="205" width="40" height="24" rx="2" fill="url(#cellComputed)" stroke="#3b82f6" stroke-width="1"/><text x="415" y="221" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">9</text>
+  <rect x="440" y="205" width="40" height="24" rx="2" fill="url(#cellAnswer)" stroke="#22c55e" stroke-width="3"/><text x="460" y="221" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">10</text>
+
+  <!-- Answer arrow -->
+  <line x1="460" y1="230" x2="460" y2="250" stroke="#22c55e" stroke-width="2"/>
+  <text x="460" y="265" text-anchor="middle" font-size="11" font-weight="bold" fill="#16a34a">Answer: 10 ✅</text>
+
+  <!-- Explanation panel -->
+  <rect x="50" y="285" width="700" height="80" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="60" y="307" font-size="12" font-weight="bold" fill="#1e293b">How the Recurrence Works</text>
+  <text x="60" y="327" font-size="11" fill="#475569">dp[i][w] = Math.max( dp[i-1][w],  dp[i-1][w - wt[i-1]] + val[i-1] )</text>
+  <text x="60" y="347" font-size="10" fill="#64748b">                  ↑ Skip item i        ↑ Take item i if it fits (add its value)</text>
+  <text x="60" y="362" font-size="10" fill="#64748b">Example: dp[4][8] = max(dp[3][8]=9, dp[3][8-5] + 6 = dp[3][3] + 6 = 4 + 6 = 10) → 10</text>
+
+  <!-- Arrow annotations -->
+  <rect x="510" y="295" width="230" height="65" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+  <text x="625" y="312" text-anchor="middle" font-size="10" font-weight="bold" fill="#16a34a">Optimal Selection</text>
+  <text x="520" y="328" font-size="10" fill="#475569">Items 2 (wt=3,v=4) + 4 (wt=5,v=6)</text>
+  <text x="520" y="344" font-size="10" fill="#475569">Total weight: 8, Total value: 10</text>
+
+  <!-- Legend -->
+  <rect x="50" y="380" width="700" height="55" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="400" y="400" text-anchor="middle" font-size="11" font-weight="bold" fill="#94a3b8">Key Properties</text>
+  <text x="400" y="418" text-anchor="middle" font-size="10" fill="#94a3b8">Time: O(n × W)  |  Space: O(n × W) → O(W) with 1D optimization  |  Pseudo-polynomial (depends on W)</text>
+
+  <!-- Orange cells explanation -->
+  <text x="400" y="448" text-anchor="middle" font-size="10" fill="#64748b">🧡 Orange cells = decision path (which items were taken to reach the optimal value)</text>
+  <text x="400" y="462" text-anchor="middle" font-size="10" fill="#64748b">💚 Green cell = final answer dp[4][8] = 10</text>
+
+  <!-- Footer -->
+  <rect x="50" y="480" width="700" height="28" rx="6" fill="#fff7ed" stroke="#fdba74" stroke-width="1"/>
+  <text x="400" y="499" text-anchor="middle" font-size="10" fill="#c2410c">💡 Tip: Iterate W backwards for 1D optimization to avoid reusing the same item twice</text>
+</svg>
