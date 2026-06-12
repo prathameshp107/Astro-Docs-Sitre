@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import ThemeToggle from "./mcq/ThemeToggle.jsx";
 
 const topics = [
   "JavaScript", "React", "Angular", "Node.js", "MongoDB",
@@ -39,6 +40,7 @@ const learningPaths = [
     desc: "Core fundamentals, async concepts, closures, event loop, and advanced patterns.",
     color: "#f7df1e",
     progress: 85,
+    icon: "🟨",
   },
   {
     abbr: "RE",
@@ -46,6 +48,7 @@ const learningPaths = [
     desc: "Components, Hooks, State Management, Routing, Performance and Interview Prep.",
     color: "#61dafb",
     progress: 40,
+    icon: "⚛️",
   },
   {
     abbr: "ND",
@@ -53,6 +56,7 @@ const learningPaths = [
     desc: "Runtime architecture, Express, async patterns, databases, and production deployment.",
     color: "#339933",
     progress: 70,
+    icon: "🟢",
   },
   {
     abbr: "DB",
@@ -60,6 +64,7 @@ const learningPaths = [
     desc: "Collections, aggregation, indexing and interview preparation.",
     color: "#47a248",
     progress: 90,
+    icon: "🍃",
   },
   {
     abbr: "DSA",
@@ -67,6 +72,7 @@ const learningPaths = [
     desc: "Arrays, Trees, Graphs, Dynamic Programming and problem solving.",
     color: "#6366f1",
     progress: 30,
+    icon: "📊",
   },
   {
     abbr: "PY",
@@ -74,7 +80,30 @@ const learningPaths = [
     desc: "Syntax, OOP, modules, file handling, and interview preparation.",
     color: "#3776AB",
     progress: 60,
+    icon: "🐍",
   },
+];
+
+const topicExplorer = [
+  { name: "JavaScript", icon: "🟨", desc: "Closures, Promises, Event Loop, Prototypes & more", href: "docs/overview" },
+  { name: "React", icon: "⚛️", desc: "Hooks, State, Components, Performance, Testing", href: "docs/overview" },
+  { name: "Angular", icon: "🅰️", desc: "Components, Routing, Forms, RxJS, NgRx", href: "docs/overview" },
+  { name: "Node.js", icon: "🟢", desc: "Express, Async, Architecture, Databases, Deployment", href: "docs/overview" },
+  { name: "MongoDB", icon: "🍃", desc: "Aggregation, Indexing, Modeling, Replication", href: "docs/overview" },
+  { name: "MySQL", icon: "🗄️", desc: "Queries, Joins, Indexing, Optimization, ACID", href: "docs/overview" },
+  { name: "Docker", icon: "🐳", desc: "Containers, Images, Compose, Networking, Volumes", href: "docs/overview" },
+  { name: "DSA", icon: "📊", desc: "Arrays, Trees, Graphs, DP, Recursion, Sorting", href: "docs/overview" },
+  { name: "Python", icon: "🐍", desc: "Syntax, OOP, Modules, File Handling, Data Science", href: "docs/overview" },
+  { name: "Redis", icon: "🔴", desc: "Caching, Pub/Sub, Data Types, Persistence, Clustering", href: "docs/overview" },
+];
+
+const recentUpdates = [
+  { date: "2026-06", title: "Redis Complete Notes", tag: "New", type: "new" },
+  { date: "2026-05", title: "JavaScript Interview Guide (200+ Qs)", tag: "Updated", type: "update" },
+  { date: "2026-05", title: "React Hooks Deep Dive", tag: "New", type: "new" },
+  { date: "2026-04", title: "Node.js Production Architecture", tag: "New", type: "new" },
+  { date: "2026-04", title: "MongoDB Aggregation Pipeline Guide", tag: "Updated", type: "update" },
+  { date: "2026-03", title: "Docker Compose & Multi-Stage Builds", tag: "New", type: "new" },
 ];
 
 function useInView(threshold = 0.15) {
@@ -130,11 +159,28 @@ function AnimatedCounter({ end, suffix = "" }) {
 
 export default function ReactLanding() {
   const [loaded, setLoaded] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const heroRef = useRef(null);
   const mouseGlowRef = useRef(null);
 
   useEffect(() => {
     setLoaded(true);
+  }, []);
+
+  // Scroll-aware navbar and back-to-top
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 80);
+      setShowBackToTop(scrollY > 600);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const handleMouseMove = useCallback((e) => {
@@ -169,7 +215,7 @@ export default function ReactLanding() {
       </div>
 
       {/* ─── Nav ─── */}
-      <nav className="landing-nav">
+      <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
         <div className="nav-inner">
           <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
             <span className="brand-logo">
@@ -187,12 +233,27 @@ export default function ReactLanding() {
             <span className="brand-text">DSA & Dev Notes</span>
           </a>
           <div className="nav-links">
-            <a href={`${base}playground`} className="nav-link nav-link-playground">
+            <a href={`${base}playground`} className="nav-link">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Practice Labs
             </a>
+            <a href={`${base}mcq`} className="nav-link nav-link-playground">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="8 12 11 15 16 9" />
+              </svg>
+              MCQ Hub
+            </a>
+            <a href={`${base}overview`} className="nav-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+              </svg>
+              Docs
+            </a>
+            <ThemeToggle />
             <a
               href="https://github.com/prathameshp107/DSA-Notes-Problems"
               target="_blank"
@@ -279,6 +340,28 @@ export default function ReactLanding() {
             ))}
           </div>
         </div>
+
+        {/* Code Preview Mockup */}
+        <div className="hero-code-preview" aria-hidden="true">
+          <div className="code-window">
+            <div className="code-window-header">
+              <span className="code-dot code-dot-red" />
+              <span className="code-dot code-dot-yellow" />
+              <span className="code-dot code-dot-green" />
+              <span className="code-window-title">example.js</span>
+            </div>
+            <div className="code-window-body">
+              <pre><span className="kw">function</span> <span className="fn">fibonacci</span>(n) {"{"}
+  <span className="kw">if</span> (n &lt;= 1) <span className="kw">return</span> n;
+  <span className="kw">return</span> <span className="fn">fibonacci</span>(n-1) + <span className="fn">fibonacci</span>(n-2);
+{"}"}
+
+<span className="cm">// Try it yourself!</span>
+<span className="fn">console</span>.<span className="fn">log</span>(<span className="fn">fibonacci</span>(<span className="num">10</span>));
+<span className="cm">// → 55</span></pre>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ─── Stats ─── */}
@@ -287,14 +370,32 @@ export default function ReactLanding() {
       {/* ─── Features ─── */}
       <FeaturesSection />
 
+      {/* ─── Topics Explorer ─── */}
+      <TopicsExplorerSection base={base} />
+
       {/* ─── Learning Paths ─── */}
       <PathsSection base={base} />
+
+      {/* ─── Latest Updates ─── */}
+      <UpdatesSection />
 
       {/* ─── CTA ─── */}
       <CTASection base={base} />
 
       {/* ─── Footer ─── */}
       <Footer base={base} />
+
+      {/* ─── Back to Top ─── */}
+      <button
+        className={`back-to-top ${showBackToTop ? "visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="Back to top"
+        title="Back to top"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="18 15 12 9 6 15" />
+        </svg>
+      </button>
     </div>
   );
 }
@@ -302,10 +403,10 @@ export default function ReactLanding() {
 function StatsSection() {
   const [ref, inView] = useInView(0.3);
   const stats = [
-    { value: 1000, suffix: "+", label: "Notes" },
-    { value: 500, suffix: "+", label: "Problems" },
-    { value: 100, suffix: "+", label: "Interview Qs" },
-    { value: 10, suffix: "+", label: "Tracks" },
+    { value: 1000, suffix: "+", label: "Notes Pages" },
+    { value: 500, suffix: "+", label: "Practice Problems" },
+    { value: 200, suffix: "+", label: "Interview Q&A" },
+    { value: 10, suffix: "+", label: "Learning Tracks" },
   ];
 
   return (
@@ -354,6 +455,40 @@ function FeaturesSection() {
   );
 }
 
+function TopicsExplorerSection({ base }) {
+  const [ref, inView] = useInView(0.1);
+
+  return (
+    <section ref={ref} className="topics-section">
+      <div className="section-header">
+        <span className="section-tag">Topics Covered</span>
+        <h2>Explore All Topics</h2>
+        <p>Dive deep into any topic with structured notes, examples, and interview prep.</p>
+      </div>
+      <div className="topics-grid">
+        {topicExplorer.map((topic, i) => (
+          <a
+            key={topic.name}
+            href={`${base}${topic.href}`}
+            className={`topic-card ${inView ? "in-view" : ""}`}
+            style={inView ? { animationDelay: `${i * 0.06}s` } : undefined}
+          >
+            <span className="topic-card-icon">{topic.icon}</span>
+            <div className="topic-card-info">
+              <h4>{topic.name}</h4>
+              <p>{topic.desc}</p>
+            </div>
+            <svg className="topic-card-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function PathsSection({ base }) {
   const [ref, inView] = useInView(0.1);
 
@@ -377,7 +512,7 @@ function PathsSection({ base }) {
                 className="path-abbr"
                 style={{ background: `${p.color}1a`, color: p.color, borderColor: `${p.color}33` }}
               >
-                {p.abbr}
+                {p.icon}
               </span>
               <svg className="path-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" />
@@ -399,6 +534,38 @@ function PathsSection({ base }) {
   );
 }
 
+function UpdatesSection() {
+  const [ref, inView] = useInView(0.2);
+
+  return (
+    <section ref={ref} className={`updates-section ${inView ? "in-view" : ""}`}>
+      <div className="section-header">
+        <span className="section-tag">What&apos;s New</span>
+        <h2>Latest Updates</h2>
+        <p>Fresh content added regularly to keep your learning journey on track.</p>
+      </div>
+      <div className="updates-timeline">
+        {recentUpdates.map((item, i) => (
+          <div
+            key={item.title}
+            className={`update-item ${inView ? "in-view" : ""}`}
+            style={inView ? { animationDelay: `${i * 0.08}s` } : undefined}
+          >
+            <div className="update-dot">
+              <div className={`update-dot-inner ${item.type}`} />
+            </div>
+            <div className="update-content">
+              <span className={`update-tag ${item.type}`}>{item.tag}</span>
+              <span className="update-title">{item.title}</span>
+              <span className="update-date">{item.date}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function CTASection({ base }) {
   const [ref, inView] = useInView(0.3);
   return (
@@ -411,12 +578,14 @@ function CTASection({ base }) {
           <a href={`${base}overview`} className="btn btn-primary btn-lg">
             Browse Docs
             <span className="btn-arrow">→</span>
-          </a>            <a href={`${base}practice`} className="btn btn-secondary btn-lg">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>              Practice Labs
-            </a>
-          </div>
+          </a>
+          <a href={`${base}practice`} className="btn btn-secondary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            Practice Labs
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -427,7 +596,7 @@ function Footer({ base }) {
     <footer className="landing-footer">
       <div className="footer-inner">
         <p>
-          Built with <strong>React</strong> + <strong>Astro</strong>
+          Built by <strong>Prathamesh Pawar</strong>
         </p>
         <div className="footer-links">
           <a href="https://github.com/prathameshp107/DSA-Notes-Problems" target="_blank" rel="noopener noreferrer">GitHub</a>

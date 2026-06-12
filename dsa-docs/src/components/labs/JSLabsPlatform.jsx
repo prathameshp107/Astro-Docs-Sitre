@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import ThemeToggle from "../mcq/ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import { JS_LESSONS, JS_BUG_CHALLENGES, JS_MINI_PROJECTS } from "../../data/js-labs-curriculum.js";
 
@@ -9,9 +10,42 @@ function BugIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill
 function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
 function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
 
+// ─── RESIZABLE HANDLE ───
+
+function ResizableHandle({ onDrag, orientation = "vertical" }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onMouseDown = (e) => {
+      e.preventDefault();
+      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
+      document.body.style.userSelect = "none";
+
+      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      };
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    };
+
+    el.addEventListener("mousedown", onMouseDown);
+    return () => el.removeEventListener("mousedown", onMouseDown);
+  }, [onDrag, orientation]);
+
+  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
+}
+
 // ─── SIDEBAR ───
 
-function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSelectLesson, onSelectBug, onSelectProject, progress }) {
+function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSelectLesson, onSelectBug, onSelectProject, progress, ...rest }) {
   const [expandedSections, setExpandedSections] = useState({ learn: true, bugs: false, projects: false });
 
   const toggleSection = (key) => {
@@ -23,7 +57,7 @@ function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSe
   const isProjectActive = (id) => activeSection === "projects" && activeProject === id;
 
   return (
-    <div className="jsl-sidebar">
+    <div className="jsl-sidebar" {...rest}>
       <div className="jsl-sidebar-header">
         <h3>
           <BookIcon />
@@ -137,12 +171,17 @@ export default function JSLabsPlatform() {
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
-  const [monacoTheme, setMonacoTheme] = useState("vs-dark");
+  const [monacoTheme, setMonacoTheme] = useState("jsl-dark");
   const [progress, setProgress] = useState({ lessons: [], bugs: [], projects: [] });
   const [isRunning, setIsRunning] = useState(false);
-  const [activeSubTab, setActiveSubTab] = useState("editor");
-  const outputRef = useRef(null);
   const editorRef = useRef(null);
+  const codeVersionRef = useRef(0);
+  const editorPanelRef = useRef(null);
+  const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [contentRatio, setContentRatio] = useState(0.5);
+  const [consoleHeight, setConsoleHeight] = useState(180);
+  const bodyRef = useRef(null);
+  const workspaceRef = useRef(null);
 
   // Load progress from sessionStorage
   useEffect(() => {
@@ -202,33 +241,303 @@ export default function JSLabsPlatform() {
   const currentBug = useMemo(() => JS_BUG_CHALLENGES.find(b => b.id === activeBug), [activeBug]);
   const currentProject = useMemo(() => JS_MINI_PROJECTS.find(p => p.id === activeProject), [activeProject]);
 
-  // Set code when switching content
-  useEffect(() => {
-    if (view === "learn" && currentLesson) {
-      setCode(currentLesson.starterCode);
-      setShowHint(false);
-      setShowSolution(false);
-      setOutput([]);
-      setTestResults([]);
-    } else if (view === "bugs" && currentBug) {
-      setCode(currentBug.brokenCode);
-      setShowHint(false);
-      setShowSolution(false);
-      setOutput([]);
-      setTestResults([]);
-    } else if (view === "projects" && currentProject) {
-      setCode(currentProject.starterCode);
-      setShowHint(false);
-      setShowSolution(false);
-      setOutput([]);
-      setTestResults([]);
-    }
-  }, [view, currentLesson, currentBug, currentProject]);
+  // Switch to a lesson and set its code synchronously
+  const selectLesson = (id) => {
+    const lesson = JS_LESSONS.find(l => l.id === id);
+    if (!lesson) return;
+    setView("learn");
+    setActiveLesson(id);
+    setActiveBug(null);
+    setActiveProject(null);
+    setCode(lesson.starterCode);
+    setShowHint(false);
+    setShowSolution(false);
+    setOutput([]);
+    setTestResults([]);
+    codeVersionRef.current++;
+  };
 
-  // Navigation
-  const selectLesson = (id) => { setView("learn"); setActiveLesson(id); setActiveBug(null); setActiveProject(null); };
-  const selectBug = (id) => { setView("bugs"); setActiveLesson(null); setActiveBug(id); setActiveProject(null); };
-  const selectProject = (id) => { setView("projects"); setActiveLesson(null); setActiveBug(null); setActiveProject(id); };
+  const selectBug = (id) => {
+    const bug = JS_BUG_CHALLENGES.find(b => b.id === id);
+    if (!bug) return;
+    setView("bugs");
+    setActiveLesson(null);
+    setActiveBug(id);
+    setActiveProject(null);
+    setCode(bug.brokenCode);
+    setShowHint(false);
+    setShowSolution(false);
+    setOutput([]);
+    setTestResults([]);
+    codeVersionRef.current++;
+  };
+
+  const selectProject = (id) => {
+    const proj = JS_MINI_PROJECTS.find(p => p.id === id);
+    if (!proj) return;
+    setView("projects");
+    setActiveLesson(null);
+    setActiveBug(null);
+    setActiveProject(id);
+    setCode(proj.starterCode);
+    setShowHint(false);
+    setShowSolution(false);
+    setOutput([]);
+    setTestResults([]);
+    codeVersionRef.current++;
+  };
+
+  // Define and register custom syntax highlighting themes
+  const defineThemes = useCallback((monaco) => {
+    // ─── Dark Theme ───
+    monaco.editor.defineTheme("jsl-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "64748b", fontStyle: "italic" },
+        { token: "keyword", foreground: "a78bfa" },
+        { token: "keyword.control", foreground: "a78bfa" },
+        { token: "keyword.operator", foreground: "60a5fa" },
+        { token: "string", foreground: "34d399" },
+        { token: "string.quoted", foreground: "34d399" },
+        { token: "string.template", foreground: "34d399" },
+        { token: "number", foreground: "f59e0b" },
+        { token: "type", foreground: "2dd4bf" },
+        { token: "type.identifier", foreground: "2dd4bf" },
+        { token: "type.builtin", foreground: "2dd4bf" },
+        { token: "builtin", foreground: "2dd4bf" },
+        { token: "function", foreground: "60a5fa" },
+        { token: "function.declaration", foreground: "60a5fa" },
+        { token: "method", foreground: "60a5fa" },
+        { token: "variable", foreground: "e2e8f0" },
+        { token: "variable.other.readwrite", foreground: "e2e8f0" },
+        { token: "variable.parameter", foreground: "fbbf24" },
+        { token: "property", foreground: "e2e8f0" },
+        { token: "parameter", foreground: "fbbf24" },
+        { token: "regexp", foreground: "f472b6" },
+        { token: "regexp.escape", foreground: "f472b6" },
+        { token: "delimiter", foreground: "94a3b8" },
+        { token: "delimiter.bracket", foreground: "94a3b8" },
+        { token: "delimiter.square", foreground: "94a3b8" },
+        { token: "delimiter.parenthesis", foreground: "94a3b8" },
+        { token: "delimiter.curly", foreground: "cbd5e1" },
+        { token: "tag", foreground: "a78bfa" },
+        { token: "attribute.name", foreground: "60a5fa" },
+        { token: "attribute.value", foreground: "34d399" },
+        { token: "metatag", foreground: "a78bfa" },
+        { token: "metatag.content", foreground: "e2e8f0" },
+        { token: "namespace", foreground: "2dd4bf" },
+        { token: "constant", foreground: "f59e0b" },
+        { token: "constant.language", foreground: "a78bfa" },
+        { token: "constant.numeric", foreground: "f59e0b" },
+        { token: "boolean", foreground: "a78bfa" },
+        { token: "null", foreground: "f59e0b" },
+        { token: "undefined", foreground: "94a3b8" },
+        { token: "this", foreground: "a78bfa", fontStyle: "italic" },
+        { token: "super", foreground: "a78bfa", fontStyle: "italic" },
+        { token: "class", foreground: "f472b6" },
+        { token: "identifier", foreground: "e2e8f0" },
+        { token: "operator", foreground: "60a5fa" },
+        { token: "string.key.json", foreground: "34d399" },
+        { token: "string.value.json", foreground: "e2e8f0" },
+        { token: "keyword.json", foreground: "a78bfa" },
+      ],
+      colors: {
+        "editor.background": "#0a0f1e",
+        "editor.foreground": "#e2e8f0",
+        "editor.lineHighlightBackground": "#0d1525",
+        "editor.selectionBackground": "rgba(96,165,250,0.25)",
+        "editor.inactiveSelectionBackground": "rgba(96,165,250,0.08)",
+        "editorCursor.foreground": "#60a5fa",
+        "editorLineNumber.foreground": "#475569",
+        "editorLineNumber.activeForeground": "#94a3b8",
+        "editor.selectionHighlightBackground": "rgba(96,165,250,0.12)",
+        "editorBracketMatch.background": "rgba(96,165,250,0.15)",
+        "editorBracketMatch.border": "rgba(96,165,250,0.3)",
+        "editorBracketHighlight.foreground1": "#60a5fa",
+        "editorBracketHighlight.foreground2": "#a78bfa",
+        "editorBracketHighlight.foreground3": "#34d399",
+        "editorBracketHighlight.foreground4": "#f59e0b",
+        "editorBracketHighlight.foreground5": "#f472b6",
+        "editorBracketHighlight.foreground6": "#2dd4bf",
+        "editorBracketPairGuide.activeBackground1": "rgba(96,165,250,0.08)",
+        "editorBracketPairGuide.activeBackground2": "rgba(167,139,250,0.08)",
+        "editorBracketPairGuide.activeBackground3": "rgba(52,211,153,0.08)",
+        "editorIndentGuide.background": "rgba(255,255,255,0.03)",
+        "editorIndentGuide.activeBackground": "rgba(255,255,255,0.06)",
+        "editorWidget.background": "#0f172a",
+        "editorWidget.border": "rgba(255,255,255,0.06)",
+        "editorSuggestWidget.background": "#0f172a",
+        "editorSuggestWidget.border": "rgba(255,255,255,0.06)",
+        "editorSuggestWidget.selectedBackground": "rgba(96,165,250,0.1)",
+        "editorSuggestWidget.foreground": "#e2e8f0",
+        "editorHoverWidget.background": "#0f172a",
+        "editorHoverWidget.border": "rgba(255,255,255,0.06)",
+        "editorError.foreground": "#f87171",
+        "editorWarning.foreground": "#fbbf24",
+        "editorInfo.foreground": "#60a5fa",
+        "editorGutter.background": "#0a0f1e",
+        "editorRuler.foreground": "rgba(255,255,255,0.04)",
+        "editorWhitespace.foreground": "rgba(255,255,255,0.04)",
+        "minimap.background": "#0a0f1e",
+        "scrollbar.shadow": "transparent",
+        "scrollbarSlider.background": "rgba(255,255,255,0.06)",
+        "scrollbarSlider.hoverBackground": "rgba(255,255,255,0.1)",
+        "scrollbarSlider.activeBackground": "rgba(255,255,255,0.15)",
+        "diffEditor.insertedTextBackground": "rgba(34,197,94,0.06)",
+        "diffEditor.removedTextBackground": "rgba(239,68,68,0.06)",
+        "focusBorder": "rgba(96,165,250,0.3)",
+      },
+    });
+
+    // ─── Light Theme ───
+    monaco.editor.defineTheme("jsl-light", {
+      base: "vs",
+      inherit: true,
+      rules: [
+        { token: "comment", foreground: "94a3b8", fontStyle: "italic" },
+        { token: "keyword", foreground: "7c3aed" },
+        { token: "keyword.control", foreground: "7c3aed" },
+        { token: "keyword.operator", foreground: "2563eb" },
+        { token: "string", foreground: "059669" },
+        { token: "string.quoted", foreground: "059669" },
+        { token: "string.template", foreground: "059669" },
+        { token: "number", foreground: "d97706" },
+        { token: "type", foreground: "0891b2" },
+        { token: "type.identifier", foreground: "0891b2" },
+        { token: "builtin", foreground: "0891b2" },
+        { token: "function", foreground: "2563eb" },
+        { token: "function.declaration", foreground: "2563eb" },
+        { token: "method", foreground: "2563eb" },
+        { token: "variable", foreground: "1e293b" },
+        { token: "variable.other.readwrite", foreground: "1e293b" },
+        { token: "variable.parameter", foreground: "d97706" },
+        { token: "property", foreground: "1e293b" },
+        { token: "parameter", foreground: "d97706" },
+        { token: "regexp", foreground: "db2777" },
+        { token: "delimiter", foreground: "64748b" },
+        { token: "delimiter.bracket", foreground: "64748b" },
+        { token: "delimiter.curly", foreground: "475569" },
+        { token: "tag", foreground: "7c3aed" },
+        { token: "attribute.name", foreground: "2563eb" },
+        { token: "attribute.value", foreground: "059669" },
+        { token: "metatag", foreground: "7c3aed" },
+        { token: "metatag.content", foreground: "1e293b" },
+        { token: "constant", foreground: "d97706" },
+        { token: "constant.language", foreground: "7c3aed" },
+        { token: "boolean", foreground: "7c3aed" },
+        { token: "null", foreground: "d97706" },
+        { token: "this", foreground: "7c3aed", fontStyle: "italic" },
+        { token: "class", foreground: "db2777" },
+        { token: "identifier", foreground: "1e293b" },
+        { token: "operator", foreground: "2563eb" },
+      ],
+      colors: {
+        "editor.background": "#ffffff",
+        "editor.foreground": "#1e293b",
+        "editor.lineHighlightBackground": "#f8fafc",
+        "editor.selectionBackground": "rgba(37,99,235,0.15)",
+        "editor.inactiveSelectionBackground": "rgba(37,99,235,0.06)",
+        "editorCursor.foreground": "#2563eb",
+        "editorLineNumber.foreground": "#94a3b8",
+        "editorLineNumber.activeForeground": "#64748b",
+        "editor.selectionHighlightBackground": "rgba(37,99,235,0.08)",
+        "editorBracketMatch.background": "rgba(37,99,235,0.1)",
+        "editorBracketMatch.border": "rgba(37,99,235,0.2)",
+        "editorBracketHighlight.foreground1": "#2563eb",
+        "editorBracketHighlight.foreground2": "#7c3aed",
+        "editorBracketHighlight.foreground3": "#059669",
+        "editorBracketHighlight.foreground4": "#d97706",
+        "editorBracketHighlight.foreground5": "#db2777",
+        "editorBracketHighlight.foreground6": "#0891b2",
+        "editorBracketPairGuide.activeBackground1": "rgba(37,99,235,0.05)",
+        "editorBracketPairGuide.activeBackground2": "rgba(124,58,237,0.05)",
+        "editorBracketPairGuide.activeBackground3": "rgba(5,150,105,0.05)",
+        "editorIndentGuide.background": "rgba(0,0,0,0.05)",
+        "editorIndentGuide.activeBackground": "rgba(0,0,0,0.1)",
+        "editorWidget.background": "#ffffff",
+        "editorWidget.border": "rgba(0,0,0,0.08)",
+        "editorSuggestWidget.background": "#ffffff",
+        "editorSuggestWidget.border": "rgba(0,0,0,0.08)",
+        "editorSuggestWidget.selectedBackground": "rgba(37,99,235,0.06)",
+        "editorError.foreground": "#ef4444",
+        "editorWarning.foreground": "#f59e0b",
+        "editorInfo.foreground": "#3b82f6",
+        "editorGutter.background": "#ffffff",
+        "editorRuler.foreground": "rgba(0,0,0,0.05)",
+        "editorWhitespace.foreground": "rgba(0,0,0,0.06)",
+        "scrollbar.shadow": "transparent",
+        "scrollbarSlider.background": "rgba(0,0,0,0.06)",
+        "scrollbarSlider.hoverBackground": "rgba(0,0,0,0.1)",
+        "scrollbarSlider.activeBackground": "rgba(0,0,0,0.15)",
+        "focusBorder": "rgba(37,99,235,0.3)",
+      },
+    });
+  }, []);
+
+  // Store Monaco editor instance, register themes, and fix cursor rendering
+  const handleEditorMount = useCallback((editor, monaco) => {
+    editorRef.current = editor;
+
+    // Register custom themes
+    defineThemes(monaco);
+    // Apply current theme
+    monaco.editor.setTheme(monacoTheme);
+
+    const remeasure = () => {
+      try {
+        editor.remeasureFonts();
+      } catch {}
+    };
+
+    // Multiple attempts ensure fonts are measured after loading completes
+    setTimeout(remeasure, 50);
+    setTimeout(remeasure, 500);
+    setTimeout(remeasure, 1500);
+
+    // Use document.fonts API for reliable font-ready detection
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(remeasure);
+    }
+  }, [defineThemes, monacoTheme]);
+
+  // Re-measure fonts on window resize (e.g., panel drags)
+  useEffect(() => {
+    const onResize = () => {
+      if (editorRef.current) {
+        try { editorRef.current.remeasureFonts(); } catch {}
+      }
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Memoize onChange to prevent unnecessary re-renders affecting cursor
+  const handleCodeChange = useCallback((v) => {
+    setCode(v || "");
+  }, []);
+
+  // Drag handlers for resizable panels
+  const handleSidebarDrag = useCallback(({ clientX }) => {
+    if (!bodyRef.current) return;
+    const bodyLeft = bodyRef.current.getBoundingClientRect().left;
+    setSidebarWidth(Math.max(180, Math.min(500, clientX - bodyLeft)));
+  }, []);
+
+  const handleContentDrag = useCallback(({ clientX }) => {
+    if (!workspaceRef.current) return;
+    const rect = workspaceRef.current.getBoundingClientRect();
+    setContentRatio(Math.max(0.2, Math.min(0.8, (clientX - rect.left) / rect.width)));
+  }, []);
+
+  const handleConsoleDrag = useCallback(({ clientY }) => {
+    if (!editorPanelRef.current) return;
+    const rect = editorPanelRef.current.getBoundingClientRect();
+    const bottom = rect.bottom;
+    const maxH = rect.height * 0.7;
+    const newHeight = Math.max(100, Math.min(maxH, bottom - clientY));
+    setConsoleHeight(newHeight);
+  }, []);
 
   const goNextLesson = () => {
     const idx = JS_LESSONS.findIndex(l => l.id === activeLesson);
@@ -294,9 +603,9 @@ export default function JSLabsPlatform() {
     const results = tests.map((test, i) => {
       try {
         const passed = test.validate(code);
-        return { index: i, name: test.name, passed };
-      } catch {
-        return { index: i, name: test.name, passed: false };
+        return { index: i, name: test.name, passed, error: passed ? null : `Expected: ${test.name}` };
+      } catch (e) {
+        return { index: i, name: test.name, passed: false, error: e?.message || `Expected: ${test.name}` };
       }
     });
 
@@ -331,6 +640,14 @@ export default function JSLabsPlatform() {
     if (view === "bugs") return currentBug;
     if (view === "projects") return currentProject;
     return null;
+  }, [view, currentLesson, currentBug, currentProject]);
+
+  // Get tests for current view (always show what tests exist)
+  const currentTests = useMemo(() => {
+    if (view === "learn") return currentLesson?.tests || [];
+    if (view === "bugs") return currentBug?.tests || [];
+    if (view === "projects") return currentProject?.tests || [];
+    return [];
   }, [view, currentLesson, currentBug, currentProject]);
 
   if (!currentContent) {
@@ -376,8 +693,9 @@ export default function JSLabsPlatform() {
           <span className="jsl-top-percent">{progressStats.pct}%</span>
         </div>
         <div className="jsl-topbar-right">
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "vs-dark" ? "light" : "vs-dark")} title="Toggle theme">
-            {monacoTheme === "vs-dark" ? (
+          <ThemeToggle />
+          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
+            {monacoTheme === "jsl-dark" ? (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             ) : (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -388,7 +706,7 @@ export default function JSLabsPlatform() {
 
       {/* ─── Main Layout ─── */}
       <div className="jsl-main">
-        <div className="jsl-body">
+        <div className="jsl-body" ref={bodyRef}>
         {/* Sidebar */}
         <JSSidebar
           activeSection={view}
@@ -399,12 +717,14 @@ export default function JSLabsPlatform() {
           onSelectBug={selectBug}
           onSelectProject={selectProject}
           progress={progressStats}
+          style={{ width: sidebarWidth }}
         />
+        <ResizableHandle onDrag={handleSidebarDrag} />
 
         {/* Content & Editor */}
-        <div className="jsl-workspace">
+        <div className="jsl-workspace" ref={workspaceRef}>
           {/* Content Panel */}
-          <div className="jsl-content-panel">
+          <div className="jsl-content-panel" style={{ flex: `${contentRatio} 1 0` }}>
             {view === "learn" && currentLesson && (
               <LessonView
                 lesson={currentLesson}
@@ -447,90 +767,97 @@ export default function JSLabsPlatform() {
           </div>
 
           {/* Editor & Output Panel */}
-          <div className="jsl-editor-panel">
-            <div className="jsl-editor-tabs">
-              <button className={`jsl-editor-tab ${activeSubTab === "editor" ? "active" : ""}`} onClick={() => setActiveSubTab("editor")}>Editor</button>
-              <button className={`jsl-editor-tab ${activeSubTab === "output" ? "active" : ""}`} onClick={() => setActiveSubTab("output")}>Console</button>
+          <ResizableHandle onDrag={handleContentDrag} />
+          <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
+            {/* Editor Toolbar */}
+            <div className="jsl-editor-actions">
+              <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
+                {isRunning ? (
+                  <><span className="jsl-spinner" /> Running</>
+                ) : (
+                  <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run</>
+                )}
+              </button>
+              <button className="jsl-btn-secondary" onClick={() => {
+                let starter = "";
+                if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
+                else if (view === "bugs" && currentBug) starter = currentBug.brokenCode;
+                else if (view === "projects" && currentProject) starter = currentProject.starterCode;
+                if (editorRef.current) {
+                  editorRef.current.setValue(starter);
+                }
+                setCode(starter);
+                setOutput([]);
+                setTestResults([]);
+                codeVersionRef.current++;
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                Reset
+              </button>
+              <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
             </div>
 
-            {activeSubTab === "editor" ? (
-              <div className="jsl-editor-container">
-                <div className="jsl-editor-actions">
-                  <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
-                    {isRunning ? (
-                      <><span className="jsl-spinner" /> Running</>
-                    ) : (
-                      <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run</>
-                    )}
-                  </button>
-                  <button className="jsl-btn-secondary" onClick={() => {
-                    if (view === "learn" && currentLesson) setCode(currentLesson.starterCode);
-                    else if (view === "bugs" && currentBug) setCode(currentBug.brokenCode);
-                    else if (view === "projects" && currentProject) setCode(currentProject.starterCode);
-                    setOutput([]);
-                    setTestResults([]);
-                  }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                    Reset
-                  </button>
-                  <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
-                </div>
-                <div className="jsl-editor-wrapper">
-                  <Editor
-                    height="100%"
-                    language="javascript"
-                    theme={monacoTheme}
-                    value={code}
-                    onChange={(v) => setCode(v || "")}
-                    options={{
-                      fontSize: 13,
-                      fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
-                      minimap: { enabled: false },
-                      scrollBeyondLastLine: false,
-                      lineNumbers: "on",
-                      tabSize: 2,
-                      insertSpaces: true,
-                      wordWrap: "on",
-                      automaticLayout: true,
-                      bracketPairColorization: { enabled: true },
-                      padding: { top: 12, bottom: 12 },
-                      cursorBlinking: "smooth",
-                      smoothScrolling: true,
-                      folding: true,
-                      lineNumbersMinChars: 3,
-                    }}
-                  />
-                </div>
+            {/* Editor */}
+            <div className="jsl-editor-wrapper">
+              <Editor
+                key={`${codeVersionRef.current}`}
+                height="100%"
+                language="javascript"
+                theme={monacoTheme}
+                value={code}
+                onChange={handleCodeChange}
+                onMount={handleEditorMount}
+                options={{
+                  fontSize: 13,
+                  fontFamily: "Consolas, 'Courier New', monospace",
+                  fontLigatures: false,
+                  letterSpacing: 0,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  lineNumbers: "on",
+                  tabSize: 2,
+                  insertSpaces: true,
+                  wordWrap: "on",
+                  automaticLayout: true,
+                  bracketPairColorization: { enabled: true },
+                  padding: { top: 12, bottom: 12 },
+                  cursorBlinking: "smooth",
+                  smoothScrolling: true,
+                  folding: true,
+                  lineNumbersMinChars: 3,
+                }}
+              />
+            </div>
+
+            {/* Resizable Console Panel (always visible below editor) */}
+            <ResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
+            <div className="jsl-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight }}>
+              <div className="jsl-console-header">
+                <span>Console Output</span>
+                <span className="jsl-console-count">{output.length} lines</span>
               </div>
-            ) : (
-              <div className="jsl-console-panel" ref={outputRef}>
-                <div className="jsl-console-header">
-                  <span>Console Output</span>
-                  <span className="jsl-console-count">{output.length} lines</span>
-                </div>
-                <div className="jsl-console-body">
-                  {output.length === 0 ? (
-                    <div className="jsl-console-empty">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                      <p>Run your code to see output</p>
+              <div className="jsl-console-body">
+                {output.length === 0 ? (
+                  <div className="jsl-console-empty">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <p>Run your code to see output</p>
+                  </div>
+                ) : (
+                  output.map((line, i) => (
+                    <div key={i} className={`jsl-console-line jsl-console-${line.type}`}>
+                      <span className="jsl-console-marker">
+                        {line.type === "log" && "▸"}
+                        {line.type === "warn" && "⚠"}
+                        {line.type === "error" && "✗"}
+                        {line.type === "info" && "ℹ"}
+                        {line.type === "result" && "›"}
+                      </span>
+                      <pre>{line.content}</pre>
                     </div>
-                  ) : (
-                    output.map((line, i) => (
-                      <div key={i} className={`jsl-console-line jsl-console-${line.type}`}>
-                        <span className="jsl-console-marker">
-                          {line.type === "log" && "▸"}
-                          {line.type === "warn" && "⚠"}
-                          {line.type === "error" && "✗"}
-                          {line.type === "info" && "ℹ"}
-                          {line.type === "result" && "›"}
-                        </span>
-                        <pre>{line.content}</pre>
-                      </div>
-                    ))
-                  )}
-                </div>
+                  ))
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
 
@@ -548,8 +875,8 @@ export default function JSLabsPlatform() {
             </span>
             <div className="jsl-tests-actions">
               {testResults.length > 0 && (
-                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === testResults.length ? "all-pass" : ""}`}>
-                  {testResults.filter(r => r.passed).length}/{testResults.length} Passed
+                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
+                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
                 </span>
               )}
               <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
@@ -559,19 +886,35 @@ export default function JSLabsPlatform() {
             </div>
           </div>
           <div className="jsl-tests-body">
-            {testResults.length === 0 ? (
-              <div className="jsl-tests-empty">Click "Run Tests" to validate your code against automated checks</div>
+            {currentTests.length === 0 ? (
+              <div className="jsl-tests-empty">No automated tests for this section</div>
             ) : (
-              testResults.map((r, i) => (
-                <div key={i} className={`jsl-test-item ${r.passed ? "pass" : "fail"}`}>
-                  <span className="jsl-test-icon">{r.passed ? "✓" : "✗"}</span>
-                  <span className="jsl-test-name">{r.name}</span>
-                </div>
-              ))
+              currentTests.map((test, i) => {
+                const result = testResults.find(r => r.index === i);
+                const passed = result?.passed;
+                const hasResult = result !== undefined;
+                return (                      <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
+                        <span className="jsl-test-icon">
+                          {hasResult ? (passed ? "✓" : "✗") : "○"}
+                        </span>
+                        <span className="jsl-test-name">{test.name}</span>
+                        {hasResult && !passed && result?.error && (
+                          <span className="jsl-test-error">{result.error}</span>
+                        )}
+                      </div>
+                );
+              })
             )}
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="jsl-footer">
+        <div className="jsl-footer-inner">
+          <p>Built by <strong>Prathamesh Pawar</strong></p>
+        </div>
+      </footer>
     </div>
   );
 }

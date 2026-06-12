@@ -22,6 +22,18 @@ const filterLabels = sidebar.map(entry => entry.label);
       <polyline points="7 18 12 13 17 18"/>
     </svg>
   </button>
+  <button id="sidebar-theme-toggle" class="sidebar-toggle" type="button" title="Toggle theme" style="flex: 0 0 auto; width: 34px;">
+    <svg id="sidebar-theme-sun" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <svg id="sidebar-theme-moon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
 </div>
 
 <div class="sidebar-filter-dropdown">
@@ -180,10 +192,40 @@ const filterLabels = sidebar.map(entry => entry.label);
     }
   }
 
+  function setupSidebarTheme() {
+    const toggle = document.getElementById('sidebar-theme-toggle');
+    const sun = document.getElementById('sidebar-theme-sun');
+    const moon = document.getElementById('sidebar-theme-moon');
+    if (!toggle || !sun || !moon) return;
+
+    function updateIcon() {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      sun.style.display = isLight ? 'none' : 'block';
+      moon.style.display = isLight ? 'block' : 'none';
+    }
+
+    updateIcon();
+
+    toggle.addEventListener('click', () => {
+      const html = document.documentElement;
+      const isLight = html.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('starlight-theme', 'dark');
+      } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('starlight-theme', 'light');
+      }
+      updateIcon();
+    });
+  }
+
   setupSidebarFilter();
   setupExpandCollapse();
+  setupSidebarTheme();
   document.addEventListener('astro:after-swap', () => {
     setupSidebarFilter();
     setupExpandCollapse();
+    setupSidebarTheme();
   });
 </script>

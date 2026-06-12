@@ -1,0 +1,31 @@
+---
+import MCQCategory from '../../components/mcq/MCQCategory.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import { MCQ_CATEGORIES } from '../../components/mcq/MCQData.js';
+
+export function getStaticPaths() {
+  return MCQ_CATEGORIES.map(cat => ({
+    params: { category: cat.id },
+  }));
+}
+
+const { category } = Astro.params;
+const cat = MCQ_CATEGORIES.find(c => c.id === category);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{cat?.name || 'Category'} — MCQ Hub</title>
+    <meta name="description" content={`${cat?.name || 'MCQ'} category — test your knowledge with interactive quizzes.`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="mcq-body">
+    <MCQCategory client:load categoryId={category} />
+  </body>
+</html>

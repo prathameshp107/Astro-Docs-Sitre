@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import ThemeToggle from "./mcq/ThemeToggle.jsx";
 
 const starterCode = `// Welcome to the DSA Playground! 🚀
 // Write any JavaScript code below and click Run.
@@ -177,6 +178,20 @@ export default function ReactPlayground() {
               </svg>
               Docs
             </a>
+            <a href={`${base}practice`} className="nav-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Labs
+            </a>
+            <a href={`${base}mcq`} className="nav-link nav-link-playground">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="8 12 11 15 16 9" />
+              </svg>
+              MCQ Hub
+            </a>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
@@ -265,6 +280,13 @@ export default function ReactPlayground() {
           </div>
         </main>
       </div>
+
+      {/* Footer */}
+      <footer className="playground-footer">
+        <div className="footer-inner">
+          <p>Built by <strong>Prathamesh Pawar</strong></p>
+        </div>
+      </footer>
     </div>
   );
 }

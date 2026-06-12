@@ -46,6 +46,14 @@ export default defineConfig({
           label: 'JS Interview Lab',
           link: '/practice',
         },
+        {
+          label: 'MCQ Hub',
+          link: '/mcq',
+        },
+        {
+          label: 'MCQ Dashboard',
+          link: '/mcq/dashboard',
+        },
       {
         label: 'Namaste JavaScript',
         items: [{ autogenerate: { directory: 'namaste-js' } }],
