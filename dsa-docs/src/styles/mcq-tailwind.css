@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Theme Variables ─── */
+:root {
+  --mcq-bg: #030712;
+  --mcq-bg-rgb: 3, 7, 18;
+  --mcq-text: #e5edf8;
+  --mcq-text-primary: #ffffff;
+  --mcq-text-secondary: #94a3b8;
+  --mcq-text-muted: #64748b;
+  --mcq-text-body: #cbd5e1;
+  --mcq-surface: rgba(15, 23, 42, 0.25);
+  --mcq-surface-20: rgba(15, 23, 42, 0.20);
+  --mcq-surface-30: rgba(15, 23, 42, 0.30);
+  --mcq-surface-40: rgba(15, 23, 42, 0.40);
+  --mcq-surface-hover: rgba(30, 41, 59, 0.30);
+  --mcq-surface-hover-40: rgba(30, 41, 59, 0.40);
+  --mcq-nav-bg: rgba(3, 7, 18, 0.85);
+  --mcq-border: rgba(255, 255, 255, 0.06);
+  --mcq-border-hover: rgba(255, 255, 255, 0.15);
+  --mcq-border-strong: rgba(255, 255, 255, 0.10);
+  --mcq-border-light: rgba(255, 255, 255, 0.03);
+  --mcq-code-bg: #0a0f1e;
+  --mcq-snippet-header: rgba(15, 23, 42, 0.40);
+}
+
+:root[data-theme='light'] {
+  --mcq-bg: #f8fafc;
+  --mcq-bg-rgb: 248, 250, 252;
+  --mcq-text: #1e293b;
+  --mcq-text-primary: #0f172a;
+  --mcq-text-secondary: #475569;
+  --mcq-text-muted: #94a3b8;
+  --mcq-text-body: #334155;
+  --mcq-surface: rgba(255, 255, 255, 0.70);
+  --mcq-surface-20: rgba(255, 255, 255, 0.60);
+  --mcq-surface-30: rgba(255, 255, 255, 0.75);
+  --mcq-surface-40: rgba(255, 255, 255, 0.85);
+  --mcq-surface-hover: rgba(241, 245, 249, 0.80);
+  --mcq-surface-hover-40: rgba(226, 232, 240, 0.80);
+  --mcq-nav-bg: rgba(248, 250, 252, 0.85);
+  --mcq-border: rgba(0, 0, 0, 0.08);
+  --mcq-border-hover: rgba(59, 130, 246, 0.25);
+  --mcq-border-strong: rgba(0, 0, 0, 0.12);
+  --mcq-border-light: rgba(0, 0, 0, 0.04);
+  --mcq-code-bg: #f1f5f9;
+  --mcq-snippet-header: rgba(226, 232, 240, 0.60);
+}
+
+@layer base {
+  .mcq-body {
+    @apply bg-[var(--mcq-bg)] text-[var(--mcq-text)] font-sans min-h-screen overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .mcq-gradient-text {
+    @apply bg-gradient-to-r from-blue-400 via-emerald-400 to-purple-400 bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_200%];
+  }
+
+  .mcq-card {
+    position: relative;
+    border-radius: 0.75rem;
+    border: 1px solid var(--mcq-border);
+    background: var(--mcq-surface-30);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+  }
+
+  .mcq-card:hover {
+    border-color: rgba(96, 165, 250, 0.2);
+    background: var(--mcq-surface-hover);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.05);
+  }
+
+  .mcq-btn-primary {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-emerald-400 shadow-md shadow-blue-500/20 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .mcq-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: var(--mcq-text-primary);
+    background: var(--mcq-surface-20);
+    border: 1px solid var(--mcq-border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+  }
+
+  .mcq-btn-secondary:hover {
+    background: var(--mcq-surface-hover);
+    border-color: rgba(96, 165, 250, 0.3);
+  }
+
+  .mcq-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: var(--mcq-text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .mcq-btn-ghost:hover {
+    color: var(--mcq-text-primary);
+    background: rgba(255,255,255,0.05);
+  }
+
+  :root[data-theme='light'] .mcq-btn-ghost:hover {
+    background: rgba(0,0,0,0.04);
+  }
+
+  .mcq-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+  }
+
+  .mcq-section-header {
+    @apply text-center mb-10;
+  }
+
+  .mcq-section-tag {
+    @apply inline-block px-3 py-1 rounded-full border border-blue-400/15 bg-blue-400/5 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4;
+  }
+}
