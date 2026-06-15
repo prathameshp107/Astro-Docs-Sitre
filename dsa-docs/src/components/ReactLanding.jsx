@@ -233,13 +233,19 @@ export default function ReactLanding() {
             <span className="brand-text">DSA & Dev Notes</span>
           </a>
           <div className="nav-links">
+            <a href={`${base}visualizer`} className="nav-link nav-link-playground">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              DSA Visualizer
+            </a>
             <a href={`${base}playground`} className="nav-link">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Practice Labs
             </a>
-            <a href={`${base}mcq`} className="nav-link nav-link-playground">
+            <a href={`${base}mcq`} className="nav-link">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="8 12 11 15 16 9" />
