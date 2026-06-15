@@ -2,9 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchingStore } from '../../store/visualizerStore';
 
+const getDelayFromPos = (pos) => Math.max(5, Math.round(2000 * Math.pow(0.945, pos - 1)));
+
 export default function SearchingVisualizer() {
   const { array, steps, currentStep, result, isAnimating, searchType, setSearchType, runSearch, nextStep, resetSearch, randomArray } = useSearchingStore();
   const [target, setTarget] = useState('29');
+  const [speed, setSpeed] = useState(() => getDelayFromPos(65));
+  const [sliderPos, setSliderPos] = useState(65);
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -13,7 +17,7 @@ export default function SearchingVisualizer() {
 
   useEffect(() => {
     if (isAnimating && currentStep >= 0 && currentStep < steps.length - 1) {
-      timerRef.current = setTimeout(() => nextStep(), 700);
+      timerRef.current = setTimeout(() => nextStep(), speed);
     }
     return () => clearTimeout(timerRef.current);
   }, [isAnimating, currentStep, steps]);
@@ -83,6 +87,26 @@ export default function SearchingVisualizer() {
         <button onClick={randomArray} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
           New Array
         </button>
+
+        <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
+          <span className="w-6 text-center" title="Slow">🐢</span>
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value={sliderPos}
+            onChange={(e) => {
+              const pos = Number(e.target.value);
+              setSliderPos(pos);
+              setSpeed(getDelayFromPos(pos));
+            }}
+            className="w-20 accent-blue-500"
+          />
+          <span className="w-6 text-center" title="Fast">🐇</span>
+          <span className="font-mono text-[10px] text-white/40 min-w-[3rem] text-center tabular-nums">
+            {speed >= 1000 ? `${(speed / 1000).toFixed(1)}s` : `${speed}ms`}
+          </span>
+        </div>
       </div>
 
       {/* Status */}

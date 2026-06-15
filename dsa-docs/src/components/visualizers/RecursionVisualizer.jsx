@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRecursionStore } from '../../store/visualizerStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -7,15 +8,19 @@ const EXAMPLES = [
   { id: 'hanoi', label: 'Tower of Hanoi', desc: 'Move n disks from A to C using B' },
 ];
 
+const getDelayFromPos = (pos) => Math.max(5, Math.round(2000 * Math.pow(0.945, pos - 1)));
+
 export default function RecursionVisualizer() {
   const { callStack, returnValues, highlighted, currentExample, isAnimating, setExample, runFactorial, runFibonacci, runHanoi, stopAnimation } = useRecursionStore();
+  const [speed, setSpeed] = useState(() => getDelayFromPos(65));
+  const [sliderPos, setSliderPos] = useState(65);
 
   const handleRun = () => {
     if (isAnimating) { stopAnimation(); return; }
     const n = currentExample === 'hanoi' ? 3 : currentExample === 'factorial' ? 5 : 6;
-    if (currentExample === 'factorial') runFactorial(n);
-    else if (currentExample === 'fibonacci') runFibonacci(n);
-    else runHanoi(n);
+    if (currentExample === 'factorial') runFactorial(n, speed);
+    else if (currentExample === 'fibonacci') runFibonacci(n, speed);
+    else runHanoi(n, speed);
   };
 
   return (
@@ -46,6 +51,27 @@ export default function RecursionVisualizer() {
         >
           {isAnimating ? 'Stop' : `Run ${currentExample === 'hanoi' ? '(n=3)' : currentExample === 'factorial' ? '(n=5)' : '(n=6)'}`}
         </button>
+        <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
+          <span className="w-6 text-center" title="Slow">🐢</span>
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value={sliderPos}
+            onChange={(e) => {
+              const pos = Number(e.target.value);
+              setSliderPos(pos);
+              setSpeed(getDelayFromPos(pos));
+            }}
+            disabled={isAnimating}
+            className="w-20 accent-blue-500"
+          />
+          <span className="w-6 text-center" title="Fast">🐇</span>
+          <span className="font-mono text-[10px] text-white/40 min-w-[3rem] text-center tabular-nums">
+            {speed >= 1000 ? `${(speed / 1000).toFixed(1)}s` : `${speed}ms`}
+          </span>
+        </div>
+
         <button onClick={stopAnimation} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
           Reset
         </button>

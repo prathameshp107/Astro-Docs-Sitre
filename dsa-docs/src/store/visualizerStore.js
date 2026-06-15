@@ -475,7 +475,7 @@ export const useRecursionStore = create((set, get) => ({
 
   setExample: (ex) => set({ currentExample: ex, callStack: [], returnValues: [], highlighted: -1, isAnimating: false }),
 
-  runFactorial: async (n) => {
+  runFactorial: async (n, delay = 400) => {
     const steps = [];
     function fact(x, depth) {
       steps.push({ type: 'call', func: `fact(${x})`, depth, line: `if (${x} <= 1) return 1` });
@@ -491,7 +491,7 @@ export const useRecursionStore = create((set, get) => ({
     fact(n, 0);
     set({ isAnimating: true });
     for (let i = 0; i < steps.length; i++) {
-      await new Promise(r => setTimeout(r, 400));
+      await new Promise(r => setTimeout(r, delay));
       if (!get().isAnimating) break;
       const step = steps[i];
       if (step.type === 'call') {
@@ -507,7 +507,7 @@ export const useRecursionStore = create((set, get) => ({
     set({ isAnimating: false });
   },
 
-  runFibonacci: async (n) => {
+  runFibonacci: async (n, delay = 350) => {
     const steps = [];
     function fib(x, depth) {
       steps.push({ type: 'call', func: `fib(${x})`, depth, line: `if (${x} <= 1) return ${x}` });
@@ -523,7 +523,7 @@ export const useRecursionStore = create((set, get) => ({
     fib(n, 0);
     set({ isAnimating: true });
     for (let i = 0; i < steps.length; i++) {
-      await new Promise(r => setTimeout(r, 350));
+      await new Promise(r => setTimeout(r, delay));
       if (!get().isAnimating) break;
       const step = steps[i];
       if (step.type === 'call') {
@@ -537,7 +537,7 @@ export const useRecursionStore = create((set, get) => ({
     set({ isAnimating: false });
   },
 
-  runHanoi: async (n) => {
+  runHanoi: async (n, delay = 500) => {
     const steps = [];
     function hanoi(disks, from, to, aux, depth) {
       if (disks === 1) {
@@ -553,7 +553,7 @@ export const useRecursionStore = create((set, get) => ({
     hanoi(n, 'A', 'C', 'B', 0);
     set({ isAnimating: true, callStack: [], returnValues: [] });
     for (let i = 0; i < steps.length; i++) {
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, delay));
       if (!get().isAnimating) break;
       const step = steps[i];
       if (step.type === 'call') {
@@ -581,7 +581,7 @@ export const useDPStore = create((set, get) => ({
 
   setExample: (ex) => set({ currentExample: ex, table: [], highlighted: [], steps: [], isAnimating: false, result: null }),
 
-  runFibonacci: async (n) => {
+  runFibonacci: async (n, delay = 500) => {
     const table = new Array(n + 1).fill(0);
     const steps = [];
     table[0] = 0;
@@ -593,13 +593,13 @@ export const useDPStore = create((set, get) => ({
     set({ isAnimating: true, result: table[n] });
     for (let i = 0; i < steps.length; i++) {
       if (!get().isAnimating) break;
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, delay));
       set({ table: steps[i].table, highlighted: steps[i].highlight, currentStep: i + 1, desc: steps[i].desc });
     }
     set({ isAnimating: false, highlighted: [] });
   },
 
-  runKnapsack: async (capacity) => {
+  runKnapsack: async (capacity, delay = 100) => {
     const weights = [2, 3, 4, 5];
     const values = [3, 4, 5, 6];
     const n = weights.length;
@@ -618,13 +618,13 @@ export const useDPStore = create((set, get) => ({
     set({ isAnimating: true, result: table[n][capacity] });
     for (let i = 0; i < steps.length; i++) {
       if (!get().isAnimating) break;
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(r => setTimeout(r, delay));
       set({ table: steps[i].table, highlighted: steps[i].highlight, currentStep: i + 1, desc: steps[i].desc });
     }
     set({ isAnimating: false, highlighted: [] });
   },
 
-  runLCS: async () => {
+  runLCS: async (delay = 80) => {
     const str1 = 'ABCDEF';
     const str2 = 'ACBEDF';
     const m = str1.length, n = str2.length;
@@ -643,13 +643,13 @@ export const useDPStore = create((set, get) => ({
     set({ isAnimating: true, result: table[m][n] });
     for (let i = 0; i < steps.length; i++) {
       if (!get().isAnimating) break;
-      await new Promise(r => setTimeout(r, 80));
+      await new Promise(r => setTimeout(r, delay));
       set({ table: steps[i].table, highlighted: steps[i].highlight, currentStep: i + 1, desc: steps[i].desc });
     }
     set({ isAnimating: false, highlighted: [] });
   },
 
-  runCoinChange: async (amount) => {
+  runCoinChange: async (amount, delay = 200) => {
     const coins = [1, 2, 5, 10];
     const table = new Array(amount + 1).fill(Infinity);
     table[0] = 0;
@@ -665,7 +665,7 @@ export const useDPStore = create((set, get) => ({
     set({ isAnimating: true, result: table[amount] === Infinity ? -1 : table[amount] });
     for (let i = 0; i < steps.length; i++) {
       if (!get().isAnimating) break;
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, delay));
       set({ table: steps[i].table, highlighted: steps[i].highlight, currentStep: i + 1, desc: steps[i].desc });
     }
     set({ isAnimating: false, highlighted: [] });

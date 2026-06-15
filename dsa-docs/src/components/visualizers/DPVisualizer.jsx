@@ -16,19 +16,23 @@ const EXAMPLE_DEFAULTS = {
   coinchange: { param: 12, label: 'amount', max: 20, suffix: '' },
 };
 
+const getDelayFromPos = (pos) => Math.max(5, Math.round(2000 * Math.pow(0.945, pos - 1)));
+
 export default function DPVisualizer() {
   const { table, highlighted, steps, currentExample, isAnimating, result, currentStep, desc, setExample, runFibonacci, runKnapsack, runLCS, runCoinChange, stopAnimation } = useDPStore();
   const [param, setParam] = useState('');
+  const [speed, setSpeed] = useState(() => getDelayFromPos(65));
+  const [sliderPos, setSliderPos] = useState(65);
   const defaults = EXAMPLE_DEFAULTS[currentExample] || EXAMPLE_DEFAULTS.fibonacci;
 
   const handleRun = () => {
     if (isAnimating) { stopAnimation(); return; }
     const p = parseInt(param);
     const pVal = (param === '' || isNaN(p)) ? defaults.param : Math.min(p, defaults.max);
-    if (currentExample === 'fibonacci') runFibonacci(pVal);
-    else if (currentExample === 'knapsack') runKnapsack(pVal);
-    else if (currentExample === 'lcs') runLCS();
-    else runCoinChange(pVal);
+    if (currentExample === 'fibonacci') runFibonacci(pVal, speed);
+    else if (currentExample === 'knapsack') runKnapsack(pVal, speed);
+    else if (currentExample === 'lcs') runLCS(speed);
+    else runCoinChange(pVal, speed);
   };
 
   const handleSetExample = (id) => {
@@ -81,6 +85,27 @@ export default function DPVisualizer() {
         >
           {isAnimating ? 'Stop' : 'Run'}
         </button>
+        <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
+          <span className="w-6 text-center" title="Slow">🐢</span>
+          <input
+            type="range"
+            min="1"
+            max="100"
+            value={sliderPos}
+            onChange={(e) => {
+              const pos = Number(e.target.value);
+              setSliderPos(pos);
+              setSpeed(getDelayFromPos(pos));
+            }}
+            disabled={isAnimating}
+            className="w-20 accent-blue-500"
+          />
+          <span className="w-6 text-center" title="Fast">🐇</span>
+          <span className="font-mono text-[10px] text-white/40 min-w-[3rem] text-center tabular-nums">
+            {speed >= 1000 ? `${(speed / 1000).toFixed(1)}s` : `${speed}ms`}
+          </span>
+        </div>
+
         <button onClick={stopAnimation} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
           Reset
         </button>
