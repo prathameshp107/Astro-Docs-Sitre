@@ -11,25 +11,25 @@ const features = [
     icon: "📝",
     title: "Structured Notes",
     desc: "Well-organized notes across JavaScript, React, Angular, DSA, databases, and more.",
-    gradient: "from-blue-400",
+    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
   },
   {
     icon: "💻",
     title: "Code Playground",
     desc: "Write, run, and test JavaScript code right in your browser instantly.",
-    gradient: "from-emerald-400",
+    gradient: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
   },
   {
     icon: "🎯",
     title: "Interview Prep",
     desc: "Curated interview questions and answers to ace your next tech interview.",
-    gradient: "from-purple-400",
+    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
   },
   {
-    icon: "📊",
-    title: "DSA Problems",
-    desc: "Data Structures & Algorithms with patterns, solutions, and visual explanations.",
-    gradient: "from-cyan-400",
+    icon: "📊"  ,
+    title: "DSA Visualizer",
+    desc: "Interactive visualizations for algorithms, data structures, and problem-solving patterns.",
+    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
   },
 ];
 
@@ -39,6 +39,7 @@ const learningPaths = [
     title: "JavaScript",
     desc: "Core fundamentals, async concepts, closures, event loop, and advanced patterns.",
     color: "#f7df1e",
+    gradient: "linear-gradient(135deg, rgba(247,223,30,0.15) 0%, rgba(247,223,30,0.05) 100%)",
     progress: 85,
     icon: "🟨",
   },
@@ -47,6 +48,7 @@ const learningPaths = [
     title: "React",
     desc: "Components, Hooks, State Management, Routing, Performance and Interview Prep.",
     color: "#61dafb",
+    gradient: "linear-gradient(135deg, rgba(97,218,251,0.15) 0%, rgba(97,218,251,0.05) 100%)",
     progress: 40,
     icon: "⚛️",
   },
@@ -55,6 +57,7 @@ const learningPaths = [
     title: "Node.js",
     desc: "Runtime architecture, Express, async patterns, databases, and production deployment.",
     color: "#339933",
+    gradient: "linear-gradient(135deg, rgba(51,153,51,0.15) 0%, rgba(51,153,51,0.05) 100%)",
     progress: 70,
     icon: "🟢",
   },
@@ -63,6 +66,7 @@ const learningPaths = [
     title: "MongoDB",
     desc: "Collections, aggregation, indexing and interview preparation.",
     color: "#47a248",
+    gradient: "linear-gradient(135deg, rgba(71,162,72,0.15) 0%, rgba(71,162,72,0.05) 100%)",
     progress: 90,
     icon: "🍃",
   },
@@ -71,6 +75,7 @@ const learningPaths = [
     title: "Data Structures",
     desc: "Arrays, Trees, Graphs, Dynamic Programming and problem solving.",
     color: "#6366f1",
+    gradient: "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 100%)",
     progress: 30,
     icon: "📊",
   },
@@ -79,22 +84,23 @@ const learningPaths = [
     title: "Python",
     desc: "Syntax, OOP, modules, file handling, and interview preparation.",
     color: "#3776AB",
+    gradient: "linear-gradient(135deg, rgba(55,118,171,0.15) 0%, rgba(55,118,171,0.05) 100%)",
     progress: 60,
     icon: "🐍",
   },
 ];
 
 const topicExplorer = [
-  { name: "JavaScript", icon: "🟨", desc: "Closures, Promises, Event Loop, Prototypes & more", href: "docs/overview" },
-  { name: "React", icon: "⚛️", desc: "Hooks, State, Components, Performance, Testing", href: "docs/overview" },
-  { name: "Angular", icon: "🅰️", desc: "Components, Routing, Forms, RxJS, NgRx", href: "docs/overview" },
-  { name: "Node.js", icon: "🟢", desc: "Express, Async, Architecture, Databases, Deployment", href: "docs/overview" },
-  { name: "MongoDB", icon: "🍃", desc: "Aggregation, Indexing, Modeling, Replication", href: "docs/overview" },
-  { name: "MySQL", icon: "🗄️", desc: "Queries, Joins, Indexing, Optimization, ACID", href: "docs/overview" },
-  { name: "Docker", icon: "🐳", desc: "Containers, Images, Compose, Networking, Volumes", href: "docs/overview" },
-  { name: "DSA", icon: "📊", desc: "Arrays, Trees, Graphs, DP, Recursion, Sorting", href: "docs/overview" },
-  { name: "Python", icon: "🐍", desc: "Syntax, OOP, Modules, File Handling, Data Science", href: "docs/overview" },
-  { name: "Redis", icon: "🔴", desc: "Caching, Pub/Sub, Data Types, Persistence, Clustering", href: "docs/overview" },
+  { name: "JavaScript", icon: "🟨", desc: "Closures, Promises, Event Loop, Prototypes & more", href: "docs/overview", color: "#f7df1e" },
+  { name: "React", icon: "⚛️", desc: "Hooks, State, Components, Performance, Testing", href: "docs/overview", color: "#61dafb" },
+  { name: "Angular", icon: "🅰️", desc: "Components, Routing, Forms, RxJS, NgRx", href: "docs/overview", color: "#dd0031" },
+  { name: "Node.js", icon: "🟢", desc: "Express, Async, Architecture, Databases, Deployment", href: "docs/overview", color: "#339933" },
+  { name: "MongoDB", icon: "🍃", desc: "Aggregation, Indexing, Modeling, Replication", href: "docs/overview", color: "#47a248" },
+  { name: "MySQL", icon: "🗄️", desc: "Queries, Joins, Indexing, Optimization, ACID", href: "docs/overview", color: "#00758f" },
+  { name: "Docker", icon: "🐳", desc: "Containers, Images, Compose, Networking, Volumes", href: "docs/overview", color: "#2496ed" },
+  { name: "DSA", icon: "📊", desc: "Arrays, Trees, Graphs, DP, Recursion, Sorting", href: "docs/overview", color: "#6366f1" },
+  { name: "Python", icon: "🐍", desc: "Syntax, OOP, Modules, File Handling, Data Science", href: "docs/overview", color: "#3776AB" },
+  { name: "Redis", icon: "🔴", desc: "Caching, Pub/Sub, Data Types, Persistence, Clustering", href: "docs/overview", color: "#dc382d" },
 ];
 
 const recentUpdates = [
@@ -157,18 +163,32 @@ function AnimatedCounter({ end, suffix = "" }) {
   );
 }
 
+function FloatingOrb({ size, gradient, top, left, delay = 0, duration = 20 }) {
+  return (
+    <div
+      className="floating-orb"
+      style={{
+        width: size,
+        height: size,
+        background: gradient,
+        top,
+        left,
+        animationDelay: `${delay}s`,
+        animationDuration: `${duration}s`,
+      }}
+    />
+  );
+}
+
 export default function ReactLanding() {
   const [loaded, setLoaded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const heroRef = useRef(null);
-  const mouseGlowRef = useRef(null);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
 
-  // Scroll-aware navbar and back-to-top
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -183,51 +203,24 @@ export default function ReactLanding() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const handleMouseMove = useCallback((e) => {
-    if (!mouseGlowRef.current || !heroRef.current) return;
-    requestAnimationFrame(() => {
-      const rect = heroRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      mouseGlowRef.current.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(59,130,246,0.15), transparent 60%)`;
-    });
-  }, []);
-
   const base = import.meta.env.BASE_URL || "/";
 
   return (
     <div className={`landing-page ${loaded ? "loaded" : ""}`}>
-      {/* ─── Floating Particles ─── */}
-      <div className="particles" aria-hidden="true">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${6 + Math.random() * 8}s`,
-              width: `${2 + Math.random() * 4}px`,
-              height: `${2 + Math.random() * 4}px`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* ─── Nav ─── */}
       <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
         <div className="nav-inner">
           <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
             <span className="brand-logo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="url(#brand-grad)" />
-                <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">D</text>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
                 <defs>
-                  <linearGradient id="brand-grad" x1="0" y1="0" x2="28" y2="28">
-                    <stop offset="0%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#2dd4bf" />
+                  <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6366f1" />
+                    <stop offset="100%" stopColor="#8b5cf6" />
                   </linearGradient>
                 </defs>
+                <rect width="32" height="32" rx="10" fill="url(#logoGrad)" />
+                <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
               </svg>
             </span>
             <span className="brand-text">DSA & Dev Notes</span>
@@ -239,7 +232,7 @@ export default function ReactLanding() {
               </svg>
               DSA Visualizer
             </a>
-            <a href={`${base}playground`} className="nav-link">
+            <a href={`${base}practice`} className="nav-link">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
@@ -276,31 +269,35 @@ export default function ReactLanding() {
       </nav>
 
       {/* ─── Hero ─── */}
-      <section
-        className="hero"
-        onMouseMove={handleMouseMove}
-        ref={heroRef}
-      >
-        <div className="hero-bg" aria-hidden="true">
-          <div className="grid-bg" />
-          <div
-            className="hero-glow"
-            ref={mouseGlowRef}
-          />
-          <div className="hero-orbe orb-1" />
-          <div className="hero-orbe orb-2" />
-          <div className="hero-orbe orb-3" />
+      <section className="hero">
+        <div className="hero-bg">
+          <FloatingOrb size="400px" gradient="radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)" top="-100px" left="-100px" delay={0} duration={25} />
+          <FloatingOrb size="350px" gradient="radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)" top="50%" right="-150px" delay={5} duration={30} />
+          <FloatingOrb size="300px" gradient="radial-gradient(circle, rgba(79,172,254,0.2) 0%, transparent 70%)" bottom="-50px" left="30%" delay={10} duration={22} />
+          <div className="hero-grid" />
         </div>
-
         <div className="hero-content">
           <div className="hero-badge">
             <span className="badge-dot" />
+            <span className="badge-pulse" />
             Your Complete Learning Hub
           </div>
 
           <h1 className="hero-title">
             Master Development{" "}
-            <span className="gradient-text">Notes to Interviews</span>
+            <span className="hero-highlight">
+              <span className="highlight-text">Notes to Interviews</span>
+              <svg className="highlight-underline" viewBox="0 0 200 12" fill="none">
+                <path d="M2 10C50 2 150 2 198 10" stroke="url(#underlineGrad)" strokeWidth="3" strokeLinecap="round"/>
+                <defs>
+                  <linearGradient id="underlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#6366f1" />
+                    <stop offset="50%" stopColor="#8b5cf6" />
+                    <stop offset="100%" stopColor="#a78bfa" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
           </h1>
 
           <p className="hero-desc">
@@ -339,33 +336,11 @@ export default function ReactLanding() {
               <span
                 key={topic}
                 className="pill"
-                style={{ animationDelay: `${0.8 + i * 0.06}s` }}
+                style={{ animationDelay: `${0.6 + i * 0.06}s` }}
               >
                 {topic}
               </span>
             ))}
-          </div>
-        </div>
-
-        {/* Code Preview Mockup */}
-        <div className="hero-code-preview" aria-hidden="true">
-          <div className="code-window">
-            <div className="code-window-header">
-              <span className="code-dot code-dot-red" />
-              <span className="code-dot code-dot-yellow" />
-              <span className="code-dot code-dot-green" />
-              <span className="code-window-title">example.js</span>
-            </div>
-            <div className="code-window-body">
-              <pre><span className="kw">function</span> <span className="fn">fibonacci</span>(n) {"{"}
-  <span className="kw">if</span> (n &lt;= 1) <span className="kw">return</span> n;
-  <span className="kw">return</span> <span className="fn">fibonacci</span>(n-1) + <span className="fn">fibonacci</span>(n-2);
-{"}"}
-
-<span className="cm">// Try it yourself!</span>
-<span className="fn">console</span>.<span className="fn">log</span>(<span className="fn">fibonacci</span>(<span className="num">10</span>));
-<span className="cm">// → 55</span></pre>
-            </div>
           </div>
         </div>
       </section>
@@ -417,8 +392,9 @@ function StatsSection() {
 
   return (
     <section ref={ref} className={`stats-section ${inView ? "in-view" : ""}`}>
-      {stats.map((s) => (
-        <div key={s.label} className="stat-item">
+      {stats.map((s, i) => (
+        <div key={s.label} className="stat-item" style={inView ? { animationDelay: `${i * 0.1}s` } : undefined}>
+          <div className="stat-glow" />
           {inView ? (
             <AnimatedCounter end={s.value} suffix={s.suffix} />
           ) : (
@@ -448,12 +424,12 @@ function FeaturesSection() {
             className={`feature-card ${inView ? "in-view" : ""}`}
             style={inView ? { animationDelay: `${i * 0.12}s` } : undefined}
           >
-            <div className="feature-icon-wrap">
+            <div className="feature-card-glow" style={{ background: f.gradient }} />
+            <div className="feature-icon-wrap" style={{ background: `${f.gradient}20` }}>
               <span className="feature-icon">{f.icon}</span>
             </div>
             <h3>{f.title}</h3>
             <p>{f.desc}</p>
-            <div className="feature-shine" />
           </div>
         ))}
       </div>
@@ -479,12 +455,14 @@ function TopicsExplorerSection({ base }) {
             className={`topic-card ${inView ? "in-view" : ""}`}
             style={inView ? { animationDelay: `${i * 0.06}s` } : undefined}
           >
-            <span className="topic-card-icon">{topic.icon}</span>
+            <span className="topic-card-icon" style={{ background: `${topic.color}15`, borderColor: `${topic.color}30` }}>
+              {topic.icon}
+            </span>
             <div className="topic-card-info">
               <h4>{topic.name}</h4>
               <p>{topic.desc}</p>
             </div>
-            <svg className="topic-card-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg className="topic-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>
@@ -513,10 +491,11 @@ function PathsSection({ base }) {
             className={`path-card ${inView ? "in-view" : ""}`}
             style={inView ? { animationDelay: `${i * 0.08}s` } : undefined}
           >
+            <div className="path-glow" style={{ background: p.gradient }} />
             <div className="path-top">
               <span
                 className="path-abbr"
-                style={{ background: `${p.color}1a`, color: p.color, borderColor: `${p.color}33` }}
+                style={{ background: `${p.color}15`, color: p.color, borderColor: `${p.color}40` }}
               >
                 {p.icon}
               </span>
@@ -529,7 +508,7 @@ function PathsSection({ base }) {
             <p>{p.desc}</p>
             <div className="path-progress">
               <div className="path-progress-bar">
-                <div className="path-progress-fill" style={{ width: `${p.progress}%`, background: p.color }} />
+                <div className="path-progress-fill" style={{ width: `${p.progress}%`, background: `linear-gradient(90deg, ${p.color}, ${p.color}99)` }} />
               </div>
               <span className="path-progress-label">{p.progress}%</span>
             </div>
@@ -546,7 +525,7 @@ function UpdatesSection() {
   return (
     <section ref={ref} className={`updates-section ${inView ? "in-view" : ""}`}>
       <div className="section-header">
-        <span className="section-tag">What&apos;s New</span>
+        <span className="section-tag">What's New</span>
         <h2>Latest Updates</h2>
         <p>Fresh content added regularly to keep your learning journey on track.</p>
       </div>
@@ -576,8 +555,11 @@ function CTASection({ base }) {
   const [ref, inView] = useInView(0.3);
   return (
     <section ref={ref} className={`cta-section ${inView ? "in-view" : ""}`}>
+      <div className="cta-bg">
+        <div className="cta-orb cta-orb-1" />
+        <div className="cta-orb cta-orb-2" />
+      </div>
       <div className="cta-card">
-        <div className="cta-glow" aria-hidden="true" />
         <h2>Ready to Start Learning?</h2>
         <p>Dive into our comprehensive docs or try the interactive playground right now.</p>
         <div className="cta-actions">
@@ -601,9 +583,21 @@ function Footer({ base }) {
   return (
     <footer className="landing-footer">
       <div className="footer-inner">
-        <p>
-          Built by <strong>Prathamesh Pawar</strong>
-        </p>
+        <div className="footer-brand">
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+            <defs>
+              <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#6366f1" />
+                <stop offset="100%" stopColor="#8b5cf6" />
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="10" fill="url(#footerLogoGrad)" />
+            <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
+          </svg>
+          <p>
+            Built by <strong>Prathamesh Pawar</strong>
+          </p>
+        </div>
         <div className="footer-links">
           <a href="https://github.com/prathameshp107/DSA-Notes-Problems" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href={`${base}overview`}>Docs</a>

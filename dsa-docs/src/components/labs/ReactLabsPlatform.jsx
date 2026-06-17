@@ -820,16 +820,9 @@ export default function ReactLabsPlatform() {
             </svg>
             Labs
           </a>
-          <div className="jsl-top-brand">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="url(#rl-grad)" />
+          <div className="jsl-top-brand">              <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+              <rect width="28" height="28" rx="8" fill="#2563eb" />
               <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">RE</text>
-              <defs>
-                <linearGradient id="rl-grad" x1="0" y1="0" x2="28" y2="28">
-                  <stop offset="0%" stopColor="#61dafb" />
-                  <stop offset="100%" stopColor="#a78bfa" />
-                </linearGradient>
-              </defs>
             </svg>
             <span className="jsl-top-title">React Labs</span>
           </div>

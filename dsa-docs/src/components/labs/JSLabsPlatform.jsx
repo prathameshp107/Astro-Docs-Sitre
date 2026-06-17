@@ -673,16 +673,9 @@ export default function JSLabsPlatform() {
             </svg>
             Labs
           </a>
-          <div className="jsl-top-brand">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="url(#jsl-grad)" />
+          <div className="jsl-top-brand">              <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+              <rect width="28" height="28" rx="8" fill="#2563eb" />
               <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">JS</text>
-              <defs>
-                <linearGradient id="jsl-grad" x1="0" y1="0" x2="28" y2="28">
-                  <stop offset="0%" stopColor="#f7df1e" />
-                  <stop offset="100%" stopColor="#f59e0b" />
-                </linearGradient>
-              </defs>
             </svg>
             <span className="jsl-top-title">JavaScript Labs</span>
           </div>
@@ -725,45 +718,56 @@ export default function JSLabsPlatform() {
         <div className="jsl-workspace" ref={workspaceRef}>
           {/* Content Panel */}
           <div className="jsl-content-panel" style={{ flex: `${contentRatio} 1 0` }}>
-            {view === "learn" && currentLesson && (
-              <LessonView
-                lesson={currentLesson}
-                showHint={showHint}
-                showSolution={showSolution}
-                onToggleHint={() => setShowHint(h => !h)}
-                onToggleSolution={() => setShowSolution(s => !s)}
-                onPrev={goPrevLesson}
-                onNext={goNextLesson}
-                hasPrev={JS_LESSONS.findIndex(l => l.id === activeLesson) > 0}
-                hasNext={JS_LESSONS.findIndex(l => l.id === activeLesson) < JS_LESSONS.length - 1}
-                onMarkDone={() => markLessonDone(currentLesson.id)}
-                isDone={progress.lessons.includes(currentLesson.id)}
-              />
-            )}
-            {view === "bugs" && currentBug && (
-              <BugView
-                bug={currentBug}
-                showHint={showHint}
-                showSolution={showSolution}
-                onToggleHint={() => setShowHint(h => !h)}
-                onToggleSolution={() => setShowSolution(s => !s)}
-                onPrev={goPrevBug}
-                onNext={goNextBug}
-                hasPrev={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) > 0}
-                hasNext={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) < JS_BUG_CHALLENGES.length - 1}
-                onMarkDone={() => markBugDone(currentBug.id)}
-                isDone={progress.bugs.includes(currentBug.id)}
-              />
-            )}
-            {view === "projects" && currentProject && (
-              <ProjectView
-                project={currentProject}
-                showSolution={showSolution}
-                onToggleSolution={() => setShowSolution(s => !s)}
-                onMarkDone={() => markProjectDone(currentProject.id)}
-                isDone={progress.projects.includes(currentProject.id)}
-              />
-            )}
+            <div className="jsl-content-scroll">
+              {view === "learn" && currentLesson && (
+                <LessonView
+                  lesson={currentLesson}
+                  showHint={showHint}
+                  showSolution={showSolution}
+                  onToggleHint={() => setShowHint(h => !h)}
+                  onToggleSolution={() => setShowSolution(s => !s)}
+                  onPrev={goPrevLesson}
+                  onNext={goNextLesson}
+                  hasPrev={JS_LESSONS.findIndex(l => l.id === activeLesson) > 0}
+                  hasNext={JS_LESSONS.findIndex(l => l.id === activeLesson) < JS_LESSONS.length - 1}
+                  onMarkDone={() => markLessonDone(currentLesson.id)}
+                  isDone={progress.lessons.includes(currentLesson.id)}
+                  testResults={testResults}
+                  currentTests={currentTests}
+                  onRunTests={runTests}
+                />
+              )}
+              {view === "bugs" && currentBug && (
+                <BugView
+                  bug={currentBug}
+                  showHint={showHint}
+                  showSolution={showSolution}
+                  onToggleHint={() => setShowHint(h => !h)}
+                  onToggleSolution={() => setShowSolution(s => !s)}
+                  onPrev={goPrevBug}
+                  onNext={goNextBug}
+                  hasPrev={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) > 0}
+                  hasNext={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) < JS_BUG_CHALLENGES.length - 1}
+                  onMarkDone={() => markBugDone(currentBug.id)}
+                  isDone={progress.bugs.includes(currentBug.id)}
+                  testResults={testResults}
+                  currentTests={currentTests}
+                  onRunTests={runTests}
+                />
+              )}
+              {view === "projects" && currentProject && (
+                <ProjectView
+                  project={currentProject}
+                  showSolution={showSolution}
+                  onToggleSolution={() => setShowSolution(s => !s)}
+                  onMarkDone={() => markProjectDone(currentProject.id)}
+                  isDone={progress.projects.includes(currentProject.id)}
+                  testResults={testResults}
+                  currentTests={currentTests}
+                  onRunTests={runTests}
+                />
+              )}
+            </div>
           </div>
 
           {/* Editor & Output Panel */}
@@ -861,51 +865,6 @@ export default function JSLabsPlatform() {
           </div>
         </div>
 
-        {/* ─── Tests Panel ─── */}
-        </div>
-
-        <div className="jsl-tests-panel">
-          <div className="jsl-tests-header">
-            <span className="jsl-tests-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="9 11 12 14 22 4"/>
-                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-              </svg>
-              Automated Tests
-            </span>
-            <div className="jsl-tests-actions">
-              {testResults.length > 0 && (
-                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
-                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
-                </span>
-              )}
-              <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
-                Run Tests
-              </button>
-            </div>
-          </div>
-          <div className="jsl-tests-body">
-            {currentTests.length === 0 ? (
-              <div className="jsl-tests-empty">No automated tests for this section</div>
-            ) : (
-              currentTests.map((test, i) => {
-                const result = testResults.find(r => r.index === i);
-                const passed = result?.passed;
-                const hasResult = result !== undefined;
-                return (                      <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
-                        <span className="jsl-test-icon">
-                          {hasResult ? (passed ? "✓" : "✗") : "○"}
-                        </span>
-                        <span className="jsl-test-name">{test.name}</span>
-                        {hasResult && !passed && result?.error && (
-                          <span className="jsl-test-error">{result.error}</span>
-                        )}
-                      </div>
-                );
-              })
-            )}
-          </div>
         </div>
       </div>
 
@@ -921,7 +880,7 @@ export default function JSLabsPlatform() {
 
 // ─── LESSON VIEW ───
 
-function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolution, onPrev, onNext, hasPrev, hasNext, onMarkDone, isDone }) {
+function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolution, onPrev, onNext, hasPrev, hasNext, onMarkDone, isDone, testResults, currentTests, onRunTests }) {
   const levelColor = lesson.level === "Beginner" ? "#22c55e" : lesson.level === "Intermediate" ? "#f59e0b" : "#ef4444";
 
   return (
@@ -1001,6 +960,42 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
         </button>
       </div>
 
+      {/* Automated Tests */}
+      {currentTests.length > 0 && (
+        <div className="jsl-content-tests">
+          <div className="jsl-content-tests-header">
+            <h3 className="jsl-section-title" style={{ margin: 0 }}>Automated Tests</h3>
+            <div className="jsl-content-tests-actions">
+              {testResults.length > 0 && (
+                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
+                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
+                </span>
+              )}
+              <button className="jsl-btn-ghost jsl-btn-sm" onClick={onRunTests}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                Run Tests
+              </button>
+            </div>
+          </div>
+          <div className="jsl-content-tests-body">
+            {currentTests.map((test, i) => {
+              const result = testResults.find(r => r.index === i);
+              const passed = result?.passed;
+              const hasResult = result !== undefined;
+              return (
+                <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
+                  <span className="jsl-test-icon">{hasResult ? (passed ? "✓" : "✗") : "○"}</span>
+                  <span className="jsl-test-name">{test.name}</span>
+                  {hasResult && !passed && result?.error && (
+                    <span className="jsl-test-error">{result.error}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Navigation */}
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
@@ -1018,7 +1013,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
 
 // ─── BUG CHALLENGE VIEW ───
 
-function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution, onPrev, onNext, hasPrev, hasNext, onMarkDone, isDone }) {
+function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution, onPrev, onNext, hasPrev, hasNext, onMarkDone, isDone, testResults, currentTests, onRunTests }) {
   return (
     <div className="jsl-content-inner">
       <div className="jsl-chapter-header">
@@ -1066,6 +1061,42 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution, 
         </button>
       </div>
 
+      {/* Automated Tests */}
+      {currentTests.length > 0 && (
+        <div className="jsl-content-tests">
+          <div className="jsl-content-tests-header">
+            <h3 className="jsl-section-title" style={{ margin: 0 }}>Automated Tests</h3>
+            <div className="jsl-content-tests-actions">
+              {testResults.length > 0 && (
+                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
+                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
+                </span>
+              )}
+              <button className="jsl-btn-ghost jsl-btn-sm" onClick={onRunTests}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                Run Tests
+              </button>
+            </div>
+          </div>
+          <div className="jsl-content-tests-body">
+            {currentTests.map((test, i) => {
+              const result = testResults.find(r => r.index === i);
+              const passed = result?.passed;
+              const hasResult = result !== undefined;
+              return (
+                <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
+                  <span className="jsl-test-icon">{hasResult ? (passed ? "✓" : "✗") : "○"}</span>
+                  <span className="jsl-test-name">{test.name}</span>
+                  {hasResult && !passed && result?.error && (
+                    <span className="jsl-test-error">{result.error}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
@@ -1082,7 +1113,7 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution, 
 
 // ─── PROJECT VIEW ───
 
-function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDone }) {
+function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDone, testResults, currentTests, onRunTests }) {
   return (
     <div className="jsl-content-inner">
       <div className="jsl-chapter-header">
@@ -1147,6 +1178,42 @@ function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDo
           {isDone ? "✓ Completed" : "Mark Complete"}
         </button>
       </div>
+
+      {/* Automated Tests */}
+      {currentTests.length > 0 && (
+        <div className="jsl-content-tests">
+          <div className="jsl-content-tests-header">
+            <h3 className="jsl-section-title" style={{ margin: 0 }}>Automated Tests</h3>
+            <div className="jsl-content-tests-actions">
+              {testResults.length > 0 && (
+                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
+                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
+                </span>
+              )}
+              <button className="jsl-btn-ghost jsl-btn-sm" onClick={onRunTests}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                Run Tests
+              </button>
+            </div>
+          </div>
+          <div className="jsl-content-tests-body">
+            {currentTests.map((test, i) => {
+              const result = testResults.find(r => r.index === i);
+              const passed = result?.passed;
+              const hasResult = result !== undefined;
+              return (
+                <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
+                  <span className="jsl-test-icon">{hasResult ? (passed ? "✓" : "✗") : "○"}</span>
+                  <span className="jsl-test-name">{test.name}</span>
+                  {hasResult && !passed && result?.error && (
+                    <span className="jsl-test-error">{result.error}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

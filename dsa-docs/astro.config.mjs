@@ -11,6 +11,11 @@ const site = isVercel && process.env.VERCEL_URL
 export default defineConfig({
   site,
   ...(isVercel ? {} : { base: '/DSA-Notes-Problems' }),
+  vite: {
+    optimizeDeps: {
+      include: ['@babel/standalone'],
+    },
+  },
   integrations: [starlight({
     title: 'DSA & Dev Notes',
     description: 'Personal knowledge base for DSA, JavaScript, React, SQL, MongoDB, Docker and Interview Prep',

@@ -1,39 +1,26 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import ThemeToggle from './mcq/ThemeToggle.jsx';
 
 const DSA_TOPICS = [
-  { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Insert, delete, update, traverse, and search in arrays', color: '#3b82f6', gradient: 'from-blue-500', visualizers: ['Array Visualizer'] },
-  { id: 'sorting', icon: '🔀', label: 'Sorting', desc: 'Bubble, Selection, Insertion, Merge, Quick Sort', color: '#f59e0b', gradient: 'from-amber-500', visualizers: ['Sorting Visualizer'] },
-  { id: 'trees', icon: '🌳', label: 'Trees', desc: 'BST operations, Inorder, Preorder, Postorder traversals', color: '#22c55e', gradient: 'from-emerald-500', visualizers: ['Tree Visualizer'] },
-  { id: 'graphs', icon: '📊', label: 'Graphs', desc: 'BFS, DFS on undirected, directed, weighted graphs', color: '#a78bfa', gradient: 'from-purple-500', visualizers: ['Graph Visualizer'] },
-  { id: 'linked-list', icon: '⛓️', label: 'Linked Lists', desc: 'Singly, doubly, circular linked lists', color: '#ec4899', gradient: 'from-pink-500', visualizers: ['Coming Soon'] },
-  { id: 'stack', icon: '📚', label: 'Stacks', desc: 'Push, pop, peek operations', color: '#14b8a6', gradient: 'from-teal-500', visualizers: ['Coming Soon'] },
-  { id: 'queue', icon: '🎯', label: 'Queues', desc: 'Enqueue, dequeue, circular queue', color: '#f97316', gradient: 'from-orange-500', visualizers: ['Coming Soon'] },
-  { id: 'heap', icon: '⛰️', label: 'Heaps', desc: 'Min-heap, max-heap, heapify', color: '#8b5cf6', gradient: 'from-violet-500', visualizers: ['Coming Soon'] },
-  { id: 'searching', icon: '🔍', label: 'Searching', desc: 'Linear search, binary search', color: '#06b6d4', gradient: 'from-cyan-500', visualizers: ['Coming Soon'] },
-  { id: 'recursion', icon: '🔄', label: 'Recursion', desc: 'Recursive calls, call stack visualization', color: '#e11d48', gradient: 'from-rose-500', visualizers: ['Coming Soon'] },
-  { id: 'dp', icon: '🧮', label: 'Dynamic Programming', desc: 'Memoization, tabulation, LCS, knapsack', color: '#10b981', gradient: 'from-emerald-500', visualizers: ['Coming Soon'] },
-  { id: 'hashing', icon: '🔑', label: 'Hash Tables', desc: 'Hash functions, collision resolution', color: '#6366f1', gradient: 'from-indigo-500', visualizers: ['Coming Soon'] },
+  { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Insert, delete, update, traverse, and search in arrays', color: '#3b82f6' },
+  { id: 'sorting', icon: '🔀', label: 'Sorting', desc: 'Bubble, Selection, Insertion, Merge, Quick Sort', color: '#f59e0b' },
+  { id: 'trees', icon: '🌳', label: 'Trees', desc: 'BST operations, Inorder, Preorder, Postorder traversals', color: '#22c55e' },
+  { id: 'graphs', icon: '📊', label: 'Graphs', desc: 'BFS, DFS on undirected, directed, weighted graphs', color: '#a78bfa' },
+  { id: 'linked-list', icon: '⛓️', label: 'Linked Lists', desc: 'Singly, doubly, circular linked lists', color: '#ec4899' },
+  { id: 'stack', icon: '📚', label: 'Stacks', desc: 'Push, pop, peek operations', color: '#14b8a6' },
+  { id: 'queue', icon: '🎯', label: 'Queues', desc: 'Enqueue, dequeue, circular queue', color: '#f97316' },
+  { id: 'heap', icon: '⛰️', label: 'Heaps', desc: 'Min-heap, max-heap, heapify', color: '#8b5cf6' },
+  { id: 'searching', icon: '🔍', label: 'Searching', desc: 'Linear search, binary search', color: '#06b6d4' },
+  { id: 'recursion', icon: '🔄', label: 'Recursion', desc: 'Recursive calls, call stack visualization', color: '#e11d48' },
+  { id: 'dp', icon: '🧮', label: 'Dynamic Programming', desc: 'Memoization, tabulation, LCS, knapsack', color: '#10b981' },
+  { id: 'hashing', icon: '🔑', label: 'Hash Tables', desc: 'Hash functions, collision resolution', color: '#6366f1' },
 ];
 
-function useInView(threshold = 0.1) {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setInView(true); observer.unobserve(el); }
-    }, { threshold });
-    return () => observer.disconnect();
-  }, [threshold]);
-  return [ref, inView];
-}
+const readyTopics = ['arrays', 'sorting', 'trees', 'graphs', 'stack', 'queue', 'linked-list', 'heap', 'searching', 'recursion', 'dp'];
 
 export default function DSAVisualizerHub() {
   const [loaded, setLoaded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const heroRef = useRef(null);
 
   useEffect(() => { setLoaded(true); }, []);
 
@@ -47,22 +34,14 @@ export default function DSAVisualizerHub() {
 
   return (
     <div className={`landing-page ${loaded ? 'loaded' : ''}`}>
-      {/* Particles */}
-      <div className="particles" aria-hidden="true">
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="particle" style={{ left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 8}s`, animationDuration: `${6 + Math.random() * 8}s`, width: `${2 + Math.random() * 4}px`, height: `${2 + Math.random() * 4}px` }} />
-        ))}
-      </div>
-
       {/* Nav */}
       <nav className={`landing-nav ${scrolled ? 'nav-scrolled' : ''}`}>
         <div className="nav-inner">
           <a href={base} className="nav-brand" style={{ textDecoration: 'none' }}>
             <span className="brand-logo">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="url(#dsa-brand)" />
+                <rect width="28" height="28" rx="8" fill="#2563eb" />
                 <text x="14" y="19" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">DSA</text>
-                <defs><linearGradient id="dsa-brand" x1="0" y1="0" x2="28" y2="28"><stop offset="0%" stopColor="#6366f1" /><stop offset="100%" stopColor="#22c55e" /></linearGradient></defs>
               </svg>
             </span>
             <span className="brand-text">DSA Visualizer</span>
@@ -78,14 +57,13 @@ export default function DSAVisualizerHub() {
       </nav>
 
       {/* Hero */}
-      <section className="hero" ref={heroRef} style={{ paddingBottom: '2rem' }}>
-        <div className="hero-bg" aria-hidden="true">
-          <div className="grid-bg" />
-          <div className="hero-orbe orb-1" /><div className="hero-orbe orb-2" /><div className="hero-orbe orb-3" />
-        </div>
+      <section className="hero" style={{ paddingBottom: '2rem' }}>
         <div className="hero-content">
           <div className="hero-badge"><span className="badge-dot" /> Interactive DSA Learning</div>
-          <h1 className="hero-title">Data Structures &<br /><span className="gradient-text" style={{ background: 'linear-gradient(135deg, #6366f1 0%, #22c55e 50%, #60a5fa 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', backgroundSize: '200% 200%', animation: 'gradientShift 6s ease-in-out infinite' }}>Algorithms Visualizer</span></h1>
+          <h1 className="hero-title">
+            Data Structures &<br />
+            <span className="hero-highlight">Algorithms Visualizer</span>
+          </h1>
           <p className="hero-desc">Watch algorithms come to life with interactive animations. Step through each operation, understand complexity, and master DSA concepts visually.</p>
           <div className="hero-actions">
             <a href={`${base}visualizer/arrays`} className="btn btn-primary btn-lg">
@@ -107,9 +85,8 @@ export default function DSAVisualizerHub() {
           <h2>Choose a Topic</h2>
           <p>Click any visualizer below to explore DSA concepts with step-by-step animations.</p>
         </div>
-        <div className="topics-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
-          {DSA_TOPICS.map((topic, i) => {
-            const readyTopics = ['arrays', 'sorting', 'trees', 'graphs', 'stack', 'queue', 'linked-list', 'heap', 'searching', 'recursion', 'dp'];
+        <div className="topics-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '0.75rem' }}>
+          {DSA_TOPICS.map((topic) => {
             const isBuilt = readyTopics.includes(topic.id);
             return (
               <a
@@ -117,16 +94,16 @@ export default function DSAVisualizerHub() {
                 href={isBuilt ? `${base}visualizer/${topic.id}` : undefined}
                 onClick={!isBuilt ? (e) => e.preventDefault() : undefined}
                 className="topic-card"
-                style={{ cursor: isBuilt ? 'pointer' : 'default', opacity: isBuilt ? 1 : 0.6 }}
+                style={{ cursor: isBuilt ? 'pointer' : 'default', opacity: isBuilt ? 1 : 0.55 }}
               >
                 <span className="topic-card-icon">{topic.icon}</span>
                 <div className="topic-card-info">
-                  <h4>{topic.label} {!isBuilt && <span className="text-[10px] text-amber-400 font-semibold">(Coming Soon)</span>}</h4>
+                  <h4>{topic.label} {!isBuilt && <span className="text-[10px] font-semibold" style={{ color: '#94a3b8' }}>(Coming Soon)</span>}</h4>
                   <p>{topic.desc}</p>
                 </div>
-                {isBuilt ? (
+                {isBuilt && (
                   <svg className="topic-card-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
-                ) : null}
+                )}
               </a>
             );
           })}

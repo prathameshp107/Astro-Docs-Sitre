@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import ThemeToggle from "../mcq/ThemeToggle.jsx";
 
 const labs = [
@@ -52,7 +52,7 @@ const labs = [
     description:
       "Solve Data Structures & Algorithms problems with real-time code execution, test case validation, and performance analysis.",
     status: "Coming Soon",
-    statusColor: "#a78bfa",
+    statusColor: "#3b82f6",
     path: null,
     color: "#6366f1",
     features: [
@@ -115,26 +115,19 @@ export default function LabHub() {
   const [loaded, setLoaded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showQuickStart, setShowQuickStart] = useState(true);
-  const [quickStartInitialized, setQuickStartInitialized] = useState(false);
 
   useEffect(() => {
-    // Only access sessionStorage on the client
     const visited = sessionStorage.getItem("labhub-visited");
     if (visited) {
       setShowQuickStart(false);
     }
-    setQuickStartInitialized(true);
   }, []);
-  const heroRef = useRef(null);
-  const mouseGlowRef = useRef(null);
-  const quickStartRef = useRef(null);
 
   useEffect(() => {
     setLoaded(true);
     sessionStorage.setItem("labhub-visited", "true");
   }, []);
 
-  // Scroll-aware navbar
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 80);
@@ -143,60 +136,26 @@ export default function LabHub() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleMouseMove = useCallback((e) => {
-    if (!mouseGlowRef.current || !heroRef.current) return;
-    requestAnimationFrame(() => {
-      const rect = heroRef.current.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      mouseGlowRef.current.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(59,130,246,0.15), transparent 60%)`;
-    });
-  }, []);
-
   const dismissQuickStart = () => {
     setShowQuickStart(false);
   };
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
-  // Compute aggregate stats
   const totalChallenges = labs.reduce((sum, l) => sum + l.challengeCount, 0);
   const readyLabs = labs.filter((l) => l.status === "Ready").length;
   const totalLabs = labs.length;
 
   return (
     <div className={`landing-page lab-hub-page ${loaded ? "loaded" : ""}`}>
-      {/* ─── Floating Particles ─── */}
-      <div className="particles" aria-hidden="true">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${6 + Math.random() * 8}s`,
-              width: `${2 + Math.random() * 4}px`,
-              height: `${2 + Math.random() * 4}px`,
-            }}
-          />
-        ))}
-      </div>
-
       {/* ─── Nav ─── */}
       <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
         <div className="nav-inner">
           <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
             <span className="brand-logo">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="url(#lh-brand-grad)" />
+                <rect width="28" height="28" rx="8" fill="#2563eb" />
                 <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">L</text>
-                <defs>
-                  <linearGradient id="lh-brand-grad" x1="0" y1="0" x2="28" y2="28">
-                    <stop offset="0%" stopColor="#a78bfa" />
-                    <stop offset="100%" stopColor="#f472b6" />
-                  </linearGradient>
-                </defs>
               </svg>
             </span>
             <span className="brand-text">Practice Labs</span>
@@ -241,15 +200,7 @@ export default function LabHub() {
       </nav>
 
       {/* ─── Hero ─── */}
-      <section className="lab-hero" onMouseMove={handleMouseMove} ref={heroRef}>
-        <div className="hero-bg" aria-hidden="true">
-          <div className="grid-bg" />
-          <div className="hero-glow" ref={mouseGlowRef} />
-          <div className="hero-orbe orb-1" />
-          <div className="hero-orbe orb-2" />
-          <div className="hero-orbe orb-3" />
-        </div>
-
+      <section className="lab-hero">
         <div className="hero-content">
           <div className="hero-badge">
             <span className="badge-dot" />
@@ -258,7 +209,7 @@ export default function LabHub() {
 
           <h1 className="hero-title">
             Practice Labs{" "}
-            <span className="gradient-text lab-gradient">Code. Learn. Master.</span>
+            <span className="hero-highlight">Code. Learn. Master.</span>
           </h1>
 
           <p className="hero-desc">
@@ -293,7 +244,7 @@ export default function LabHub() {
 
       {/* ─── Quick Start Guide ─── */}
       {showQuickStart && (
-        <section className="quick-start-section" ref={quickStartRef}>
+        <section className="quick-start-section">
           <button className="quick-start-close" onClick={dismissQuickStart} aria-label="Dismiss">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -345,7 +296,7 @@ export default function LabHub() {
 const difficultyColors = {
   "Beginner to Advanced": "#22c55e",
   "Intermediate": "#f59e0b",
-  "All Levels": "#a78bfa",
+  "All Levels": "#3b82f6",
 };
 
 function LabCard({ lab, index, base }) {
@@ -371,7 +322,7 @@ function LabCard({ lab, index, base }) {
   return (
     <div
       ref={ref}
-      className={`lab-card ${inView ? "in-view" : ""} ${isReady ? "ready" : "coming-soon"} ${hovered ? "hovered" : ""}`}
+      className={`lab-card ${inView ? "in-view" : ""} ${isReady ? "ready" : "coming-soon"}`}
       style={inView ? { animationDelay: `${index * 0.1}s` } : undefined}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -382,28 +333,9 @@ function LabCard({ lab, index, base }) {
       aria-label={isReady ? `Open ${lab.title}` : `${lab.title} — ${lab.status}`}
       aria-disabled={!isReady}
     >
-      {/* Card background gradient */}
-      <div className="lab-card-bg" aria-hidden="true">
-        <div
-          className="lab-card-orb"
-          style={{
-            background: `radial-gradient(circle at 30% 20%, ${lab.color}22, transparent 60%)`,
-          }}
-        />
-        <div
-          className="lab-card-orb lab-card-orb-2"
-          style={{
-            background: `radial-gradient(circle at 80% 80%, ${lab.color}15, transparent 50%)`,
-          }}
-        />
-      </div>
-
       {/* Status badge */}
       <div className="lab-card-status">
-        <span
-          className="lab-status-dot"
-          style={{ background: lab.statusColor }}
-        />
+        <span className="lab-status-dot" style={{ background: lab.statusColor }} />
         <span className="lab-status-text" style={{ color: lab.statusColor }}>
           {lab.status}
         </span>
@@ -421,11 +353,9 @@ function LabCard({ lab, index, base }) {
         <span className="lab-icon-text">{lab.shortIcon}</span>
       </div>
 
-      {/* Content */}
       <h3 className="lab-card-title">{lab.title}</h3>
       <p className="lab-card-desc">{lab.description}</p>
 
-      {/* Difficulty badge */}
       <div className="lab-card-meta">
         <span
           className="lab-diff-badge"
@@ -442,7 +372,6 @@ function LabCard({ lab, index, base }) {
         </span>
       </div>
 
-      {/* Features */}
       <div className="lab-card-features">
         {lab.features.slice(0, hovered ? lab.features.length : 3).map((f) => (
           <span key={f} className="lab-feature-chip">
@@ -456,7 +385,6 @@ function LabCard({ lab, index, base }) {
         )}
       </div>
 
-      {/* Action */}
       <div className="lab-card-action">
         {isReady ? (
           <span className="lab-action-btn">
@@ -470,9 +398,6 @@ function LabCard({ lab, index, base }) {
           <span className="lab-action-soon">Coming Soon</span>
         )}
       </div>
-
-      {/* Shine effect */}
-      <div className="lab-card-shine" />
     </div>
   );
 }
