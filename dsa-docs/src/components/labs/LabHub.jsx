@@ -86,6 +86,27 @@ const labs = [
     challengeCount: 100,
     difficulty: "Intermediate",
   },
+  {
+    id: "mongodb",
+    title: "MongoDB Lab",
+    icon: "🍃",
+    shortIcon: "MO",
+    description:
+      "Learn MongoDB with guided lessons, interactive queries, aggregation pipeline builder, and real-time document exploration. Master NoSQL the right way.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/mongodb",
+    color: "#13aa52",
+    features: [
+      "16 Guided Lessons",
+      "Query Playground",
+      "Aggregation Pipeline Builder",
+      "Collections Explorer",
+      "8+ Query Challenges",
+    ],
+    challengeCount: 30,
+    difficulty: "Beginner to Advanced",
+  },
 ];
 
 function useInView(threshold = 0.15) {

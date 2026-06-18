@@ -279,6 +279,236 @@
 .sql-si-level.advanced { background: rgba(239,68,68,0.13); color: #ef4444; }
 .sql-si-check { display: flex; flex-shrink: 0; }
 
+/* ─── Schema Diagram (ERD) ─── */
+
+.sql-erd-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 3rem;
+  color: #475569;
+  text-align: center;
+  height: 100%;
+}
+
+.sql-erd-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sql-erd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(15,23,42,0.35);
+}
+
+.sql-erd-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sql-erd-title svg {
+  color: #60a5fa;
+}
+
+.sql-erd-close {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  border: none;
+}
+
+.sql-erd-close:hover {
+  background: rgba(255,255,255,0.07);
+  color: #e2e8f0;
+}
+
+.sql-erd-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-shrink: 0;
+  padding: 0.4rem 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(10,15,30,0.4);
+}
+
+.sql-erd-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #64748b;
+  font-size: 0.68rem;
+}
+
+.sql-erd-legend-key {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.sql-erd-canvas-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0.85rem;
+}
+
+.sql-erd-canvas {
+  position: relative;
+  min-height: 100%;
+}
+
+.sql-erd-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Table cards */
+.sql-erd-table {
+  position: absolute;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(10,15,30,0.6);
+  overflow: hidden;
+  z-index: 1;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sql-erd-table:hover,
+.sql-erd-table.hovered {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  z-index: 2;
+}
+
+.sql-erd-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.sql-erd-column {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.74rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  min-height: 32px;
+}
+
+.sql-erd-column:last-child {
+  border-bottom: none;
+}
+
+.sql-erd-col-name {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #e2e8f0;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sql-erd-col-type {
+  color: #64748b;
+  font-size: 0.65rem;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  flex-shrink: 0;
+}
+
+.sql-erd-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 14px;
+  border-radius: 3px;
+  font-size: 0.55rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.sql-erd-badge.pk {
+  background: rgba(59,130,246,0.2);
+  color: #60a5fa;
+}
+
+.sql-erd-badge.fk {
+  background: rgba(251,191,36,0.2);
+  color: #fbbf24;
+}
+
+.sql-erd-badge.col {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+/* Schema toggle button in editor */
+.sql-btn-schema {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.sql-btn-schema:hover {
+  background: rgba(59,130,246,0.1);
+  border-color: rgba(59,130,246,0.25);
+  color: #60a5fa;
+}
+
+.sql-btn-schema.active {
+  background: rgba(59,130,246,0.15);
+  border-color: rgba(59,130,246,0.3);
+  color: #60a5fa;
+}
+
+.sql-btn-schema.active svg {
+  color: #60a5fa;
+}
+
 /* ─── Schema Explorer ─── */
 
 .sql-schema-section {

@@ -3,6 +3,7 @@ import ThemeToggle from "../mcq/ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import initSqlJs from "sql.js";
 import { SQL_LESSONS, SQL_CHALLENGES, SQL_PROJECTS, SQL_DATABASES, createSampleDatabase, createEmptyDatabase } from "../../data/sql-curriculum.js";
+import SchemaDiagram from "./SchemaDiagram.jsx";
 
 // ─── ICONS ───
 
@@ -268,6 +269,7 @@ export default function SQLLabsPlatform() {
   const [queryError, setQueryError] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+  const [showSchema, setShowSchema] = useState(false);
   const [monacoTheme, setMonacoTheme] = useState("jsl-dark");
   const [progress, setProgress] = useState({ lessons: [], challenges: [], projects: {} });
   const [isRunning, setIsRunning] = useState(false);
@@ -722,55 +724,61 @@ export default function SQLLabsPlatform() {
             {/* Content Panel (left side) */}
             <div className="sql-content-panel" ref={contentPanelRef} style={{ flex: `${contentRatio} 1 0` }}>
               <div className="sql-content-scroll">
-                {view === "learn" && currentLesson && (
-                  <LessonView
-                    lesson={currentLesson}
-                    showHint={showHint}
-                    showSolution={showSolution}
-                    onToggleHint={() => setShowHint(h => !h)}
-                    onToggleSolution={() => setShowSolution(s => !s)}
-                    onPrev={goPrevLesson}
-                    onNext={goNextLesson}
-                    hasPrev={SQL_LESSONS.findIndex(l => l.id === activeLesson) > 0}
-                    hasNext={SQL_LESSONS.findIndex(l => l.id === activeLesson) < SQL_LESSONS.length - 1}
-                    onMarkDone={() => markLessonDone(currentLesson.id)}
-                    isDone={progress.lessons.includes(currentLesson.id)}
-                  />
-                )}
-                {view === "challenge" && currentChallenge && (
-                  <ChallengeView
-                    challenge={currentChallenge}
-                    showHint={showHint}
-                    showSolution={showSolution}
-                    onToggleHint={() => setShowHint(h => !h)}
-                    onToggleSolution={() => setShowSolution(s => !s)}
-                    onMarkDone={() => markChallengeDone(currentChallenge.id)}
-                    isDone={progress.challenges.includes(currentChallenge.id)}
-                  />
-                )}
-                {view === "project" && currentProject && (
-                  <ProjectView
-                    project={currentProject}
-                    activeMilestone={activeMilestone}
-                    showHint={showHint}
-                    showSolution={showSolution}
-                    onToggleHint={() => setShowHint(h => !h)}
-                    onToggleSolution={() => setShowSolution(s => !s)}
-                    onMilestoneChange={(idx) => {
-                      setActiveMilestone(idx);
-                      const milestone = currentProject.milestones[idx];
-                      if (milestone) {
-                        setQuery(milestone.solutionQuery);
-                        setShowHint(false);
-                        setShowSolution(false);
-                        setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
-                        setQueryError(null);
-                        codeVersionRef.current++;
-                      }
-                    }}
-                    onMarkDone={() => markMilestoneDone(currentProject.id, activeMilestone)}
-                    isDone={progress.projects[currentProject.id]?.includes(activeMilestone)}
-                  />
+                {showSchema ? (
+                  <SchemaDiagram activeDatabase={activeDatabase} onClose={() => setShowSchema(false)} />
+                ) : (
+                  <>
+                    {view === "learn" && currentLesson && (
+                      <LessonView
+                        lesson={currentLesson}
+                        showHint={showHint}
+                        showSolution={showSolution}
+                        onToggleHint={() => setShowHint(h => !h)}
+                        onToggleSolution={() => setShowSolution(s => !s)}
+                        onPrev={goPrevLesson}
+                        onNext={goNextLesson}
+                        hasPrev={SQL_LESSONS.findIndex(l => l.id === activeLesson) > 0}
+                        hasNext={SQL_LESSONS.findIndex(l => l.id === activeLesson) < SQL_LESSONS.length - 1}
+                        onMarkDone={() => markLessonDone(currentLesson.id)}
+                        isDone={progress.lessons.includes(currentLesson.id)}
+                      />
+                    )}
+                    {view === "challenge" && currentChallenge && (
+                      <ChallengeView
+                        challenge={currentChallenge}
+                        showHint={showHint}
+                        showSolution={showSolution}
+                        onToggleHint={() => setShowHint(h => !h)}
+                        onToggleSolution={() => setShowSolution(s => !s)}
+                        onMarkDone={() => markChallengeDone(currentChallenge.id)}
+                        isDone={progress.challenges.includes(currentChallenge.id)}
+                      />
+                    )}
+                    {view === "project" && currentProject && (
+                      <ProjectView
+                        project={currentProject}
+                        activeMilestone={activeMilestone}
+                        showHint={showHint}
+                        showSolution={showSolution}
+                        onToggleHint={() => setShowHint(h => !h)}
+                        onToggleSolution={() => setShowSolution(s => !s)}
+                        onMilestoneChange={(idx) => {
+                          setActiveMilestone(idx);
+                          const milestone = currentProject.milestones[idx];
+                          if (milestone) {
+                            setQuery(milestone.solutionQuery);
+                            setShowHint(false);
+                            setShowSolution(false);
+                            setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+                            setQueryError(null);
+                            codeVersionRef.current++;
+                          }
+                        }}
+                        onMarkDone={() => markMilestoneDone(currentProject.id, activeMilestone)}
+                        isDone={progress.projects[currentProject.id]?.includes(activeMilestone)}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -801,6 +809,13 @@ export default function SQLLabsPlatform() {
                   Reset
                 </button>
                 <span className="sql-editor-lang">SQL</span>
+                <button className={`sql-btn-schema ${showSchema ? "active" : ""}`} onClick={() => setShowSchema(s => !s)} title="Toggle schema diagram">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="5" cy="19" r="3"/>
+                    <line x1="12" y1="9" x2="16.65" y2="7.35"/><line x1="8.59" y1="13.51" x2="6.65" y2="17.04"/>
+                  </svg>
+                  Schema
+                </button>
                 <span className="sql-editor-shortcut">Ctrl+Enter to run</span>
               </div>
 
