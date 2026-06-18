@@ -51,9 +51,9 @@ const labs = [
     shortIcon: "DS",
     description:
       "Solve Data Structures & Algorithms problems with real-time code execution, test case validation, and performance analysis.",
-    status: "Coming Soon",
-    statusColor: "#3b82f6",
-    path: null,
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/dsa/problems",
     color: "#6366f1",
     features: [
       "Arrays & Strings",
@@ -62,8 +62,8 @@ const labs = [
       "Sorting & Searching",
       "Test Case Runner",
     ],
-    challengeCount: 200,
-    difficulty: "All Levels",
+    challengeCount: 12,
+    difficulty: "Beginner to Advanced",
   },
   {
     id: "sql",
@@ -306,7 +306,11 @@ function LabCard({ lab, index, base }) {
 
   const handleClick = () => {
     if (isReady && lab.path) {
-      window.location.href = `${base}practice/${lab.path}`;
+      if (lab.path.startsWith("/")) {
+        window.location.href = `${base}${lab.path.slice(1)}`;
+      } else {
+        window.location.href = `${base}practice/${lab.path}`;
+      }
     }
   };
 

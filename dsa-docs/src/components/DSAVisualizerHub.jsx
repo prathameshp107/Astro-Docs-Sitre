@@ -50,6 +50,7 @@ export default function DSAVisualizerHub() {
             <a href={base} className="nav-link">Home</a>
             <a href={`${base}overview`} className="nav-link">Docs</a>
             <a href={`${base}playground`} className="nav-link">Playground</a>
+            <a href={`${base}dsa/problems`} className="nav-link">DSA Lab</a>
             <a href={`${base}mcq`} className="nav-link nav-link-playground">MCQ Hub</a>
             <ThemeToggle />
           </div>
