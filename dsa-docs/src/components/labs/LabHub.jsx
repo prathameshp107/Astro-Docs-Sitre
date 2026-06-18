@@ -62,7 +62,7 @@ const labs = [
       "Sorting & Searching",
       "Test Case Runner",
     ],
-    challengeCount: 12,
+    challengeCount: 20,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -72,9 +72,9 @@ const labs = [
     shortIcon: "SQ",
     description:
       "Write and execute SQL queries against sample databases. Practice joins, aggregations, subqueries, and query optimization.",
-    status: "Coming Soon",
-    statusColor: "#f59e0b",
-    path: null,
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/mysql",
     color: "#f59e0b",
     features: [
       "JOINs Practice",
