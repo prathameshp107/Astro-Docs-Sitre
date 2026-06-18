@@ -13,6 +13,21 @@ function testRegex(regex) {
   return (code) => regex.test(code);
 }
 
+function stripLineComments(code) {
+  return code
+    .split("\n")
+    .map((line) => line.replace(/\/\/.*$/, ""))
+    .join("\n");
+}
+
+function hasDeclaration(name, kind, valueRegex) {
+  return (code) => {
+    const source = stripLineComments(code);
+    const declaration = new RegExp(`\\b${kind}\\s+${name}\\s*=\\s*${valueRegex.source}`, "m");
+    return declaration.test(source);
+  };
+}
+
 // ─── LESSONS ───
 
 export const JS_LESSONS = [
@@ -55,11 +70,11 @@ console.log("Is Student:", isStudent);
 console.log("Hobbies:", hobbies);`,
     hint: `Remember:\n• Strings use quotes: "text" or 'text'\n• Numbers don't use quotes: 25\n• Booleans are true or false (no quotes)\n• Arrays use square brackets: [item1, item2]`,
     tests: [
-      { name: "Variable 'name' exists and is a string", validate: (c) => c.includes("const name") },
-      { name: "Variable 'age' exists and is a number", validate: testContains("let age") },
-      { name: "Variable 'isStudent' is a boolean", validate: testContains("const isStudent") },
-      { name: "Variable 'hobbies' is an array", validate: testContains("const hobbies") },
-      { name: "All variables logged to console", validate: (c) => (c.match(/console\.log/g) || []).length >= 4 },
+      { name: "Variable 'name' exists and is a string", validate: hasDeclaration("name", "const", /(["'`])(?=\S).+?\1/) },
+      { name: "Variable 'age' exists and is a number", validate: hasDeclaration("age", "let", /\d+(?:\.\d+)?/) },
+      { name: "Variable 'isStudent' is a boolean", validate: hasDeclaration("isStudent", "const", /(?:true|false)\b/) },
+      { name: "Variable 'hobbies' is an array", validate: hasDeclaration("hobbies", "const", /\[[^\]]+\]/) },
+      { name: "All variables logged to console", validate: (c) => (stripLineComments(c).match(/console\.log\s*\(/g) || []).length >= 4 },
     ],
   },
 

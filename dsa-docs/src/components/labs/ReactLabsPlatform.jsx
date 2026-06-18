@@ -770,6 +770,31 @@ export default function ReactLabsPlatform() {
       : view === "bugs" ? currentBug?.tests || []
       : currentProject?.tests || [];
 
+    try {
+      const transpiled = transpileReactCode(code);
+      new Function(
+        "React",
+        "ReactDOM",
+        "useState",
+        "useEffect",
+        "useRef",
+        "useMemo",
+        "useCallback",
+        "useReducer",
+        "useContext",
+        "createContext",
+        transpiled
+      );
+    } catch (e) {
+      setTestResults(tests.map((test, i) => ({
+        index: i,
+        name: test.name,
+        passed: false,
+        error: `Fix syntax error first: ${e?.message || "Invalid JSX"}`,
+      })));
+      return;
+    }
+
     const results = tests.map((test, i) => {
       try {
         const passed = test.validate(code);

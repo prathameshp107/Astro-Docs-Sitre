@@ -177,9 +177,11 @@ export default function JSLabsPlatform() {
   const editorRef = useRef(null);
   const codeVersionRef = useRef(0);
   const editorPanelRef = useRef(null);
+  const contentPanelRef = useRef(null);
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [contentRatio, setContentRatio] = useState(0.5);
   const [consoleHeight, setConsoleHeight] = useState(180);
+  const [testsPanelHeight, setTestsPanelHeight] = useState(130);
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
 
@@ -539,6 +541,14 @@ export default function JSLabsPlatform() {
     setConsoleHeight(newHeight);
   }, []);
 
+  const handleTestsDrag = useCallback(({ clientY }) => {
+    if (!contentPanelRef.current) return;
+    const rect = contentPanelRef.current.getBoundingClientRect();
+    const maxH = rect.height * 0.5;
+    const newHeight = Math.max(60, Math.min(maxH, rect.bottom - clientY));
+    setTestsPanelHeight(newHeight);
+  }, []);
+
   const goNextLesson = () => {
     const idx = JS_LESSONS.findIndex(l => l.id === activeLesson);
     if (idx < JS_LESSONS.length - 1) selectLesson(JS_LESSONS[idx + 1].id);
@@ -599,6 +609,18 @@ export default function JSLabsPlatform() {
     const tests = view === "learn" ? currentLesson?.tests || []
       : view === "bugs" ? currentBug?.tests || []
       : currentProject?.tests || [];
+
+    try {
+      new Function(code);
+    } catch (e) {
+      setTestResults(tests.map((test, i) => ({
+        index: i,
+        name: test.name,
+        passed: false,
+        error: `Fix syntax error first: ${e?.message || "Invalid JavaScript"}`,
+      })));
+      return;
+    }
 
     const results = tests.map((test, i) => {
       try {
@@ -717,7 +739,7 @@ export default function JSLabsPlatform() {
         {/* Content & Editor */}
         <div className="jsl-workspace" ref={workspaceRef}>
           {/* Content Panel */}
-          <div className="jsl-content-panel" style={{ flex: `${contentRatio} 1 0` }}>
+          <div className="jsl-content-panel" ref={contentPanelRef} style={{ flex: `${contentRatio} 1 0` }}>
             <div className="jsl-content-scroll">
               {view === "learn" && currentLesson && (
                 <LessonView
@@ -767,8 +789,9 @@ export default function JSLabsPlatform() {
                   onRunTests={runTests}
                 />
               )}
-            </div>
-            <div className="jsl-tests-panel">
+            </div>              {/* Duplicate tests panel removed — now resizable above */}
+            <ResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+            <div className="jsl-tests-panel" style={{ height: testsPanelHeight, maxHeight: testsPanelHeight, minHeight: testsPanelHeight }}>
               <div className="jsl-tests-header">
                 <span className="jsl-tests-title">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
