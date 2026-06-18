@@ -1,0 +1,30 @@
+---
+import DSAProblemView from '../../../components/dsa/DSAProblemView.jsx';
+import '../../../styles/dsa-lab.css';
+import '../../../styles/landing.css';
+
+export async function getStaticPaths() {
+  const { DSA_PROBLEMS } = await import('../../../data/dsa-problems.js');
+  return DSA_PROBLEMS.map((problem) => ({
+    params: { id: problem.id },
+  }));
+}
+
+const { id } = Astro.params;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Problem — DSA Problem Lab</title>
+    <meta name="description" content="Solve DSA problems with interactive code editor and test runner." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <DSAProblemView problemId={id} client:only="react" />
+  </body>
+</html>

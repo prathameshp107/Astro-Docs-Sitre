@@ -4,49 +4,49 @@
 
 /* ─── Theme Variables ─── */
 :root {
-  --mcq-bg: #030712;
-  --mcq-bg-rgb: 3, 7, 18;
-  --mcq-text: #e5edf8;
-  --mcq-text-primary: #ffffff;
-  --mcq-text-secondary: #94a3b8;
-  --mcq-text-muted: #64748b;
-  --mcq-text-body: #cbd5e1;
-  --mcq-surface: rgba(15, 23, 42, 0.25);
-  --mcq-surface-20: rgba(15, 23, 42, 0.20);
-  --mcq-surface-30: rgba(15, 23, 42, 0.30);
-  --mcq-surface-40: rgba(15, 23, 42, 0.40);
-  --mcq-surface-hover: rgba(30, 41, 59, 0.30);
-  --mcq-surface-hover-40: rgba(30, 41, 59, 0.40);
-  --mcq-nav-bg: rgba(3, 7, 18, 0.85);
-  --mcq-border: rgba(255, 255, 255, 0.06);
-  --mcq-border-hover: rgba(255, 255, 255, 0.15);
-  --mcq-border-strong: rgba(255, 255, 255, 0.10);
-  --mcq-border-light: rgba(255, 255, 255, 0.03);
-  --mcq-code-bg: #0a0f1e;
-  --mcq-snippet-header: rgba(15, 23, 42, 0.40);
-}
-
-:root[data-theme='light'] {
-  --mcq-bg: #f8fafc;
-  --mcq-bg-rgb: 248, 250, 252;
+  --mcq-bg: #ffffff;
+  --mcq-bg-rgb: 255, 255, 255;
   --mcq-text: #1e293b;
   --mcq-text-primary: #0f172a;
   --mcq-text-secondary: #475569;
   --mcq-text-muted: #94a3b8;
   --mcq-text-body: #334155;
-  --mcq-surface: rgba(255, 255, 255, 0.70);
-  --mcq-surface-20: rgba(255, 255, 255, 0.60);
-  --mcq-surface-30: rgba(255, 255, 255, 0.75);
-  --mcq-surface-40: rgba(255, 255, 255, 0.85);
-  --mcq-surface-hover: rgba(241, 245, 249, 0.80);
-  --mcq-surface-hover-40: rgba(226, 232, 240, 0.80);
-  --mcq-nav-bg: rgba(248, 250, 252, 0.85);
-  --mcq-border: rgba(0, 0, 0, 0.08);
-  --mcq-border-hover: rgba(59, 130, 246, 0.25);
-  --mcq-border-strong: rgba(0, 0, 0, 0.12);
-  --mcq-border-light: rgba(0, 0, 0, 0.04);
-  --mcq-code-bg: #f1f5f9;
-  --mcq-snippet-header: rgba(226, 232, 240, 0.60);
+  --mcq-surface: #f8fafc;
+  --mcq-surface-20: #f8fafc;
+  --mcq-surface-30: #f8fafc;
+  --mcq-surface-40: #ffffff;
+  --mcq-surface-hover: #f1f5f9;
+  --mcq-surface-hover-40: #e2e8f0;
+  --mcq-nav-bg: rgba(255, 255, 255, 0.85);
+  --mcq-border: #e2e8f0;
+  --mcq-border-hover: #2563eb;
+  --mcq-border-strong: #cbd5e1;
+  --mcq-border-light: #f1f5f9;
+  --mcq-code-bg: #f8fafc;
+  --mcq-snippet-header: #f1f5f9;
+}
+
+:root[data-theme='dark'] {
+  --mcq-bg: #0f172a;
+  --mcq-bg-rgb: 15, 23, 42;
+  --mcq-text: #e2e8f0;
+  --mcq-text-primary: #f8fafc;
+  --mcq-text-secondary: #94a3b8;
+  --mcq-text-muted: #64748b;
+  --mcq-text-body: #cbd5e1;
+  --mcq-surface: #1e293b;
+  --mcq-surface-20: #1e293b;
+  --mcq-surface-30: #1e293b;
+  --mcq-surface-40: #1e293b;
+  --mcq-surface-hover: #334155;
+  --mcq-surface-hover-40: #334155;
+  --mcq-nav-bg: rgba(15, 23, 42, 0.85);
+  --mcq-border: #334155;
+  --mcq-border-hover: #3b82f6;
+  --mcq-border-strong: #475569;
+  --mcq-border-light: #1e293b;
+  --mcq-code-bg: #0a0f1e;
+  --mcq-snippet-header: #1e293b;
 }
 
 @layer base {
@@ -57,27 +57,42 @@
 
 @layer components {
   .mcq-gradient-text {
-    @apply bg-gradient-to-r from-blue-400 via-emerald-400 to-purple-400 bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_200%];
+    @apply font-bold text-[var(--mcq-text-primary)];
   }
 
   .mcq-card {
     position: relative;
-    border-radius: 0.75rem;
+    border-radius: 12px;
     border: 1px solid var(--mcq-border);
-    background: var(--mcq-surface-30);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all 0.3s ease;
+    background: var(--mcq-surface);
+    transition: all 0.2s ease;
   }
 
   .mcq-card:hover {
-    border-color: rgba(96, 165, 250, 0.2);
-    background: var(--mcq-surface-hover);
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.05);
+    border-color: var(--mcq-border-hover);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+  }
+
+  :root[data-theme='dark'] .mcq-card:hover {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
   }
 
   .mcq-btn-primary {
-    @apply inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-emerald-400 shadow-md shadow-blue-500/20 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5 active:translate-y-0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #ffffff;
+    background: #2563eb;
+    border: none;
+    transition: all 0.15s ease;
+  }
+
+  .mcq-btn-primary:hover {
+    background: #1d4ed8;
   }
 
   .mcq-btn-secondary {
@@ -87,17 +102,15 @@
     padding: 0.625rem 1.25rem;
     border-radius: 0.5rem;
     font-weight: 600;
+    font-size: 0.9rem;
     color: var(--mcq-text-primary);
-    background: var(--mcq-surface-20);
+    background: var(--mcq-surface);
     border: 1px solid var(--mcq-border);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
   }
 
   .mcq-btn-secondary:hover {
-    background: var(--mcq-surface-hover);
-    border-color: rgba(96, 165, 250, 0.3);
+    border-color: var(--mcq-border-hover);
   }
 
   .mcq-btn-ghost {
@@ -107,27 +120,47 @@
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     color: var(--mcq-text-secondary);
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
   }
 
   .mcq-btn-ghost:hover {
-    color: var(--mcq-text-primary);
-    background: rgba(255,255,255,0.05);
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.05);
   }
 
-  :root[data-theme='light'] .mcq-btn-ghost:hover {
-    background: rgba(0,0,0,0.04);
+  :root[data-theme='dark'] .mcq-btn-ghost:hover {
+    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.08);
   }
 
   .mcq-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .mcq-section-header {
-    @apply text-center mb-10;
+    text-align: center;
+    margin-bottom: 2.5rem;
   }
 
   .mcq-section-tag {
-    @apply inline-block px-3 py-1 rounded-full border border-blue-400/15 bg-blue-400/5 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-4;
+    display: inline-block;
+    padding: 0.2rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--mcq-border);
+    background: var(--mcq-surface);
+    color: var(--mcq-text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.75rem;
   }
 }

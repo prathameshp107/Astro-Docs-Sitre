@@ -8,9 +8,25 @@ import { REACT_LESSONS, REACT_BUG_CHALLENGES, REACT_MINI_PROJECTS } from "../../
 // ─── ICON COMPONENTS ───
 
 function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function BugIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>; }
+function BugIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V4a2 2 0 00-2-2"/><path d="M12 6V4a2 2 0 012-2"/><path d="M8 10H4"/><path d="M20 10h-4"/><path d="M8 14H4"/><path d="M20 14h-4"/><line x1="12" y1="6" x2="12" y2="20"/></svg>; }
 function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
 function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
+function ReactAtomIcon({ size = 20, color = "#61dafb" }) {
+  return (
+    <svg width={size} height={size} viewBox="-11.5 -10.23174 23 20.46348">
+      <circle cx="0" cy="0" r="2.05" fill={color}/>
+      <g stroke={color} strokeWidth="1" fill="none">
+        <ellipse rx="11" ry="4.2"/>
+        <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
+        <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
+      </g>
+    </svg>
+  );
+}
+function LightbulbIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 21h6"/><path d="M12 3C8.5 3 6 5.5 6 9c0 2.3 1.2 4.2 3 5.4V17h6v-2.6c1.8-1.2 3-3.1 3-5.4 0-3.5-2.5-6-6-6z"/></svg>; }
+function ListRulesIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>; }
+function TaskPencilIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>; }
+function TargetIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>; }
 
 // ─── RESIZABLE HANDLE ───
 
@@ -135,11 +151,18 @@ function ReactPreview({ code, previewKey, style }) {
   return (
     <div className="jsl-preview-panel" style={style}>
       <div className="jsl-preview-header">
-        <span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Live Preview
+        <span className="jsl-preview-header-left">
+          <span className="jsl-browser-dots">
+            <span className="jsl-browser-dot red"/>
+            <span className="jsl-browser-dot yellow"/>
+            <span className="jsl-browser-dot green"/>
+          </span>
+          <span className="jsl-preview-url">preview</span>
         </span>
-        <span className="jsl-preview-info">React ⚛</span>
+        <span className="jsl-preview-info">
+          <ReactAtomIcon size={11} color="#61dafb" />
+          React
+        </span>
       </div>
       <div className="jsl-preview-body" ref={previewContainerRef}>
         <div className="jsl-preview-placeholder">
@@ -176,7 +199,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
       {/* ─── LEARN REACT ─── */}
       <div className="jsl-sidebar-group">
         <button
-          className={`jsl-sg-header ${expandedSections.learn ? "expanded" : ""}`}
+          className={`jsl-sg-header learn ${expandedSections.learn ? "expanded" : ""}`}
           onClick={() => toggleSection("learn")}
         >
           <div className="jsl-sg-title">
@@ -207,7 +230,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
       {/* ─── FIX THE BUG ─── */}
       <div className="jsl-sidebar-group">
         <button
-          className={`jsl-sg-header ${expandedSections.bugs ? "expanded" : ""}`}
+          className={`jsl-sg-header bugs ${expandedSections.bugs ? "expanded" : ""}`}
           onClick={() => toggleSection("bugs")}
         >
           <div className="jsl-sg-title">
@@ -237,7 +260,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
       {/* ─── MINI PROJECTS ─── */}
       <div className="jsl-sidebar-group">
         <button
-          className={`jsl-sg-header ${expandedSections.projects ? "expanded" : ""}`}
+          className={`jsl-sg-header projects ${expandedSections.projects ? "expanded" : ""}`}
           onClick={() => toggleSection("projects")}
         >
           <div className="jsl-sg-title">
@@ -274,7 +297,7 @@ export default function ReactLabsPlatform() {
   const [activeLesson, setActiveLesson] = useState(REACT_LESSONS[0]?.id || null);
   const [activeBug, setActiveBug] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(REACT_LESSONS[0]?.starterCode || "");
   const [output, setOutput] = useState([]);
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
@@ -747,6 +770,31 @@ export default function ReactLabsPlatform() {
       : view === "bugs" ? currentBug?.tests || []
       : currentProject?.tests || [];
 
+    try {
+      const transpiled = transpileReactCode(code);
+      new Function(
+        "React",
+        "ReactDOM",
+        "useState",
+        "useEffect",
+        "useRef",
+        "useMemo",
+        "useCallback",
+        "useReducer",
+        "useContext",
+        "createContext",
+        transpiled
+      );
+    } catch (e) {
+      setTestResults(tests.map((test, i) => ({
+        index: i,
+        name: test.name,
+        passed: false,
+        error: `Fix syntax error first: ${e?.message || "Invalid JSX"}`,
+      })));
+      return;
+    }
+
     const results = tests.map((test, i) => {
       try {
         const passed = test.validate(code);
@@ -821,21 +869,18 @@ export default function ReactLabsPlatform() {
             Labs
           </a>
           <div className="jsl-top-brand">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="url(#rl-grad)" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">RE</text>
-              <defs>
-                <linearGradient id="rl-grad" x1="0" y1="0" x2="28" y2="28">
-                  <stop offset="0%" stopColor="#61dafb" />
-                  <stop offset="100%" stopColor="#a78bfa" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <div className="jsl-top-brand-icon">
+              <ReactAtomIcon size={18} />
+            </div>
             <span className="jsl-top-title">React Labs</span>
           </div>
         </div>
         <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
+          <div className="jsl-cat-chips">
+            <span className="jsl-cat-chip learn"><span className="jsl-cat-dot"/>{progressStats.lessonsDone}/{progressStats.lessonsTotal} Learn</span>
+            <span className="jsl-cat-chip bugs"><span className="jsl-cat-dot"/>{progressStats.bugsDone}/{progressStats.bugsTotal} Bugs</span>
+            <span className="jsl-cat-chip projects"><span className="jsl-cat-dot"/>{progressStats.projectsDone}/{progressStats.projectsTotal} Projects</span>
+          </div>
           <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
           <span className="jsl-top-percent">{progressStats.pct}%</span>
         </div>
@@ -988,7 +1033,7 @@ export default function ReactLabsPlatform() {
             <div className="jsl-editor-actions">
               <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
                 {isRunning ? (
-                  <><span className="jsl-spinner" /> Running</>
+                  <><span className="jsl-spinner" /> Running…</>
                 ) : (
                   <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run</>
                 )}
@@ -1010,6 +1055,10 @@ export default function ReactLabsPlatform() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
                 Reset
               </button>
+              <span className="jsl-editor-lang">
+                <ReactAtomIcon size={10} color="#61dafb" />
+                JSX
+              </span>
               <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
             </div>
 
@@ -1112,8 +1161,11 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
       </div>
 
       {/* Concept Explanation */}
-      <div className="jsl-section">
-        <h3 className="jsl-section-title">Concept</h3>
+      <div className="jsl-section jsl-section-concept">
+        <h3 className="jsl-section-title">
+          <LightbulbIcon />
+          Concept
+        </h3>
         <div className="jsl-concept-text">
           {lesson.conceptExplanation.split("\n").map((line, i) => {
             if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
@@ -1125,7 +1177,10 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
 
       {/* Key Rules */}
       <div className="jsl-section jsl-rules-section">
-        <h3 className="jsl-section-title">Key Rules</h3>
+        <h3 className="jsl-section-title">
+          <ListRulesIcon />
+          Key Rules
+        </h3>
         <ul className="jsl-rules-list">
           {lesson.keyRules.map((rule, i) => (
             <li key={i} className="jsl-rule-item">{rule}</li>
@@ -1135,7 +1190,10 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
 
       {/* Your Task */}
       <div className="jsl-section jsl-task-section">
-        <h3 className="jsl-section-title">Your Task</h3>
+        <h3 className="jsl-section-title">
+          <TaskPencilIcon />
+          Your Task
+        </h3>
         <div className="jsl-task-text">
           {lesson.task.split("\n").map((line, i) => {
             if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
@@ -1186,18 +1244,27 @@ function BugView({ bug, showHint, showSolution, onPrev, onNext, hasPrev, hasNext
         <h2 className="jsl-content-title">{bug.title}</h2>
       </div>
 
-      <div className="jsl-section">
-        <h3 className="jsl-section-title">Problem</h3>
+      <div className="jsl-section jsl-section-problem">
+        <h3 className="jsl-section-title">
+          <BugIcon />
+          Problem
+        </h3>
         <p className="jsl-text">{bug.problem}</p>
       </div>
 
-      <div className="jsl-section">
-        <h3 className="jsl-section-title">Learning Goal</h3>
+      <div className="jsl-section jsl-section-goal">
+        <h3 className="jsl-section-title">
+          <LightbulbIcon />
+          Learning Goal
+        </h3>
         <p className="jsl-text">{bug.learningGoal}</p>
       </div>
 
-      <div className="jsl-section">
-        <h3 className="jsl-section-title">Expected Result</h3>
+      <div className="jsl-section jsl-section-result">
+        <h3 className="jsl-section-title">
+          <TargetIcon />
+          Expected Result
+        </h3>
         <p className="jsl-text">{bug.expectedResult}</p>
       </div>
 
@@ -1238,8 +1305,11 @@ function ProjectView({ project, showSolution }) {
         <h2 className="jsl-content-title">{project.title}</h2>
       </div>
 
-      <div className="jsl-section">
-        <h3 className="jsl-section-title">Overview</h3>
+      <div className="jsl-section jsl-section-concept">
+        <h3 className="jsl-section-title">
+          <LightbulbIcon />
+          Overview
+        </h3>
         <p className="jsl-text">{project.overview}</p>
         <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}><strong>Why?</strong> {project.why}</p>
       </div>
