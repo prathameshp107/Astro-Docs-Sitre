@@ -166,7 +166,7 @@ export default function JSLabsPlatform() {
   const [activeLesson, setActiveLesson] = useState(JS_LESSONS[0]?.id || null);
   const [activeBug, setActiveBug] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(JS_LESSONS[0]?.starterCode || "");
   const [output, setOutput] = useState([]);
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
@@ -732,8 +732,8 @@ export default function JSLabsPlatform() {
                   hasNext={JS_LESSONS.findIndex(l => l.id === activeLesson) < JS_LESSONS.length - 1}
                   onMarkDone={() => markLessonDone(currentLesson.id)}
                   isDone={progress.lessons.includes(currentLesson.id)}
-                  testResults={testResults}
-                  currentTests={currentTests}
+                  testResults={[]}
+                  currentTests={[]}
                   onRunTests={runTests}
                 />
               )}
@@ -750,8 +750,8 @@ export default function JSLabsPlatform() {
                   hasNext={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) < JS_BUG_CHALLENGES.length - 1}
                   onMarkDone={() => markBugDone(currentBug.id)}
                   isDone={progress.bugs.includes(currentBug.id)}
-                  testResults={testResults}
-                  currentTests={currentTests}
+                  testResults={[]}
+                  currentTests={[]}
                   onRunTests={runTests}
                 />
               )}
@@ -762,11 +762,55 @@ export default function JSLabsPlatform() {
                   onToggleSolution={() => setShowSolution(s => !s)}
                   onMarkDone={() => markProjectDone(currentProject.id)}
                   isDone={progress.projects.includes(currentProject.id)}
-                  testResults={testResults}
-                  currentTests={currentTests}
+                  testResults={[]}
+                  currentTests={[]}
                   onRunTests={runTests}
                 />
               )}
+            </div>
+            <div className="jsl-tests-panel">
+              <div className="jsl-tests-header">
+                <span className="jsl-tests-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                  </svg>
+                  Automated Tests
+                </span>
+                <div className="jsl-tests-actions">
+                  {testResults.length > 0 && (
+                    <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
+                      {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
+                    </span>
+                  )}
+                  <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    Run Tests
+                  </button>
+                </div>
+              </div>
+              <div className="jsl-tests-body">
+                {currentTests.length === 0 ? (
+                  <div className="jsl-tests-empty">No automated tests for this section</div>
+                ) : (
+                  currentTests.map((test, i) => {
+                    const result = testResults.find(r => r.index === i);
+                    const passed = result?.passed;
+                    const hasResult = result !== undefined;
+                    return (
+                      <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
+                        <span className="jsl-test-icon">
+                          {hasResult ? (passed ? "✓" : "✗") : "○"}
+                        </span>
+                        <span className="jsl-test-name">{test.name}</span>
+                        {hasResult && !passed && result?.error && (
+                          <span className="jsl-test-error">{result.error}</span>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </div>
           </div>
 
