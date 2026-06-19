@@ -1,5 +1,6 @@
 ---
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
+import AppNav from '../../components/AppNav.jsx';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 ---
@@ -17,6 +18,7 @@ import '../../styles/landing.css';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body class="mcq-body">
+    <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerPage topicId="graphs" client:load />
   </body>
 </html>

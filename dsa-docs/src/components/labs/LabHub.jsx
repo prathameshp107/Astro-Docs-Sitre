@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
+
 
 const labs = [
   {
@@ -155,7 +155,6 @@ function useInView(threshold = 0.15) {
 
 export default function LabHub() {
   const [loaded, setLoaded] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [showQuickStart, setShowQuickStart] = useState(true);
 
   useEffect(() => {
@@ -170,14 +169,6 @@ export default function LabHub() {
     sessionStorage.setItem("labhub-visited", "true");
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 80);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const dismissQuickStart = () => {
     setShowQuickStart(false);
   };
@@ -190,57 +181,6 @@ export default function LabHub() {
 
   return (
     <div className={`landing-page lab-hub-page ${loaded ? "loaded" : ""}`}>
-      {/* ─── Nav ─── */}
-      <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
-        <div className="nav-inner">
-          <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
-            <span className="brand-logo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="#2563eb" />
-                <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">L</text>
-              </svg>
-            </span>
-            <span className="brand-text">Practice Labs</span>
-          </a>
-          <div className="nav-links">
-            <a href={base} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-              Home
-            </a>
-            <a href={`${base}overview`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-              </svg>
-              Docs
-            </a>
-            <a href={`${base}visualizer`} className="nav-link nav-link-playground">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-              DSA Visualizer
-            </a>
-            <a href={`${base}playground`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-              Playground
-            </a>
-            <a href={`${base}mcq`} className="nav-link nav-link-playground">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="8 12 11 15 16 9" />
-              </svg>
-              MCQ Hub
-            </a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       {/* ─── Hero ─── */}
       <section className="lab-hero">
         <div className="hero-content">

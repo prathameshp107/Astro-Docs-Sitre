@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ThemeToggle from '../ThemeToggle.jsx';
+
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES } from './MCQData.js';
 import { getInitialProgress, getAccuracy, getCategoryAccuracy, getStreakInfo, getAllAchievements } from './MCQStore.js';
@@ -41,23 +41,6 @@ export default function MCQDashboard() {
 
   return (
     <div className={`min-h-screen bg-[var(--mcq-bg)] text-[var(--mcq-text)] ${loaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}>
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-[var(--mcq-nav-bg)] backdrop-blur-xl border-b border-[var(--mcq-border)]">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
-          <a href={`${base}mcq`} className="flex items-center gap-2 text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] transition-colors no-underline">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-            <span className="text-sm font-medium">MCQ Hub</span>
-          </a>
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-yellow-400">✦ {progress.xp} XP</span>
-            <span className="text-xs text-[var(--mcq-text-muted)]">Level {progress.level}</span>
-            <a href={`${base}practice`} className="mcq-btn-ghost text-sm">Labs</a>
-            <a href={`${base}overview`} className="mcq-btn-ghost text-sm">Docs</a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Hero Stats */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">

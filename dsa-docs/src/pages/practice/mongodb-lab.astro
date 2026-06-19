@@ -1,5 +1,6 @@
 ---
 import MongoLabsPlatform from '../../components/labs/MongoLabsPlatform.jsx';
+import AppNav from '../../components/AppNav.jsx';
 import '../../styles/landing.css';
 import '../../styles/practice-labs.css';
 import '../../styles/mongodb-labs.css';
@@ -18,6 +19,7 @@ import '../../styles/mongodb-labs.css';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <AppNav activeSection="practice" client:load />
     <MongoLabsPlatform client:only="react" />
   </body>
 </html>

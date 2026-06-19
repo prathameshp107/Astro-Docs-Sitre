@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import ThemeToggle from "./ThemeToggle.jsx";
+
 
 const starterCode = `// Welcome to the DSA Playground! 🚀
 // Write any JavaScript code below and click Run.
@@ -156,61 +156,6 @@ export default function ReactPlayground() {
 
   return (
     <div className="playground-page">
-      {/* Playground Nav */}
-      <nav className="playground-nav">
-        <div className="nav-inner">
-          <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
-            <span className="brand-icon">📚</span>
-            <span className="brand-text">DSA & Dev Notes</span>
-          </a>
-          <div className="nav-links">
-            <a href={base} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-              Home
-            </a>
-            <a href={`${base}overview`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-              </svg>
-              Docs
-            </a>
-            <a href={`${base}practice`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-              Labs
-            </a>
-            <a href={`${base}dsa/problems`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
-              DSA Lab
-            </a>
-            <a href={`${base}mysql`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <line x1="3" y1="9" x2="21" y2="9"/>
-                <line x1="9" y1="21" x2="9" y2="9"/>
-              </svg>
-              SQL Labs
-            </a>
-            <a href={`${base}mcq`} className="nav-link nav-link-playground">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="8 12 11 15 16 9" />
-              </svg>
-              MCQ Hub
-            </a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       <div className="playground-layout">
         {/* Sidebar - Snippets */}
         <aside className="playground-sidebar">

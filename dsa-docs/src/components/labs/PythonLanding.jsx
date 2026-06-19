@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
+
 
 const sections = [
   {
@@ -51,43 +51,15 @@ const roadmapLevels = [
 
 export default function PythonLanding() {
   const [loaded, setLoaded] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   return (
     <div className={`landing-page ${loaded ? "loaded" : ""}`}>
-      {/* Nav */}
-      <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
-        <div className="nav-inner">
-          <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
-            <span className="brand-logo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="#3776AB" />
-                <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">Py</text>
-              </svg>
-            </span>
-            <span className="brand-text">Python Labs</span>
-          </a>
-          <div className="nav-links">
-            <a href={base} className="nav-link">Home</a>
-            <a href={`${base}practice`} className="nav-link">Practice Labs</a>
-            <a href={`${base}practice/python-lab`} className="nav-link nav-link-playground" style={{ color: "#4b8bbe" }}>Open Lab →</a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="hero" style={{ paddingBottom: "2rem" }}>
         <div className="hero-content">

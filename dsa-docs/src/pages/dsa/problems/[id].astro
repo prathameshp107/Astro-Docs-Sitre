@@ -1,5 +1,6 @@
 ---
 import DSAProblemView from '../../../components/dsa/DSAProblemView.jsx';
+import AppNav from '../../../components/AppNav.jsx';
 import '../../../styles/dsa-lab.css';
 import '../../../styles/landing.css';
 
@@ -26,6 +27,7 @@ const { id } = Astro.params;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <AppNav activeSection="dsa-problems" client:load />
     <DSAProblemView problemId={id} client:only="react" />
   </body>
 </html>

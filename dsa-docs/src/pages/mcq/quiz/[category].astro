@@ -1,5 +1,6 @@
 ---
 import MCQQuiz from '../../../components/mcq/MCQQuiz.jsx';
+import AppNav from '../../../components/AppNav.jsx';
 import '../../../styles/mcq-tailwind.css';
 import '../../../styles/landing.css';
 import { MCQ_CATEGORIES } from '../../../components/mcq/MCQData.js';
@@ -28,6 +29,7 @@ const cat = MCQ_CATEGORIES.find(c => c.id === category);
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body class="mcq-body">
+    <AppNav activeSection="mcq" client:load />
     <MCQQuiz client:load categoryId={category} initialTopic={topic} />
   </body>
 </html>

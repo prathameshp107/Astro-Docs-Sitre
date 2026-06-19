@@ -1,5 +1,6 @@
 ---
 import PythonLabsPlatform from '../../components/labs/PythonLabsPlatform.jsx';
+import AppNav from '../../components/AppNav.jsx';
 import '../../styles/landing.css';
 import '../../styles/practice-labs.css';
 ---
@@ -18,6 +19,7 @@ import '../../styles/practice-labs.css';
     <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
   </head>
   <body>
+    <AppNav activeSection="practice" client:load />
     <PythonLabsPlatform client:only="react" />
   </body>
 </html>

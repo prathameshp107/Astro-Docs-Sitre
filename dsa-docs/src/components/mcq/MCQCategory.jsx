@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ThemeToggle from '../ThemeToggle.jsx';
+
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getTopicsForCategory, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, getCategoryAccuracy, getTopicAccuracy } from './MCQStore.js';
@@ -58,23 +58,6 @@ export default function MCQCategory({ categoryId }) {
             style={{ left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 8}s`, animationDuration: `${6 + Math.random() * 8}s`, width: `${2 + Math.random() * 4}px`, height: `${2 + Math.random() * 4}px` }} />
         ))}
       </div>
-
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 bg-[var(--mcq-nav-bg)] backdrop-blur-xl border-b border-[var(--mcq-border)]">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
-          <a href={`${base}mcq`} className="flex items-center gap-2 text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] transition-colors no-underline">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
-            <span className="text-sm font-medium">Back</span>
-          </a>
-          <div className="flex items-center gap-3">
-            {progress && <span className="text-xs text-[var(--mcq-text-muted)]">Level {progress.level} · {progress.xp} XP</span>}
-            <a href={`${base}practice`} className="mcq-btn-ghost text-sm">Labs</a>
-            <a href={`${base}overview`} className="mcq-btn-ghost text-sm">Docs</a>
-            <a href={`${base}mcq/dashboard`} className="mcq-btn-ghost text-sm">Dashboard</a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
 
       {/* Header */}
       <section className="relative z-10 pt-12 pb-8">
