@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import ThemeToggle from './ThemeToggle.jsx';
+import ThemeToggle from '../ThemeToggle.jsx';
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, recordAnswer, getAccuracy, getStreakInfo } from './MCQStore.js';

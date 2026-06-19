@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import initSqlJs from "sql.js";
 import { SQL_LESSONS, SQL_CHALLENGES, SQL_PROJECTS, SQL_DATABASES, createSampleDatabase, createEmptyDatabase } from "../../data/sql-curriculum.js";
@@ -228,10 +228,38 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
 
 // ─── RESULTS TABLE ───
 
-function ResultsView({ columns, values }) {
+function ResultsView({ batches }) {
+  if (!batches || batches.length === 0) {
+    return <div className="sql-results-empty">Query executed successfully — 0 rows returned</div>;
+  }
+
+  if (batches.length === 1) {
+    return <SingleResultTable batch={batches[0]} />;
+  }
+
+  return (
+    <div className="sql-multi-results">
+      {batches.map((batch, i) => (
+        <div key={i} className="sql-batch-result">
+          <div className="sql-batch-label">
+            <span className="sql-batch-num">{i + 1}</span>
+            <code className="sql-batch-query">{batch.query}</code>
+            <span className="sql-batch-count">{batch.values?.length || 0} rows</span>
+          </div>
+          <SingleResultTable batch={batch} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SingleResultTable({ batch }) {
+  const { columns, values } = batch;
+
   if (!columns || columns.length === 0 || !values || values.length === 0) {
     return <div className="sql-results-empty">Query executed successfully — 0 rows returned</div>;
   }
+
   return (
     <table className="sql-results-table">
       <thead>
@@ -265,7 +293,7 @@ export default function SQLLabsPlatform() {
   const [activeProject, setActiveProject] = useState(null);
   const [activeMilestone, setActiveMilestone] = useState(0);
   const [query, setQuery] = useState(SQL_LESSONS[0]?.starterQuery || "");
-  const [results, setResults] = useState({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+  const [results, setResults] = useState({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
   const [queryError, setQueryError] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
@@ -385,7 +413,7 @@ export default function SQLLabsPlatform() {
     setQuery(lesson.starterQuery);
     setShowHint(false);
     setShowSolution(false);
-    setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+    setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     setQueryError(null);
     codeVersionRef.current++;
     if (lesson.database) setActiveDatabase(lesson.database);
@@ -402,7 +430,7 @@ export default function SQLLabsPlatform() {
     setQuery("-- Write your SQL query here\n");
     setShowHint(false);
     setShowSolution(false);
-    setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+    setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     setQueryError(null);
     codeVersionRef.current++;
     if (challenge.database) setActiveDatabase(challenge.database);
@@ -420,7 +448,7 @@ export default function SQLLabsPlatform() {
     setQuery(firstMilestone ? `-- Milestone ${1}: ${firstMilestone.title}\n${firstMilestone.solutionQuery.split("\n")[0]}\n` : "-- Write your SQL query here\n");
     setShowHint(false);
     setShowSolution(false);
-    setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+    setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     setQueryError(null);
     codeVersionRef.current++;
     setActiveDatabase("blank");
@@ -554,7 +582,7 @@ export default function SQLLabsPlatform() {
     try {
       const trimmed = query.trim();
       if (!trimmed || trimmed.startsWith("--")) {
-        setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+        setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
         setQueryError("Enter a SQL query to execute");
         setIsRunning(false);
         return;
@@ -567,9 +595,9 @@ export default function SQLLabsPlatform() {
         .map(s => s.trim())
         .filter(s => s.length > 0);
 
-      let lastColumns = [];
-      let lastValues = [];
+      const batches = [];
       let totalRows = 0;
+      let totalAffected = 0;
 
       const db = dbRef.current;
       db.run("PRAGMA foreign_keys = OFF;");
@@ -580,12 +608,22 @@ export default function SQLLabsPlatform() {
             stmt.toUpperCase().startsWith("PRAGMA")) {
           const res = db.exec(stmt);
           if (res.length > 0) {
-            lastColumns = res[0].columns;
-            lastValues = res[0].values;
-            totalRows += lastValues.length;
+            batches.push({
+              query: stmt,
+              columns: res[0].columns,
+              values: res[0].values,
+            });
+            totalRows += res[0].values.length;
+          } else {
+            batches.push({
+              query: stmt,
+              columns: [],
+              values: [],
+            });
           }
         } else {
           db.run(stmt);
+          totalAffected += db.getRowsModified();
         }
       }
 
@@ -593,30 +631,21 @@ export default function SQLLabsPlatform() {
       const executionTime = Math.round((endTime - startTime) * 100) / 100;
 
       setResults({
-        columns: lastColumns,
-        values: lastValues,
-        rowsAffected: totalRows || db.getRowsModified(),
+        batches,
+        totalRows,
+        totalAffected,
         executionTime,
       });
-
-      // Auto-mark lesson/challenge complete if query returned results
-      if (lastValues.length > 0 || db.getRowsModified() > 0) {
-        if (view === "learn" && currentLesson) {
-          // Don't auto-mark, let user click mark complete
-        } else if (view === "challenge" && currentChallenge) {
-          // Don't auto-mark, let user click mark complete
-        }
-      }
     } catch (e) {
       setQueryError(e.message);
-      setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+      setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     } finally {
       setIsRunning(false);
       if (dbRef.current) {
         try { dbRef.current.run("PRAGMA foreign_keys = ON;"); } catch {}
       }
     }
-  }, [query, view, currentLesson, currentChallenge]);
+  }, [query]);
 
   // Keyboard shortcut
   useEffect(() => {
@@ -769,7 +798,7 @@ export default function SQLLabsPlatform() {
                             setQuery(milestone.solutionQuery);
                             setShowHint(false);
                             setShowSolution(false);
-                            setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+                            setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
                             setQueryError(null);
                             codeVersionRef.current++;
                           }
@@ -800,13 +829,13 @@ export default function SQLLabsPlatform() {
                   if (view === "learn" && currentLesson) starter = currentLesson.starterQuery;
                   else if (view === "challenge") starter = "-- Write your SQL query here\n";
                   if (editorRef.current) editorRef.current.setValue(starter);
-                  setQuery(starter);
-                  setResults({ columns: [], values: [], rowsAffected: 0, executionTime: 0 });
+                  setQuery(starter);                  setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
                   setQueryError(null);
                   codeVersionRef.current++;
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                  Reset
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                Reset
                 </button>
                 <span className="sql-editor-lang">SQL</span>
                 <button className={`sql-btn-schema ${showSchema ? "active" : ""}`} onClick={() => setShowSchema(s => !s)} title="Toggle schema diagram">
@@ -856,15 +885,18 @@ export default function SQLLabsPlatform() {
                   <div className="sql-results-info">
                     {queryError ? (
                       <span className="sql-results-error">✗ {queryError}</span>
-                    ) : results.values.length > 0 ? (
+                    ) : results.batches.length > 0 || results.totalAffected > 0 ? (
                       <>
-                        <span className="sql-results-count">{results.values.length} rows returned</span>
+                        {results.totalRows > 0 && (
+                          <span className="sql-results-count">{results.totalRows} rows returned ({results.batches.length} quer{results.batches.length === 1 ? "y" : "ies"})</span>
+                        )}
+                        {results.totalAffected > 0 && (
+                          <span className="sql-results-success">✓ {results.totalAffected} rows affected</span>
+                        )}
                         {results.executionTime > 0 && (
                           <span className="sql-results-count">{results.executionTime}ms</span>
                         )}
                       </>
-                    ) : results.rowsAffected > 0 ? (
-                      <span className="sql-results-success">✓ {results.rowsAffected} rows affected</span>
                     ) : null}
                   </div>
                 </div>
@@ -879,7 +911,7 @@ export default function SQLLabsPlatform() {
                       <p>{queryError}</p>
                     </div>
                   ) : (
-                    <ResultsView columns={results.columns} values={results.values} />
+                    <ResultsView batches={results.batches} />
                   )}
                 </div>
               </div>

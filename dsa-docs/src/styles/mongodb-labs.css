@@ -1,15 +1,50 @@
 /* MongoDB Labs - Interactive NoSQL Learning Platform Styles */
 
 .mongo-platform {
+  --sql-bg: #030712;
+  --sql-bg-panel: #050b18;
+  --sql-bg-sidebar: rgba(15,23,42,0.46);
+  --sql-bg-top: rgba(3,7,18,0.96);
+  --sql-bg-console: rgba(15,23,42,0.28);
+  --sql-bg-editor: rgba(15,23,42,0.48);
+  --sql-text: #e2e8f0;
+  --sql-text-title: #f8fafc;
+  --sql-text-body: #cbd5e1;
+  --sql-text-muted: #94a3b8;
+  --sql-text-dim: #64748b;
+  --sql-text-green: #22c55e;
+  --sql-border: rgba(255,255,255,0.08);
+  --sql-border2: rgba(255,255,255,0.07);
+  --sql-border3: rgba(255,255,255,0.06);
+  --sql-border4: rgba(255,255,255,0.055);
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100vh;
   min-height: 0;
-  background: #030712;
-  color: #e2e8f0;
+  background: var(--sql-bg);
+  color: var(--sql-text);
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow: hidden;
+}
+
+[data-theme='light'] .mongo-platform {
+  --sql-bg: #ffffff;
+  --sql-bg-panel: #f8fafc;
+  --sql-bg-sidebar: #f1f5f9;
+  --sql-bg-top: rgba(255,255,255,0.96);
+  --sql-bg-console: #f1f5f9;
+  --sql-bg-editor: #f1f5f9;
+  --sql-text: #0f172a;
+  --sql-text-title: #0f172a;
+  --sql-text-body: #334155;
+  --sql-text-muted: #64748b;
+  --sql-text-dim: #94a3b8;
+  --sql-text-green: #16a34a;
+  --sql-border: rgba(0,0,0,0.08);
+  --sql-border2: rgba(0,0,0,0.07);
+  --sql-border3: rgba(0,0,0,0.06);
+  --sql-border4: rgba(0,0,0,0.055);
 }
 
 .mongo-platform *,
@@ -1295,6 +1330,21 @@
   font-weight: 700;
   letter-spacing: 0.04em;
 }
+
+/* ─── Light mode overrides for MongoDB platform ─── */
+[data-theme='light'] .mongo-editor-lang { background: rgba(22,163,74,0.08); border-color: rgba(22,163,74,0.18); color: #16a34a; }
+[data-theme='light'] .mongo-collection-item { color: var(--sql-text-muted); }
+[data-theme='light'] .mongo-collection-item:hover { color: var(--sql-text-body); }
+[data-theme='light'] .mongo-col-meta-label { color: var(--sql-text-muted); }
+[data-theme='light'] .mongo-col-sample { border-color: var(--sql-border2); background: rgba(255,255,255,0.6); }
+[data-theme='light'] .mongo-col-sample-code { color: var(--sql-text-dim); }
+[data-theme='light'] .mongo-db-select { background: rgba(255,255,255,0.8); color: var(--sql-text); border-color: var(--sql-border); }
+[data-theme='light'] .mongo-batch-result { border-color: var(--sql-border2); background: rgba(0,0,0,0.02); }
+[data-theme='light'] .mongo-project-card { border-color: var(--sql-border2); background: rgba(0,0,0,0.02); }
+[data-theme='light'] .mongo-project-card h4 { color: var(--sql-text-title); }
+[data-theme='light'] .mongo-project-card p { color: var(--sql-text-muted); }
+[data-theme='light'] .mongo-batch-label { border-bottom-color: var(--sql-border3); }
+[data-theme='light'] .mongo-batch-query { color: var(--sql-text-dim); }
 
 /* ─── Collections Explorer ─── */
 

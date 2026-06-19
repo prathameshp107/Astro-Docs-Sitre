@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 import { getProblemById, DIFFICULTY, DSA_TOPICS } from "../../data/dsa-problems.js";
 
 // ─── RESIZABLE HANDLE ───

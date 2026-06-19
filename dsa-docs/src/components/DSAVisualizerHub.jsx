@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ThemeToggle from './mcq/ThemeToggle.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const DSA_TOPICS = [
   { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Insert, delete, update, traverse, and search in arrays', color: '#3b82f6' },

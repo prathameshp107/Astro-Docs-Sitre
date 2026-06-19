@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 import { DSA_PROBLEMS, DSA_TOPICS, DIFFICULTY, getTopicsWithCounts } from "../../data/dsa-problems.js";
 
 function ProblemRow({ problem, index, base }) {

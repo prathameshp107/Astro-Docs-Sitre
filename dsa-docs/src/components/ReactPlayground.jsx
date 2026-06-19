@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import ThemeToggle from "./mcq/ThemeToggle.jsx";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 const starterCode = `// Welcome to the DSA Playground! 🚀
 // Write any JavaScript code below and click Run.
