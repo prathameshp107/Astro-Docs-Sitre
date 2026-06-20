@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Skeleton, { SkeletonGrid } from '../Skeleton.jsx';
 
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES } from './MCQData.js';
@@ -7,18 +8,66 @@ import { getInitialProgress, getAccuracy, getCategoryAccuracy, getStreakInfo, ge
 export default function MCQDashboard() {
   const [progress, setProgress] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoaded(true);
     const p = getInitialProgress();
     setProgress(p);
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
   }, []);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
-  if (!progress) {
-    return <div className="min-h-screen bg-[var(--mcq-bg)] flex items-center justify-center">
-      <div className="animate-pulse text-[var(--mcq-text-muted)]">Loading...</div>
-    </div>;
+
+  if (loading || !progress) {
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '32px 24px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+            <Skeleton variant="avatar" size="40px" />
+            <div>
+              <Skeleton variant="text" width="160px" height="24px" style={{ marginBottom: '4px' }} />
+              <Skeleton variant="text" width="200px" height="14px" />
+            </div>
+          </div>
+          {/* Stats grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4" style={{ marginBottom: '32px' }}>
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} className="p-4 rounded-xl border" style={{ borderColor: 'var(--mcq-border)', background: 'var(--mcq-surface-20)' }}>
+                <Skeleton variant="text" width="50%" height="24px" style={{ marginBottom: '4px' }} />
+                <Skeleton variant="text" width="40%" height="10px" />
+              </div>
+            ))}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '32px' }}>
+            <div className="p-5 rounded-xl border" style={{ borderColor: 'var(--mcq-border)', background: 'var(--mcq-surface-20)' }}>
+              <Skeleton variant="text" width="120px" height="14px" style={{ marginBottom: '16px' }} />
+              {Array.from({ length: 5 }, (_, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <Skeleton variant="avatar" size="24px" />
+                  <Skeleton variant="text" width="80%" height="16px" />
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {Array.from({ length: 2 }, (_, i) => (
+                <div key={i} className="p-5 rounded-xl border" style={{ borderColor: 'var(--mcq-border)', background: 'var(--mcq-surface-20)' }}>
+                  <Skeleton variant="text" width="100px" height="14px" style={{ marginBottom: '12px' }} />
+                  {Array.from({ length: 3 }, (_, j) => (
+                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                      <Skeleton variant="avatar" size="20px" />
+                      <Skeleton variant="text" width="60%" height="14px" />
+                      <Skeleton variant="badge" width="40px" height="14px" style={{ marginLeft: 'auto' }} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const accuracy = getAccuracy(progress);

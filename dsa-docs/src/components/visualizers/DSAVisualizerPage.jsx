@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Skeleton from '../Skeleton.jsx';
 import { DSA_TOPICS } from '../../data/visualizers/dsaTopics';
 import ComplexityTable from '../visualizer-common/ComplexityTable';
 import CodeTabs from '../visualizer-common/CodeTabs';
@@ -105,7 +106,32 @@ export default function DSAVisualizerPage({ topicId }) {
   const topic = DSA_TOPICS[topicId];
   const VisualizerComponent = VISUALIZER_MAP[topicId];
   const [activeSection, setActiveSection] = useState('visualizer');
+  const [loading, setLoading] = useState(true);
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div style={{ marginBottom: '32px' }}>
+          <Skeleton variant="text" width="120px" height="14px" style={{ marginBottom: '16px' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <Skeleton variant="avatar" size="36px" />
+            <Skeleton variant="text" width="200px" height="32px" />
+          </div>
+          <Skeleton variant="text" width="60%" height="14px" />
+        </div>
+        <Skeleton variant="text" width="100%" height="40px" style={{ marginBottom: '24px', borderRadius: '12px' }} />
+        <div className="p-5 rounded-xl" style={{ background: 'var(--mcq-surface-20)', border: '1px solid var(--mcq-border)' }}>
+          <Skeleton variant="text" width="100%" height="200px" borderRadius="12px" />
+        </div>
+      </div>
+    );
+  }
 
   if (!topic) {
     return (

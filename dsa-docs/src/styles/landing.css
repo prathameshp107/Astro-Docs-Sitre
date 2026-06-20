@@ -1269,6 +1269,338 @@ html, body {
 }
 
 /* =============================================
+   SKELETON LOADING ANIMATIONS
+   ============================================= */
+
+@keyframes skeletonPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.1) 37%,
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.8s ease-in-out infinite;
+  border-radius: 6px;
+  display: inline-block;
+  line-height: 1;
+}
+
+[data-theme='light'] .skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.06) 25%,
+    rgba(0, 0, 0, 0.1) 37%,
+    rgba(0, 0, 0, 0.06) 63%
+  );
+  background-size: 200% 100%;
+}
+
+.skeleton-paragraph {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.skeleton-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  animation: none;
+}
+
+[data-theme='light'] .skeleton-card {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.skeleton-card-inner {
+  padding: 20px;
+}
+
+.skeleton-icon {
+  border-radius: 10px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-avatar {
+  border-radius: 50%;
+}
+
+.skeleton-badge {
+  border-radius: 999px;
+}
+
+.skeleton-grid {
+  animation: skeletonPulse 2s ease-in-out infinite;
+}
+
+/* Stats bar skeleton */
+.skeleton-stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 28px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 24px;
+}
+
+[data-theme='light'] .skeleton-stats-bar {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.skeleton-stats-divider {
+  width: 1px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  margin: 0 8px;
+}
+
+[data-theme='light'] .skeleton-stats-divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* Hero skeleton */
+.skeleton-hero {
+  text-align: center;
+  padding: 80px 0 64px;
+  animation: skeletonPulse 2s ease-in-out infinite;
+}
+
+/* Lab platform skeleton */
+.skeleton-lab-platform {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background: #030712;
+}
+
+[data-theme='light'] .skeleton-lab-platform {
+  background: #ffffff;
+}
+
+.skeleton-lab-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(3, 7, 18, 0.96);
+  flex-shrink: 0;
+  min-height: 54px;
+}
+
+[data-theme='light'] .skeleton-lab-topbar {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-lab-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.skeleton-lab-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.46);
+}
+
+[data-theme='light'] .skeleton-lab-sidebar {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-lab-content {
+  flex: 1;
+  background: #050b18;
+}
+
+[data-theme='light'] .skeleton-lab-content {
+  background: #f8fafc;
+}
+
+/* Table skeleton */
+.skeleton-table {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.skeleton-table-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 6px;
+}
+
+/* DSA-specific skeletons */
+.skeleton-dsa-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.46);
+}
+
+[data-theme='light'] .skeleton-dsa-sidebar {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #f1f5f9;
+}
+
+.skeleton-dsa-list {
+  flex: 1;
+  padding: 8px 0;
+}
+
+.skeleton-dsa-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+[data-theme='light'] .skeleton-dsa-row {
+  border-color: rgba(0, 0, 0, 0.03);
+}
+
+/* MCQ skeletons */
+.skeleton-mcq-page {
+  min-height: 100vh;
+  background: var(--mcq-bg);
+}
+
+.skeleton-mcq-card {
+  border-radius: 12px;
+  border: 1px solid var(--mcq-border);
+  background: var(--mcq-surface);
+  overflow: hidden;
+}
+
+.skeleton-mcq-dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 24px;
+}
+
+.skeleton-mcq-achievement {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--mcq-border);
+  background: var(--mcq-surface);
+}
+
+/* Interview mode skeleton */
+.skeleton-interview {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Playground skeleton */
+.skeleton-playground {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #030712;
+}
+
+[data-theme='light'] .skeleton-playground {
+  background: #ffffff;
+}
+
+.skeleton-playground-left {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.46);
+  padding: 12px;
+}
+
+[data-theme='light'] .skeleton-playground-left {
+  background: #f1f5f9;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-playground-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-playground-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.48);
+}
+
+[data-theme='light'] .skeleton-playground-toolbar {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: #f1f5f9;
+}
+
+.skeleton-playground-panels {
+  flex: 1;
+  display: flex;
+}
+
+.skeleton-playground-editor {
+  flex: 1;
+  padding: 16px;
+}
+
+.skeleton-playground-output {
+  width: 300px;
+  flex-shrink: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px;
+}
+
+[data-theme='light'] .skeleton-playground-output {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* =============================================
    RESPONSIVE ADJUSTMENTS
    ============================================= */
 

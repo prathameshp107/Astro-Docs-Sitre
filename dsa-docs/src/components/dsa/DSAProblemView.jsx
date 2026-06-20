@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import ThemeToggle from "../ThemeToggle.jsx";
+import Skeleton from "../Skeleton.jsx";
 import { getProblemById, DIFFICULTY, DSA_TOPICS } from "../../data/dsa-problems.js";
 
 // ─── RESIZABLE HANDLE ───
@@ -88,6 +89,7 @@ function defineDSAThemes(monaco) {
 
 export default function DSAProblemView({ problemId }) {
   const problem = useMemo(() => getProblemById(problemId), [problemId]);
+  const [loading, setLoading] = useState(true);
 
   const [code, setCode] = useState("");
   const [output, setOutput] = useState([]);
@@ -114,6 +116,11 @@ export default function DSAProblemView({ problemId }) {
   }, [problemId, problem]);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleEditorMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
@@ -248,6 +255,40 @@ export default function DSAProblemView({ problemId }) {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  if (loading) {
+    return (
+      <div className="dsa-platform">
+        <div className="dsa-topbar" style={{ justifyContent: 'space-between', display: 'flex', alignItems: 'center', padding: '10px 16px' }}>
+          <Skeleton variant="text" width="200px" height="16px" />
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <Skeleton variant="avatar" size="28px" />
+            <Skeleton variant="avatar" size="28px" />
+          </div>
+        </div>
+        <div className="dsa-detail-page">
+          <div className="dsa-detail-content" style={{ padding: '20px' }}>
+            <Skeleton variant="badge" width="80px" height="20px" style={{ marginBottom: '12px' }} />
+            <Skeleton variant="text" width="60%" height="24px" style={{ marginBottom: '16px' }} />
+            <Skeleton variant="text" width="100%" height="14px" style={{ marginBottom: '6px' }} />
+            <Skeleton variant="text" width="80%" height="14px" style={{ marginBottom: '24px' }} />
+            <Skeleton variant="text" width="100%" height="120px" borderRadius="8px" style={{ marginBottom: '16px' }} />
+            <Skeleton variant="text" width="100%" height="60px" borderRadius="8px" />
+          </div>
+          <div className="dsa-editor-panel" style={{ padding: '0' }}>
+            <div className="dsa-editor-toolbar" style={{ padding: '10px 14px', display: 'flex', gap: '8px' }}>
+              <Skeleton variant="badge" width="60px" height="28px" />
+              <Skeleton variant="badge" width="80px" height="28px" />
+              <Skeleton variant="badge" width="60px" height="28px" style={{ marginLeft: 'auto' }} />
+            </div>
+            <div style={{ padding: '16px' }}>
+              <Skeleton variant="rect" width="100%" height="calc(100vh - 250px)" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!problem) {
     return (

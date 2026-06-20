@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Skeleton, { SkeletonHero, SkeletonStats, SkeletonGrid } from "../Skeleton.jsx";
 
 
 const sections = [
@@ -51,12 +52,26 @@ const roadmapLevels = [
 
 export default function PythonLanding() {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoaded(true);
+    const timer = setTimeout(() => setLoading(false), 350);
+    return () => clearTimeout(timer);
   }, []);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
+
+  if (loading) {
+    return (
+      <div className="landing-page loaded">
+        <SkeletonHero />
+        <SkeletonStats count={4} />
+        <SkeletonGrid count={4} variant="card" columns={2} cardHeight="200px" />
+        <SkeletonGrid count={3} variant="card" columns={3} cardHeight="180px" />
+      </div>
+    );
+  }
 
   return (
     <div className={`landing-page ${loaded ? "loaded" : ""}`}>
@@ -79,16 +94,16 @@ export default function PythonLanding() {
             Write Code. Build Projects. Solve Challenges. Prepare For Interviews.
           </p>
           <div className="hero-actions" style={{ justifyContent: "center" }}>
-            <a href={`${base}practice/python-lab`} className="btn btn-primary">
+            <a href={`${base}labs/python-lab`} className="btn btn-primary">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: "0.35rem" }}>
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Start Learning
             </a>
-            <a href={`${base}practice/python-lab`} className="btn btn-secondary">
+            <a href={`${base}labs/python-lab`} className="btn btn-secondary">
               Practice Python
             </a>
-            <a href={`${base}practice/python-lab`} className="btn btn-ghost">
+            <a href={`${base}labs/python-lab`} className="btn btn-ghost">
               Python Roadmap
             </a>
           </div>
@@ -122,7 +137,7 @@ export default function PythonLanding() {
       <section className="lab-cards-section" style={{ maxWidth: "900px", margin: "0 auto 3rem", padding: "0 1.5rem" }}>
         <div className="lab-cards-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
           {sections.map((sec, i) => (
-            <SectionCard key={sec.title} icon={sec.icon} title={sec.title} desc={sec.desc} color={sec.color} href={`${base}practice/python-lab`} />
+            <SectionCard key={sec.title} icon={sec.icon} title={sec.title} desc={sec.desc} color={sec.color} href={`${base}labs/python-lab`} />
           ))}
         </div>
       </section>
@@ -148,7 +163,7 @@ export default function PythonLanding() {
           <div className="footer-links">
             <a href="https://github.com/prathameshp107/DSA-Notes-Problems" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href={base}>Home</a>
-            <a href={`${base}practice`}>Practice Labs</a>
+            <a href={`${base}labs`}>Practice Labs</a>
           </div>
         </div>
       </footer>

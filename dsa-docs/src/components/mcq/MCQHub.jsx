@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import Skeleton, { SkeletonStats, SkeletonGrid } from '../Skeleton.jsx';
 
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES } from './MCQData.js';
@@ -29,15 +30,37 @@ const cardVariants = {
 
 export default function MCQHub() {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
   useEffect(() => {
     setLoaded(true);
     setProgress(getInitialProgress());
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
   }, []);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
   const accuracy = progress ? getAccuracy(progress) : 0;
   const streak = progress ? getStreakInfo(progress) : { current: 0, best: 0 };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '80px 24px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Hero skeleton */}
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <Skeleton variant="badge" width="160px" height="28px" style={{ margin: '0 auto 16px' }} />
+            <Skeleton variant="text" width="60%" height="40px" style={{ margin: '0 auto 12px' }} />
+            <Skeleton variant="text" width="40%" height="16px" style={{ margin: '0 auto 32px' }} />
+          </div>
+          {/* Stats skeleton */}
+          <SkeletonStats count={5} />
+          {/* Category cards skeleton */}
+          <SkeletonGrid count={9} variant="card" columns={3} cardHeight="220px" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)' }}>

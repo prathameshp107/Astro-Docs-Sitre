@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Skeleton, { SkeletonHero, SkeletonGrid, SkeletonStats } from './Skeleton.jsx';
 
 
 const DSA_TOPICS = [
@@ -20,10 +21,25 @@ const readyTopics = ['arrays', 'sorting', 'trees', 'graphs', 'stack', 'queue', '
 
 export default function DSAVisualizerHub() {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { setLoaded(true); }, []);
+  useEffect(() => {
+    setLoaded(true);
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+
+  if (loading) {
+    return (
+      <div className="landing-page loaded">
+        <SkeletonHero />
+        <SkeletonGrid count={12} variant="topic-card" columns={3} cardHeight="60px" />
+        <SkeletonStats count={4} />
+      </div>
+    );
+  }
 
   return (
     <div className={`landing-page ${loaded ? 'loaded' : ''}`}>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Skeleton, { SkeletonHero, SkeletonStats, SkeletonLabCard } from "../Skeleton.jsx";
 
 
 const labs = [
@@ -155,6 +156,7 @@ function useInView(threshold = 0.15) {
 
 export default function LabHub() {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showQuickStart, setShowQuickStart] = useState(true);
 
   useEffect(() => {
@@ -166,7 +168,9 @@ export default function LabHub() {
 
   useEffect(() => {
     setLoaded(true);
+    const timer = setTimeout(() => setLoading(false), 350);
     sessionStorage.setItem("labhub-visited", "true");
+    return () => clearTimeout(timer);
   }, []);
 
   const dismissQuickStart = () => {
@@ -178,6 +182,20 @@ export default function LabHub() {
   const totalChallenges = labs.reduce((sum, l) => sum + l.challengeCount, 0);
   const readyLabs = labs.filter((l) => l.status === "Ready").length;
   const totalLabs = labs.length;
+
+  if (loading) {
+    return (
+      <div className="landing-page lab-hub-page loaded">
+        <SkeletonHero />
+        <SkeletonStats count={4} />
+        <div className="lab-cards-grid" style={{ padding: '0 16px' }}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <SkeletonLabCard key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`landing-page lab-hub-page ${loaded ? "loaded" : ""}`}>
@@ -291,7 +309,7 @@ function LabCard({ lab, index, base }) {
       if (lab.path.startsWith("/")) {
         window.location.href = `${base}${lab.path.slice(1)}`;
       } else {
-        window.location.href = `${base}practice/${lab.path}`;
+        window.location.href = `${base}labs/${lab.path}`;
       }
     }
   };

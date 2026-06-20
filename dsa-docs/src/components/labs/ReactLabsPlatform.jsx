@@ -3,6 +3,7 @@ import ThemeToggle from "../ThemeToggle.jsx";
 import { createRoot } from "react-dom/client";
 import Editor from "@monaco-editor/react";
 import * as Babel from "@babel/standalone";
+import { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { REACT_LESSONS, REACT_BUG_CHALLENGES, REACT_MINI_PROJECTS } from "../../data/react-labs-curriculum.js";
 
 // ─── ICON COMPONENTS ───
@@ -293,6 +294,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
 // ─── MAIN PLATFORM ───
 
 export default function ReactLabsPlatform() {
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(REACT_LESSONS[0]?.id || null);
   const [activeBug, setActiveBug] = useState(null);
@@ -349,10 +351,12 @@ export default function ReactLabsPlatform() {
 
   // Load progress from sessionStorage
   useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 100);
     try {
       const stored = JSON.parse(sessionStorage.getItem("rl-progress") || '{"lessons":[],"bugs":[],"projects":[]}');
       setProgress(stored);
     } catch { /* ignore */ }
+    return () => clearTimeout(timer);
   }, []);
 
   // Save progress
@@ -845,6 +849,14 @@ export default function ReactLabsPlatform() {
     return [];
   }, [view, currentLesson, currentBug, currentProject]);
 
+  if (loading) {
+    return (
+      <div className="jsl-platform">
+        <SkeletonLabPlatform />
+      </div>
+    );
+  }
+
   if (!currentContent) {
     return (
       <div className="jsl-platform">
@@ -861,7 +873,7 @@ export default function ReactLabsPlatform() {
       {/* ─── Top Navigation Bar ─── */}
       <div className="jsl-topbar">
         <div className="jsl-topbar-left">
-          <a href={`${base}practice`} className="jsl-top-back">
+          <a href={`${base}labs`} className="jsl-top-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />

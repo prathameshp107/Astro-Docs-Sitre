@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import initSqlJs from "sql.js";
+import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { SQL_LESSONS, SQL_CHALLENGES, SQL_PROJECTS, SQL_DATABASES, createSampleDatabase, createEmptyDatabase } from "../../data/sql-curriculum.js";
 import SchemaDiagram from "./SchemaDiagram.jsx";
 
@@ -287,6 +288,7 @@ function SingleResultTable({ batch }) {
 // ─── MAIN PLATFORM ───
 
 export default function SQLLabsPlatform() {
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(SQL_LESSONS[0]?.id || null);
   const [activeChallenge, setActiveChallenge] = useState(null);
@@ -321,6 +323,7 @@ export default function SQLLabsPlatform() {
       const db = createFreshDatabase();
       dbRef.current = db;
       setDbReady(true);
+      setLoading(false);
     });
     return () => {
       if (dbRef.current) {
@@ -669,6 +672,14 @@ export default function SQLLabsPlatform() {
   }, [view, currentLesson, currentChallenge, currentProject]);
 
   // Render landing if DB not ready
+  if (loading) {
+    return (
+      <div className="sql-platform">
+        <SkeletonLabPlatform />
+      </div>
+    );
+  }
+
   if (!dbReady) {
     return (
       <div className="sql-platform">
@@ -696,7 +707,7 @@ export default function SQLLabsPlatform() {
       {/* Top Bar */}
       <div className="sql-topbar">
         <div className="sql-topbar-left">
-          <a href={`${base}practice`} className="sql-top-back">
+          <a href={`${base}labs`} className="sql-top-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />

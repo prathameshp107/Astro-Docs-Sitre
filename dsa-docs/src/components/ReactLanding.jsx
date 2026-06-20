@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import Skeleton, { SkeletonHero, SkeletonStats, SkeletonGrid } from "./Skeleton.jsx";
 
 
 const topics = [
@@ -182,10 +183,13 @@ function FloatingOrb({ size, gradient, top, left, delay = 0, duration = 20 }) {
 
 export default function ReactLanding() {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -201,6 +205,18 @@ export default function ReactLanding() {
   }, []);
 
   const base = import.meta.env.BASE_URL || "/";
+
+  if (loading) {
+    return (
+      <div className="landing-page loaded">
+        <SkeletonHero />
+        <SkeletonStats count={4} />
+        <SkeletonGrid count={4} variant="card" columns={4} cardHeight="200px" />
+        <SkeletonGrid count={6} variant="topic-card" columns={2} cardHeight="60px" />
+        <SkeletonGrid count={3} variant="card" columns={3} cardHeight="240px" />
+      </div>
+    );
+  }
 
   return (
     <div className={`landing-page ${loaded ? "loaded" : ""}`}>
@@ -253,7 +269,7 @@ export default function ReactLanding() {
               Explore Docs
               <span className="btn-arrow">→</span>
             </a>
-            <a href={`${base}practice`} className="btn btn-secondary">
+            <a href={`${base}labs`} className="btn btn-secondary">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
@@ -503,7 +519,7 @@ function CTASection({ base }) {
             Browse Docs
             <span className="btn-arrow">→</span>
           </a>
-          <a href={`${base}practice`} className="btn btn-secondary btn-lg">
+          <a href={`${base}labs`} className="btn btn-secondary btn-lg">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="5 3 19 12 5 21 5 3" />
             </svg>
@@ -537,7 +553,7 @@ function Footer({ base }) {
         <div className="footer-links">
           <a href="https://github.com/prathameshp107/DSA-Notes-Problems" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href={`${base}overview`}>Docs</a>
-          <a href={`${base}practice`}>Practice Labs</a>
+          <a href={`${base}labs`}>Practice Labs</a>
         </div>
       </div>
     </footer>

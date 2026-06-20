@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Skeleton from "./Skeleton.jsx";
 
 
 const starterCode = `// Welcome to the DSA Playground! 🚀
@@ -59,10 +60,16 @@ export default function ReactPlayground() {
   const [error, setError] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [activeSnippet, setActiveSnippet] = useState(null);
+  const [loading, setLoading] = useState(true);
   const outputRef = useRef(null);
   const textareaRef = useRef(null);
 
   const base = import.meta.env.BASE_URL || "/";
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (outputRef.current) {
@@ -153,6 +160,43 @@ export default function ReactPlayground() {
       }, 0);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="playground-page">
+        <div className="playground-layout">
+          <aside className="playground-sidebar">
+            <div className="sidebar-title" style={{ marginBottom: '12px' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+              Code Snippets
+            </div>
+            {Array.from({ length: 5 }, (_, i) => (
+              <div key={i} style={{ padding: '8px 10px', marginBottom: '4px' }}>
+                <Skeleton variant="text" width={`${60 + Math.random() * 30}%`} height="12px" />
+              </div>
+            ))}
+          </aside>
+          <main className="playground-main">
+            <div className="playground-header" style={{ justifyContent: 'space-between', display: 'flex', alignItems: 'center', padding: '10px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <Skeleton variant="text" width="140px" height="16px" />
+              <Skeleton variant="badge" width="80px" height="32px" />
+            </div>
+            <div className="playground-editor-area" style={{ padding: '16px' }}>
+              <div className="skeleton skeleton-text" style={{ width: '100%', height: '300px', borderRadius: '8px' }} />
+            </div>
+            <div className="playground-output" style={{ padding: '12px 16px' }}>
+              <Skeleton variant="text" width="60px" height="14px" style={{ marginBottom: '12px' }} />
+              <Skeleton variant="text" width="90%" height="10px" style={{ marginBottom: '6px' }} />
+              <Skeleton variant="text" width="70%" height="10px" />
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="playground-page">

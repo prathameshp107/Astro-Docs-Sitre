@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Skeleton, { SkeletonGrid } from '../Skeleton.jsx';
 
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getTopicsForCategory, getQuestionsForCategory } from './MCQData.js';
@@ -20,6 +21,7 @@ function useMCQTheme() {
 export default function MCQCategory({ categoryId }) {
   const [progress, setProgress] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const cat = MCQ_CATEGORIES.find(c => c.id === categoryId);
   const topics = cat ? getTopicsForCategory(categoryId) : [];
@@ -28,9 +30,37 @@ export default function MCQCategory({ categoryId }) {
   useEffect(() => {
     setLoaded(true);
     setProgress(getInitialProgress());
+    const timer = setTimeout(() => setLoading(false), 350);
+    return () => clearTimeout(timer);
   }, [categoryId]);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+
+  if (loading) {
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '48px 24px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
+            <Skeleton variant="avatar" size="64px" />
+            <div style={{ flex: 1 }}>
+              <Skeleton variant="badge" width="100px" height="22px" style={{ marginBottom: '8px' }} />
+              <Skeleton variant="text" width="50%" height="32px" style={{ marginBottom: '6px' }} />
+              <Skeleton variant="text" width="70%" height="14px" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4" style={{ marginBottom: '32px' }}>
+            {Array.from({ length: 4 }, (_, i) => (
+              <div key={i} className="p-4 rounded-xl border" style={{ borderColor: 'var(--mcq-border)', background: 'var(--mcq-surface-20)' }}>
+                <Skeleton variant="text" width="60%" height="24px" style={{ marginBottom: '4px' }} />
+                <Skeleton variant="text" width="40%" height="10px" />
+              </div>
+            ))}
+          </div>
+          <SkeletonGrid count={9} variant="topic-card" columns={3} cardHeight="60px" />
+        </div>
+      </div>
+    );
+  }
 
   if (!cat) {
     return (
