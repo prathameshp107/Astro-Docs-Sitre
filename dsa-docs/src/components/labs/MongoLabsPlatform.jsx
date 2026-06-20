@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import { createMongoEngine, MONGO_LESSONS, MONGO_CHALLENGES, MONGO_DATABASES, MONGO_PROJECTS, MONGO_INTERVIEW_CATEGORIES, MONGO_INTERVIEW_QUESTIONS } from "../../data/mongodb-curriculum.js";
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 
 const labs = [
   {
@@ -85,6 +85,27 @@ const labs = [
     ],
     challengeCount: 100,
     difficulty: "Intermediate",
+  },
+  {
+    id: "python",
+    title: "Python Labs",
+    icon: "🐍",
+    shortIcon: "PY",
+    description:
+      "Master Python from beginner to advanced. 20 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/python",
+    color: "#3776AB",
+    features: [
+      "20 Guided Lessons",
+      "10 Code Challenges",
+      "8 Projects (Todo, Weather, AI)",
+      "10 Debug Challenges",
+      "Monaco Editor + Pyodide",
+    ],
+    challengeCount: 48,
+    difficulty: "Beginner to Advanced",
   },
   {
     id: "mongodb",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback, useRef, useReducer, useContext, createContext } from "react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 import { createRoot } from "react-dom/client";
 import Editor from "@monaco-editor/react";
 import * as Babel from "@babel/standalone";

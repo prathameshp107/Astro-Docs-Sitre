@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import ThemeToggle from "./mcq/ThemeToggle.jsx";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 const topics = [
   "JavaScript", "React", "Angular", "Node.js", "MongoDB",
@@ -252,6 +252,12 @@ export default function ReactLanding() {
                 <line x1="9" y1="21" x2="9" y2="9"/>
               </svg>
               SQL Labs
+            </a>
+            <a href={`${base}python`} className="nav-link">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Python Labs
             </a>
             <a href={`${base}mcq`} className="nav-link">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

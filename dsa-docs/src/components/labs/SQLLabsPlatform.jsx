@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../mcq/ThemeToggle.jsx";
+import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import initSqlJs from "sql.js";
 import { SQL_LESSONS, SQL_CHALLENGES, SQL_PROJECTS, SQL_DATABASES, createSampleDatabase, createEmptyDatabase } from "../../data/sql-curriculum.js";
