@@ -19,6 +19,7 @@ const NAV_SECTIONS = [
     label: 'Labs',
     href: '/labs',
     icon: 'M5 3l14 9-14 9V3z',
+    hasDropdown: true,
   },
   {
     id: 'mcq',
@@ -34,6 +35,66 @@ const NAV_SECTIONS = [
   },
 ];
 
+const LABS_SUB_ITEMS = [
+
+  {
+    id: 'html-lab',
+    label: 'HTML Labs',
+    href: '/labs/html',
+    icon: '🔶',
+    color: '#fb923c',
+  },
+  {
+    id: 'css-lab',
+    label: 'CSS Labs',
+    href: '/labs/css',
+    icon: '🎨',
+    color: '#60a5fa',
+  },
+  {
+    id: 'js-lab',
+    label: 'JS Interview Lab',
+    href: '/labs/js-lab',
+    icon: '🟨',
+    color: '#f7df1e',
+  },
+  {
+    id: 'react-lab',
+    label: 'React Practice Lab',
+    href: '/labs/react-lab',
+    icon: '⚛️',
+    color: '#61dafb',
+  },
+  {
+    id: 'dsa-problems',
+    label: 'DSA Problem Lab',
+    href: '/dsa/problems',
+    icon: '📊',
+    color: '#6366f1',
+  },
+  {
+    id: 'sql-lab',
+    label: 'SQL Query Lab',
+    href: '/labs/mysql',
+    icon: '🗄️',
+    color: '#f59e0b',
+  },
+  {
+    id: 'python-lab',
+    label: 'Python Labs',
+    href: '/labs/python',
+    icon: '🐍',
+    color: '#3776AB',
+  },
+  {
+    id: 'mongodb-lab',
+    label: 'MongoDB Lab',
+    href: '/labs/mongodb',
+    icon: '🍃',
+    color: '#13aa52',
+  },
+];
+
 /**
  * Universal App Navigation Bar
  * @param {Object} props
@@ -45,7 +106,11 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [labsDropdownOpen, setLabsDropdownOpen] = useState(false);
+  const [labsMobileExpanded, setLabsMobileExpanded] = useState(false);
   const menuRef = useRef(null);
+  const labsDropdownRef = useRef(null);
+  const hoverTimeoutRef = useRef(null);
 
   useEffect(() => {
     setLoaded(true);
@@ -70,6 +135,26 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
     }
   }, [mobileOpen]);
 
+  // Close labs dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (labsDropdownRef.current && !labsDropdownRef.current.contains(e.target)) {
+        setLabsDropdownOpen(false);
+      }
+    };
+    if (labsDropdownOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [labsDropdownOpen]);
+
+  // Clean up hover timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
+
   // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
@@ -83,6 +168,77 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
     const isActive = activeSection === section.id;
     const isHighlight = section.highlight;
     const href = `${base}${section.href.replace(/^\//, '')}`;
+
+    if (section.hasDropdown) {
+      return (
+        <div
+          key={section.id}
+          className={`app-nav-dropdown ${labsDropdownOpen ? 'app-nav-dropdown-open' : ''}`}
+          ref={labsDropdownRef}
+          onMouseEnter={() => {
+            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+            hoverTimeoutRef.current = setTimeout(() => setLabsDropdownOpen(true), 700);
+          }}
+          onMouseLeave={() => {
+            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+            setLabsDropdownOpen(false);
+          }}
+        >
+          <a
+            href={href}
+            className={`app-nav-link ${isActive ? 'app-nav-link-active' : ''}`}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d={section.icon} />
+            </svg>
+            <span className="app-nav-label">{section.label}</span>
+          </a>
+          <span
+            className="app-nav-dropdown-chevron-wrap"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setLabsDropdownOpen(!labsDropdownOpen);
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={labsDropdownOpen ? 'Close labs menu' : 'Open labs menu'}
+            aria-expanded={labsDropdownOpen}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setLabsDropdownOpen(!labsDropdownOpen); } }}
+          >
+            <svg
+              className={`app-nav-dropdown-chevron ${labsDropdownOpen ? 'open' : ''}`}
+              width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </span>
+          <div className={`app-nav-dropdown-menu ${labsDropdownOpen ? 'open' : ''}`}>
+            {LABS_SUB_ITEMS.map((item) => {
+              const itemHref = `${base}${item.href.replace(/^\//, '')}`;
+              const isItemActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={itemHref}
+                  className={`app-nav-dropdown-item ${isItemActive ? 'app-nav-dropdown-item-active' : ''}`}
+                  onClick={() => setLabsDropdownOpen(false)}
+                >
+                  <span className="app-nav-dropdown-item-icon" style={{ color: item.color }}>
+                    {item.icon}
+                  </span>
+                  <span className="app-nav-dropdown-item-label">{item.label}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
 
     return (
       <a
@@ -200,6 +356,55 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
             {filteredSections.map((section) => {
               const isActive = activeSection === section.id;
               const href = `${base}${section.href.replace(/^\//, '')}`;
+              const isLabs = section.hasDropdown;
+
+              if (isLabs) {
+                return (
+                  <div key={section.id} className="app-nav-mobile-section">
+                    <div
+                      className={`app-nav-mobile-link ${isActive ? 'app-nav-mobile-link-active' : ''}`}
+                      onClick={() => setLabsMobileExpanded(!labsMobileExpanded)}
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={labsMobileExpanded}
+                      onKeyDown={(e) => { if (e.key === 'Enter') setLabsMobileExpanded(!labsMobileExpanded); }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d={section.icon} />
+                      </svg>
+                      <span>{section.label}</span>
+                      <svg
+                        className={`app-nav-mobile-chevron ${labsMobileExpanded ? 'open' : ''}`}
+                        width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                      >
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </div>
+                    {labsMobileExpanded && (
+                      <div className="app-nav-mobile-sublist">
+                        {LABS_SUB_ITEMS.map((item) => {
+                          const itemHref = `${base}${item.href.replace(/^\//, '')}`;
+                          const isItemActive = activeSection === item.id;
+                          return (
+                            <a
+                              key={item.id}
+                              href={itemHref}
+                              className={`app-nav-mobile-sub-link ${isItemActive ? 'app-nav-mobile-link-active' : ''}`}
+                              onClick={() => setMobileOpen(false)}
+                            >
+                              <span className="app-nav-mobile-sub-icon">{item.icon}</span>
+                              <span>{item.label}</span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               return (
                 <a
                   key={section.id}

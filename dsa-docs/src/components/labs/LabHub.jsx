@@ -4,6 +4,50 @@ import Skeleton, { SkeletonHero, SkeletonStats, SkeletonLabCard } from "../Skele
 
 const labs = [
   {
+    id: "html",
+    title: "HTML Labs",
+    icon: "🔶",
+    shortIcon: "HT",
+    description:
+      "Master HTML through interactive learning. 16 guided lessons, 10 coding challenges, 6 real-world projects, HTML playground with live preview, and interview preparation.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/html",
+    color: "#fb923c",
+    features: [
+      "Live HTML Preview",
+      "16 Interactive Lessons",
+      "10 Code Challenges",
+      "6 Real-World Projects",
+      "50+ Interview Questions",
+      "HTML Playground",
+    ],
+    challengeCount: 32,
+    difficulty: "Beginner to Advanced",
+  },
+  {
+    id: "css",
+    title: "CSS Labs",
+    icon: "🎨",
+    shortIcon: "CS",
+    description:
+      "Master CSS through interactive learning. 20 guided lessons, 10 coding challenges, 10 reusable components, 6 animations, and an interactive playground.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/css",
+    color: "#60a5fa",
+    features: [
+      "20 Interactive Lessons",
+      "Live CSS Preview",
+      "10 Code Challenges",
+      "10 UI Components Lab",
+      "6 Animation Projects",
+      "50+ Interview Questions",
+    ],
+    challengeCount: 46,
+    difficulty: "Beginner to Advanced",
+  },
+  {
     id: "js",
     title: "JS Interview Lab",
     icon: "🟨",
@@ -75,7 +119,7 @@ const labs = [
       "Write and execute SQL queries against sample databases. Practice joins, aggregations, subqueries, and query optimization.",
     status: "Ready",
     statusColor: "#22c55e",
-    path: "/mysql",
+    path: "/labs/mysql",
     color: "#f59e0b",
     features: [
       "JOINs Practice",
@@ -96,7 +140,7 @@ const labs = [
       "Master Python from beginner to advanced. 20 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
     status: "Ready",
     statusColor: "#22c55e",
-    path: "/python",
+    path: "/labs/python",
     color: "#3776AB",
     features: [
       "20 Guided Lessons",
@@ -117,7 +161,7 @@ const labs = [
       "Learn MongoDB with guided lessons, interactive queries, aggregation pipeline builder, and real-time document exploration. Master NoSQL the right way.",
     status: "Ready",
     statusColor: "#22c55e",
-    path: "/mongodb",
+    path: "/labs/mongodb",
     color: "#13aa52",
     features: [
       "16 Guided Lessons",
