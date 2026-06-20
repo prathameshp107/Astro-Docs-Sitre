@@ -93,6 +93,13 @@ const LABS_SUB_ITEMS = [
     icon: '🍃',
     color: '#13aa52',
   },
+  {
+    id: 'git-lab',
+    label: 'Git & GitHub Labs',
+    href: '/labs/git',
+    icon: '🔄',
+    color: '#f59e0b',
+  },
 ];
 
 /**

@@ -1,0 +1,1154 @@
+/* ─── Git Labs Platform ─── */
+
+/* ===== Content Panel (Left) ===== */
+
+.jsl-content-panel {
+  background: var(--jsl-bg-panel);
+  border: 1px solid var(--jsl-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(255,255,255,0.015);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.jsl-content-panel:hover {
+  border-color: var(--jsl-border2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.jsl-content-scroll {
+  padding: 0.75rem;
+}
+
+/* Styled scrollbar for content panel */
+.jsl-content-panel::-webkit-scrollbar,
+.jsl-content-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.jsl-content-panel::-webkit-scrollbar-track,
+.jsl-content-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jsl-content-panel::-webkit-scrollbar-thumb,
+.jsl-content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.15);
+  border-radius: 3px;
+}
+
+.jsl-content-panel::-webkit-scrollbar-thumb:hover,
+.jsl-content-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(148,163,184,0.3);
+}
+
+/* ===== Content-Inner Sections ===== */
+
+.jsl-content-inner {
+  animation: gitFadeIn 0.25s ease;
+}
+
+.jsl-chapter-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--jsl-border);
+}
+
+.jsl-chapter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.jsl-content-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem 0;
+  color: var(--jsl-text-title);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.jsl-chapter-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.jsl-section {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--jsl-border);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.6rem;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.jsl-section:hover {
+  border-color: var(--jsl-border2);
+  background: rgba(255,255,255,0.03);
+}
+
+.jsl-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--jsl-text-muted);
+  margin: 0 0 0.4rem 0;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.jsl-rules-section {
+  border-left: 3px solid rgba(96,165,250,0.25);
+}
+
+.jsl-task-section {
+  border-left: 3px solid rgba(245,158,11,0.25);
+}
+
+.jsl-rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.jsl-rule-item {
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--jsl-text);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.jsl-rule-item::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #60a5fa;
+  font-weight: 700;
+}
+
+.jsl-task-text {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--jsl-text);
+}
+
+.jsl-task-item {
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--jsl-text);
+  margin-bottom: 0.15rem;
+  padding-left: 0.25rem;
+}
+
+.jsl-bullet {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--jsl-text);
+  margin-left: 1rem;
+  padding-left: 0.25rem;
+}
+
+.jsl-concept-text {
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--jsl-text);
+}
+
+.jsl-concept-text p {
+  margin: 0.2rem 0;
+}
+
+.jsl-hint-box {
+  background: rgba(245,158,11,0.07);
+  border: 1px solid rgba(245,158,11,0.18);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #f59e0b;
+  animation: gitFadeIn 0.3s ease;
+}
+
+.jsl-solution-box {
+  background: rgba(34,197,94,0.06);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 0.6rem;
+  animation: gitFadeIn 0.3s ease;
+}
+
+.jsl-solution-box h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin: 0 0 0.4rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.jsl-code-block {
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  padding: 0.6rem;
+  overflow-x: auto;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.jsl-code-block code {
+  font-family: 'JetBrains Mono', monospace;
+  color: #e2e8f0;
+}
+
+.jsl-content-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--jsl-border);
+}
+
+.jsl-btn-ghost {
+  padding: 0.35rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--jsl-border);
+  background: transparent;
+  color: var(--jsl-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.jsl-btn-ghost:hover {
+  border-color: var(--jsl-border2);
+  background: rgba(255,255,255,0.04);
+  color: var(--jsl-text);
+}
+
+.jsl-btn-mark {
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(34,197,94,0.2);
+  background: rgba(34,197,94,0.08);
+  color: #22c55e;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-left: auto;
+}
+
+.jsl-btn-mark:hover {
+  background: rgba(34,197,94,0.15);
+  border-color: rgba(34,197,94,0.35);
+}
+
+.jsl-btn-mark.done {
+  background: rgba(34,197,94,0.12);
+  border-color: rgba(34,197,94,0.25);
+  opacity: 0.8;
+  cursor: default;
+}
+
+.jsl-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.jsl-tag {
+  font-size: 0.62rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(148,163,184,0.08);
+  color: #64748b;
+  font-weight: 500;
+  border: 1px solid rgba(148,163,184,0.1);
+}
+
+.jsl-diff-badge {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+/* ===== Graph Container (Right) ===== */
+
+.git-graph-container {
+  background: var(--jsl-bg-panel);
+  border: 1px solid var(--jsl-border);
+  border-radius: 12px;
+  overflow: auto;
+  position: relative;
+  min-height: 200px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(255,255,255,0.015);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.git-graph-container:hover {
+  border-color: var(--jsl-border2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.git-graph-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 200px;
+  color: #475569;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.git-graph-empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.6;
+}
+
+.git-graph-empty-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+.git-graph-empty-hint {
+  font-size: 0.65rem;
+  color: #475569;
+  font-style: italic;
+}
+
+.git-graph-empty-cmd {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: #22c55e;
+  margin-top: 0.25rem;
+}
+
+.git-graph-svg {
+  display: block;
+  min-width: 100%;
+}
+
+/* Graph scrollbar */
+.git-graph-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.git-graph-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.git-graph-container::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.12);
+  border-radius: 3px;
+}
+
+.git-graph-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(148,163,184,0.25);
+}
+
+/* Graph Nodes */
+.git-commit-node {
+  cursor: pointer;
+  transition: r 0.2s ease;
+}
+
+.git-commit-node:hover {
+  r: 10;
+}
+
+.git-commit-node.current {
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
+}
+
+.git-commit-circle {
+  stroke-width: 2.5;
+  transition: all 0.2s ease;
+}
+
+/* Graph Edges */
+.git-edge-path {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.git-edge-path:hover {
+  opacity: 1;
+}
+
+/* Branch Labels */
+.git-branch-label {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  fill: #e2e8f0;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.git-branch-label:hover {
+  opacity: 0.8;
+}
+
+.git-branch-label-bg {
+  rx: 4;
+  ry: 4;
+  opacity: 0.85;
+}
+
+.git-branch-label.active {
+  fill: #f59e0b !important;
+}
+
+/* HEAD Indicator */
+.git-head-indicator {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  fill: #f59e0b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Commit SHA */
+.git-commit-sha {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  fill: #64748b;
+  font-weight: 500;
+}
+
+.git-commit-message {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  fill: #94a3b8;
+  font-weight: 400;
+}
+
+/* ─── Terminal Panel ─── */
+
+.git-terminal {
+  background: #0a0f1e;
+  border: 1px solid var(--jsl-border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.git-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--jsl-border);
+}
+
+.git-terminal-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.git-terminal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.git-terminal-dot.red { background: #ef4444; }
+.git-terminal-dot.yellow { background: #f59e0b; }
+.git-terminal-dot.green { background: #22c55e; }
+
+.git-terminal-body {
+  flex: 1;
+  padding: 0.75rem;
+  overflow-y: auto;
+  min-height: 150px;
+  max-height: 300px;
+}
+
+.git-terminal-output {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.git-terminal-line {
+  font-size: 0.78rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #94a3b8;
+}
+
+.git-terminal-line.output {
+  color: #e2e8f0;
+}
+
+.git-terminal-line.error {
+  color: #ef4444;
+}
+
+.git-terminal-line.success {
+  color: #22c55e;
+}
+
+.git-terminal-line.info {
+  color: #60a5fa;
+}
+
+.git-terminal-line.warning {
+  color: #f59e0b;
+}
+
+/* Terminal Input */
+.git-terminal-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid var(--jsl-border);
+}
+
+.git-terminal-prompt {
+  color: #22c55e;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.git-terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  caret-color: #22c55e;
+}
+
+.git-terminal-input::placeholder {
+  color: #475569;
+}
+
+.git-terminal-run {
+  padding: 0.3rem 0.7rem;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 6px;
+  color: #22c55e;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.git-terminal-run:hover {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+/* ─── Command History ─── */
+
+.git-command-history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--jsl-border);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.git-history-cmd {
+  padding: 0.15rem 0.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--jsl-border);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ─── Mission Panel ─── */
+
+.git-mission-panel {
+  background: var(--jsl-bg-panel);
+  border: 1px solid var(--jsl-border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.git-mission-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.git-mission-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.git-mission-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--jsl-text-title);
+}
+
+.git-mission-steps {
+  padding: 0;
+  margin: 0.5rem 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.git-mission-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.git-mission-step::before {
+  content: "→";
+  color: #60a5fa;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.git-mission-step.done {
+  color: #22c55e;
+}
+
+.git-mission-step.done::before {
+  content: "✓";
+  color: #22c55e;
+}
+
+/* ─── Conflict Arena ─── */
+
+.git-conflict-editor {
+  background: #0a0f1e;
+  border: 1px solid var(--jsl-border);
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.git-conflict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--jsl-border);
+}
+
+.git-conflict-filename {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.git-conflict-difficulty {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.git-conflict-difficulty.easy { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
+.git-conflict-difficulty.medium { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.git-conflict-difficulty.hard { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
+.git-conflict-difficulty.nightmare { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+
+.git-conflict-code {
+  padding: 0.75rem;
+  margin: 0;
+  white-space: pre;
+  overflow-x: auto;
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.git-conflict-marker {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.git-conflict-separator {
+  color: #60a5fa;
+  font-weight: 700;
+}
+
+.git-conflict-resolution {
+  width: 100%;
+  min-height: 120px;
+  background: #0d1525;
+  border: none;
+  border-top: 1px solid var(--jsl-border);
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  padding: 0.75rem;
+  resize: vertical;
+  outline: none;
+  line-height: 1.5;
+  transition: background 0.2s ease;
+}
+
+.git-conflict-resolution:focus {
+  background: #0f1a2e;
+}
+
+.git-conflict-resolution::placeholder {
+  color: #475569;
+  font-size: 0.72rem;
+}
+
+/* ─── Team Simulator ─── */
+
+.git-team-panel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--jsl-border);
+  border-radius: 10px;
+  padding: 0.85rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.git-team-panel:hover {
+  border-color: var(--jsl-border2);
+}
+
+.git-team-member {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.git-team-member:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.git-team-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.git-team-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--jsl-text);
+}
+
+.git-team-role {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
+/* ─── Achievement Badges ─── */
+
+.git-achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.5rem;
+}
+
+.git-achievement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--jsl-border);
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.git-achievement:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--jsl-border2);
+}
+
+.git-achievement-icon {
+  font-size: 1.3rem;
+}
+
+.git-achievement-title {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.git-achievement.unlocked {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.git-achievement.unlocked .git-achievement-title {
+  color: #f59e0b;
+}
+
+/* ─── Graph Tooltip ─── */
+
+.git-graph-tooltip {
+  position: absolute;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.72rem;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  max-width: 250px;
+}
+
+.git-tooltip-sha {
+  font-family: 'JetBrains Mono', monospace;
+  color: #f59e0b;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.git-tooltip-message {
+  color: #e2e8f0;
+  margin-bottom: 0.15rem;
+}
+
+.git-tooltip-meta {
+  color: #64748b;
+  font-size: 0.65rem;
+}
+
+/* ─── Progress Bar ─── */
+
+.git-progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.git-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, #f59e0b, #a78bfa);
+}
+
+/* ─── Boss Battle ─── */
+
+.git-boss-banner {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(245, 158, 11, 0.12));
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.git-boss-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ef4444;
+  margin-bottom: 0.3rem;
+}
+
+.git-boss-subtitle {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-bottom: 0.75rem;
+}
+
+/* ─── Sprint Board Cards ─── */
+
+.git-sprint-card {
+  transition: all 0.15s ease !important;
+}
+
+.git-sprint-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='light'] .git-sprint-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Boss Battle Steps ─── */
+
+.git-boss-step:hover {
+  transform: translateX(2px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.git-boss-step.pending {
+  border-color: var(--jsl-border);
+}
+
+.git-boss-step.done {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+/* ─── Animations ─── */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gitFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Responsive ─── */
+
+/* ─── Zoom Controls ─── */
+
+.git-zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--jsl-border);
+  border-radius: 6px;
+  padding: 0.15rem;
+}
+
+.git-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.git-zoom-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #e2e8f0;
+}
+
+.git-zoom-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #64748b;
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
+}
+
+[data-theme='light'] .git-zoom-controls {
+  background: rgba(0,0,0,0.03);
+}
+
+[data-theme='light'] .git-zoom-btn:hover {
+  background: rgba(0,0,0,0.06);
+  color: #1e293b;
+}
+
+@media (max-width: 768px) {
+  .git-terminal-body {
+    min-height: 100px;
+    max-height: 200px;
+  }
+
+  .git-terminal-line {
+    font-size: 0.72rem;
+  }
+
+  .git-terminal-input {
+    font-size: 0.75rem;
+  }
+
+  .git-achievement-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+}
+
+/* ─── Light Theme ─── */
+
+[data-theme='light'] .git-terminal {
+  background: #f1f5f9;
+}
+
+[data-theme='light'] .git-terminal-body {
+  background: #f8fafc;
+}
+
+[data-theme='light'] .git-terminal-line.output {
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-terminal-input {
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-conflict-editor {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-conflict-code {
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-conflict-resolution {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-conflict-resolution:focus {
+  background: #ffffff;
+}
+
+[data-theme='light'] .git-graph-container {
+  background: #ffffff;
+}
+
+[data-theme='light'] .git-graph-container:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(0,0,0,0.02);
+}
+
+[data-theme='light'] .jsl-content-panel {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.8);
+}
+
+[data-theme='light'] .jsl-content-panel:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(255,255,255,0.8);
+}
+
+[data-theme='light'] .git-graph-tooltip {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .git-commit-message {
+  fill: #64748b;
+}
+
+[data-theme='light'] .git-commit-sha {
+  fill: #94a3b8;
+}
+
+[data-theme='light'] .git-branch-label {
+  fill: #1e293b;
+}
+
+[data-theme='light'] .git-boss-step:hover {
+  background: rgba(0,0,0,0.02) !important;
+  border-color: rgba(0,0,0,0.1) !important;
+}
+
+[data-theme='light'] .jsl-section {
+  background: rgba(0,0,0,0.01);
+}
+
+[data-theme='light'] .jsl-section:hover {
+  background: rgba(0,0,0,0.015);
+}
+
+[data-theme='light'] .jsl-code-block {
+  background: rgba(0,0,0,0.04);
+}
+
+[data-theme='light'] .jsl-code-block code {
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-team-panel {
+  background: rgba(0,0,0,0.01);
+}

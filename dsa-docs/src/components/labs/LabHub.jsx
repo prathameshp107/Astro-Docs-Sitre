@@ -173,6 +173,28 @@ const labs = [
     challengeCount: 30,
     difficulty: "Beginner to Advanced",
   },
+  {
+    id: "git",
+    title: "Git & GitHub Labs",
+    icon: "🔄",
+    shortIcon: "GI",
+    description:
+      "Master Git and GitHub through interactive visual simulations. Learn branching, merging, rebasing, merge conflicts, and team collaboration workflows.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/git",
+    color: "#f59e0b",
+    features: [
+      "30 Interactive Lessons",
+      "Visual Commit Graph",
+      "Git CLI Terminal Simulator",
+      "Merge Conflict Arena",
+      "Team Collaboration Simulator",
+      "Boss Battles & Achievements",
+    ],
+    challengeCount: 50,
+    difficulty: "Beginner to Advanced",
+  },
 ];
 
 function useInView(threshold = 0.15) {
