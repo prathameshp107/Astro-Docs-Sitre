@@ -1,7 +1,10 @@
+import { FiArrowLeft, FiAward, FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiCode, FiEye, FiGrid, FiMonitor, FiMoon, FiPlay, FiRefreshCw, FiSmartphone, FiSun, FiUsers } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
+import { DiHtml5 } from "react-icons/di";
+
+
 import {
   HTML_LESSONS,
   HTML_CHALLENGES,
@@ -10,17 +13,6 @@ import {
 } from "../../data/html-labs-curriculum.js";
 
 // ─── ICONS ───
-
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function ChallengeIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>; }
-function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
-function InterviewIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>; }
-function PlayIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
-function EyeIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>; }
-function CodeIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>; }
-function SmartphoneIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>; }
-function MonitorIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
 
 // ─── RESIZABLE HANDLE ───
 
@@ -65,7 +57,7 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
   return (
     <div className="jsl-sidebar" {...rest}>
       <div className="jsl-sidebar-header">
-        <h3><BookIcon /> Curriculum</h3>
+        <h3><FiBook size={16} /> Curriculum</h3>
       </div>
 
       {/* Playground shortcut */}
@@ -76,7 +68,7 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
           style={{ color: activeSection === "playground" ? "#f472b6" : undefined }}
         >
           <div className="jsl-sg-title" style={{ color: "#f472b6" }}>
-            <CodeIcon /> <span>HTML PLAYGROUND</span>
+            <FiBook size={16} /> <span>HTML PLAYGROUND</span>
           </div>
         </button>
       </div>
@@ -84,9 +76,9 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
       {/* LEARN HTML */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header learn ${expandedSections.learn ? "expanded" : ""}`} onClick={() => toggleSection("learn")}>
-          <div className="jsl-sg-title" style={{ color: "#fb923c" }}><BookIcon /><span>LEARN HTML</span></div>
+          <div className="jsl-sg-title" style={{ color: "#fb923c" }}><FiBook size={16} /><span>LEARN HTML</span></div>
           <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.learn && (
           <div className="jsl-sg-items">
@@ -99,7 +91,7 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
                 <span className="jsl-si-num">{lesson.chapter}.</span>
                 <span className="jsl-si-title">{lesson.title}</span>
                 <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -109,9 +101,9 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
       {/* CODE CHALLENGES */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header ${expandedSections.challenges ? "expanded" : ""}`} onClick={() => toggleSection("challenges")}>
-          <div className="jsl-sg-title" style={{ color: "#34d399" }}><ChallengeIcon /><span>CODE CHALLENGES</span></div>
+          <div className="jsl-sg-title" style={{ color: "#34d399" }}><FiBook size={16} /><span>CODE CHALLENGES</span></div>
           <span className="jsl-sg-count">{progress.challengesDone}/{progress.challengesTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.challenges && (
           <div className="jsl-sg-items">
@@ -124,7 +116,7 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
                 <span className="jsl-si-num">{i + 1}.</span>
                 <span className="jsl-si-title">{c.title.replace(/^\d+\.\s*/, "")}</span>
                 <span className={`jsl-si-level ${c.difficulty.toLowerCase()}`}>{c.difficulty[0]}</span>
-                {progress.challenges.includes(c.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.challenges.includes(c.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -134,9 +126,9 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
       {/* PROJECTS LAB */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header projects ${expandedSections.projects ? "expanded" : ""}`} onClick={() => toggleSection("projects")}>
-          <div className="jsl-sg-title" style={{ color: "#a78bfa" }}><ProjectIcon /><span>PROJECTS LAB</span></div>
+          <div className="jsl-sg-title" style={{ color: "#a78bfa" }}><FiBook size={16} /><span>PROJECTS LAB</span></div>
           <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.projects && (
           <div className="jsl-sg-items">
@@ -148,7 +140,7 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
               >
                 <span className="jsl-si-num">{i + 1}.</span>
                 <span className="jsl-si-title">{proj.title}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -158,9 +150,9 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
       {/* INTERVIEW PREP */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header ${expandedSections.interview ? "expanded" : ""}`} onClick={() => toggleSection("interview")}>
-          <div className="jsl-sg-title" style={{ color: "#fcd34d" }}><InterviewIcon /><span>INTERVIEW PREP</span></div>
+          <div className="jsl-sg-title" style={{ color: "#fcd34d" }}><FiBook size={16} /><span>INTERVIEW PREP</span></div>
           <span className="jsl-sg-count">{progress.interviewDone}/{progress.interviewTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.interview && (
           <div className="jsl-sg-items">
@@ -172,7 +164,7 @@ function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProje
               >
                 <span className="jsl-si-title">{topic.title}</span>
                 <span className="jsl-si-num" style={{ minWidth: "auto", marginLeft: "auto" }}>{topic.questions.length}Q</span>
-                {progress.interview.includes(topic.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.interview.includes(topic.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -529,18 +521,12 @@ export default function HTMLLabsPlatform() {
       <div className="jsl-topbar">
         <div className="jsl-topbar-left">
           <a href={`${base}labs`} className="jsl-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
+            <FiArrowLeft size={16} />
             Labs
           </a>
           <div className="jsl-top-brand">
             <div className="jsl-top-brand-icon" style={{ background: "rgba(251,146,60,0.08)", borderColor: "rgba(251,146,60,0.18)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <rect x="4" y="4" width="16" height="16" rx="3" stroke="#fb923c" strokeWidth="2" fill="rgba(251,146,60,0.15)" />
-                <text x="12" y="16" textAnchor="middle" fill="#fb923c" fontSize="10" fontWeight="bold">&lt;/&gt;</text>
-              </svg>
+              <DiHtml5 size={18} />
             </div>
             <span className="jsl-top-title">HTML Labs</span>
           </div>
@@ -557,15 +543,14 @@ export default function HTMLLabsPlatform() {
               else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
               else if (view === "project" && currentProject) markProjectDone(currentProject.id);
             }}>
-              <CheckIcon /> Mark Complete
+              <FiBook size={16} /> Mark Complete
             </button>
           ) : null}
-          <ThemeToggle />
           <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
             {monacoTheme === "jsl-dark" ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <FiSun size={16} />
             ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              <FiMoon size={16} />
             )}
           </button>
         </div>
@@ -653,10 +638,7 @@ export default function HTMLLabsPlatform() {
                   <div className="jsl-tests-panel" style={{ height: 120, maxHeight: 120, minHeight: 120 }}>
                     <div className="jsl-tests-header">
                       <span className="jsl-tests-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="9 11 12 14 22 4"/>
-                          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                        </svg>
+                        <FiCheckSquare size={14} />
                         Automated Tests
                       </span>
                       <div className="jsl-tests-actions">
@@ -666,7 +648,7 @@ export default function HTMLLabsPlatform() {
                           </span>
                         )}
                         <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                          <FiRefreshCw size={12} />
                           Run Tests
                         </button>
                       </div>
@@ -695,7 +677,7 @@ export default function HTMLLabsPlatform() {
             <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
               <div className="jsl-editor-actions">
                 <button className="jsl-btn-run" onClick={updatePreview} title="Ctrl+Enter to refresh preview" style={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa" }}>
-                  <EyeIcon /> Preview
+                  <FiBook size={16} /> Preview
                 </button>
                 <div className="jsl-editor-mode-tabs" style={{ display: "flex", gap: "0.2rem", marginLeft: "0.25rem" }}>
                   {["html", "htmlcss", "htmlcssjs"].map(mode => (
@@ -715,7 +697,7 @@ export default function HTMLLabsPlatform() {
                   ))}
                 </div>
                 <span className="jsl-editor-lang" style={{ background: "rgba(251,146,60,0.07)", borderColor: "rgba(251,146,60,0.15)", color: "#fb923c" }}>
-                  <CodeIcon /> HTML
+                  <FiBook size={16} /> HTML
                 </span>
                 <span className="jsl-editor-shortcut">Ctrl+Enter to preview</span>
               </div>
@@ -773,7 +755,7 @@ export default function HTMLLabsPlatform() {
                       }}
                       title="Mobile preview"
                     >
-                      <SmartphoneIcon /> Mobile
+                      <FiBook size={16} /> Mobile
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "tablet" ? "active" : ""}`}
@@ -786,7 +768,7 @@ export default function HTMLLabsPlatform() {
                       }}
                       title="Tablet preview"
                     >
-                      <MonitorIcon /> Tablet
+                      <FiBook size={16} /> Tablet
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "desktop" ? "active" : ""}`}
@@ -799,7 +781,7 @@ export default function HTMLLabsPlatform() {
                       }}
                       title="Desktop preview"
                     >
-                      <MonitorIcon /> Desktop
+                      <FiBook size={16} /> Desktop
                     </button>
                   </div>
                 </div>
@@ -916,12 +898,12 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {/* Navigation */}
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`jsl-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>
@@ -1119,7 +1101,7 @@ function PlaygroundView() {
     <div className="jsl-content-inner" style={{ textAlign: "center" }}>
       <div className="jsl-chapter-header">
         <span className="jsl-chapter-badge" style={{ background: "rgba(244,114,182,0.11)", borderColor: "rgba(244,114,182,0.18)", color: "#f472b6" }}>
-          <CodeIcon /> HTML Playground
+          <FiBook size={16} /> HTML Playground
         </span>
         <h2 className="jsl-content-title">HTML Playground</h2>
         <p className="jsl-text" style={{ marginTop: "0.5rem" }}>

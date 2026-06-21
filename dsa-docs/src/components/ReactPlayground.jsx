@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Skeleton from "./Skeleton.jsx";
+import { FiCode, FiTrash2, FiPlay } from "react-icons/fi";
 
 
 const starterCode = `// Welcome to the DSA Playground! 🚀
@@ -167,10 +168,7 @@ export default function ReactPlayground() {
         <div className="playground-layout">
           <aside className="playground-sidebar">
             <div className="sidebar-title" style={{ marginBottom: '12px' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
+              <FiCode size={18} />
               Code Snippets
             </div>
             {Array.from({ length: 5 }, (_, i) => (
@@ -204,10 +202,7 @@ export default function ReactPlayground() {
         {/* Sidebar - Snippets */}
         <aside className="playground-sidebar">
           <div className="sidebar-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
+            <FiCode size={18} />
             Code Snippets
           </div>
           <div className="snippet-list">
@@ -232,10 +227,7 @@ export default function ReactPlayground() {
             </div>
             <div className="pg-header-right">
               <button className="btn-icon" onClick={clearOutput} title="Clear output">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="3 6 5 6 21 6" />
-                  <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
-                </svg>
+                <FiTrash2 size={16} />
               </button>
               <button className="btn-run" onClick={runCode} disabled={isRunning}>
                 {isRunning ? "Running..." : "▶ Run"}
@@ -265,9 +257,7 @@ export default function ReactPlayground() {
             <div className="output-content">
               {output.length === 0 && !error && (
                 <div className="output-placeholder">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.3">
-                    <polygon points="5 3 19 12 5 21 5 3" />
-                  </svg>
+                  <FiPlay size={40} opacity={0.3} />
                   <p>Click <strong>Run</strong> to see output</p>
                 </div>
               )}

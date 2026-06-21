@@ -1,19 +1,15 @@
+import { FiArrowLeft, FiAward, FiBook, FiCheck, FiChevronDown, FiChevronLeft, FiChevronRight, FiColumns, FiDatabase, FiGrid, FiMoon, FiPlay, FiRefreshCw, FiSun } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import initSqlJs from "sql.js";
 import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { SQL_LESSONS, SQL_CHALLENGES, SQL_PROJECTS, SQL_DATABASES, createSampleDatabase, createEmptyDatabase } from "../../data/sql-curriculum.js";
 import SchemaDiagram from "./SchemaDiagram.jsx";
+import { DiMysql } from "react-icons/di";
+
+
 
 // ─── ICONS ───
-
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function ChallengeIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>; }
-function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/></svg>; }
-function DatabaseIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>; }
-function TableIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
 
 // ─── RESIZABLE HANDLE ───
 
@@ -79,7 +75,7 @@ function SchemaExplorer({ db, activeDatabase, onSelectDatabase }) {
   return (
     <div className="sql-schema-section">
       <div className="sql-schema-active">
-        <DatabaseIcon />
+        <FiBook size={16} />
         <span>{schema?.name || "No DB"}</span>
       </div>
 
@@ -101,15 +97,9 @@ function SchemaExplorer({ db, activeDatabase, onSelectDatabase }) {
             className="sql-table-item"
             onClick={() => toggleTable(name)}
           >
-            <TableIcon />
+            <FiBook size={16} />
             <span>{name}</span>
-            <svg
-              width="12" height="12" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2"
-              style={{ marginLeft: "auto", transform: expandedTables[name] ? "rotate(90deg)" : "", transition: "transform 0.15s" }}
-            >
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
+            <FiChevronRight size={12} style={{ marginLeft: "auto", transform: expandedTables[name] ? "rotate(90deg)" : "", transition: "transform 0.15s" }} />
           </button>
           {expandedTables[name] && (
             <div className="sql-column-list">
@@ -138,7 +128,7 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
   return (
     <div className="sql-sidebar" {...rest}>
       <div className="sql-sidebar-header">
-        <h3><BookIcon /> Curriculum</h3>
+        <h3><FiBook size={16} /> Curriculum</h3>
       </div>
 
       {/* Schema Explorer */}
@@ -147,9 +137,9 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
       {/* LEARN SQL */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header ${expandedSections.learn ? "expanded" : ""}`} onClick={() => toggleSection("learn")}>
-          <div className="sql-sg-title"><BookIcon /><span>LEARN SQL</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>LEARN SQL</span></div>
           <span className="sql-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.learn && (
           <div className="sql-sg-items">
@@ -162,7 +152,7 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
                 <span className="sql-si-num">{lesson.chapter}.</span>
                 <span className="sql-si-title">{lesson.title}</span>
                 <span className={`sql-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="sql-si-check"><CheckIcon /></span>}
+                {progress.lessons.includes(lesson.id) && <span className="sql-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -172,9 +162,9 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
       {/* QUERY CHALLENGES */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header ${expandedSections.challenges ? "expanded" : ""}`} onClick={() => toggleSection("challenges")}>
-          <div className="sql-sg-title"><ChallengeIcon /><span>CHALLENGES</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>CHALLENGES</span></div>
           <span className="sql-sg-count">{progress.challengesDone}/{progress.challengesTotal}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.challenges && (
           <div className="sql-sg-items">
@@ -187,7 +177,7 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
                 <span className="sql-si-num">{i + 1}.</span>
                 <span className="sql-si-title">{c.title.replace(/^\d+\.\s*/, "")}</span>
                 <span className={`sql-si-level ${c.difficulty.toLowerCase()}`}>{c.difficulty[0]}</span>
-                {progress.challenges.includes(c.id) && <span className="sql-si-check"><CheckIcon /></span>}
+                {progress.challenges.includes(c.id) && <span className="sql-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -197,9 +187,9 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
       {/* DATABASE PROJECTS */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header projects ${expandedSections.projects ? "expanded" : ""}`} onClick={() => toggleSection("projects")}>
-          <div className="sql-sg-title"><ProjectIcon /><span>PROJECTS</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>PROJECTS</span></div>
           <span className="sql-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.projects && (
           <div className="sql-sg-items">
@@ -216,7 +206,7 @@ function SQLSidebar({ activeSection, activeLesson, activeChallenge, activeProjec
                   <span className="sql-si-num">{proj.icon || `${i + 1}.`}</span>
                   <span className="sql-si-title">{proj.title}</span>
                   <span className={`sql-si-level ${proj.difficulty.toLowerCase()}`}>{proj.difficulty[0]}</span>
-                  {isComplete && <span className="sql-si-check"><CheckIcon /></span>}
+                  {isComplete && <span className="sql-si-check"><FiCheck size={16} /></span>}
                 </button>
               );
             })}
@@ -708,17 +698,11 @@ export default function SQLLabsPlatform() {
       <div className="sql-topbar">
         <div className="sql-topbar-left">
           <a href={`${base}labs`} className="sql-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
+            <FiArrowLeft size={16} />
             Labs
           </a>
           <div className="sql-top-brand">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="#f59e0b" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">SQL</text>
-            </svg>
+            <DiMysql size={20} />
             <span className="sql-top-title">SQL Labs</span>
           </div>
         </div>
@@ -728,12 +712,11 @@ export default function SQLLabsPlatform() {
           <span className="sql-top-percent">{progressStats.pct}%</span>
         </div>
         <div className="sql-topbar-right">
-          <ThemeToggle />
           <button className="sql-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
             {monacoTheme === "jsl-dark" ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <FiSun size={16} />
             ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              <FiMoon size={16} />
             )}
           </button>
         </div>
@@ -832,7 +815,7 @@ export default function SQLLabsPlatform() {
                   {isRunning ? (
                     <><span className="sql-spinner" /> Running</>
                   ) : (
-                    <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Query</>
+                    <><FiPlay size={14} fill="currentColor" /> Run Query</>
                   )}
                 </button>
                 <button className="sql-btn-secondary" onClick={() => {
@@ -845,7 +828,7 @@ export default function SQLLabsPlatform() {
                   codeVersionRef.current++;
                 }}
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                <FiRefreshCw size={14} />
                 Reset
                 </button>
                 <span className="sql-editor-lang">SQL</span>
@@ -914,7 +897,7 @@ export default function SQLLabsPlatform() {
                 <div className="sql-results-body">
                   {!query && !queryError ? (
                     <div className="sql-results-empty">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      <FiPlay size={28} opacity={0.2} />
                       <p>Write a SQL query and click Run</p>
                     </div>
                   ) : queryError ? (
@@ -1017,12 +1000,12 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
 
       <div className="sql-content-nav">
         <button className={`sql-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`sql-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>
@@ -1121,12 +1104,12 @@ function ProjectView({ project, activeMilestone, showHint, showSolution, onToggl
 
       <div className="sql-content-nav">
         <button className={`sql-nav-btn ${isFirst ? "disabled" : ""}`} onClick={() => onMilestoneChange(activeMilestone - 1)} disabled={isFirst}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous Milestone
         </button>
         <button className={`sql-nav-btn ${isLast ? "disabled" : ""}`} onClick={() => onMilestoneChange(activeMilestone + 1)} disabled={isLast}>
           Next Milestone
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>

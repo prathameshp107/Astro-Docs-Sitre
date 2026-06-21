@@ -1,5 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Skeleton, { SkeletonHero, SkeletonStats, SkeletonGrid } from "./Skeleton.jsx";
+import { FaGithub } from "react-icons/fa";
+import {
+  DiJavascript1,
+  DiReact,
+  DiAngularSimple,
+  DiNodejsSmall,
+  DiMongodb,
+  DiMysql,
+  DiDocker,
+  DiPython,
+  DiRedis,
+  DiDatabase,
+} from "react-icons/di";
 
 
 const topics = [
@@ -12,25 +25,25 @@ const features = [
     icon: "📝",
     title: "Structured Notes",
     desc: "Well-organized notes across JavaScript, React, Angular, DSA, databases, and more.",
-    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    gradient: "linear-gradient(135deg, #7c3aed 0%, #c026d3 100%)",
   },
   {
     icon: "💻",
     title: "Code Playground",
     desc: "Write, run, and test JavaScript code right in your browser instantly.",
-    gradient: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
+    gradient: "linear-gradient(135deg, #10b981 0%, #34d399 100%)",
   },
   {
     icon: "🎯",
     title: "Interview Prep",
     desc: "Curated interview questions and answers to ace your next tech interview.",
-    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    gradient: "linear-gradient(135deg, #f59e0b 0%, #f97316 100%)",
   },
   {
-    icon: "📊"  ,
+    icon: "📊",
     title: "DSA Visualizer",
     desc: "Interactive visualizations for algorithms, data structures, and problem-solving patterns.",
-    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+    gradient: "linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)",
   },
 ];
 
@@ -42,7 +55,7 @@ const learningPaths = [
     color: "#f7df1e",
     gradient: "linear-gradient(135deg, rgba(247,223,30,0.15) 0%, rgba(247,223,30,0.05) 100%)",
     progress: 85,
-    icon: "🟨",
+    icon: <DiJavascript1 />,
   },
   {
     abbr: "RE",
@@ -51,7 +64,7 @@ const learningPaths = [
     color: "#61dafb",
     gradient: "linear-gradient(135deg, rgba(97,218,251,0.15) 0%, rgba(97,218,251,0.05) 100%)",
     progress: 40,
-    icon: "⚛️",
+    icon: <DiReact />,
   },
   {
     abbr: "ND",
@@ -60,7 +73,7 @@ const learningPaths = [
     color: "#339933",
     gradient: "linear-gradient(135deg, rgba(51,153,51,0.15) 0%, rgba(51,153,51,0.05) 100%)",
     progress: 70,
-    icon: "🟢",
+    icon: <DiNodejsSmall />,
   },
   {
     abbr: "DB",
@@ -69,7 +82,7 @@ const learningPaths = [
     color: "#47a248",
     gradient: "linear-gradient(135deg, rgba(71,162,72,0.15) 0%, rgba(71,162,72,0.05) 100%)",
     progress: 90,
-    icon: "🍃",
+    icon: <DiMongodb />,
   },
   {
     abbr: "DSA",
@@ -78,7 +91,7 @@ const learningPaths = [
     color: "#6366f1",
     gradient: "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 100%)",
     progress: 30,
-    icon: "📊",
+    icon: <DiDatabase />,
   },
   {
     abbr: "PY",
@@ -87,21 +100,21 @@ const learningPaths = [
     color: "#3776AB",
     gradient: "linear-gradient(135deg, rgba(55,118,171,0.15) 0%, rgba(55,118,171,0.05) 100%)",
     progress: 60,
-    icon: "🐍",
+    icon: <DiPython />,
   },
 ];
 
 const topicExplorer = [
-  { name: "JavaScript", icon: "🟨", desc: "Closures, Promises, Event Loop, Prototypes & more", href: "docs/overview", color: "#f7df1e" },
-  { name: "React", icon: "⚛️", desc: "Hooks, State, Components, Performance, Testing", href: "docs/overview", color: "#61dafb" },
-  { name: "Angular", icon: "🅰️", desc: "Components, Routing, Forms, RxJS, NgRx", href: "docs/overview", color: "#dd0031" },
-  { name: "Node.js", icon: "🟢", desc: "Express, Async, Architecture, Databases, Deployment", href: "docs/overview", color: "#339933" },
-  { name: "MongoDB", icon: "🍃", desc: "Aggregation, Indexing, Modeling, Replication", href: "docs/overview", color: "#47a248" },
-  { name: "MySQL", icon: "🗄️", desc: "Queries, Joins, Indexing, Optimization, ACID", href: "docs/overview", color: "#00758f" },
-  { name: "Docker", icon: "🐳", desc: "Containers, Images, Compose, Networking, Volumes", href: "docs/overview", color: "#2496ed" },
-  { name: "DSA", icon: "📊", desc: "Arrays, Trees, Graphs, DP, Recursion, Sorting", href: "docs/overview", color: "#6366f1" },
-  { name: "Python", icon: "🐍", desc: "Syntax, OOP, Modules, File Handling, Data Science", href: "docs/overview", color: "#3776AB" },
-  { name: "Redis", icon: "🔴", desc: "Caching, Pub/Sub, Data Types, Persistence, Clustering", href: "docs/overview", color: "#dc382d" },
+  { name: "JavaScript", icon: <DiJavascript1 />, desc: "Closures, Promises, Event Loop, Prototypes & more", href: "docs/overview", color: "#f7df1e" },
+  { name: "React", icon: <DiReact />, desc: "Hooks, State, Components, Performance, Testing", href: "docs/overview", color: "#61dafb" },
+  { name: "Angular", icon: <DiAngularSimple />, desc: "Components, Routing, Forms, RxJS, NgRx", href: "docs/overview", color: "#dd0031" },
+  { name: "Node.js", icon: <DiNodejsSmall />, desc: "Express, Async, Architecture, Databases, Deployment", href: "docs/overview", color: "#339933" },
+  { name: "MongoDB", icon: <DiMongodb />, desc: "Aggregation, Indexing, Modeling, Replication", href: "docs/overview", color: "#47a248" },
+  { name: "MySQL", icon: <DiMysql />, desc: "Queries, Joins, Indexing, Optimization, ACID", href: "docs/overview", color: "#00758f" },
+  { name: "Docker", icon: <DiDocker />, desc: "Containers, Images, Compose, Networking, Volumes", href: "docs/overview", color: "#2496ed" },
+  { name: "DSA", icon: <DiDatabase />, desc: "Arrays, Trees, Graphs, DP, Recursion, Sorting", href: "docs/overview", color: "#6366f1" },
+  { name: "Python", icon: <DiPython />, desc: "Syntax, OOP, Modules, File Handling, Data Science", href: "docs/overview", color: "#3776AB" },
+  { name: "Redis", icon: <DiRedis />, desc: "Caching, Pub/Sub, Data Types, Persistence, Clustering", href: "docs/overview", color: "#dc382d" },
 ];
 
 const recentUpdates = [
@@ -223,9 +236,9 @@ export default function ReactLanding() {
       {/* ─── Hero ─── */}
       <section className="hero">
         <div className="hero-bg">
-          <FloatingOrb size="400px" gradient="radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)" top="-100px" left="-100px" delay={0} duration={25} />
-          <FloatingOrb size="350px" gradient="radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%)" top="50%" right="-150px" delay={5} duration={30} />
-          <FloatingOrb size="300px" gradient="radial-gradient(circle, rgba(79,172,254,0.2) 0%, transparent 70%)" bottom="-50px" left="30%" delay={10} duration={22} />
+          <div className="hero-organic-blob hero-organic-blob-1" />
+          <div className="hero-organic-blob hero-organic-blob-2" />
+          <div className="hero-organic-blob hero-organic-blob-3" />
           <div className="hero-grid" />
         </div>
         <div className="hero-content">
@@ -243,9 +256,9 @@ export default function ReactLanding() {
                 <path d="M2 10C50 2 150 2 198 10" stroke="url(#underlineGrad)" strokeWidth="3" strokeLinecap="round"/>
                 <defs>
                   <linearGradient id="underlineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="50%" stopColor="#8b5cf6" />
-                    <stop offset="100%" stopColor="#a78bfa" />
+                    <stop offset="0%" stopColor="#7c3aed" />
+                    <stop offset="50%" stopColor="#c026d3" />
+                    <stop offset="100%" stopColor="#f0abfc" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -276,9 +289,7 @@ export default function ReactLanding() {
               Practice Labs
             </a>
             <a href="https://github.com/prathameshp107/DSA-Notes-Problems" target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
+              <FaGithub size={20} />
               Star on GitHub
             </a>
           </div>

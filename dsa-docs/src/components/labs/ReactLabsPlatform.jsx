@@ -1,33 +1,15 @@
+import { FiArrowLeft, FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiCrosshair, FiEdit3, FiGrid, FiList, FiMoon, FiPlay, FiRefreshCw, FiSun } from "react-icons/fi";
 import React, { useState, useEffect, useMemo, useCallback, useRef, useReducer, useContext, createContext } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import { createRoot } from "react-dom/client";
 import Editor from "@monaco-editor/react";
 import * as Babel from "@babel/standalone";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
+import { DiReact } from "react-icons/di";
 import { REACT_LESSONS, REACT_BUG_CHALLENGES, REACT_MINI_PROJECTS } from "../../data/react-labs-curriculum.js";
 
-// ─── ICON COMPONENTS ───
 
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function BugIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V4a2 2 0 00-2-2"/><path d="M12 6V4a2 2 0 012-2"/><path d="M8 10H4"/><path d="M20 10h-4"/><path d="M8 14H4"/><path d="M20 14h-4"/><line x1="12" y1="6" x2="12" y2="20"/></svg>; }
-function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
-function ReactAtomIcon({ size = 20, color = "#61dafb" }) {
-  return (
-    <svg width={size} height={size} viewBox="-11.5 -10.23174 23 20.46348">
-      <circle cx="0" cy="0" r="2.05" fill={color}/>
-      <g stroke={color} strokeWidth="1" fill="none">
-        <ellipse rx="11" ry="4.2"/>
-        <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
-        <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
-      </g>
-    </svg>
-  );
-}
-function LightbulbIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 21h6"/><path d="M12 3C8.5 3 6 5.5 6 9c0 2.3 1.2 4.2 3 5.4V17h6v-2.6c1.8-1.2 3-3.1 3-5.4 0-3.5-2.5-6-6-6z"/></svg>; }
-function ListRulesIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>; }
-function TaskPencilIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>; }
-function TargetIcon() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>; }
+
+// ─── ICON COMPONENTS ───
 
 // ─── RESIZABLE HANDLE ───
 
@@ -161,13 +143,13 @@ function ReactPreview({ code, previewKey, style }) {
           <span className="jsl-preview-url">preview</span>
         </span>
         <span className="jsl-preview-info">
-          <ReactAtomIcon size={11} color="#61dafb" />
+          <DiReact size={11} />
           React
         </span>
       </div>
       <div className="jsl-preview-body" ref={previewContainerRef}>
         <div className="jsl-preview-placeholder">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <FiPlay size={24} opacity={0.2} />
           <p>Run your React code to see a live preview</p>
         </div>
       </div>
@@ -192,8 +174,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
     <div className="jsl-sidebar" {...rest}>
       <div className="jsl-sidebar-header">
         <h3>
-          <BookIcon />
-          Curriculum
+          <FiBook size={16} /> Curriculum
         </h3>
       </div>
 
@@ -204,11 +185,10 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
           onClick={() => toggleSection("learn")}
         >
           <div className="jsl-sg-title">
-            <BookIcon />
-            <span>LEARN REACT</span>
+            <FiBook size={16} /><span>LEARN REACT</span>
           </div>
           <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.learn && (
           <div className="jsl-sg-items">
@@ -221,7 +201,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
                 <span className="jsl-si-num">{lesson.chapter}.</span>
                 <span className="jsl-si-title">{lesson.title}</span>
                 <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -235,11 +215,11 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
           onClick={() => toggleSection("bugs")}
         >
           <div className="jsl-sg-title">
-            <BugIcon />
+            <FiBook size={16} />
             <span>FIX THE BUG</span>
           </div>
           <span className="jsl-sg-count">{progress.bugsDone}/{progress.bugsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.bugs && (
           <div className="jsl-sg-items">
@@ -251,7 +231,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
               >
                 <span className="jsl-si-num">{bug.title.split(".")[0]}.</span>
                 <span className="jsl-si-title">{bug.title.split(". ")[1] || bug.title}</span>
-                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -265,11 +245,11 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
           onClick={() => toggleSection("projects")}
         >
           <div className="jsl-sg-title">
-            <ProjectIcon />
+            <FiBook size={16} />
             <span>MINI PROJECTS</span>
           </div>
           <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.projects && (
           <div className="jsl-sg-items">
@@ -281,7 +261,7 @@ function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, o
               >
                 <span className="jsl-si-num">{proj.title.split(".")[0]}.</span>
                 <span className="jsl-si-title">{proj.title.split(". ")[1] || proj.title}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -874,15 +854,12 @@ export default function ReactLabsPlatform() {
       <div className="jsl-topbar">
         <div className="jsl-topbar-left">
           <a href={`${base}labs`} className="jsl-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
+            <FiArrowLeft size={16} />
             Labs
           </a>
           <div className="jsl-top-brand">
             <div className="jsl-top-brand-icon">
-              <ReactAtomIcon size={18} />
+              <DiReact size={20} />
             </div>
             <span className="jsl-top-title">React Labs</span>
           </div>
@@ -928,12 +905,11 @@ export default function ReactLabsPlatform() {
               )}
             </>
           )}
-          <ThemeToggle />
           <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
             {monacoTheme === "jsl-dark" ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              <FiSun size={16} />
             ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              <FiMoon size={16} />
             )}
           </button>
         </div>
@@ -995,10 +971,7 @@ export default function ReactLabsPlatform() {
             <div className="jsl-tests-panel" style={{ height: testHeight, maxHeight: testHeight, minHeight: testHeight, flexShrink: 0 }}>
               <div className="jsl-tests-header">
                 <span className="jsl-tests-title">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="9 11 12 14 22 4"/>
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                  </svg>
+                  <FiCheckSquare size={14} />
                   Automated Tests
                 </span>
                 <div className="jsl-tests-actions">
@@ -1008,7 +981,7 @@ export default function ReactLabsPlatform() {
                     </span>
                   )}
                   <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    <FiRefreshCw size={12} />
                     Run Tests
                   </button>
                 </div>
@@ -1047,7 +1020,7 @@ export default function ReactLabsPlatform() {
                 {isRunning ? (
                   <><span className="jsl-spinner" /> Running…</>
                 ) : (
-                  <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run</>
+                  <><FiPlay size={14} fill="currentColor" /> Run</>
                 )}
               </button>
               <button className="jsl-btn-secondary" onClick={() => {
@@ -1064,11 +1037,11 @@ export default function ReactLabsPlatform() {
                 codeVersionRef.current++;
                 setPreviewKey(prev => prev + 1);
               }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                <FiRefreshCw size={14} />
                 Reset
               </button>
               <span className="jsl-editor-lang">
-                <ReactAtomIcon size={10} color="#61dafb" />
+                <DiReact size={10} />
                 JSX
               </span>
               <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
@@ -1120,7 +1093,7 @@ export default function ReactLabsPlatform() {
               <div className="jsl-console-body">
                 {output.length === 0 ? (
                   <div className="jsl-console-empty">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <FiPlay size={24} opacity={0.2} />
                     <p>Run your code to see output</p>
                   </div>
                 ) : (
@@ -1175,7 +1148,7 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
       {/* Concept Explanation */}
       <div className="jsl-section jsl-section-concept">
         <h3 className="jsl-section-title">
-          <LightbulbIcon />
+          <FiBook size={16} />
           Concept
         </h3>
         <div className="jsl-concept-text">
@@ -1190,8 +1163,7 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
       {/* Key Rules */}
       <div className="jsl-section jsl-rules-section">
         <h3 className="jsl-section-title">
-          <ListRulesIcon />
-          Key Rules
+          <FiBook size={16} /> Key Rules
         </h3>
         <ul className="jsl-rules-list">
           {lesson.keyRules.map((rule, i) => (
@@ -1203,8 +1175,7 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
       {/* Your Task */}
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">
-          <TaskPencilIcon />
-          Your Task
+          <FiBook size={16} /> Your Task
         </h3>
         <div className="jsl-task-text">
           {lesson.task.split("\n").map((line, i) => {
@@ -1234,12 +1205,12 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
       {/* Navigation */}
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`jsl-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>
@@ -1258,24 +1229,21 @@ function BugView({ bug, showHint, showSolution, onPrev, onNext, hasPrev, hasNext
 
       <div className="jsl-section jsl-section-problem">
         <h3 className="jsl-section-title">
-          <BugIcon />
-          Problem
+          <FiBook size={16} /> Problem
         </h3>
         <p className="jsl-text">{bug.problem}</p>
       </div>
 
       <div className="jsl-section jsl-section-goal">
         <h3 className="jsl-section-title">
-          <LightbulbIcon />
-          Learning Goal
+          <FiBook size={16} /> Learning Goal
         </h3>
         <p className="jsl-text">{bug.learningGoal}</p>
       </div>
 
       <div className="jsl-section jsl-section-result">
         <h3 className="jsl-section-title">
-          <TargetIcon />
-          Expected Result
+          <FiBook size={16} /> Expected Result
         </h3>
         <p className="jsl-text">{bug.expectedResult}</p>
       </div>
@@ -1295,12 +1263,12 @@ function BugView({ bug, showHint, showSolution, onPrev, onNext, hasPrev, hasNext
 
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`jsl-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>
@@ -1319,8 +1287,7 @@ function ProjectView({ project, showSolution }) {
 
       <div className="jsl-section jsl-section-concept">
         <h3 className="jsl-section-title">
-          <LightbulbIcon />
-          Overview
+          <FiBook size={16} /> Overview
         </h3>
         <p className="jsl-text">{project.overview}</p>
         <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}><strong>Why?</strong> {project.why}</p>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Skeleton, { SkeletonGrid } from '../Skeleton.jsx';
+import { FiArrowRight } from "react-icons/fi";
 
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES } from './MCQData.js';
@@ -150,7 +151,7 @@ export default function MCQDashboard() {
               })}
             </div>
             <a href={`${base}mcq`} className="mt-4 text-xs text-blue-400/70 hover:text-blue-400 transition-colors inline-flex items-center gap-1">
-              View all categories <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              View all categories <FiArrowRight size={12} />
             </a>
           </motion.div>
 
