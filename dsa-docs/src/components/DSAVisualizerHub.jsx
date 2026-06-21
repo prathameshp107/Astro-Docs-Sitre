@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import ThemeToggle from './ThemeToggle.jsx';
+import Skeleton, { SkeletonHero, SkeletonGrid, SkeletonStats } from './Skeleton.jsx';
+
 
 const DSA_TOPICS = [
   { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Insert, delete, update, traverse, and search in arrays', color: '#3b82f6' },
@@ -20,44 +21,28 @@ const readyTopics = ['arrays', 'sorting', 'trees', 'graphs', 'stack', 'queue', '
 
 export default function DSAVisualizerHub() {
   const [loaded, setLoaded] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => { setLoaded(true); }, []);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', handle, { passive: true });
-    return () => window.removeEventListener('scroll', handle);
+    setLoaded(true);
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
   }, []);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
+  if (loading) {
+    return (
+      <div className="landing-page loaded">
+        <SkeletonHero />
+        <SkeletonGrid count={12} variant="topic-card" columns={3} cardHeight="60px" />
+        <SkeletonStats count={4} />
+      </div>
+    );
+  }
+
   return (
     <div className={`landing-page ${loaded ? 'loaded' : ''}`}>
-      {/* Nav */}
-      <nav className={`landing-nav ${scrolled ? 'nav-scrolled' : ''}`}>
-        <div className="nav-inner">
-          <a href={base} className="nav-brand" style={{ textDecoration: 'none' }}>
-            <span className="brand-logo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="#2563eb" />
-                <text x="14" y="19" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">DSA</text>
-              </svg>
-            </span>
-            <span className="brand-text">DSA Visualizer</span>
-          </a>
-          <div className="nav-links">
-            <a href={base} className="nav-link">Home</a>
-            <a href={`${base}overview`} className="nav-link">Docs</a>
-            <a href={`${base}playground`} className="nav-link">Playground</a>
-            <a href={`${base}dsa/problems`} className="nav-link">DSA Lab</a>
-            <a href={`${base}mysql`} className="nav-link">SQL Labs</a>
-            <a href={`${base}mcq`} className="nav-link nav-link-playground">MCQ Hub</a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="hero" style={{ paddingBottom: '2rem' }}>
         <div className="hero-content">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
+import Skeleton, { SkeletonHero, SkeletonStats, SkeletonGrid } from "../Skeleton.jsx";
+
 
 const sections = [
   {
@@ -51,43 +52,29 @@ const roadmapLevels = [
 
 export default function PythonLanding() {
   const [loaded, setLoaded] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const timer = setTimeout(() => setLoading(false), 350);
+    return () => clearTimeout(timer);
   }, []);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
+  if (loading) {
+    return (
+      <div className="landing-page loaded">
+        <SkeletonHero />
+        <SkeletonStats count={4} />
+        <SkeletonGrid count={4} variant="card" columns={2} cardHeight="200px" />
+        <SkeletonGrid count={3} variant="card" columns={3} cardHeight="180px" />
+      </div>
+    );
+  }
+
   return (
     <div className={`landing-page ${loaded ? "loaded" : ""}`}>
-      {/* Nav */}
-      <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
-        <div className="nav-inner">
-          <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
-            <span className="brand-logo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="#3776AB" />
-                <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">Py</text>
-              </svg>
-            </span>
-            <span className="brand-text">Python Labs</span>
-          </a>
-          <div className="nav-links">
-            <a href={base} className="nav-link">Home</a>
-            <a href={`${base}practice`} className="nav-link">Practice Labs</a>
-            <a href={`${base}practice/python-lab`} className="nav-link nav-link-playground" style={{ color: "#4b8bbe" }}>Open Lab →</a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="hero" style={{ paddingBottom: "2rem" }}>
         <div className="hero-content">
@@ -107,16 +94,16 @@ export default function PythonLanding() {
             Write Code. Build Projects. Solve Challenges. Prepare For Interviews.
           </p>
           <div className="hero-actions" style={{ justifyContent: "center" }}>
-            <a href={`${base}practice/python-lab`} className="btn btn-primary">
+            <a href={`${base}labs/python-lab`} className="btn btn-primary">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: "0.35rem" }}>
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Start Learning
             </a>
-            <a href={`${base}practice/python-lab`} className="btn btn-secondary">
+            <a href={`${base}labs/python-lab`} className="btn btn-secondary">
               Practice Python
             </a>
-            <a href={`${base}practice/python-lab`} className="btn btn-ghost">
+            <a href={`${base}labs/python-lab`} className="btn btn-ghost">
               Python Roadmap
             </a>
           </div>
@@ -150,7 +137,7 @@ export default function PythonLanding() {
       <section className="lab-cards-section" style={{ maxWidth: "900px", margin: "0 auto 3rem", padding: "0 1.5rem" }}>
         <div className="lab-cards-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
           {sections.map((sec, i) => (
-            <SectionCard key={sec.title} icon={sec.icon} title={sec.title} desc={sec.desc} color={sec.color} href={`${base}practice/python-lab`} />
+            <SectionCard key={sec.title} icon={sec.icon} title={sec.title} desc={sec.desc} color={sec.color} href={`${base}labs/python-lab`} />
           ))}
         </div>
       </section>
@@ -176,7 +163,7 @@ export default function PythonLanding() {
           <div className="footer-links">
             <a href="https://github.com/prathameshp107/DSA-Notes-Problems" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href={base}>Home</a>
-            <a href={`${base}practice`}>Practice Labs</a>
+            <a href={`${base}labs`}>Practice Labs</a>
           </div>
         </div>
       </footer>

@@ -49,7 +49,7 @@ export default defineConfig({
         },
         {
           label: 'JS Interview Lab',
-          link: '/practice',
+          link: '/labs',
         },
         {
           label: 'MCQ Hub',

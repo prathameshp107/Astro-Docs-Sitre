@@ -1,7 +1,52 @@
 import { useState, useEffect, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
+import Skeleton, { SkeletonHero, SkeletonStats, SkeletonLabCard } from "../Skeleton.jsx";
+
 
 const labs = [
+  {
+    id: "html",
+    title: "HTML Labs",
+    icon: "🔶",
+    shortIcon: "HT",
+    description:
+      "Master HTML through interactive learning. 16 guided lessons, 10 coding challenges, 6 real-world projects, HTML playground with live preview, and interview preparation.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/html",
+    color: "#fb923c",
+    features: [
+      "Live HTML Preview",
+      "16 Interactive Lessons",
+      "10 Code Challenges",
+      "6 Real-World Projects",
+      "50+ Interview Questions",
+      "HTML Playground",
+    ],
+    challengeCount: 32,
+    difficulty: "Beginner to Advanced",
+  },
+  {
+    id: "css",
+    title: "CSS Labs",
+    icon: "🎨",
+    shortIcon: "CS",
+    description:
+      "Master CSS through interactive learning. 20 guided lessons, 10 coding challenges, 10 reusable components, 6 animations, and an interactive playground.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/css",
+    color: "#60a5fa",
+    features: [
+      "20 Interactive Lessons",
+      "Live CSS Preview",
+      "10 Code Challenges",
+      "10 UI Components Lab",
+      "6 Animation Projects",
+      "50+ Interview Questions",
+    ],
+    challengeCount: 46,
+    difficulty: "Beginner to Advanced",
+  },
   {
     id: "js",
     title: "JS Interview Lab",
@@ -74,7 +119,7 @@ const labs = [
       "Write and execute SQL queries against sample databases. Practice joins, aggregations, subqueries, and query optimization.",
     status: "Ready",
     statusColor: "#22c55e",
-    path: "/mysql",
+    path: "/labs/mysql",
     color: "#f59e0b",
     features: [
       "JOINs Practice",
@@ -95,7 +140,7 @@ const labs = [
       "Master Python from beginner to advanced. 20 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
     status: "Ready",
     statusColor: "#22c55e",
-    path: "/python",
+    path: "/labs/python",
     color: "#3776AB",
     features: [
       "20 Guided Lessons",
@@ -116,7 +161,7 @@ const labs = [
       "Learn MongoDB with guided lessons, interactive queries, aggregation pipeline builder, and real-time document exploration. Master NoSQL the right way.",
     status: "Ready",
     statusColor: "#22c55e",
-    path: "/mongodb",
+    path: "/labs/mongodb",
     color: "#13aa52",
     features: [
       "16 Guided Lessons",
@@ -126,6 +171,28 @@ const labs = [
       "8+ Query Challenges",
     ],
     challengeCount: 30,
+    difficulty: "Beginner to Advanced",
+  },
+  {
+    id: "git",
+    title: "Git & GitHub Labs",
+    icon: "🔄",
+    shortIcon: "GI",
+    description:
+      "Master Git and GitHub through interactive visual simulations. Learn branching, merging, rebasing, merge conflicts, and team collaboration workflows.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/git",
+    color: "#f59e0b",
+    features: [
+      "30 Interactive Lessons",
+      "Visual Commit Graph",
+      "Git CLI Terminal Simulator",
+      "Merge Conflict Arena",
+      "Team Collaboration Simulator",
+      "Boss Battles & Achievements",
+    ],
+    challengeCount: 50,
     difficulty: "Beginner to Advanced",
   },
 ];
@@ -155,7 +222,7 @@ function useInView(threshold = 0.15) {
 
 export default function LabHub() {
   const [loaded, setLoaded] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showQuickStart, setShowQuickStart] = useState(true);
 
   useEffect(() => {
@@ -167,15 +234,9 @@ export default function LabHub() {
 
   useEffect(() => {
     setLoaded(true);
+    const timer = setTimeout(() => setLoading(false), 350);
     sessionStorage.setItem("labhub-visited", "true");
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 80);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => clearTimeout(timer);
   }, []);
 
   const dismissQuickStart = () => {
@@ -188,59 +249,22 @@ export default function LabHub() {
   const readyLabs = labs.filter((l) => l.status === "Ready").length;
   const totalLabs = labs.length;
 
+  if (loading) {
+    return (
+      <div className="landing-page lab-hub-page loaded">
+        <SkeletonHero />
+        <SkeletonStats count={4} />
+        <div className="lab-cards-grid" style={{ padding: '0 16px' }}>
+          {Array.from({ length: 6 }, (_, i) => (
+            <SkeletonLabCard key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`landing-page lab-hub-page ${loaded ? "loaded" : ""}`}>
-      {/* ─── Nav ─── */}
-      <nav className={`landing-nav ${scrolled ? "nav-scrolled" : ""}`}>
-        <div className="nav-inner">
-          <a href={base} className="nav-brand" style={{ textDecoration: "none" }}>
-            <span className="brand-logo">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" rx="8" fill="#2563eb" />
-                <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">L</text>
-              </svg>
-            </span>
-            <span className="brand-text">Practice Labs</span>
-          </a>
-          <div className="nav-links">
-            <a href={base} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-              Home
-            </a>
-            <a href={`${base}overview`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-              </svg>
-              Docs
-            </a>
-            <a href={`${base}visualizer`} className="nav-link nav-link-playground">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-              DSA Visualizer
-            </a>
-            <a href={`${base}playground`} className="nav-link">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" />
-              </svg>
-              Playground
-            </a>
-            <a href={`${base}mcq`} className="nav-link nav-link-playground">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="8 12 11 15 16 9" />
-              </svg>
-              MCQ Hub
-            </a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       {/* ─── Hero ─── */}
       <section className="lab-hero">
         <div className="hero-content">
@@ -351,7 +375,7 @@ function LabCard({ lab, index, base }) {
       if (lab.path.startsWith("/")) {
         window.location.href = `${base}${lab.path.slice(1)}`;
       } else {
-        window.location.href = `${base}practice/${lab.path}`;
+        window.location.href = `${base}labs/${lab.path}`;
       }
     }
   };

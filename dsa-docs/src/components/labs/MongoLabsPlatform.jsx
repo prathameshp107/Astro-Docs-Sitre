@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
+import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { createMongoEngine, MONGO_LESSONS, MONGO_CHALLENGES, MONGO_DATABASES, MONGO_PROJECTS, MONGO_INTERVIEW_CATEGORIES, MONGO_INTERVIEW_QUESTIONS } from "../../data/mongodb-curriculum.js";
 
 // ─── ICONS ───
@@ -515,6 +516,7 @@ function formatCellValue(val) {
 // ─── MAIN PLATFORM ───
 
 export default function MongoLabsPlatform() {
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(MONGO_LESSONS[0]?.id || null);
   const [activeChallenge, setActiveChallenge] = useState(null);
@@ -545,6 +547,7 @@ export default function MongoLabsPlatform() {
   // Initialize engine
   useEffect(() => {
     engineRef.current = getEngine();
+    setLoading(false);
   }, []);
 
   // Change database
@@ -849,6 +852,14 @@ export default function MongoLabsPlatform() {
     return null;
   }, [view, currentLesson, currentChallenge]);
 
+  if (loading) {
+    return (
+      <div className="mongo-platform">
+        <SkeletonLabPlatform />
+      </div>
+    );
+  }
+
   if (!currentContent) {
     return (
       <div className="mongo-platform">
@@ -868,7 +879,7 @@ export default function MongoLabsPlatform() {
       {/* Top Bar */}
       <div className="sql-topbar">
         <div className="sql-topbar-left">
-          <a href={`${base}practice`} className="sql-top-back">
+          <a href={`${base}labs`} className="sql-top-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ThemeToggle from '../ThemeToggle.jsx';
+import Skeleton from '../Skeleton.jsx';
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, recordAnswer, getAccuracy, getStreakInfo } from './MCQStore.js';
@@ -12,6 +13,7 @@ const MODE_CONFIG = {
 
 export default function MCQQuiz({ categoryId, initialTopic }) {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
   const [allQuestions, setAllQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -37,6 +39,8 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
     setProgress(getInitialProgress());
     const qs = getQuestionsForCategory(categoryId);
     setAllQuestions(qs);
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
   }, [categoryId]);
 
   // Timer for assessment mode
@@ -173,6 +177,25 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
     hard: '#ef4444',
     expert: '#a78bfa',
   }[currentQuestion?.difficulty] || '#64748b';
+
+  if (loading) {
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '48px 24px' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          <Skeleton variant="text" width="100px" height="14px" style={{ marginBottom: '32px' }} />
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <Skeleton variant="avatar" size="48px" style={{ margin: '0 auto 16px' }} />
+            <Skeleton variant="text" width="50%" height="28px" style={{ margin: '0 auto 8px' }} />
+            <Skeleton variant="text" width="60%" height="14px" style={{ margin: '0 auto' }} />
+          </div>
+          <Skeleton variant="text" width="100%" height="80px" style={{ marginBottom: '16px' }} />
+          <Skeleton variant="text" width="100%" height="44px" style={{ marginBottom: '16px' }} />
+          <Skeleton variant="text" width="100%" height="44px" style={{ marginBottom: '24px' }} />
+          <Skeleton variant="text" width="100%" height="48px" borderRadius="12px" />
+        </div>
+      </div>
+    );
+  }
 
   if (!cat) {
     return <div className="min-h-screen bg-[var(--mcq-bg)] flex items-center justify-center"><p className="text-[var(--mcq-text-secondary)]">Category not found</p></div>;

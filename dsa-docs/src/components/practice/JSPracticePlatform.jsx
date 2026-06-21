@@ -79,7 +79,7 @@ export default function JSPracticePlatform() {
             <span className="prac-logo-text">JS Interview Lab</span>
           </a>
           <div className="prac-topbar-links">
-            <a href={`${base}practice`} className="prac-top-link">
+            <a href={`${base}labs`} className="prac-top-link">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12" />
                 <polyline points="12 19 5 12 12 5" />

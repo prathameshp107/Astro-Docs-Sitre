@@ -1,5 +1,6 @@
 ---
 import DSAProblemList from '../../components/dsa/DSAProblemList.jsx';
+import AppNav from '../../components/AppNav.jsx';
 import '../../styles/dsa-lab.css';
 import '../../styles/landing.css';
 ---
@@ -17,6 +18,7 @@ import '../../styles/landing.css';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <AppNav activeSection="dsa-problems" client:load />
     <DSAProblemList client:load />
   </body>
 </html>

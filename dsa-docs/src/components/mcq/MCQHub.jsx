@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import ThemeToggle from '../ThemeToggle.jsx';
+import { useState, useEffect } from 'react';
+import Skeleton, { SkeletonStats, SkeletonGrid } from '../Skeleton.jsx';
+
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES } from './MCQData.js';
 import { getInitialProgress, getAccuracy, getCategoryAccuracy, getStreakInfo } from './MCQStore.js';
@@ -29,53 +30,40 @@ const cardVariants = {
 
 export default function MCQHub() {
   const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
-  const [scrolled, setScrolled] = useState(false);
-
   useEffect(() => {
     setLoaded(true);
     setProgress(getInitialProgress());
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const timer = setTimeout(() => setLoading(false), 400);
+    return () => clearTimeout(timer);
   }, []);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
   const accuracy = progress ? getAccuracy(progress) : 0;
   const streak = progress ? getStreakInfo(progress) : { current: 0, best: 0 };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '80px 24px 0' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          {/* Hero skeleton */}
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <Skeleton variant="badge" width="160px" height="28px" style={{ margin: '0 auto 16px' }} />
+            <Skeleton variant="text" width="60%" height="40px" style={{ margin: '0 auto 12px' }} />
+            <Skeleton variant="text" width="40%" height="16px" style={{ margin: '0 auto 32px' }} />
+          </div>
+          {/* Stats skeleton */}
+          <SkeletonStats count={5} />
+          {/* Category cards skeleton */}
+          <SkeletonGrid count={9} variant="card" columns={3} cardHeight="220px" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)' }}>
-      {/* Nav */}
-      <nav className={`sticky top-0 z-50 transition-all duration-200 ${scrolled ? 'bg-[var(--mcq-nav-bg)] backdrop-blur-md border-b border-[var(--mcq-border)]' : ''}`}>
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
-          <a href={base} className="flex items-center gap-2 font-bold text-[var(--mcq-text-primary)] hover:opacity-85 transition-opacity no-underline">
-            <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="#2563eb" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">M</text>
-            </svg>
-            <span>MCQ Hub</span>
-          </a>
-          <div className="flex items-center gap-2">
-            {progress && (
-              <div className="hidden sm:flex items-center gap-4 text-xs" style={{ color: 'var(--mcq-text-muted)' }}>
-                <span className="flex items-center gap-1">
-                  <span style={{ color: '#d97706' }}>✦</span> {progress.xp} XP
-                </span>
-                <span>Level {progress.level}</span>
-              </div>
-            )}
-            <a href={`${base}mcq/dashboard`} className="mcq-btn-ghost text-sm">Dashboard</a>
-            <a href={`${base}practice`} className="mcq-btn-ghost text-sm">Labs</a>
-            <a href={`${base}overview`} className="mcq-btn-ghost text-sm">Docs</a>
-            <ThemeToggle />
-          </div>
-        </div>
-      </nav>
-
       {/* Hero */}
       <section className="relative z-10 pt-16 pb-8 overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 text-center">

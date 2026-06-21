@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ThemeToggle from "../ThemeToggle.jsx";
+import Skeleton from "../Skeleton.jsx";
 import { DSA_PROBLEMS, DSA_TOPICS, DIFFICULTY, getTopicsWithCounts } from "../../data/dsa-problems.js";
 
 function ProblemRow({ problem, index, base }) {
@@ -37,7 +38,13 @@ export default function DSAProblemList() {
   const [activeTopic, setActiveTopic] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState(null);
+  const [loading, setLoading] = useState(true);
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 350);
+    return () => clearTimeout(timer);
+  }, []);
 
   const topicsWithCounts = useMemo(() => getTopicsWithCounts(), []);
 
@@ -65,12 +72,57 @@ export default function DSAProblemList() {
 
   const solvedCount = 0; // Will be implemented with progress tracking
 
+  if (loading) {
+    return (
+      <div className="dsa-platform">
+        <div className="dsa-topbar">
+          <div className="dsa-topbar-left">
+            <Skeleton variant="text" width="80px" height="16px" />
+          </div>
+          <div className="dsa-topbar-right">
+            <ThemeToggle />
+          </div>
+        </div>
+        <div className="dsa-problems-page">
+          <div className="skeleton-dsa-sidebar" style={{ width: '280px' }}>
+            <div style={{ padding: '12px' }}>
+              <Skeleton variant="text" width="100px" height="14px" style={{ marginBottom: '12px' }} />
+              {Array.from({ length: 8 }, (_, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0' }}>
+                  <Skeleton variant="avatar" size="16px" />
+                  <Skeleton variant="text" width="60%" height="12px" />
+                  <Skeleton variant="badge" width="24px" height="12px" style={{ marginLeft: 'auto' }} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="dsa-problems-main">
+            <div className="dsa-problems-toolbar">
+              <Skeleton variant="text" width="260px" height="30px" borderRadius="6px" />
+            </div>
+            <div className="skeleton-dsa-list">
+              {Array.from({ length: 10 }, (_, i) => (
+                <div key={i} className="skeleton-dsa-row">
+                  <Skeleton variant="avatar" size="8px" />
+                  <Skeleton variant="text" width="30px" height="12px" />
+                  <Skeleton variant="text" width="50%" height="14px" />
+                  <Skeleton variant="badge" width="50px" height="18px" style={{ marginLeft: 'auto' }} />
+                  <Skeleton variant="badge" width="40px" height="12px" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="dsa-platform">
       {/* Top Navigation */}
       <div className="dsa-topbar">
         <div className="dsa-topbar-left">
-          <a href={`${base}practice`} className="dsa-top-back">
+          <a href={`${base}labs`} className="dsa-top-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="19" y1="12" x2="5" y2="12" />
               <polyline points="12 19 5 12 12 5" />
