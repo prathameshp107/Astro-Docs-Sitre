@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiAward, FiBook, FiCheck, FiChevronDown, FiChevronLeft, FiChevronRight, FiColumns, FiDatabase, FiGrid, FiMoon, FiPlay, FiRefreshCw, FiSun } from "react-icons/fi";
+import { FiBook, FiCheck, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import initSqlJs from "sql.js";
@@ -7,36 +7,17 @@ import { SQL_LESSONS, SQL_CHALLENGES, SQL_PROJECTS, SQL_DATABASES, createSampleD
 import SchemaDiagram from "./SchemaDiagram.jsx";
 import { DiMysql } from "react-icons/di";
 
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
+
 
 
 // ─── ICONS ───
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
 
 // ─── SQL ENGINE ───
 
@@ -640,17 +621,7 @@ export default function SQLLabsPlatform() {
     }
   }, [query]);
 
-  // Keyboard shortcut
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runQuery();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runQuery]);
+  useKeyboardShortcut(runQuery);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -694,33 +665,15 @@ export default function SQLLabsPlatform() {
 
   return (
     <div className="sql-platform" key={dbKey}>
-      {/* Top Bar */}
-      <div className="sql-topbar">
-        <div className="sql-topbar-left">
-          <a href={`${base}labs`} className="sql-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="sql-top-brand">
-            <DiMysql size={20} />
-            <span className="sql-top-title">SQL Labs</span>
-          </div>
-        </div>
-        <div className="sql-topbar-center">
-          <span className="sql-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="sql-top-progress-bar"><div className="sql-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="sql-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="sql-topbar-right">
-          <button className="sql-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
-            )}
-          </button>
-        </div>
-      </div>
+      <LabTopbar
+        base={base}
+        title="SQL Labs"
+        icon={{ component: <DiMysql size={20} /> }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        prefix="sql"
+      />
 
       {/* Main Layout */}
       <div className="sql-main">
@@ -740,7 +693,7 @@ export default function SQLLabsPlatform() {
             onSelectDatabase={setActiveDatabase}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           {/* Content & Editor */}
           <div className="sql-workspace" ref={workspaceRef}>
@@ -807,40 +760,34 @@ export default function SQLLabsPlatform() {
             </div>
 
             {/* Editor + Results Panel (right side) */}
-            <ResizableHandle onDrag={handleContentDrag} />
+            <LabResizableHandle onDrag={handleContentDrag} />
             <div className="sql-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-              {/* Editor Actions */}
-              <div className="sql-editor-actions">
-                <button className="sql-btn-run" onClick={runQuery} disabled={isRunning} title="Ctrl+Enter to run">
-                  {isRunning ? (
-                    <><span className="sql-spinner" /> Running</>
-                  ) : (
-                    <><FiPlay size={14} fill="currentColor" /> Run Query</>
-                  )}
-                </button>
-                <button className="sql-btn-secondary" onClick={() => {
+              <LabEditorToolbar
+                isRunning={isRunning}
+                onRun={runQuery}
+                onReset={() => {
                   let starter = "";
                   if (view === "learn" && currentLesson) starter = currentLesson.starterQuery;
                   else if (view === "challenge") starter = "-- Write your SQL query here\n";
                   if (editorRef.current) editorRef.current.setValue(starter);
-                  setQuery(starter);                  setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
+                  setQuery(starter);
+                  setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
                   setQueryError(null);
                   codeVersionRef.current++;
                 }}
-              >
-                <FiRefreshCw size={14} />
-                Reset
-                </button>
-                <span className="sql-editor-lang">SQL</span>
-                <button className={`sql-btn-schema ${showSchema ? "active" : ""}`} onClick={() => setShowSchema(s => !s)} title="Toggle schema diagram">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="5" cy="19" r="3"/>
-                    <line x1="12" y1="9" x2="16.65" y2="7.35"/><line x1="8.59" y1="13.51" x2="6.65" y2="17.04"/>
-                  </svg>
-                  Schema
-                </button>
-                <span className="sql-editor-shortcut">Ctrl+Enter to run</span>
-              </div>
+                runLabel="Run Query"
+                lang="SQL"
+                prefix="sql"
+                extraButtons={
+                  <button className={`sql-btn-schema ${showSchema ? "active" : ""}`} onClick={() => setShowSchema(s => !s)} title="Toggle schema diagram">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="5" cy="19" r="3"/>
+                      <line x1="12" y1="9" x2="16.65" y2="7.35"/><line x1="8.59" y1="13.51" x2="6.65" y2="17.04"/>
+                    </svg>
+                    Schema
+                  </button>
+                }
+              />
 
               {/* Monaco Editor */}
               <div className="sql-editor-wrapper">
@@ -872,7 +819,7 @@ export default function SQLLabsPlatform() {
               </div>
 
               {/* Results Panel */}
-              <ResizableHandle onDrag={handleResultsDrag} orientation="horizontal" />
+              <LabResizableHandle onDrag={handleResultsDrag} orientation="horizontal" />
               <div className="sql-results-panel" style={{ height: resultsHeight, maxHeight: resultsHeight, minHeight: resultsHeight }}>
                 <div className="sql-results-header">
                   <span>Query Results</span>
@@ -914,12 +861,7 @@ export default function SQLLabsPlatform() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiAward, FiBook, FiBox, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiCode, FiEye, FiMonitor, FiMoon, FiPlayCircle, FiRefreshCw, FiSmartphone, FiSun, FiUsers } from "react-icons/fi";
+import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
@@ -13,34 +13,13 @@ import {
   CSS_INTERVIEW_TOPICS,
 } from "../../data/css-labs-curriculum.js";
 
-// ─── ICONS ───
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ─── SIDEBAR ───
 
@@ -510,17 +489,7 @@ export default function CSSLabsPlatform() {
     }
   }, [code, view, currentLesson, currentChallenge, currentComponent, currentAnimation, markLessonDone, markChallengeDone, markComponentDone, markAnimationDone]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        updatePreview();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [updatePreview]);
+  useKeyboardShortcut(updatePreview);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -570,45 +539,28 @@ export default function CSSLabsPlatform() {
 
   return (
     <div className="jsl-platform">
-      {/* Top Nav */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon" style={{ background: "rgba(96,165,250,0.08)", borderColor: "rgba(96,165,250,0.18)" }}>
-              <DiCss3 size={18} />
-            </div>
-            <span className="jsl-top-title">CSS Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {(view === "learn" && currentLesson) || (view === "challenge" && currentChallenge) || (view === "component" && currentComponent) || (view === "animation" && currentAnimation) ? (
-            <button className={`jsl-btn-mark jsl-btn-topbar done`} onClick={() => {
-              if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
-              else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
-              else if (view === "component" && currentComponent) markComponentDone(currentComponent.id);
-              else if (view === "animation" && currentAnimation) markAnimationDone(currentAnimation.id);
-            }}>
-              <FiBook size={16} /> Mark Complete
-            </button>
-          ) : null}
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
-            )}
+      <LabTopbar
+        base={base}
+        title="CSS Labs"
+        icon={{
+          component: <DiCss3 size={18} />,
+          style: { background: "rgba(96,165,250,0.08)", borderColor: "rgba(96,165,250,0.18)" },
+        }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      >
+        {((view === "learn" && currentLesson) || (view === "challenge" && currentChallenge) || (view === "component" && currentComponent) || (view === "animation" && currentAnimation)) && (
+          <button className={`jsl-btn-mark jsl-btn-topbar done`} onClick={() => {
+            if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
+            else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
+            else if (view === "component" && currentComponent) markComponentDone(currentComponent.id);
+            else if (view === "animation" && currentAnimation) markAnimationDone(currentAnimation.id);
+          }}>
+            <FiBook size={16} /> Mark Complete
           </button>
-        </div>
-      </div>
+        )}
+      </LabTopbar>
 
       {/* Main Layout */}
       <div className="jsl-main">
@@ -629,7 +581,7 @@ export default function CSSLabsPlatform() {
             progress={progressStats}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           <div className="jsl-workspace" ref={workspaceRef}>
             {/* Content Panel */}
@@ -691,7 +643,7 @@ export default function CSSLabsPlatform() {
               {/* Tests Panel */}
               {(view === "learn" || view === "challenge" || view === "component" || view === "animation") && currentTests.length > 0 && (
                 <>
-                  <ResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
+                  <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
                   <div className="jsl-tests-panel" style={{ height: 120, maxHeight: 120, minHeight: 120 }}>
                     <div className="jsl-tests-header">
                       <span className="jsl-tests-title">
@@ -730,17 +682,27 @@ export default function CSSLabsPlatform() {
             </div>
 
             {/* Editor & Preview */}
-            <ResizableHandle onDrag={handleContentDrag} />
+            <LabResizableHandle onDrag={handleContentDrag} />
             <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-              <div className="jsl-editor-actions">
-                <button className="jsl-btn-run" onClick={updatePreview} title="Ctrl+Enter to refresh preview" style={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa" }}>
-                  <FiBook size={16} /> Preview
-                </button>
-                <span className="jsl-editor-lang" style={{ background: "rgba(96,165,250,0.07)", borderColor: "rgba(96,165,250,0.15)", color: "#60a5fa" }}>
-                  <FiBook size={16} /> HTML+CSS
-                </span>
-                <span className="jsl-editor-shortcut">Ctrl+Enter to preview</span>
-              </div>
+              <LabEditorToolbar
+                isRunning={false}
+                onRun={updatePreview}
+                onReset={() => {
+                  let starter = '';
+                  if (view === 'learn' && currentLesson) starter = currentLesson.starterCode;
+                  else if (view === 'challenge' && currentChallenge) starter = currentChallenge.starterCode;
+                  else if (view === 'component' && currentComponent) starter = currentComponent.starterCode;
+                  else if (view === 'animation' && currentAnimation) starter = currentAnimation.starterCode;
+                  else if (view === 'playground') starter = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>CSS Playground</title>\n</head>\n<body>\n  <h1>CSS Playground</h1>\n</body>\n</html>';
+                  if (editorRef.current) editorRef.current.setValue(starter);
+                  setCode(starter);
+                  setTestResults([]);
+                  codeVersionRef.current++;
+                }}
+                runLabel="Preview"
+                lang="HTML+CSS"
+                runButtonStyle={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa" }}
+              />
 
               <div className="jsl-editor-wrapper">
                 <Editor
@@ -772,7 +734,7 @@ export default function CSSLabsPlatform() {
               </div>
 
               {/* Preview Panel */}
-              <ResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
+              <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
               <div className="jsl-preview-panel" style={{ height: previewHeight, maxHeight: previewHeight, minHeight: previewHeight }}>
                 <div className="jsl-preview-header">
                   <div className="jsl-preview-header-left">
@@ -844,11 +806,7 @@ export default function CSSLabsPlatform() {
         </div>
       </div>
 
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

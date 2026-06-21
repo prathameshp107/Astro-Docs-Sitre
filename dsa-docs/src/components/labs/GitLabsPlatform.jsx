@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiAward, FiBook, FiCheck, FiGitBranch, FiPlay, FiUsers, FiXCircle } from "react-icons/fi";
+import { FiBook, FiCheck } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef, useReducer } from "react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { DiGitBranch } from "react-icons/di";
@@ -11,6 +11,12 @@ import {
   TEAM_SCENARIOS,
   GIT_INTERVIEW_TOPICS,
 } from "../../data/git-labs-curriculum.js";
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ═══════════════════════════════════════════════════
 // GIT STATE MACHINE
@@ -1444,33 +1450,24 @@ export default function GitLabsPlatform() {
   return (
     <div className="jsl-platform">
       {/* Top Nav */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon" style={{ background: "rgba(245,158,11,0.08)", borderColor: "rgba(245,158,11,0.18)" }}>
-              <DiGitBranch size={18} />
-            </div>
-            <span className="jsl-top-title">Git & GitHub Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%`, background: "linear-gradient(90deg, #f59e0b, #a78bfa)" }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {achievements.length > 0 && (
-            <span style={{ fontSize: "0.7rem", color: "#f59e0b", display: "flex", alignItems: "center", gap: "0.25rem" }}>
-              🏆 {achievements.length}
-            </span>
-          )}
-        </div>
-      </div>
-
+      <LabTopbar
+        base={base}
+        title="Git & GitHub Labs"
+        icon={{
+          component: <DiGitBranch size={18} />,
+          style: { background: "rgba(245,158,11,0.08)", borderColor: "rgba(245,158,11,0.18)" },
+        }}
+        progressStats={progressStats}
+        monacoTheme="jsl-dark"
+        onToggleTheme={() => {}}
+      >
+        {achievements.length > 0 && (
+          <span style={{ fontSize: "0.7rem", color: "#f59e0b", display: "flex", alignItems: "center", gap: "0.25rem" }}>
+            {"\u{1F3C6}"} {achievements.length}
+          </span>
+        )}
+      </LabTopbar>
+      
       {/* Main Layout */}
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
@@ -1490,7 +1487,7 @@ export default function GitLabsPlatform() {
             progress={progressStats}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           <div className="jsl-workspace" style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {/* Top Row: Content + Graph side by side */}
@@ -1586,11 +1583,7 @@ export default function GitLabsPlatform() {
         </div>
       </div>
 
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

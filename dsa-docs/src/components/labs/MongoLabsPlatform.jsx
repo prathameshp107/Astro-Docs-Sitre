@@ -1,40 +1,21 @@
-import { FiArrowLeft, FiAward, FiBook, FiCheck, FiChevronDown, FiDatabase, FiGrid, FiMoon, FiPlay, FiRefreshCw, FiSun, FiTrendingUp, FiUsers } from "react-icons/fi";
+import { FiBook, FiCheck, FiChevronDown, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { DiMongodb } from "react-icons/di";
 import { createMongoEngine, MONGO_LESSONS, MONGO_CHALLENGES, MONGO_DATABASES, MONGO_PROJECTS, MONGO_INTERVIEW_CATEGORIES, MONGO_INTERVIEW_QUESTIONS } from "../../data/mongodb-curriculum.js";
 
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
+
 
 
 // ─── ICONS ───
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
 
 // ─── MONGODB ENGINE ───
 
@@ -827,17 +808,7 @@ export default function MongoLabsPlatform() {
     }
   }, [query]);
 
-  // Keyboard shortcut
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runQuery();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runQuery]);
+  useKeyboardShortcut(runQuery);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -871,33 +842,15 @@ export default function MongoLabsPlatform() {
 
   return (
     <div className="mongo-platform">
-      {/* Top Bar */}
-      <div className="sql-topbar">
-        <div className="sql-topbar-left">
-          <a href={`${base}labs`} className="sql-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="sql-top-brand">
-            <DiMongodb size={20} />
-            <span className="sql-top-title">MongoDB Labs</span>
-          </div>
-        </div>
-        <div className="sql-topbar-center">
-          <span className="sql-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="sql-top-progress-bar"><div className="sql-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="sql-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="sql-topbar-right">
-          <button className="sql-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
-            )}
-          </button>
-        </div>
-      </div>
+      <LabTopbar
+        base={base}
+        title="MongoDB Labs"
+        icon={{ component: <DiMongodb size={20} /> }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        prefix="sql"
+      />
 
       {/* Main Layout */}
       <div className="sql-main">
@@ -918,7 +871,7 @@ export default function MongoLabsPlatform() {
             onSelectDatabase={setActiveDatabase}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           {/* Content & Editor */}
           <div className="sql-workspace" ref={workspaceRef}>
@@ -986,18 +939,12 @@ export default function MongoLabsPlatform() {
             </div>
 
             {/* Editor + Results Panel (right side) */}
-            <ResizableHandle onDrag={handleContentDrag} />
+            <LabResizableHandle onDrag={handleContentDrag} />
             <div className="sql-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-              {/* Editor Actions */}
-              <div className="sql-editor-actions">
-                <button className="sql-btn-run" onClick={runQuery} disabled={isRunning} title="Ctrl+Enter to run">
-                  {isRunning ? (
-                    <><span className="mongo-spinner" /> Running</>
-                  ) : (
-                    <><FiPlay size={14} fill="currentColor" /> Run Query</>
-                  )}
-                </button>
-                <button className="sql-btn-secondary" onClick={() => {
+              <LabEditorToolbar
+                isRunning={isRunning}
+                onRun={runQuery}
+                onReset={() => {
                   let starter = "// Write your MongoDB query here\n";
                   if (view === "learn" && currentLesson) starter = currentLesson.starterQuery;
                   else if (view === "challenge" && currentChallenge) starter = currentChallenge.starterQuery;
@@ -1006,13 +953,11 @@ export default function MongoLabsPlatform() {
                   setResults({ batches: [], totalCount: 0, executionTime: 0 });
                   setQueryError(null);
                   codeVersionRef.current++;
-                }}>
-                  <FiRefreshCw size={14} />
-                  Reset
-                </button>
-                <span className="mongo-editor-lang">MongoDB</span>
-                <span className="sql-editor-shortcut">Ctrl+Enter to run</span>
-              </div>
+                }}
+                runLabel="Run Query"
+                lang="MongoDB"
+                prefix="sql"
+              />
 
               {/* Monaco Editor */}
               <div className="sql-editor-wrapper">
@@ -1044,7 +989,7 @@ export default function MongoLabsPlatform() {
               </div>
 
               {/* Results Panel */}
-              <ResizableHandle onDrag={handleResultsDrag} orientation="horizontal" />
+              <LabResizableHandle onDrag={handleResultsDrag} orientation="horizontal" />
               <div className="sql-results-panel" style={{ height: resultsHeight, maxHeight: resultsHeight, minHeight: resultsHeight }}>
                 <div className="sql-results-header">
                   <span>Query Results</span>
@@ -1081,12 +1026,7 @@ export default function MongoLabsPlatform() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

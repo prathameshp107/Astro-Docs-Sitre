@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiAward, FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiCode, FiEye, FiGrid, FiMonitor, FiMoon, FiPlay, FiRefreshCw, FiSmartphone, FiSun, FiUsers } from "react-icons/fi";
+import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
@@ -12,34 +12,13 @@ import {
   HTML_INTERVIEW_TOPICS,
 } from "../../data/html-labs-curriculum.js";
 
-// ─── ICONS ───
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ─── SIDEBAR ───
 
@@ -459,17 +438,7 @@ export default function HTMLLabsPlatform() {
     }
   }, [code, view, currentLesson, currentChallenge, currentProject, markLessonDone, markChallengeDone, markProjectDone]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        updatePreview();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [updatePreview]);
+  useKeyboardShortcut(updatePreview);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -517,44 +486,27 @@ export default function HTMLLabsPlatform() {
 
   return (
     <div className="jsl-platform">
-      {/* Top Nav */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon" style={{ background: "rgba(251,146,60,0.08)", borderColor: "rgba(251,146,60,0.18)" }}>
-              <DiHtml5 size={18} />
-            </div>
-            <span className="jsl-top-title">HTML Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {(view === "learn" && currentLesson) || (view === "challenge" && currentChallenge) || (view === "project" && currentProject) ? (
-            <button className={`jsl-btn-mark jsl-btn-topbar done`} onClick={() => {
-              if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
-              else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
-              else if (view === "project" && currentProject) markProjectDone(currentProject.id);
-            }}>
-              <FiBook size={16} /> Mark Complete
-            </button>
-          ) : null}
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
-            )}
+      <LabTopbar
+        base={base}
+        title="HTML Labs"
+        icon={{
+          component: <DiHtml5 size={18} />,
+          style: { background: "rgba(251,146,60,0.08)", borderColor: "rgba(251,146,60,0.18)" },
+        }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      >
+        {((view === "learn" && currentLesson) || (view === "challenge" && currentChallenge) || (view === "project" && currentProject)) && (
+          <button className={`jsl-btn-mark jsl-btn-topbar done`} onClick={() => {
+            if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
+            else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
+            else if (view === "project" && currentProject) markProjectDone(currentProject.id);
+          }}>
+            <FiBook size={16} /> Mark Complete
           </button>
-        </div>
-      </div>
+        )}
+      </LabTopbar>
 
       {/* Main Layout */}
       <div className="jsl-main">
@@ -573,7 +525,7 @@ export default function HTMLLabsPlatform() {
             progress={progressStats}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           <div className="jsl-workspace" ref={workspaceRef}>
             {/* Content Panel */}
@@ -634,7 +586,7 @@ export default function HTMLLabsPlatform() {
               {/* Tests Panel */}
               {(view === "learn" || view === "challenge" || view === "project") && currentTests.length > 0 && (
                 <>
-                  <ResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
+                  <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
                   <div className="jsl-tests-panel" style={{ height: 120, maxHeight: 120, minHeight: 120 }}>
                     <div className="jsl-tests-header">
                       <span className="jsl-tests-title">
@@ -673,34 +625,45 @@ export default function HTMLLabsPlatform() {
             </div>
 
             {/* Editor & Preview */}
-            <ResizableHandle onDrag={handleContentDrag} />
+            <LabResizableHandle onDrag={handleContentDrag} />
             <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-              <div className="jsl-editor-actions">
-                <button className="jsl-btn-run" onClick={updatePreview} title="Ctrl+Enter to refresh preview" style={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa" }}>
-                  <FiBook size={16} /> Preview
-                </button>
-                <div className="jsl-editor-mode-tabs" style={{ display: "flex", gap: "0.2rem", marginLeft: "0.25rem" }}>
-                  {["html", "htmlcss", "htmlcssjs"].map(mode => (
-                    <button
-                      key={mode}
-                      className={`jsl-mode-tab ${editorMode === mode ? "active" : ""}`}
-                      onClick={() => setEditorMode(mode)}
-                      style={{
-                        padding: "0.2rem 0.5rem", borderRadius: "4px", fontSize: "0.68rem",
-                        fontWeight: 700, border: "1px solid transparent",
-                        background: editorMode === mode ? "rgba(96,165,250,0.12)" : "transparent",
-                        color: editorMode === mode ? "#60a5fa" : "#64748b",
-                      }}
-                    >
-                      {mode === "html" ? "HTML" : mode === "htmlcss" ? "HTML+CSS" : "HTML+CSS+JS"}
-                    </button>
-                  ))}
-                </div>
-                <span className="jsl-editor-lang" style={{ background: "rgba(251,146,60,0.07)", borderColor: "rgba(251,146,60,0.15)", color: "#fb923c" }}>
-                  <FiBook size={16} /> HTML
-                </span>
-                <span className="jsl-editor-shortcut">Ctrl+Enter to preview</span>
-              </div>
+              <LabEditorToolbar
+                isRunning={false}
+                onRun={updatePreview}
+                onReset={() => {
+                  let starter = '';
+                  if (view === 'learn' && currentLesson) starter = currentLesson.starterCode;
+                  else if (view === 'challenge' && currentChallenge) starter = currentChallenge.starterCode;
+                  else if (view === 'project' && currentProject) starter = currentProject.starterCode;
+                  else if (view === 'playground') starter = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>HTML Playground</title>\n</head>\n<body>\n  <h1>Hello, HTML!</h1>\n</body>\n</html>';
+                  if (editorRef.current) editorRef.current.setValue(starter);
+                  setCode(starter);
+                  setTestResults([]);
+                  codeVersionRef.current++;
+                }}
+                runLabel="Preview"
+                lang="HTML"
+                runButtonStyle={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa" }}
+                extraButtons={
+                  <div className="jsl-editor-mode-tabs" style={{ display: "flex", gap: "0.2rem", marginLeft: "0.25rem" }}>
+                    {["html", "htmlcss", "htmlcssjs"].map(mode => (
+                      <button
+                        key={mode}
+                        className={`jsl-mode-tab ${editorMode === mode ? "active" : ""}`}
+                        onClick={() => setEditorMode(mode)}
+                        style={{
+                          padding: "0.2rem 0.5rem", borderRadius: "4px", fontSize: "0.68rem",
+                          fontWeight: 700, border: "1px solid transparent",
+                          background: editorMode === mode ? "rgba(96,165,250,0.12)" : "transparent",
+                          color: editorMode === mode ? "#60a5fa" : "#64748b",
+                        }}
+                      >
+                        {mode === "html" ? "HTML" : mode === "htmlcss" ? "HTML+CSS" : "HTML+CSS+JS"}
+                      </button>
+                    ))}
+                  </div>
+                }
+              />
 
               <div className="jsl-editor-wrapper">
                 <Editor
@@ -732,7 +695,7 @@ export default function HTMLLabsPlatform() {
               </div>
 
               {/* Preview Panel */}
-              <ResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
+              <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
               <div className="jsl-preview-panel" style={{ height: previewHeight, maxHeight: previewHeight, minHeight: previewHeight }}>
                 <div className="jsl-preview-header">
                   <div className="jsl-preview-header-left">
@@ -804,11 +767,7 @@ export default function HTMLLabsPlatform() {
         </div>
       </div>
 
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

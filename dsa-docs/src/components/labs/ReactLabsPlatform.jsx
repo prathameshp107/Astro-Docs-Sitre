@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiCrosshair, FiEdit3, FiGrid, FiList, FiMoon, FiPlay, FiRefreshCw, FiSun } from "react-icons/fi";
+import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw, FiPlay } from "react-icons/fi";
 import React, { useState, useEffect, useMemo, useCallback, useRef, useReducer, useContext, createContext } from "react";
 import { createRoot } from "react-dom/client";
 import Editor from "@monaco-editor/react";
@@ -7,42 +7,18 @@ import { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { DiReact } from "react-icons/di";
 import { REACT_LESSONS, REACT_BUG_CHALLENGES, REACT_MINI_PROJECTS } from "../../data/react-labs-curriculum.js";
 
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabConsolePanel,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
+
 
 
 // ─── ICON COMPONENTS ───
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
 
 // ─── HELPERS: STRIP IMPORTS & SET UP REACT GLOBALS ───
 
@@ -799,17 +775,7 @@ export default function ReactLabsPlatform() {
     }
   }, [code, view, currentLesson, currentBug, currentProject, markLessonDone, markBugDone, markProjectDone]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runCode();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runCode]);
+  useKeyboardShortcut(runCode);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -850,70 +816,54 @@ export default function ReactLabsPlatform() {
 
   return (
     <div className="jsl-platform">
-      {/* ─── Top Navigation Bar ─── */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon">
-              <DiReact size={20} />
-            </div>
-            <span className="jsl-top-title">React Labs</span>
-          </div>
+      <LabTopbar
+        base={base}
+        title="React Labs"
+        icon={{
+          component: <DiReact size={20} />,
+        }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      >
+        <div className="jsl-cat-chips">
+          <span className="jsl-cat-chip learn"><span className="jsl-cat-dot"/>{progressStats.lessonsDone}/{progressStats.lessonsTotal} Learn</span>
+          <span className="jsl-cat-chip bugs"><span className="jsl-cat-dot"/>{progressStats.bugsDone}/{progressStats.bugsTotal} Bugs</span>
+          <span className="jsl-cat-chip projects"><span className="jsl-cat-dot"/>{progressStats.projectsDone}/{progressStats.projectsTotal} Projects</span>
         </div>
-        <div className="jsl-topbar-center">
-          <div className="jsl-cat-chips">
-            <span className="jsl-cat-chip learn"><span className="jsl-cat-dot"/>{progressStats.lessonsDone}/{progressStats.lessonsTotal} Learn</span>
-            <span className="jsl-cat-chip bugs"><span className="jsl-cat-dot"/>{progressStats.bugsDone}/{progressStats.bugsTotal} Bugs</span>
-            <span className="jsl-cat-chip projects"><span className="jsl-cat-dot"/>{progressStats.projectsDone}/{progressStats.projectsTotal} Projects</span>
-          </div>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {/* View-specific action buttons */}
-          {currentContent && (
-            <>
-              {(view === "learn" || view === "bugs") && (
-                <button className="jsl-btn-ghost jsl-btn-topbar" onClick={() => setShowHint(h => !h)}>
-                  {showHint ? "Hide Hint" : "💡 Hint"}
-                </button>
-              )}
-              <button className="jsl-btn-ghost jsl-btn-topbar" onClick={() => setShowSolution(s => !s)}>
-                {showSolution ? "Hide Solution" : "🔍 Solution"}
+        <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
+        <span className="jsl-top-percent">{progressStats.pct}%</span>
+        {currentContent && (
+          <>
+            {(view === "learn" || view === "bugs") && (
+              <button className="jsl-btn-ghost jsl-btn-topbar" onClick={() => setShowHint(h => !h)}>
+                {showHint ? "Hide Hint" : "💡 Hint"}
               </button>
-              {view === "learn" && currentLesson && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
-                  onClick={() => markLessonDone(currentLesson.id)}>
-                  {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
-                </button>
-              )}
-              {view === "bugs" && currentBug && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
-                  onClick={() => markBugDone(currentBug.id)}>
-                  {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
-                </button>
-              )}
-              {view === "projects" && currentProject && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
-                  onClick={() => markProjectDone(currentProject.id)}>
-                  {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
-                </button>
-              )}
-            </>
-          )}
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
             )}
-          </button>
-        </div>
-      </div>
+            <button className="jsl-btn-ghost jsl-btn-topbar" onClick={() => setShowSolution(s => !s)}>
+              {showSolution ? "Hide Solution" : "🔍 Solution"}
+            </button>
+            {view === "learn" && currentLesson && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
+                onClick={() => markLessonDone(currentLesson.id)}>
+                {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
+              </button>
+            )}
+            {view === "bugs" && currentBug && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
+                onClick={() => markBugDone(currentBug.id)}>
+                {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
+              </button>
+            )}
+            {view === "projects" && currentProject && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
+                onClick={() => markProjectDone(currentProject.id)}>
+                {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
+              </button>
+            )}
+          </>
+        )}
+      </LabTopbar>
 
       {/* ─── Main Layout ─── */}
       <div className="jsl-main">
@@ -930,7 +880,7 @@ export default function ReactLabsPlatform() {
           progress={progressStats}
           style={{ width: sidebarWidth }}
         />
-        <ResizableHandle onDrag={handleSidebarDrag} />
+        <LabResizableHandle onDrag={handleSidebarDrag} />
 
         {/* Content & Editor */}
         <div className="jsl-workspace" ref={workspaceRef}>
@@ -967,7 +917,7 @@ export default function ReactLabsPlatform() {
               )}
             </div>
             {/* Resizable Automated Tests (in content panel) */}
-            <ResizableHandle onDrag={handleTestDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handleTestDrag} orientation="horizontal" />
             <div className="jsl-tests-panel" style={{ height: testHeight, maxHeight: testHeight, minHeight: testHeight, flexShrink: 0 }}>
               <div className="jsl-tests-header">
                 <span className="jsl-tests-title">
@@ -1012,40 +962,27 @@ export default function ReactLabsPlatform() {
           </div>
 
           {/* Editor & Preview Panel */}
-          <ResizableHandle onDrag={handleContentDrag} />
+          <LabResizableHandle onDrag={handleContentDrag} />
           <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-            {/* Editor Toolbar */}
-            <div className="jsl-editor-actions">
-              <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
-                {isRunning ? (
-                  <><span className="jsl-spinner" /> Running…</>
-                ) : (
-                  <><FiPlay size={14} fill="currentColor" /> Run</>
-                )}
-              </button>
-              <button className="jsl-btn-secondary" onClick={() => {
+            <LabEditorToolbar
+              isRunning={isRunning}
+              onRun={runCode}
+              onReset={() => {
                 let starter = "";
                 if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
                 else if (view === "bugs" && currentBug) starter = currentBug.brokenCode;
                 else if (view === "projects" && currentProject) starter = currentProject.starterCode;
-                if (editorRef.current) {
-                  editorRef.current.setValue(starter);
-                }
+                if (editorRef.current) editorRef.current.setValue(starter);
                 setCode(starter);
                 setOutput([]);
                 setTestResults([]);
                 codeVersionRef.current++;
                 setPreviewKey(prev => prev + 1);
-              }}>
-                <FiRefreshCw size={14} />
-                Reset
-              </button>
-              <span className="jsl-editor-lang">
-                <DiReact size={10} />
-                JSX
-              </span>
-              <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
-            </div>
+              }}
+              runLabel="Run"
+              lang="JSX"
+              langIcon={<DiReact size={10} />}
+            />
 
             {/* Editor */}
             <div className="jsl-editor-wrapper">
@@ -1080,49 +1017,20 @@ export default function ReactLabsPlatform() {
             </div>
 
             {/* Resizable Preview Panel (React-specific) */}
-            <ResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
             <ReactPreview code={code} previewKey={previewKey} style={{ height: previewHeight }} />
 
             {/* Resizable Console Output (in editor panel, below preview) */}
-            <ResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
             <div className="jsl-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight, flexShrink: 0 }}>
-              <div className="jsl-console-header">
-                <span>Console Output</span>
-                <span className="jsl-console-count">{output.length} lines</span>
-              </div>
-              <div className="jsl-console-body">
-                {output.length === 0 ? (
-                  <div className="jsl-console-empty">
-                    <FiPlay size={24} opacity={0.2} />
-                    <p>Run your code to see output</p>
-                  </div>
-                ) : (
-                  output.map((line, i) => (
-                    <div key={i} className={`jsl-console-line jsl-console-${line.type}`}>
-                      <span className="jsl-console-marker">
-                        {line.type === "log" && "▸"}
-                        {line.type === "warn" && "⚠"}
-                        {line.type === "error" && "✗"}
-                        {line.type === "info" && "ℹ"}
-                        {line.type === "result" && "›"}
-                      </span>
-                      <pre>{line.content}</pre>
-                    </div>
-                  ))
-                )}
-              </div>
+              <LabConsolePanel output={output} />
             </div>
           </div>
         </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

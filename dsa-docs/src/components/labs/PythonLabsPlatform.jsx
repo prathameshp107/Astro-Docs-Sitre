@@ -1,13 +1,18 @@
-import { FiArrowLeft, FiAward, FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiGrid, FiMoon, FiPlay, FiRefreshCw, FiSun } from "react-icons/fi";
+import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { DiPython } from "react-icons/di";
 import { PYTHON_LESSONS, PYTHON_CHALLENGES, PYTHON_PROJECTS, PYTHON_DEBUG_CHALLENGES } from "../../data/python-labs-curriculum.js";
 
-
-
-// ─── ICON COMPONENTS ───
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabConsolePanel,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ─── PYTHON RUNNER (Pyodide) ───
 
@@ -33,37 +38,7 @@ function getPyodide() {
     })();
   }
   return pyodideLoadingPromise;
-}
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
-
-// ─── SIDEBAR ───
+}// ─── SIDEBAR ───
 
 function PythonSidebar({ activeSection, activeLesson, activeChallenge, activeProject, activeBug, onSelectLesson, onSelectChallenge, onSelectProject, onSelectBug, progress, ...rest }) {
   const [expandedSections, setExpandedSections] = useState({ learn: true, challenges: false, projects: false, bugs: false });
@@ -515,17 +490,7 @@ export default function PythonLabsPlatform() {
     }
   }, [code, view, currentLesson, currentChallenge, currentProject, currentBug, markLessonDone, markChallengeDone, markProjectDone, markBugDone]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runCode();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runCode]);
+  useKeyboardShortcut(runCode);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -575,63 +540,46 @@ export default function PythonLabsPlatform() {
 
   return (
     <div className="jsl-platform">
-      {/* ─── Top Navigation Bar ─── */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <FiArrowLeft size={16} />
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon" style={{ background: "rgba(55,118,171,0.08)", borderColor: "rgba(55,118,171,0.18)" }}>
-              <DiPython size={18} />
-            </div>
-            <span className="jsl-top-title">Python Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {currentContent && (
-            <>
-              {view === "learn" && currentLesson && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
-                  onClick={() => markLessonDone(currentLesson.id)}>
-                  {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
-                </button>
-              )}
-              {view === "challenge" && currentChallenge && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.challenges.includes(currentChallenge.id) ? "done" : ""}`}
-                  onClick={() => markChallengeDone(currentChallenge.id)}>
-                  {progress.challenges.includes(currentChallenge.id) ? "✓ Solved" : "Mark Solved"}
-                </button>
-              )}
-              {view === "project" && currentProject && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
-                  onClick={() => markProjectDone(currentProject.id)}>
-                  {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
-                </button>
-              )}
-              {view === "bugs" && currentBug && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
-                  onClick={() => markBugDone(currentBug.id)}>
-                  {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
-                </button>
-              )}
-            </>
-          )}
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
+      <LabTopbar
+        base={base}
+        title="Python Labs"
+        icon={{
+          component: <DiPython size={18} />,
+          style: { background: "rgba(55,118,171,0.08)", borderColor: "rgba(55,118,171,0.18)" },
+        }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      >
+        {currentContent && (
+          <>
+            {view === "learn" && currentLesson && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
+                onClick={() => markLessonDone(currentLesson.id)}>
+                {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
+              </button>
             )}
-          </button>
-        </div>
-      </div>
+            {view === "challenge" && currentChallenge && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.challenges.includes(currentChallenge.id) ? "done" : ""}`}
+                onClick={() => markChallengeDone(currentChallenge.id)}>
+                {progress.challenges.includes(currentChallenge.id) ? "✓ Solved" : "Mark Solved"}
+              </button>
+            )}
+            {view === "project" && currentProject && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
+                onClick={() => markProjectDone(currentProject.id)}>
+                {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
+              </button>
+            )}
+            {view === "bugs" && currentBug && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
+                onClick={() => markBugDone(currentBug.id)}>
+                {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
+              </button>
+            )}
+          </>
+        )}
+      </LabTopbar>
 
       {/* ─── Main Layout ─── */}
       <div className="jsl-main">
@@ -650,7 +598,7 @@ export default function PythonLabsPlatform() {
           progress={progressStats}
           style={{ width: sidebarWidth }}
         />
-        <ResizableHandle onDrag={handleSidebarDrag} />
+        <LabResizableHandle onDrag={handleSidebarDrag} />
 
         {/* Content & Editor */}
         <div className="jsl-workspace" ref={workspaceRef}>
@@ -697,7 +645,7 @@ export default function PythonLabsPlatform() {
               )}
             </div>
             {/* Tests Panel */}
-            <ResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
             <div className="jsl-tests-panel" style={{ height: testsPanelHeight, maxHeight: testsPanelHeight, minHeight: testsPanelHeight }}>
               <div className="jsl-tests-header">
                 <span className="jsl-tests-title">
@@ -742,18 +690,12 @@ export default function PythonLabsPlatform() {
           </div>
 
           {/* Editor & Output Panel */}
-          <ResizableHandle onDrag={handleContentDrag} />
+          <LabResizableHandle onDrag={handleContentDrag} />
           <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-            {/* Editor Toolbar */}
-            <div className="jsl-editor-actions">
-              <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
-                {isRunning ? (
-                  <><span className="jsl-spinner" /> Running</>
-                ) : (
-                  <><FiPlay size={14} fill="currentColor" /> Run</>
-                )}
-              </button>
-              <button className="jsl-btn-secondary" onClick={() => {
+            <LabEditorToolbar
+              isRunning={isRunning}
+              onRun={runCode}
+              onReset={() => {
                 let starter = "";
                 if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
                 else if (view === "challenge" && currentChallenge) starter = currentChallenge.starterCode;
@@ -764,24 +706,16 @@ export default function PythonLabsPlatform() {
                 setOutput([]);
                 setTestResults([]);
                 codeVersionRef.current++;
-              }}>
-                <FiRefreshCw size={14} />
-                Reset
-              </button>
-              <span className="jsl-editor-lang" style={{ background: "rgba(55,118,171,0.07)", borderColor: "rgba(55,118,171,0.15)", color: "#4b8bbe" }}>
-                <DiPython size={12} />
-                Python
-              </span>
-              {!pyodideReady && !pyodideLoadError && (
-                <span className="jsl-editor-shortcut">Loading Python runtime...</span>
-              )}
-              {pyodideLoadError && (
-                <span className="jsl-editor-shortcut" style={{ color: "#f87171" }}>Python runtime unavailable</span>
-              )}
-              {pyodideReady && (
-                <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
-              )}
-            </div>
+              }}
+              runLabel="Run"
+              lang="Python"
+              langIcon={<DiPython size={12} />}
+              shortcut={
+                !pyodideReady && !pyodideLoadError ? "Loading Python runtime..." :
+                pyodideLoadError ? "Python runtime unavailable" :
+                "Ctrl+Enter to run"
+              }
+            />
 
             {/* Editor */}
             <div className="jsl-editor-wrapper">
@@ -814,43 +748,16 @@ export default function PythonLabsPlatform() {
             </div>
 
             {/* Resizable Console Panel */}
-            <ResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
             <div className="jsl-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight }}>
-              <div className="jsl-console-header">
-                <span>Python Output</span>
-                <span className="jsl-console-count">{output.length} lines</span>
-              </div>
-              <div className="jsl-console-body">
-                {output.length === 0 ? (
-                  <div className="jsl-console-empty">
-                    <FiPlay size={28} opacity={0.2} />
-                    <p>Run your Python code to see output</p>
-                  </div>
-                ) : (
-                  output.map((line, i) => (
-                    <div key={i} className={`jsl-console-line jsl-console-${line.type}`}>
-                      <span className="jsl-console-marker">
-                        {line.type === "log" && "▸"}
-                        {line.type === "error" && "✗"}
-                        {line.type === "info" && "ℹ"}
-                      </span>
-                      <pre>{line.content}</pre>
-                    </div>
-                  ))
-                )}
-              </div>
+              <LabConsolePanel output={output} title="Python Output" emptyMessage="Run your Python code to see output" />
             </div>
           </div>
         </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }

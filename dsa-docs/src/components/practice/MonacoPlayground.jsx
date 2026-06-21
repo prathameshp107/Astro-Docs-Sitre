@@ -1,7 +1,6 @@
-import { FiCopy, FiRefreshCw, FiPlay } from "react-icons/fi";
+import { FiCopy, FiRefreshCw, FiPlay, FiSun, FiMoon } from "react-icons/fi";
 import { useState, useRef, useCallback } from "react";
 import Editor from "@monaco-editor/react";
-import { FiSun, FiMoon, FiPlay } from "react-icons/fi";
 
 
 const DEFAULT_CODE = `// JavaScript Playground 🚀
