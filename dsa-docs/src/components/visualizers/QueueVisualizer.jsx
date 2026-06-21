@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQueueStore } from '../../store/visualizerStore';
+import { useQueueStore } from '../../store/visualizers/queueStore';
 
 export default function QueueVisualizer() {
   const { queue, frontIdx, highlighted, operations, enqueue, dequeue, peek, clear, randomEnqueue } = useQueueStore();

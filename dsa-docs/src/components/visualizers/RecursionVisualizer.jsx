@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRecursionStore } from '../../store/visualizerStore';
+import { useRecursionStore } from '../../store/visualizers/recursionStore';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const EXAMPLES = [

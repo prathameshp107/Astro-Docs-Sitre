@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { useGraphStore } from '../../store/visualizerStore';
+import { useGraphStore } from '../../store/visualizers/graphStore';
 
 const EDGE_TYPES = [
   { id: 'undirected', label: 'Undirected' },

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useTreeStore } from '../../store/visualizerStore';
+import { useTreeStore } from '../../store/visualizers/treeStore';
 
 const TRAVERSALS = [
   { id: 'inorder', label: 'Inorder (LNR)', desc: 'Left → Node → Right' },

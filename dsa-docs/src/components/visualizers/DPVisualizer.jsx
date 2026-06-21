@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useDPStore } from '../../store/visualizerStore';
+import { useDPStore } from '../../store/visualizers/dpStore';
 
 const EXAMPLES = [
   { id: 'fibonacci', label: 'Fibonacci', desc: 'Bottom-up DP for nth Fibonacci number', param: 'n=10' },

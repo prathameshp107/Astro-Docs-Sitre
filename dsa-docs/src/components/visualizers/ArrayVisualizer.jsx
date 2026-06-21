@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useArrayStore } from '../../store/visualizerStore';
+import { useArrayStore } from '../../store/visualizers/arrayStore';
 
 export default function ArrayVisualizer() {
   const { array, highlighted, selected, insert, deleteAt, update, search, randomize, generateSorted } = useArrayStore();

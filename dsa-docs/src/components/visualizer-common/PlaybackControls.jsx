@@ -1,4 +1,4 @@
-import { usePlaybackStore } from '../../store/visualizerStore';
+import { usePlaybackStore } from '../../store/visualizers/playbackStore';
 
 export default function PlaybackControls({ onPlay, onPause, onStep, totalSteps }) {
   const { isPlaying, currentStep, speed, setSpeed, play, pause, nextStep, prevStep, restart } = usePlaybackStore();
