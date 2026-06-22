@@ -9,54 +9,216 @@ import { Card, CardGrid, Aside, Badge, Steps, LinkCard } from '@astrojs/starligh
 
 Complete JavaScript notes covering language fundamentals, features, and advanced concepts — from the history of the language to deep-dive interview preparation.
 
-<Aside type="tip" title="524+ Total Documents">
-  JavaScript is the most comprehensive section in this knowledge base. Use the card grids below to jump to any topic, or follow the **Learning Path** for a structured approach.
+<Aside type="tip" title="30+ Documents">
+  JavaScript is the most comprehensive section in this knowledge base. Browse by topic below, or follow the **Learning Path** for a structured approach.
 </Aside>
 
 ---
 
-## 📚 Core Fundamentals
+## 🚀 Getting Started
 
 <CardGrid>
   <LinkCard
     title="The History of JavaScript"
-    href="/DSA-Notes-Problems/javascript/the-history-of-javascript"
+    href="/DSA-Notes-Problems/javascript/getting-started/the-history-of-javascript"
     description="Origins, evolution, and how JavaScript became the world's most popular programming language."
   />
   <LinkCard
     title="JS Compilation Techniques"
-    href="/DSA-Notes-Problems/javascript/js-compilation-techniques"
+    href="/DSA-Notes-Problems/javascript/getting-started/js-compilation-techniques"
     description="How JavaScript engines compile and optimize code using JIT compilation techniques."
   />
   <LinkCard
     title="JavaScript Uses & Applications"
-    href="/DSA-Notes-Problems/javascript/javascript-uses-and-application-areas"
+    href="/DSA-Notes-Problems/javascript/getting-started/javascript-uses-and-application-areas"
     description="Where JavaScript is used — from web browsers to servers, mobile apps to IoT."
   />
   <LinkCard
     title="Output to the Console"
-    href="/DSA-Notes-Problems/javascript/output-to-the-console"
+    href="/DSA-Notes-Problems/javascript/getting-started/output-to-the-console"
     description="console.log(), console.table(), console.time(), and other debugging techniques."
   />
   <LinkCard
     title="Alert & Prompt Dialogs"
-    href="/DSA-Notes-Problems/javascript/output-in-alert-and-prompt-dialogs"
+    href="/DSA-Notes-Problems/javascript/getting-started/output-in-alert-and-prompt-dialogs"
     description="Browser dialogs: alert(), confirm(), prompt() for user interaction."
   />
+</CardGrid>
+
+---
+
+## 📦 Variables
+
+<CardGrid>
   <LinkCard
     title="Understanding `var`"
-    href="/DSA-Notes-Problems/javascript/understanding-var-in-javascript"
+    href="/DSA-Notes-Problems/javascript/variables/understanding-var-in-javascript"
     description="Function scope, hoisting, redeclaration behavior, and when to use var."
   />
   <LinkCard
     title="Understanding `let`"
-    href="/DSA-Notes-Problems/javascript/understanding-let-in-javascript"
+    href="/DSA-Notes-Problems/javascript/variables/understanding-let-in-javascript"
     description="Block scope, Temporal Dead Zone, and modern variable declarations."
   />
   <LinkCard
     title="Understanding `const`"
-    href="/DSA-Notes-Problems/javascript/understanding-const-in-javascript"
+    href="/DSA-Notes-Problems/javascript/variables/understanding-const-in-javascript"
     description="Immutability, object references, const with arrays/objects, and best practices."
+  />
+</CardGrid>
+
+---
+
+## 🧱 Core Language
+
+<CardGrid>
+  <LinkCard
+    title="Data Types & Type Conversion"
+    href="/DSA-Notes-Problems/javascript/core-language/data-types-and-type-conversion"
+    description="Primitives vs objects, typeof, implicit coercion, truthy/falsy, and NaN."
+  />
+  <LinkCard
+    title="Operators"
+    href="/DSA-Notes-Problems/javascript/core-language/operators"
+    description="Arithmetic, comparison, logical, nullish coalescing, optional chaining, and spread."
+  />
+  <LinkCard
+    title="Numbers, Math & Dates"
+    href="/DSA-Notes-Problems/javascript/core-language/numbers-math-and-dates"
+    description="Number methods, Math object, Date manipulation, floating-point precision, and formatting."
+  />
+  <LinkCard
+    title="Strings & Template Literals"
+    href="/DSA-Notes-Problems/javascript/core-language/strings-and-template-literals"
+    description="Immutability, common methods, template literals, multiline, and tagged templates."
+  />
+  <LinkCard
+    title="Regular Expressions"
+    href="/DSA-Notes-Problems/javascript/core-language/regular-expressions"
+    description="Pattern matching with RegExp, flags, character classes, and common patterns."
+  />
+  <LinkCard
+    title="Conditionals"
+    href="/DSA-Notes-Problems/javascript/core-language/conditionals"
+    description="if/else, switch, ternary, short-circuit evaluation, and guard clauses."
+  />
+  <LinkCard
+    title="Loops & Iteration"
+    href="/DSA-Notes-Problems/javascript/core-language/loops-and-iteration"
+    description="For, while, do...while, for...of, for...in, break/continue, and labeled loops."
+  />
+  <LinkCard
+    title="Functions"
+    href="/DSA-Notes-Problems/javascript/core-language/functions"
+    description="Declarations vs expressions, arrows, parameters, IIFE, and hoisting differences."
+  />
+  <LinkCard
+    title="Scope & Closures"
+    href="/DSA-Notes-Problems/javascript/core-language/scope-and-closures"
+    description="Global/function/block scope, lexical scoping, scope chain, and closures."
+  />
+  <LinkCard
+    title="Error Handling"
+    href="/DSA-Notes-Problems/javascript/core-language/error-handling"
+    description="try/catch/finally, throw, custom error classes, and async error handling."
+  />
+</CardGrid>
+
+---
+
+## 📚 Collections
+
+<CardGrid>
+  <LinkCard
+    title="Arrays & Array Methods"
+    href="/DSA-Notes-Problems/javascript/collections/arrays-and-array-methods"
+    description="map, filter, reduce, slice vs splice, spread, destructuring, and sort gotcha."
+  />
+  <LinkCard
+    title="Objects"
+    href="/DSA-Notes-Problems/javascript/collections/objects"
+    description="Literals, property access, shorthand, computed keys, Object methods, and freeze."
+  />
+  <LinkCard
+    title="Map & Set"
+    href="/DSA-Notes-Problems/javascript/collections/map-and-set"
+    description="Map vs Object, Set for unique values, WeakMap/WeakSet, and practical use cases."
+  />
+</CardGrid>
+
+---
+
+## ⚡ Advanced Language
+
+<CardGrid>
+  <LinkCard
+    title="The `this` Keyword"
+    href="/DSA-Notes-Problems/javascript/advanced-language/the-this-keyword"
+    description="Binding rules, implicit/explicit, arrows, call/apply/bind, and common pitfalls."
+  />
+  <LinkCard
+    title="Prototypes & Inheritance"
+    href="/DSA-Notes-Problems/javascript/advanced-language/prototypes-and-inheritance"
+    description="Prototype chain, Object.create, hasOwnProperty, and prototypal inheritance."
+  />
+  <LinkCard
+    title="Classes"
+    href="/DSA-Notes-Problems/javascript/advanced-language/classes"
+    description="Class syntax, extends/super, getters/setters, static, and private fields."
+  />
+  <LinkCard
+    title="ES6+ Features"
+    href="/DSA-Notes-Problems/javascript/advanced-language/es6-features"
+    description="Destructuring, spread/rest, enhanced literals, Symbols, Map, and Set."
+  />
+  <LinkCard
+    title="Modules"
+    href="/DSA-Notes-Problems/javascript/advanced-language/modules"
+    description="Named/default exports, dynamic import, ESM vs CommonJS, and module scope."
+  />
+  <LinkCard
+    title="Generators & Iterators"
+    href="/DSA-Notes-Problems/javascript/advanced-language/generators-and-iterators"
+    description="Iteration protocol, custom iterables, generator functions, yield, and async generators."
+  />
+</CardGrid>
+
+---
+
+## ⏳ Async JavaScript
+
+<CardGrid>
+  <LinkCard
+    title="Async JavaScript"
+    href="/DSA-Notes-Problems/javascript/async/async-javascript"
+    description="Callbacks, Promises, async/await, and modern async control flow patterns."
+  />
+  <LinkCard
+    title="Timers & Animation"
+    href="/DSA-Notes-Problems/javascript/async/timers-and-animation"
+    description="setTimeout, setInterval, requestAnimationFrame, debounce, and throttle."
+  />
+</CardGrid>
+
+---
+
+## 🌐 Browser APIs
+
+<CardGrid>
+  <LinkCard
+    title="DOM Manipulation"
+    href="/DSA-Notes-Problems/javascript/browser-apis/dom-manipulation"
+    description="Query selectors, creating/removing nodes, textContent vs innerHTML, and traversal."
+  />
+  <LinkCard
+    title="Events & Event Handling"
+    href="/DSA-Notes-Problems/javascript/browser-apis/events-and-event-handling"
+    description="addEventListener, bubbling vs capturing, event delegation, and preventDefault."
+  />
+  <LinkCard
+    title="JSON & Web Storage"
+    href="/DSA-Notes-Problems/javascript/browser-apis/json-and-storage"
+    description="JSON.parse/stringify, replacer/reviver, localStorage, sessionStorage, and deep copy."
   />
 </CardGrid>
 
@@ -112,13 +274,21 @@ Complete JavaScript notes covering language fundamentals, features, and advanced
 ## 📖 Suggested Learning Path
 
 <Steps>
-1. [Start with Fundamentals](/DSA-Notes-Problems/javascript/the-history-of-javascript) — Begin with the history and how JavaScript is compiled
-2. [Master Variables](/DSA-Notes-Problems/javascript/understanding-var-in-javascript) — Understand `var`, `let`, and `const` deeply
-3. [Practice Output Methods](/DSA-Notes-Problems/javascript/output-to-the-console) — Console and dialog interactions
-4. [Test Your Knowledge](/DSA-Notes-Problems/javascript/interview/fundamentals) — Start with interview fundamentals
-5. [Deep Dive into Objects](/DSA-Notes-Problems/javascript/interview/objects-prototypes) — Prototypes, classes, inheritance
-6. [Master Async JS](/DSA-Notes-Problems/javascript/interview/async-js) — Event loop, promises, async/await
-7. [Advanced Topics](/DSA-Notes-Problems/javascript/interview/advanced-topics) — System design, patterns, performance
+1. [Start with Fundamentals](/DSA-Notes-Problems/javascript/getting-started/the-history-of-javascript) — Begin with the history and how JavaScript is compiled
+2. [Master Variables](/DSA-Notes-Problems/javascript/variables/understanding-var-in-javascript) — Understand `var`, `let`, and `const` deeply
+3. [Practice Output Methods](/DSA-Notes-Problems/javascript/getting-started/output-to-the-console) — Console and dialog interactions
+4. [Data Types & Operators](/DSA-Notes-Problems/javascript/core-language/data-types-and-type-conversion) — Primitives, coercion, operators, and numbers
+5. [Strings & Regex](/DSA-Notes-Problems/javascript/core-language/strings-and-template-literals) — String methods, template literals, and regular expressions
+6. [Control Flow](/DSA-Notes-Problems/javascript/core-language/conditionals) — Conditionals and loops
+7. [Functions & Scope](/DSA-Notes-Problems/javascript/core-language/functions) — Declarations, arrows, closures
+8. [Arrays & Objects](/DSA-Notes-Problems/javascript/collections/arrays-and-array-methods) — Methods, destructuring, and collections
+9. [Advanced Language](/DSA-Notes-Problems/javascript/advanced-language/the-this-keyword) — `this`, prototypes, classes, ES6+, modules
+10. [Async JavaScript](/DSA-Notes-Problems/javascript/async/async-javascript) — Callbacks, promises, async/await, timers
+11. [Browser APIs](/DSA-Notes-Problems/javascript/browser-apis/dom-manipulation) — DOM, events, storage, and JSON
+12. [Test Your Knowledge](/DSA-Notes-Problems/javascript/interview/fundamentals) — Start with interview fundamentals
+13. [Deep Dive into Objects](/DSA-Notes-Problems/javascript/interview/objects-prototypes) — Prototypes, classes, inheritance
+14. [Master Async JS](/DSA-Notes-Problems/javascript/interview/async-js) — Event loop, promises, async/await
+15. [Advanced Topics](/DSA-Notes-Problems/javascript/interview/advanced-topics) — System design, patterns, performance
 </Steps>
 
 ---

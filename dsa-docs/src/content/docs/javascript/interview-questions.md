@@ -2,7 +2,7 @@
 title: "JavaScript Interview Questions"
 description: "Common JavaScript interview questions and answers covering core concepts, async, closures, and more."
 sidebar:
-  order: 9
+  order: 99
 ---
 
 # 🚀 Top 100 JavaScript Interview Questions
