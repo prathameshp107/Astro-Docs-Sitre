@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" fill="none">
+  <rect width="700" height="450" rx="12" fill="#020617"/>
+  <text x="350" y="40" text-anchor="middle" fill="#a78bfa" font-size="20" font-weight="bold" font-family="Inter, sans-serif">Type Guards — Decision Tree</text>
+  
+  <!-- Start -->
+  <rect x="260" y="70" width="180" height="50" rx="25" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+  <text x="350" y="101" text-anchor="middle" fill="#a5b4fc" font-size="15" font-weight="bold" font-family="monospace">unknown value</text>
+  
+  <!-- Arrow -->
+  <line x1="350" y1="120" x2="350" y2="155" stroke="#475569" stroke-width="2"/>
+  <polygon points="345,150 350,160 355,150" fill="#475569"/>
+  
+  <!-- Diamond: typeof? -->
+  <polygon points="350,155 420,190 350,225 280,190" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+  <text x="350" y="195" text-anchor="middle" fill="#fbbf24" font-size="12" font-family="Inter, sans-serif">typeof?</text>
+  
+  <!-- Arrow Yes (left) -->
+  <line x1="280" y1="190" x2="160" y2="260" stroke="#22c55e" stroke-width="2"/>
+  <polygon points="165,255 155,265 170,267" fill="#22c55e"/>
+  
+  <!-- String result -->
+  <rect x="40" y="270" width="200" height="50" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <text x="140" y="301" text-anchor="middle" fill="#86efac" font-size="15" font-weight="bold" font-family="monospace">string</text>
+  
+  <!-- Arrow No (right) -->
+  <line x1="420" y1="190" x2="540" y2="260" stroke="#22c55e" stroke-width="2"/>
+  <polygon points="535,255 545,265 530,267" fill="#22c55e"/>
+  
+  <!-- instanceof/ custom -->
+  <rect x="460" y="270" width="200" height="50" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="560" y="301" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="bold" font-family="Inter, sans-serif">Use Guard</text>
+  
+  <!-- Arrow down from instanceof -->
+  <line x1="560" y1="320" x2="560" y2="355" stroke="#475569" stroke-width="2"/>
+  <polygon points="555,350 560,360 565,350" fill="#475569"/>
+  
+  <!-- Type guard options -->
+  <rect x="430" y="360" width="260" height="70" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="560" y="383" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Inter, sans-serif">typeof | instanceof | in | is</text>
+  <text x="560" y="405" text-anchor="middle" fill="#64748b" font-size="11" font-family="Inter, sans-serif">User-defined: x is Type</text>
+  
+  <!-- Bottom legend -->
+  <text x="350" y="440" text-anchor="middle" fill="#64748b" font-size="11" font-family="Inter, sans-serif">Always narrow before using union types!</text>
+</svg>
