@@ -1,45 +1,21 @@
+import { FiBook, FiCheck, FiChevronDown, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
+import { DiMongodb } from "react-icons/di";
 import { createMongoEngine, MONGO_LESSONS, MONGO_CHALLENGES, MONGO_DATABASES, MONGO_PROJECTS, MONGO_INTERVIEW_CATEGORIES, MONGO_INTERVIEW_QUESTIONS } from "../../data/mongodb-curriculum.js";
 
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
+
+
+
 // ─── ICONS ───
-
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function ChallengeIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>; }
-function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/></svg>; }
-function AggIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>; }
-function InterviewIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.37 4.06a2.5 2.5 0 113.54 3.54l-10.4 10.4L6 18l.04-3.47 10.4-10.4z"/></svg>; }
-function DatabaseIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
 
 // ─── MONGODB ENGINE ───
 
@@ -205,7 +181,7 @@ function CollectionsExplorer({ activeDatabase, onSelectDatabase }) {
   return (
     <div className="mongo-schema-section">
       <div className="mongo-schema-active">
-        <DatabaseIcon />
+        <FiBook size={16} />
         <span>{db?.name || "No DB"}</span>
       </div>
 
@@ -282,7 +258,7 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
   return (
     <div className="sql-sidebar" {...rest}>
       <div className="sql-sidebar-header">
-        <h3><BookIcon /> Curriculum</h3>
+        <h3><FiBook size={16} /> Curriculum</h3>
       </div>
 
       {/* Collections Explorer */}
@@ -291,9 +267,9 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
       {/* LEARN MONGODB */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header ${expandedSections.learn ? "expanded" : ""}`} onClick={() => toggleSection("learn")}>
-          <div className="sql-sg-title"><BookIcon /><span>LEARN MONGODB</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>LEARN MONGODB</span></div>
           <span className="sql-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.learn && (
           <div className="sql-sg-items">
@@ -306,7 +282,7 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
                 <span className="sql-si-num">{lesson.chapter}.</span>
                 <span className="sql-si-title">{lesson.title}</span>
                 <span className={`sql-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="sql-si-check"><CheckIcon /></span>}
+                {progress.lessons.includes(lesson.id) && <span className="sql-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -316,9 +292,9 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
       {/* QUERY CHALLENGES */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header ${expandedSections.challenges ? "expanded" : ""}`} onClick={() => toggleSection("challenges")}>
-          <div className="sql-sg-title"><ChallengeIcon /><span>CHALLENGES</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>CHALLENGES</span></div>
           <span className="sql-sg-count">{progress.challengesDone}/{progress.challengesTotal}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.challenges && (
           <div className="sql-sg-items">
@@ -331,7 +307,7 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
                 <span className="sql-si-num">{i + 1}.</span>
                 <span className="sql-si-title">{c.title.replace(/^\d+\.\s*/, "")}</span>
                 <span className={`sql-si-level ${c.difficulty.toLowerCase()}`}>{c.difficulty[0]}</span>
-                {progress.challenges.includes(c.id) && <span className="sql-si-check"><CheckIcon /></span>}
+                {progress.challenges.includes(c.id) && <span className="sql-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -341,9 +317,9 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
       {/* AGGREGATION LAB */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header ${expandedSections.aggregation ? "expanded" : ""}`} onClick={() => toggleSection("aggregation")}>
-          <div className="sql-sg-title"><AggIcon /><span>AGGREGATION LAB</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>AGGREGATION LAB</span></div>
           <span className="sql-sg-count">{progress.aggDone}/{progress.aggTotal}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.aggregation && (
           <div className="sql-sg-items">
@@ -358,7 +334,7 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
                 <span className="sql-si-num">{i}.</span>
                 <span className="sql-si-title">{["$match","$project","$group","$sort","$lookup","$unwind","$facet","$bucket","$setWindowFields","Complex Pipelines"][i-1]}</span>
                 <span className={`sql-si-level ${i <= 4 ? "intermediate" : "advanced"}`}>{i <= 4 ? "I" : "A"}</span>
-                {progress.agg?.includes(i) && <span className="sql-si-check"><CheckIcon /></span>}
+                {progress.agg?.includes(i) && <span className="sql-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -369,9 +345,9 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
       {MONGO_PROJECTS && MONGO_PROJECTS.length > 0 && (
         <div className="jsl-sidebar-group">
           <button className={`sql-sg-header projects ${expandedSections.projects ? "expanded" : ""}`} onClick={() => toggleSection("projects")}>
-            <div className="sql-sg-title"><ProjectIcon /><span>PROJECTS</span></div>
+            <div className="sql-sg-title"><FiBook size={16} /><span>PROJECTS</span></div>
             <span className="sql-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-            <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+            <FiChevronDown size={14} />
           </button>
           {expandedSections.projects && (
             <div className="sql-sg-items">
@@ -384,7 +360,7 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
                   <span className="sql-si-num">{proj.icon || `${i + 1}.`}</span>
                   <span className="sql-si-title">{proj.title}</span>
                   <span className={`sql-si-level ${proj.difficulty.toLowerCase()}`}>{proj.difficulty[0]}</span>
-                  {progress.projects[proj.id]?.complete && <span className="sql-si-check"><CheckIcon /></span>}
+                  {progress.projects[proj.id]?.complete && <span className="sql-si-check"><FiCheck size={16} /></span>}
                 </button>
               ))}
             </div>
@@ -395,9 +371,9 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
       {/* INTERVIEW PREP */}
       <div className="jsl-sidebar-group">
         <button className={`sql-sg-header interview ${expandedSections.interview ? "expanded" : ""}`} onClick={() => toggleSection("interview")}>
-          <div className="sql-sg-title"><InterviewIcon /><span>INTERVIEW PREP</span></div>
+          <div className="sql-sg-title"><FiBook size={16} /><span>INTERVIEW PREP</span></div>
           <span className="sql-sg-count">{progress.interviewDone || 0}/{MONGO_INTERVIEW_QUESTIONS?.length || 0}</span>
-          <svg className="sql-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.interview && (
           <div className="sql-sg-items">
@@ -832,17 +808,7 @@ export default function MongoLabsPlatform() {
     }
   }, [query]);
 
-  // Keyboard shortcut
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runQuery();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runQuery]);
+  useKeyboardShortcut(runQuery);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -876,40 +842,15 @@ export default function MongoLabsPlatform() {
 
   return (
     <div className="mongo-platform">
-      {/* Top Bar */}
-      <div className="sql-topbar">
-        <div className="sql-topbar-left">
-          <a href={`${base}labs`} className="sql-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Labs
-          </a>
-          <div className="sql-top-brand">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="#13aa52" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">MDB</text>
-            </svg>
-            <span className="sql-top-title">MongoDB Labs</span>
-          </div>
-        </div>
-        <div className="sql-topbar-center">
-          <span className="sql-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="sql-top-progress-bar"><div className="sql-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="sql-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="sql-topbar-right">
-          <ThemeToggle />
-          <button className="sql-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-            )}
-          </button>
-        </div>
-      </div>
+      <LabTopbar
+        base={base}
+        title="MongoDB Labs"
+        icon={{ component: <DiMongodb size={20} /> }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        prefix="sql"
+      />
 
       {/* Main Layout */}
       <div className="sql-main">
@@ -930,7 +871,7 @@ export default function MongoLabsPlatform() {
             onSelectDatabase={setActiveDatabase}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           {/* Content & Editor */}
           <div className="sql-workspace" ref={workspaceRef}>
@@ -998,18 +939,12 @@ export default function MongoLabsPlatform() {
             </div>
 
             {/* Editor + Results Panel (right side) */}
-            <ResizableHandle onDrag={handleContentDrag} />
+            <LabResizableHandle onDrag={handleContentDrag} />
             <div className="sql-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-              {/* Editor Actions */}
-              <div className="sql-editor-actions">
-                <button className="sql-btn-run" onClick={runQuery} disabled={isRunning} title="Ctrl+Enter to run">
-                  {isRunning ? (
-                    <><span className="mongo-spinner" /> Running</>
-                  ) : (
-                    <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run Query</>
-                  )}
-                </button>
-                <button className="sql-btn-secondary" onClick={() => {
+              <LabEditorToolbar
+                isRunning={isRunning}
+                onRun={runQuery}
+                onReset={() => {
                   let starter = "// Write your MongoDB query here\n";
                   if (view === "learn" && currentLesson) starter = currentLesson.starterQuery;
                   else if (view === "challenge" && currentChallenge) starter = currentChallenge.starterQuery;
@@ -1018,13 +953,11 @@ export default function MongoLabsPlatform() {
                   setResults({ batches: [], totalCount: 0, executionTime: 0 });
                   setQueryError(null);
                   codeVersionRef.current++;
-                }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                  Reset
-                </button>
-                <span className="mongo-editor-lang">MongoDB</span>
-                <span className="sql-editor-shortcut">Ctrl+Enter to run</span>
-              </div>
+                }}
+                runLabel="Run Query"
+                lang="MongoDB"
+                prefix="sql"
+              />
 
               {/* Monaco Editor */}
               <div className="sql-editor-wrapper">
@@ -1056,7 +989,7 @@ export default function MongoLabsPlatform() {
               </div>
 
               {/* Results Panel */}
-              <ResizableHandle onDrag={handleResultsDrag} orientation="horizontal" />
+              <LabResizableHandle onDrag={handleResultsDrag} orientation="horizontal" />
               <div className="sql-results-panel" style={{ height: resultsHeight, maxHeight: resultsHeight, minHeight: resultsHeight }}>
                 <div className="sql-results-header">
                   <span>Query Results</span>
@@ -1076,7 +1009,7 @@ export default function MongoLabsPlatform() {
                 <div className="sql-results-body">
                   {!query && !queryError ? (
                     <div className="sql-results-empty">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      <FiPlay size={28} opacity={0.2} />
                       <p>Write a MongoDB query and click Run</p>
                     </div>
                   ) : queryError ? (
@@ -1093,12 +1026,7 @@ export default function MongoLabsPlatform() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }
@@ -1307,7 +1235,7 @@ function InterviewView({ categoryId, questionId, onSelectQuestion, onMarkDone, i
                         <div className="interview-q-title-row">
                           <span className="interview-q-difficulty" style={{ background: dc?.bg, color: dc?.color }}>{q.difficulty}</span>
                           <span className="interview-q-text">{q.question}</span>
-                          {isDone?.includes(q.id) && <span className="sql-si-check"><CheckIcon /></span>}
+                          {isDone?.includes(q.id) && <span className="sql-si-check"><FiCheck size={16} /></span>}
                         </div>
                         <svg className="interview-q-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transform: isExpanded ? "rotate(180deg)" : "" }}>
                           <polyline points="6 9 12 15 18 9"/>

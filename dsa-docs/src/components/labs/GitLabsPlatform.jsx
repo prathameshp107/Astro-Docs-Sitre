@@ -1,6 +1,9 @@
+import { FiBook, FiCheck } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef, useReducer } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
+import { DiGitBranch } from "react-icons/di";
+
+
 import {
   GIT_LESSONS,
   GIT_BOSS_CHALLENGES,
@@ -8,6 +11,12 @@ import {
   TEAM_SCENARIOS,
   GIT_INTERVIEW_TOPICS,
 } from "../../data/git-labs-curriculum.js";
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ═══════════════════════════════════════════════════
 // GIT STATE MACHINE
@@ -1035,16 +1044,6 @@ function GitTerminal({ gitState, dispatch, onCommand, commands }) {
 // ICONS
 // ═══════════════════════════════════════════════════
 
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function ChallengeIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>; }
-function BossIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>; }
-function ConflictIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>; }
-function TeamIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>; }
-function InterviewIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>; }
-function PlayIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
-function GitIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="18" r="4"/><circle cx="12" cy="6" r="4"/><line x1="12" y1="10" x2="12" y2="14"/></svg>; }
-
 // ═══════════════════════════════════════════════════
 // RESIZABLE HANDLE
 // ═══════════════════════════════════════════════════
@@ -1108,7 +1107,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
   return (
     <div className="jsl-sidebar" {...rest}>
       <div className="jsl-sidebar-header">
-        <h3><GitIcon /> Git Labs</h3>
+        <h3><FiBook size={16} /> Git Labs</h3>
       </div>
 
       {/* Playground shortcut */}
@@ -1119,7 +1118,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
           style={{ color: activeSection === "playground" ? "#f59e0b" : undefined }}
         >
           <div className="jsl-sg-title" style={{ color: "#f59e0b" }}>
-            <PlayIcon /> <span>GIT PLAYGROUND</span>
+            <FiBook size={16} /> <span>GIT PLAYGROUND</span>
           </div>
         </button>
       </div>
@@ -1131,7 +1130,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
           style={{ color: activeSection === "boss" ? "#ef4444" : undefined }}
         >
           <div className="jsl-sg-title" style={{ color: "#ef4444" }}>
-            <BossIcon /> <span>BOSS BATTLES</span>
+            <FiBook size={16} /> <span>BOSS BATTLES</span>
           </div>
         </button>
         <div className="jsl-sg-items" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -1145,7 +1144,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
               <span className="jsl-si-num">⚔️</span>
               <span className="jsl-si-title">{boss.title}</span>
               <span className={`jsl-si-level ${boss.difficulty.toLowerCase()}`}>{boss.difficulty[0]}</span>
-              {progress.bosses.includes(boss.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+              {progress.bosses.includes(boss.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
             </button>
           ))}
         </div>
@@ -1158,7 +1157,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
           style={{ color: activeSection === "conflict" ? "#ef4444" : undefined }}
         >
           <div className="jsl-sg-title" style={{ color: "#ef4444" }}>
-            <ConflictIcon /> <span>CONFLICT ARENA</span>
+            <FiBook size={16} /> <span>CONFLICT ARENA</span>
           </div>
         </button>
         <div className="jsl-sg-items" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -1172,7 +1171,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
               <span className="jsl-si-num">{i + 1}.</span>
               <span className="jsl-si-title">{conflict.title}</span>
               <span className={`jsl-si-level ${conflict.difficulty.toLowerCase()}`}>{conflict.difficulty[0]}</span>
-              {progress.conflicts.includes(conflict.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+              {progress.conflicts.includes(conflict.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
             </button>
           ))}
         </div>
@@ -1185,7 +1184,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
           style={{ color: activeSection === "team" ? "#60a5fa" : undefined }}
         >
           <div className="jsl-sg-title" style={{ color: "#60a5fa" }}>
-            <TeamIcon /> <span>TEAM SIMULATOR</span>
+            <FiBook size={16} /> <span>TEAM SIMULATOR</span>
           </div>
         </button>
         <div className="jsl-sg-items" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -1199,7 +1198,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
               <span className="jsl-si-num">{i + 1}.</span>
               <span className="jsl-si-title">{scenario.title}</span>
               <span className={`jsl-si-level ${(scenario.difficulty || 'intermediate').toLowerCase()}`}>{(scenario.difficulty || 'Intermediate')[0]}</span>
-              {progress.teams.includes(scenario.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+              {progress.teams.includes(scenario.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
             </button>
           ))}
         </div>
@@ -1213,7 +1212,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
           style={{ color: activeSection === "interview" ? "#fcd34d" : undefined }}
         >
           <div className="jsl-sg-title" style={{ color: "#fcd34d" }}>
-            <InterviewIcon /> <span>INTERVIEW PREP</span>
+            <FiBook size={16} /> <span>INTERVIEW PREP</span>
           </div>
         </button>
       </div>
@@ -1247,7 +1246,7 @@ function GitSidebar({ activeSection, activeLesson, activeBoss, activeConflict, a
                     <span className="jsl-si-num">{lesson.chapter}.</span>
                     <span className="jsl-si-title">{lesson.title}</span>
                     <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                    {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                    {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
                   </button>
                 ))}
               </div>
@@ -1451,41 +1450,24 @@ export default function GitLabsPlatform() {
   return (
     <div className="jsl-platform">
       {/* Top Nav */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon" style={{ background: "rgba(245,158,11,0.08)", borderColor: "rgba(245,158,11,0.18)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="18" r="4" stroke="#f59e0b" strokeWidth="2" fill="rgba(245,158,11,0.15)" />
-                <circle cx="12" cy="6" r="4" stroke="#f59e0b" strokeWidth="2" fill="rgba(245,158,11,0.15)" />
-                <line x1="12" y1="10" x2="12" y2="14" stroke="#f59e0b" strokeWidth="2" />
-              </svg>
-            </div>
-            <span className="jsl-top-title">Git & GitHub Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%`, background: "linear-gradient(90deg, #f59e0b, #a78bfa)" }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {achievements.length > 0 && (
-            <span style={{ fontSize: "0.7rem", color: "#f59e0b", display: "flex", alignItems: "center", gap: "0.25rem" }}>
-              🏆 {achievements.length}
-            </span>
-          )}
-          <ThemeToggle />
-        </div>
-      </div>
-
+      <LabTopbar
+        base={base}
+        title="Git & GitHub Labs"
+        icon={{
+          component: <DiGitBranch size={18} />,
+          style: { background: "rgba(245,158,11,0.08)", borderColor: "rgba(245,158,11,0.18)" },
+        }}
+        progressStats={progressStats}
+        monacoTheme="jsl-dark"
+        onToggleTheme={() => {}}
+      >
+        {achievements.length > 0 && (
+          <span style={{ fontSize: "0.7rem", color: "#f59e0b", display: "flex", alignItems: "center", gap: "0.25rem" }}>
+            {"\u{1F3C6}"} {achievements.length}
+          </span>
+        )}
+      </LabTopbar>
+      
       {/* Main Layout */}
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
@@ -1505,7 +1487,7 @@ export default function GitLabsPlatform() {
             progress={progressStats}
             style={{ width: sidebarWidth }}
           />
-          <ResizableHandle onDrag={handleSidebarDrag} />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
           <div className="jsl-workspace" style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
             {/* Top Row: Content + Graph side by side */}
@@ -1601,11 +1583,7 @@ export default function GitLabsPlatform() {
         </div>
       </div>
 
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }
@@ -1622,7 +1600,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
     <div className="jsl-content-inner">
       <div className="jsl-chapter-header">
         <span className="jsl-chapter-badge" style={{ background: "rgba(245,158,11,0.11)", borderColor: "rgba(245,158,11,0.18)", color: "#f59e0b" }}>
-          <GitIcon /> Chapter {lesson.chapter}
+          <FiBook size={16} /> Chapter {lesson.chapter}
         </span>
         <h2 className="jsl-content-title">{lesson.title}</h2>
         <div className="jsl-chapter-meta">
@@ -2475,7 +2453,7 @@ function PlaygroundView({ achievements }) {
     <div className="jsl-content-inner" style={{ textAlign: "center" }}>
       <div className="jsl-chapter-header">
         <span className="jsl-chapter-badge" style={{ background: "rgba(245,158,11,0.11)", borderColor: "rgba(245,158,11,0.18)", color: "#f59e0b" }}>
-          <PlayIcon /> Git Playground
+          <FiBook size={16} /> Git Playground
         </span>
         <h2 className="jsl-content-title">Git Playground</h2>
         <p className="jsl-text" style={{ marginTop: "0.5rem", fontSize: "0.82rem" }}>

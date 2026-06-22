@@ -3,17 +3,17 @@ import Skeleton, { SkeletonHero, SkeletonGrid, SkeletonStats } from './Skeleton.
 
 
 const DSA_TOPICS = [
-  { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Insert, delete, update, traverse, and search in arrays', color: '#3b82f6' },
-  { id: 'sorting', icon: '🔀', label: 'Sorting', desc: 'Bubble, Selection, Insertion, Merge, Quick Sort', color: '#f59e0b' },
-  { id: 'trees', icon: '🌳', label: 'Trees', desc: 'BST operations, Inorder, Preorder, Postorder traversals', color: '#22c55e' },
-  { id: 'graphs', icon: '📊', label: 'Graphs', desc: 'BFS, DFS on undirected, directed, weighted graphs', color: '#a78bfa' },
+  { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Insert, delete, update, traverse, and search in arrays', color: '#7c3aed' },
+  { id: 'sorting', icon: '🔀', label: 'Sorting', desc: 'Bubble, Selection, Insertion, Merge, Quick Sort', color: '#c026d3' },
+  { id: 'trees', icon: '🌳', label: 'Trees', desc: 'BST operations, Inorder, Preorder, Postorder traversals', color: '#10b981' },
+  { id: 'graphs', icon: '📊', label: 'Graphs', desc: 'BFS, DFS on undirected, directed, weighted graphs', color: '#f59e0b' },
   { id: 'linked-list', icon: '⛓️', label: 'Linked Lists', desc: 'Singly, doubly, circular linked lists', color: '#ec4899' },
   { id: 'stack', icon: '📚', label: 'Stacks', desc: 'Push, pop, peek operations', color: '#14b8a6' },
   { id: 'queue', icon: '🎯', label: 'Queues', desc: 'Enqueue, dequeue, circular queue', color: '#f97316' },
   { id: 'heap', icon: '⛰️', label: 'Heaps', desc: 'Min-heap, max-heap, heapify', color: '#8b5cf6' },
   { id: 'searching', icon: '🔍', label: 'Searching', desc: 'Linear search, binary search', color: '#06b6d4' },
   { id: 'recursion', icon: '🔄', label: 'Recursion', desc: 'Recursive calls, call stack visualization', color: '#e11d48' },
-  { id: 'dp', icon: '🧮', label: 'Dynamic Programming', desc: 'Memoization, tabulation, LCS, knapsack', color: '#10b981' },
+  { id: 'dp', icon: '🧮', label: 'Dynamic Programming', desc: 'Memoization, tabulation, LCS, knapsack', color: '#3b82f6' },
   { id: 'hashing', icon: '🔑', label: 'Hash Tables', desc: 'Hash functions, collision resolution', color: '#6366f1' },
 ];
 
@@ -98,12 +98,12 @@ export default function DSAVisualizerHub() {
       </section>
 
       {/* Stats */}
-      <section className="stats-section" style={{ marginTop: '3rem' }}>
-        <div className="stat-item"><span className="stat-value">4</span><span className="stat-label">Active Visualizers</span></div>
-        <div className="stat-item"><span className="stat-value">12</span><span className="stat-label">Topics Planned</span></div>
-        <div className="stat-item"><span className="stat-value">5+</span><span className="stat-label">Sorting Algorithms</span></div>
-        <div className="stat-item"><span className="stat-value">3</span><span className="stat-label">Tree Traversals</span></div>
-      </section>
+  <section className="stats-section" style={{ marginTop: '3rem' }}>
+    <div className="stat-item"><span className="stat-value">{readyTopics.length}</span><span className="stat-label">Active Visualizers</span></div>
+    <div className="stat-item"><span className="stat-value">{DSA_TOPICS.length}</span><span className="stat-label">Topics Covered</span></div>
+    <div className="stat-item"><span className="stat-value">6</span><span className="stat-label">Sorting Algorithms</span></div>
+    <div className="stat-item"><span className="stat-value">4</span><span className="stat-label">Tree Traversals</span></div>
+  </section>
 
       {/* Footer */}
       <footer className="landing-footer">

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ThemeToggle from '../ThemeToggle.jsx';
 import Skeleton from '../Skeleton.jsx';
+import { FiArrowLeft, FiPlay, FiArrowRight, FiHome, FiCornerDownLeft } from "react-icons/fi";
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, recordAnswer, getAccuracy, getStreakInfo } from './MCQStore.js';
@@ -207,7 +208,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
       <div className="min-h-screen bg-[var(--mcq-bg)] text-[var(--mcq-text)] flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg w-full">
           <a href={`${base}mcq/${categoryId}`} className="inline-flex items-center gap-1.5 text-sm text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] mb-8 transition-colors no-underline">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            <FiArrowLeft size={14} />
             Back to {cat.name}
           </a>
 
@@ -266,7 +267,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
 
           <button onClick={startQuiz} className="mcq-btn-primary w-full justify-center text-base py-3">
             {mode === 'practice' ? 'Start Practice' : mode === 'assessment' ? 'Start Assessment' : 'Start Interview'}
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <FiPlay size={16} fill="currentColor" />
           </button>
         </motion.div>
       </div>
@@ -335,7 +336,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
             <button onClick={startQuiz} className="mcq-btn-primary flex-1 justify-center">Try Again</button>
             <a href={`${base}mcq/${categoryId}`} className="mcq-btn-secondary flex-1 justify-center">Category</a>
             <a href={`${base}mcq`} className="mcq-btn-ghost flex-shrink-0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+              <FiHome size={16} />
             </a>
           </div>
         </motion.div>
@@ -355,7 +356,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between h-12">
           <div className="flex items-center gap-3">
             <a href={`${base}mcq/${categoryId}`} className="text-[var(--mcq-text-muted)] hover:text-[var(--mcq-text-primary)] transition-colors no-underline">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+              <FiArrowLeft size={16} />
             </a>
             <span className="text-xs text-[var(--mcq-text-muted)] font-medium">{cat.icon} {cat.name}</span>
             <span className="text-[0.6rem] font-semibold px-2 py-0.5 rounded border"
@@ -461,7 +462,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
             <button onClick={handleSubmit} disabled={selectedAnswers.length === 0}
               className={`mcq-btn-primary px-8 py-2.5 text-sm ${selectedAnswers.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}>
               Submit Answer
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="12" x2="2" y2="12"/><polyline points="5 9 2 12 5 15"/></svg>
+              <FiCornerDownLeft size={14} />
             </button>
           ) : (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
@@ -495,7 +496,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
 
               <button onClick={handleNext} className="mcq-btn-primary px-8 py-2.5 text-sm">
                 {currentIndex + 1 >= totalQuestions ? 'See Results' : 'Next Question'}
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <FiArrowRight size={14} />
               </button>
             </motion.div>
           )}

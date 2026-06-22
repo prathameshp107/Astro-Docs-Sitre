@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { useSortingStore } from '../../store/visualizerStore';
+import { useSortingStore } from '../../store/visualizers/sortingStore';
 
 const ALGORITHMS = [
   { id: 'bubble', label: 'Bubble Sort' },

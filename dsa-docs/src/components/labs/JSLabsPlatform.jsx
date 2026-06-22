@@ -1,48 +1,18 @@
+import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { JS_LESSONS, JS_BUG_CHALLENGES, JS_MINI_PROJECTS } from "../../data/js-labs-curriculum.js";
+import { DiJavascript1 } from "react-icons/di";
 
-// ─── ICON COMPONENTS ───
-
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function BugIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>; }
-function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabConsolePanel,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ─── SIDEBAR ───
 
@@ -61,23 +31,20 @@ function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSe
     <div className="jsl-sidebar" {...rest}>
       <div className="jsl-sidebar-header">
         <h3>
-          <BookIcon />
-          Curriculum
+          <FiBook size={16} /> Curriculum
         </h3>
       </div>
 
-      {/* ─── LEARN JAVASCRIPT ─── */}
       <div className="jsl-sidebar-group">
         <button
           className={`jsl-sg-header ${expandedSections.learn ? "expanded" : ""}`}
           onClick={() => toggleSection("learn")}
         >
           <div className="jsl-sg-title">
-            <BookIcon />
-            <span>LEARN JAVASCRIPT</span>
+            <FiBook size={16} /><span>LEARN JAVASCRIPT</span>
           </div>
           <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.learn && (
           <div className="jsl-sg-items">
@@ -90,25 +57,24 @@ function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSe
                 <span className="jsl-si-num">{lesson.chapter}.</span>
                 <span className="jsl-si-title">{lesson.title}</span>
                 <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* ─── FIX THE BUG ─── */}
       <div className="jsl-sidebar-group">
         <button
           className={`jsl-sg-header ${expandedSections.bugs ? "expanded" : ""}`}
           onClick={() => toggleSection("bugs")}
         >
           <div className="jsl-sg-title">
-            <BugIcon />
+            <FiBook size={16} />
             <span>FIX THE BUG</span>
           </div>
           <span className="jsl-sg-count">{progress.bugsDone}/{progress.bugsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.bugs && (
           <div className="jsl-sg-items">
@@ -120,25 +86,24 @@ function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSe
               >
                 <span className="jsl-si-num">{bug.title.split(".")[0]}.</span>
                 <span className="jsl-si-title">{bug.title.split(". ")[1] || bug.title}</span>
-                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* ─── MINI PROJECTS ─── */}
       <div className="jsl-sidebar-group">
         <button
           className={`jsl-sg-header ${expandedSections.projects ? "expanded" : ""}`}
           onClick={() => toggleSection("projects")}
         >
           <div className="jsl-sg-title">
-            <ProjectIcon />
+            <FiBook size={16} />
             <span>MINI PROJECTS</span>
           </div>
           <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.projects && (
           <div className="jsl-sg-items">
@@ -150,7 +115,7 @@ function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSe
               >
                 <span className="jsl-si-num">{proj.title.split(".")[0]}.</span>
                 <span className="jsl-si-title">{proj.title.split(". ")[1] || proj.title}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -197,36 +162,23 @@ export default function JSLabsPlatform() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Save progress
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try {
-      sessionStorage.setItem("jsl-progress", JSON.stringify(newProgress));
-    } catch { /* ignore */ }
+    try { sessionStorage.setItem("jsl-progress", JSON.stringify(newProgress)); } catch { /* ignore */ }
   }, []);
 
   const markLessonDone = useCallback((id) => {
-    if (!progress.lessons.includes(id)) {
-      const next = { ...progress, lessons: [...progress.lessons, id] };
-      saveProgress(next);
-    }
+    if (!progress.lessons.includes(id)) saveProgress({ ...progress, lessons: [...progress.lessons, id] });
   }, [progress, saveProgress]);
 
   const markBugDone = useCallback((id) => {
-    if (!progress.bugs.includes(id)) {
-      const next = { ...progress, bugs: [...progress.bugs, id] };
-      saveProgress(next);
-    }
+    if (!progress.bugs.includes(id)) saveProgress({ ...progress, bugs: [...progress.bugs, id] });
   }, [progress, saveProgress]);
 
   const markProjectDone = useCallback((id) => {
-    if (!progress.projects.includes(id)) {
-      const next = { ...progress, projects: [...progress.projects, id] };
-      saveProgress(next);
-    }
+    if (!progress.projects.includes(id)) saveProgress({ ...progress, projects: [...progress.projects, id] });
   }, [progress, saveProgress]);
 
-  // Progress stats
   const progressStats = useMemo(() => ({
     lessonsDone: progress.lessons.length,
     lessonsTotal: JS_LESSONS.length,
@@ -242,12 +194,10 @@ export default function JSLabsPlatform() {
     projects: progress.projects,
   }), [progress]);
 
-  // Get current content
   const currentLesson = useMemo(() => JS_LESSONS.find(l => l.id === activeLesson), [activeLesson]);
   const currentBug = useMemo(() => JS_BUG_CHALLENGES.find(b => b.id === activeBug), [activeBug]);
   const currentProject = useMemo(() => JS_MINI_PROJECTS.find(p => p.id === activeProject), [activeProject]);
 
-  // Switch to a lesson and set its code synchronously
   const selectLesson = (id) => {
     const lesson = JS_LESSONS.find(l => l.id === id);
     if (!lesson) return;
@@ -293,12 +243,9 @@ export default function JSLabsPlatform() {
     codeVersionRef.current++;
   };
 
-  // Define and register custom syntax highlighting themes
   const defineThemes = useCallback((monaco) => {
-    // ─── Dark Theme ───
     monaco.editor.defineTheme("jsl-dark", {
-      base: "vs-dark",
-      inherit: true,
+      base: "vs-dark", inherit: true,
       rules: [
         { token: "comment", foreground: "64748b", fontStyle: "italic" },
         { token: "keyword", foreground: "a78bfa" },
@@ -395,11 +342,8 @@ export default function JSLabsPlatform() {
         "focusBorder": "rgba(96,165,250,0.3)",
       },
     });
-
-    // ─── Light Theme ───
     monaco.editor.defineTheme("jsl-light", {
-      base: "vs",
-      inherit: true,
+      base: "vs", inherit: true,
       rules: [
         { token: "comment", foreground: "94a3b8", fontStyle: "italic" },
         { token: "keyword", foreground: "7c3aed" },
@@ -481,49 +425,27 @@ export default function JSLabsPlatform() {
     });
   }, []);
 
-  // Store Monaco editor instance, register themes, and fix cursor rendering
   const handleEditorMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
-
-    // Register custom themes
     defineThemes(monaco);
-    // Apply current theme
     monaco.editor.setTheme(monacoTheme);
-
-    const remeasure = () => {
-      try {
-        editor.remeasureFonts();
-      } catch {}
-    };
-
-    // Multiple attempts ensure fonts are measured after loading completes
+    const remeasure = () => { try { editor.remeasureFonts(); } catch {} };
     setTimeout(remeasure, 50);
     setTimeout(remeasure, 500);
     setTimeout(remeasure, 1500);
-
-    // Use document.fonts API for reliable font-ready detection
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(remeasure);
     }
   }, [defineThemes, monacoTheme]);
 
-  // Re-measure fonts on window resize (e.g., panel drags)
   useEffect(() => {
-    const onResize = () => {
-      if (editorRef.current) {
-        try { editorRef.current.remeasureFonts(); } catch {}
-      }
-    };
+    const onResize = () => { if (editorRef.current) { try { editorRef.current.remeasureFonts(); } catch {} } };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Memoize onChange to prevent unnecessary re-renders affecting cursor
-  const handleCodeChange = useCallback((v) => {
-    setCode(v || "");
-  }, []);
+  const handleCodeChange = useCallback((v) => setCode(v || ""), []);
 
-  // Drag handlers for resizable panels
   const handleSidebarDrag = useCallback(({ clientX }) => {
     if (!bodyRef.current) return;
     const bodyLeft = bodyRef.current.getBoundingClientRect().left;
@@ -573,7 +495,6 @@ export default function JSLabsPlatform() {
     if (idx > 0) selectBug(JS_BUG_CHALLENGES[idx - 1].id);
   };
 
-  // Run code
   const runCode = useCallback(() => {
     setIsRunning(true);
     setOutput([]);
@@ -608,7 +529,6 @@ export default function JSLabsPlatform() {
     }
   }, [code]);
 
-  // Run tests
   const runTests = useCallback(() => {
     const tests = view === "learn" ? currentLesson?.tests || []
       : view === "bugs" ? currentBug?.tests || []
@@ -637,7 +557,6 @@ export default function JSLabsPlatform() {
 
     setTestResults(results);
 
-    // Auto-mark as done if all tests pass
     const allPassed = results.length > 0 && results.every(r => r.passed);
     if (allPassed) {
       if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
@@ -646,21 +565,10 @@ export default function JSLabsPlatform() {
     }
   }, [code, view, currentLesson, currentBug, currentProject, markLessonDone, markBugDone, markProjectDone]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runCode();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runCode]);
+  useKeyboardShortcut(runCode);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
-  // Get editor content for current view
   const currentContent = useMemo(() => {
     if (view === "learn") return currentLesson;
     if (view === "bugs") return currentBug;
@@ -668,7 +576,6 @@ export default function JSLabsPlatform() {
     return null;
   }, [view, currentLesson, currentBug, currentProject]);
 
-  // Get tests for current view (always show what tests exist)
   const currentTests = useMemo(() => {
     if (view === "learn") return currentLesson?.tests || [];
     if (view === "bugs") return currentBug?.tests || [];
@@ -695,264 +602,198 @@ export default function JSLabsPlatform() {
     );
   }
 
+  const handleReset = () => {
+    let starter = "";
+    if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
+    else if (view === "bugs" && currentBug) starter = currentBug.brokenCode;
+    else if (view === "projects" && currentProject) starter = currentProject.starterCode;
+    if (editorRef.current) editorRef.current.setValue(starter);
+    setCode(starter);
+    setOutput([]);
+    setTestResults([]);
+    codeVersionRef.current++;
+  };
+
   return (
     <div className="jsl-platform">
-      {/* ─── Top Navigation Bar ─── */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Labs
-          </a>
-          <div className="jsl-top-brand">              <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="#2563eb" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">JS</text>
-            </svg>
-            <span className="jsl-top-title">JavaScript Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          <ThemeToggle />
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-            )}
-          </button>
-        </div>
-      </div>
+      <LabTopbar
+        base={base}
+        title="JavaScript Labs"
+        icon={{
+          component: <DiJavascript1 size={20} color="#2563eb" />,
+        }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      />
 
-      {/* ─── Main Layout ─── */}
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
-        {/* Sidebar */}
-        <JSSidebar
-          activeSection={view}
-          activeLesson={activeLesson}
-          activeBug={activeBug}
-          activeProject={activeProject}
-          onSelectLesson={selectLesson}
-          onSelectBug={selectBug}
-          onSelectProject={selectProject}
-          progress={progressStats}
-          style={{ width: sidebarWidth }}
-        />
-        <ResizableHandle onDrag={handleSidebarDrag} />
+          <JSSidebar
+            activeSection={view}
+            activeLesson={activeLesson}
+            activeBug={activeBug}
+            activeProject={activeProject}
+            onSelectLesson={selectLesson}
+            onSelectBug={selectBug}
+            onSelectProject={selectProject}
+            progress={progressStats}
+            style={{ width: sidebarWidth }}
+          />
+          <LabResizableHandle onDrag={handleSidebarDrag} />
 
-        {/* Content & Editor */}
-        <div className="jsl-workspace" ref={workspaceRef}>
-          {/* Content Panel */}
-          <div className="jsl-content-panel" ref={contentPanelRef} style={{ flex: `${contentRatio} 1 0` }}>
-            <div className="jsl-content-scroll">
-              {view === "learn" && currentLesson && (
-                <LessonView
-                  lesson={currentLesson}
-                  showHint={showHint}
-                  showSolution={showSolution}
-                  onToggleHint={() => setShowHint(h => !h)}
-                  onToggleSolution={() => setShowSolution(s => !s)}
-                  onPrev={goPrevLesson}
-                  onNext={goNextLesson}
-                  hasPrev={JS_LESSONS.findIndex(l => l.id === activeLesson) > 0}
-                  hasNext={JS_LESSONS.findIndex(l => l.id === activeLesson) < JS_LESSONS.length - 1}
-                  onMarkDone={() => markLessonDone(currentLesson.id)}
-                  isDone={progress.lessons.includes(currentLesson.id)}
-                  testResults={[]}
-                  currentTests={[]}
-                  onRunTests={runTests}
-                />
-              )}
-              {view === "bugs" && currentBug && (
-                <BugView
-                  bug={currentBug}
-                  showHint={showHint}
-                  showSolution={showSolution}
-                  onToggleHint={() => setShowHint(h => !h)}
-                  onToggleSolution={() => setShowSolution(s => !s)}
-                  onPrev={goPrevBug}
-                  onNext={goNextBug}
-                  hasPrev={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) > 0}
-                  hasNext={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) < JS_BUG_CHALLENGES.length - 1}
-                  onMarkDone={() => markBugDone(currentBug.id)}
-                  isDone={progress.bugs.includes(currentBug.id)}
-                  testResults={[]}
-                  currentTests={[]}
-                  onRunTests={runTests}
-                />
-              )}
-              {view === "projects" && currentProject && (
-                <ProjectView
-                  project={currentProject}
-                  showSolution={showSolution}
-                  onToggleSolution={() => setShowSolution(s => !s)}
-                  onMarkDone={() => markProjectDone(currentProject.id)}
-                  isDone={progress.projects.includes(currentProject.id)}
-                  testResults={[]}
-                  currentTests={[]}
-                  onRunTests={runTests}
-                />
-              )}
-            </div>              {/* Duplicate tests panel removed — now resizable above */}
-            <ResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
-            <div className="jsl-tests-panel" style={{ height: testsPanelHeight, maxHeight: testsPanelHeight, minHeight: testsPanelHeight }}>
-              <div className="jsl-tests-header">
-                <span className="jsl-tests-title">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="9 11 12 14 22 4"/>
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                  </svg>
-                  Automated Tests
-                </span>
-                <div className="jsl-tests-actions">
-                  {testResults.length > 0 && (
-                    <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
-                      {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
-                    </span>
+          <div className="jsl-workspace" ref={workspaceRef}>
+            {/* Content Panel */}
+            <div className="jsl-content-panel" ref={contentPanelRef} style={{ flex: `${contentRatio} 1 0` }}>
+              <div className="jsl-content-scroll">
+                {view === "learn" && currentLesson && (
+                  <LessonView
+                    lesson={currentLesson}
+                    showHint={showHint}
+                    showSolution={showSolution}
+                    onToggleHint={() => setShowHint(h => !h)}
+                    onToggleSolution={() => setShowSolution(s => !s)}
+                    onPrev={goPrevLesson}
+                    onNext={goNextLesson}
+                    hasPrev={JS_LESSONS.findIndex(l => l.id === activeLesson) > 0}
+                    hasNext={JS_LESSONS.findIndex(l => l.id === activeLesson) < JS_LESSONS.length - 1}
+                    onMarkDone={() => markLessonDone(currentLesson.id)}
+                    isDone={progress.lessons.includes(currentLesson.id)}
+                    testResults={[]}
+                    currentTests={[]}
+                    onRunTests={runTests}
+                  />
+                )}
+                {view === "bugs" && currentBug && (
+                  <BugView
+                    bug={currentBug}
+                    showHint={showHint}
+                    showSolution={showSolution}
+                    onToggleHint={() => setShowHint(h => !h)}
+                    onToggleSolution={() => setShowSolution(s => !s)}
+                    onPrev={goPrevBug}
+                    onNext={goNextBug}
+                    hasPrev={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) > 0}
+                    hasNext={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) < JS_BUG_CHALLENGES.length - 1}
+                    onMarkDone={() => markBugDone(currentBug.id)}
+                    isDone={progress.bugs.includes(currentBug.id)}
+                    testResults={[]}
+                    currentTests={[]}
+                    onRunTests={runTests}
+                  />
+                )}
+                {view === "projects" && currentProject && (
+                  <ProjectView
+                    project={currentProject}
+                    showSolution={showSolution}
+                    onToggleSolution={() => setShowSolution(s => !s)}
+                    onMarkDone={() => markProjectDone(currentProject.id)}
+                    isDone={progress.projects.includes(currentProject.id)}
+                    testResults={[]}
+                    currentTests={[]}
+                    onRunTests={runTests}
+                  />
+                )}
+              </div>
+              <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+              <div className="jsl-tests-panel" style={{ height: testsPanelHeight, maxHeight: testsPanelHeight, minHeight: testsPanelHeight }}>
+                <div className="jsl-tests-header">
+                  <span className="jsl-tests-title">
+                    <FiCheckSquare size={14} />
+                    Automated Tests
+                  </span>
+                  <div className="jsl-tests-actions">
+                    {testResults.length > 0 && (
+                      <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
+                        {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
+                      </span>
+                    )}
+                    <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
+                      <FiRefreshCw size={12} />
+                      Run Tests
+                    </button>
+                  </div>
+                </div>
+                <div className="jsl-tests-body">
+                  {currentTests.length === 0 ? (
+                    <div className="jsl-tests-empty">No automated tests for this section</div>
+                  ) : (
+                    currentTests.map((test, i) => {
+                      const result = testResults.find(r => r.index === i);
+                      const passed = result?.passed;
+                      const hasResult = result !== undefined;
+                      return (
+                        <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
+                          <span className="jsl-test-icon">
+                            {hasResult ? (passed ? "✓" : "✗") : "○"}
+                          </span>
+                          <span className="jsl-test-name">{test.name}</span>
+                          {hasResult && !passed && result?.error && (
+                            <span className="jsl-test-error">{result.error}</span>
+                          )}
+                        </div>
+                      );
+                    })
                   )}
-                  <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
-                    Run Tests
-                  </button>
                 </div>
               </div>
-              <div className="jsl-tests-body">
-                {currentTests.length === 0 ? (
-                  <div className="jsl-tests-empty">No automated tests for this section</div>
-                ) : (
-                  currentTests.map((test, i) => {
-                    const result = testResults.find(r => r.index === i);
-                    const passed = result?.passed;
-                    const hasResult = result !== undefined;
-                    return (
-                      <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
-                        <span className="jsl-test-icon">
-                          {hasResult ? (passed ? "✓" : "✗") : "○"}
-                        </span>
-                        <span className="jsl-test-name">{test.name}</span>
-                        {hasResult && !passed && result?.error && (
-                          <span className="jsl-test-error">{result.error}</span>
-                        )}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Editor & Output Panel */}
-          <ResizableHandle onDrag={handleContentDrag} />
-          <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-            {/* Editor Toolbar */}
-            <div className="jsl-editor-actions">
-              <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
-                {isRunning ? (
-                  <><span className="jsl-spinner" /> Running</>
-                ) : (
-                  <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run</>
-                )}
-              </button>
-              <button className="jsl-btn-secondary" onClick={() => {
-                let starter = "";
-                if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
-                else if (view === "bugs" && currentBug) starter = currentBug.brokenCode;
-                else if (view === "projects" && currentProject) starter = currentProject.starterCode;
-                if (editorRef.current) {
-                  editorRef.current.setValue(starter);
-                }
-                setCode(starter);
-                setOutput([]);
-                setTestResults([]);
-                codeVersionRef.current++;
-              }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                Reset
-              </button>
-              <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
             </div>
 
-            {/* Editor */}
-            <div className="jsl-editor-wrapper">
-              <Editor
-                key={`${codeVersionRef.current}`}
-                height="100%"
-                language="javascript"
-                theme={monacoTheme}
-                value={code}
-                onChange={handleCodeChange}
-                onMount={handleEditorMount}
-                options={{
-                  fontSize: 13,
-                  fontFamily: "Consolas, 'Courier New', monospace",
-                  fontLigatures: false,
-                  letterSpacing: 0,
-                  minimap: { enabled: false },
-                  scrollBeyondLastLine: false,
-                  lineNumbers: "on",
-                  tabSize: 2,
-                  insertSpaces: true,
-                  wordWrap: "on",
-                  automaticLayout: true,
-                  bracketPairColorization: { enabled: true },
-                  padding: { top: 12, bottom: 12 },
-                  cursorBlinking: "smooth",
-                  smoothScrolling: true,
-                  folding: true,
-                  lineNumbersMinChars: 3,
-                }}
+            {/* Editor & Output Panel */}
+            <LabResizableHandle onDrag={handleContentDrag} />
+            <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
+              <LabEditorToolbar
+                isRunning={isRunning}
+                onRun={runCode}
+                onReset={handleReset}
+                runLabel="Run"
+                lang="JavaScript"
+                langIcon={<DiJavascript1 size={14} />}
               />
-            </div>
 
-            {/* Resizable Console Panel (always visible below editor) */}
-            <ResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
-            <div className="jsl-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight }}>
-              <div className="jsl-console-header">
-                <span>Console Output</span>
-                <span className="jsl-console-count">{output.length} lines</span>
+              {/* Editor */}
+              <div className="jsl-editor-wrapper">
+                <Editor
+                  key={`${codeVersionRef.current}`}
+                  height="100%"
+                  language="javascript"
+                  theme={monacoTheme}
+                  value={code}
+                  onChange={handleCodeChange}
+                  onMount={handleEditorMount}
+                  options={{
+                    fontSize: 13,
+                    fontFamily: "Consolas, 'Courier New', monospace",
+                    fontLigatures: false,
+                    letterSpacing: 0,
+                    minimap: { enabled: false },
+                    scrollBeyondLastLine: false,
+                    lineNumbers: "on",
+                    tabSize: 2,
+                    insertSpaces: true,
+                    wordWrap: "on",
+                    automaticLayout: true,
+                    bracketPairColorization: { enabled: true },
+                    padding: { top: 12, bottom: 12 },
+                    cursorBlinking: "smooth",
+                    smoothScrolling: true,
+                    folding: true,
+                    lineNumbersMinChars: 3,
+                  }}
+                />
               </div>
-              <div className="jsl-console-body">
-                {output.length === 0 ? (
-                  <div className="jsl-console-empty">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    <p>Run your code to see output</p>
-                  </div>
-                ) : (
-                  output.map((line, i) => (
-                    <div key={i} className={`jsl-console-line jsl-console-${line.type}`}>
-                      <span className="jsl-console-marker">
-                        {line.type === "log" && "▸"}
-                        {line.type === "warn" && "⚠"}
-                        {line.type === "error" && "✗"}
-                        {line.type === "info" && "ℹ"}
-                        {line.type === "result" && "›"}
-                      </span>
-                      <pre>{line.content}</pre>
-                    </div>
-                  ))
-                )}
+
+              {/* Resizable Console */}
+              <LabResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
+              <div className="jsl-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight }}>
+                <LabConsolePanel output={output} />
               </div>
             </div>
           </div>
-        </div>
-
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }
@@ -975,7 +816,6 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
         </div>
       </div>
 
-      {/* Concept Explanation */}
       <div className="jsl-section">
         <h3 className="jsl-section-title">Concept</h3>
         <div className="jsl-concept-text">
@@ -988,17 +828,13 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
         </div>
       </div>
 
-      {/* Key Rules */}
       <div className="jsl-section jsl-rules-section">
         <h3 className="jsl-section-title">Key Rules</h3>
         <ul className="jsl-rules-list">
-          {lesson.keyRules.map((rule, i) => (
-            <li key={i} className="jsl-rule-item">{rule}</li>
-          ))}
+          {lesson.keyRules.map((rule, i) => <li key={i} className="jsl-rule-item">{rule}</li>)}
         </ul>
       </div>
 
-      {/* Your Task */}
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">Your Task</h3>
         <div className="jsl-task-text">
@@ -1011,14 +847,12 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
         </div>
       </div>
 
-      {/* Hint */}
       {showHint && (
         <div className="jsl-hint-box">
           <strong>💡 Hint:</strong> {lesson.hint}
         </div>
       )}
 
-      {/* Solution */}
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
@@ -1026,7 +860,6 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
         </div>
       )}
 
-      {/* Actions */}
       <div className="jsl-content-actions">
         <button className="jsl-btn-ghost" onClick={onToggleHint}>
           {showHint ? "Hide Hint" : "💡 Show Hint"}
@@ -1039,51 +872,14 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
         </button>
       </div>
 
-      {/* Automated Tests */}
-      {currentTests.length > 0 && (
-        <div className="jsl-content-tests">
-          <div className="jsl-content-tests-header">
-            <h3 className="jsl-section-title" style={{ margin: 0 }}>Automated Tests</h3>
-            <div className="jsl-content-tests-actions">
-              {testResults.length > 0 && (
-                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
-                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
-                </span>
-              )}
-              <button className="jsl-btn-ghost jsl-btn-sm" onClick={onRunTests}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
-                Run Tests
-              </button>
-            </div>
-          </div>
-          <div className="jsl-content-tests-body">
-            {currentTests.map((test, i) => {
-              const result = testResults.find(r => r.index === i);
-              const passed = result?.passed;
-              const hasResult = result !== undefined;
-              return (
-                <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
-                  <span className="jsl-test-icon">{hasResult ? (passed ? "✓" : "✗") : "○"}</span>
-                  <span className="jsl-test-name">{test.name}</span>
-                  {hasResult && !passed && result?.error && (
-                    <span className="jsl-test-error">{result.error}</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Navigation */}
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`jsl-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>
@@ -1140,50 +936,14 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution, 
         </button>
       </div>
 
-      {/* Automated Tests */}
-      {currentTests.length > 0 && (
-        <div className="jsl-content-tests">
-          <div className="jsl-content-tests-header">
-            <h3 className="jsl-section-title" style={{ margin: 0 }}>Automated Tests</h3>
-            <div className="jsl-content-tests-actions">
-              {testResults.length > 0 && (
-                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
-                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
-                </span>
-              )}
-              <button className="jsl-btn-ghost jsl-btn-sm" onClick={onRunTests}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
-                Run Tests
-              </button>
-            </div>
-          </div>
-          <div className="jsl-content-tests-body">
-            {currentTests.map((test, i) => {
-              const result = testResults.find(r => r.index === i);
-              const passed = result?.passed;
-              const hasResult = result !== undefined;
-              return (
-                <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
-                  <span className="jsl-test-icon">{hasResult ? (passed ? "✓" : "✗") : "○"}</span>
-                  <span className="jsl-test-name">{test.name}</span>
-                  {hasResult && !passed && result?.error && (
-                    <span className="jsl-test-error">{result.error}</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`jsl-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>
@@ -1213,7 +973,6 @@ function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDo
         </div>
       </div>
 
-      {/* Checklist */}
       <div className="jsl-section">
         <h3 className="jsl-section-title">Feature Checklist</h3>
         <div className="jsl-checklist">
@@ -1226,7 +985,6 @@ function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDo
         </div>
       </div>
 
-      {/* Milestones */}
       <div className="jsl-section">
         <h3 className="jsl-section-title">Milestones</h3>
         <div className="jsl-milestones">
@@ -1257,42 +1015,6 @@ function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDo
           {isDone ? "✓ Completed" : "Mark Complete"}
         </button>
       </div>
-
-      {/* Automated Tests */}
-      {currentTests.length > 0 && (
-        <div className="jsl-content-tests">
-          <div className="jsl-content-tests-header">
-            <h3 className="jsl-section-title" style={{ margin: 0 }}>Automated Tests</h3>
-            <div className="jsl-content-tests-actions">
-              {testResults.length > 0 && (
-                <span className={`jsl-tests-score ${testResults.filter(r => r.passed).length === currentTests.length ? "all-pass" : ""}`}>
-                  {testResults.filter(r => r.passed).length}/{currentTests.length} Passed
-                </span>
-              )}
-              <button className="jsl-btn-ghost jsl-btn-sm" onClick={onRunTests}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
-                Run Tests
-              </button>
-            </div>
-          </div>
-          <div className="jsl-content-tests-body">
-            {currentTests.map((test, i) => {
-              const result = testResults.find(r => r.index === i);
-              const passed = result?.passed;
-              const hasResult = result !== undefined;
-              return (
-                <div key={i} className={`jsl-test-item ${hasResult ? (passed ? "pass" : "fail") : "pending"}`}>
-                  <span className="jsl-test-icon">{hasResult ? (passed ? "✓" : "✗") : "○"}</span>
-                  <span className="jsl-test-name">{test.name}</span>
-                  {hasResult && !passed && result?.error && (
-                    <span className="jsl-test-error">{result.error}</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

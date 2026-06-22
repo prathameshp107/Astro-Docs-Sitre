@@ -1,7 +1,10 @@
 import { useState, useMemo, useEffect } from "react";
 import ThemeToggle from "../ThemeToggle.jsx";
 import Skeleton from "../Skeleton.jsx";
+import { DiDatabase } from "react-icons/di";
 import { DSA_PROBLEMS, DSA_TOPICS, DIFFICULTY, getTopicsWithCounts } from "../../data/dsa-problems.js";
+import { FiArrowLeft } from "react-icons/fi";
+
 
 function ProblemRow({ problem, index, base }) {
   const diff = DIFFICULTY[problem.difficulty] || DIFFICULTY.Easy;
@@ -123,17 +126,11 @@ export default function DSAProblemList() {
       <div className="dsa-topbar">
         <div className="dsa-topbar-left">
           <a href={`${base}labs`} className="dsa-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
+            <FiArrowLeft size={16} />
             Labs
           </a>
           <div className="dsa-top-brand">
-            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="#6366f1" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">DS</text>
-            </svg>
+            <DiDatabase size={20} color="#6366f1" />
             <span className="dsa-top-title">Problem List</span>
           </div>
         </div>

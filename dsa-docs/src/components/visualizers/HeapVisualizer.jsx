@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useHeapStore } from '../../store/visualizerStore';
+import { useHeapStore } from '../../store/visualizers/heapStore';
 
 export default function HeapVisualizer() {
   const { heap, heapType, highlighted, lastOperation, setHeapType, initialize, insert, extract, randomInsert } = useHeapStore();

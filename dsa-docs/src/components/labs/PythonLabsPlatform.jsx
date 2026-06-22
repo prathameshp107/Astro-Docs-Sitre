@@ -1,16 +1,18 @@
+import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import ThemeToggle from "../ThemeToggle.jsx";
 import Editor from "@monaco-editor/react";
 import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
+import { DiPython } from "react-icons/di";
 import { PYTHON_LESSONS, PYTHON_CHALLENGES, PYTHON_PROJECTS, PYTHON_DEBUG_CHALLENGES } from "../../data/python-labs-curriculum.js";
 
-// ─── ICON COMPONENTS ───
-
-function BookIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/></svg>; }
-function ChallengeIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>; }
-function ProjectIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>; }
-function BugIcon() { return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>; }
-function CheckIcon() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>; }
+import {
+  LabResizableHandle,
+  LabFooter,
+  LabConsolePanel,
+  LabEditorToolbar,
+  LabTopbar,
+  useKeyboardShortcut,
+} from "./shared/index.js";
 
 // ─── PYTHON RUNNER (Pyodide) ───
 
@@ -36,37 +38,7 @@ function getPyodide() {
     })();
   }
   return pyodideLoadingPromise;
-}
-
-// ─── RESIZABLE HANDLE ───
-
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const onMouseDown = (e) => {
-      e.preventDefault();
-      document.body.style.cursor = orientation === "vertical" ? "col-resize" : "row-resize";
-      document.body.style.userSelect = "none";
-      const onMouseMove = (e) => onDrag({ clientX: e.clientX, clientY: e.clientY });
-      const onMouseUp = () => {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      };
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    };
-    el.addEventListener("mousedown", onMouseDown);
-    return () => el.removeEventListener("mousedown", onMouseDown);
-  }, [onDrag, orientation]);
-  return <div ref={ref} className={`jsl-resize-handle ${orientation}`} />;
-}
-
-// ─── SIDEBAR ───
+}// ─── SIDEBAR ───
 
 function PythonSidebar({ activeSection, activeLesson, activeChallenge, activeProject, activeBug, onSelectLesson, onSelectChallenge, onSelectProject, onSelectBug, progress, ...rest }) {
   const [expandedSections, setExpandedSections] = useState({ learn: true, challenges: false, projects: false, bugs: false });
@@ -82,17 +54,16 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
     <div className="jsl-sidebar" {...rest}>
       <div className="jsl-sidebar-header">
         <h3>
-          <BookIcon />
-          Curriculum
+          <FiBook size={16} /> Curriculum
         </h3>
       </div>
 
       {/* LEARN PYTHON */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header learn ${expandedSections.learn ? "expanded" : ""}`} onClick={() => toggleSection("learn")}>
-          <div className="jsl-sg-title"><BookIcon /><span>LEARN PYTHON</span></div>
+          <div className="jsl-sg-title"><FiBook size={16} /><span>LEARN PYTHON</span></div>
           <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.learn && (
           <div className="jsl-sg-items">
@@ -105,7 +76,7 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
                 <span className="jsl-si-num">{lesson.chapter}.</span>
                 <span className="jsl-si-title">{lesson.title}</span>
                 <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -115,9 +86,9 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
       {/* CODE CHALLENGES */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header ${expandedSections.challenges ? "expanded" : ""}`} onClick={() => toggleSection("challenges")}>
-          <div className="jsl-sg-title"><ChallengeIcon /><span>CODE CHALLENGES</span></div>
+          <div className="jsl-sg-title"><FiBook size={16} /><span>CODE CHALLENGES</span></div>
           <span className="jsl-sg-count">{progress.challengesDone}/{progress.challengesTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.challenges && (
           <div className="jsl-sg-items">
@@ -130,7 +101,7 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
                 <span className="jsl-si-num">{i + 1}.</span>
                 <span className="jsl-si-title">{c.title.replace(/^\d+\.\s*/, "")}</span>
                 <span className={`jsl-si-level ${c.difficulty.toLowerCase()}`}>{c.difficulty[0]}</span>
-                {progress.challenges.includes(c.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.challenges.includes(c.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -140,9 +111,9 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
       {/* PROJECTS LAB */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header projects ${expandedSections.projects ? "expanded" : ""}`} onClick={() => toggleSection("projects")}>
-          <div className="jsl-sg-title"><ProjectIcon /><span>PROJECTS LAB</span></div>
+          <div className="jsl-sg-title"><FiBook size={16} /><span>PROJECTS LAB</span></div>
           <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.projects && (
           <div className="jsl-sg-items">
@@ -154,7 +125,7 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
               >
                 <span className="jsl-si-num">{i + 1}.</span>
                 <span className="jsl-si-title">{proj.title.replace(/^\d+\.\s*/, "")}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -164,9 +135,9 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
       {/* DEBUGGING CHALLENGES */}
       <div className="jsl-sidebar-group">
         <button className={`jsl-sg-header bugs ${expandedSections.bugs ? "expanded" : ""}`} onClick={() => toggleSection("bugs")}>
-          <div className="jsl-sg-title"><BugIcon /><span>DEBUG CHALLENGES</span></div>
+          <div className="jsl-sg-title"><FiBook size={16} /><span>DEBUG CHALLENGES</span></div>
           <span className="jsl-sg-count">{progress.bugsDone}/{progress.bugsTotal}</span>
-          <svg className="jsl-sg-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <FiChevronDown size={14} />
         </button>
         {expandedSections.bugs && (
           <div className="jsl-sg-items">
@@ -178,7 +149,7 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
               >
                 <span className="jsl-si-num">{i + 1}.</span>
                 <span className="jsl-si-title">{bug.title.replace(/^\d+\.\s*/, "")}</span>
-                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><CheckIcon /></span>}
+                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
               </button>
             ))}
           </div>
@@ -519,17 +490,7 @@ export default function PythonLabsPlatform() {
     }
   }, [code, view, currentLesson, currentChallenge, currentProject, currentBug, markLessonDone, markChallengeDone, markProjectDone, markBugDone]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        runCode();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [runCode]);
+  useKeyboardShortcut(runCode);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -579,72 +540,46 @@ export default function PythonLabsPlatform() {
 
   return (
     <div className="jsl-platform">
-      {/* ─── Top Navigation Bar ─── */}
-      <div className="jsl-topbar">
-        <div className="jsl-topbar-left">
-          <a href={`${base}labs`} className="jsl-top-back">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Labs
-          </a>
-          <div className="jsl-top-brand">
-            <div className="jsl-top-brand-icon" style={{ background: "rgba(55,118,171,0.08)", borderColor: "rgba(55,118,171,0.18)" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <ellipse cx="12" cy="7" rx="9" ry="4.5" fill="#3776AB"/>
-                <ellipse cx="12" cy="17" rx="9" ry="4.5" fill="#FFD43B"/>
-                <circle cx="9" cy="10" r="1.2" fill="#fff" opacity="0.5"/>
-                <circle cx="15" cy="14" r="1.2" fill="#fff" opacity="0.5"/>
-              </svg>
-            </div>
-            <span className="jsl-top-title">Python Labs</span>
-          </div>
-        </div>
-        <div className="jsl-topbar-center">
-          <span className="jsl-top-progress-text">{progressStats.total}/{progressStats.totalAll} completed</span>
-          <div className="jsl-top-progress-bar"><div className="jsl-top-progress-fill" style={{ width: `${progressStats.pct}%` }} /></div>
-          <span className="jsl-top-percent">{progressStats.pct}%</span>
-        </div>
-        <div className="jsl-topbar-right">
-          {currentContent && (
-            <>
-              {view === "learn" && currentLesson && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
-                  onClick={() => markLessonDone(currentLesson.id)}>
-                  {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
-                </button>
-              )}
-              {view === "challenge" && currentChallenge && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.challenges.includes(currentChallenge.id) ? "done" : ""}`}
-                  onClick={() => markChallengeDone(currentChallenge.id)}>
-                  {progress.challenges.includes(currentChallenge.id) ? "✓ Solved" : "Mark Solved"}
-                </button>
-              )}
-              {view === "project" && currentProject && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
-                  onClick={() => markProjectDone(currentProject.id)}>
-                  {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
-                </button>
-              )}
-              {view === "bugs" && currentBug && (
-                <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
-                  onClick={() => markBugDone(currentBug.id)}>
-                  {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
-                </button>
-              )}
-            </>
-          )}
-          <ThemeToggle />
-          <button className="jsl-btn-icon" onClick={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")} title="Toggle theme">
-            {monacoTheme === "jsl-dark" ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <LabTopbar
+        base={base}
+        title="Python Labs"
+        icon={{
+          component: <DiPython size={18} />,
+          style: { background: "rgba(55,118,171,0.08)", borderColor: "rgba(55,118,171,0.18)" },
+        }}
+        progressStats={progressStats}
+        monacoTheme={monacoTheme}
+        onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      >
+        {currentContent && (
+          <>
+            {view === "learn" && currentLesson && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
+                onClick={() => markLessonDone(currentLesson.id)}>
+                {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
+              </button>
             )}
-          </button>
-        </div>
-      </div>
+            {view === "challenge" && currentChallenge && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.challenges.includes(currentChallenge.id) ? "done" : ""}`}
+                onClick={() => markChallengeDone(currentChallenge.id)}>
+                {progress.challenges.includes(currentChallenge.id) ? "✓ Solved" : "Mark Solved"}
+              </button>
+            )}
+            {view === "project" && currentProject && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
+                onClick={() => markProjectDone(currentProject.id)}>
+                {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
+              </button>
+            )}
+            {view === "bugs" && currentBug && (
+              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
+                onClick={() => markBugDone(currentBug.id)}>
+                {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
+              </button>
+            )}
+          </>
+        )}
+      </LabTopbar>
 
       {/* ─── Main Layout ─── */}
       <div className="jsl-main">
@@ -663,7 +598,7 @@ export default function PythonLabsPlatform() {
           progress={progressStats}
           style={{ width: sidebarWidth }}
         />
-        <ResizableHandle onDrag={handleSidebarDrag} />
+        <LabResizableHandle onDrag={handleSidebarDrag} />
 
         {/* Content & Editor */}
         <div className="jsl-workspace" ref={workspaceRef}>
@@ -710,14 +645,11 @@ export default function PythonLabsPlatform() {
               )}
             </div>
             {/* Tests Panel */}
-            <ResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
             <div className="jsl-tests-panel" style={{ height: testsPanelHeight, maxHeight: testsPanelHeight, minHeight: testsPanelHeight }}>
               <div className="jsl-tests-header">
                 <span className="jsl-tests-title">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="9 11 12 14 22 4"/>
-                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-                  </svg>
+                  <FiCheckSquare size={14} />
                   Automated Tests
                 </span>
                 <div className="jsl-tests-actions">
@@ -727,7 +659,7 @@ export default function PythonLabsPlatform() {
                     </span>
                   )}
                   <button className="jsl-btn-secondary jsl-btn-sm" onClick={runTests}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    <FiRefreshCw size={12} />
                     Run Tests
                   </button>
                 </div>
@@ -758,18 +690,12 @@ export default function PythonLabsPlatform() {
           </div>
 
           {/* Editor & Output Panel */}
-          <ResizableHandle onDrag={handleContentDrag} />
+          <LabResizableHandle onDrag={handleContentDrag} />
           <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
-            {/* Editor Toolbar */}
-            <div className="jsl-editor-actions">
-              <button className="jsl-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
-                {isRunning ? (
-                  <><span className="jsl-spinner" /> Running</>
-                ) : (
-                  <><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Run</>
-                )}
-              </button>
-              <button className="jsl-btn-secondary" onClick={() => {
+            <LabEditorToolbar
+              isRunning={isRunning}
+              onRun={runCode}
+              onReset={() => {
                 let starter = "";
                 if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
                 else if (view === "challenge" && currentChallenge) starter = currentChallenge.starterCode;
@@ -780,27 +706,16 @@ export default function PythonLabsPlatform() {
                 setOutput([]);
                 setTestResults([]);
                 codeVersionRef.current++;
-              }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
-                Reset
-              </button>
-              <span className="jsl-editor-lang" style={{ background: "rgba(55,118,171,0.07)", borderColor: "rgba(55,118,171,0.15)", color: "#4b8bbe" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <ellipse cx="12" cy="7" rx="7" ry="3.5" fill="#3776AB"/>
-                  <ellipse cx="12" cy="17" rx="7" ry="3.5" fill="#FFD43B"/>
-                </svg>
-                Python
-              </span>
-              {!pyodideReady && !pyodideLoadError && (
-                <span className="jsl-editor-shortcut">Loading Python runtime...</span>
-              )}
-              {pyodideLoadError && (
-                <span className="jsl-editor-shortcut" style={{ color: "#f87171" }}>Python runtime unavailable</span>
-              )}
-              {pyodideReady && (
-                <span className="jsl-editor-shortcut">Ctrl+Enter to run</span>
-              )}
-            </div>
+              }}
+              runLabel="Run"
+              lang="Python"
+              langIcon={<DiPython size={12} />}
+              shortcut={
+                !pyodideReady && !pyodideLoadError ? "Loading Python runtime..." :
+                pyodideLoadError ? "Python runtime unavailable" :
+                "Ctrl+Enter to run"
+              }
+            />
 
             {/* Editor */}
             <div className="jsl-editor-wrapper">
@@ -833,43 +748,16 @@ export default function PythonLabsPlatform() {
             </div>
 
             {/* Resizable Console Panel */}
-            <ResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
+            <LabResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
             <div className="jsl-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight }}>
-              <div className="jsl-console-header">
-                <span>Python Output</span>
-                <span className="jsl-console-count">{output.length} lines</span>
-              </div>
-              <div className="jsl-console-body">
-                {output.length === 0 ? (
-                  <div className="jsl-console-empty">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                    <p>Run your Python code to see output</p>
-                  </div>
-                ) : (
-                  output.map((line, i) => (
-                    <div key={i} className={`jsl-console-line jsl-console-${line.type}`}>
-                      <span className="jsl-console-marker">
-                        {line.type === "log" && "▸"}
-                        {line.type === "error" && "✗"}
-                        {line.type === "info" && "ℹ"}
-                      </span>
-                      <pre>{line.content}</pre>
-                    </div>
-                  ))
-                )}
-              </div>
+              <LabConsolePanel output={output} title="Python Output" emptyMessage="Run your Python code to see output" />
             </div>
           </div>
         </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="jsl-footer">
-        <div className="jsl-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+      <LabFooter />
     </div>
   );
 }
@@ -956,12 +844,12 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {/* Navigation */}
       <div className="jsl-content-nav">
         <button className={`jsl-nav-btn ${!hasPrev ? "disabled" : ""}`} onClick={onPrev} disabled={!hasPrev}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <FiChevronLeft size={14} />
           Previous
         </button>
         <button className={`jsl-nav-btn ${!hasNext ? "disabled" : ""}`} onClick={onNext} disabled={!hasNext}>
           Next
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>

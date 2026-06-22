@@ -1,17 +1,19 @@
-/* ─── Git Labs Platform ─── */
+/* ═══════════════════════════════════════════════════════════════
+   Git Labs — Platform-Specific Styles
+   Uses --lab-* variables from lab-base.css for theme consistency
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ===== Content Panel (Left) ===== */
+/* ===== Content Panel Overrides ===== */
 
 .jsl-content-panel {
-  background: var(--jsl-bg-panel);
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(255,255,255,0.015);
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .jsl-content-panel:hover {
-  border-color: var(--jsl-border2);
+  border-color: var(--lab-border2);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.02);
 }
 
@@ -51,7 +53,7 @@
 .jsl-chapter-header {
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--jsl-border);
+  border-bottom: 1px solid var(--lab-border);
 }
 
 .jsl-chapter-badge {
@@ -70,7 +72,7 @@
   font-size: 1.15rem;
   font-weight: 800;
   margin: 0 0 0.4rem 0;
-  color: var(--jsl-text-title);
+  color: var(--lab-text-title);
   line-height: 1.3;
   letter-spacing: -0.01em;
 }
@@ -84,7 +86,7 @@
 
 .jsl-section {
   background: rgba(255,255,255,0.02);
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 10px;
   padding: 0.75rem 0.9rem;
   margin-bottom: 0.6rem;
@@ -92,7 +94,7 @@
 }
 
 .jsl-section:hover {
-  border-color: var(--jsl-border2);
+  border-color: var(--lab-border2);
   background: rgba(255,255,255,0.03);
 }
 
@@ -101,7 +103,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--jsl-text-muted);
+  color: var(--lab-text-muted);
   margin: 0 0 0.4rem 0;
   padding-bottom: 0.3rem;
   border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -127,13 +129,13 @@
 .jsl-rule-item {
   font-size: 0.78rem;
   line-height: 1.6;
-  color: var(--jsl-text);
+  color: var(--lab-text);
   padding-left: 1.2rem;
   position: relative;
 }
 
 .jsl-rule-item::before {
-  content: "→";
+  content: "\2192";
   position: absolute;
   left: 0;
   color: #60a5fa;
@@ -143,13 +145,13 @@
 .jsl-task-text {
   font-size: 0.82rem;
   line-height: 1.7;
-  color: var(--jsl-text);
+  color: var(--lab-text);
 }
 
 .jsl-task-item {
   font-size: 0.8rem;
   line-height: 1.6;
-  color: var(--jsl-text);
+  color: var(--lab-text);
   margin-bottom: 0.15rem;
   padding-left: 0.25rem;
 }
@@ -157,7 +159,7 @@
 .jsl-bullet {
   font-size: 0.82rem;
   line-height: 1.7;
-  color: var(--jsl-text);
+  color: var(--lab-text);
   margin-left: 1rem;
   padding-left: 0.25rem;
 }
@@ -165,7 +167,7 @@
 .jsl-concept-text {
   font-size: 0.82rem;
   line-height: 1.7;
-  color: var(--jsl-text);
+  color: var(--lab-text);
 }
 
 .jsl-concept-text p {
@@ -222,15 +224,15 @@
   gap: 0.4rem;
   margin-top: 0.75rem;
   padding-top: 0.65rem;
-  border-top: 1px solid var(--jsl-border);
+  border-top: 1px solid var(--lab-border);
 }
 
 .jsl-btn-ghost {
   padding: 0.35rem 0.7rem;
   border-radius: 8px;
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   background: transparent;
-  color: var(--jsl-text-muted);
+  color: var(--lab-text-muted);
   font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
@@ -241,9 +243,9 @@
 }
 
 .jsl-btn-ghost:hover {
-  border-color: var(--jsl-border2);
+  border-color: var(--lab-border2);
   background: rgba(255,255,255,0.04);
-  color: var(--jsl-text);
+  color: var(--lab-text);
 }
 
 .jsl-btn-mark {
@@ -297,8 +299,8 @@
 /* ===== Graph Container (Right) ===== */
 
 .git-graph-container {
-  background: var(--jsl-bg-panel);
-  border: 1px solid var(--jsl-border);
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
   border-radius: 12px;
   overflow: auto;
   position: relative;
@@ -308,7 +310,7 @@
 }
 
 .git-graph-container:hover {
-  border-color: var(--jsl-border2);
+  border-color: var(--lab-border2);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.02);
 }
 
@@ -319,7 +321,7 @@
   justify-content: center;
   height: 100%;
   min-height: 200px;
-  color: #475569;
+  color: var(--lab-text-dim);
   text-align: center;
   gap: 0.5rem;
 }
@@ -332,14 +334,14 @@
 .git-graph-empty-text {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #64748b;
+  color: var(--lab-text-muted);
   max-width: 200px;
   line-height: 1.5;
 }
 
 .git-graph-empty-hint {
   font-size: 0.65rem;
-  color: #475569;
+  color: var(--lab-text-dim);
   font-style: italic;
 }
 
@@ -445,7 +447,6 @@
   letter-spacing: 0.05em;
 }
 
-/* Commit SHA */
 .git-commit-sha {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -460,11 +461,11 @@
   font-weight: 400;
 }
 
-/* ─── Terminal Panel ─── */
+/* ===== Terminal Panel ===== */
 
 .git-terminal {
   background: #0a0f1e;
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -478,13 +479,13 @@
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--jsl-border);
+  border-bottom: 1px solid var(--lab-border);
 }
 
 .git-terminal-title {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--lab-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -548,7 +549,7 @@
   gap: 0.4rem;
   padding: 0.5rem 0.75rem;
   background: rgba(255, 255, 255, 0.02);
-  border-top: 1px solid var(--jsl-border);
+  border-top: 1px solid var(--lab-border);
 }
 
 .git-terminal-prompt {
@@ -570,7 +571,7 @@
 }
 
 .git-terminal-input::placeholder {
-  color: #475569;
+  color: var(--lab-text-dim);
 }
 
 .git-terminal-run {
@@ -590,32 +591,32 @@
   background: rgba(34, 197, 94, 0.2);
 }
 
-/* ─── Command History ─── */
+/* ===== Command History ===== */
 
 .git-command-history {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--jsl-border);
+  border-bottom: 1px solid var(--lab-border);
   background: rgba(255, 255, 255, 0.015);
 }
 
 .git-history-cmd {
   padding: 0.15rem 0.4rem;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 4px;
   font-size: 0.65rem;
-  color: #64748b;
+  color: var(--lab-text-dim);
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* ─── Mission Panel ─── */
+/* ===== Mission Panel ===== */
 
 .git-mission-panel {
-  background: var(--jsl-bg-panel);
-  border: 1px solid var(--jsl-border);
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
   border-radius: 10px;
   padding: 1rem;
 }
@@ -640,7 +641,7 @@
 .git-mission-title {
   font-size: 0.85rem;
   font-weight: 700;
-  color: var(--jsl-text-title);
+  color: var(--lab-text-title);
 }
 
 .git-mission-steps {
@@ -662,7 +663,7 @@
 }
 
 .git-mission-step::before {
-  content: "→";
+  content: "\2192";
   color: #60a5fa;
   font-weight: 700;
   flex-shrink: 0;
@@ -673,15 +674,15 @@
 }
 
 .git-mission-step.done::before {
-  content: "✓";
+  content: "\2713";
   color: #22c55e;
 }
 
-/* ─── Conflict Arena ─── */
+/* ===== Conflict Arena ===== */
 
 .git-conflict-editor {
   background: #0a0f1e;
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 10px;
   overflow: hidden;
   font-family: 'JetBrains Mono', monospace;
@@ -696,7 +697,7 @@
   justify-content: space-between;
   padding: 0.5rem 0.75rem;
   background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--jsl-border);
+  border-bottom: 1px solid var(--lab-border);
 }
 
 .git-conflict-filename {
@@ -743,7 +744,7 @@
   min-height: 120px;
   background: #0d1525;
   border: none;
-  border-top: 1px solid var(--jsl-border);
+  border-top: 1px solid var(--lab-border);
   color: #e2e8f0;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
@@ -759,22 +760,22 @@
 }
 
 .git-conflict-resolution::placeholder {
-  color: #475569;
+  color: var(--lab-text-dim);
   font-size: 0.72rem;
 }
 
-/* ─── Team Simulator ─── */
+/* ===== Team Simulator ===== */
 
 .git-team-panel {
   background: rgba(255,255,255,0.02);
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 10px;
   padding: 0.85rem;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .git-team-panel:hover {
-  border-color: var(--jsl-border2);
+  border-color: var(--lab-border2);
 }
 
 .git-team-member {
@@ -807,15 +808,15 @@
 .git-team-name {
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--jsl-text);
+  color: var(--lab-text);
 }
 
 .git-team-role {
   font-size: 0.68rem;
-  color: #64748b;
+  color: var(--lab-text-dim);
 }
 
-/* ─── Achievement Badges ─── */
+/* ===== Achievement Badges ===== */
 
 .git-achievement-grid {
   display: grid;
@@ -830,7 +831,7 @@
   gap: 0.25rem;
   padding: 0.6rem;
   background: rgba(255, 255, 255, 0.025);
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 8px;
   text-align: center;
   transition: all 0.2s ease;
@@ -838,7 +839,7 @@
 
 .git-achievement:hover {
   background: rgba(255, 255, 255, 0.05);
-  border-color: var(--jsl-border2);
+  border-color: var(--lab-border2);
 }
 
 .git-achievement-icon {
@@ -861,7 +862,7 @@
   color: #f59e0b;
 }
 
-/* ─── Graph Tooltip ─── */
+/* ===== Graph Tooltip ===== */
 
 .git-graph-tooltip {
   position: absolute;
@@ -889,11 +890,11 @@
 }
 
 .git-tooltip-meta {
-  color: #64748b;
+  color: var(--lab-text-dim);
   font-size: 0.65rem;
 }
 
-/* ─── Progress Bar ─── */
+/* ===== Progress Bar ===== */
 
 .git-progress-bar {
   height: 4px;
@@ -910,7 +911,7 @@
   background: linear-gradient(90deg, #f59e0b, #a78bfa);
 }
 
-/* ─── Boss Battle ─── */
+/* ===== Boss Battle ===== */
 
 .git-boss-banner {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(245, 158, 11, 0.12));
@@ -933,7 +934,7 @@
   margin-bottom: 0.75rem;
 }
 
-/* ─── Sprint Board Cards ─── */
+/* ===== Sprint Board Cards ===== */
 
 .git-sprint-card {
   transition: all 0.15s ease !important;
@@ -944,11 +945,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-[data-theme='light'] .git-sprint-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-/* ─── Boss Battle Steps ─── */
+/* ===== Boss Battle Steps ===== */
 
 .git-boss-step:hover {
   transform: translateX(2px);
@@ -956,45 +953,21 @@
 }
 
 .git-boss-step.pending {
-  border-color: var(--jsl-border);
+  border-color: var(--lab-border);
 }
 
 .git-boss-step.done {
   border-color: rgba(34, 197, 94, 0.3);
 }
 
-/* ─── Animations ─── */
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes gitFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ─── Responsive ─── */
-
-/* ─── Zoom Controls ─── */
+/* ===== Zoom Controls ===== */
 
 .git-zoom-controls {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   background: rgba(255,255,255,0.04);
-  border: 1px solid var(--jsl-border);
+  border: 1px solid var(--lab-border);
   border-radius: 6px;
   padding: 0.15rem;
 }
@@ -1025,20 +998,35 @@
 .git-zoom-label {
   font-size: 0.65rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--lab-text-dim);
   min-width: 32px;
   text-align: center;
   user-select: none;
 }
 
-[data-theme='light'] .git-zoom-controls {
-  background: rgba(0,0,0,0.03);
+/* ===== Animations ===== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-[data-theme='light'] .git-zoom-btn:hover {
-  background: rgba(0,0,0,0.06);
-  color: #1e293b;
+@keyframes gitFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive ===== */
 
 @media (max-width: 768px) {
   .git-terminal-body {
@@ -1059,7 +1047,7 @@
   }
 }
 
-/* ─── Light Theme ─── */
+/* ===== Light Theme ===== */
 
 [data-theme='light'] .git-terminal {
   background: #f1f5f9;
@@ -1079,7 +1067,6 @@
 
 [data-theme='light'] .git-conflict-editor {
   background: #f1f5f9;
-  color: #1e293b;
 }
 
 [data-theme='light'] .git-conflict-code {
@@ -1151,4 +1138,17 @@
 
 [data-theme='light'] .git-team-panel {
   background: rgba(0,0,0,0.01);
+}
+
+[data-theme='light'] .git-zoom-controls {
+  background: rgba(0,0,0,0.03);
+}
+
+[data-theme='light'] .git-zoom-btn:hover {
+  background: rgba(0,0,0,0.06);
+  color: #1e293b;
+}
+
+[data-theme='light'] .git-sprint-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }

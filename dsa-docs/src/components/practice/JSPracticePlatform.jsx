@@ -4,6 +4,7 @@ import SnippetQuestions from "./SnippetQuestions.jsx";
 import FixBug from "./FixBug.jsx";
 import MiniApps from "./MiniApps.jsx";
 import InterviewMode from "./InterviewMode.jsx";
+import { DiJavascript1 } from "react-icons/di";
 import { SNIPPET_QUESTIONS, BUG_CHALLENGES, MINI_APPS } from "../../data/questions.js";
 
 const TABS = [
@@ -66,16 +67,7 @@ export default function JSPracticePlatform() {
       <div className="prac-topbar">
         <div className="prac-topbar-left">
           <a href={base} className="prac-logo">
-            <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
-              <rect width="28" height="28" rx="8" fill="url(#pg)" />
-              <text x="14" y="19" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">JS</text>
-              <defs>
-                <linearGradient id="pg" x1="0" y1="0" x2="28" y2="28">
-                  <stop offset="0%" stopColor="#f7df1e" />
-                  <stop offset="100%" stopColor="#f59e0b" />
-                </linearGradient>
-              </defs>
-            </svg>
+            <DiJavascript1 size={22} />
             <span className="prac-logo-text">JS Interview Lab</span>
           </a>
           <div className="prac-topbar-links">

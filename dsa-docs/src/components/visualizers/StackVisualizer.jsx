@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useStackStore } from '../../store/visualizerStore';
+import { useStackStore } from '../../store/visualizers/stackStore';
 
 export default function StackVisualizer() {
   const { stack, highlighted, operations, push, pop, peek, clear, randomPush } = useStackStore();

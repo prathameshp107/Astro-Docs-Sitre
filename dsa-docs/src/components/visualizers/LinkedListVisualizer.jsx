@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLinkedListStore } from '../../store/visualizerStore';
+import { useLinkedListStore } from '../../store/visualizers/linkedListStore';
 
 export default function LinkedListVisualizer() {
   const { nodes, edges, highlighted, listType, setListType, initialize, insertHead, insertTail, deleteHead, deleteTail, reverse, deleteValue } = useLinkedListStore();

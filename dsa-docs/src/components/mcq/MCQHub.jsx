@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Skeleton, { SkeletonStats, SkeletonGrid } from '../Skeleton.jsx';
+import { FiArrowRight, FiBarChart2 } from "react-icons/fi";
 
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES } from './MCQData.js';
@@ -88,10 +89,10 @@ export default function MCQHub() {
             <div className="flex flex-wrap justify-center gap-3">
               <a href="#categories" className="mcq-btn-primary text-base px-6 py-3">
                 Start Learning
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <FiArrowRight size={16} />
               </a>
               <a href={`${base}mcq/dashboard`} className="mcq-btn-secondary text-base px-6 py-3">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                <FiBarChart2 size={16} />
                 View Dashboard
               </a>
             </div>

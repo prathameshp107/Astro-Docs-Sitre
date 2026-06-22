@@ -11,9 +11,23 @@ const site = isVercel && process.env.VERCEL_URL
 export default defineConfig({
   site,
   ...(isVercel ? {} : { base: '/DSA-Notes-Problems' }),
+  server: {
+    host: 'localhost',
+    port: 4321,
+  },
   vite: {
+    resolve: {
+      dedupe: ['react', 'react-dom'],
+    },
+    server: {
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        clientPort: 4321,
+      },
+    },
     optimizeDeps: {
-      include: ['@babel/standalone'],
+      include: ['@babel/standalone', 'react', 'react-dom', 'react/jsx-runtime'],
     },
   },
   integrations: [starlight({

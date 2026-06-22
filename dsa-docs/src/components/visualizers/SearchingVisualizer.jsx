@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchingStore } from '../../store/visualizerStore';
+import { useSearchingStore } from '../../store/visualizers/searchingStore';
 
 const getDelayFromPos = (pos) => Math.max(5, Math.round(2000 * Math.pow(0.945, pos - 1)));
 

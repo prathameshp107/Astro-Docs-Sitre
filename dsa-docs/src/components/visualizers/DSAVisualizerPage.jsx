@@ -51,7 +51,7 @@ function Section({ title, children, className = '' }) {
       className={`mb-10 transition-all duration-700 ${inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} ${className}`}
     >
       <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-        <span className="w-8 h-1 rounded-full bg-gradient-to-r from-blue-500 to-emerald-400" />
+        <span className="w-8 h-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-500" />
         {title}
       </h2>
       {children}
@@ -180,7 +180,7 @@ export default function DSAVisualizerPage({ topicId }) {
             onClick={() => setActiveSection(s.id)}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
               activeSection === s.id
-                ? 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg'
                 : 'text-[var(--mcq-text-muted)] hover:text-white'
             }`}
           >
