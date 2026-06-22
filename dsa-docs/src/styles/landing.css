@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* =============================================
    LANDING PAGE — MODERN DEVELOPER PLATFORM
    ============================================= */
@@ -1863,4 +1867,37 @@ html, body {
   .btn { justify-content: center; }
   .topic-pills { gap: 0.35rem; }
   .pill { font-size: 0.72rem; padding: 0.25rem 0.7rem; }
+}
+
+/* ─── Space Grotesk display font ─── */
+.sg {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+}
+
+/* ─── Redesigned Landing Page Keyframes & Animation overrides ─── */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: inline-flex;
+  animation: marquee 36s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
