@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import ThemeToggle from './ThemeToggle.jsx';
 import { FaGithub } from "react-icons/fa";
+import { Binary } from "lucide-react";
 import {
   DiHtml5,
   DiCss3,
@@ -121,7 +122,7 @@ const LABS_SUB_ITEMS = [
  * @param {string[]} props.hideSections - Optional array of section ids to hide
  * @param {boolean} props.showOnStarlight - If true, renders minimal version suitable for Starlight docs
  */
-export default function AppNav({ activeSection, hideSections = [], showOnStarlight = false }) {
+export default function AppNav({ activeSection, hideSections = [], showOnStarlight = false, variant = 'default' }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -180,6 +181,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   }, [activeSection]);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+  const baseHref = base.replace(/\/$/, '');
 
   const filteredSections = NAV_SECTIONS.filter(s => !hideSections.includes(s.id));
 
@@ -278,7 +280,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   if (showOnStarlight) {
     // Minimal version for Starlight docs pages (just brand + theme + back link)
     return (
-      <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`}>
+      <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
         <nav className="app-nav" role="navigation" aria-label="Site navigation">
           <div className="app-nav-inner">
             <a href={base} className="app-nav-brand" aria-label="Home">
@@ -314,24 +316,37 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   }
 
   return (
-    <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`}>
+    <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
       <nav className="app-nav" role="navigation" aria-label="Site navigation">
         <div className="app-nav-inner">
           {/* Brand */}
           <a href={base} className="app-nav-brand" aria-label="Home">
-            <span className="app-nav-logo">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                <defs>
-                  <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#8b5cf6" />
-                  </linearGradient>
-                </defs>
-                <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
-                <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
-              </svg>
-            </span>
-            <span className="app-nav-brand-text">DSA & Dev Notes</span>
+            {variant === 'landing' ? (
+              <>
+                <div className="app-nav-logo">
+                  <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center">
+                    <Binary className="w-4 h-4 text-black" />
+                  </div>
+                </div>
+                <span className="app-nav-brand-text sg">DSA & Dev Notes</span>
+              </>
+            ) : (
+              <>
+                <span className="app-nav-logo">
+                  <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                    <defs>
+                      <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#6366f1" />
+                        <stop offset="100%" stopColor="#8b5cf6" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
+                    <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
+                  </svg>
+                </span>
+                <span className="app-nav-brand-text">DSA & Dev Notes</span>
+              </>
+            )}
           </a>
 
           {/* Desktop Links */}
@@ -341,6 +356,13 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
 
           {/* Desktop Actions */}
           <div className="app-nav-actions">
+            {variant === 'landing' && (
+              <a href={`${baseHref}/overview`}
+                className="app-nav-cta"
+              >
+                Start Learning
+              </a>
+            )}
             <a
               href="https://github.com/prathameshp107/DSA-Notes-Problems"
               target="_blank"
