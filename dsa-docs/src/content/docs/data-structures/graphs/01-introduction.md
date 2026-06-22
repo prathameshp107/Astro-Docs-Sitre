@@ -62,6 +62,25 @@ Edges: A-B, A-C, B-C, B-D, C-D, C-E
 | Edges have **no direction** — A-B means both A→B and B→A | Edges have **direction (arrows)** — A→B does NOT imply B→A |
 | Used for: social networks (friendships), road networks | Used for: web pages (hyperlinks), Twitter follows |
 
+```mermaid
+flowchart LR
+    subgraph Undirected
+        A1((A)) --- B1((B))
+        A1 --- C1((C))
+        B1 --- D1((D))
+        C1 --- D1
+    end
+    subgraph Directed
+        A2((A)) --> B2((B))
+        A2 --> C2((C))
+        C2 --> D2((D))
+        B2 --> D2
+    end
+
+    style Undirected fill:#1e293b,color:#fff
+    style Directed fill:#1e293b,color:#fff
+```
+
 ```
 Undirected:         Directed:
    A --- B            A ---> B
@@ -76,6 +95,25 @@ Undirected:         Directed:
 |------------|----------|
 | All edges are equal | Each edge has a numeric cost/weight |
 | Used for: hop count, simple connectivity | Used for: shortest path (distance, time, cost) |
+
+```mermaid
+flowchart LR
+    subgraph Unweighted
+        A1((A)) --- B1((B))
+        A1 --- C1((C))
+        B1 --- D1((D))
+        C1 --- D1
+    end
+    subgraph Weighted
+        A2((A)) -- 5 --- B2((B))
+        A2 -- 10 --- C2((C))
+        B2 -- 3 --- D2((D))
+        C2 -- 7 --- D2
+    end
+
+    style Unweighted fill:#1e293b,color:#fff
+    style Weighted fill:#1e293b,color:#fff
+```
 
 ```
 Unweighted:         Weighted:
@@ -93,6 +131,26 @@ Unweighted:         Weighted:
 | Contains at least one cycle | No cycle possible |
 | Used for: detecting deadlocks | Used for: task scheduling, build systems |
 
+```mermaid
+flowchart LR
+    subgraph Cyclic
+        A1((A)) --> B1((B))
+        B1 --> C1((C))
+        C1 --> D1((D))
+        D1 --> A1
+    end
+    subgraph DAG[Acyclic (DAG)]
+        A2((A)) --> B2((B))
+        A2 --> C2((C))
+        B2 --> D2((D))
+        C2 --> D2
+        D2 --> E2((E))
+    end
+
+    style Cyclic fill:#1e293b,color:#fff
+    style DAG fill:#1e293b,color:#fff
+```
+
 ```
 Cyclic:             Acyclic (DAG):
    A → B               A → B
@@ -107,6 +165,24 @@ Cyclic:             Acyclic (DAG):
 | Connected | Disconnected |
 |-----------|-------------|
 | All nodes reachable from every other node | Some nodes are isolated (multiple components) |
+
+```mermaid
+flowchart LR
+    subgraph Connected
+        A1((A)) --- B1((B))
+        A1 --- C1((C))
+        B1 --- D1((D))
+        C1 --- D1
+    end
+    subgraph Disconnected
+        A2((A)) --- B2((B))
+        D2((D)) --- E2((E))
+        D2 --- F2((F))
+    end
+
+    style Connected fill:#1e293b,color:#fff
+    style Disconnected fill:#1e293b,color:#fff
+```
 
 ```
 Connected:          Disconnected:
@@ -124,6 +200,25 @@ Connected:          Disconnected:
 | **Complete Graph (Kₙ)** | Every pair of vertices is connected | N×(N-1)/2 edges |
 | **Bipartite Graph** | Vertices split into 2 groups; edges only between groups | No odd-length cycles |
 | **DAG** | Directed graph with no cycles | Used for scheduling, dependency resolution |
+
+```mermaid
+flowchart LR
+    subgraph Tree
+        T1((1)) --- T2((2))
+        T1 --- T3((3))
+        T2 --- T4((4))
+        T2 --- T5((5))
+    end
+    subgraph Bipartite
+        B1((1)) --- B4((4))
+        B1 --- B5((5))
+        B2((2)) --- B4
+        B3((3)) --- B5
+    end
+
+    style Tree fill:#1e293b,color:#fff
+    style Bipartite fill:#1e293b,color:#fff
+```
 
 ---
 

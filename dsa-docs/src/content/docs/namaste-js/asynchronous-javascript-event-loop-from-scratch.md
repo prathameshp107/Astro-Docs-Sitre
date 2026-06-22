@@ -7,6 +7,57 @@ sidebar:
 
 # Episode 15 : Asynchronous JavaScript & EVENT LOOP from scratch
 
+
+
+```mermaid
+flowchart LR
+    subgraph JS_Engine["JavaScript Engine"]
+        CallStack["Call Stack
+Executes code
+one frame at a time"]
+        Heap["Heap
+Memory allocation"]
+    end
+
+    subgraph Browser["Browser Superpowers"]
+        WebAPI["Web APIs
+setTimeout, fetch,
+DOM, console,
+localStorage"]
+    end
+
+    subgraph Queues["Task Queues"]
+        MicrotaskQ["Microtask Queue
+(Promises, queueMicrotask)
+Priority: HIGH"]
+        CallbackQ["Callback Queue
+(setTimeout, setInterval)
+Priority: LOW"]
+    end
+
+    EventLoop["Event Loop
+constantly checks:
+Is stack empty?"]
+
+    CallStack -->|"Async call"| WebAPI
+    WebAPI -->|"Promise resolves"| MicrotaskQ
+    WebAPI -->|"Timer expires"| CallbackQ
+    MicrotaskQ -->|"Empty stack?"| EventLoop
+    CallbackQ -->|"Empty stack?"| EventLoop
+    EventLoop -->|"Push to stack"| CallStack
+
+    style JS_Engine fill:#1e3a5f,color:#fff
+    style Browser fill:#3b1f5e,color:#fff
+    style Queues fill:#1e293b,color:#fff
+    style CallStack fill:#7c3aed,color:#fff
+    style Heap fill:#4f46e5,color:#fff
+    style WebAPI fill:#059669,color:#fff
+    style MicrotaskQ fill:#dc2626,color:#fff
+    style CallbackQ fill:#d97706,color:#fff
+    style EventLoop fill:#0d9488,color:#fff
+```
+
+
 > Note: Call stack will execeute any execeution context which enters it. Time, tide and JS waits for none. TLDR; Call stack has no timer.
 
 - Browser has JS Engine which has Call Stack which has Global execution context, local execution context etc.

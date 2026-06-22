@@ -21,6 +21,58 @@ sidebar:
 
 - Code inside Javascript Engine passes through 3 steps : **Parsing**, **Compilation** and **Execution**
 
+```mermaid
+flowchart LR
+    Source["JavaScript
+Source Code"] --> Parser
+
+    subgraph V8["Google V8 Engine"]
+        Parser["Parser
+Tokenizes & builds
+AST (Abstract Syntax Tree)"]
+
+        Parser --> Ignition["Ignition
+(Interpreter)
+
+Converts AST to
+Bytecode
+(runs immediately)"]
+
+        Ignition --> Profiler["Profiler
+Monitors hot code
+(frequently executed)"]
+
+        Profiler --> Turbofan["TurboFan
+(Optimizing Compiler)
+
+Compiles hot code
+to optimized
+Machine Code"]
+
+        Turbofan --> Deopt["Deoptimization
+If assumptions fail,
+falls back to bytecode"]
+
+        Ignition --> Execution["Execution
+Memory Heap + Call Stack"]
+    end
+
+    Execution --> GC["Garbage Collector
+Orinoco
+(Mark & Sweep)"]
+
+    style V8 fill:#1e293b,color:#fff
+    style Source fill:#7c3aed,color:#fff
+    style Parser fill:#4f46e5,color:#fff
+    style Ignition fill:#059669,color:#fff
+    style Profiler fill:#d97706,color:#fff
+    style Turbofan fill:#dc2626,color:#fff
+    style Deopt fill:#64748b,color:#fff
+    style Execution fill:#6366f1,color:#fff
+    style GC fill:#0d9488,color:#fff
+```
+
+
   1. **Parsing** - Code is broken down into tokens. In "let a = 7" -> let, a, =, 7 are all tokens. Also we have a syntax parser that takes code and converts it into an AST (Abstract Syntax Tree) which is a JSON with all key values like type, start, end, body etc (looks like package.json but for a line of code in JS. Kinda unimportant)(Check out astexplorer.net -> converts line of code into AST).
   2. **Compilation** - JS has something called Just-in-time(JIT) Compilation - uses both interpreter & compiler. Also compilation and execution both go hand in hand. The AST from previous step goes to interpreter which converts hi-level code to byte code and moves to execeution. While interpreting, compiler also works hand in hand to compile and form optimized code during runtime. **Does JavaScript really Compiles?** The answer is a loud **YES**. More info at: [Link 1](https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/get-started/ch1.md#whats-in-an-interpretation), [Link 2](https://web.stanford.edu/class/cs98si/slides/overview.html), [Link 3](https://blog.greenroots.info/javascript-interpreted-or-compiled-the-debate-is-over-ckb092cv302mtl6s17t14hq1j). JS used to be only interpreter in old times, but now has both to compile and interpreter code and this make JS a JIT compiled language, its like best of both world.
   3. **Execution** - Needs 2 components ie. Memory heap(place where all memory is stored) and Call Stack(same call stack from prev episodes). There is also a garbage collector. It uses an algo called **Mark and Sweep**.

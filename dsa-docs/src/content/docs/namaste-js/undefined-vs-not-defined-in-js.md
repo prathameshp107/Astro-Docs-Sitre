@@ -9,6 +9,40 @@ sidebar:
 
 - In first phase (memory allocation) JS assigns each variable a placeholder called **undefined**.
 
+
+```mermaid
+flowchart LR
+    subgraph Memory["Memory Allocation Phase"]
+        Declared["var x;(Memory allocated)
+Value: undefined
+✅ Accessible but undefined"]
+    end
+
+    subgraph After["After Assignment"]
+        Assigned["var x = 25;
+Value: 25
+✅ Accessible with value"]
+    end
+
+    subgraph Error["Not Defined"]
+        NotDeclared["console.log(a);
+No memory allocated for 'a'
+🚫 ReferenceError:
+'a' is not defined"]
+    end
+
+    Declared --> Assigned
+    NotDeclared
+
+    style Memory fill:#7c3aed,color:#fff
+    style After fill:#059669,color:#fff
+    style Error fill:#dc2626,color:#fff
+    style Declared fill:#4f46e5,color:#fff
+    style Assigned fill:#0d9488,color:#fff
+    style NotDeclared fill:#ef4444,color:#fff
+```
+
+
 - **undefined** is when memory is allocated for the variable, but no value is assigned yet.
 
 - If an object/variable is not even declared/found in memory allocation phase, and tried to access it then it is **Not defined**

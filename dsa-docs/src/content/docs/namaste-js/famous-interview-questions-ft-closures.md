@@ -7,6 +7,57 @@ sidebar:
 
 # Episode 12 : Famous Interview Questions ft. Closures
 
+
+```mermaid
+flowchart TB
+    subgraph Q1["Q1: What is Closure?"]
+        Outer["function outer()"] --> Inner["function inner()
+forms closure with outer
+accesses var a = 10"]
+        Inner --> Result["outer()() → 10
+Inner remembers 'a'
+even after outer returns"]
+    end
+
+    subgraph Q7_Q8["Closure Advantages & Data Hiding"]
+        Without["Without Closure:
+var count = 0;
+❌ Anyone can modify count!"]
+        With["With Closure:
+function counter() {
+  var count = 0;
+  return function() { count++; }
+}
+✅ Data is hidden & encapsulated!"]
+    end
+
+    subgraph Q9["Disadvantage & GC"]
+        Mem["Closure variables
+not garbage collected
+until program ends
+⚠️ Potential memory leak"]
+        GC["V8 Smart GC:
+Removes unused closure
+vars automatically
+(e.g., z = 10 removed
+if never used)"]
+    end
+
+    Q1 --> Q7_Q8 --> Q9
+
+    style Q1 fill:#7c3aed,color:#fff
+    style Outer fill:#4f46e5,color:#fff
+    style Inner fill:#6366f1,color:#fff
+    style Result fill:#059669,color:#fff
+    style Q7_Q8 fill:#d97706,color:#fff
+    style Without fill:#dc2626,color:#fff
+    style With fill:#059669,color:#fff
+    style Q9 fill:#1e293b,color:#fff
+    style Mem fill:#ef4444,color:#fff
+    style GC fill:#0d9488,color:#fff
+```
+
+
 ### Q1: What is Closure in Javascript?
 
 **Ans**: A function along with reference to its outer environment together forms a closure. Or in other words, A Closure is a combination of a function and its lexical scope bundled together.

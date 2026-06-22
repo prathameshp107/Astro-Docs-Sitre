@@ -23,6 +23,43 @@ y(); // Hi
 // x is a callback function
 ```
 
+
+
+```mermaid
+flowchart LR
+    subgraph Before["Without HOF (DRY Violated)"]
+        Area1["calculateArea(radius)
+- Contains loop + area logic"]
+        Circ1["calculateCircumference(radius)
+- Contains loop + circumference logic"]
+        Dia1["calculateDiameter(radius)
+- Contains loop + diameter logic"]
+    end
+
+    subgraph After["With HOF (Clean & Reusable)"]
+        AreaFn["area = (r) => PI * r * r"]
+        CircFn["circumference = (r) => 2 * PI * r"]
+        DiaFn["diameter = (r) => 2 * r"]
+        HOF["calculate(arr, operation)
+HOF - takes operation as argument"]
+        HOF --> AreaFn
+        HOF --> CircFn
+        HOF --> DiaFn
+    end
+
+    Before -.->|"Refactor"| After
+
+    style Before fill:#dc2626,color:#fff
+    style After fill:#059669,color:#fff
+    style Area1 fill:#ef4444,color:#fff
+    style Circ1 fill:#ef4444,color:#fff
+    style HOF fill:#7c3aed,color:#fff
+    style AreaFn fill:#4f46e5,color:#fff
+    style CircFn fill:#4f46e5,color:#fff
+    style DiaFn fill:#4f46e5,color:#fff
+```
+
+
 Let's try to understand how we should approach solution in interview.
 I have an array of radius and I have to calculate area using these radius and store in an array.
 

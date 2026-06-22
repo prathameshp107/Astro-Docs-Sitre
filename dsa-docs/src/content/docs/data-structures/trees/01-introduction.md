@@ -15,6 +15,28 @@ A **tree** is a hierarchical, non-linear data structure that consists of **nodes
 
 > **Key insight**: A tree with `N` nodes always has exactly `N - 1` edges.
 
+```mermaid
+flowchart TD
+    R["Root
+[1]"] --> N1["Internal
+[2]"]
+    R --> N2["Internal
+[3]"]
+    N1 --> L1["Leaf
+[4]"]
+    N1 --> L2["Leaf
+[5]"]
+    N2 --> L3["Leaf
+[6]"]
+
+    style R fill:#7c3aed,color:#fff
+    style N1 fill:#4f46e5,color:#fff
+    style N2 fill:#4f46e5,color:#fff
+    style L1 fill:#059669,color:#fff
+    style L2 fill:#059669,color:#fff
+    style L3 fill:#059669,color:#fff
+```
+
 ```
            [1]          ← Root
           /   \
@@ -44,6 +66,28 @@ A **tree** is a hierarchical, non-linear data structure that consists of **nodes
 ---
 
 ## Height vs Depth — Visual Clarification
+
+```mermaid
+flowchart TD
+    A["[A]
+Depth: 0
+Height: 2"] --> B["[B]
+Depth: 1
+Height: 1"]
+    A --> C["[C]
+Depth: 1
+Height: 0
+(leaf)"]
+    B --> D["[D]
+Depth: 2
+Height: 0
+(leaf)"]
+
+    style A fill:#7c3aed,color:#fff
+    style B fill:#4f46e5,color:#fff
+    style C fill:#059669,color:#fff
+    style D fill:#059669,color:#fff
+```
 
 ```
            [A]   ← Depth=0, Height=2

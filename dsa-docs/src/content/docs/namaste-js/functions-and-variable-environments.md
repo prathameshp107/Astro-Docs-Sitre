@@ -32,6 +32,56 @@ Outputs:
 
 > 1
 
+
+
+
+
+
+
+```mermaid
+flowchart TB
+    subgraph GEC["1. Global Execution Context (GEC)"]
+        G_Mem["Memory Phase:
+x → undefined
+a → function a() { ... }
+b → function b() { ... }"]
+        G_Code["Execution Phase:
+x = 1
+a() called → New EC created"]
+    end
+
+    GEC --> EC_A
+
+    subgraph EC_A["2. EC for a()"]
+        A_Mem["Memory Phase:
+x → undefined"]
+        A_Code["Execution Phase:
+x = 10
+console.log(x) → 10
+EC removed after completion"]
+    end
+
+    EC_A --> EC_B
+
+    subgraph EC_B["3. EC for b()"]
+        B_Mem["Memory Phase:
+x → undefined"]
+        B_Code["Execution Phase:
+x = 100
+console.log(x) → 100
+EC removed after completion"]
+    end
+
+    EC_B --> Done["4. GEC removed
+Program ends"]
+
+    style GEC fill:#7c3aed,color:#fff
+    style EC_A fill:#4f46e5,color:#fff
+    style EC_B fill:#6366f1,color:#fff
+    style Done fill:#059669,color:#fff
+```
+
+
 ## Code Flow in terms of Execution Context
 
 - The Global Execution Context (GEC) is created (the big box with Memory and Code subparts). Also GEC is pushed into Call Stack

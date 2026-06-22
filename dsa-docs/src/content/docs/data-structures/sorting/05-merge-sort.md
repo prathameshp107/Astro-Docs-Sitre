@@ -29,6 +29,55 @@ Merge Sort follows three steps for every recursive call:
 
 Sort: `[38, 27, 43, 3, 9, 82, 10]`
 
+```mermaid
+flowchart TD
+    L0["[38, 27, 43, 3, 9, 82, 10]"]
+    L1_L["[38, 27, 43, 3]"]
+    L1_R["[9, 82, 10]"]
+    L2_LL["[38, 27]"]
+    L2_LR["[43, 3]"]
+    L2_RL["[9, 82]"]
+    L2_RR["[10]"]
+    L3_LLL["[38]"]
+    L3_LLR["[27]"]
+    L3_LRL["[43]"]
+    L3_LRR["[3]"]
+    L3_RLL["[9]"]
+    L3_RLR["[82]"]
+
+    M2_LL["[27, 38]"]
+    M2_LR["[3, 43]"]
+    M2_RL["[9, 82]"]
+    M1_L["[3, 27, 38, 43]"]
+    M1_R["[9, 10, 82]"]
+    RESULT["[3, 9, 10, 27, 38, 43, 82] ✅"]
+
+    L0 --> L1_L
+    L0 --> L1_R
+    L1_L --> L2_LL
+    L1_L --> L2_LR
+    L1_R --> L2_RL
+    L1_R --> L2_RR
+    L2_LL --> L3_LLL
+    L2_LL --> L3_LLR
+    L2_LR --> L3_LRL
+    L2_LR --> L3_LRR
+    L2_RL --> L3_RLL
+    L2_RL --> L3_RLR
+
+    L3_LLL & L3_LLR --> M2_LL
+    L3_LRL & L3_LRR --> M2_LR
+    L3_RLL & L3_RLR --> M2_RL
+    M2_LL & M2_LR --> M1_L
+    M2_RL & L2_RR --> M1_R
+    M1_L & M1_R --> RESULT
+
+    style RESULT fill:#059669,color:#fff
+    style L0 fill:#7c3aed,color:#fff
+    style M1_L fill:#4f46e5,color:#fff
+    style M1_R fill:#4f46e5,color:#fff
+```
+
 ```text
 Level 0 (Divide):
                     [38, 27, 43, 3, 9, 82, 10]

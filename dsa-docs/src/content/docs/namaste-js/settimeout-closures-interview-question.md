@@ -1,9 +1,10 @@
 ---
 title: "setTimeout + Closures Interview Question"
-description: "Time, tide and Javascript wait for none."
+description: "Time, tide and Javascript wait for none - setTimeout and closure interview questions."
 sidebar:
   order: 11
 ---
+
 
 # Episode 11 : setTimeout + Closures Interview Question
 
@@ -27,6 +28,42 @@ x();
 - The function inside setTimeout forms a closure (remembers reference to i). So wherever function goes it carries this ref along with it.
 - setTimeout takes this callback function & attaches timer of 3000ms and stores it. Goes to next line without waiting and prints string.
 - After 3000ms runs out, JS takes function, puts it into call stack and runs it.
+
+
+
+```mermaid
+flowchart LR
+    subgraph Loop["for (var i = 1; i <= 5; i++)"]
+        I1["i = 1"] --> Set1["setTimeout(cb, 1000)
+cb remembers REFERENCE to i"]
+        I2["i = 2"] --> Set2["setTimeout(cb, 2000)
+cb remembers REFERENCE to i"]
+        I3["i = 3"] --> Set3["setTimeout(cb, 3000)
+cb remembers REFERENCE to i"]
+        I4["i = 4"] --> Set4["setTimeout(cb, 4000)
+cb remembers REFERENCE to i"]
+        I5["i = 5"] --> Set5["setTimeout(cb, 5000)
+cb remembers REFERENCE to i"]
+    end
+
+    I6["After loop: i = 6"]
+    AllTimers["All 5 callbacks fire
+They all see i = 6
+because they share the SAME var i"]
+
+    Loop --> I6
+    I6 --> AllTimers
+
+    style Loop fill:#7c3aed,color:#fff
+    style I6 fill:#dc2626,color:#fff
+    style AllTimers fill:#dc2626,color:#fff
+    style I1 fill:#4f46e5,color:#fff
+    style I2 fill:#4f46e5,color:#fff
+    style I3 fill:#4f46e5,color:#fff
+    style I4 fill:#4f46e5,color:#fff
+    style I5 fill:#4f46e5,color:#fff
+```
+
 
 - Q: Print 1 after 1 sec, 2 after 2 sec till 5 : Tricky interview question
 

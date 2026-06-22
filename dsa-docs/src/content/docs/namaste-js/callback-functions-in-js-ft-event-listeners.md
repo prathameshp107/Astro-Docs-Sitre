@@ -1,11 +1,49 @@
 ---
 title: "Callback Functions in JS ft. Event Listeners"
-description: "- Functions are first class citizens ie. take a function A and pass it to another function B. Here, A is a callback function. So basically I am giving acce"
+description: "Functions are first class citizens - callback functions and event listeners in JavaScript."
 sidebar:
   order: 14
 ---
 
+
 # Episode 14 : Callback Functions in JS ft. Event Listeners
+
+```mermaid
+flowchart TD
+    Main["Main Thread
+(Call Stack)"]
+
+    Main --> Sync["Synchronous Code
+console.log('x')
+function y()
+etc."]
+
+    Main --> Async["Async Operation
+setTimeout(cb, 5000)"]
+
+    Async --> WebAPI["Web API Environment
+Timer starts counting 5s
+Callback cb() stored"]
+
+    WebAPI -->|"After 5s"| CallbackQ["Callback Queue
+cb() waiting..."]
+
+    Main -->|"After GEC pops"| EventLoop["Event Loop
+Checks if Call Stack is empty"]
+
+    CallbackQ -->|"Stack empty? Push!"| EventLoop
+    EventLoop -->|"cb() runs"| CallStack["Call Stack
+cb() executes"]
+
+    style Main fill:#7c3aed,color:#fff
+    style Sync fill:#4f46e5,color:#fff
+    style Async fill:#6366f1,color:#fff
+    style WebAPI fill:#059669,color:#fff
+    style CallbackQ fill:#d97706,color:#fff
+    style EventLoop fill:#dc2626,color:#fff
+    style CallStack fill:#7c3aed,color:#fff
+```
+
 
 ### Callback Functions
 

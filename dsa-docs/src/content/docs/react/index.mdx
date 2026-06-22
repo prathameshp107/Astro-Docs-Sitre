@@ -1,0 +1,279 @@
+---
+title: "React"
+description: "React setup guidance, notes, hooks, component patterns, and interview preparation."
+---
+
+import { Card, CardGrid, Aside, Steps, LinkCard } from '@astrojs/starlight/components';
+
+# React
+
+Complete React knowledge base covering setup, components, hooks, core concepts, and interview preparation — from basic functional components to advanced state management patterns.
+
+<Aside type="tip" title="Comprehensive React Coverage">
+  45+ documents across components, hooks, data binding, routing, and interview questions. Use the cards below to jump to any topic, or follow the **Learning Path** for a structured approach.
+</Aside>
+
+---
+
+## 🚀 Getting Started
+
+<CardGrid>
+  <LinkCard
+    title="Introduction to React"
+    href="/DSA-Notes-Problems/react/introduction"
+    description="What React is, Virtual DOM, Reconciliation, React vs Angular, and the declarative paradigm."
+  />
+  <LinkCard
+    title="React Project Structure"
+    href="/DSA-Notes-Problems/react/project-structure"
+    description="Recommended folder structure, file organization, and project architecture patterns."
+  />
+  <LinkCard
+    title="JSX"
+    href="/DSA-Notes-Problems/react/jsx"
+    description="JSX syntax, expressions, attributes, and how it compiles to React.createElement calls."
+  />
+  <LinkCard
+    title="Props"
+    href="/DSA-Notes-Problems/react/props"
+    description="Passing data via props, prop types, default props, and children prop patterns."
+  />
+  <LinkCard
+    title="Strict Mode"
+    href="/DSA-Notes-Problems/react/strict-mode"
+    description="React StrictMode, double-invocation, identifying side effects, and best practices."
+  />
+  <LinkCard
+    title="Fragments"
+    href="/DSA-Notes-Problems/react/fragments"
+    description="React Fragments, shorthand syntax, and avoiding unnecessary DOM wrappers."
+  />
+  <LinkCard
+    title="React Setup Guideline"
+    href="/DSA-Notes-Problems/react/react-setup-guideline"
+    description="Complete setup guide with Vite, Create React App, and Next.js configuration."
+  />
+</CardGrid>
+
+---
+
+## 🪝 Hooks Deep Dive
+
+<Aside type="note" title="9 Hook Documents">
+  React Hooks are the foundation of modern React development. Each hook document includes detailed explanations, code examples, and common pitfalls.
+</Aside>
+
+<CardGrid stagger>
+  <LinkCard
+    title="Hooks Overview"
+    href="/DSA-Notes-Problems/react/hooks"
+    description="Rules of hooks, built-in hooks catalog, and when to use each one."
+  />
+  <LinkCard
+    title="useState"
+    href="/DSA-Notes-Problems/react/hooks/use-state"
+    description="State management, updater functions, lazy initialization, and state batching."
+  />
+  <LinkCard
+    title="useEffect"
+    href="/DSA-Notes-Problems/react/hooks/use-effect"
+    description="Side effects, dependency arrays, cleanup functions, and lifecycle mapping."
+  />
+  <LinkCard
+    title="useRef"
+    href="/DSA-Notes-Problems/react/hooks/use-ref"
+    description="DOM refs, mutable values, forwardRef, and ref callback patterns."
+  />
+  <LinkCard
+    title="useMemo"
+    href="/DSA-Notes-Problems/react/hooks/use-memo"
+    description="Memoization, expensive computations, and performance optimization."
+  />
+  <LinkCard
+    title="useCallback"
+    href="/DSA-Notes-Problems/react/hooks/use-callback"
+    description="Function memoization, referential equality, and optimizing child re-renders."
+  />
+  <LinkCard
+    title="useContext"
+    href="/DSA-Notes-Problems/react/hooks/use-context"
+    description="Context API, provider patterns, useContext hook, and context composition."
+  />
+  <LinkCard
+    title="useReducer"
+    href="/DSA-Notes-Problems/react/hooks/use-reducer"
+    description="Reducer pattern, complex state logic, action dispatching, and Redux alternative."
+  />
+  <LinkCard
+    title="Custom Hooks"
+    href="/DSA-Notes-Problems/react/hooks/custom-hooks"
+    description="Building reusable hooks, hook composition, and real-world custom hook examples."
+  />
+</CardGrid>
+
+---
+
+## 🧩 Component Patterns
+
+<CardGrid>
+  <LinkCard
+    title="Components Overview"
+    href="/DSA-Notes-Problems/react/components"
+    description="Complete guide to all React component types and patterns."
+  />
+  <LinkCard
+    title="Functional Components"
+    href="/DSA-Notes-Problems/react/components/functional-components"
+    description="Modern function-based components, hooks integration, and best practices."
+  />
+  <LinkCard
+    title="Class Components"
+    href="/DSA-Notes-Problems/react/components/class-components"
+    description="ES6 class components, lifecycle methods, and legacy patterns."
+  />
+  <LinkCard
+    title="Component Lifecycle"
+    href="/DSA-Notes-Problems/react/components/component-lifecycle"
+    description="Mount, update, unmount phases — class lifecycle vs hooks equivalents."
+  />
+  <LinkCard
+    title="Higher-Order Components"
+    href="/DSA-Notes-Problems/react/components/higher-order-components"
+    description="HOC pattern, wrapping components, and cross-cutting concerns."
+  />
+  <LinkCard
+    title="Compound Components"
+    href="/DSA-Notes-Problems/react/components/compound-components"
+    description="Flexible component composition with implicit state sharing."
+  />
+  <LinkCard
+    title="Layout Components"
+    href="/DSA-Notes-Problems/react/components/layout-components"
+    description="Sidebars, modals, grids, and reusable layout patterns."
+  />
+  <LinkCard
+    title="Controlled vs Uncontrolled"
+    href="/DSA-Notes-Problems/react/components/controlled-components"
+    description="Controlled components with state vs uncontrolled with refs."
+  />
+  <LinkCard
+    title="Container & Presentational"
+    href="/DSA-Notes-Problems/react/components/container-components"
+    description="Separation of concerns: smart vs dumb component architecture."
+  />
+  <LinkCard
+    title="Custom Hook Components"
+    href="/DSA-Notes-Problems/react/components/custom-hook-components"
+    description="Components driven entirely by custom hooks for logic reuse."
+  />
+</CardGrid>
+
+---
+
+## 🔗 Data Binding & Core Concepts
+
+<CardGrid>
+  <LinkCard
+    title="Data Binding Overview"
+    href="/DSA-Notes-Problems/react/data-binding"
+    description="One-way data flow, state management philosophy, and binding patterns."
+  />
+  <LinkCard
+    title="Data Binding Concepts"
+    href="/DSA-Notes-Problems/react/data-binding/data-binding-concepts"
+    description="State vs props, lifting state up, and data flow architecture."
+  />
+  <LinkCard
+    title="Conditional Rendering"
+    href="/DSA-Notes-Problems/react/data-binding/conditional-rendering"
+    description="Ternary, &&, switch, and conditional rendering patterns."
+  />
+  <LinkCard
+    title="Lists and Keys"
+    href="/DSA-Notes-Problems/react/data-binding/lists-and-keys"
+    description="Rendering lists, key prop importance, and index vs stable IDs."
+  />
+  <LinkCard
+    title="React Events"
+    href="/DSA-Notes-Problems/react/data-binding/events"
+    description="Synthetic events, event handlers, event pooling, and custom events."
+  />
+  <LinkCard
+    title="Lifecycle Hooks"
+    href="/DSA-Notes-Problems/react/data-binding/lifecycle-hooks"
+    description="Mapping class lifecycle to hooks for data operations."
+  />
+  <LinkCard
+    title="Forms"
+    href="/DSA-Notes-Problems/react/data-binding/forms"
+    description="Controlled forms, form validation, and form libraries."
+  />
+  <LinkCard
+    title="HTTP Methods & Axios"
+    href="/DSA-Notes-Problems/react/data-binding/http-methods-axios"
+    description="Fetch API, Axios, API calls, loading states, and error handling."
+  />
+  <LinkCard
+    title="Routing"
+    href="/DSA-Notes-Problems/react/data-binding/routing"
+    description="React Router, route configuration, nested routes, and navigation."
+  />
+  <LinkCard
+    title="State Management"
+    href="/DSA-Notes-Problems/react/data-binding/state-management"
+    description="Local state, Context, Zustand, Redux, and state management strategies."
+  />
+  <LinkCard
+    title="Higher-Order Components"
+    href="/DSA-Notes-Problems/react/data-binding/higher-order-components"
+    description="HOCs for cross-cutting concerns like auth, logging, and data fetching."
+  />
+</CardGrid>
+
+---
+
+## 🎯 Interview Preparation
+
+<CardGrid stagger>
+  <Card title="Interview Questions Overview" icon="open-book">
+    <p>Comprehensive React interview resource with questions ranked by difficulty — from beginner to advanced.</p>
+    <a href="/DSA-Notes-Problems/react/interview-questions" style={{ color: 'var(--sl-color-accent)', fontWeight: 500 }}>Browse all questions →</a>
+  </Card>
+  <Card title="Easy Questions" icon="code">
+    <p>JSX basics, components, props, state, and fundamental React concepts.</p>
+    <a href="/DSA-Notes-Problems/react/interview-questions/easy-questions" style={{ color: 'var(--sl-color-accent)', fontWeight: 500 }}>Start →</a>
+  </Card>
+  <Card title="Medium Questions" icon="layers">
+    <p>Hooks, lifecycle, context, refs, performance optimization, and patterns.</p>
+    <a href="/DSA-Notes-Problems/react/interview-questions/medium-questions" style={{ color: 'var(--sl-color-accent)', fontWeight: 500 }}>Start →</a>
+  </Card>
+  <Card title="Hard Questions" icon="lightning">
+    <p>Advanced patterns, reconciliation internals, concurrent mode, and architecture.</p>
+    <a href="/DSA-Notes-Problems/react/interview-questions/hard-questions" style={{ color: 'var(--sl-color-accent)', fontWeight: 500 }}>Start →</a>
+  </Card>
+  <Card title="Quick Cheatsheet" icon="gear">
+    <p>Rapid-fire syntax reference, common hooks patterns, and quick code snippets.</p>
+    <a href="/DSA-Notes-Problems/react/interview-questions/quick-cheatsheet" style={{ color: 'var(--sl-color-accent)', fontWeight: 500 }}>View →</a>
+  </Card>
+</CardGrid>
+
+---
+
+## 📖 Suggested Learning Path
+
+<Steps>
+1. [Introduction to React](/DSA-Notes-Problems/react/introduction) — Understand what React is and how the Virtual DOM works
+2. [JSX](/DSA-Notes-Problems/react/jsx) — Learn the JSX syntax and how it compiles to JavaScript
+3. [Components & Props](/DSA-Notes-Problems/react/components) — Build your first components and pass data with props
+4. [Hooks (useState & useEffect)](/DSA-Notes-Problems/react/hooks/use-state) — Master the two most important hooks
+5. [Conditional Rendering & Lists](/DSA-Notes-Problems/react/data-binding/conditional-rendering) — Build dynamic UIs with conditions and keyed lists
+6. [Forms & Events](/DSA-Notes-Problems/react/data-binding/forms) — Handle user input and form submission
+7. [State Management & Routing](/DSA-Notes-Problems/react/data-binding/state-management) — Scale your app with proper state and routing
+8. [Interview Questions](/DSA-Notes-Problems/react/interview-questions/easy-questions) — Test your knowledge with real interview questions
+</Steps>
+
+---
+
+<Aside type="caution" title="Keep Building">
+  React is best learned by building. After studying the concepts, jump to the [Playground](/DSA-Notes-Problems/playground) to practice, or try the [React Practice Lab](/DSA-Notes-Problems/labs/react-lab) for hands-on exercises.
+</Aside>

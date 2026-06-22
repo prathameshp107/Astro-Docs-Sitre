@@ -27,6 +27,35 @@ It looks like let isn't hoisted, **but it is**, let's understand
 
 - **Temporal Dead Zone** : Time since when the let variable was hoisted until it is initialized some value.
 
+```mermaid
+flowchart LR
+    subgraph Global["Global Scope"]
+        Script["Script (let/const)
+let a -> TDZ -> a = 10"]
+        GlobalMem["Global (var)
+var b -> undefined -> b = 15
+window.b = 15"]
+    end
+
+    TDZ["Temporal Dead Zone
+Time between hoisting
+and initialization
+
+let a; // hoisted but in TDZ
+// Cannot access a here!
+let a = 10; // TDZ ends
+Now a is accessible"]
+
+    GlobalMem --> TDZ
+    TDZ --> Script
+
+    style Global fill:#1e293b,color:#fff
+    style Script fill:#7c3aed,color:#fff
+    style GlobalMem fill:#059669,color:#fff
+    style TDZ fill:#dc2626,color:#fff
+```
+
+
   - So any line till before "let a = 10" is the TDZ for a
   - Since a is not accessible on global, its not accessible in _window/this_ also. window.b or this.b -> 15; But window.a or this.a ->undefined, just like window.x->undefined (x isn't declared anywhere)
 

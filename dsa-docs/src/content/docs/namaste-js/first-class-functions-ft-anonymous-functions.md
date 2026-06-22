@@ -1,13 +1,60 @@
 ---
 title: "First Class Functions ft. Anonymous Functions"
-description: "Functions are heart ♥ of Javascript."
+description: "Functions are heart of Javascript - function statements, expressions, and first-class functions."
 sidebar:
   order: 13
 ---
 
+
 # Episode 13 : First Class Functions ft. Anonymous Functions
 
 > Functions are heart ♥ of Javascript.
+
+
+
+```mermaid
+flowchart TB
+    subgraph Types["Types of Functions in JavaScript"]
+        FS["Function Statement
+function a() { }
+- Fully hoisted
+- Can be called before declaration"]
+
+        FE["Function Expression
+var b = function() { }
+- NOT hoisted
+- TypeError if called early"]
+
+        AF["Anonymous Function
+function() { }
+- No name, used as value
+- Syntax Error if standalone"]
+
+        NFE["Named Function Expression
+var b = function xyz() { }
+- Has internal name
+- xyz not in global scope"]
+
+        FCF["First Class Function
+Functions as values
+- Pass as argument
+- Return from function
+- Assign to variable"]
+    end
+
+    FS --> NFE
+    FE --> AF
+    FE --> NFE
+    FE --> FCF
+
+    style Types fill:#1e293b,color:#fff
+    style FS fill:#7c3aed,color:#fff
+    style FE fill:#4f46e5,color:#fff
+    style AF fill:#6366f1,color:#fff
+    style NFE fill:#8b5cf6,color:#fff
+    style FCF fill:#059669,color:#fff
+```
+
 
 ### Q: What is Function statement?
 

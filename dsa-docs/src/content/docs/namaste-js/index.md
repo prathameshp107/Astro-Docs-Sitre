@@ -6,6 +6,49 @@ description: "Namaste JavaScript course notes covering execution context, hoisti
 # Namaste JavaScript
 
 Namaste JavaScript course notes covering execution context, hoisting, closures, and more.
+```mermaid
+flowchart TB
+    subgraph Foundation["Foundation"]
+        EC["1. Execution Context"] --> CS["2. Call Stack"]
+        CS --> Hoisting["3. Hoisting"]
+        Hoisting --> FVE["4. Functions & Variable Env"]
+        FVE --> Window["5. window & this"]
+        Window --> Undef["6. undefined vs not defined"]
+    end
+
+    subgraph Scoping["Scoping & Closures"]
+        Scope["7. Scope Chain & Lexical Env"] --> TDZ["8. let/const & TDZ"]
+        TDZ --> Block["9. Block Scope & Shadowing"]
+        Block --> Closures["10. Closures"]
+        Closures --> SetTime["11. setTimeout + Closures"]
+        SetTime --> Interview["12. Interview Questions ft. Closures"]
+    end
+
+    subgraph Functions["Functions & Async"]
+        FCF["13. First Class Functions"] --> CB["14. Callback Functions"]
+        CB --> EventLoop["15. Event Loop"] --> V8["16. V8 Architecture"]
+        V8 --> Trust["17. Trust issues with setTimeout"]
+        Trust --> HOF["18. Higher-Order Functions"]
+        HOF --> MFR["19. map, filter & reduce"]
+    end
+
+    subgraph Season2["Season 2 - Promises & Async"]
+        CHell["20. Callback Hell & IoC"] --> Prom["21. Promises"]
+        Prom --> CreateP["22. Creating a Promise & Chaining"]
+        CreateP --> PAPI["23. Promise APIs"]
+        PAPI --> AsyncAwait["24. async / await"]
+        AsyncAwait --> ThisKw["25. this keyword"]
+    end
+
+    Foundation --> Scoping --> Functions --> Season2
+
+    style Foundation fill:#7c3aed,color:#fff
+    style Scoping fill:#4f46e5,color:#fff
+    style Functions fill:#059669,color:#fff
+    style Season2 fill:#b45309,color:#fff
+```
+
+
 
 ## Sections
 
@@ -28,3 +71,12 @@ Namaste JavaScript course notes covering execution context, hoisting, closures, 
 - [Trust issues with setTimeout()](/DSA-Notes-Problems/namaste-js/trust-issues-with-settimeout)
 - [Higher-Order Functions ft. Functional Programming](/DSA-Notes-Problems/namaste-js/higher-order-functions-ft-functional-programming)
 - [map, filter & reduce](/DSA-Notes-Problems/namaste-js/map-filter-reduce)
+
+## Season 2 — Promises & Async
+
+- [Callback Hell & Inversion of Control](/DSA-Notes-Problems/namaste-js/callback-hell-inversion-of-control)
+- [Promises](/DSA-Notes-Problems/namaste-js/promises)
+- [Creating a Promise, Chaining & Error Handling](/DSA-Notes-Problems/namaste-js/creating-a-promise-chaining-error-handling)
+- [Promise APIs (all, allSettled, race, any)](/DSA-Notes-Problems/namaste-js/promise-apis-all-allsettled-race-any)
+- [async / await](/DSA-Notes-Problems/namaste-js/async-await)
+- [this keyword in JavaScript](/DSA-Notes-Problems/namaste-js/this-keyword-in-javascript)

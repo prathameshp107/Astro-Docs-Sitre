@@ -22,6 +22,37 @@ function getName() {
 
 - **Hoisting** is a concept which enables us to extract values of variables and functions even before initialising/assigning value without getting error and this is happening due to the 1st phase (memory creation phase) of the Execution Context.
 
+```mermaid
+flowchart LR
+    subgraph Before["🕐 Before Code Execution
+(Memory Creation Phase)"]
+        BF["Function: getName()
+→ Entire function body stored
+
+Variable: x
+→ undefined
+
+console.log(x) → undefined
+✅ No error!"]
+    end
+
+    Before --> After
+
+    subgraph After["🕐 After Code Execution
+(Assignment Phase)"]
+        AF["var x = 7
+→ x becomes 7
+
+Calling getName()
+→ Prints 'Namaste JavaScript'"]
+    end
+
+    style Before fill:#7c3aed,color:#fff
+    style After fill:#059669,color:#fff
+    style BF fill:#4f46e5,color:#fff
+    style AF fill:#0d9488,color:#fff
+```
+
 - So in previous lecture, we learnt that execution context gets created in two phase, so even before code execution, memory is created so in case of variable, it will be initialized as undefined while in case of function the whole function code is placed in the memory. Example:
 
 ```js

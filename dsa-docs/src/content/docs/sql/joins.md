@@ -15,6 +15,21 @@ sidebar:
 
 Before diving in, here are the two tables used throughout all examples. Refer back here whenever you need to trace a result.
 
+```mermaid
+erDiagram
+    employees {
+        int id PK
+        string name
+        int dept_id FK
+        int manager_id
+    }
+    departments {
+        int dept_id PK
+        string dept_name
+    }
+    employees ||--o{ departments : "belongs to"
+```
+
 ```
 Table A — employees                    Table B — departments
 ┌────┬────────┬─────────┬────────────┐  ┌─────────┬────────────┐

@@ -1,13 +1,48 @@
 ---
 title: "Closures in JS"
-description: "- Function bundled along with it's lexical scope is closure."
+description: "Function bundled along with its lexical scope is called a closure in JavaScript."
 sidebar:
   order: 10
 ---
 
+
 # Episode 10 : Closures in JS
 
 - Function bundled along with it's lexical scope is **closure**.
+
+
+```mermaid
+flowchart TB
+    subgraph xFunc["function x()"]
+        VarA["var a = 7"] --> yFunc
+            
+        subgraph yFunc["function y()"]
+            Log["console.log(a)
+→ Accesses 'a' from parent scope"] --> Return["return y"]
+        end
+    end
+
+    ClosureFormation["Closure Formed
+x() returns function y
+along with its lexical scope (a = 7)
+
+var z = x()
+→ z holds y + closure over a"]
+    
+    Later["Later in code:
+z() → still remembers a = 7
+Even after x() has finished!"]
+
+    Return --> ClosureFormation --> Later
+
+    style xFunc fill:#7c3aed,color:#fff
+    style yFunc fill:#4f46e5,color:#fff
+    style VarA fill:#059669,color:#fff
+    style Log fill:#6366f1,color:#fff
+    style ClosureFormation fill:#d97706,color:#fff
+    style Later fill:#0d9488,color:#fff
+```
+
 
 - JavaScript has a lexcial scope environment. If a function needs to access a variable, it first goes to its local memory. When it does not find it there, it goes to the memory of its lexical parent. See Below code, Over here function **y** along with its lexical scope i.e. (function x) would be called a closure.
 

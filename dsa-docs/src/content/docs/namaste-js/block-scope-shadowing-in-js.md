@@ -39,7 +39,36 @@ console.log(b); // Uncaught ReferenceError: b is not defined
 
         * Thus we say, *let* and *const* are BLOCK SCOPED. They are stored in a separate mem space which is reserved for this block. Also, they can't be accessed outside this block. But var a can be accessed anywhere as it is in global scope. Thus, we can't access them outside the Block.
 
-What is **Shadowing**?
+
+
+```mermaid
+flowchart TB
+    subgraph Global["Global Scope"]
+        GlobalVar["var a = 100
+(accessible everywhere)"]
+    end
+
+    subgraph Block["Block { ... }"]
+        BlockVar["var a = 10
+(shadows global a -> overwrites it)"]
+        BlockLet["let b = 20
+(block scoped - separate memory)"]
+        BlockConst["const c = 30
+(block scoped - separate memory)"]
+    end
+
+    GlobalVar -.->|"Shadowed!"| BlockVar
+
+    style Global fill:#7c3aed,color:#fff
+    style Block fill:#1e293b,color:#fff
+    style GlobalVar fill:#4f46e5,color:#fff
+    style BlockVar fill:#dc2626,color:#fff
+    style BlockLet fill:#059669,color:#fff
+    style BlockConst fill:#059669,color:#fff
+```
+
+
+### What is **Shadowing**?
 
 ```js
 var a = 100;

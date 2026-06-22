@@ -9,6 +9,45 @@ sidebar:
 
 - **Scope** in Javascript is directly related to **Lexical Environment**.
 
+```mermaid
+flowchart TB
+    subgraph Global["Global Execution Context"]
+        G_Mem["Memory:
+b = 10
+a = {function}
+"]
+        G_LE["Lexical Env
+-> null"]
+
+        subgraph FuncA["a() Execution Context"]
+            A_Mem["Memory:
+b = 10 (local)
+c = {function}
+"]
+            A_LE["Lexical Env
+-> Global"]
+
+            subgraph FuncC["c() Execution Context"]
+                C_Mem["Memory:
+(b via scope chain)
+"]
+                C_LE["Lexical Env
+-> a()"]
+            end
+        end
+    end
+
+    G_LE -.->|"parent"| Null["null"]
+    A_LE -.->|"parent"| Global
+    C_LE -.->|"parent"| FuncA
+
+    style Global fill:#7c3aed,color:#fff
+    style FuncA fill:#4f46e5,color:#fff
+    style FuncC fill:#6366f1,color:#fff
+    style Null fill:#dc2626,color:#fff
+```
+
+
 - Let's observe the below examples:
 
 ```js

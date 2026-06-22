@@ -846,8 +846,40 @@ Symbol.hasInstance
 **Answer:**
 The event loop allows JavaScript (single-threaded) to perform non-blocking operations.
 
-```
-Call Stack → Web APIs → Task Queue → Microtask Queue
+```mermaid
+flowchart LR
+    subgraph JS_Engine["JavaScript Engine"]
+        CallStack["Call Stack
+(executes code)"]
+        Heap["Heap
+(memory)"]
+    end
+
+    subgraph Browser["Browser / Node.js"]
+        WebAPIs["Web APIs
+setTimeout, fetch,
+DOM, console"]
+        CallbackQueue["Callback Queue
+(Macrotasks)
+setTimeout, setInterval"]
+        MicrotaskQueue["Microtask Queue
+Promises, queueMicrotask,
+MutationObserver"]
+    end
+
+    CallStack -->|"Async operation"| WebAPIs
+    WebAPIs -->|"Callback ready"| MicrotaskQueue
+    WebAPIs -->|"Timer done"| CallbackQueue
+    MicrotaskQueue -->|"Higher priority"| CallStack
+    CallbackQueue -->|"Lower priority"| CallStack
+
+    style JS_Engine fill:#1e3a5f,color:#fff
+    style Browser fill:#3b1f5e,color:#fff
+    style CallStack fill:#7c3aed,color:#fff
+    style Heap fill:#4f46e5,color:#fff
+    style WebAPIs fill:#059669,color:#fff
+    style CallbackQueue fill:#d97706,color:#fff
+    style MicrotaskQueue fill:#dc2626,color:#fff
 ```
 
 **Order of execution:**
@@ -875,6 +907,25 @@ console.log("4");
 A Promise represents a value that will be available now, in the future, or never.
 
 **States:** `pending` → `fulfilled` or `rejected`
+
+```mermaid
+flowchart LR
+    Pending["⏳ Pending
+Initial state"] -->|"Operation
+succeeds"| Fulfilled["✅ Fulfilled
+.then() runs"]
+    Pending -->|"Operation
+fails"| Rejected["❌ Rejected
+.catch() runs"]
+    Fulfilled --> Settled["🏁 Settled
+.finally() runs"]
+    Rejected --> Settled
+
+    style Pending fill:#d97706,color:#fff
+    style Fulfilled fill:#059669,color:#fff
+    style Rejected fill:#dc2626,color:#fff
+    style Settled fill:#6366f1,color:#fff
+```
 
 ```js
 const fetchData = () => new Promise((resolve, reject) => {
@@ -1157,9 +1208,34 @@ const intersection = new Set([...setA].filter(x => setB.has(x))); // {2,3}
 
 **Answer:**
 
-```
-  Phase 1 (Capture): Window → Document → Body → ... → Target
-  Phase 2 (Bubble):  Target → ... → Body → Document → Window
+```mermaid
+flowchart TD
+    subgraph Capture["Phase 1: Capture (Trickling)"]
+        direction TB
+        Window1["window"] --> Document1["document"]
+        Document1 --> Body1["body"]
+        Body1 --> Target1["✅ Target"]
+    end
+
+    subgraph Bubble["Phase 2: Bubbling"]
+        direction TB
+        Target2["✅ Target"] --> Body2["body"]
+        Body2 --> Document2["document"]
+        Document2 --> Window2["window"]
+    end
+
+    Capture -->|"addEventListener(..., true)"| Bubble
+
+    style Capture fill:#1e3a5f,color:#fff
+    style Bubble fill:#3b1f5e,color:#fff
+    style Window1 fill:#7c3aed,color:#fff
+    style Document1 fill:#4f46e5,color:#fff
+    style Body1 fill:#6366f1,color:#fff
+    style Target1 fill:#059669,color:#fff
+    style Window2 fill:#7c3aed,color:#fff
+    style Document2 fill:#4f46e5,color:#fff
+    style Body2 fill:#6366f1,color:#fff
+    style Target2 fill:#059669,color:#fff
 ```
 
 ```js

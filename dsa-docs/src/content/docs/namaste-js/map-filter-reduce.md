@@ -9,6 +9,48 @@ sidebar:
 
 > map, filter & reducer are Higher Order Functions.
 
+
+
+```mermaid
+flowchart LR
+    subgraph Input["Input Array"]
+        Arr["[5, 1, 3, 2, 6]"]
+    end
+
+    subgraph Map["map"]
+        MapDesc["Transform each element
+Returns NEW array (same length)"]
+        MapEx["map(double) -> [10, 2, 6, 4, 12]
+map(binary) -> ['101', '1', '11', '10', '110']"]
+    end
+
+    subgraph Filter["filter"]
+        FilterDesc["Keep elements passing test
+Returns NEW array (<= length)"]
+        FilterEx["filter(isOdd) -> [5, 1, 3]
+filter(n > 2) -> [5, 3, 6]"]
+    end
+
+    subgraph Reduce["reduce"]
+        ReduceDesc["Accumulate to single value
+Returns ATOMIC value"]
+        ReduceEx["reduce(sum) -> 17
+reduce(max) -> 6
+reduce(groupBy) -> {29: 2, 50: 1}"]
+    end
+
+    Arr --> Map
+    Arr --> Filter
+    Arr --> Reduce
+
+    style Input fill:#1e293b,color:#fff
+    style Arr fill:#7c3aed,color:#fff
+    style Map fill:#4f46e5,color:#fff
+    style Filter fill:#6366f1,color:#fff
+    style Reduce fill:#059669,color:#fff
+```
+
+
 ## Map function
 
 It is basically used to transform a array. The map() method creates a new array with the results of calling a function for every array element.
@@ -206,6 +248,45 @@ alt="map, filter & reduce Youtube Link"/></a>
 
 # Episode 20 (Season 2 : Episode 1) : Callback
 
+
+
+```mermaid
+flowchart TD
+    Create["api.createOrder(cart)"] --> Payment["api.proceedToPayment()"]
+    Payment --> Summary["api.showOrderSummary()"]
+    Summary --> Wallet["api.updateWallet()"]
+
+    subgraph CallbackHell["Callback Hell (Pyramid of Doom)"]
+        CH["api.createOrder(cart, function() {
+  api.proceedToPayment(function() {
+    api.showOrderSummary(function() {
+      api.updateWallet(function() {
+        // Deep nesting!
+      })
+    })
+  })
+})"]
+    end
+
+    subgraph PromiseChain["Promise Chaining (Clean)"]
+        PC["createOrder(cart)
+  .then(orderId => proceedToPayment(orderId))
+  .then(paymentInfo => showOrderSummary(paymentInfo))
+  .then(balance => updateWallet(balance))
+  .catch(err => console.log(err))"]
+    end
+
+    CallbackHell -.->|"Refactor"| PromiseChain
+
+    style CallbackHell fill:#dc2626,color:#fff
+    style PromiseChain fill:#059669,color:#fff
+    style Create fill:#4f46e5,color:#fff
+    style Payment fill:#4f46e5,color:#fff
+    style Summary fill:#4f46e5,color:#fff
+    style Wallet fill:#4f46e5,color:#fff
+```
+
+
 - There are 2 Parts of Callback:
 
   1. Good Part of callback - Callback are super important while writing asynchronous code in JS
@@ -330,6 +411,27 @@ alt="map, filter & reduce Youtube Link"/></a>
 <hr>
 
 # Episode 21 (Season 2 : Episode 2) : Promises
+
+
+
+```mermaid
+flowchart LR
+    Pending["PENDING
+Initial state"]
+    Pending -->|"resolve(value)"| Fulfilled["FULFILLED
+.then() runs"]
+    Pending -->|"reject(error)"| Rejected["REJECTED
+.catch() runs"]
+    Fulfilled --> Settled["SETTLED
+.finally() runs"]
+    Rejected --> Settled
+
+    style Pending fill:#d97706,color:#fff
+    style Fulfilled fill:#059669,color:#fff
+    style Rejected fill:#dc2626,color:#fff
+    style Settled fill:#6366f1,color:#fff
+```
+
 
 > Promises are used to handle async operations in JavaScript.
 

@@ -11,6 +11,35 @@ sidebar:
 
 - The execution context is created in two phases.
 
+```mermaid
+flowchart LR
+    subgraph Phase1["Phase 1: Memory Creation"]
+        M1["Allocate memory
+for variables & functions
+
+var n → undefined
+function square → {code}
+var square2 → undefined
+var square4 → undefined"]
+    end
+    Phase1 --> Phase2
+    subgraph Phase2["Phase 2: Code Execution"]
+        C1["Execute code
+line by line
+
+n = 2
+square2 = square(n)
+  → New EC created
+square4 = square(4)
+  → New EC created"]
+    end
+
+    style Phase1 fill:#7c3aed,color:#fff
+    style Phase2 fill:#059669,color:#fff
+    style M1 fill:#4f46e5,color:#fff
+    style C1 fill:#0d9488,color:#fff
+```
+
   - Memory creation phase - JS will allocate memory to variables and functions.
   - Code execution phase
 
@@ -49,6 +78,30 @@ So the **final diagram** before deletion would look something like:
 - Call Stack is a mechanism to keep track of its place in script that calls multiple function.
 
 - Call Stack maintains the order of execution of execution contexts. It is also known as Program Stack, Control Stack, Runtime stack, Machine Stack, Execution context stack.
+
+```mermaid
+flowchart TB
+    subgraph CS["Call Stack (LIFO)"]
+        direction TB
+        Top["Top of Stack"]
+        EC_square4["EC(square4)
+num=4, ans=16
+↩ Global"]
+        EC_square2["EC(square2)
+num=2, ans=4
+↩ Global"]
+        GEC["GEC (Global)
+n=2, square={fn}"]
+    end
+
+    Top --> EC_square4 --> EC_square2 --> GEC
+
+    style CS fill:#1e293b,color:#fff
+    style Top fill:#dc2626,color:#fff
+    style EC_square4 fill:#7c3aed,color:#fff
+    style EC_square2 fill:#4f46e5,color:#fff
+    style GEC fill:#059669,color:#fff
+```
 
 <hr>
 

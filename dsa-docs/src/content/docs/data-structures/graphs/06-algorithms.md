@@ -175,6 +175,30 @@ Steps:
 
 ## Choosing the Right Algorithm
 
+```mermaid
+flowchart TD
+    Q1{What problem?}
+    Q1 --> SP[Shortest Path]
+    Q1 --> MST[Minimum Spanning Tree]
+
+    SP --> SP1{Edge weights?}
+    SP1 -->|Unweighted| BFS["BFS O(V+E)"]
+    SP1 -->|Non-negative| DIJK["Dijkstra O((V+E) log V)"]
+    SP1 -->|Negative edges| BF["Bellman-Ford O(V×E)"]
+    SP1 -->|All pairs| FW["Floyd-Warshall O(V³)"]
+
+    MST --> MST1{Graph density?}
+    MST1 -->|Sparse| KRUS["Kruskal's O(E log E)"]
+    MST1 -->|Dense| PRIM["Prim's O((V+E) log V)"]
+
+    style BFS fill:#4f46e5,color:#fff
+    style DIJK fill:#4f46e5,color:#fff
+    style BF fill:#4f46e5,color:#fff
+    style FW fill:#4f46e5,color:#fff
+    style KRUS fill:#059669,color:#fff
+    style PRIM fill:#059669,color:#fff
+```
+
 ```
 Shortest Path?
 ├── Unweighted → BFS (O(V+E))

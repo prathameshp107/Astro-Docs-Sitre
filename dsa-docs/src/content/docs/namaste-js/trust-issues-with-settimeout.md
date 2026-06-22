@@ -1,13 +1,51 @@
 ---
 title: "Trust issues with setTimeout()"
-description: "- setTimeout with timer of 5 secs sometimes does not exactly guarantees that the callback function will execute exactly after 5s."
+description: "setTimeout with timer of 5 secs sometimes does not guarantee that the callback function will execute exactly after 5s."
 sidebar:
   order: 17
 ---
-
 # Episode 17 : Trust issues with setTimeout()
 
 - setTimeout with timer of 5 secs sometimes does not exactly guarantees that the callback function will execute exactly after 5s.
+
+
+```mermaid
+flowchart TB
+    subgraph MainThread["Main Thread (Call Stack)"]
+        Start["console.log('Start')"] --> SetTimeout["setTimeout(cb, 5000)
+Callback registered in Web API
+Timer starts ticking"] --> End["console.log('End')"]
+        End --> MillionLines["Millions of lines of code
+(TAKES 10 SECONDS TO RUN!)"]
+    end
+
+    subgraph WebAPI["Web API Environment"]
+        Timer["Timer: 5 seconds
+⏱️ ⏱️ ⏱️ ⏱️ ⏱️
+Timer expires at 5s!"] --> CallbackQ
+    end
+
+    subgraph CallbackQ["Callback Queue"]
+        Waiting["cb() waiting...
+⏳ Timer expired but
+Call Stack is busy"]
+    end
+
+    CallbackQ --> EventLoop
+    EventLoop["Event Loop
+Is Call Stack empty?
+NO - still busy with 1M lines"] --> Eventually["⏰ After 10 seconds:
+Call Stack finally empty
+Event Loop pushes cb() to stack
+cb() executes!"]
+
+    style MainThread fill:#7c3aed,color:#fff
+    style WebAPI fill:#059669,color:#fff
+    style CallbackQ fill:#d97706,color:#fff
+    style EventLoop fill:#dc2626,color:#fff
+    style Eventually fill:#0d9488,color:#fff
+```
+
 
 - Let's observe the below code and it's explaination
 

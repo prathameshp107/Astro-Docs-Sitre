@@ -20,6 +20,38 @@ JavaScript (often abbreviated as JS) is a widely used programming language that 
 - The World Wide Web emerged as a way to share information and documents over the internet.
 - Tim Berners-Lee created the first web browser and web server, forming the foundation for the web's development.
 
+```mermaid
+flowchart LR
+    subgraph Timeline["JavaScript Evolution Timeline"]
+        direction LR
+        1995["1995
+Brendan Eich
+creates JS"] --> 1996["1996
+Standardized
+as ECMAScript"]
+        1996 --> 1999["1999
+ES3 Released
+Try/Catch,
+Regex"]
+        1999 --> 2009["2009
+ES5 & Node.js
+JSON, strict
+mode"]
+        2009 --> 2015["2015
+ES6 (Big Bang!)
+Arrow, Class,
+Promise"]
+        2015 --> 2016["2016+
+ES7-ES14
+Async/Await,
+Optional Chaining"]
+    end
+
+    style 1995 fill:#7c3aed,color:#fff
+    style 2015 fill:#059669,color:#fff
+    style Timeline fill:#1e293b,color:#fff
+```
+
 ### Netscape's Creation of JavaScript (1995)
 
 - JavaScript was originally designed to provide a way to add dynamic and interactive elements to web pages.

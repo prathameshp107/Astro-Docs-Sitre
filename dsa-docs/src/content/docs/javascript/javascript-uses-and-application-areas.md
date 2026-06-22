@@ -85,7 +85,38 @@ Certainly, let's explore the DOM tree in depth and understand its structure, nod
 
 ### What is the DOM Tree?
 
-The DOM tree is a hierarchical representation of the structure of an HTML or XML document. It is created by browsers when they parse an HTML document. The tree-like structure consists of various types of nodes, each representing a different aspect of the document, such as elements, attributes, text content, and more.
+The DOM tree is a hierarchical representation of the structure of an HTML or XML document. It is created by browsers when they parse an HTML document.
+
+```mermaid
+flowchart TB
+    Document["📄 Document
+(root)"] --> HTML["html"]
+    HTML --> Head["head"]
+    HTML --> Body["body"]
+    Head --> Title["title"]
+    Title --> TitleText[""DOM Tree
+Example""]
+    Body --> Div["div #container"]
+    Div --> H1["h1"]
+    Div --> P["p"]
+    H1 --> H1Text[""Hello,
+DOM!""]
+    P --> PText[""This is an
+example of
+the DOM tree.""]
+
+    style Document fill:#7c3aed,color:#fff
+    style HTML fill:#4f46e5,color:#fff
+    style Head fill:#6366f1,color:#fff
+    style Body fill:#6366f1,color:#fff
+    style Title fill:#8b5cf6,color:#fff
+    style Div fill:#4f46e5,color:#fff
+    style H1 fill:#059669,color:#fff
+    style P fill:#059669,color:#fff
+    style TitleText fill:#0d9488,color:#fff
+    style H1Text fill:#0d9488,color:#fff
+    style PText fill:#0d9488,color:#fff
+``` The tree-like structure consists of various types of nodes, each representing a different aspect of the document, such as elements, attributes, text content, and more.
 
 ### Node Types in the DOM Tree:
 

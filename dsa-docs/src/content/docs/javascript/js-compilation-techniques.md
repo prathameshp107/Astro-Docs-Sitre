@@ -9,6 +9,57 @@ sidebar:
 
 Compiling is the process of translating source code written in a high-level programming language into machine-readable code, which can be executed by a computer's processor. There are different types of compilation techniques used to achieve this translation. Let's explore three main types: ahead-of-time compilation, just-in-time compilation, and interpretation.
 
+```mermaid
+flowchart TD
+    Source["Source Code
+(C, C++, Java, JS)"] --> Parser
+
+    subgraph AOT["Ahead-of-Time Compilation"]
+        direction TB
+        Parser_AOT["Parse
+Source"] --> Compiler_AOT["Compiler
+(gcc, rustc)"]
+        Compiler_AOT --> Machine_AOT["Machine Code
+(.exe, .out)"]
+        Machine_AOT --> Run_AOT["⚡ Direct
+Execution"]
+    end
+
+    subgraph JIT["Just-in-Time Compilation"]
+        direction TB
+        Parser_JIT["Parse
+Source"] --> Interpreter_JIT["Interpreter
+(Ignition)"]
+        Interpreter_JIT --> Profiler_JIT["Profiler
+(monitors hot code)"]
+        Profiler_JIT --> Compiler_JIT["Compiler
+(Turbofan)"]
+        Compiler_JIT --> Machine_JIT["Optimized
+Machine Code"]
+    end
+
+    subgraph Interpreted["Interpretation"]
+        direction TB
+        Parser_INT["Parse
+Source"] --> Runtime_INT["Interpreter
+Reads & Executes
+line by line"]
+        Runtime_INT --> Output_INT["🐢 Slower
+but portable"]
+    end
+
+    Parser --> AOT
+    Parser --> JIT
+    Parser --> Interpreted
+
+    style AOT fill:#1e3a5f,color:#fff
+    style JIT fill:#3b1f5e,color:#fff
+    style Interpreted fill:#5f1e1e,color:#fff
+    style Source fill:#7c3aed,color:#fff
+    style Run_AOT fill:#059669,color:#fff
+    style Output_INT fill:#dc2626,color:#fff
+```
+
 1. **Ahead-of-Time Compilation (AOT):**
 
    In AOT compilation, the source code is translated into machine code before the program is executed. This compiled machine code can be directly run by the computer's processor without the need for further translation during runtime.

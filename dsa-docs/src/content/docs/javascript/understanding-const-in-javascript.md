@@ -64,6 +64,64 @@ In JavaScript, data types categorize the various kinds of values that variables 
 
 Primitive data types are the fundamental building blocks of data in JavaScript. They are simple, immutable values that represent basic concepts. JavaScript has six primitive data types:
 
+```mermaid
+flowchart TD
+    JS["JavaScript
+Data Types"] --> Primitive["Primitive Types
+(Immutable, Pass by Value)"]
+    JS --> NonPrimitive["Non-Primitive Types
+(Mutable, Pass by Reference)"]
+
+    Primitive --> Number["Number
+42, 3.14, NaN"]
+    Primitive --> String["String
+'hello', \`hi\`"]
+    Primitive --> Boolean["Boolean
+true / false"]
+    Primitive --> Undefined["Undefined
+Declared but
+not assigned"]
+    Primitive --> Null["Null
+Intentional
+absence"]
+    Primitive --> Symbol["Symbol
+Unique
+identifier"]
+    Primitive --> BigInt["BigInt
+Large integers
+9007199254740991n"]
+
+    NonPrimitive --> Object["Object"]
+    Object --> Array["Array
+[1, 2, 3]"]
+    Object --> Function["Function
+() => {}"]
+    Object --> Date["Date
+new Date()"]
+    Object --> Regex["RegExp
+/[a-z]+/"]
+    Object --> Map["Map & Set
+key-value
+collections"]
+
+    style JS fill:#7c3aed,color:#fff
+    style Primitive fill:#4f46e5,color:#fff
+    style NonPrimitive fill:#059669,color:#fff
+    style Number fill:#6366f1,color:#fff
+    style String fill:#6366f1,color:#fff
+    style Boolean fill:#6366f1,color:#fff
+    style Undefined fill:#6366f1,color:#fff
+    style Null fill:#6366f1,color:#fff
+    style Symbol fill:#6366f1,color:#fff
+    style BigInt fill:#6366f1,color:#fff
+    style Object fill:#0d9488,color:#fff
+    style Array fill:#0891b2,color:#fff
+    style Function fill:#0891b2,color:#fff
+    style Date fill:#0891b2,color:#fff
+    style Regex fill:#0891b2,color:#fff
+    style Map fill:#0891b2,color:#fff
+```
+
 1. **Number:**
    - Represents both integer and floating-point numbers.
    - Examples: `42`, `3.14`, `-10`.
