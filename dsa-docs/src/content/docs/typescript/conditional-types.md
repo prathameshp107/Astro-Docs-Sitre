@@ -9,6 +9,27 @@ description: "Complete guide to TypeScript conditional types: T extends U ? X : 
 
 Conditional types select one of two possible types based on a condition. They're like ternary operators (`condition ? a : b`) but at the **type level**.
 
+### Conditional Type Resolution
+
+```mermaid
+flowchart TB
+    CT["type IsString T = T extends string ? true : false"] --> CD{T extends string?}
+    CD -->|Yes| True[type Result = true]
+    CD -->|No| False[type Result = false]
+    
+    RT["type ReturnType T =<br/>T extends (...args: any) => infer R ? R : never"] --> FN["Fn: (x: number) => string"]
+    FN --> EX[infer R = string 🎯]
+    
+    style CT fill:#7c3aed,color:#fff
+    style CD fill:#f59e0b,color:#fff
+    style True fill:#3b82f6,color:#fff
+    style False fill:#ef4444,color:#fff
+    style RT fill:#059669,color:#fff
+    style EX fill:#10b981,color:#fff
+```
+
+> **Analogy:** Conditional types are like a compiler telling you: "If the input is a string, label it true; if it's anything else, label it false." The `infer` keyword is like saying "tell me what type is inside this other type."
+
 ### Basic Syntax
 
 ```typescript

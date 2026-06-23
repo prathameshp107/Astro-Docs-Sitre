@@ -11,11 +11,30 @@ Aggregation is MongoDB's pipeline system for transforming, joining, grouping, an
 
 Think of it as:
 
-```text
-documents -> stage -> stage -> stage -> result
+```mermaid
+flowchart LR
+    Docs[(Collection
+    Raw Documents)] --> S1["Stage 1: $match
+    Filter documents"]
+    S1 --> S2["Stage 2: $group
+    Group & aggregate"]
+    S2 --> S3["Stage 3: $sort
+    Sort results"]
+    S3 --> Result["📊 Final Result
+    Transformed data"]
+    
+    style Docs fill:#3b82f6,color:#fff
+    style S1 fill:#7c3aed,color:#fff
+    style S2 fill:#059669,color:#fff
+    style S3 fill:#f59e0b,color:#fff
+    style Result fill:#10b981,color:#fff
 ```
 
 Each stage receives documents from the previous stage and sends transformed documents to the next stage.
+
+```text
+documents -> stage -> stage -> stage -> result
+```
 
 ## Sections
 

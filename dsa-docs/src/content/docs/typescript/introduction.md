@@ -67,21 +67,25 @@ greet(42); // ❌ Error: Argument of type 'number' is not assignable to paramete
 
 ### The Type System Flow
 
-![Type System Flow](/DSA-Notes-Problems/assets/typescript/type-system-flow.svg)
-
-TypeScript adds a **compile-time type checking layer** between your code and runtime execution:
-
+```mermaid
+flowchart TB
+    TS[Your TypeScript Code<br/>.ts file] --> TSC[TypeScript Compiler<br/>tsc]
+    TSC --> Check{Type Checking<br/>Passes?}
+    Check -->|No ❌| Errors[Errors Reported<br/>Fix & Re-compile]
+    Check -->|Yes ✅| Transpile[Transpile to JavaScript]
+    Transpile --> JS[JavaScript Output<br/>.js file]
+    JS --> Runtime[Execute in<br/>Browser / Node.js]
+    
+    style TS fill:#7c3aed,color:#fff
+    style TSC fill:#3b82f6,color:#fff
+    style Check fill:#f59e0b,color:#fff
+    style Errors fill:#ef4444,color:#fff
+    style Transpile fill:#059669,color:#fff
+    style JS fill:#7c3aed,color:#fff
+    style Runtime fill:#10b981,color:#fff
 ```
-Your TypeScript Code
-        ↓
-   TypeScript Compiler (tsc)
-        ↓
-   Type Checking Passes? → No → Errors Reported
-        ↓ Yes
-   Transpile to JavaScript
-        ↓
-   Execute (Browser / Node.js)
-```
+
+TypeScript adds a **compile-time type checking layer** between your code and runtime execution.
 
 ---
 
@@ -100,30 +104,6 @@ Your TypeScript Code
 | **Vercel** | Next.js framework |
 
 ---
-
-### TypeScript Compilation Process
-
-```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│  TypeScript     │     │  TypeScript       │     │  JavaScript     │
-│  Source (.ts)   │ ──► │  Compiler (tsc)   │ ──► │  Output (.js)   │
-│                 │     │                   │     │                 │
-│  interface User │     │  1. Parse         │     │  function       │
-│  function greet │     │  2. Type Check    │     │  greet(name) {  │
-│  const age: num │     │  3. Transform     │     │    ...          │
-└─────────────────┘     │  4. Emit JS       │     └─────────────────┘
-                        └──────────────────┘
-                              │
-                              ▼
-                        Type Errors Found?
-                              │
-                         ┌────┴────┐
-                         ▼         ▼
-                       Yes        No
-                         │         │
-                         ▼         ▼
-                    Fix Code    Emit JS
-```
 
 ---
 
@@ -162,18 +142,20 @@ Your TypeScript Code
 
 ### Learning Path
 
-```
-JavaScript Developer
-        ↓
-Basic Types & Inference
-        ↓
-Functions & Objects
-        ↓
-Interfaces & Generics
-        ↓
-Utility & Advanced Types
-        ↓
-React / Node / Angular Integration
-        ↓
-Enterprise TypeScript
+```mermaid
+flowchart TB
+    JS[JavaScript Developer] --> Basic[Basic Types & Inference]
+    Basic --> Func[Functions & Objects]
+    Func --> Inter[Interfaces & Generics]
+    Inter --> Adv[Utility & Advanced Types]
+    Adv --> FW[React / Node / Angular Integration]
+    FW --> Ent[Enterprise TypeScript 🚀]
+    
+    style JS fill:#3b82f6,color:#fff
+    style Basic fill:#7c3aed,color:#fff
+    style Func fill:#059669,color:#fff
+    style Inter fill:#f59e0b,color:#fff
+    style Adv fill:#ec4899,color:#fff
+    style FW fill:#06b6d4,color:#fff
+    style Ent fill:#10b981,color:#fff
 ```

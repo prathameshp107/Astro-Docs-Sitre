@@ -9,6 +9,24 @@ description: "Complete guide to TypeScript type guards: typeof, instanceof, user
 
 Type guards are expressions that perform runtime checks to **narrow** a type within a scope. They tell TypeScript's compiler: "in this block, this value is definitely this specific type."
 
+### Type Narrowing Flow
+
+```mermaid
+flowchart TB
+    Wide[Wide Type<br/>string | number | boolean] --> Check{Type Guard Check}
+    Check -->|typeof === 'string' ✅| Narrow1[Narrowed: string<br/>Can use .toUpperCase()]
+    Check -->|typeof === 'number' ✅| Narrow2[Narrowed: number<br/>Can use .toFixed()]
+    Check -->|typeof === 'boolean' ✅| Narrow3[Narrowed: boolean<br/>Can use ! negation]
+    
+    style Wide fill:#7c3aed,color:#fff
+    style Check fill:#f59e0b,color:#fff
+    style Narrow1 fill:#3b82f6,color:#fff
+    style Narrow2 fill:#059669,color:#fff
+    style Narrow3 fill:#ec4899,color:#fff
+```
+
+> **Analogy:** A wide type is like a box labeled "mixed items." A type guard is like opening the box and checking each item — once you know it's a hammer, you can use it as a hammer.
+
 ### Built-in Type Guards
 
 ```typescript

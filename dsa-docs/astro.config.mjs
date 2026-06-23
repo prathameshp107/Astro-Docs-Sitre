@@ -394,6 +394,11 @@ export default defineConfig({
               { label: 'Aggregations & Functions', link: '/sql/aggregations-functions' },
               { label: 'Subqueries & CTEs', link: '/sql/subqueries-ctes' },
               { label: 'Views', link: '/sql/views' },
+              { label: 'Window Functions', link: '/sql/window-functions' },
+              { label: 'Set Operations', link: '/sql/set-operations' },
+              { label: 'CASE & Conditional Logic', link: '/sql/case-and-conditional-logic' },
+              { label: 'Query Execution Order', link: '/sql/query-execution-order' },
+              { label: 'NULL Handling', link: '/sql/null-handling' },
             ],
           },
           {
@@ -418,6 +423,7 @@ export default defineConfig({
               { label: 'EXPLAIN & Query Optimization', link: '/sql/explain-query-optimization' },
               { label: 'Performance Optimization', link: '/sql/performance-optimization' },
               { label: 'Transactions & ACID', link: '/sql/transactions-acid-properties' },
+              { label: 'Isolation Levels & Deadlocks', link: '/sql/isolation-levels-and-deadlocks' },
               { label: 'Locks', link: '/sql/locks' },
             ],
           },
@@ -426,6 +432,16 @@ export default defineConfig({
             items: [
               { label: 'Stored Procedures & Functions', link: '/sql/stored-procedures-functions' },
               { label: 'Triggers', link: '/sql/triggers' },
+            ],
+          },
+          {
+            label: 'Administration & Scaling',
+            items: [
+              { label: 'Users & Privileges', link: '/sql/users-and-privileges' },
+              { label: 'Backup & Restore', link: '/sql/backup-and-restore' },
+              { label: 'Replication', link: '/sql/replication' },
+              { label: 'Partitioning & Sharding', link: '/sql/partitioning-and-sharding' },
+              { label: 'JSON & Full-Text Search', link: '/sql/json-and-fulltext' },
             ],
           },
           {
@@ -444,11 +460,20 @@ export default defineConfig({
         items: [
           { label: 'MongoDB Overview', link: '/mongodb' },
           {
+            label: 'Getting Started',
+            items: [
+              { label: 'What is MongoDB?', link: '/mongodb/getting-started/what-is-mongodb' },
+              { label: 'Installation & Tools', link: '/mongodb/getting-started/installation-and-tools' },
+              { label: 'Documents & Collections', link: '/mongodb/getting-started/documents-and-collections' },
+            ],
+          },
+          {
             label: 'Core MongoDB',
             items: [
-              { label: 'Fundamentals & CRUD', link: '/mongodb/fundamentals-crud' },
-              { label: 'Data Modeling', link: '/mongodb/data-modeling' },
-              { label: 'Query & Filtering', link: '/mongodb/query-filtering' },
+              { label: 'Fundamentals & CRUD', link: '/mongodb/core/fundamentals-crud' },
+              { label: 'Query & Filtering', link: '/mongodb/core/query-filtering' },
+              { label: 'Data Modeling', link: '/mongodb/core/data-modeling' },
+              { label: 'Indexing', link: '/mongodb/core/indexing' },
             ],
           },
           {
@@ -465,16 +490,28 @@ export default defineConfig({
             ],
           },
           {
-            label: 'Performance',
+            label: 'Operations',
             items: [
-              { label: 'Indexing', link: '/mongodb/indexing' },
+              { label: 'Replication & Replica Sets', link: '/mongodb/operations/replication-and-replica-sets' },
+              { label: 'Sharding', link: '/mongodb/operations/sharding' },
+              { label: 'Transactions', link: '/mongodb/operations/transactions' },
+              { label: 'Read & Write Concern', link: '/mongodb/operations/read-write-concern' },
+              { label: 'Change Streams', link: '/mongodb/operations/change-streams' },
+              { label: 'Performance & explain()', link: '/mongodb/operations/performance-and-explain' },
             ],
           },
           {
-            label: 'Advanced & Integration',
+            label: 'Security',
             items: [
-              { label: 'Advanced Topics', link: '/mongodb/advanced-topics' },
-              { label: 'Mongoose Node.js Integration', link: '/mongodb/mongoose-nodejs-integration' },
+              { label: 'Authentication & Authorization', link: '/mongodb/security/authentication-and-authorization' },
+              { label: 'Schema Validation', link: '/mongodb/security/schema-validation' },
+              { label: 'Security Best Practices', link: '/mongodb/security/security-best-practices' },
+            ],
+          },
+          {
+            label: 'Integration',
+            items: [
+              { label: 'Mongoose — Node.js', link: '/mongodb/mongoose-nodejs-integration' },
             ],
           },
           {
@@ -482,6 +519,7 @@ export default defineConfig({
             items: [
               { label: 'Top 100 Interview Questions', link: '/mongodb/top-100-interview-questions' },
               { label: 'Quick Reference Cheat Sheet', link: '/mongodb/quick-reference-cheat-sheet' },
+              { label: 'Advanced Topics Hub', link: '/mongodb/advanced-topics' },
             ],
           },
         ],

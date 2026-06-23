@@ -7,6 +7,8 @@ sidebar:
 
 ## 9. Transactions & ACID Properties
 
+> 📖 **Isolation levels and deadlocks are covered in detail on the [Isolation Levels & Deadlocks page →](/DSA-Notes-Problems/sql/isolation-levels-and-deadlocks)**
+
 ### What is a Transaction?
 A **transaction** is a sequence of SQL operations treated as a single logical unit. Either **all succeed** or **all fail**.
 
@@ -23,6 +25,27 @@ ROLLBACK;  -- undo all changes in transaction
 ```
 
 ### ACID Properties
+
+```mermaid
+flowchart TB
+    subgraph ACID[ACID Properties]
+        A["ATOMICITY<br/>All or nothing<br/>✅ Commit or ❌ Rollback"]
+        C["CONSISTENCY<br/>Valid state to valid state<br/>✅ Rules & constraints respected"]
+        I["ISOLATION<br/>No interference between txns<br/>✅ Invisible intermediate state"]
+        D["DURABILITY<br/>Persists after commit<br/>✅ Survives crashes (WAL)"]
+    end
+    
+    Transaction[START TRANSACTION] --> A
+    A --> C
+    C --> I
+    I --> D
+    D --> COMMIT
+    
+    style A fill:#7c3aed,color:#fff
+    style C fill:#3b82f6,color:#fff
+    style I fill:#059669,color:#fff
+    style D fill:#f59e0b,color:#fff
+```
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -76,24 +99,6 @@ START TRANSACTION;
 COMMIT;
 ```
 
-### Isolation Levels
-
-| Level | Dirty Read | Non-Repeatable Read | Phantom Read |
-|---|---|---|---|
-| READ UNCOMMITTED | ✅ Possible | ✅ Possible | ✅ Possible |
-| READ COMMITTED | ❌ Prevented | ✅ Possible | ✅ Possible |
-| REPEATABLE READ | ❌ Prevented | ❌ Prevented | ✅ Possible |
-| SERIALIZABLE | ❌ Prevented | ❌ Prevented | ❌ Prevented |
-
-```sql
--- Set isolation level
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;  -- InnoDB default
-SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED;
-```
-
-**Read Anomalies Explained:**
-- **Dirty Read** — reading uncommitted data from another transaction
-- **Non-Repeatable Read** — same row returns different values in same transaction
-- **Phantom Read** — same query returns different number of rows in same transaction
+> 📖 **Isolation levels, anomalies, and deadlocks are now on the dedicated [Isolation Levels & Deadlocks page →](/DSA-Notes-Problems/sql/isolation-levels-and-deadlocks)**
 
 ---

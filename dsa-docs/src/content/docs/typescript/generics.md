@@ -11,6 +11,22 @@ description: "Complete guide to TypeScript generics: generic functions, constrai
 
 > **Analogy:** A generic function is like a vending machine that works with any product — the mechanics are the same, but the product type varies.
 
+### One Function, Many Types
+
+```mermaid
+flowchart LR
+    GF[Generic Function<br/>function identity T (arg: T): T] --> C1["identity string ('hello')<br/>T = string → returns string"]
+    GF --> C2["identity number (42)<br/>T = number → returns number"]
+    GF --> C3["identity boolean (true)<br/>T = boolean → returns boolean"]
+    
+    style GF fill:#7c3aed,color:#fff
+    style C1 fill:#f59e0b,color:#fff
+    style C2 fill:#f59e0b,color:#fff
+    style C3 fill:#f59e0b,color:#fff
+```
+
+> Think of `T` as a placeholder: you call `identity("hello")`, and TypeScript fills in `T = string` automatically. One function body works for any type, and you never lose type information.
+
 ### Basic Generic Function
 
 ```typescript

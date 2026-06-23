@@ -9,6 +9,33 @@ description: "Complete guide to indexed access types: T[K] syntax, accessing nes
 
 Indexed access types allow you to **look up** a property type by its key, just like accessing an object property at runtime — but at the **type level**.
 
+### keyof + Indexed Access
+
+```mermaid
+flowchart TB
+    subgraph UserType["interface User {
+      name: string;
+      age: number;
+      email: string;
+    }"]
+    end
+    
+    UserType --> Keyof["keyof User<br/>→ 'name' | 'age' | 'email'<br/>(union of all keys)"]
+    UserType --> Indexed["User['name']<br/>→ string<br/>(value type at key 'name')"]
+    UserType --> Combined["User[keyof User]<br/>→ string | number<br/>(all value types)"]
+    
+    Keyof --> Specific["Type-safe getter:<br/>function get&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K]"]
+    Indexed --> Specific
+    
+    style UserType fill:#7c3aed,color:#fff
+    style Keyof fill:#3b82f6,color:#fff
+    style Indexed fill:#f59e0b,color:#fff
+    style Combined fill:#059669,color:#fff
+    style Specific fill:#ec4899,color:#fff
+```
+
+> **Analogy:** Think of `keyof` as asking a house "what rooms do you have?" — it returns a list. Indexed access (`User['name']`) is like saying "show me what's in the name room" — it returns the contents. Together they give you type-safe property access.
+
 ### Basic Syntax
 
 ```typescript

@@ -11,7 +11,32 @@ A **union type** describes a value that can be one of several types. It's create
 
 > **Analogy:** A union type is like a parking spot that can hold either a car OR a motorcycle OR a bicycle — you know it's one of those, but you need to check which one before driving away.
 
-![Union Types Diagram](/DSA-Notes-Problems/assets/typescript/union-types.svg)
+```mermaid
+flowchart TB
+    subgraph Union[Union Type A | B | C]
+        direction LR
+        A[Type A<br/>string] --- B[Type B<br/>number] --- C[Type C<br/>boolean]
+    end
+    
+    subgraph Intersection[Intersection Type A & B]
+        direction LR
+        AB[Has ALL properties<br/>of A AND B]
+    end
+    
+    Union -->|Value can be ONE of| Example1["id: string | number<br/>-> 'abc' OR 42"]
+    Intersection -->|Value must have ALL| Example2["Admin = User & Permissions<br/>-> has name, email, role, permissions"]
+    
+    style Union fill:#7c3aed,color:#fff
+    style Intersection fill:#3b82f6,color:#fff
+    style A fill:#f59e0b,color:#fff
+    style B fill:#f59e0b,color:#fff
+    style C fill:#f59e0b,color:#fff
+    style AB fill:#059669,color:#fff
+    style Example1 fill:#7c3aed,color:#fff
+    style Example2 fill:#3b82f6,color:#fff
+```
+
+> **Venn diagram thinking:** A union (`|`) is like the **OR** area — the value can be in circle A OR circle B. An intersection (`&`) is like the **AND** area — the value must be in both circles at once.
 
 ---
 

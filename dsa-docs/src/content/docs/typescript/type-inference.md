@@ -9,7 +9,28 @@ description: "Deep dive into TypeScript's type inference system: how the compile
 
 Type inference is TypeScript's ability to automatically determine the type of a variable, function return value, or expression without explicit annotations. The compiler analyzes how values are used and assigns types accordingly.
 
-![Type Inference Flow](/DSA-Notes-Problems/assets/typescript/type-inference-flow.svg)
+```mermaid
+flowchart TB
+    Code[Your Code] --> Analyzer[TypeScript Analyzer]
+    Analyzer --> Var["let name = 'Alice'<br/>→ inferred: string"]
+    Analyzer --> Func["function add(a: number, b: number) {<br/>  return a + b<br/>}<br/>→ inferred return: number"]
+    Analyzer --> Context["Contextual Typing<br/>arr.forEach((n) => n.toFixed(2))<br/>→ n inferred: number"]
+    
+    Var --> Check{Type checks out?}
+    Func --> Check
+    Context --> Check
+    Check -->|Yes ✅| Compiles[Type-safe Code ✨]
+    Check -->|No ❌| Error[Compiler Error Reported]
+    
+    style Code fill:#7c3aed,color:#fff
+    style Analyzer fill:#3b82f6,color:#fff
+    style Var fill:#f59e0b,color:#fff
+    style Func fill:#059669,color:#fff
+    style Context fill:#ec4899,color:#fff
+    style Check fill:#f59e0b,color:#fff
+    style Compiles fill:#10b981,color:#fff
+    style Error fill:#ef4444,color:#fff
+```
 
 ---
 

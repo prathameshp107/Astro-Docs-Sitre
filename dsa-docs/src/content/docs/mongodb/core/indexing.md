@@ -11,6 +11,28 @@ sidebar:
 
 Without an index, MongoDB does a **Collection Scan** — it reads **every document** to find matching ones. This is fine for small collections but becomes catastrophically slow for millions of records.
 
+```mermaid
+flowchart LR
+    subgraph Without[Without Index — COLLSCAN ❌]
+        Q1[Query: find email=alice@...]
+        D1[doc1] --> D2[doc2]
+        D2 --> D3[doc3]
+        D3 --> Dots[...scan 1M docs...]
+        Dots --> Slow[~500ms]
+    end
+    
+    subgraph With[With Index — IXSCAN ✅]
+        Q2[Query: find email=alice@...]
+        BT[B-Tree Index]
+        Match[Direct to matching doc]
+        Q2 --> BT --> Match --> Fast[~1ms]
+    end
+    
+    style Without fill:#ef4444,color:#fff
+    style With fill:#7c3aed,color:#fff
+    style BT fill:#059669,color:#fff
+```
+
 ```
 Without Index (Collection Scan):
 [doc1][doc2][doc3][doc4]...[doc999999][doc1000000]

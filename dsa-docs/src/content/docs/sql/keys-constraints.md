@@ -9,6 +9,30 @@ sidebar:
 
 ### Types of Keys
 
+### Primary Key ↔ Foreign Key Relationship
+
+```mermaid
+flowchart TB
+    subgraph Departments[departments TABLE]
+        PK1["🔑 PRIMARY KEY<br/>dept_id (1, 2, 3)
+        → Unique, NOT NULL"]
+    end
+    
+    subgraph Employees[employees TABLE]
+        PK2["🔑 PRIMARY KEY<br/>id (101, 102, 103)"]
+        FK1["🔗 FOREIGN KEY<br/>dept_id<br/>→ References dept_id in departments"]
+    end
+    
+    PK1 -->|One department| FK1
+    FK1 -->|Many employees| PK1
+    
+    style PK1 fill:#7c3aed,color:#fff
+    style PK2 fill:#3b82f6,color:#fff
+    style FK1 fill:#059669,color:#fff
+```
+
+---
+
 ```
 PRIMARY KEY
 ├── Uniquely identifies each row

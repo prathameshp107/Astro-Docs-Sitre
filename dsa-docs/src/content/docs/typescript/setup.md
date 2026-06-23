@@ -171,6 +171,29 @@ npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslin
 
 ---
 
+### Project Architecture: TypeScript Compilation
+
+```mermaid
+flowchart LR
+    TSSRC[.ts Source Files<br/>src/] --> TSC[TypeScript Compiler<br/>tsc --noEmit]
+    TSSRC --> BUILD[Build Tool<br/>tsc / esbuild / vite]
+    TSC -->|Type Check ✅| CLEAN[Type-safe Code]
+    BUILD --> JS[.js Output<br/>dist/]
+    JS --> DEPLOY[Deploy to<br/>Browser / Node]
+    
+    TSCONFIG[tsconfig.json<br/>Configures everything] -.-> TSC
+    TSCONFIG -.-> BUILD
+    
+    style TSSRC fill:#7c3aed,color:#fff
+    style TSC fill:#3b82f6,color:#fff
+    style BUILD fill:#f59e0b,color:#fff
+    style JS fill:#059669,color:#fff
+    style TSCONFIG fill:#ec4899,color:#fff
+    style DEPLOY fill:#10b981,color:#fff
+```
+
+> **Flow:** Write `.ts` in `src/` → `tsc` checks types (in CI: `--noEmit`) → build tool emits `.js` to `dist/` → deploy. The `tsconfig.json` file is the control panel that tells everything how to behave.
+
 ### TypeScript with Bundlers
 
 **Vite:**

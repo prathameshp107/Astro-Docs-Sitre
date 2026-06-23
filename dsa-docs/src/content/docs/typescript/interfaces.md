@@ -9,6 +9,52 @@ description: "Complete guide to TypeScript interfaces: defining shapes, extendin
 
 An **interface** defines the shape of an object — what properties and methods it must have. Interfaces are the primary way to describe object shapes in TypeScript.
 
+### Structural Typing — "If It Walks Like a Duck…"
+
+```mermaid
+flowchart LR
+    subgraph Duck[Duck Interface]
+        D1[name: string]
+        D2[swim(): void]
+        D3[quack(): void]
+    end
+    
+    subgraph RealDuck[A Real Duck Object]
+        R1[name: "Donald"]
+        R2[swim: function]
+        R3[quack: function]
+        R4[color: "white"]
+    end
+    
+    subgraph Robot[Robot Duck Object]
+        B1[name: "Mech"]
+        B2[swim: function]
+        B3[quack: function]
+        B4[battery: 100]
+    end
+    
+    Duck -.->|✅ Matches| RealDuck
+    Duck -.->|✅ Matches| Robot
+    
+    style Duck fill:#7c3aed,color:#fff
+    style RealDuck fill:#3b82f6,color:#fff
+    style Robot fill:#059669,color:#fff
+```
+
+TypeScript uses **structural typing** (also called duck typing): if an object has all the required properties with the right types, it satisfies the interface — regardless of its actual name or origin.
+
+```typescript
+interface Duck {
+  name: string;
+  swim(): void;
+  quack(): void;
+}
+
+// These all satisfy Duck because they have the right shape:
+const realDuck = { name: "Donald", swim() {}, quack() {}, color: "white" };  // ✅
+const robotDuck = { name: "Mech", swim() {}, quack() {}, battery: 100 };     // ✅
+```
+
 ---
 
 ### Basic Interface

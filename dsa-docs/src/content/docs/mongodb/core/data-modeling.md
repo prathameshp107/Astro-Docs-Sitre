@@ -11,6 +11,30 @@ Data modeling is the most **critical skill** in MongoDB. Good schema design = fa
 
 ### 3.1 The Core Question: Embed or Reference?
 
+```mermaid
+flowchart TB
+    subgraph Embed[Embedding ✅
+    Store related data INSIDE the same document]
+        E1["user document:
+        { name: "Alice",
+          address: { city: "Mumbai" }
+        }"]
+    end
+    
+    subgraph Reference[Referencing ✅
+    Store related data in SEPARATE collection, link with ID]
+        R1["users: { _id: "u1", name: "Alice" }"]
+        R2["addresses: { userId: "u1", city: "Mumbai" }"]
+        R1 -.-> R2
+    end
+    
+    Q[Which to choose?] --> Embed
+    Q --> Reference
+    
+    style Embed fill:#7c3aed,color:#fff
+    style Reference fill:#3b82f6,color:#fff
+```
+
 ```
 Embedding (Denormalization)        Referencing (Normalization)
 ──────────────────────────────     ────────────────────────────
@@ -354,6 +378,36 @@ One student can enroll in many courses. One course can have many students.
 ---
 
 ### 3.8 Decision Guide: Embed vs Reference
+
+```mermaid
+flowchart TB
+    Q1[Is the data always<br/>accessed together?]
+    Q1 -->|Yes| Q2[Can the nested data<br/>grow without bound?]
+    Q1 -->|No| Q3[Is the data shared<br/>across many documents?]
+    
+    Q2 -->|Yes| Q4[Do you need to query<br/>the nested data<br/>independently?]
+    Q2 -->|No| EMBED["✅ EMBED<br/>Small, bounded, owned data<br/>Single query → fast reads"]
+    
+    Q3 -->|Yes| REF1["✅ REFERENCE<br/>Shared data → update once<br/>reflected everywhere"]
+    Q3 -->|No| Q5[Is write performance<br/>critical?]
+    
+    Q4 -->|Yes| REF2["✅ REFERENCE<br/>Use separate collection<br/>for independent querying"]
+    Q4 -->|No| Q5
+    
+    Q5 -->|Yes| EMBED2["✅ EMBED<br/>Fewer documents = less I/O<br/>= faster writes"]
+    Q5 -->|No| REF3["✅ REFERENCE<br/>Cleaner, normalized data<br/>grows safely"]
+    
+    style EMBED fill:#7c3aed,color:#fff
+    style EMBED2 fill:#7c3aed,color:#fff
+    style REF1 fill:#3b82f6,color:#fff
+    style REF2 fill:#3b82f6,color:#fff
+    style REF3 fill:#3b82f6,color:#fff
+    style Q1 fill:#f59e0b,color:#fff
+    style Q2 fill:#f59e0b,color:#fff
+    style Q3 fill:#f59e0b,color:#fff
+    style Q4 fill:#f59e0b,color:#fff
+    style Q5 fill:#f59e0b,color:#fff
+```
 
 ```
 Ask yourself these questions:

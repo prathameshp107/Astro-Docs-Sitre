@@ -11,7 +11,29 @@ An **intersection type** combines multiple types into one. A value of an interse
 
 > **Analogy:** An intersection type is like a person who is both a Developer AND a Designer — they have all the properties of both roles.
 
-![Intersection Types Venn](/DSA-Notes-Problems/assets/typescript/intersection-types.svg)
+```mermaid
+flowchart TB
+    subgraph Union[Union: A | B — Either/Or]
+        direction LR
+        U1[Type A] --- U2[Type B]
+    end
+    
+    subgraph Intersection[Intersection: A & B — Both/And]
+        direction LR
+        I1[Type A] --- I2[Both A & B] --- I3[Type B]
+    end
+    
+    Union -->|Value is ONE of| UEx["string | number<br/>→ 'hello' OR 42"]
+    Intersection -->|Value has ALL of| IEx["Person & Employee<br/>→ has name, age, employeeId, department"]
+    
+    style Union fill:#ef4444,color:#fff
+    style Intersection fill:#7c3aed,color:#fff
+    style UEx fill:#ef4444,color:#fff
+    style IEx fill:#7c3aed,color:#fff
+    style I2 fill:#059669,color:#fff
+```
+
+> **Analogy:** Union is like a parking spot that fits a car OR a bike. Intersection is like a multi-tool that has a blade AND scissors AND a file.
 
 ---
 

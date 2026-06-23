@@ -5,6 +5,32 @@ description: "Deep dive into TypeScript special types: any, unknown, void, never
 
 ## Special Types in TypeScript
 
+### Type Hierarchy
+
+```mermaid
+flowchart TB
+    Unk[unknown<br/>Top type — every type fits here] --> Obj[object<br/>Non-primitive types: functions, arrays, classes]
+    Obj --> Func[Function]
+    Obj --> Arr[Array]
+    Obj --> Custom[Interfaces & Classes]
+    Obj --> Prim[string | number | boolean | bigint | symbol]
+    Prim --> Never[never<br/>Bottom type — nothing fits here]
+    
+    Any[any<br/>⚠️ Bypasses the entire hierarchy] -.- Unk
+    Any -.- Never
+    
+    style Unk fill:#7c3aed,color:#fff
+    style Any fill:#ef4444,color:#fff
+    style Obj fill:#3b82f6,color:#fff
+    style Func fill:#059669,color:#fff
+    style Arr fill:#059669,color:#fff
+    style Custom fill:#059669,color:#fff
+    style Prim fill:#f59e0b,color:#fff
+    style Never fill:#10b981,color:#fff
+```
+
+> **Analogy:** `unknown` is the ceiling — every type fits under it. `never` is the floor — nothing goes below it. `any` is a trapdoor that bypasses the whole hierarchy.
+
 ### The any Type — Opt-Out of Checking
 
 ```typescript

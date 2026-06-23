@@ -10,6 +10,30 @@ sidebar:
 ### What is Normalization?
 The process of organizing a database to **reduce redundancy** and **improve data integrity** by dividing tables and defining relationships.
 
+### Normalization Steps
+
+```mermaid
+flowchart TB
+    UNF["Unnormalized Form<br/>Repeating groups,<br/>multi-valued cells"]
+    NF1["1NF<br/>✦ Atomic values only<br/>✦ No repeating groups<br/>(one value per cell)"]
+    NF2["2NF<br/>✦ 1NF + no partial dependency<br/>✦ Non-key depends on ALL of PK<br/>(split composite keys)"]
+    NF3["3NF<br/>✦ 2NF + no transitive dependency<br/>✦ Non-key depends only on PK<br/>(move dependent fields)"]
+    BCNF["BCNF<br/>✦ 3NF + every determinant<br/>  is a superkey<br/>(stricter version of 3NF)"]
+    
+    UNF -->|Remove repeating groups| NF1
+    NF1 -->|Remove partial dependencies| NF2
+    NF2 -->|Remove transitive dependencies| NF3
+    NF3 -->|Every determinant is a superkey| BCNF
+    
+    style UNF fill:#ef4444,color:#fff
+    style NF1 fill:#f59e0b,color:#fff
+    style NF2 fill:#3b82f6,color:#fff
+    style NF3 fill:#7c3aed,color:#fff
+    style BCNF fill:#059669,color:#fff
+```
+
+---
+
 ### Unnormalized Table (Example)
 
 ```
