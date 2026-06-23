@@ -11,7 +11,42 @@ sidebar:
 
 Python handles memory automatically through **reference counting** and a **garbage collector** for circular references. Understanding these helps you write efficient code.
 
-<img src="/DSA-Notes-Problems/assets/python/memory-representation.svg" alt="Python Memory Representation Diagram" width="700" />
+```mermaid
+flowchart TB
+    subgraph RefCount["Reference Counting (Immediate)"]
+        direction TB
+        RC1["Object created — refcount = 1"]
+        RC2["Another reference — refcount = 2"]
+        RC3["Reference deleted — refcount = 1"]
+        RC4["Last ref deleted — refcount = 0 🗑️"]
+        RC5["Memory freed immediately"]
+        RC1 --> RC2 --> RC3 --> RC4 --> RC5
+    end
+
+    subgraph GC["Garbage Collector (Cycle Detector)"]
+        direction TB
+        GC1["Object A → Object B"]
+        GC2["Object B → Object A"]
+        GC3["Both unreachable from outside"]
+        GC4["GC detects cycle 🔄"]
+        GC5["Memory freed"]
+        GC1 --- GC2
+        GC2 --> GC3 --> GC4 --> GC5
+    end
+
+    style RefCount fill:#059669,color:#fff
+    style GC fill:#7c3aed,color:#fff
+    style RC1 fill:#10b981,color:#fff
+    style RC2 fill:#10b981,color:#fff
+    style RC3 fill:#f59e0b,color:#fff
+    style RC4 fill:#ef4444,color:#fff
+    style RC5 fill:#059669,color:#fff
+    style GC1 fill:#8b5cf6,color:#fff
+    style GC2 fill:#8b5cf6,color:#fff
+    style GC3 fill:#f59e0b,color:#fff
+    style GC4 fill:#ef4444,color:#fff
+    style GC5 fill:#059669,color:#fff
+```
 
 ## Reference Counting
 

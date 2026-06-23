@@ -27,6 +27,45 @@ def count_numbers():
     return total
 ```
 
+```mermaid
+flowchart TB
+    subgraph Threading["Threading (Same Process — GIL)"]
+        direction TB
+        T1["Thread 1"]
+        T2["Thread 2"]
+        T3["Thread 3"]
+        L1["GIL Lock 🚫"]
+        T1 -->|waits| L1
+        T2 -->|waits| L1
+        T3 -->|waits| L1
+        L1 -->|"one at a time"| CPU1["1 CPU Core"]
+    end
+
+    subgraph Multiprocessing["Multiprocessing (Separate Processes)"]
+        direction TB
+        P1["Process 1"]
+        P2["Process 2"]
+        P3["Process 3"]
+        G1["GIL 1"]
+        G2["GIL 2"]
+        G3["GIL 3"]
+        P1 --> G1 --> C1["CPU Core 1"]
+        P2 --> G2 --> C2["CPU Core 2"]
+        P3 --> G3 --> C3["CPU Core 3"]
+    end
+
+    style Threading fill:#1e40af,color:#fff
+    style Multiprocessing fill:#7c3aed,color:#fff
+    style L1 fill:#dc2626,color:#fff
+    style CPU1 fill:#6b7280,color:#fff
+    style G1 fill:#059669,color:#fff
+    style G2 fill:#059669,color:#fff
+    style G3 fill:#059669,color:#fff
+    style C1 fill:#2563eb,color:#fff
+    style C2 fill:#2563eb,color:#fff
+    style C3 fill:#2563eb,color:#fff
+```
+
 ## GIL Impact
 
 ```python

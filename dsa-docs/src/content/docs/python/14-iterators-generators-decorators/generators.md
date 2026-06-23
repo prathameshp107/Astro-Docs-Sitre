@@ -11,6 +11,35 @@ sidebar:
 
 A **generator** is a function that produces a sequence of values lazily using `yield` instead of `return`. Generators are memory-efficient because they produce values on demand.
 
+### Generator Lazy Evaluation
+
+```mermaid
+flowchart TB
+    Start["def countdown(n):
+while n > 0:"] --> Yield["⏸️ yield n
+Pause and return n"]
+    Yield -->|"next() called"| Resume["▶️ Resume from yield
+n -= 1
+continue loop"]
+    Resume -->|"n > 0"| Yield
+    Resume -->|"n == 0"| Stop["⛔ StopIteration
+Generator exhausted"]
+
+    subgraph Memory["Memory Efficient"
+        Mem["🧠 Only stores current state
+not the entire sequence!
+List: O(n) memory
+Generator: O(1) memory"]
+    end
+
+    style Start fill:#7c3aed,color:#fff
+    style Yield fill:#f59e0b,color:#000
+    style Resume fill:#4f46e5,color:#fff
+    style Stop fill:#dc2626,color:#fff
+    style Mem fill:#059669,color:#fff
+    style Memory fill:#1e1b4b,color:#e0e7ff
+```
+
 ## Generator Functions
 
 ```python

@@ -11,6 +11,27 @@ sidebar:
 
 An **iterator** is an object that produces a sequence of values one at a time. Python's `for` loop works by calling `next()` on an iterator until it raises `StopIteration`.
 
+### Iterator Protocol
+
+```mermaid
+flowchart TB
+    Iterable["📦 Iterable
+has __iter__()
+list, tuple, str, dict"] -->|"iter(iterable)"| Iterator["🔄 Iterator
+has __iter__() + __next__()
+remembers its position"]
+    Iterator -->|"next(iterator)"| Value["📤 Returns next value
+1, 2, 3, ..."]
+    Value -->|"More values?"| Iterator
+    Value -->|"No more values!"| Stop["⛔ StopIteration
+Exception raised"]
+
+    style Iterable fill:#7c3aed,color:#fff
+    style Iterator fill:#4f46e5,color:#fff
+    style Value fill:#059669,color:#fff
+    style Stop fill:#dc2626,color:#fff
+```
+
 ## The Iteration Protocol
 
 ```python

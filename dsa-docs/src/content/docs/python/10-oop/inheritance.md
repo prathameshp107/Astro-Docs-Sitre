@@ -11,7 +11,46 @@ sidebar:
 
 **Inheritance** allows a class to inherit attributes and methods from another class, enabling code reuse and establishing hierarchical relationships.
 
-<img src="/DSA-Notes-Problems/assets/python/inheritance-hierarchy.svg" alt="Inheritance Hierarchy Diagram" width="700" />
+### Class Inheritance + MRO
+
+```mermaid
+flowchart TB
+    Animal["🐾 Animal
++ name
++ speak()
++ move()"]
+
+    Dog["🐕 Dog
++ speak() → Woof"]
+    Cat["🐈 Cat
++ speak() → Meow"]
+    Duck["🦆 Duck
++ fly()
++ swim()
++ move() → Walk"]
+
+    Flyable["🪽 Flyable
++ fly()
++ move()"]
+    Swimmable["🏊 Swimmable
++ swim()
++ move()"]
+
+    Animal --> Dog
+    Animal --> Cat
+    Animal --> Duck
+    Flyable --> Duck
+    Swimmable --> Duck
+
+    style Animal fill:#7c3aed,color:#fff
+    style Dog fill:#4f46e5,color:#fff
+    style Cat fill:#4f46e5,color:#fff
+    style Duck fill:#059669,color:#fff
+    style Flyable fill:#f59e0b,color:#000
+    style Swimmable fill:#dc2626,color:#fff
+```
+
+**MRO for Duck:** `Duck → Flyable → Swimmable → Animal → object`
 
 ## Basic Inheritance
 

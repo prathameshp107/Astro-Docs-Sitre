@@ -11,6 +11,36 @@ sidebar:
 
 **Scope** determines where a variable is accessible. Python follows the **LEGB** rule: Local → Enclosing → Global → Built-in.
 
+### LEGB Lookup Order
+
+```mermaid
+flowchart TB
+    Code["🔍 Variable lookup
+x = 5"] --> Local["1️⃣ Local
+Inside current function"]
+    Local -->|"Not found"| Enclosing["2️⃣ Enclosing
+Outer function"]
+    Enclosing -->|"Not found"| Global["3️⃣ Global
+Module level"]
+    Global -->|"Not found"| Builtin["4️⃣ Built-in
+Python built-ins
+print, len, range"]
+    Builtin -->|"Not found"| Error["❌ NameError"]
+
+    Local -->|"✅ Found"| Use["Use the value"]
+    Enclosing -->|"✅ Found"| Use
+    Global -->|"✅ Found"| Use
+    Builtin -->|"✅ Found"| Use
+
+    style Code fill:#7c3aed,color:#fff
+    style Local fill:#059669,color:#fff
+    style Enclosing fill:#4f46e5,color:#fff
+    style Global fill:#f59e0b,color:#000
+    style Builtin fill:#dc2626,color:#fff
+    style Error fill:#dc2626,color:#fff
+    style Use fill:#059669,color:#fff
+```
+
 ## LEGB Rule
 
 ```python

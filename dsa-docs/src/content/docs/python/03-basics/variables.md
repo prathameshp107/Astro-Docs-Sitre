@@ -55,6 +55,40 @@ flag = True      # bool
 nothing = None   # NoneType
 ```
 
+```mermaid
+flowchart TB
+    subgraph Mutable["Mutable Objects (can change in place)"]
+        direction TB
+        L["list"]
+        D["dict"]
+        S["set"]
+        BA["bytearray"]
+    end
+
+    subgraph Immutable["Immutable Objects (cannot change in place)"]
+        direction TB
+        I["int"]
+        F["float"]
+        ST["str"]
+        T["tuple"]
+        BO["bool"]
+        FR["frozenset"]
+    end
+
+    style Mutable fill:#1e40af,color:#fff
+    style Immutable fill:#7c3aed,color:#fff
+    style L fill:#2563eb,color:#fff
+    style D fill:#2563eb,color:#fff
+    style S fill:#2563eb,color:#fff
+    style BA fill:#2563eb,color:#fff
+    style I fill:#8b5cf6,color:#fff
+    style F fill:#8b5cf6,color:#fff
+    style ST fill:#8b5cf6,color:#fff
+    style T fill:#8b5cf6,color:#fff
+    style BO fill:#8b5cf6,color:#fff
+    style FR fill:#8b5cf6,color:#fff
+```
+
 ## Dynamic Typing
 
 ```python

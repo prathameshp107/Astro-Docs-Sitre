@@ -18,6 +18,48 @@ Next.js offers four main rendering strategies. Choosing the right one impacts **
 
 ---
 
+### Rendering Strategies Comparison
+
+```mermaid
+flowchart TB
+    subgraph Strategies["4 Rendering Strategies"]
+        SSG["🏗️ SSG
+Static Site Generation
+HTML built at deploy time
+Blogs, Docs, Marketing"]
+
+        SSR["🔄 SSR
+Server-Side Rendering
+HTML built per request
+Dashboards, Auth, User-specific"]
+
+        ISR["⏳ ISR
+Incremental Static Regen.
+Static + periodic refresh
+E-com, News, Pricing"]
+
+        CSR["🖥️ CSR
+Client-Side Rendering
+Rendered in browser
+Real-time apps, Charts"]
+    end
+
+    SSG -->|"⚡ Fastest CDN"| HTML1["Static HTML"]
+    SSR -->|"🐢 Always fresh"| HTML2["Dynamic HTML"]
+    ISR -->|"⚡ Fast + Fresh"| HTML3["Cached + Revalidated"]
+    CSR -->|"🐌 Slow initial"| HTML4["JS + Empty Shell"]
+
+    style SSG fill:#059669,color:#fff
+    style SSR fill:#4f46e5,color:#fff
+    style ISR fill:#f59e0b,color:#000
+    style CSR fill:#dc2626,color:#fff
+    style HTML1 fill:#9333ea,color:#fff
+    style HTML2 fill:#9333ea,color:#fff
+    style HTML3 fill:#9333ea,color:#fff
+    style HTML4 fill:#9333ea,color:#fff
+    style Strategies fill:#1e1b4b,color:#e0e7ff
+```
+
 ## 9.2 Static Site Generation (SSG)
 
 **SSG** pre-renders pages at build time. All pages become static HTML files — blazing fast.

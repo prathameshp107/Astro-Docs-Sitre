@@ -25,6 +25,54 @@ async def hello():
 asyncio.run(hello())
 ```
 
+```mermaid
+flowchart TB
+    EL["Event Loop 🌀"]
+    
+    subgraph Tasks["Scheduled Tasks"]
+        T1["Task 1: fetch(url1)"]
+        T2["Task 2: fetch(url2)"]
+        T3["Task 3: fetch(url3)"]
+    end
+
+    subgraph IO["I/O Operations (non-blocking)"]
+        IO1["🌐 HTTP Request"]
+        IO2["💾 DB Query"]
+        IO3["📁 File Read"]
+    end
+
+    subgraph Ready["Ready Queue"]
+        R1["Task A (resumed)"]
+        R2["Task B (resumed)"]
+    end
+
+    EL -->|"1. runs"| T1
+    T1 -->|"2. await I/O"| IO1
+    IO1 -->|"3. suspends"| EL
+    EL -->|"4. switches to"| T2
+    T2 -->|"5. await I/O"| IO2
+    IO2 -->|"6. suspends"| EL
+    EL -->|"7. switches to"| T3
+    T3 -->|"8. await I/O"| IO3
+    IO3 -->|"9. suspends"| EL
+    IO1 -->|"10. I/O done"| Ready
+    IO2 -->|"11. I/O done"| Ready
+    EL -->|"12. picks next"| Ready
+
+    style EL fill:#7c3aed,color:#fff
+    style Tasks fill:#1e40af,color:#fff
+    style IO fill:#059669,color:#fff
+    style Ready fill:#d97706,color:#fff
+    style T1 fill:#2563eb,color:#fff
+    style T2 fill:#2563eb,color:#fff
+    style T3 fill:#2563eb,color:#fff
+    style IO1 fill:#059669,color:#fff
+    style IO2 fill:#059669,color:#fff
+    style IO3 fill:#059669,color:#fff
+    style R1 fill:#f59e0b,color:#fff
+    style R2 fill:#f59e0b,color:#fff
+```
+
 ## Running Multiple Tasks
 
 ```python

@@ -11,6 +11,34 @@ sidebar:
 
 **Exception handling** allows your program to respond to errors gracefully instead of crashing. Python uses `try/except` blocks to catch and handle exceptions.
 
+### Exception Flow: try → except → else → finally
+
+```mermaid
+flowchart TB
+    Try["🔷 try:
+Code that might fail"] --> Exception{"❌ Exception
+raised?"}
+
+    Exception -->|"Yes"| Except["🔶 except:
+Handle the error"]
+    Exception -->|"No"| Else["✅ else:
+Runs if NO exception
+(success path)"]
+
+    Except --> Finally["✅ finally:
+ALWAYS runs
+(cleanup: close files, 
+release resources)"]
+    Else --> Finally
+    Try --> Finally
+
+    style Try fill:#4f46e5,color:#fff
+    style Exception fill:#f59e0b,color:#000
+    style Except fill:#dc2626,color:#fff
+    style Else fill:#059669,color:#fff
+    style Finally fill:#7c3aed,color:#fff
+```
+
 ## Basic Syntax
 
 ```python
