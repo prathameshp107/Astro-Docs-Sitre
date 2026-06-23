@@ -539,13 +539,14 @@ export default defineConfig({
             ],
           },
           {
-            label: 'Data Types',
+                        label: 'Data Types',
             items: [
               { label: 'Strings', link: '/redis/redis-strings' },
               { label: 'Lists', link: '/redis/redis-lists' },
               { label: 'Sets', link: '/redis/redis-sets' },
               { label: 'Sorted Sets', link: '/redis/redis-sorted-sets' },
               { label: 'Hashes', link: '/redis/redis-hashes' },
+              { label: 'Streams', link: '/redis/redis-streams' },
             ],
           },
           {
@@ -556,6 +557,16 @@ export default defineConfig({
               { label: 'Pub/Sub', link: '/redis/redis-pub-sub' },
               { label: 'Transactions', link: '/redis/redis-transactions' },
               { label: 'Caching Patterns', link: '/redis/redis-caching-patterns' },
+              { label: 'Eviction Policies', link: '/redis/redis-eviction-policies' },
+              { label: 'Distributed Locks', link: '/redis/redis-distributed-locks' },
+            ],
+          },
+          {
+            label: 'Scaling & High Availability',
+            items: [
+              { label: 'Replication', link: '/redis/redis-replication' },
+              { label: 'Sentinel', link: '/redis/redis-sentinel' },
+              { label: 'Cluster', link: '/redis/redis-cluster' },
             ],
           },
           {
@@ -564,6 +575,7 @@ export default defineConfig({
               { label: 'Redis with Node.js', link: '/redis/redis-with-node-js' },
               { label: 'Redis with Docker', link: '/redis/redis-with-docker' },
               { label: 'Commands Cheat Sheet', link: '/redis/common-redis-commands-cheat-sheet' },
+              { label: 'Security', link: '/redis/redis-security' },
             ],
           },
           {
@@ -917,6 +929,10 @@ export default defineConfig({
           {
             label: 'Advanced Docker',
             items: [{ autogenerate: { directory: 'docker/advanced' } }],
+          },
+          {
+            label: 'Orchestration',
+            items: [{ autogenerate: { directory: 'docker/orchestration' } }],
           },
         ],
       },

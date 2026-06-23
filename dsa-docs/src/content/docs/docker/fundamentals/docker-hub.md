@@ -2,7 +2,7 @@
 title: "Docker Hub"
 description: "Docker Hub is the world's largest container registry — like GitHub for Docker images."
 sidebar:
-  order: 14
+  order: 18
 ---
 
 ## 14. Docker Hub

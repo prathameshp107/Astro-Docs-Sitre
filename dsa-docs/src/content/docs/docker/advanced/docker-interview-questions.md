@@ -2,7 +2,7 @@
 title: "Docker Interview Questions"
 description: "Q1: What is the difference between COPY and ADD in a Dockerfile? COPY simply copies files from build context to the image — explicit and predictable. ADD d"
 sidebar:
-  order: 117
+  order: 118
 ---
 
 ## 17. Docker Interview Questions

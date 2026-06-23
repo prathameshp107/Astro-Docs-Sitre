@@ -2,7 +2,7 @@
 title: "Docker Containers"
 description: "If an image is a recipe, then a container is the cooked meal."
 sidebar:
-  order: 6
+  order: 8
 ---
 
 ## 6. Docker Containers

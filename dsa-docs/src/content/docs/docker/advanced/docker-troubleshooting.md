@@ -2,7 +2,7 @@
 title: "Docker Troubleshooting"
 description: "<!-- Start -- <ellipse cx=\"340\" cy=\"60\" rx=\"100\" ry=\"25\" fill=\"e3f2fd\" stroke=\"1565c0\" stroke-width=\"2\"/ <text x=\"340\" y=\"65\" text-anchor=\"middle\" font-siz"
 sidebar:
-  order: 115
+  order: 116
 ---
 
 ## 15. Docker Troubleshooting

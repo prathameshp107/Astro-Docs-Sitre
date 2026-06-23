@@ -2,7 +2,7 @@
 title: "Common Mistakes Beginners Make"
 description: "---"
 sidebar:
-  order: 17
+  order: 21
 ---
 
 ## 17. Common Mistakes Beginners Make

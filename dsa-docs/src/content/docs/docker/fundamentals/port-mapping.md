@@ -2,7 +2,7 @@
 title: "Port Mapping"
 description: "Containers are isolated — they have their own network. Your host machine can't access a container's internal ports unless you explicitly map them."
 sidebar:
-  order: 8
+  order: 10
 ---
 
 ## 8. Port Mapping

@@ -5,6 +5,47 @@ description: "Why it matters: Without TTL, cache entries pile up indefinitely. R
 
 ## 19. Common Beginner Mistakes
 
+### Bad vs Good: A Quick Reference
+
+```mermaid
+flowchart TB
+    Mistakes[Common Redis Mistakes ❌] --> M1[Mistake 1: No TTL on Cache]
+    Mistakes --> M2[Mistake 2: Using KEYS * in Production]
+    Mistakes --> M3[Mistake 3: Storing Huge Values]
+    Mistakes --> M4[Mistake 4: Bad Key Naming]
+    Mistakes --> M5[Mistake 5: Not Handling Cache Errors]
+    Mistakes --> M6[Mistake 6: Redis as Primary DB]
+    Mistakes --> M7[Mistake 7: No maxmemory Set]
+    
+    M1 --> F1[Fix: SET key value EX 300]
+    M2 --> F2[Fix: Use SCAN instead]
+    M3 --> F3[Fix: Store individual items]
+    M4 --> F4[Fix: Use user:id:field naming]
+    M5 --> F5[Fix: try/catch + DB fallback]
+    M6 --> F6[Fix: Pair Redis with durable DB]
+    M7 --> F7[Fix: Set maxmemory + eviction policy]
+    
+    style Mistakes fill:#ef4444,color:#fff
+    style M1 fill:#ef4444,color:#fff
+    style M2 fill:#ef4444,color:#fff
+    style M3 fill:#ef4444,color:#fff
+    style M4 fill:#ef4444,color:#fff
+    style M5 fill:#ef4444,color:#fff
+    style M6 fill:#ef4444,color:#fff
+    style M7 fill:#ef4444,color:#fff
+    style F1 fill:#059669,color:#fff
+    style F2 fill:#059669,color:#fff
+    style F3 fill:#059669,color:#fff
+    style F4 fill:#059669,color:#fff
+    style F5 fill:#059669,color:#fff
+    style F6 fill:#059669,color:#fff
+    style F7 fill:#059669,color:#fff
+```
+
+> **Themes:** Every mistake comes from treating Redis like a traditional database or forgetting it's an in-memory cache with finite RAM.
+
+---
+
 ### Mistake 1: No Expiration on Cache Keys
 
 ```bash

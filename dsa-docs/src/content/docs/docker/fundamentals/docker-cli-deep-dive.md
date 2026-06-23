@@ -2,7 +2,7 @@
 title: "Docker CLI Deep Dive"
 description: "docker run -p 3000:3000 node-app Both host and container use port 3000"
 sidebar:
-  order: 7
+  order: 9
 ---
 
 ## 7. Docker CLI Deep Dive

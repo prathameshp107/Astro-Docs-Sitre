@@ -2,7 +2,7 @@
 title: "Docker CI/CD Integration"
 description: "on: push: branches: [main, develop] pullrequest: branches: [main]"
 sidebar:
-  order: 111
+  order: 112
 ---
 
 ## 11. Docker CI/CD Integration

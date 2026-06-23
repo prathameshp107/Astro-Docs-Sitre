@@ -9,13 +9,49 @@ sidebar:
 
 ---
 
+### The Three Types of Linked Lists
+
+```mermaid
+flowchart TB
+    subgraph Singly[Singly Linked List
+One-way ➡️]
+        S1[HEAD] --> S2["Node: 10"]
+        S2 --> S3["Node: 20"]
+        S3 --> S4["Node: 30"]
+        S4 --> SNULL[NULL]
+    end
+    
+    subgraph Doubly[Doubly Linked List
+Two-way ⬅️➡️]
+        DNULL1[NULL] <--> D1["Node: 10"]
+        D1 <--> D2["Node: 20"]
+        D2 <--> D3["Node: 30"]
+        D3 <--> DNULL2[NULL]
+    end
+    
+    subgraph Circular[Circular Linked List
+Loop 🔄]
+        C1[HEAD] --> C2["Node: 10"]
+        C2 --> C3["Node: 20"]
+        C3 --> C4["Node: 30"]
+        C4 -.-> C2
+    end
+    
+    style Singly fill:#7c3aed,color:#fff
+    style Doubly fill:#3b82f6,color:#fff
+    style Circular fill:#059669,color:#fff
+    style S1 fill:#f59e0b,color:#fff
+    style SNULL fill:#ef4444,color:#fff
+    style DNULL1 fill:#ef4444,color:#fff
+    style DNULL2 fill:#ef4444,color:#fff
+    style C1 fill:#f59e0b,color:#fff
+```
+
+---
+
 ## 🔸 Singly Linked List (One-Way Street) ➡️
 
 Each node points only to the **next** node. You can only move forward.
-
-```
-HEAD ──▶ [10|●] ──▶ [20|●] ──▶ [30|●] ──▶ NULL
-```
 
 ```js
 class Node {

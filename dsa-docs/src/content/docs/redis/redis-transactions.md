@@ -9,6 +9,39 @@ description: "A Redis transaction ensures a group of commands executes atomicall
 
 A Redis transaction ensures a **group of commands executes atomically** — either all commands run, or none do (in case of a DISCARD). No other client can interrupt the sequence.
 
+### MULTI / EXEC / DISCARD Flow
+
+```mermaid
+flowchart TB
+    Start[Client sends commands] --> Check{Want atomic<br/>execution?}
+    Check -->|Yes| MULTI["MULTI<br/>Begin transaction"]
+    Check -->|No| Direct["Run commands directly<br/>(not atomic)"]
+    
+    MULTI --> Queue["Queue commands<br/>SET balance:alice 500<br/>DECRBY balance:alice 100<br/>INCRBY balance:bob 100"]
+    Queue --> Decision{Ready to<br/>execute?}
+    Decision -->|Yes ✅| EXEC["EXEC<br/>All commands run atomically<br/>No other client can interrupt"]
+    Decision -->|No ❌| DISCARD["DISCARD<br/>Queued commands thrown away<br/>Nothing happens"]
+    
+    subgraph Optimistic[Optimistic Locking with WATCH]
+        Watch["WATCH balance:alice<br/>Monitor key for changes"] --> MULTI2[MULTI]
+        MULTI2 --> Queue2[DECRBY balance:alice 200]
+        Queue2 --> EXEC2{EXEC}
+        EXEC2 -->|Key unchanged ✅| Success[Transaction succeeds]
+        EXEC2 -->|Key changed by another client ❌| Fail[EXEC returns nil<br/>Retry the transaction]
+    end
+    
+    style Start fill:#3b82f6,color:#fff
+    style Check fill:#f59e0b,color:#fff
+    style MULTI fill:#7c3aed,color:#fff
+    style Queue fill:#3b82f6,color:#fff
+    style Decision fill:#f59e0b,color:#fff
+    style EXEC fill:#059669,color:#fff
+    style DISCARD fill:#ef4444,color:#fff
+    style Optimistic fill:#ec4899,color:#fff
+    style Success fill:#059669,color:#fff
+    style Fail fill:#ef4444,color:#fff
+```
+
 ---
 
 ### MULTI / EXEC / DISCARD

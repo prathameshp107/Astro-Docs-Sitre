@@ -40,28 +40,39 @@ Sorting is not just about numbers. You can sort:
 
 This is one of the most important properties of a sorting algorithm.
 
-![Stable vs Unstable Sort Visualization](/DSA-Notes-Problems/assets/images/sorting/stable-vs-unstable.svg)
-
 ### Stable Sort
 
 A sort is **stable** if elements with **equal keys** maintain their **original relative order** after sorting.
 
+```mermaid
+flowchart LR
+    subgraph Input[Original — sorted by name]
+        I1["(Alice, 3)"] --> I2["(Bob, 1)"]
+        I2 --> I3["(Carol, 3)"]
+        I3 --> I4["(Dave, 2)"]
+    end
+    
+    subgraph Stable[Stable — sort by score ✅]
+        S1["(Bob, 1)"] --> S2["(Dave, 2)"]
+        S2 --> S3["(Alice, 3) ← original order preserved"]
+        S3 --> S4["(Carol, 3)"]
+    end
+    
+    subgraph Unstable[Unstable — sort by score ❌]
+        U1["(Bob, 1)"] --> U2["(Dave, 2)"]
+        U2 --> U3["(Carol, 3) ← order flipped!"]
+        U3 --> U4["(Alice, 3)"]
+    end
+    
+    Input --> Stable
+    Input --> Unstable
+    
+    style Input fill:#7c3aed,color:#fff
+    style Stable fill:#059669,color:#fff
+    style Unstable fill:#ef4444,color:#fff
 ```
-Original input (sorted by name, now sort by score):
 
-Index:  0          1          2          3
-Data: [(Alice,3), (Bob,1), (Carol,3), (Dave,2)]
-               ↑                 ↑
-         Both score = 3
-
-Stable sort result:   [(Bob,1), (Dave,2), (Alice,3), (Carol,3)]
-                                                  ↑           ↑
-                                        Alice before Carol ✅ (original order preserved)
-
-Unstable sort result: [(Bob,1), (Dave,2), (Carol,3), (Alice,3)]
-                                                  ↑           ↑
-                                        Carol before Alice ❌ (order flipped)
-```
+**When does stability matter?** Sorting by multiple keys (e.g., sort by department, then by salary within department).
 
 ### When Does Stability Matter?
 
@@ -175,50 +186,73 @@ Bucket Sort:   Distribute into buckets, sort each bucket
 
 ## 🔹 How Sorting Algorithms Are Classified
 
+```mermaid
+flowchart TB
+    Sorts[Sorting Algorithms] --> Simple[Simple — O(n²)
+Quadratic]
+    Sorts --> Efficient[Efficient — O(n log n)
+Linearithmic]
+    Sorts --> Linear[Linear — O(n)
+Non-Comparison]
+    
+    Simple --> Bubble[Bubble Sort
+Stable, In-place]
+    Simple --> Selection[Selection Sort
+Unstable, In-place]
+    Simple --> Insertion[Insertion Sort
+Stable, In-place]
+    
+    Efficient --> Merge[Merge Sort
+Stable, Out-of-place]
+    Efficient --> Quick[Quick Sort
+Unstable, In-place*]
+    Efficient --> Heap[Heap Sort
+Unstable, In-place]
+    
+    Linear --> Counting[Counting Sort
+Stable, Out-of-place]
+    Linear --> Radix[Radix Sort
+Stable, Out-of-place]
+    Linear --> Bucket[Bucket Sort
+Stable, Out-of-place]
+    
+    style Sorts fill:#7c3aed,color:#fff
+    style Simple fill:#f59e0b,color:#fff
+    style Efficient fill:#059669,color:#fff
+    style Linear fill:#3b82f6,color:#fff
 ```
-Sorting Algorithms
-├── Simple (Quadratic) — O(n²)
-│   ├── Bubble Sort       (stable, in-place)
-│   ├── Selection Sort    (unstable, in-place)
-│   └── Insertion Sort    (stable, in-place)
-│
-├── Efficient (Linearithmic) — O(n log n)
-│   ├── Merge Sort         (stable, out-of-place)
-│   ├── Quick Sort         (unstable, in-place*)
-│   └── Heap Sort          (unstable, in-place)
-│
-└── Linear — O(n) [non-comparison]
-    ├── Counting Sort      (stable, out-of-place)
-    ├── Radix Sort         (stable, out-of-place)
-    └── Bucket Sort        (stable, out-of-place)
 
-* Quick Sort uses O(log n) stack space for recursion
-```
+*Quick Sort uses O(log n) stack space for recursion
 
 ---
 
 ## 🔹 Choosing a Sort — Mental Model
 
-```
-Step 1: What is the input size?
-        n < 20 → Insertion Sort (low overhead, great cache behavior)
-        n ≥ 20 → Continue
-
-Step 2: Is the data nearly sorted?
-        Yes → Insertion Sort (degrades gracefully, O(n) best case)
-        No  → Continue
-
-Step 3: Do you need a stable sort?
-        Yes → Merge Sort (guaranteed stable O(n log n))
-        No  → Continue
-
-Step 4: Is memory a constraint?
-        Yes → Heap Sort (O(n log n) time, O(1) space)
-        No  → Quick Sort (fastest in practice due to cache efficiency)
-
-Step 5: Is worst-case guarantee critical?
-        Yes → Merge Sort or Heap Sort
-        No  → Quick Sort with random pivot
+```mermaid
+flowchart TB
+    Q1{Input size n?} -->|n smaller than 20| Ins1[Insertion Sort
+Low overhead, fast]
+    Q1 -->|n at least 20| Q2{Data nearly<br/>sorted?}
+    Q2 -->|Yes| Ins2[Insertion Sort
+O(n) best case]
+    Q2 -->|No| Q3{Need stable?}
+    Q3 -->|Yes| Q4{Memory OK?}
+    Q4 -->|Yes ✅| Merge1[Merge Sort
+Guaranteed O(n log n)]
+    Q4 -->|No ❌| NoOpt[(No O(1) space<br/>stable sort exists)]
+    Q3 -->|No| Q5{Memory<br/>constrained?}
+    Q5 -->|Yes| Heap1[Heap Sort
+O(n log n), O(1) space]
+    Q5 -->|No| Q6{Worst-case<br/>critical?}
+    Q6 -->|Yes| Merge2[Merge or Heap Sort]
+    Q6 -->|No| Quick1[Quick Sort
+Fastest in practice]
+    
+    style Q1 fill:#7c3aed,color:#fff
+    style Q2 fill:#3b82f6,color:#fff
+    style Q3 fill:#f59e0b,color:#fff
+    style Q5 fill:#ec4899,color:#fff
+    style Q6 fill:#06b6d4,color:#fff
 ```
 
 ---

@@ -5,6 +5,32 @@ description: "Redis notes for Common Redis Commands Cheat Sheet."
 
 ## 18. Common Redis Commands Cheat Sheet
 
+### Command Types Overview
+
+```mermaid
+flowchart TB
+    CMDS[Redis Commands] --> Strings["🔤 Strings<br/>SET / GET / INCR / MSET<br/>Values, counters, tokens"]
+    CMDS --> Lists["📋 Lists<br/>LPUSH / RPUSH / LPOP / LRANGE<br/>Queues, timelines"]
+    CMDS --> Sets["🔢 Sets<br/>SADD / SINTER / SUNION / SDIFF<br/>Unique members, tags"]
+    CMDS --> SortedSets["🏆 Sorted Sets<br/>ZADD / ZRANGE / ZREVRANK<br/>Leaderboards, rankings"]
+    CMDS --> Hashes["🗂️ Hashes<br/>HSET / HGET / HGETALL / HINCRBY<br/>Objects, profiles"]
+    CMDS --> Keys["🔑 Keys & TTL<br/>EXPIRE / TTL / SCAN / TYPE<br/>Management"]
+    CMDS --> Server["⚙️ Server<br/>INFO / PING / CONFIG / MONITOR<br/>Administration"]
+    
+    style CMDS fill:#7c3aed,color:#fff
+    style Strings fill:#3b82f6,color:#fff
+    style Lists fill:#059669,color:#fff
+    style Sets fill:#f59e0b,color:#fff
+    style SortedSets fill:#ec4899,color:#fff
+    style Hashes fill:#06b6d4,color:#fff
+    style Keys fill:#8b5cf6,color:#fff
+    style Server fill:#10b981,color:#fff
+```
+
+> **Quick reference:** 7 command categories covering all essential Redis operations. Each section below has the full syntax.
+
+---
+
 ### String Commands
 
 | Command | Syntax | Description |

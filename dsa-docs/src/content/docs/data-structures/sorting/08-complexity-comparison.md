@@ -59,32 +59,82 @@ Heap          O(nlogn)  O(nlogn)  O(nlogn) O(1)
 
 ## 🔹 Decision Flowchart
 
-```text
-START: What are your constraints?
-│
-├── n < 30? ──────────────────────────────────────────────→ INSERTION SORT (low overhead)
-│
-├── Memory extremely limited? (O(1) space required)
-│   ├── Guaranteed O(n log n) needed? ────────────────────→ HEAP SORT
-│   └── O(n²) acceptable? ────────────────────────────────→ INSERTION or SELECTION
-│
-├── Stability required?
-│   ├── Memory available (O(n) space) ────────────────────→ MERGE SORT
-│   └── Memory constrained ───────────────────────────────→ (no O(1) stable O(n log n) sort exists)
-│
-├── Nearly sorted input? ─────────────────────────────────→ INSERTION SORT (O(n) best case)
-│
-├── Average performance is priority? ─────────────────────→ QUICK SORT (fastest on average)
-│
-├── Worst-case guarantee required? ───────────────────────→ MERGE SORT or HEAP SORT
-│
-├── Sort in place required? (no extra arrays)
-│   ├── Guarantee needed? ────────────────────────────────→ HEAP SORT
-│   └── Fast average OK? ─────────────────────────────────→ QUICK SORT
-│
-├── Teaching / learning? ─────────────────────────────────→ BUBBLE SORT (simplest to explain)
-│
-└── Write operations expensive? (flash memory) ───────────→ SELECTION SORT (≤ n-1 swaps)
+```mermaid
+flowchart TB
+    Q0{What are your constraints?}
+
+    Q0 --> Q1{n < 30?}
+    Q1 -->|Yes| IS[INSERTION SORT ✅
+    Low overhead,
+    fast for tiny n]
+
+    Q0 --> Q2{Memory extremely
+    limited?
+    O(1) space required}
+    Q2 --> Q3{Guaranteed
+    O(n log n) needed?}
+    Q3 -->|Yes| HS[HEAP SORT ✅
+    O(n log n) worst-case,
+    O(1) space]
+    Q3 -->|No| IS2[INSERTION or SELECTION
+    O(n²) acceptable
+    for small data]
+
+    Q0 --> Q4{Stability
+    required?}
+    Q4 --> Q5{Memory available
+    O(n) space?}
+    Q5 -->|Yes| MS[MERGE SORT ✅
+    Stable O(n log n)]
+    Q5 -->|No| NONE[⚠️ No O(1) stable
+    O(n log n) sort exists]
+
+    Q0 --> Q6{Nearly sorted
+    input?}
+    Q6 -->|Yes| IS3[INSERTION SORT ✅
+    O(n) on sorted data]
+
+    Q0 --> Q7{Average perf
+    is priority?}
+    Q7 -->|Yes| QS[QUICK SORT ✅
+    Fastest on average]
+
+    Q0 --> Q8{Worst-case guarantee
+    required?}
+    Q8 -->|Yes| MS2[MERGE SORT or HEAP SORT
+    Both O(n log n) guaranteed]
+
+    Q0 --> Q9{Sort in-place
+    required?}
+    Q9 --> Q10{Guarantee
+    needed?}
+    Q10 -->|Yes| HS2[HEAP SORT]
+    Q10 -->|No| QS2[QUICK SORT]
+
+    Q0 --> Q11{Teaching /
+    learning?}
+    Q11 -->|Yes| BS[BUBBLE SORT
+    Simplest to explain]
+
+    Q0 --> Q12{Write ops
+    expensive?
+    flash memory}
+    Q12 -->|Yes| SS[SELECTION SORT
+    ≤ n-1 swaps]
+
+    style Q0 fill:#f59e0b,color:#fff
+    style IS fill:#7c3aed,color:#fff
+    style HS fill:#3b82f6,color:#fff
+    style IS2 fill:#6366f1,color:#fff
+    style MS fill:#059669,color:#fff
+    style NONE fill:#ef4444,color:#fff
+    style IS3 fill:#7c3aed,color:#fff
+    style QS fill:#ec4899,color:#fff
+    style MS2 fill:#059669,color:#fff
+    style HS2 fill:#3b82f6,color:#fff
+    style QS2 fill:#ec4899,color:#fff
+    style BS fill:#06b6d4,color:#fff
+    style SS fill:#f97316,color:#fff
 ```
 
 ---
@@ -158,16 +208,42 @@ Selection    ── Even slower
 
 ## 🔹 Memory Usage Comparison
 
-```text
-Memory (extra space needed):
-                           O(1)                     O(log n)            O(n)
-        ├──────────────────┼─────────────────────────┼──────────────────┤
-Bubble   ● (in-place)
-Selection● (in-place)
-Insertion● (in-place)
-Heap     ● (in-place, iterative)
-Quick                   ● (recursion stack)
-Merge                                                ● (auxiliary array)
+```mermaid
+flowchart LR
+    subgraph O1[O(1) Space — In-place]
+        B1[Bubble Sort
+    ● In-place]
+        S1[Selection Sort
+    ● In-place]
+        I1[Insertion Sort
+    ● In-place]
+        H1[Heap Sort
+    ● In-place, iterative]
+    end
+
+    subgraph OLogN[O(log n) Stack Space]
+        Q1[Quick Sort
+    ● Recursion stack
+    avg O(log n)]
+    end
+
+    subgraph ON[O(n) Auxiliary Space]
+        M1[Merge Sort
+    ● Needs auxiliary
+    array for merge]
+    end
+
+    O1 --> OLogN --> ON
+
+    style O1 fill:#7c3aed,color:#fff
+    style OLogN fill:#f59e0b,color:#fff
+    style ON fill:#ef4444,color:#fff
+    style B1 fill:#3b82f6,color:#fff
+    style S1 fill:#3b82f6,color:#fff
+    style I1 fill:#3b82f6,color:#fff
+    style H1 fill:#3b82f6,color:#fff
+    style Q1 fill:#f97316,color:#fff
+    style M1 fill:#059669,color:#fff
 ```
 
 ### Practical Implications

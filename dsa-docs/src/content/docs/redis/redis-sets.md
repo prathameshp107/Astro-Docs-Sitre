@@ -11,6 +11,34 @@ A Redis Set is an **unordered collection of unique strings**. Duplicates are aut
 
 > **Analogy:** A bag of tickets where each ticket has a unique number. You can add tickets, check if a ticket exists, or remove a ticket. No duplicates allowed.
 
+### Set Operations at a Glance
+
+```mermaid
+flowchart TB
+    subgraph TeamA[Team A: Alice, Bob, Charlie]
+        TA["{Alice, Bob, Charlie}"]
+    end
+    subgraph TeamB[Team B: Bob, Diana, Eve]
+        TB["{Bob, Diana, Eve}"]
+    end
+    
+    TeamA --> Intersection
+    TeamB --> Intersection
+    Intersection["SINTER = {Bob} 🟣<br/>In BOTH sets"]
+    
+    TeamA --> Union
+    TeamB --> Union
+    Union["SUNION = {Alice, Bob, Charlie, Diana, Eve} 🟢<br/>All members, no duplicates"]
+    
+    TeamA --> Diff["SDIFF = {Alice, Charlie} 🔵<br/>In A but NOT in B"]
+    
+    style TeamA fill:#3b82f6,color:#fff
+    style TeamB fill:#7c3aed,color:#fff
+    style Intersection fill:#ec4899,color:#fff
+    style Union fill:#059669,color:#fff
+    style Diff fill:#f59e0b,color:#fff
+```
+
 ---
 
 ### Core Commands

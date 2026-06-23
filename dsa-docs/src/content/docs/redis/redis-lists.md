@@ -11,6 +11,30 @@ A Redis List is an **ordered collection of strings**. You can add elements to th
 
 > **Analogy:** A ticket queue at a counter. New people join at the back (right), and the counter serves from the front (left).
 
+### Queue vs Stack Patterns
+
+```mermaid
+flowchart LR
+    subgraph Queue[Queue — FIFO
+      First In, First Out]
+        Q1["RPUSH task1..task3"] --> Q2["✅ queue: [task1, task2, task3]"]
+        Q2 --> Q3["LPOP → task1"]
+        Q3 --> Q4["Remaining: [task2, task3]"]
+    end
+    
+    subgraph Stack[Stack — LIFO
+      Last In, First Out]
+        S1["LPUSH action1..action3"] --> S2["✅ stack: [action3, action2, action1]"]
+        S2 --> S3["LPOP → action3"]
+        S3 --> S4["Remaining: [action2, action1]"]
+    end
+    
+    style Queue fill:#7c3aed,color:#fff
+    style Stack fill:#3b82f6,color:#fff
+    style Q3 fill:#059669,color:#fff
+    style S3 fill:#f59e0b,color:#fff
+```
+
 ---
 
 ### Core Commands

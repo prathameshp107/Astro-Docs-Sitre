@@ -57,6 +57,36 @@ The I/O is handled with non-blocking **epoll/kqueue** multiplexing. Redis can se
 
 ### Redis Architecture Diagram
 
-![Redis Architecture Diagram diagram](/DSA-Notes-Problems/assets/redis/redis-architecture-redis-architecture-diagram.svg)
+```mermaid
+flowchart TB
+    Client[Client<br/>redis-cli / App] --> TCP[TCP Connection<br/>Port 6379]
+    TCP --> RESP[RESP Protocol Parser
+Redis Serialization Protocol]
+    RESP --> Dispatcher[Command Dispatcher]
+    Dispatcher --> EventLoop[Single-threaded<br/>Event Loop
+⚡ Processed one at a time]
+    
+    EventLoop --> MemStore[In-Memory Data Store
+Giant Hash Table in RAM]
+    EventLoop --> Persistence[Persistence Engine
+RDB Snapshots + AOF Log]
+    EventLoop --> Replication[Replication
+Master → Replica copies]
+    
+    MemStore --> Response[Response serialized
+Sent back to client]
+    
+    style Client fill:#3b82f6,color:#fff
+    style TCP fill:#f59e0b,color:#fff
+    style RESP fill:#7c3aed,color:#fff
+    style Dispatcher fill:#3b82f6,color:#fff
+    style EventLoop fill:#059669,color:#fff
+    style MemStore fill:#7c3aed,color:#fff
+    style Persistence fill:#ec4899,color:#fff
+    style Replication fill:#06b6d4,color:#fff
+    style Response fill:#10b981,color:#fff
+```
+
+> **Core insight:** The single-threaded event loop is key — no locks, no race conditions, no context switching. Redis uses non-blocking I/O (epoll/kqueue) to handle thousands of concurrent clients on a single thread.
 
 ---

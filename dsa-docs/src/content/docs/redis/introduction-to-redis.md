@@ -93,6 +93,26 @@ Caching stores the result of an expensive operation so you can reuse it without 
 
 ### Architecture Diagram: Application with Cache Layer
 
-![Architecture Diagram: Application with Cache Layer diagram](/DSA-Notes-Problems/assets/redis/introduction-to-redis-architecture-diagram-application-with-cache-layer.svg)
+```mermaid
+flowchart TB
+    Client[Client / Browser] --> App[Application Server]
+    App --> Cache{Check Redis Cache}
+    Cache -->|Cache HIT ✅| Fast["Return cached data<br/>< 1ms"]
+    Cache -->|Cache MISS ❌| DB[Query Database<br/>PostgreSQL / MySQL<br/>~5-50ms]
+    DB --> Store[Store result in Redis<br/>with TTL]
+    Store --> Return[Return data to client]
+    Fast --> Client
+    Return --> Client
+    
+    style Client fill:#3b82f6,color:#fff
+    style App fill:#7c3aed,color:#fff
+    style Cache fill:#f59e0b,color:#fff
+    style Fast fill:#059669,color:#fff
+    style DB fill:#3b82f6,color:#fff
+    style Store fill:#7c3aed,color:#fff
+    style Return fill:#10b981,color:#fff
+```
+
+> **Flow:** Client requests data → App checks Redis cache → HIT: serve instantly from RAM (0.1ms) → MISS: query slow database, store result in Redis for next time, then return.
 
 ---

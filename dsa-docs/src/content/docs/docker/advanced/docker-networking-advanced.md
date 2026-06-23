@@ -2,7 +2,7 @@
 title: "Docker Networking Advanced"
 description: "Docker's embedded DNS server resolves container names to IP addresses automatically within custom networks."
 sidebar:
-  order: 106
+  order: 107
 ---
 
 ## 6. Docker Networking Advanced

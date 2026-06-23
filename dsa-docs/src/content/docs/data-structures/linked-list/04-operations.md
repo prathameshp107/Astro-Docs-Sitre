@@ -38,18 +38,26 @@ class LinkedList {
 
 **Goal:** Add `5` to the start of `10 → 20 → 30`.
 
+```mermaid
+flowchart LR
+    subgraph Before[Before]
+        H1[HEAD] --> N1[10] --> N2[20] --> N3[30] --> X1[NULL]
+    end
+    
+    subgraph After[After]
+        H2[HEAD] --> New[5 🆕] --> M1[10] --> M2[20] --> M3[30] --> X2[NULL]
+    end
+    
+    style Before fill:#1e293b,color:#fff
+    style After fill:#1e293b,color:#fff
+    style New fill:#7c3aed,color:#fff
+    style H2 fill:#f59e0b,color:#fff
+```
+
 **Steps:**
 1. Make a new node with value `5`.
 2. Point new node's `next` to current head (`10`).
 3. Update head to point to new node.
-
-```
-Before:        HEAD ──▶ [10] ──▶ [20] ──▶ [30] ──▶ NULL
-
-Step 1:        [5|?]                                       (new node, ? = unknown)
-Step 2: [5|●]──▶[10] ──▶ [20] ──▶ [30] ──▶ NULL            (point to old head)
-Step 3: HEAD ──▶ [5] ──▶ [10] ──▶ [20] ──▶ [30] ──▶ NULL   (move head)
-```
 
 ```js
 insertAtHead(val) {
@@ -65,16 +73,20 @@ insertAtHead(val) {
 
 **Goal:** Add `40` to end of `10 → 20 → 30`.
 
+```mermaid
+flowchart LR
+    H1[HEAD] --> A[10] --> B[20] --> C[30]
+    C -->|walk to end| New[40 🆕] --> X1[NULL]
+    
+    style H1 fill:#f59e0b,color:#fff
+    style C fill:#3b82f6,color:#fff
+    style New fill:#7c3aed,color:#fff
+    style X1 fill:#ef4444,color:#fff
+```
+
 **Steps:**
 1. Walk all the way to the **last node**.
 2. Make last node's `next` point to the new node.
-
-```
-HEAD ──▶ [10] ──▶ [20] ──▶ [30] ──▶ NULL
-                              │
-                              ▼
-                        ──▶ [40] ──▶ NULL
-```
 
 ```js
 insertAtTail(val) {
@@ -97,17 +109,28 @@ insertAtTail(val) {
 
 **Goal:** Insert `25` between `20` and `30`.
 
+```mermaid
+flowchart LR
+    subgraph Before[Before]
+        H1[HEAD] --> A1[10] --> B1[20] --> C1[30] --> X1[NULL]
+    end
+    
+    subgraph After[After]
+        H2[HEAD] --> A2[10] --> B2[20] --> New[25 🆕] --> C2[30] --> X2[NULL]
+    end
+    
+    B1 -.->|prev| B2
+    
+    style Before fill:#1e293b,color:#fff
+    style After fill:#1e293b,color:#fff
+    style New fill:#7c3aed,color:#fff
+    style B2 fill:#3b82f6,color:#fff
+```
+
 **Steps:**
 1. Walk to the node **just before** where you want to insert (i.e., `20`).
 2. Make new node point to `prev.next` (which is `30`).
 3. Make `prev.next` point to the new node.
-
-```
-Before:  [10] ──▶ [20] ──▶ [30] ──▶ NULL
-                   prev
-
-After:   [10] ──▶ [20] ──▶ [25] ──▶ [30] ──▶ NULL
-```
 
 ```js
 insertAt(val, idx) {
@@ -132,9 +155,20 @@ insertAt(val, idx) {
 
 Just move the head one step forward.
 
-```
-Before: HEAD ──▶ [10] ──▶ [20] ──▶ [30]
-After:           [10]    HEAD ──▶ [20] ──▶ [30]   (10 is forgotten)
+```mermaid
+flowchart LR
+    subgraph Before2[Before]
+        H1[HEAD] --> D1[10 ❌] --> D2[20] --> D3[30]
+    end
+    
+    subgraph After2[After]
+        H2[HEAD] --> A2[20] --> A3[30]
+    end
+    
+    style Before2 fill:#1e293b,color:#fff
+    style After2 fill:#1e293b,color:#fff
+    style D1 fill:#ef4444,color:#fff
+    style H2 fill:#f59e0b,color:#fff
 ```
 
 ```js

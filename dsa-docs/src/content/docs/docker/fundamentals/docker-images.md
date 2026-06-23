@@ -2,7 +2,7 @@
 title: "Docker Images"
 description: "A Docker image is a read-only template used to create containers. Think of it like a recipe:"
 sidebar:
-  order: 5
+  order: 6
 ---
 
 ## 5. Docker Images

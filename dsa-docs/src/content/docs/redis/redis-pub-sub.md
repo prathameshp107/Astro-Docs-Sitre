@@ -51,9 +51,31 @@ PUBLISH notifications "New order received: #1042"
 
 ### Pub/Sub Communication Diagram
 
-![Pub/Sub Communication Diagram diagram](/DSA-Notes-Problems/assets/redis/redis-pub-sub-pub-sub-communication-diagram.svg)
+```mermaid
+flowchart TB
+    Pub1["📢 Publisher 1<br/>PUBLISH notifications 'New order!'"] --> Channel["Channel: notifications
+Messages broadcast to all subscribers"]
+    Pub2["📢 Publisher 2<br/>PUBLISH alerts 'Server down!'"] --> Channel
+    
+    Channel --> Sub1["👂 Subscriber 1<br/>SUBSCRIBE notifications alerts
+Receives: notifications + alerts"]
+    Channel --> Sub2["👂 Subscriber 2<br/>SUBSCRIBE notifications
+Receives: notifications only"]
+    Channel --> Sub3["👂 Subscriber 3<br/>PSUBSCRIBE news:*<br/>Receives: news:tech, news:sports, ..."]
+    
+    style Pub1 fill:#7c3aed,color:#fff
+    style Pub2 fill:#7c3aed,color:#fff
+    style Channel fill:#f59e0b,color:#fff
+    style Sub1 fill:#3b82f6,color:#fff
+    style Sub2 fill:#3b82f6,color:#fff
+    style Sub3 fill:#3b82f6,color:#fff
+```
+
+> **Key insight:** Publishers and subscribers are completely decoupled — they have no knowledge of each other. A publisher sends to a channel, and Redis delivers to every subscriber listening on that channel. If no one is subscribed, the message is simply lost.
 
 ---
+
+### Real-World Examples
 
 ### Real-World Examples
 

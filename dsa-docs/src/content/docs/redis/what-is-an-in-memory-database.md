@@ -36,7 +36,34 @@ Redis stores all data in **RAM**. This means:
 
 ### Disk vs Memory Diagram
 
-![Disk vs Memory Diagram diagram](/DSA-Notes-Problems/assets/redis/what-is-an-in-memory-database-disk-vs-memory-diagram.svg)
+```mermaid
+flowchart LR
+    subgraph RAM[RAM — Memory
+      ~100 nanoseconds
+      Volatile (lost on restart)]
+        R1["📝 Redis<br/>1M ops/sec
+        < 0.1ms per lookup"]
+    end
+    
+    subgraph Disk[Disk — SSD/HDD
+      ~100 microseconds
+      Persistent (survives restart)]
+        D1["🗄️ MySQL / PostgreSQL<br/>~5K ops/sec
+        ~1-5ms per lookup"]
+    end
+    
+    RAM -->|100x - 1000x faster ⚡| Speed[Redis wins on speed]
+    Disk -->|Safe storage ✅| Safety[DB wins on durability]
+    
+    style RAM fill:#7c3aed,color:#fff
+    style Disk fill:#3b82f6,color:#fff
+    style R1 fill:#7c3aed,color:#fff
+    style D1 fill:#3b82f6,color:#fff
+    style Speed fill:#059669,color:#fff
+    style Safety fill:#f59e0b,color:#fff
+```
+
+> **Analogy:** RAM is your desk — fast access, limited space. Disk is your filing cabinet — slow access, unlimited space.
 
 ---
 

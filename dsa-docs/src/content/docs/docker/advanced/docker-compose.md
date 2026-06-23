@@ -2,7 +2,7 @@
 title: "Docker Compose"
 description: "Docker Compose is a tool for defining and running multi-container applications using a single YAML file. Instead of running five docker run commands manual"
 sidebar:
-  order: 104
+  order: 105
 ---
 
 ## 4. Docker Compose
