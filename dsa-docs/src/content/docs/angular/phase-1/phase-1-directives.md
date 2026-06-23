@@ -15,8 +15,6 @@ Angular has three types:
 2. **Attribute Directives** — Change the appearance/behavior of elements
 3. **Components** — Are technically directives with templates
 
-![Types of Angular Directives](/DSA-Notes-Problems/assets/angular/phase-1-5-types-of-angular-directives.svg)
-
 ---
 
 ### 6.1 `*ngIf` — Conditional Rendering

@@ -2,7 +2,7 @@
 title: "7. Final Large Project: Enterprise E-Commerce Platform"
 description: "// Reducer (immutable) export const cartReducer = createReducer(initialCartState, on(addToCart, (state, { product, quantity }) = { const existing = state.i"
 sidebar:
-  order: 7
+  order: 13
 ---
 
 ## 7. Final Large Project: Enterprise E-Commerce Platform

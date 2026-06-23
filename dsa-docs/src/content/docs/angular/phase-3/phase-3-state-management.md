@@ -225,8 +225,25 @@ export class UsersComponent {
 
 ---
 
-### NgRx Architecture Diagram
+### NgRx Data Flow
 
-![NgRx Unidirectional Data Flow](/DSA-Notes-Problems/assets/angular/phase-3-3-ngrx-unidirectional-data-flow.svg)
+```mermaid
+flowchart LR
+    Comp["🏗️ Component\ndispatches Action"] --> Action["📤 Action\n{ type: LoadUsers }\"]
+    Action --> Effect["⚡ Effect\nCalls API"]
+    Effect -->|"API success"| Success["📤 Action\nloadUsersSuccess"]
+    Success --> Reducer["⚙️ Reducer\nCreates new state"]
+    Reducer --> Store["📦 Store\nAppState"]
+    Store --> Selector["🔍 Selector\nselectAllUsers"]
+    Selector --> Comp
+
+    style Comp fill:#7c3aed,color:#fff
+    style Action fill:#4f46e5,color:#fff
+    style Effect fill:#059669,color:#fff
+    style Success fill:#6366f1,color:#fff
+    style Reducer fill:#d97706,color:#fff
+    style Store fill:#10b981,color:#fff
+    style Selector fill:#f59e0b,color:#fff
+```
 
 ---

@@ -75,12 +75,77 @@ export default defineConfig({
         },
       {
         label: 'Namaste JavaScript',
-        items: [{ autogenerate: { directory: 'namaste-js' } }],
+        items: [
+          { label: 'Overview', link: '/namaste-js' },
+          {
+            label: 'Season 1 — Foundations',
+            items: [
+              { label: '1. Execution Context', link: '/namaste-js/season-1/execution-context' },
+              { label: '2. How JS is Executed & Call Stack', link: '/namaste-js/season-1/how-js-is-executed-call-stack' },
+              { label: '3. Hoisting', link: '/namaste-js/season-1/hoisting-in-javascript-variables-functions' },
+              { label: '4. Functions & Variable Environments', link: '/namaste-js/season-1/functions-and-variable-environments' },
+              { label: '5. Shortest JS Program, window & this', link: '/namaste-js/season-1/shortest-js-program-window-this-keyword' },
+              { label: '6. undefined vs not defined', link: '/namaste-js/season-1/undefined-vs-not-defined-in-js' },
+              { label: '7. Scope Chain & Lexical Environment', link: '/namaste-js/season-1/the-scope-chain-scope-lexical-environment' },
+              { label: '8. let & const, Temporal Dead Zone', link: '/namaste-js/season-1/let-const-in-js-temporal-dead-zone' },
+              { label: '9. Block Scope & Shadowing', link: '/namaste-js/season-1/block-scope-shadowing-in-js' },
+              { label: '10. Closures', link: '/namaste-js/season-1/closures-in-js' },
+              { label: '11. setTimeout + Closures', link: '/namaste-js/season-1/settimeout-closures-interview-question' },
+              { label: '12. Famous Interview Questions ft. Closures', link: '/namaste-js/season-1/famous-interview-questions-ft-closures' },
+              { label: '13. First Class Functions', link: '/namaste-js/season-1/first-class-functions-ft-anonymous-functions' },
+              { label: '14. Callback Functions', link: '/namaste-js/season-1/callback-functions-in-js-ft-event-listeners' },
+              { label: '15. Event Loop', link: '/namaste-js/season-1/asynchronous-javascript-event-loop-from-scratch' },
+              { label: '16. V8 Architecture', link: '/namaste-js/season-1/js-engine-exposed-googles-v8-architecture' },
+              { label: '17. Trust issues with setTimeout', link: '/namaste-js/season-1/trust-issues-with-settimeout' },
+              { label: '18. Higher-Order Functions', link: '/namaste-js/season-1/higher-order-functions-ft-functional-programming' },
+              { label: '19. map, filter & reduce', link: '/namaste-js/season-1/map-filter-reduce' },
+            ],
+          },
+          {
+            label: 'Season 2 — Promises & Async',
+            items: [
+              { label: '20. Callback Hell & Inversion of Control', link: '/namaste-js/season-2/callback-hell-inversion-of-control' },
+              { label: '21. Promises', link: '/namaste-js/season-2/promises' },
+              { label: '22. Creating a Promise, Chaining & Error Handling', link: '/namaste-js/season-2/creating-a-promise-chaining-error-handling' },
+              { label: '23. Promise APIs (all, allSettled, race, any)', link: '/namaste-js/season-2/promise-apis-all-allsettled-race-any' },
+              { label: '24. async / await', link: '/namaste-js/season-2/async-await' },
+              { label: '25. this keyword in JavaScript', link: '/namaste-js/season-2/this-keyword-in-javascript' },
+            ],
+          },
+        ],
       },
       {
         label: 'JavaScript',
         items: [
-          { autogenerate: { directory: 'javascript' } },
+          {
+            label: 'Getting Started',
+            items: [{ autogenerate: { directory: 'javascript/getting-started' } }],
+          },
+          {
+            label: 'Variables',
+            items: [{ autogenerate: { directory: 'javascript/variables' } }],
+          },
+          {
+            label: 'Core Language',
+            items: [{ autogenerate: { directory: 'javascript/core-language' } }],
+          },
+          {
+            label: 'Collections',
+            items: [{ autogenerate: { directory: 'javascript/collections' } }],
+          },
+          {
+            label: 'Advanced Language',
+            items: [{ autogenerate: { directory: 'javascript/advanced-language' } }],
+          },
+          {
+            label: 'Async JavaScript',
+            items: [{ autogenerate: { directory: 'javascript/async' } }],
+          },
+          {
+            label: 'Browser APIs',
+            items: [{ autogenerate: { directory: 'javascript/browser-apis' } }],
+          },
+          { label: '📋 JS Interview Questions (200+)', link: '/javascript/interview-questions' },
           {
             label: 'Interview Questions',
             items: [
@@ -120,7 +185,13 @@ export default defineConfig({
               { label: 'Component Lifecycle', link: '/react/components/component-lifecycle' },
             ],
           },
-          { label: 'Props', link: '/react/props' },
+          { label: 'Props', items: [
+              { label: 'Props Overview', link: '/react/props' },
+              { label: 'Prop Types', link: '/react/props/prop-types' },
+              { label: 'Children Prop', link: '/react/props/children-prop' },
+              { label: 'Default Props & Destructuring', link: '/react/props/default-props' },
+            ],
+          },
           {
             label: 'Hooks',
             items: [
@@ -133,6 +204,12 @@ export default defineConfig({
               { label: 'useContext', link: '/react/hooks/use-context' },
               { label: 'useReducer', link: '/react/hooks/use-reducer' },
               { label: 'Custom Hooks', link: '/react/hooks/custom-hooks' },
+              { label: 'useLayoutEffect', link: '/react/hooks/use-layout-effect' },
+              { label: 'useImperativeHandle', link: '/react/hooks/use-imperative-handle' },
+              { label: 'useId', link: '/react/hooks/use-id' },
+              { label: 'useTransition', link: '/react/hooks/use-transition' },
+              { label: 'useDeferredValue', link: '/react/hooks/use-deferred-value' },
+              { label: 'useSyncExternalStore', link: '/react/hooks/use-sync-external-store' },
             ],
           },
           { label: 'React Strict Mode', link: '/react/strict-mode' },
@@ -154,6 +231,28 @@ export default defineConfig({
             ],
           },
           { label: 'React Setup Guideline', link: '/react/react-setup-guideline' },
+          {
+            label: 'Advanced Concepts',
+            items: [
+              { label: 'Error Boundaries', link: '/react/advanced/error-boundaries' },
+              { label: 'Suspense & Lazy Loading', link: '/react/advanced/suspense-and-lazy' },
+              { label: 'Portals', link: '/react/advanced/portals' },
+              { label: 'Refs & forwardRef', link: '/react/advanced/refs-and-forwardref' },
+              { label: 'Performance & Memoization', link: '/react/advanced/performance-and-memo' },
+              { label: 'Reconciliation & Virtual DOM', link: '/react/advanced/reconciliation-and-virtual-dom' },
+              { label: 'Prop Drilling', link: '/react/advanced/prop-drilling' },
+            ],
+          },
+          {
+            label: 'Modern React (v19)',
+            items: [
+              { label: 'Actions & Forms', link: '/react/modern-react/actions-and-forms' },
+              { label: 'useOptimistic', link: '/react/modern-react/use-optimistic' },
+              { label: 'use() Hook', link: '/react/modern-react/use-hook' },
+              { label: 'Server Components', link: '/react/modern-react/server-components' },
+              { label: 'Modern React Interview', link: '/react/modern-react/modern-react-interview' },
+            ],
+          },
           {
             label: 'React Interview Questions',
             items: [
@@ -255,6 +354,10 @@ export default defineConfig({
           {
             label: 'Phase 4: Enterprise',
             items: [{ autogenerate: { directory: 'angular/phase-4' } }],
+          },
+          {
+            label: 'Phase 5: Modern Angular',
+            items: [{ autogenerate: { directory: 'angular/phase-5' } }],
           },
         ],
       },
@@ -523,46 +626,26 @@ export default defineConfig({
         items: [
           { label: 'Node.js Overview', link: '/nodejs' },
           {
-            label: 'Core Concepts',
-            items: [
-              { label: 'Introduction to Node.js', link: '/nodejs/introduction' },
-              { label: 'Node.js Architecture', link: '/nodejs/architecture' },
-              { label: 'Core Modules', link: '/nodejs/core-modules' },
-              { label: 'Async Programming', link: '/nodejs/async-programming' },
-            ],
+            label: '1. Fundamentals',
+            items: [{ autogenerate: { directory: 'nodejs/fundamentals' } }],
           },
           {
-            label: 'Building Applications',
-            items: [
-              { label: 'Building APIs', link: '/nodejs/building-apis' },
-              { label: 'Express.js Framework', link: '/nodejs/express-framework' },
-              { label: 'Authentication & Security', link: '/nodejs/authentication-security' },
-              { label: 'Databases', link: '/nodejs/databases' },
-            ],
+            label: '2. Core Concepts',
+            items: [{ autogenerate: { directory: 'nodejs/core' } }],
           },
           {
-            label: 'Advanced Topics',
-            items: [
-              { label: 'Advanced Node.js', link: '/nodejs/advanced' },
-              { label: 'Production Architecture', link: '/nodejs/production-architecture' },
-              { label: 'Design Patterns', link: '/nodejs/design-patterns' },
-              { label: 'Performance Optimization', link: '/nodejs/performance' },
-            ],
+            label: '3. Web Development',
+            items: [{ autogenerate: { directory: 'nodejs/web' } }],
           },
           {
-            label: 'Testing & Deployment',
-            items: [
-              { label: 'Testing', link: '/nodejs/testing' },
-              { label: 'Deployment', link: '/nodejs/deployment' },
-            ],
+            label: '4. Data Layer',
+            items: [{ autogenerate: { directory: 'nodejs/data' } }],
           },
           {
-            label: 'Architecture & Interview',
-            items: [
-              { label: 'Project Architecture', link: '/nodejs/project-architecture' },
-              { label: 'Interview Questions', link: '/nodejs/interview-questions' },
-            ],
+            label: '5. Production',
+            items: [{ autogenerate: { directory: 'nodejs/production' } }],
           },
+          { label: '6. Interview Questions', link: '/nodejs/interview-questions' },
         ],
       },
       {
@@ -795,6 +878,113 @@ export default defineConfig({
           name: 'keywords',
           content: 'DSA, JavaScript, React, MongoDB, SQL, Docker, Interview Prep',
         },
+      },
+      {
+        tag: 'script',
+        attrs: {
+          type: 'module',
+        },
+        content: `
+          import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.esm.min.mjs';
+
+          let rendering = false;
+
+          async function renderMermaid() {
+            if (rendering) return;
+            rendering = true;
+            try {
+            const theme = document.documentElement.getAttribute('data-theme');
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: theme === 'light' ? 'default' : 'dark',
+              themeVariables: {
+                primaryColor: theme === 'light' ? '#7c3aed' : '#a78bfa',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: theme === 'light' ? '#7c3aed' : '#a78bfa',
+                lineColor: theme === 'light' ? '#64748b' : '#94a3b8',
+                secondaryColor: theme === 'light' ? '#f5f3ff' : '#1e1b4b',
+                tertiaryColor: theme === 'light' ? '#f8fafc' : '#0f172a',
+              }
+            });
+
+            // Find mermaid code blocks in their various HTML wrappers
+            // Starlight/expressive-code structures them as: <pre data-language="mermaid"><code>...</code></pre>
+            // Regular markdown renders as: <pre><code class="language-mermaid">...</code></pre>
+            const blocks = [];
+
+            document.querySelectorAll('pre[data-language="mermaid"]').forEach(el => {
+              if (!blocks.includes(el)) blocks.push(el);
+            });
+
+            document.querySelectorAll('pre > code.language-mermaid').forEach(el => {
+              const pre = el.parentElement;
+              if (pre && !blocks.includes(pre)) blocks.push(pre);
+            });
+
+            document.querySelectorAll('pre.language-mermaid').forEach(el => {
+              if (!blocks.includes(el)) blocks.push(el);
+            });
+
+            // Remove old SVG renders before re-rendering
+            document.querySelectorAll('.mermaid svg').forEach(svg => svg.remove());
+
+            // Convert each matched block into a .mermaid div
+            blocks.forEach(pre => {
+              // Skip if already processed
+              if (pre.dataset.mermaidProcessed) return;
+              pre.dataset.mermaidProcessed = 'true';
+
+              const code = pre.querySelector('code');
+              let content;
+              if (code) {
+                // Expressive Code splits each line into a .ec-line element.
+                // textContent joins them with NO newline, breaking mermaid.
+                // Rebuild source by joining lines with newlines.
+                const lines = code.querySelectorAll('.ec-line');
+                content = lines.length
+                  ? Array.from(lines).map(l => l.textContent).join('\\n')
+                  : code.textContent;
+              } else {
+                content = pre.textContent;
+              }
+
+              const div = document.createElement('div');
+              div.className = 'mermaid';
+              div.textContent = content;
+
+              pre.parentNode.replaceChild(div, pre);
+            });
+
+            // Render all unrendered .mermaid divs in one pass (mermaid handles ids/attachment)
+            const nodes = document.querySelectorAll('.mermaid:not([data-rendered])');
+            if (nodes.length) {
+              nodes.forEach(el => el.dataset.rendered = 'true');
+              try {
+                await mermaid.run({ nodes: Array.from(nodes) });
+              } catch(e) {
+                console.error('Mermaid diagram failed:', e);
+              }
+            }
+            } finally {
+              rendering = false;
+            }
+          }
+
+          // Run on initial page load and every Astro client-side navigation
+          // astro:page-load fires on initial visit too in Astro 6
+          document.addEventListener('astro:page-load', renderMermaid);
+          // Module scripts are deferred; page-load may have already fired. Run once now.
+          renderMermaid();
+
+          // Re-render on theme change (no page reload)
+          const themeObserver = new MutationObserver(() => {
+            const theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'light' || theme === 'dark') {
+              renderMermaid();
+            }
+          });
+          themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        `,
       },
     ],
   }), react()],

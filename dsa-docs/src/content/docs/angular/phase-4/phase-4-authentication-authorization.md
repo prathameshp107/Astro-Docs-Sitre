@@ -2,7 +2,7 @@
 title: "2. Authentication & Authorization"
 description: "Enterprise applications separate the frontend (Angular SPA) from the backend (REST API). Traditional session-based auth doesn't work well here — the server"
 sidebar:
-  order: 2
+  order: 4
 ---
 
 ## 2. Authentication & Authorization

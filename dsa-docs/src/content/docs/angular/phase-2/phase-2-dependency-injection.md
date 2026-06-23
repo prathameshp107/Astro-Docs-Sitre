@@ -41,9 +41,30 @@ export class ProductComponent {
 
 ---
 
-### DI Architecture Diagram
+### Hierarchical DI Tree
 
-![Angular Dependency Injection Architecture](/DSA-Notes-Problems/assets/angular/phase-2-2-angular-dependency-injection-architecture.svg)
+```mermaid
+flowchart TB
+    Root["🏛️ Root Injector\nprovidedIn: 'root'\nGlobalUserService, HttpClient"]
+    
+    Root --> ModuleA["📦 Feature Module A\nModule Injector\nProductService"]
+    Root --> ModuleB["📦 Feature Module B\nModule Injector"]
+    
+    ModuleA --> CompA1["⚙️ Component A1\nComponent Injector\nLocalCounterService"]
+    ModuleA --> CompA2["⚙️ Component A2\nComponent Injector"]
+    
+    ModuleB --> CompB1["⚙️ Component B1\nComponent Injector"]
+    
+    CompA1 --> ChildA["🪆 Child Component\nInherits from parent"]
+
+    style Root fill:#7c3aed,color:#fff
+    style ModuleA fill:#4f46e5,color:#fff
+    style ModuleB fill:#4f46e5,color:#fff
+    style CompA1 fill:#059669,color:#fff
+    style CompA2 fill:#059669,color:#fff
+    style CompB1 fill:#059669,color:#fff
+    style ChildA fill:#10b981,color:#fff
+```
 
 ---
 

@@ -1,6 +1,8 @@
 ---
 title: "State Management"
 description: "Redux and Zustand state management notes for React."
+sidebar:
+  order: 10
 ---
 
 # State Management in React - Redux & Zustand (Simple Guide)
@@ -145,9 +147,23 @@ function CartPage() {
 }
 ```
 
-## Redux Data Flow (Visual)
+## Redux Data Flow
 
-![Redux Data Flow](/DSA-Notes-Problems/assets/react/redux-data-flow.svg)
+```mermaid
+flowchart LR
+    Comp["🏗️ Component\ndispatch(action)"] --> Action["📤 Action\n{ type: 'cart/addItem' }\"]
+    Action --> Reducer["⚙️ Reducer\n(state, action) → newState"]
+    Reducer --> Store["📦 Store\nSingle state tree"]
+    Store --> Selector["🔍 useSelector\nPicks state slice"]
+    Selector --> Comp
+
+    style Comp fill:#7c3aed,color:#fff
+    style Action fill:#4f46e5,color:#fff
+    style Reducer fill:#d97706,color:#fff
+    style Store fill:#059669,color:#fff
+    style Selector fill:#10b981,color:#fff
+```
+
 ---
 
 # Part 2 - Zustand

@@ -2,7 +2,7 @@
 title: "4. Testing"
 description: "In a team of 20 engineers, no one can hold the entire system in their head. Tests are the executable specification of your system's behavior. Without them:"
 sidebar:
-  order: 4
+  order: 7
 ---
 
 ## 4. Testing

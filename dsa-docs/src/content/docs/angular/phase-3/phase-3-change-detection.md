@@ -87,9 +87,31 @@ class ApplicationRef {
 
 ---
 
-### Architecture Diagram — Zone.js to DOM Update
+### Change Detection Tree + OnPush
 
-![Angular Change Detection Flow](/DSA-Notes-Problems/assets/angular/phase-3-1-angular-change-detection-flow.svg)
+```mermaid
+flowchart TB
+    subgraph Default["Default Strategy — Full Tree Checked"]
+        Root1["🔄 Root Component"] --> H1["Header (checked)"]
+        Root1 --> L1["List (checked)"]
+        Root1 --> F1["Footer (checked)"]
+        L1 --> I1["Item 1 (checked)"]
+        L1 --> I2["Item 2 (checked)"]
+    end
+
+    subgraph OnPush["OnPush Strategy — Only Changed Branches"]
+        Root2["🔄 Root Component"] --> H2["Header (skipped ❌)"]
+        Root2 --> L2["List (@Input changed ✅)"]
+        Root2 --> F2["Footer (skipped ❌)"]
+        L2 --> I3["Item 1 (checked ✅)"]
+        L2 --> I4["Item 2 (checked ✅)"]
+    end
+
+    style Default fill:#4f46e5,color:#fff
+    style OnPush fill:#059669,color:#fff
+    style Root1 fill:#6366f1,color:#fff
+    style Root2 fill:#6366f1,color:#fff
+```
 
 ---
 

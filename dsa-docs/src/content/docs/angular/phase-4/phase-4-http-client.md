@@ -2,7 +2,7 @@
 title: "3. HTTP Client"
 description: "constructor(protected http: HttpClient) {}"
 sidebar:
-  order: 3
+  order: 2
 ---
 
 ## 3. HTTP Client

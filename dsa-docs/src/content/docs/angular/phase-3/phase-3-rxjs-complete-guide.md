@@ -157,9 +157,23 @@ async$.complete(); // Only now: prints 3
 
 ---
 
-### RxJS Architecture Diagram
+### RxJS Observable Stream Through Operators
 
-![RxJS Stream Architecture](/DSA-Notes-Problems/assets/angular/phase-3-2-rxjs-stream-architecture.svg)
+```mermaid
+flowchart LR
+    Source["🔵 Observable\nfromEvent(input, 'keyup')"] --> Op1["⚙️ debounceTime(300)\nWaits 300ms pause"]
+    Op1 --> Op2["⚙️ map(e => e.value)\nExtracts input value"]
+    Op2 --> Op3["⚙️ distinctUntilChanged()\nSkips same value"]
+    Op3 --> Op4["⚙️ switchMap(term => api.search(term))\nCancels previous request"]
+    Op4 --> Sub["✅ Subscribe\nGets search results"]
+
+    style Source fill:#7c3aed,color:#fff
+    style Op1 fill:#4f46e5,color:#fff
+    style Op2 fill:#6366f1,color:#fff
+    style Op3 fill:#059669,color:#fff
+    style Op4 fill:#d97706,color:#fff
+    style Sub fill:#10b981,color:#fff
+```
 
 ---
 

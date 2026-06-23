@@ -1,16 +1,16 @@
 ---
 title: "React"
-description: "React setup guidance, notes, hooks, component patterns, and interview preparation."
+description: "React setup guidance, notes, hooks, component patterns, advanced concepts, and interview preparation."
 ---
 
 import { Card, CardGrid, Aside, Steps, LinkCard } from '@astrojs/starlight/components';
 
 # React
 
-Complete React knowledge base covering setup, components, hooks, core concepts, and interview preparation — from basic functional components to advanced state management patterns.
+Complete React knowledge base covering setup, components, hooks, core concepts, advanced patterns, and modern React 19 features — from basic functional components to Server Components and Actions.
 
 <Aside type="tip" title="Comprehensive React Coverage">
-  45+ documents across components, hooks, data binding, routing, and interview questions. Use the cards below to jump to any topic, or follow the **Learning Path** for a structured approach.
+  60+ documents across components, hooks, data binding, routing, advanced concepts, modern React 19, and interview questions. Use the cards below to jump to any topic, or follow the **Learning Path** for a structured approach.
 </Aside>
 
 ---
@@ -34,9 +34,24 @@ Complete React knowledge base covering setup, components, hooks, core concepts, 
     description="JSX syntax, expressions, attributes, and how it compiles to React.createElement calls."
   />
   <LinkCard
-    title="Props"
+    title="Props Overview"
     href="/DSA-Notes-Problems/react/props"
-    description="Passing data via props, prop types, default props, and children prop patterns."
+    description="What are props, one-way data flow, component tree, and basic usage."
+  />
+  <LinkCard
+    title="Prop Types"
+    href="/DSA-Notes-Problems/react/props/prop-types"
+    description="String, number, boolean, array, object, function — all prop types explained."
+  />
+  <LinkCard
+    title="Children Prop"
+    href="/DSA-Notes-Problems/react/props/children-prop"
+    description="The special children prop for wrapping and composing components."
+  />
+  <LinkCard
+    title="Default Props & Destructuring"
+    href="/DSA-Notes-Problems/react/props/default-props"
+    description="Setting default values and cleaning up code with destructuring."
   />
   <LinkCard
     title="Strict Mode"
@@ -59,7 +74,7 @@ Complete React knowledge base covering setup, components, hooks, core concepts, 
 
 ## 🪝 Hooks Deep Dive
 
-<Aside type="note" title="9 Hook Documents">
+<Aside type="note" title="15 Hook Documents">
   React Hooks are the foundation of modern React development. Each hook document includes detailed explanations, code examples, and common pitfalls.
 </Aside>
 
@@ -108,6 +123,36 @@ Complete React knowledge base covering setup, components, hooks, core concepts, 
     title="Custom Hooks"
     href="/DSA-Notes-Problems/react/hooks/custom-hooks"
     description="Building reusable hooks, hook composition, and real-world custom hook examples."
+  />
+  <LinkCard
+    title="useLayoutEffect"
+    href="/DSA-Notes-Problems/react/hooks/use-layout-effect"
+    description="Synchronous layout effects, DOM measurements before paint."
+  />
+  <LinkCard
+    title="useImperativeHandle"
+    href="/DSA-Notes-Problems/react/hooks/use-imperative-handle"
+    description="Exposing a controlled API from child to parent via ref."
+  />
+  <LinkCard
+    title="useId"
+    href="/DSA-Notes-Problems/react/hooks/use-id"
+    description="Stable unique IDs for accessibility and SSR-safe forms."
+  />
+  <LinkCard
+    title="useTransition"
+    href="/DSA-Notes-Problems/react/hooks/use-transition"
+    description="Marking state updates as non-urgent for responsive UIs."
+  />
+  <LinkCard
+    title="useDeferredValue"
+    href="/DSA-Notes-Problems/react/hooks/use-deferred-value"
+    description="Deferring heavy re-renders based on a value."
+  />
+  <LinkCard
+    title="useSyncExternalStore"
+    href="/DSA-Notes-Problems/react/hooks/use-sync-external-store"
+    description="Subscribing to external data stores (Redux, Zustand, browser APIs)."
   />
 </CardGrid>
 
@@ -226,7 +271,81 @@ Complete React knowledge base covering setup, components, hooks, core concepts, 
   <LinkCard
     title="Higher-Order Components"
     href="/DSA-Notes-Problems/react/data-binding/higher-order-components"
-    description="HOCs for cross-cutting concerns like auth, logging, and data fetching."
+    description="HOCs for cross-cutting concerns — now redirects to canonical Components page."
+  />
+</CardGrid>
+
+---
+
+## ⚡ Advanced Concepts
+
+<CardGrid>
+  <LinkCard
+    title="Error Boundaries"
+    href="/DSA-Notes-Problems/react/advanced/error-boundaries"
+    description="Catching render errors, fallback UI, and error boundary placement strategies."
+  />
+  <LinkCard
+    title="Suspense & Lazy Loading"
+    href="/DSA-Notes-Problems/react/advanced/suspense-and-lazy"
+    description="Code-splitting with React.lazy, Suspense fallbacks, and route-based splitting."
+  />
+  <LinkCard
+    title="Portals"
+    href="/DSA-Notes-Problems/react/advanced/portals"
+    description="Rendering outside parent DOM for modals, tooltips, and overlays."
+  />
+  <LinkCard
+    title="Refs & forwardRef"
+    href="/DSA-Notes-Problems/react/advanced/refs-and-forwardref"
+    description="DOM access, forwardRef, useImperativeHandle, and React 19 ref-as-prop."
+  />
+  <LinkCard
+    title="Performance & Memoization"
+    href="/DSA-Notes-Problems/react/advanced/performance-and-memo"
+    description="React.memo, useMemo, useCallback, profiling, and when memoization helps."
+  />
+  <LinkCard
+    title="Reconciliation & Virtual DOM"
+    href="/DSA-Notes-Problems/react/advanced/reconciliation-and-virtual-dom"
+    description="How React diffs, the role of keys, Fiber reconciler, and render cycle."
+  />
+  <LinkCard
+    title="Prop Drilling"
+    href="/DSA-Notes-Problems/react/advanced/prop-drilling"
+    description="What prop drilling is, why it's a problem, and how to fix it with Context API, composition, and state management."
+  />
+</CardGrid>
+
+---
+
+## 🚀 Modern React (v19)
+
+<CardGrid stagger>
+  <LinkCard
+    title="Actions & Forms"
+    href="/DSA-Notes-Problems/react/modern-react/actions-and-forms"
+    description="React 19 Actions, form action, useActionState, useFormStatus."
+  />
+  <LinkCard
+    title="useOptimistic"
+    href="/DSA-Notes-Problems/react/modern-react/use-optimistic"
+    description="Optimistic UI updates — show results instantly, revert on failure."
+  />
+  <LinkCard
+    title="use() Hook"
+    href="/DSA-Notes-Problems/react/modern-react/use-hook"
+    description="Reading Promises and Context conditionally with Suspense integration."
+  />
+  <LinkCard
+    title="Server Components"
+    href="/DSA-Notes-Problems/react/modern-react/server-components"
+    description="RSC vs Client Components, 'use client', where each runs."
+  />
+  <LinkCard
+    title="Modern React Interview"
+    href="/DSA-Notes-Problems/react/modern-react/modern-react-interview"
+    description="Q&A for React 19 features — Actions, useOptimistic, Server Components."
   />
 </CardGrid>
 
@@ -269,7 +388,9 @@ Complete React knowledge base covering setup, components, hooks, core concepts, 
 5. [Conditional Rendering & Lists](/DSA-Notes-Problems/react/data-binding/conditional-rendering) — Build dynamic UIs with conditions and keyed lists
 6. [Forms & Events](/DSA-Notes-Problems/react/data-binding/forms) — Handle user input and form submission
 7. [State Management & Routing](/DSA-Notes-Problems/react/data-binding/state-management) — Scale your app with proper state and routing
-8. [Interview Questions](/DSA-Notes-Problems/react/interview-questions/easy-questions) — Test your knowledge with real interview questions
+8. [Advanced Concepts](/DSA-Notes-Problems/react/advanced/error-boundaries) — Error boundaries, Suspense, and performance optimization
+9. [Modern React (v19)](/DSA-Notes-Problems/react/modern-react/actions-and-forms) — Actions, useOptimistic, Server Components
+10. [Interview Questions](/DSA-Notes-Problems/react/interview-questions/easy-questions) — Test your knowledge with real interview questions
 </Steps>
 
 ---

@@ -20,9 +20,29 @@ URL: /login           → Show LoginComponent
 
 ---
 
+### Routing Navigation + Guard Flow
+
+```mermaid
+flowchart TB
+    URL["User types URL\n/products/admin"] --> Router["Angular Router\nMatches route config"]
+    Router --> Guards["Route Guards\ncanActivate / canMatch"]
+    Guards -->|"⛔ Denied"| Denied["Redirect to /login\nor /unauthorized"]
+    Guards -->|"✅ Allowed"| Resolver["Resolve\nPre-fetch data"]
+    Resolver --> Outlet["<router-outlet>\nRenders matched\ncomponent"]
+
+    style URL fill:#7c3aed,color:#fff
+    style Router fill:#4f46e5,color:#fff
+    style Guards fill:#d97706,color:#fff
+    style Denied fill:#dc2626,color:#fff
+    style Resolver fill:#059669,color:#fff
+    style Outlet fill:#10b981,color:#fff
+```
+
 ### Routing Flow Diagram
 
 ![Angular Router Navigation Flow](/DSA-Notes-Problems/assets/angular/phase-2-3-angular-router-navigation-flow.svg)
+
+> 🔍 See the dedicated **[Route Guards & Resolvers](/DSA-Notes-Problems/angular/phase-4/phase-4-route-guards-and-resolvers)** page for a deeper dive into guards and data resolvers.
 
 ---
 
