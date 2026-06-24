@@ -3,6 +3,8 @@ import starlight from '@astrojs/starlight';
 
 import react from '@astrojs/react';
 
+import remarkPracticeLinks from './src/plugins/remark-practice-links.mjs';
+
 const isVercel = !!process.env.VERCEL;
 const site = isVercel && process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -148,6 +150,32 @@ export default defineConfig({
           {
             label: '05. Interview',
             items: [{ autogenerate: { directory: 'html-css/05-interview' } }],
+          },
+        ],
+      },
+      {
+        label: 'Tailwind CSS',
+        items: [
+          { label: 'Tailwind Overview', link: '/tailwind' },
+          {
+            label: '01. Basics',
+            items: [{ autogenerate: { directory: 'tailwind/01-basics' } }],
+          },
+          {
+            label: '02. Core Utilities',
+            items: [{ autogenerate: { directory: 'tailwind/02-core-utilities' } }],
+          },
+          {
+            label: '03. Layout',
+            items: [{ autogenerate: { directory: 'tailwind/03-layout' } }],
+          },
+          {
+            label: '04. Advanced',
+            items: [{ autogenerate: { directory: 'tailwind/04-advanced' } }],
+          },
+          {
+            label: '05. Interview',
+            items: [{ autogenerate: { directory: 'tailwind/05-interview' } }],
           },
         ],
       },
@@ -818,6 +846,32 @@ export default defineConfig({
         ],
       },
       {
+        label: 'GraphQL',
+        items: [
+          { label: 'GraphQL Overview', link: '/graphql' },
+          {
+            label: '01. Basics',
+            items: [{ autogenerate: { directory: 'graphql/01-basics' } }],
+          },
+          {
+            label: '02. Operations',
+            items: [{ autogenerate: { directory: 'graphql/02-operations' } }],
+          },
+          {
+            label: '03. Server',
+            items: [{ autogenerate: { directory: 'graphql/03-server' } }],
+          },
+          {
+            label: '04. Client & Practice',
+            items: [{ autogenerate: { directory: 'graphql/04-client-and-practice' } }],
+          },
+          {
+            label: '05. Interview',
+            items: [{ autogenerate: { directory: 'graphql/05-interview' } }],
+          },
+        ],
+      },
+      {
         label: 'Python',
         items: [
           { label: 'Python Overview', link: '/python' },
@@ -1023,6 +1077,36 @@ export default defineConfig({
           { label: 'Interview Questions', link: '/typescript/interview-questions' },
           { label: 'Cheatsheet', link: '/typescript/cheatsheet' },
           { label: 'Roadmap', link: '/typescript/roadmap' },
+        ],
+      },
+      {
+        label: 'Cloud & AWS',
+        items: [
+          { label: 'Cloud & AWS Overview', link: '/aws' },
+          {
+            label: '01. Fundamentals',
+            items: [{ autogenerate: { directory: 'aws/01-fundamentals' } }],
+          },
+          {
+            label: '02. Compute',
+            items: [{ autogenerate: { directory: 'aws/02-compute' } }],
+          },
+          {
+            label: '03. Storage & Database',
+            items: [{ autogenerate: { directory: 'aws/03-storage-and-database' } }],
+          },
+          {
+            label: '04. Networking & Delivery',
+            items: [{ autogenerate: { directory: 'aws/04-networking-and-delivery' } }],
+          },
+          {
+            label: '05. Deployment',
+            items: [{ autogenerate: { directory: 'aws/05-deployment' } }],
+          },
+          {
+            label: '06. Interview',
+            items: [{ autogenerate: { directory: 'aws/06-interview' } }],
+          },
         ],
       },
       {
