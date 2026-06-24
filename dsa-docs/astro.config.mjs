@@ -74,6 +74,84 @@ export default defineConfig({
           link: '/mcq/dashboard',
         },
       {
+        label: 'Computer Networks',
+        items: [
+          { label: 'Overview', link: '/networks' },
+          {
+            label: '01. Fundamentals',
+            items: [{ autogenerate: { directory: 'networks/01-fundamentals' } }],
+          },
+          {
+            label: '02. Transport',
+            items: [{ autogenerate: { directory: 'networks/02-transport' } }],
+          },
+          {
+            label: '03. Web Protocols',
+            items: [{ autogenerate: { directory: 'networks/03-web-protocols' } }],
+          },
+          {
+            label: '04. Infrastructure',
+            items: [{ autogenerate: { directory: 'networks/04-infrastructure' } }],
+          },
+          {
+            label: '05. Interview',
+            items: [{ autogenerate: { directory: 'networks/05-interview' } }],
+          },
+        ],
+      },
+      {
+        label: 'Git & GitHub',
+        items: [
+          { label: 'Overview', link: '/git' },
+          {
+            label: '01. Basics',
+            items: [{ autogenerate: { directory: 'git/01-basics' } }],
+          },
+          {
+            label: '02. Branching',
+            items: [{ autogenerate: { directory: 'git/02-branching' } }],
+          },
+          {
+            label: '03. Remote & GitHub',
+            items: [{ autogenerate: { directory: 'git/03-remote-and-github' } }],
+          },
+          {
+            label: '04. Advanced',
+            items: [{ autogenerate: { directory: 'git/04-advanced' } }],
+          },
+          {
+            label: '05. Interview',
+            items: [{ autogenerate: { directory: 'git/05-interview' } }],
+          },
+        ],
+      },
+      {
+        label: 'HTML & CSS',
+        items: [
+          { label: 'Overview', link: '/html-css' },
+          {
+            label: '01. HTML Basics',
+            items: [{ autogenerate: { directory: 'html-css/01-html' } }],
+          },
+          {
+            label: '02. CSS Basics',
+            items: [{ autogenerate: { directory: 'html-css/02-css-basics' } }],
+          },
+          {
+            label: '03. Layout',
+            items: [{ autogenerate: { directory: 'html-css/03-layout' } }],
+          },
+          {
+            label: '04. Advanced',
+            items: [{ autogenerate: { directory: 'html-css/04-advanced' } }],
+          },
+          {
+            label: '05. Interview',
+            items: [{ autogenerate: { directory: 'html-css/05-interview' } }],
+          },
+        ],
+      },
+      {
         label: 'Namaste JavaScript',
         items: [
           { label: 'Overview', link: '/namaste-js' },
@@ -962,6 +1040,40 @@ export default defineConfig({
           {
             label: 'Orchestration',
             items: [{ autogenerate: { directory: 'docker/orchestration' } }],
+          },
+        ],
+      },
+      {
+        label: 'Design Patterns & SOLID',
+        items: [
+          { label: 'Overview', link: '/design-patterns' },
+          {
+            label: '01. Fundamentals',
+            items: [{ autogenerate: { directory: 'design-patterns/01-fundamentals' } }],
+          },
+          {
+            label: '02. SOLID Principles',
+            items: [{ autogenerate: { directory: 'design-patterns/02-solid' } }],
+          },
+          {
+            label: '03. Creational',
+            items: [{ autogenerate: { directory: 'design-patterns/03-creational' } }],
+          },
+          {
+            label: '04. Structural',
+            items: [{ autogenerate: { directory: 'design-patterns/04-structural' } }],
+          },
+          {
+            label: '05. Behavioral',
+            items: [{ autogenerate: { directory: 'design-patterns/05-behavioral' } }],
+          },
+          {
+            label: '06. Practical Guide',
+            items: [{ autogenerate: { directory: 'design-patterns/06-practical' } }],
+          },
+          {
+            label: '07. Interview',
+            items: [{ autogenerate: { directory: 'design-patterns/07-interview' } }],
           },
         ],
       },
