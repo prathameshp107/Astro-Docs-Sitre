@@ -610,12 +610,29 @@ export default defineConfig({
             ],
           },
           {
-            label: 'Stacks & Queues',
-            items: [{ autogenerate: { directory: 'data-structures/stacks-queues' } }],
+            label: 'Strings',
+            items: [{ autogenerate: { directory: 'data-structures/strings' } }],
+          },
+          {
+            label: 'Matrix',
+            items: [{ autogenerate: { directory: 'data-structures/matrix' } }],
           },
           {
             label: 'Hashing',
             items: [{ autogenerate: { directory: 'data-structures/hashing' } }],
+          },
+          {
+            label: 'Stacks & Queues',
+            items: [{ autogenerate: { directory: 'data-structures/stacks-queues' } }],
+          },
+          {
+            label: 'Heap & Priority Queue',
+            items: [
+              { label: 'Priority Queue & Heap', link: '/data-structures/stacks-queues/priority-queue-and-heap' },
+              { label: 'Heap Operations', link: '/data-structures/trees/09-heap' },
+              { label: 'Heap Sort', link: '/data-structures/sorting/07-heap-sort' },
+              { label: 'Top K Elements (Heap Pattern)', link: '/data-structures/interview-prep/13-top-k-heap' },
+            ],
           },
           {
             label: 'Linked List',
@@ -624,6 +641,10 @@ export default defineConfig({
           {
             label: 'Trees',
             items: [{ autogenerate: { directory: 'data-structures/trees' } }],
+          },
+          {
+            label: 'Graphs',
+            items: [{ autogenerate: { directory: 'data-structures/graphs' } }],
           },
           {
             label: 'Sorting',
@@ -652,8 +673,8 @@ export default defineConfig({
             ],
           },
           {
-            label: 'Graphs',
-            items: [{ autogenerate: { directory: 'data-structures/graphs' } }],
+            label: 'Recursion & Backtracking',
+            items: [{ autogenerate: { directory: 'data-structures/recursion' } }],
           },
           {
             label: 'Dynamic Programming',
@@ -674,8 +695,16 @@ export default defineConfig({
             ],
           },
           {
-            label: 'Recursion & Backtracking',
-            items: [{ autogenerate: { directory: 'data-structures/recursion' } }],
+            label: 'Greedy',
+            items: [{ autogenerate: { directory: 'data-structures/greedy' } }],
+          },
+          {
+            label: 'Bit Manipulation',
+            items: [{ autogenerate: { directory: 'data-structures/bit-manipulation' } }],
+          },
+          {
+            label: 'Math',
+            items: [{ autogenerate: { directory: 'data-structures/math' } }],
           },
           {
             label: 'Interview Prep',
@@ -933,6 +962,56 @@ export default defineConfig({
           {
             label: 'Orchestration',
             items: [{ autogenerate: { directory: 'docker/orchestration' } }],
+          },
+        ],
+      },
+      {
+        label: 'System Design',
+        items: [
+          { label: 'Overview', link: '/system-design' },
+          {
+            label: 'Fundamentals',
+            items: [{ autogenerate: { directory: 'system-design/01-fundamentals' } }],
+          },
+          {
+            label: 'Building Blocks',
+            items: [{ autogenerate: { directory: 'system-design/02-building-blocks' } }],
+          },
+          {
+            label: 'Databases',
+            items: [{ autogenerate: { directory: 'system-design/03-databases' } }],
+          },
+          {
+            label: 'Caching',
+            items: [{ autogenerate: { directory: 'system-design/04-caching' } }],
+          },
+          {
+            label: 'Communication',
+            items: [{ autogenerate: { directory: 'system-design/05-communication' } }],
+          },
+          {
+            label: 'Architecture Patterns',
+            items: [{ autogenerate: { directory: 'system-design/06-architecture-patterns' } }],
+          },
+          {
+            label: 'Distributed Systems',
+            items: [{ autogenerate: { directory: 'system-design/07-distributed-systems' } }],
+          },
+          {
+            label: 'Reliability & Scale',
+            items: [{ autogenerate: { directory: 'system-design/08-reliability-and-scale' } }],
+          },
+          {
+            label: 'Security',
+            items: [{ autogenerate: { directory: 'system-design/09-security' } }],
+          },
+          {
+            label: 'Interview Guide',
+            items: [{ autogenerate: { directory: 'system-design/10-interview-guide' } }],
+          },
+          {
+            label: 'Case Studies',
+            items: [{ autogenerate: { directory: 'system-design/11-case-studies' } }],
           },
         ],
       },
