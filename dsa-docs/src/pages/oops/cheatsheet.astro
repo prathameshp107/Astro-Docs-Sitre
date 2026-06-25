@@ -1,0 +1,119 @@
+---
+import OOPCheatSheet from '../../components/OOPCheatSheet.jsx';
+import AppNav from '../../components/AppNav.jsx';
+import ThemeToggle from '../../components/ThemeToggle.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OOP Cheat Sheet — Interactive Reference</title>
+    <meta name="description" content="Interactive OOP cheat sheet with collapsible sections, search, code examples, and decision guide." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background: #0a0a0f;
+        color: #e2e8f0;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        min-height: 100vh;
+      }
+      .oop-cheatsheet code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8125rem;
+      }
+      .oop-cheatsheet pre {
+        background: transparent !important;
+        border: none !important;
+        margin: 0 !important;
+      }
+      .oop-cheatsheet pre code {
+        font-size: 0.8125rem;
+        line-height: 1.6;
+      }
+      .oop-cheatsheet input::placeholder {
+        color: rgba(255,255,255,0.2);
+      }
+      .oop-cheatsheet table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .oop-cheatsheet th,
+      .oop-cheatsheet td {
+        text-align: left;
+      }
+      .oop-cheatsheet th:first-child,
+      .oop-cheatsheet td:first-child {
+        padding-left: 1rem;
+      }
+      .oop-cheatsheet th:last-child,
+      .oop-cheatsheet td:last-child {
+        padding-right: 1rem;
+      }
+      @media (max-width: 640px) {
+        .oop-cheatsheet .grid-cols-2 {
+          grid-template-columns: 1fr;
+        }
+        .oop-cheatsheet .sm\\:grid-cols-2 {
+          grid-template-columns: 1fr;
+        }
+        .oop-cheatsheet .sm\\:grid-cols-3 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      /* Starlight theme integration */
+      [data-theme="light"] body {
+        background: #ffffff;
+        color: #1e293b;
+      }
+      [data-theme="light"] .oop-section {
+        border-color: rgba(0,0,0,0.08);
+        background: rgba(0,0,0,0.02);
+      }
+      [data-theme="light"] .oop-section-btn:hover {
+        background: rgba(0,0,0,0.03);
+      }
+      [data-theme="light"] .oop-section-btn span.text-white {
+        color: #1e293b;
+      }
+      [data-theme="light"] .oop-table thead tr {
+        background: rgba(0,0,0,0.04);
+      }
+      [data-theme="light"] .oop-table td {
+        color: rgba(30,41,59,0.7);
+      }
+      [data-theme="light"] .oop-table td code {
+        color: #1e293b;
+      }
+      [data-theme="light"] .oop-table td:first-child code {
+        color: #d97706;
+      }
+      /* Light theme code blocks */
+      [data-theme="light"] .oop-cheatsheet pre {
+        background: #f8fafc !important;
+        color: #1e293b !important;
+      }
+      [data-theme="light"] .oop-cheatsheet pre code {
+        color: #1e293b !important;
+      }
+      [data-theme="light"] .oop-cheatsheet .rounded-xl.border.border-white\/10.bg-\[\#0d1117\] {
+        background: #f1f5f9 !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .oop-cheatsheet .bg-\[\#161b22\] {
+        background: #e2e8f0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <AppNav client:load />
+    <OOPCheatSheet client:load />
+    <div class="pb-12"></div>
+  </body>
+</html>

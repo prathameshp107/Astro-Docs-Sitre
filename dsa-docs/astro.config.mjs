@@ -74,7 +74,10 @@ export default defineConfig({
         {
           label: 'MCQ Dashboard',
           link: '/mcq/dashboard',
-        },
+        },        {
+        label: 'Object-Oriented Programming (OOP)',
+        items: [{ autogenerate: { directory: 'oops' } }],
+      },
       {
         label: 'Computer Networks',
         items: [
