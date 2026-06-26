@@ -1,0 +1,1268 @@
+// Auto-extracted from MCQData.js
+
+export default [
+  // ─── Topic 1: What is OOP? (oop-1 to oop-5) ───
+  {
+    id: 'oop-1',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'easy',
+    question: 'What does OOP stand for?',
+    options: ['Object-Oriented Programming', 'Object-Ordered Programming', 'Operational Object Programming', 'Outcome-Oriented Process'],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'OOP stands for Object-Oriented Programming, a programming paradigm that organizes code around objects and data rather than functions and logic.',
+    keyConcept: 'OOP is a paradigm that models real-world entities as objects with data (properties) and behavior (methods).',
+    xpReward: 5,
+    tags: ['oops', 'basics', 'definition'],
+  },
+  {
+    id: 'oop-2',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'easy',
+    question: 'Which of the following is NOT one of the four main pillars of OOP?',
+    options: ['Encapsulation', 'Inheritance', 'Compilation', 'Polymorphism'],
+    correctAnswer: [2],
+    type: 'single',
+    explanation: 'The four pillars of OOP are Encapsulation, Inheritance, Polymorphism, and Abstraction. Compilation is a process of converting source code to machine code, not an OOP concept.',
+    keyConcept: 'The four pillars of OOP are: Encapsulation, Inheritance, Polymorphism, and Abstraction.',
+    xpReward: 5,
+    tags: ['oops', 'pillars', 'basics'],
+  },
+  {
+    id: 'oop-3',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'easy',
+    question: 'Which programming paradigm focuses on functions and stateless computation?',
+    options: ['Object-Oriented Programming', 'Functional Programming', 'Procedural Programming', 'Event-Driven Programming'],
+    correctAnswer: [1],
+    type: 'single',
+    explanation: 'Functional Programming treats computation as the evaluation of mathematical functions and avoids changing state and mutable data. OOP focuses on objects with state and behavior.',
+    keyConcept: 'OOP = objects with state + behavior. Functional = pure functions, immutability. Procedural = step-by-step instructions.',
+    xpReward: 5,
+    tags: ['oops', 'paradigms', 'comparison'],
+  },
+  {
+    id: 'oop-4',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'medium',
+    question: 'What is the primary advantage of OOP over procedural programming?',
+    options: [
+      'It runs faster',
+      'It models real-world entities more naturally, making code reusable and maintainable',
+      'It uses less memory',
+      'It eliminates all bugs',
+    ],
+    correctAnswer: [1],
+    type: 'single',
+    explanation: "OOP's main advantage is that it models real-world entities as objects, making code more intuitive, reusable through inheritance, and maintainable through encapsulation.",
+    keyConcept: 'OOP provides code reusability (inheritance), modularity (encapsulation), and extensibility (polymorphism).',
+    xpReward: 10,
+    tags: ['oops', 'advantage', 'procedural'],
+  },
+  {
+    id: 'oop-5',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'medium',
+    question: 'What is a key difference between class-based OOP and prototype-based OOP?',
+    codeSnippet: `// Class-based (Java, C++, TypeScript)
+class Dog {
+  speak() { return "Woof!"; }
+}
+// Prototype-based (JavaScript)
+function Dog() {}
+Dog.prototype.speak = function() {
+  return "Woof!";
+};`,
+    options: [
+      'Class-based uses classes as blueprints; prototype-based uses existing objects as templates',
+      'Class-based is slower than prototype-based',
+      'Prototype-based does not support inheritance',
+      'There is no difference — they are the same concept with different syntax',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Class-based OOP (Java, C++, TypeScript) uses classes as blueprints to create objects. Prototype-based OOP (JavaScript) creates objects directly and uses existing objects as prototypes to inherit behavior.',
+    keyConcept: 'Classes are blueprints; prototypes are template objects. Both enable inheritance but through different mechanisms.',
+    xpReward: 15,
+    tags: ['oops', 'class-based', 'prototype-based'],
+  },
+
+  // ─── Topic 2: Class & Object (oop-6 to oop-10) ───
+  {
+    id: 'oop-6',
+    technology: 'oops',
+    topic: 'Class & Object',
+    difficulty: 'easy',
+    question: 'What is a class in OOP?',
+    options: [
+      'A blueprint or template for creating objects',
+      'An instance of an object',
+      'A function that performs a specific task',
+      'A variable that stores data',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A class is a blueprint or template that defines the structure (properties) and behavior (methods) that its objects will have. It is not an object itself but a definition.',
+    keyConcept: 'A class is a blueprint. An object is an instance created from that blueprint.',
+    xpReward: 5,
+    tags: ['class', 'definition', 'basics'],
+  },
+  {
+    id: 'oop-7',
+    technology: 'oops',
+    topic: 'Class & Object',
+    difficulty: 'easy',
+    question: 'What is an object in OOP?',
+    options: [
+      'An instance of a class that has state and behavior',
+      'A blueprint for creating classes',
+      'A function that modifies data',
+      'A primitive data type like a number or string',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'An object is a specific instance of a class. It has its own state (property values) and can perform actions (methods). Each object occupies its own memory space.',
+    keyConcept: 'Objects are concrete instances with their own data. Classes are abstract definitions.',
+    xpReward: 5,
+    tags: ['object', 'instance', 'basics'],
+  },
+  {
+    id: 'oop-8',
+    technology: 'oops',
+    topic: 'Class & Object',
+    difficulty: 'easy',
+    question: 'What is the correct syntax to create an object from a class?',
+    codeSnippet: `class Car {
+  constructor(brand) {
+    this.brand = brand;
+  }
+}`,
+    options: [
+      'const myCar = new Car("Toyota");',
+      'const myCar = Car("Toyota");',
+      'const myCar = Car.create("Toyota");',
+      'const myCar = Car.new("Toyota");',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The `new` keyword is used to create an object from a class. It allocates memory, calls the constructor, and returns the new object instance.',
+    keyConcept: 'Use `new ClassName()` to instantiate an object. The `new` keyword allocates memory and calls the constructor.',
+    xpReward: 5,
+    tags: ['class', 'object', 'instantiation', 'new'],
+  },
+  {
+    id: 'oop-9',
+    technology: 'oops',
+    topic: 'Class & Object',
+    difficulty: 'easy',
+    question: 'Can a single class create multiple objects?',
+    options: [
+      'Yes, a class can create multiple independent objects',
+      'No, each class can only create one object',
+      'Yes, but all objects share the same property values',
+      'No, classes cannot create objects directly',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A class can create multiple independent objects (instances). Each object gets its own copy of instance properties, so changing one object does not affect others.',
+    keyConcept: 'A class can produce many independent instances, each with its own state.',
+    xpReward: 5,
+    tags: ['class', 'instance', 'multiple-objects'],
+  },
+  {
+    id: 'oop-10',
+    technology: 'oops',
+    topic: 'Class & Object',
+    difficulty: 'medium',
+    question: 'What is the output of this code?',
+    codeSnippet: `class Counter {
+  constructor() {
+    this.count = 0;
+  }
+  increment() {
+    this.count++;
+  }
+}
+const a = new Counter();
+const b = new Counter();
+a.increment();
+console.log(a.count, b.count);`,
+    options: ['1, 1', '1, 0', '0, 1', '1, undefined'],
+    correctAnswer: [1],
+    type: 'single',
+    explanation: 'Each object gets its own `count` property. When `a.increment()` is called, it increments only `a`\'s count to 1. Object `b` has its own separate count property which remains 0.',
+    keyConcept: 'Each instance has independent state. Changes to one instance do not affect others.',
+    xpReward: 10,
+    tags: ['class', 'object', 'state', 'independence'],
+  },
+
+  // ─── Topic 3: Constructor & this (oop-11 to oop-15) ───
+  {
+    id: 'oop-11',
+    technology: 'oops',
+    topic: 'Constructor & this',
+    difficulty: 'easy',
+    question: 'What is the purpose of a constructor in a class?',
+    options: [
+      'To initialize the object\'s properties when it is created',
+      'To destroy the object when it is no longer needed',
+      'To define static methods on the class',
+      'To create a copy of the class blueprint',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A constructor is a special method that is automatically called when an object is created. It initializes the object\'s properties and sets up the initial state.',
+    keyConcept: 'Constructors initialize new objects. They run once at creation time and set up initial property values.',
+    xpReward: 5,
+    tags: ['constructor', 'initialization', 'basics'],
+  },
+  {
+    id: 'oop-12',
+    technology: 'oops',
+    topic: 'Constructor & this',
+    difficulty: 'medium',
+    question: 'What does the `this` keyword refer to inside a class method?',
+    codeSnippet: `class Person {
+  constructor(name) {
+    this.name = name;
+  }
+  greet() {
+    return \`Hi, I'm \${this.name}\`;
+  }
+}
+const p = new Person("Alice");
+console.log(p.greet());`,
+    options: [
+      'The object that the method was called on (the instance)',
+      'The class itself',
+      'The global/window object',
+      'The constructor function',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Inside a class method, `this` refers to the object instance that the method was called on. When `p.greet()` is called, `this` inside `greet()` refers to the `p` object.',
+    keyConcept: '`this` in a method refers to the object that called the method. It provides access to the instance\'s properties.',
+    xpReward: 10,
+    tags: ['this', 'context', 'method'],
+  },
+  {
+    id: 'oop-13',
+    technology: 'oops',
+    topic: 'Constructor & this',
+    difficulty: 'medium',
+    question: 'What happens if you don\'t define a constructor in a JavaScript class?',
+    options: [
+      'JavaScript provides a default empty constructor',
+      'The class cannot be instantiated',
+      'An error is thrown at runtime',
+      'The parent class constructor is not called',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'If you don\'t define a constructor, JavaScript automatically provides a default empty constructor. For a base class, it\'s `constructor() {}`. For a derived class, it\'s `constructor(...args) { super(...args); }`.',
+    keyConcept: 'Every class has a constructor — either explicitly defined or implicitly provided by JavaScript.',
+    xpReward: 10,
+    tags: ['constructor', 'default', 'javascript'],
+  },
+  {
+    id: 'oop-14',
+    technology: 'oops',
+    topic: 'Constructor & this',
+    difficulty: 'medium',
+    question: 'What will the following code output?',
+    codeSnippet: `class Parent {
+  constructor() {
+    console.log("Parent");
+  }
+}
+class Child extends Parent {
+  constructor() {
+    console.log("Child");
+  }
+}
+new Child();`,
+    options: ['"Child" then "Parent"', '"Parent" then "Child"', 'ReferenceError', 'TypeError'],
+    correctAnswer: [3],
+    type: 'single',
+    explanation: 'In JavaScript, a derived class constructor must call `super()` before using `this`. Failure to call `super()` results in a ReferenceError. The correct code would be: `constructor() { super(); console.log("Child"); }`.',
+    keyConcept: 'In derived classes, you MUST call `super()` before accessing `this` in the constructor.',
+    xpReward: 15,
+    tags: ['constructor', 'super', 'inheritance', 'error'],
+  },
+  {
+    id: 'oop-15',
+    technology: 'oops',
+    topic: 'Constructor & this',
+    difficulty: 'hard',
+    question: 'What will this code log?',
+    codeSnippet: `const obj = {
+  name: "Alice",
+  greet: () => {
+    console.log(\`Hello, \${this.name}\`);
+  },
+};
+obj.greet();`,
+    options: ['"Hello, Alice"', '"Hello, undefined"', '"Hello, "', 'ReferenceError'],
+    correctAnswer: [1],
+    type: 'single',
+    explanation: 'Arrow functions do not have their own `this`. They inherit `this` from the enclosing lexical scope. Here, the enclosing scope is the global/module scope, not the `obj` object. So `this.name` is `undefined`.',
+    keyConcept: 'Arrow functions capture `this` from the surrounding lexical scope. Regular functions get `this` from the caller.',
+    xpReward: 15,
+    tags: ['this', 'arrow-function', 'lexical-scope'],
+  },
+
+  // ─── Topic 4: Encapsulation (oop-16 to oop-20) ───
+  {
+    id: 'oop-16',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'easy',
+    question: 'What is encapsulation in OOP?',
+    options: [
+      'Bundling data and methods together and hiding internal details',
+      'Creating multiple classes from a single base class',
+      'Changing the behavior of a method at runtime',
+      'Dividing a program into multiple files',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Encapsulation is the bundling of data (properties) and methods (behavior) that operate on that data into a single unit (class), while restricting direct access to some of the object\'s internal components.',
+    keyConcept: 'Encapsulation = data hiding + bundling. Keep internal state private, expose only what\'s necessary.',
+    xpReward: 5,
+    tags: ['encapsulation', 'data-hiding', 'basics'],
+  },
+  {
+    id: 'oop-17',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'medium',
+    question: 'How is encapsulation typically achieved in class-based languages?',
+    options: [
+      'Using access modifiers like private and public',
+      'Using the extends keyword',
+      'Using abstract methods',
+      'Using static methods',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Encapsulation is achieved through access modifiers (private, protected, public) that control visibility of class members. Private members cannot be accessed from outside the class, enforcing data hiding.',
+    keyConcept: 'Access modifiers (private, protected, public) enforce encapsulation by controlling visibility of class members.',
+    xpReward: 10,
+    tags: ['encapsulation', 'access-modifiers', 'private'],
+  },
+  {
+    id: 'oop-18',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'medium',
+    question: 'What will this JavaScript code output?',
+    codeSnippet: `class BankAccount {
+  #balance = 0;
+  deposit(amount) {
+    this.#balance += amount;
+  }
+  getBalance() {
+    return this.#balance;
+  }
+}
+const acc = new BankAccount();
+acc.deposit(100);
+console.log(acc.getBalance());
+console.log(acc.#balance);`,
+    options: ['100, 100', '100, undefined', '100, SyntaxError', '100, 0'],
+    correctAnswer: [2],
+    type: 'single',
+    explanation: 'The `#balance` is a private field (ES2020+). `acc.getBalance()` works because the method is inside the class and can access private fields. `acc.#balance` throws a SyntaxError because private fields cannot be accessed from outside the class.',
+    keyConcept: 'JavaScript `#` prefix creates true private fields. Accessing them outside the class throws an error.',
+    xpReward: 15,
+    tags: ['encapsulation', 'private-fields', 'javascript', 'syntax'],
+  },
+  {
+    id: 'oop-19',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'easy',
+    question: 'What is the main benefit of encapsulation?',
+    options: [
+      'Protects internal data from unintended modification',
+      'Makes the code run faster',
+      'Reduces the number of classes needed',
+      'Eliminates the need for constructors',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Encapsulation protects an object\'s internal state from unintended or harmful modification by external code. It enforces controlled access through public methods, ensuring data integrity.',
+    keyConcept: 'Encapsulation prevents external code from directly modifying internal state, protecting data integrity.',
+    xpReward: 5,
+    tags: ['encapsulation', 'benefit', 'data-integrity'],
+  },
+  {
+    id: 'oop-20',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'medium',
+    question: 'What is the purpose of getters and setters in encapsulation?',
+    codeSnippet: `class Temperature {
+  #celsius = 0;
+  get fahrenheit() {
+    return this.#celsius * 9/5 + 32;
+  }
+  set fahrenheit(value) {
+    this.#celsius = (value - 32) * 5/9;
+  }
+}`,
+    options: [
+      'To provide controlled access to private fields with validation logic',
+      'To make all properties publicly accessible',
+      'To delete private fields from the object',
+      'To create copies of the object',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Getters and setters provide controlled access to private fields. They allow validation, transformation, or computation when getting or setting values, while keeping the internal representation hidden.',
+    keyConcept: 'Getters/setters enable computed properties and validation on access. They expose a controlled interface over private data.',
+    xpReward: 10,
+    tags: ['encapsulation', 'getters', 'setters', 'accessors'],
+  },
+
+  // ─── Topic 5: Abstraction (oop-21 to oop-25) ───
+  {
+    id: 'oop-21',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'easy',
+    question: 'What is abstraction in OOP?',
+    options: [
+      'Hiding complex implementation details and showing only essential features',
+      'Making all methods public',
+      'Creating multiple objects from one class',
+      'Copying properties from one object to another',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Abstraction means hiding the complex implementation details and exposing only the essential features of an object. It reduces complexity by providing a simple interface.',
+    keyConcept: 'Abstraction hides complexity. Users interact with a simple interface without knowing internal details.',
+    xpReward: 5,
+    tags: ['abstraction', 'hiding-complexity', 'basics'],
+  },
+  {
+    id: 'oop-22',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'medium',
+    question: 'How is abstraction different from encapsulation?',
+    options: [
+      'Abstraction hides implementation complexity; encapsulation hides data and bundles it with methods',
+      'They are the same concept with different names',
+      'Encapsulation hides complexity; abstraction hides data',
+      'Abstraction is about security; encapsulation is about performance',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Abstraction focuses on hiding implementation complexity by providing a simplified interface. Encapsulation focuses on hiding internal data and bundling it with methods that operate on it. Abstraction = what it does. Encapsulation = how it protects its data.',
+    keyConcept: 'Abstraction = hiding complexity (interface). Encapsulation = hiding data (access control). They work together.',
+    xpReward: 10,
+    tags: ['abstraction', 'encapsulation', 'difference'],
+  },
+  {
+    id: 'oop-23',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'hard',
+    question: 'What is an abstract class?',
+    codeSnippet: `// TypeScript example
+abstract class Shape {
+  abstract getArea(): number;
+  getDescription(): string {
+    return \`Area: \${this.getArea()}\`;
+  }
+}
+class Circle extends Shape {
+  constructor(private radius: number) { super(); }
+  getArea(): number {
+    return Math.PI * this.radius ** 2;
+  }
+}`,
+    options: [
+      'A class that cannot be instantiated directly and may contain abstract (unimplemented) methods',
+      'A class that can only create one object',
+      'A class that has no methods, only properties',
+      'A class that cannot be inherited from',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'An abstract class cannot be instantiated directly. It serves as a base class that defines a common interface, with some methods left abstract (unimplemented) for subclasses to implement. It can also contain concrete (implemented) methods.',
+    keyConcept: 'Abstract classes provide partial implementation. Subclasses complete the missing pieces. Use when related classes share structure.',
+    xpReward: 15,
+    tags: ['abstraction', 'abstract-class', 'inheritance'],
+  },
+  {
+    id: 'oop-24',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'easy',
+    question: 'Which of the following is a real-world example of abstraction?',
+    options: [
+      'A car\'s steering wheel and pedals — you drive without knowing engine mechanics',
+      'A calculator showing each internal calculation step',
+      'A phone that requires you to know its circuit design to make a call',
+      'A house where all wiring is exposed on the walls',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A car\'s steering wheel and pedals provide a simple interface while hiding the complex engine, transmission, and fuel systems. This is abstraction — providing essential controls while hiding complexity.',
+    keyConcept: 'Abstraction is everywhere in daily life: remote controls, car dashboards, smartphone interfaces.',
+    xpReward: 5,
+    tags: ['abstraction', 'real-world', 'analogy'],
+  },
+  {
+    id: 'oop-25',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'medium',
+    question: 'What is the purpose of an interface in achieving abstraction?',
+    options: [
+      'To define a contract of what methods a class must implement, without providing implementation',
+      'To provide a complete implementation of all methods',
+      'To store data for the class',
+      'To improve performance by skipping implementation details',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'An interface defines a contract — a set of method signatures that implementing classes must provide. The interface specifies WHAT to do, and each class decides HOW to do it. This achieves abstraction by separating specification from implementation.',
+    keyConcept: 'Interfaces define WHAT (contract). Classes define HOW (implementation). This is the essence of abstraction.',
+    xpReward: 10,
+    tags: ['abstraction', 'interface', 'contract'],
+  },
+
+  // ─── Topic 6: Inheritance (oop-26 to oop-30) ───
+  {
+    id: 'oop-26',
+    technology: 'oops',
+    topic: 'Inheritance',
+    difficulty: 'easy',
+    question: 'What is inheritance in OOP?',
+    options: [
+      'A mechanism where one class acquires properties and methods of another class',
+      'A way to hide data from other classes',
+      'A technique to create multiple objects',
+      'A method of deleting unused objects',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Inheritance allows a class (child/subclass) to inherit properties and methods from another class (parent/superclass). This promotes code reuse and establishes a hierarchical relationship.',
+    keyConcept: 'Inheritance establishes an IS-A relationship. A Dog IS-AN Animal. It enables code reuse through hierarchical classification.',
+    xpReward: 5,
+    tags: ['inheritance', 'reuse', 'is-a'],
+  },
+  {
+    id: 'oop-27',
+    technology: 'oops',
+    topic: 'Inheritance',
+    difficulty: 'medium',
+    question: 'What does the `extends` keyword do in this code?',
+    codeSnippet: `class Animal {
+  constructor(name) {
+    this.name = name;
+  }
+  speak() {
+    return \`\${this.name} makes a sound\`;
+  }
+}
+class Dog extends Animal {
+  speak() {
+    return \`\${this.name} barks\`;
+  }
+}
+const d = new Dog("Rex");
+console.log(d.speak());`,
+    options: [
+      'Dog inherits from Animal and overrides the speak method',
+      'Dog creates a copy of Animal\'s methods',
+      'Dog and Animal become the same class',
+      'Dog can only use its own methods, not Animal\'s',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`extends` makes Dog a subclass of Animal. Dog inherits the constructor from Animal (via `super()`) and overrides the `speak()` method. The output is "Rex barks" because Dog\'s version takes precedence.',
+    keyConcept: '`extends` creates inheritance. Overriding replaces parent methods with child-specific implementations.',
+    xpReward: 10,
+    tags: ['inheritance', 'extends', 'override'],
+  },
+  {
+    id: 'oop-28',
+    technology: 'oops',
+    topic: 'Inheritance',
+    difficulty: 'easy',
+    question: 'What type of relationship does inheritance represent?',
+    options: ['IS-A relationship', 'HAS-A relationship', 'USES-A relationship', 'PART-OF relationship'],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Inheritance represents an IS-A relationship. For example, a Dog IS-AN Animal, a Car IS-A Vehicle. If the relationship is HAS-A (a Car HAS-AN Engine), composition should be used instead.',
+    keyConcept: 'IS-A = inheritance. HAS-A = composition. Choosing correctly is crucial for good design.',
+    xpReward: 5,
+    tags: ['inheritance', 'is-a', 'relationship'],
+  },
+  {
+    id: 'oop-29',
+    technology: 'oops',
+    topic: 'Inheritance',
+    difficulty: 'medium',
+    question: 'What is the output of this code?',
+    codeSnippet: `class A {
+  constructor() { console.log("A"); }
+}
+class B extends A {
+  constructor() {
+    super();
+    console.log("B");
+  }
+}
+class C extends B {
+  constructor() {
+    super();
+    console.log("C");
+  }
+}
+new C();`,
+    options: ['"A", "B", "C"', '"C", "B", "A"', '"A", "C", "B"', '"C", "A", "B"'],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'When creating a `C` instance, constructors chain from parent to child. First `super()` in C calls B\'s constructor, which calls `super()` to A\'s constructor. A logs first, then B, then C. The chain is: A → B → C.',
+    keyConcept: 'Constructor chaining goes from parent to child. Each `super()` call goes up the chain before the current constructor runs.',
+    xpReward: 10,
+    tags: ['inheritance', 'constructor-chain', 'super'],
+  },
+  {
+    id: 'oop-30',
+    technology: 'oops',
+    topic: 'Inheritance',
+    difficulty: 'hard',
+    question: 'What is a common problem with deep inheritance hierarchies (5+ levels)?',
+    options: [
+      'The fragile base class problem — changes at the top can break subclasses unpredictably',
+      'Objects use too much memory',
+      'The code compiles slower',
+      'Methods cannot be overridden in deep hierarchies',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Deep inheritance leads to the fragile base class problem: a change in a base class can have unintended effects on all subclasses. This makes the code hard to maintain and refactor. Composition is often preferred over deep inheritance.',
+    keyConcept: 'Prefer shallow hierarchies. Use composition over inheritance to avoid the fragile base class problem.',
+    xpReward: 15,
+    tags: ['inheritance', 'fragile-base-class', 'design'],
+  },
+
+  // ─── Topic 7: Polymorphism (oop-31 to oop-35) ───
+  {
+    id: 'oop-31',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'easy',
+    question: 'What does polymorphism mean in OOP?',
+    options: [
+      'The ability of objects to take many forms — the same interface can work with different types',
+      'The ability to create multiple objects from a class',
+      'The process of converting one data type to another',
+      'The ability to hide data from other classes',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Polymorphism (Greek for "many forms") allows objects of different classes to respond to the same method call in their own way. The same interface can work with different underlying types.',
+    keyConcept: 'Polymorphism: same method name, different implementations. "One interface, many implementations."',
+    xpReward: 5,
+    tags: ['polymorphism', 'many-forms', 'basics'],
+  },
+  {
+    id: 'oop-32',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'medium',
+    question: 'What are the two main types of polymorphism?',
+    options: [
+      'Compile-time (overloading) and Runtime (overriding)',
+      'Static and Dynamic',
+      'Public and Private',
+      'Direct and Indirect',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Compile-time polymorphism (method overloading) is resolved at compile time based on parameters. Runtime polymorphism (method overriding) is resolved at runtime when a subclass provides its own implementation of a parent method.',
+    keyConcept: 'Overloading = same name, different params (compile time). Overriding = same signature, different impl (runtime).',
+    xpReward: 10,
+    tags: ['polymorphism', 'overloading', 'overriding'],
+  },
+  {
+    id: 'oop-33',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'medium',
+    question: 'What will this code output?',
+    codeSnippet: `class Animal {
+  speak() { return "Some sound"; }
+}
+class Cat extends Animal {
+  speak() { return "Meow"; }
+}
+class Dog extends Animal {
+  speak() { return "Woof"; }
+}
+function makeSound(animal) {
+  console.log(animal.speak());
+}
+makeSound(new Animal());
+makeSound(new Cat());
+makeSound(new Dog());`,
+    options: [
+      '"Some sound", "Meow", "Woof"',
+      '"Some sound", "Some sound", "Some sound"',
+      '"Meow", "Woof", "Some sound"',
+      'TypeError',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Despite the parameter type being `Animal`, each object calls its own overridden `speak()` method at runtime. This is runtime polymorphism — the exact method is determined by the actual object type, not the variable type.',
+    keyConcept: 'Polymorphism: the JVM/runtime calls the actual object\'s method, not the reference type\'s method.',
+    xpReward: 10,
+    tags: ['polymorphism', 'runtime', 'override'],
+  },
+  {
+    id: 'oop-34',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'medium',
+    question: 'What is duck typing?',
+    codeSnippet: `// If it walks like a duck and quacks like a duck...
+function makeItQuack(duck) {
+  console.log(duck.quack());
+}
+makeItQuack({ quack: () => "Quack!" });
+makeItQuack({ quack: () => "Moo?" }); // Still works!`,
+    options: [
+      'An object\'s suitability is determined by its methods and properties, not its type',
+      'A design pattern for creating duck objects',
+      'A feature only available in statically-typed languages',
+      'A way to optimize object creation',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Duck typing (from "if it walks like a duck...") means an object\'s type is determined by its behavior, not its declared type. If an object has the required methods, it can be used regardless of its class hierarchy.',
+    keyConcept: 'Duck typing: "If it walks like a duck and quacks like a duck, it\'s a duck." Common in Python and JavaScript.',
+    xpReward: 10,
+    tags: ['polymorphism', 'duck-typing', 'dynamic'],
+  },
+  {
+    id: 'oop-35',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'hard',
+    question: 'What does this TypeScript code demonstrate?',
+    codeSnippet: `interface PaymentProcessor {
+  process(amount: number): string;
+}
+class CreditCard implements PaymentProcessor {
+  process(amount: number) {
+    return \`Charged \$\${amount} to card\`;
+  }
+}
+class PayPal implements PaymentProcessor {
+  process(amount: number) {
+    return \`Charged \$\${amount} via PayPal\`;
+  }
+}
+function checkout(processor: PaymentProcessor, amount: number) {
+  return processor.process(amount);
+}`,
+    options: [
+      'Polymorphism through interfaces — different implementations of the same contract',
+      'Method overloading — same method, different parameters',
+      'Encapsulation — data hiding through interfaces',
+      'Inheritance — extending a base class',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'This demonstrates polymorphism through interfaces. Both `CreditCard` and `PayPal` implement the same `PaymentProcessor` interface. The `checkout` function works with any implementation, and the correct `process` method is called based on the actual object type.',
+    keyConcept: 'Interfaces enable polymorphic behavior. Code against interfaces, not concrete implementations.',
+    xpReward: 15,
+    tags: ['polymorphism', 'interface', 'typescript'],
+  },
+
+  // ─── Topic 8: SOLID Principles (oop-36 to oop-40) ───
+  {
+    id: 'oop-36',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'easy',
+    question: 'What does the SOLID acronym stand for?',
+    options: [
+      'Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion',
+      'Simple, Object-oriented, Logical, Integrated, Dynamic',
+      'Standard Object Language Interface Design',
+      'Structured, Ordered, Linear, Inherited, Defined',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'SOLID is an acronym for five design principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion. Together they guide maintainable OOP design.',
+    keyConcept: 'SOLID = SRP, OCP, LSP, ISP, DIP. These principles help create maintainable, scalable object-oriented code.',
+    xpReward: 10,
+    tags: ['solid', 'principles', 'design'],
+  },
+  {
+    id: 'oop-37',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'medium',
+    question: 'Which SOLID principle is violated in this code?',
+    codeSnippet: `class Report {
+  generate() { /* generate data */ }
+  printPDF() { /* print to PDF */ }
+  sendEmail() { /* send via email */ }
+  saveToDB() { /* save to database */ }
+}`,
+    options: [
+      'Single Responsibility Principle — the class has multiple reasons to change',
+      'Open/Closed Principle — the class is not open for extension',
+      'Liskov Substitution — the class cannot be substituted',
+      'Interface Segregation — the interface is too small',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'This class violates SRP because it has multiple responsibilities: generating data, printing, sending emails, and database operations. Each is a separate reason to change. It should be split into separate classes.',
+    keyConcept: 'SRP: A class should have only one reason to change. Split responsibilities into focused classes.',
+    xpReward: 15,
+    tags: ['solid', 'srp', 'single-responsibility'],
+  },
+  {
+    id: 'oop-38',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'medium',
+    question: 'What does the Open/Closed Principle state?',
+    options: [
+      'Classes should be open for extension but closed for modification',
+      'Classes should be open for modification but closed for extension',
+      'All methods should be public',
+      'Classes should have only one method',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'OCP means you should be able to extend a class\'s behavior (via inheritance, composition, or interfaces) without modifying its source code. New functionality is added through new code, not changes to existing, tested code.',
+    keyConcept: 'OCP: Extend behavior through new classes, not by modifying existing ones. Use inheritance and interfaces.',
+    xpReward: 10,
+    tags: ['solid', 'ocp', 'open-closed'],
+  },
+  {
+    id: 'oop-39',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'hard',
+    question: 'Which scenario violates the Liskov Substitution Principle?',
+    codeSnippet: `class Rectangle {
+  setWidth(w) { this.width = w; }
+  setHeight(h) { this.height = h; }
+  getArea() { return this.width * this.height; }
+}
+class Square extends Rectangle {
+  setWidth(w) {
+    this.width = w;
+    this.height = w;  // Maintains square invariant
+  }
+  setHeight(h) {
+    this.width = h;
+    this.height = h;
+  }
+}`,
+    options: [
+      'Square changes the behavior of setWidth/setHeight in a way that surprises callers expecting Rectangle behavior',
+      'Square inherits from Rectangle correctly with no issues',
+      'Square should not have a getArea method',
+      'Square uses more memory than Rectangle',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'This classic LSP violation occurs because a `Square` changes `setWidth` and `setHeight` to also set the other dimension. Code that works with a `Rectangle` and separately calls `setWidth(5)` then `setHeight(10)` expecting area 50 will get 100 from a `Square` instead.',
+    keyConcept: 'LSP: Subtypes must be substitutable for their base types without altering the correctness of the program.',
+    xpReward: 20,
+    tags: ['solid', 'lsp', 'liskov-substitution'],
+  },
+  {
+    id: 'oop-40',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'hard',
+    question: 'What does the Dependency Inversion Principle (DIP) recommend?',
+    codeSnippet: `// Instead of this:
+class UserService {
+  constructor() {
+    this.db = new MySQLDatabase();
+  }
+}
+// Do this:
+class UserService {
+  constructor(database) {
+    this.db = database;  // Depends on abstraction
+  }
+}`,
+    options: [
+      'High-level modules should not depend on low-level modules; both should depend on abstractions',
+      'All classes should depend on concrete implementations',
+      'Dependencies should only be injected through constructors',
+      'No class should have any dependencies',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'DIP states that high-level modules (business logic) should not depend on low-level modules (database, network). Both should depend on abstractions (interfaces). This decouples the code and makes it easier to swap implementations.',
+    keyConcept: 'DIP: Depend on abstractions, not concretions. Inject dependencies rather than creating them inside the class.',
+    xpReward: 15,
+    tags: ['solid', 'dip', 'dependency-inversion'],
+  },
+
+  // ─── Topic 9: Relationships (oop-41 to oop-45) ───
+  {
+    id: 'oop-41',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'easy',
+    question: 'What is association in OOP?',
+    options: [
+      'A relationship where one object knows about and uses another object',
+      'A parent-child inheritance relationship',
+      'The process of creating a new object',
+      'A way to destroy unused objects',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Association is a relationship where one object has a reference to another and can communicate with it. Both objects have independent lifetimes. For example, a Teacher and Student are associated — they know about each other but can exist independently.',
+    keyConcept: 'Association = objects know about each other. Both have independent lifetimes. The weakest type of relationship.',
+    xpReward: 5,
+    tags: ['relationships', 'association', 'basics'],
+  },
+  {
+    id: 'oop-42',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'medium',
+    question: 'What is the difference between aggregation and composition?',
+    options: [
+      'Aggregation is a weak HAS-A (part can exist without whole); Composition is a strong HAS-A (part dies with the whole)',
+      'Aggregation is for inheritance; Composition is for interfaces',
+      'Aggregation means the child class inherits from the parent; Composition means the parent creates the child',
+      'There is no difference — they are synonyms',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Aggregation: the part can exist independently of the whole (e.g., a Department has Teachers — if the department closes, teachers still exist). Composition: the part cannot exist without the whole (e.g., a House has Rooms — if the house is destroyed, rooms cease to exist).',
+    keyConcept: 'Composition = strong ownership (part dies with whole). Aggregation = weak ownership (part survives whole).',
+    xpReward: 10,
+    tags: ['relationships', 'aggregation', 'composition'],
+  },
+  {
+    id: 'oop-43',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'medium',
+    question: 'Which relationship does this code represent?',
+    codeSnippet: `class Room {
+  constructor(name) { this.name = name; }
+}
+class House {
+  constructor() {
+    this.rooms = [
+      new Room("Living"),
+      new Room("Bedroom"),
+    ];
+  }
+}
+const house = new House();
+// When house is destroyed, rooms are destroyed too`,
+    options: ['Composition', 'Aggregation', 'Association', 'Inheritance'],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'This is composition because rooms are created inside the House constructor and are owned by the House. When the House object is garbage collected, the Room objects owned by it become unreachable. Rooms have no independent existence outside the House.',
+    keyConcept: 'Composition: `new Room()` inside the constructor implies creation-time ownership and lifetime dependency.',
+    xpReward: 10,
+    tags: ['relationships', 'composition', 'example'],
+  },
+  {
+    id: 'oop-44',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'easy',
+    question: 'What is UML primarily used for in OOP?',
+    options: [
+      'Visually representing classes, relationships, and object interactions in a standardized way',
+      'Compiling object-oriented code',
+      'Testing object-oriented programs',
+      'Managing object memory allocation',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'UML (Unified Modeling Language) is a standardized visual language for representing OOP designs. Class diagrams show classes with their attributes, methods, and relationships (inheritance, association, composition, etc.).',
+    keyConcept: 'UML class diagrams visually document OOP design: classes, relationships, and multiplicities.',
+    xpReward: 5,
+    tags: ['relationships', 'uml', 'diagrams'],
+  },
+  {
+    id: 'oop-45',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'medium',
+    question: 'What does a dependency relationship mean?',
+    codeSnippet: `class OrderService {
+  calculateTotal(order) {
+    const taxService = new TaxService();
+    return order.subtotal + taxService.calculate(order);
+  }
+}`,
+    options: [
+      'A temporary, weaker relationship where a class uses another class as a method parameter or local variable',
+      'A permanent relationship where one class owns another',
+      'An inheritance relationship between parent and child',
+      'A relationship where one class stores another as a property',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Dependency is the weakest relationship. Class A depends on class B if B is used as a method parameter, local variable, or return type. Unlike association, the dependency is temporary and not stored as a field.',
+    keyConcept: 'Dependency = temporary use (method param, local var). Weaker than association, no field reference.',
+    xpReward: 10,
+    tags: ['relationships', 'dependency', 'usage'],
+  },
+
+  // ─── Topic 10: Interfaces & Abstract (oop-46 to oop-50) ───
+  {
+    id: 'oop-46',
+    technology: 'oops',
+    topic: 'Interfaces & Abstract',
+    difficulty: 'easy',
+    question: 'What is an interface in OOP?',
+    options: [
+      'A contract that specifies what methods a class must implement, without providing implementation',
+      'A class that cannot be inherited from',
+      'A concrete class with all methods implemented',
+      'A variable that holds a reference to an object',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'An interface defines a contract — a set of method signatures (and sometimes properties) that implementing classes must provide. Interfaces contain no implementation; they specify only WHAT to do, not HOW.',
+    keyConcept: 'Interfaces define WHAT. Classes define HOW. Interfaces enable abstraction and loose coupling.',
+    xpReward: 5,
+    tags: ['interface', 'contract', 'abstraction'],
+  },
+  {
+    id: 'oop-47',
+    technology: 'oops',
+    topic: 'Interfaces & Abstract',
+    difficulty: 'medium',
+    question: 'What does this TypeScript interface enforce?',
+    codeSnippet: `interface Flyable {
+  fly(): void;
+  land(): void;
+}
+class Bird implements Flyable {
+  fly() { console.log("Flying"); }
+  land() { console.log("Landing"); }
+}`,
+    options: [
+      'Bird must implement both fly() and land() methods — TypeScript will error if they are missing',
+      'Bird automatically gets fly() and land() from the interface',
+      'The interface provides default implementations of fly() and land()',
+      'Bird can choose which methods to implement from the interface',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'When a class `implements` an interface, it must provide implementations for all methods declared in the interface. TypeScript (and statically-typed languages) will throw a compile-time error if any method is missing.',
+    keyConcept: '`implements` enforces a contract. All interface methods must be implemented, or the code won\'t compile.',
+    xpReward: 10,
+    tags: ['interface', 'typescript', 'implements'],
+  },
+  {
+    id: 'oop-48',
+    technology: 'oops',
+    topic: 'Interfaces & Abstract',
+    difficulty: 'medium',
+    question: 'What is a key difference between an abstract class and an interface?',
+    options: [
+      'An abstract class can have some implemented methods and state; an interface traditionally has no implementation or state',
+      'Interfaces can have constructors; abstract classes cannot',
+      'Abstract classes support multiple inheritance; interfaces do not',
+      'There is no difference — they are interchangeable',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'An abstract class can have both abstract (unimplemented) and concrete (implemented) methods, as well as fields/state. An interface traditionally defines only method signatures. In TypeScript/Java, a class can implement multiple interfaces but extend only one abstract class.',
+    keyConcept: 'Abstract class = partial implementation + state. Interface = pure contract. Use abstract for related classes, interface for capabilities.',
+    xpReward: 10,
+    tags: ['interface', 'abstract-class', 'comparison'],
+  },
+  {
+    id: 'oop-49',
+    technology: 'oops',
+    topic: 'Interfaces & Abstract',
+    difficulty: 'easy',
+    question: 'Can you create an object directly from an abstract class?',
+    options: [
+      'No — abstract classes cannot be instantiated directly',
+      'Yes — abstract classes work like regular classes',
+      'Yes, but only if all methods are implemented',
+      'No — abstract classes do not have constructors',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Abstract classes cannot be instantiated directly. They are designed to be base classes that are extended by concrete subclasses. The subclass must implement all abstract methods before it can be instantiated.',
+    keyConcept: 'Abstract classes are incomplete. They serve as base classes and require a concrete subclass for instantiation.',
+    xpReward: 5,
+    tags: ['abstract-class', 'instantiation', 'basics'],
+  },
+  {
+    id: 'oop-50',
+    technology: 'oops',
+    topic: 'Interfaces & Abstract',
+    difficulty: 'medium',
+    question: 'What does the `implements` keyword signify?',
+    codeSnippet: `// TypeScript
+interface Drawable {
+  draw(): void;
+}
+interface Resizable {
+  resize(factor: number): void;
+}
+class Circle implements Drawable, Resizable {
+  draw() { /* ... */ }
+  resize(f: number) { /* ... */ }
+}`,
+    options: [
+      'The class promises to fulfill the contracts defined by the interfaces',
+      'The class automatically inherits method implementations from the interfaces',
+      'The class becomes abstract',
+      'The class can only implement one interface',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`implements` means the class agrees to fulfill all the contracts defined by the specified interfaces. A class can implement multiple interfaces (as shown — Circle implements both Drawable and Resizable), enabling flexible type composition.',
+    keyConcept: '`implements` is a promise to satisfy the interface contract. Multiple interfaces can be implemented by one class.',
+    xpReward: 10,
+    tags: ['interface', 'implements', 'typescript'],
+  },
+
+  // ─── Topic 11: Access & Design (oop-51 to oop-55) ───
+  {
+    id: 'oop-51',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'easy',
+    question: 'What are access modifiers in OOP?',
+    options: [
+      'Keywords that control the visibility and accessibility of class members',
+      'Methods that modify object properties',
+      'Variables that store access permissions',
+      'Decorators that add functionality to methods',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Access modifiers (like public, private, protected) control where class members (properties and methods) can be accessed from. They are fundamental to implementing encapsulation.',
+    keyConcept: 'Access modifiers enforce encapsulation: public (anywhere), protected (class + subclasses), private (class only).',
+    xpReward: 5,
+    tags: ['access-modifiers', 'visibility', 'basics'],
+  },
+  {
+    id: 'oop-52',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'easy',
+    question: 'What does the `private` access modifier do?',
+    options: [
+      'Restricts access to only within the same class',
+      'Allows access from any class',
+      'Allows access from the class and its subclasses',
+      'Makes the member accessible only within the same file',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`private` restricts access to only within the declaring class. Not even subclasses can access private members. This is the most restrictive access level and provides the strongest encapsulation.',
+    keyConcept: 'Private = class-only access. Strongest encapsulation. Use for internal implementation details.',
+    xpReward: 5,
+    tags: ['access-modifiers', 'private', 'encapsulation'],
+  },
+  {
+    id: 'oop-53',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'medium',
+    question: 'What does the DRY principle stand for and what does it mean?',
+    options: [
+      'Don\'t Repeat Yourself — avoid code duplication by extracting shared logic',
+      'Dynamic Resource Yielding — optimize memory usage',
+      'Data Retrieval Yield — optimize database queries',
+      'Direct Return Yielding — return values directly without variables',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'DRY (Don\'t Repeat Yourself) means every piece of knowledge should have a single, unambiguous representation in the system. Duplication leads to maintenance issues — changes must be made in multiple places, increasing the risk of inconsistencies.',
+    keyConcept: 'DRY: Extract duplicated code into reusable methods, classes, or modules. One source of truth for each concept.',
+    xpReward: 10,
+    tags: ['design', 'dry', 'principles'],
+  },
+  {
+    id: 'oop-54',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What does "Favor composition over inheritance" mean?',
+    codeSnippet: `// Inheritance approach:
+class Pizza {
+  /* ... */
+}
+class PepperoniPizza extends Pizza {
+  /* ... */
+}
+
+// Composition approach:
+class Pizza {
+  constructor(toppings) {
+    this.toppings = toppings;
+  }
+}
+const pizza = new Pizza([new Pepperoni()]);`,
+    options: [
+      'Prefer assembling objects from smaller, focused components (HAS-A) rather than deep class hierarchies (IS-A)',
+      'Always use inheritance instead of composition',
+      'Composition is only for interfaces, not classes',
+      'Inheritance should always be preferred for code reuse',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Composition (HAS-A) offers more flexibility than inheritance (IS-A). With composition, you can mix and match behaviors, change them at runtime, and avoid the fragile base class problem. Deep inheritance hierarchies are rigid and hard to maintain.',
+    keyConcept: 'Composition = flexible, runtime-changeable. Inheritance = rigid, compile-time-fixed. Prefer composition for most cases.',
+    xpReward: 15,
+    tags: ['design', 'composition', 'inheritance', 'comparison'],
+  },
+  {
+    id: 'oop-55',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the Law of Demeter (Principle of Least Knowledge)?',
+    codeSnippet: `// Violates Law of Demeter:
+customer.getOrder().getItem().getPrice();
+
+// Follows Law of Demeter:
+customer.getItemPrice(itemId);`,
+    options: [
+      'An object should only communicate with its immediate neighbors, not with objects 2+ levels away',
+      'Every class should have exactly one public method',
+      'All methods should be private by default',
+      'Objects should never call methods on other objects',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Law of Demeter states that a method should only call methods on: the object itself, its own parameters, objects it creates, or its direct component fields. Chained calls like `a.getB().getC().doSomething()` violate this, creating tight coupling.',
+    keyConcept: 'Law of Demeter: "Don\'t talk to strangers." Only interact with immediate dependencies. Avoid deep method chaining.',
+    xpReward: 15,
+    tags: ['design', 'law-of-demeter', 'coupling'],
+  },
+];
