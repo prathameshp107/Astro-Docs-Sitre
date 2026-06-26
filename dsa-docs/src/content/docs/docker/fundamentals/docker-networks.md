@@ -2,7 +2,7 @@
 title: "Docker Networks"
 description: "By default, containers are isolated. Docker networking lets containers communicate with each other and with the outside world."
 sidebar:
-  order: 10
+  order: 12
 ---
 
 ## 10. Docker Networks

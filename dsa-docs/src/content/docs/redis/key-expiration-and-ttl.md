@@ -11,6 +11,32 @@ description: "TTL (Time To Live) defines how long a key exists in Redis before i
 
 > **Analogy:** TTL is like a best-before date on food. Once expired, Redis automatically throws it away — you don't have to clean it up manually.
 
+### TTL Lifecycle
+
+```mermaid
+flowchart LR
+    Create["SET otp:user:42 '895621' EX 300<br/>Key created with 300s TTL
+⏱️ Timer starts now"] --> Active["Key is alive<br/>TTL reports: 287 seconds remaining<br/>GET returns the value"]
+    Active --> Check{Does TTL
+reach 0?}
+    Check -->|Not yet ⏳| Active
+    Check -->|Yes! 🕐| Expired["Key auto-deleted by Redis<br/>TTL reports: -2 (key not found)<br/>GET returns nil"]
+    
+    Refresh["User activity: EXTEND TTL<br/>EXPIRE otp:user:42 300<br/>Reset timer ⏰"] -.-> Active
+    Delete["Manual delete<br/>DEL otp:user:42<br/>Remove immediately ❌"] -.-> Expired
+    Persist["Make permanent<br/>PERSIST otp:user:42<br/>Removes TTL 🏠"] -.-> Active
+    
+    style Create fill:#7c3aed,color:#fff
+    style Active fill:#3b82f6,color:#fff
+    style Check fill:#f59e0b,color:#fff
+    style Expired fill:#ef4444,color:#fff
+    style Refresh fill:#059669,color:#fff
+    style Delete fill:#ef4444,color:#fff
+    style Persist fill:#10b981,color:#fff
+```
+
+> **Warning:** Keys without TTL will accumulate in memory indefinitely and eventually cause Redis to run out of RAM.
+
 ---
 
 ### Core Commands

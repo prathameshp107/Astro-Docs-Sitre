@@ -13,12 +13,18 @@ sidebar:
 
 A tree where each node has **at most 2 children**: left and right.
 
-```
-         [10]
-        /    \
-      [5]    [15]
-     /  \
-   [3]  [7]
+```mermaid
+flowchart TD
+    R[10] --> L[5]
+    R --> R2[15]
+    L --> LL[3]
+    L --> LR[7]
+
+    style R fill:#7c3aed,color:#fff
+    style L fill:#4f46e5,color:#fff
+    style R2 fill:#4f46e5,color:#fff
+    style LL fill:#6366f1,color:#fff
+    style LR fill:#6366f1,color:#fff
 ```
 
 - Most common type in interviews
@@ -31,14 +37,28 @@ A tree where each node has **at most 2 children**: left and right.
 A Binary Tree with the **BST Property**:
 > For every node N: all values in the **left subtree < N**, all values in the **right subtree > N**
 
-```
-         [8]
-        /   \
-      [3]   [10]
-     /  \      \
-   [1]  [6]   [14]
-       /  \   /
-     [4] [7] [13]
+```mermaid
+flowchart TD
+    R[8] --> L[3]
+    R --> R2[10]
+    L --> LL[1]
+    L --> LR[6]
+    LR --> LRL[4]
+    LR --> LRR[7]
+    R2 --> R2L[NULL]
+    R2 --> R2R[14]
+    R2R --> R2RL[13]
+    R2R --> R2RR[NULL]
+
+    style R fill:#7c3aed,color:#fff
+    style L fill:#4f46e5,color:#fff
+    style R2 fill:#4f46e5,color:#fff
+    style LL fill:#6366f1,color:#fff
+    style LR fill:#6366f1,color:#fff
+    style LRL fill:#6366f1,color:#fff
+    style LRR fill:#6366f1,color:#fff
+    style R2R fill:#4f46e5,color:#fff
+    style R2RL fill:#6366f1,color:#fff
 ```
 
 **BST Invariant**: Inorder traversal of a BST always gives a **sorted sequence**.
@@ -54,23 +74,35 @@ A Binary Tree with the **BST Property**:
 - On insert/delete, **rotations** (LL, RR, LR, RL) restore balance.
 - **Height**: O(log N) guaranteed.
 
-```
-      [30]        BF = 1-0 = 1  ✅
-      /
-    [20]          BF = 1-0 = 1  ✅
-    /
-  [10]            BF = 0       ✅
-```
-
-If we insert `[5]` without rebalancing:
-```
-      [30]        BF = 3  ❌  → Trigger LL Rotation
-      /
-    [20]
-    /
-  [10]
-  /
-[5]
+```mermaid
+flowchart TD
+    subgraph Balanced[Balanced AVL ✅]
+        B1[30
+BF=1] --> B2[20
+BF=1]
+        B2 --> B3[10
+BF=0]
+    end
+    
+    subgraph Unbalanced[Unbalanced ❌ triggers LL rotation]
+        U1[30
+BF=3] --> U2[20
+BF=2]
+        U2 --> U3[10
+BF=1]
+        U3 --> U4[5
+BF=0]
+    end
+    
+    style Balanced fill:#059669,color:#fff
+    style Unbalanced fill:#ef4444,color:#fff
+    style B1 fill:#059669,color:#fff
+    style B2 fill:#059669,color:#fff
+    style B3 fill:#059669,color:#fff
+    style U1 fill:#ef4444,color:#fff
+    style U2 fill:#ef4444,color:#fff
+    style U3 fill:#ef4444,color:#fff
+    style U4 fill:#ef4444,color:#fff
 ```
 
 ### Red-Black Tree
@@ -87,39 +119,38 @@ If we insert `[5]` without rebalancing:
 
 ## Full, Complete, and Perfect Binary Trees
 
-### Full Binary Tree
-> Every node has **0 or 2 children** (never 1).
-
-```
-         [1]
-        /   \
-      [2]   [3]
-     /  \
-   [4]  [5]
-```
-
-### Complete Binary Tree
-> All levels are **fully filled except possibly the last**, which is filled **from left to right**.
-
-```
-         [1]
-        /   \
-      [2]   [3]
-     /  \   /
-   [4] [5] [6]     ← last level fills left to right ✅
-```
-
-- **Heaps** are always complete binary trees.
-
-### Perfect Binary Tree
-> All internal nodes have **exactly 2 children** and all leaves are at the **same level**.
-
-```
-         [1]
-        /   \
-      [2]   [3]
-     /  \  /  \
-   [4][5][6]  [7]
+```mermaid
+flowchart TB
+    subgraph Full[Full Binary Tree
+Every node has 0 or 2 children]
+        F1[1] --> F2[2]
+        F1 --> F3[3]
+        F2 --> F4[4]
+        F2 --> F5[5]
+    end
+    
+    subgraph Complete[Complete Binary Tree
+Last level fills left to right]
+        C1[1] --> C2[2]
+        C1 --> C3[3]
+        C2 --> C4[4]
+        C2 --> C5[5]
+        C3 --> C6[6]
+    end
+    
+    subgraph Perfect[Perfect Binary Tree
+All leaves at same level]
+        P1[1] --> P2[2]
+        P1 --> P3[3]
+        P2 --> P4[4]
+        P2 --> P5[5]
+        P3 --> P6[6]
+        P3 --> P7[7]
+    end
+    
+    style Full fill:#7c3aed,color:#fff
+    style Complete fill:#3b82f6,color:#fff
+    style Perfect fill:#059669,color:#fff
 ```
 
 - A perfect binary tree with height `h` has `2^(h+1) - 1` nodes.

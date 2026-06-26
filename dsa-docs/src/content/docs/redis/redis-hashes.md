@@ -11,6 +11,34 @@ A Redis Hash stores a mapping of **fields to values** within a single key. It is
 
 > **Analogy:** A Hash is like a row in a spreadsheet — the key is the row ID, and the fields are column names with their values.
 
+### How Hashes Structure Data
+
+```mermaid
+flowchart TB
+    Key["Key: user:42<br/>One top-level key"] --> Fields["Fields & Values<br/>(stored efficiently together)"]
+    
+    Fields --> F1["name → 'Prathamesh'"]
+    Fields --> F2["age → '26'"]
+    Fields --> F3["city → 'Pune'"]
+    Fields --> F4["role → 'engineer'"]
+    Fields --> F5["login_count → '0'"]
+    
+    HSET["HSET user:42 name 'Alice' age '30'<br/>Sets multiple fields in one command"] --> Key
+    HGET["HGET user:42 name<br/>→ Returns: 'Alice'"] -.-> F1
+    HGETALL["HGETALL user:42<br/>→ Returns all fields"] -.-> Fields
+    
+    style Key fill:#7c3aed,color:#fff
+    style Fields fill:#3b82f6,color:#fff
+    style F1 fill:#f59e0b,color:#fff
+    style F2 fill:#f59e0b,color:#fff
+    style F3 fill:#f59e0b,color:#fff
+    style F4 fill:#f59e0b,color:#fff
+    style F5 fill:#f59e0b,color:#fff
+    style HSET fill:#059669,color:#fff
+    style HGET fill:#3b82f6,color:#fff
+    style HGETALL fill:#ec4899,color:#fff
+```
+
 ---
 
 ### Core Commands

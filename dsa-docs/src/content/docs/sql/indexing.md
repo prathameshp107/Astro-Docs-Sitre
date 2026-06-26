@@ -10,6 +10,31 @@ sidebar:
 ### What is an Index?
 An index is a **data structure** (B-Tree by default in MySQL) that speeds up data retrieval at the cost of extra storage and slower writes.
 
+### Index Scan vs Full Table Scan
+
+```mermaid
+flowchart LR
+    subgraph NoIndex[Without Index — FULL TABLE SCAN ❌]
+        Q1[Query: WHERE department = 'IT']
+        Q1 --> S1[Scan row 1]
+        S1 --> S2[Scan row 2]
+        S2 --> S3[Scan row 3]
+        S3 --> S4[...scan 1M rows...]
+        S4 --> Slow[🐢 Reads every row → O(n)]
+    end
+    
+    subgraph WithIndex[With B-Tree Index ✅]
+        Q2[Query: WHERE department = 'IT']
+        Q2 --> BT[B-Tree Lookup
+        Root ➔ Branch ➔ Leaf]
+        BT --> Fast[🚀 Jumps directly to matching rows → O(log n)]
+    end
+    
+    style NoIndex fill:#ef4444,color:#fff
+    style WithIndex fill:#7c3aed,color:#fff
+    style BT fill:#059669,color:#fff
+```
+
 ```
 Without index:  Full table scan → O(n)
 With index:     B-Tree lookup   → O(log n)

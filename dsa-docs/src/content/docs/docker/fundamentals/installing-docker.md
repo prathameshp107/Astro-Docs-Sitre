@@ -2,7 +2,7 @@
 title: "Installing Docker"
 description: "---"
 sidebar:
-  order: 4
+  order: 5
 ---
 
 ## 4. Installing Docker

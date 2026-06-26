@@ -11,7 +11,45 @@ sidebar:
 
 A **module** is a `.py` file containing Python code. A **package** is a directory containing modules and an `__init__.py` file.
 
-<img src="/DSA-Notes-Problems/assets/python/module-dependency.svg" alt="Module Dependency Structure Diagram" width="700" />
+```mermaid
+flowchart TB
+    subgraph SysPath["sys.path (Module Search Path)"]
+        direction LR
+        CWD["1. Current Directory\n('')"]
+        PYTHONPATH["2. PYTHONPATH\n(enviroment var)"]
+        STDLIB["3. Standard Library\n(/usr/lib/python3.12/)"]
+        SITEPKG["4. Site Packages\n(/usr/lib/.../site-packages/)"]
+        CWD --> PYTHONPATH --> STDLIB --> SITEPKG
+    end
+
+    subgraph Resolution["Import Resolution"]
+        direction TB
+        REQ["import math"]
+        CHECK["Check sys.modules\n(cache)"]
+        FOUND["Found? 🔍"]
+        CACHED["✅ Yes — use cached module"]
+        NOT_FOUND["❌ No — search sys.path"]
+        LOAD["Load .py file / package"]
+        STORE["Store in sys.modules"]
+        
+        REQ --> CHECK --> FOUND
+        FOUND -->|"yes"| CACHED
+        FOUND -->|"no"| NOT_FOUND --> LOAD --> STORE
+    end
+
+    style SysPath fill:#1e40af,color:#fff
+    style Resolution fill:#7c3aed,color:#fff
+    style CWD fill:#2563eb,color:#fff
+    style PYTHONPATH fill:#2563eb,color:#fff
+    style STDLIB fill:#2563eb,color:#fff
+    style SITEPKG fill:#2563eb,color:#fff
+    style CHECK fill:#8b5cf6,color:#fff
+    style FOUND fill:#d97706,color:#fff
+    style CACHED fill:#059669,color:#fff
+    style NOT_FOUND fill:#dc2626,color:#fff
+    style LOAD fill:#8b5cf6,color:#fff
+    style STORE fill:#059669,color:#fff
+```
 
 ## Creating a Module
 

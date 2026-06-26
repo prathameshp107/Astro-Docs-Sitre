@@ -15,7 +15,29 @@ sidebar:
 
 BFS explores a graph **level by level** — visiting all neighbors at the current depth before moving deeper. It uses a **Queue (FIFO)**.
 
-![BFS Traversal](../../../../assets/images/graphs/bfs-traversal.svg)
+### BFS Traversal Visual
+
+```mermaid
+flowchart TD
+    N1(1) --> N2(2)
+    N1 --> N3(3)
+    N2 --> N4(4)
+    N2 --> N5(5)
+    N3 --> N6(6)
+    N3 --> N7[NULL]
+    
+    style N1 fill:#7c3aed,color:#fff
+    style N2 fill:#4f46e5,color:#fff
+    style N3 fill:#4f46e5,color:#fff
+    style N4 fill:#6366f1,color:#fff
+    style N5 fill:#6366f1,color:#fff
+    style N6 fill:#6366f1,color:#fff
+```
+
+```
+BFS order: 1 → 2 → 3 → 4 → 5 → 6
+(queue-based, level by level)
+```
 
 ### How BFS Works
 
@@ -65,7 +87,28 @@ Step 6: Dequeue 6 → no new neighbors
 
 DFS explores a graph by going as **deep as possible** before backtracking. It uses a **Stack** (or recursion).
 
-![DFS Traversal](../../../../assets/images/graphs/dfs-traversal.svg)
+### DFS Traversal Visual
+
+```mermaid
+flowchart TD
+    N1(1) --> N2(2)
+    N1 --> N3(3)
+    N2 --> N4(4)
+    N2 --> N5(5)
+    N3 --> N6(6)
+    
+    style N1 fill:#7c3aed,color:#fff
+    style N2 fill:#4f46e5,color:#fff
+    style N3 fill:#4f46e5,color:#fff
+    style N4 fill:#6366f1,color:#fff
+    style N5 fill:#6366f1,color:#fff
+    style N6 fill:#6366f1,color:#fff
+```
+
+```
+DFS order: 1 → 2 → 4 → 5 → 3 → 6
+(stack/recursion-based, goes deep first)
+```
 
 ### How DFS Works
 

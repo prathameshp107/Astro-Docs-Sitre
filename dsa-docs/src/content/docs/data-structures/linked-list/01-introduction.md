@@ -28,6 +28,27 @@ A **Linked List** is a chain of **nodes**, where each node has:
 1. **Data** — the value (like the clue)
 2. **Next** — the address of the next node (like "go to kitchen")
 
+```mermaid
+flowchart LR
+    HEAD["HEAD"] --> N1["Node 1
+Data: 10"]
+    N1 --> N2["Node 2
+Data: 20"]
+    N2 --> N3["Node 3
+Data: 30"]
+    N3 --> N4["Node 4
+Data: 40"]
+    N4 --> NULL["NULL
+(end)"]
+
+    style HEAD fill:#7c3aed,color:#fff
+    style N1 fill:#4f46e5,color:#fff
+    style N2 fill:#4f46e5,color:#fff
+    style N3 fill:#4f46e5,color:#fff
+    style N4 fill:#4f46e5,color:#fff
+    style NULL fill:#dc2626,color:#fff
+```
+
 ```
 HEAD
  │

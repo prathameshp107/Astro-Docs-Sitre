@@ -2,7 +2,7 @@
 title: "Docker Logs and Monitoring"
 description: "---"
 sidebar:
-  order: 12
+  order: 16
 ---
 
 ## 12. Docker Logs and Monitoring

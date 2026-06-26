@@ -25,8 +25,24 @@ function Counter() {
  );
 }
 ```
-### How it works
-![useState diagram](/DSA-Notes-Problems/assets/react/01-usestate.svg)
+### State Update → Re-render Cycle
+
+```mermaid
+flowchart LR
+    Event["User clicks\nsetCount(count + 1)"] --> State["State update\ncount: 0 → 1"]
+    State --> ReRender["React schedules\na re-render"]
+    ReRender --> VDOM["New Virtual DOM\ncreated"]
+    VDOM --> Diff["Diff with\nold VDOM"]
+    Diff --> DOM["Real DOM\nupdated"]
+
+    style Event fill:#4f46e5,color:#fff
+    style State fill:#dc2626,color:#fff
+    style ReRender fill:#d97706,color:#fff
+    style VDOM fill:#6366f1,color:#fff
+    style Diff fill:#f59e0b,color:#fff
+    style DOM fill:#059669,color:#fff
+```
+
 ### Simple idea:
 * `count` -> value
 * `setCount` -> update value

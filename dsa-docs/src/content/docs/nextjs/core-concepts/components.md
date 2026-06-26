@@ -30,6 +30,8 @@ function Greeting() {
 
 ---
 
+> 📖 **Server & Client Components are covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/core-concepts/server-and-client-components)**
+
 ## 6.2 Types of Components in Next.js
 
 Next.js 13+ (App Router) introduces a powerful distinction between **Server** and **Client** components. This is one of the most important concepts to understand.

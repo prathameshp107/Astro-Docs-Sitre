@@ -13,7 +13,43 @@ sidebar:
 
 ## Comparison Overview
 
-![Graph Representations](../../../../assets/images/graphs/graph-representations.svg)
+```mermaid
+flowchart TB
+    subgraph Matrix[Adjacency Matrix — V × V grid]
+        direction LR
+        M1[V0: 0,1,1,0] --> M2[V1: 1,0,1,1]
+        M2 --> M3[V2: 1,1,0,1]
+        M3 --> M4[V3: 0,1,1,0]
+    end
+    
+    subgraph List[Adjacency List — Array of neighbors]
+        direction LR
+        L1[V0: 1,2] --> L2[V1: 0,2,3]
+        L2 --> L3[V2: 0,1,3]
+        L3 --> L4[V3: 1,2]
+    end
+    
+    subgraph EdgeL[Edge List — List of pairs]
+        direction LR
+        EL1[(0,1)] --> EL2[(0,2)]
+        EL2 --> EL3[(1,2)]
+        EL3 --> EL4[(1,3)]
+        EL4 --> EL5[(2,3)]
+    end
+    
+    Matrix --> MatUse["O(1) edge check<br/>O(V²) space<br/>Best for dense graphs"]
+    List --> ListUse["O(degree) iteration<br/>O(V+E) space<br/>✅ Best for 90% of problems"]
+    EdgeL --> EdgeUse["O(E) space<br/>Best for MST algorithms<br/>like Kruskal's"]
+    
+    style Matrix fill:#7c3aed,color:#fff
+    style List fill:#3b82f6,color:#fff
+    style EdgeL fill:#059669,color:#fff
+    style MatUse fill:#7c3aed,color:#fff
+    style ListUse fill:#3b82f6,color:#fff
+    style EdgeUse fill:#059669,color:#fff
+```
+
+> **Rule of thumb:** Use Adjacency List for 90% of interview problems. Reserve Adjacency Matrix for dense graphs where O(1) edge lookup matters.
 
 ---
 

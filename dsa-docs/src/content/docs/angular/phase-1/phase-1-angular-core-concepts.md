@@ -180,6 +180,28 @@ export class UserProfileComponent { }
 
 ### 4.3 Modules
 
+### Angular App Structure
+
+```mermaid
+flowchart TB
+    subgraph App["Angular Application"]
+        Comp["🏗️ Component\nUI + Logic\nTypeScript Class"]
+        Temp["📝 Template\nHTML + Bindings\nWhat user sees"]
+        Serv["🔧 Service\nBusiness Logic\nData + Methods"]
+        DI["🔌 Dependency Injection\nAngular provides services\nto components"]
+    end
+
+    Comp -->|"uses"| Temp
+    Comp -->|"injected with"| DI
+    DI -->|"delivers"| Serv
+    Temp -->|"async pipe"| Serv
+
+    style Comp fill:#7c3aed,color:#fff
+    style Temp fill:#4f46e5,color:#fff
+    style Serv fill:#059669,color:#fff
+    style DI fill:#d97706,color:#fff
+```
+
 #### Simple Words First 🟡
 A module is like a **department in a company**. The HR Department has its own people, tools, and rules — it's self-contained. The IT Department is the same. They work independently but can share resources when needed.
 

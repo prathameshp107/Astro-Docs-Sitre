@@ -9,6 +9,44 @@ description: "Middleware is a function that runs before a request reaches your p
 
 Middleware is a **function that runs before a request reaches your page or API route**. Think of it as a security guard at the entrance of a building — every visitor (HTTP request) must pass through the guard before entering (reaching your page).
 
+### Middleware Request Flow
+
+```mermaid
+flowchart TB
+    Request["🌐 Browser
+makes a request"] --> Middleware["🛡️ Middleware
+Runs at the Edge
+before any route"]
+
+    Middleware --> Check{"Check request:
+Auth? Geo? Path?"}
+
+    Check -->|"Allow"| Route["📄 Page / API Route
+Normal rendering"]
+    Check -->|"Redirect"| Redirect["↪️ Redirect user
+to /login or /other"]
+    Check -->|"Rewrite"| Rewrite["📝 Rewrite URL
+Serve different content
+(URL stays same)"]
+    Check -->|"Block"| Block["⛔ Return 401/403
+Block the request"]
+
+    Route --> Response["📤 Response
+sent to browser"]
+    Redirect --> Response
+    Rewrite --> Response
+    Block --> Response
+
+    style Request fill:#7c3aed,color:#fff
+    style Middleware fill:#f59e0b,color:#000
+    style Check fill:#4f46e5,color:#fff
+    style Route fill:#059669,color:#fff
+    style Redirect fill:#dc2626,color:#fff
+    style Rewrite fill:#9333ea,color:#fff
+    style Block fill:#dc2626,color:#fff
+    style Response fill:#059669,color:#fff
+```
+
 In Next.js, middleware runs **at the Edge** (close to the user), making it extremely fast. It can:
 
 - Read and modify the incoming request

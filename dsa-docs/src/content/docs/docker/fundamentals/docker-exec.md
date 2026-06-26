@@ -2,7 +2,7 @@
 title: "Docker Exec"
 description: "docker exec lets you run commands inside a running container without stopping it."
 sidebar:
-  order: 13
+  order: 17
 ---
 
 ## 13. Docker Exec

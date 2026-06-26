@@ -139,18 +139,33 @@ STEP 7: countdown(3) finishes → return
 
 **The Call Stack (visualized like a stack of plates):**
 
-```
-         ┌──────────────┐
-Step 4:  │ countdown(0)  │  ← TOP (currently executing) → BASE CASE, returns
-         ├──────────────┤
-Step 3:  │ countdown(1)  │  ← waiting for countdown(0) to finish
-         ├──────────────┤
-Step 2:  │ countdown(2)  │  ← waiting for countdown(1) to finish
-         ├──────────────┤
-Step 1:  │ countdown(3)  │  ← waiting for countdown(2) to finish
-         └──────────────┘
-              BOTTOM
+```mermaid
+flowchart TB
+    subgraph Top[Top — Currently Executing]
+        S4["countdown(0)
+    BASE CASE → returns"]
+    end
 
+    subgraph Waiting[Waiting for result]
+        S3["countdown(1)
+    waiting for countdown(0)"]
+        S2["countdown(2)
+    waiting for countdown(1)"]
+        S1["countdown(3)
+    waiting for countdown(2)"]
+    end
+
+    S4 --> S3 --> S2 --> S1
+
+    style S4 fill:#7c3aed,color:#fff
+    style S3 fill:#4f46e5,color:#fff
+    style S2 fill:#4f46e5,color:#fff
+    style S1 fill:#6366f1,color:#fff
+    style Top fill:#1e293b,color:#fff
+    style Waiting fill:#1e293b,color:#fff
+```
+
+```
 After base case, the stack UNWINDS (pops one by one from top):
     countdown(0) returns → popped
     countdown(1) returns → popped

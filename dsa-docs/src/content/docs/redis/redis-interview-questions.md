@@ -5,6 +5,51 @@ description: "Q1: What is Redis and what makes it different from traditional dat
 
 ## 21. Redis Interview Questions
 
+### Interview Topics Overview
+
+```mermaid
+flowchart TB
+    Interview[Redis Interview Topics 🎯] --> Beginner[Beginner Level<br/>Core concepts] --> Q1[Q1: What is Redis?<br/>In-memory, fast, key-value]
+    Beginner --> Q2[Q2: In-memory trade-offs<br/>Speed vs volatility]
+    Beginner --> Q3[Q3: LPUSH vs RPUSH<br/>FIFO vs LIFO]
+    Beginner --> Q4[Q4: TTL & Expiration<br/>Auto-cleanup]
+    Beginner --> Q5[Q5: Set vs Sorted Set<br/>Unique vs scored]
+    
+    Interview --> Inter[Intermediate Level<br/>Patterns & Architecture]
+    Inter --> Q6[Q6: Cache-Aside Pattern
+Lazy loading cache]
+    Inter --> Q7[Q7: RDB vs AOF
+Snapshot vs append-log]
+    Inter --> Q8[Q8: Single-threaded perf
+Event loop + epoll]
+    Inter --> Q9[Q9: WATCH & Optimistic Lock
+Transaction safety]
+    Inter --> Q10[Q10: Rate Limiting
+INCR + TTL pattern]
+    Inter --> Q11[Q11: Eviction Policies
+LRU / LFU / TTL]
+    Inter --> Q12[Q12: Pub/Sub vs Streams
+Fire & forget vs persisted]
+    
+    style Interview fill:#7c3aed,color:#fff
+    style Beginner fill:#3b82f6,color:#fff
+    style Inter fill:#059669,color:#fff
+    style Q1 fill:#3b82f6,color:#fff
+    style Q2 fill:#3b82f6,color:#fff
+    style Q3 fill:#3b82f6,color:#fff
+    style Q4 fill:#3b82f6,color:#fff
+    style Q5 fill:#3b82f6,color:#fff
+    style Q6 fill:#059669,color:#fff
+    style Q7 fill:#059669,color:#fff
+    style Q8 fill:#059669,color:#fff
+    style Q9 fill:#059669,color:#fff
+    style Q10 fill:#059669,color:#fff
+    style Q11 fill:#059669,color:#fff
+    style Q12 fill:#059669,color:#fff
+```
+
+---
+
 ### Beginner Level
 
 **Q1: What is Redis and what makes it different from traditional databases?**

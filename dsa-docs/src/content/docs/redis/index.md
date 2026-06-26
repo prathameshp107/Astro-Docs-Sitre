@@ -1,11 +1,29 @@
 ---
 title: "Redis Fundamentals"
-description: "Complete Redis guide split into section-wise notes covering core concepts, architecture, data types, TTL, persistence, Pub/Sub, transactions, caching patte"
+description: "Complete Redis guide split into section-wise notes covering core concepts, architecture, data types, TTL, persistence, Pub/Sub, transactions, caching patterns, integrations, best practices, and interview preparation."
 ---
 
 # Redis Fundamentals
 
 Complete Redis guide split into section-wise notes covering core concepts, architecture, data types, TTL, persistence, Pub/Sub, transactions, caching patterns, integrations, best practices, and interview preparation.
+
+## Learning Path
+
+```mermaid
+flowchart TB
+    Intro[Redis Introduction<br/>What, Why, How] --> Core[Core Concepts<br/>In-Memory DB, Architecture, Install]
+    Core --> Types[Data Types<br/>String, List, Set, Sorted Set, Hash]
+    Types --> Features[Features & Patterns<br/>TTL, Persistence, Pub/Sub, Transactions, Caching]
+    Features --> Integration[Integration<br/>Node.js, Docker, CLI]
+    Integration --> Practice[Practice & Interview<br/>Mistakes, Best Practices, Interview Q&A]
+
+    style Intro fill:#7c3aed,color:#fff
+    style Core fill:#3b82f6,color:#fff
+    style Types fill:#059669,color:#fff
+    style Features fill:#f59e0b,color:#fff
+    style Integration fill:#ec4899,color:#fff
+    style Practice fill:#10b981,color:#fff
+```
 
 ## Core Concepts
 

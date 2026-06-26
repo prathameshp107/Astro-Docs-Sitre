@@ -18,8 +18,22 @@ function MyComponent() {
  return <p>The current theme is {theme}.</p>;
 }
 ```
-### How it works
-![useContext diagram](/DSA-Notes-Problems/assets/react/03-usecontext.svg)
+### Context: Provider → Consumer
+
+```mermaid
+flowchart TB
+    Provider["🟣 Context.Provider\nvalue='dark'"] --> Child1["Component A\nconsumes context"]
+    Provider --> Child2["Component B\nno context needed"]
+    Provider --> Child3["Component C\nconsumes context"]
+    Child2 --> Deep["Deep child D\nuses useContext\nto get 'dark'"]
+
+    style Provider fill:#7c3aed,color:#fff
+    style Child1 fill:#4f46e5,color:#fff
+    style Child2 fill:#6366f1,color:#fff
+    style Child3 fill:#4f46e5,color:#fff
+    style Deep fill:#059669,color:#fff
+```
+
 ### Simple idea:
 > "Share data anywhere without props"
 ---

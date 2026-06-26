@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" fill="none">
+  <rect width="800" height="420" rx="12" fill="#020617"/>
+  <text x="400" y="40" text-anchor="middle" fill="#a78bfa" font-size="20" font-weight="bold" font-family="Inter, sans-serif">Interfaces vs Types — Comparison</text>
+  
+  <!-- Interface column -->
+  <rect x="40" y="70" width="340" height="310" rx="10" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+  <rect x="40" y="70" width="340" height="40" rx="10" fill="#4338ca"/>
+  <rect x="40" y="90" width="340" height="20" fill="#4338ca"/>
+  <text x="210" y="96" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="Inter, sans-serif">Interface</text>
+  
+  <text x="60" y="135" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Extensible (extends)</text>
+  <text x="60" y="160" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Declaration Merging</text>
+  <text x="60" y="185" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Class Implementation</text>
+  <text x="60" y="210" fill="#ef4444" font-size="13" font-family="Inter, sans-serif">❌ No Union Types</text>
+  <text x="60" y="235" fill="#ef4444" font-size="13" font-family="Inter, sans-serif">❌ No Mapped Types</text>
+  <text x="60" y="260" fill="#ef4444" font-size="13" font-family="Inter, sans-serif">❌ No Computed Properties</text>
+  
+  <!-- Type column -->
+  <rect x="420" y="70" width="340" height="310" rx="10" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <rect x="420" y="70" width="340" height="40" rx="10" fill="#166534"/>
+  <rect x="420" y="90" width="340" height="20" fill="#166534"/>
+  <text x="590" y="96" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="Inter, sans-serif">Type Alias</text>
+  
+  <text x="440" y="135" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Union Types (|)</text>
+  <text x="440" y="160" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Intersection Types (&amp;)</text>
+  <text x="440" y="185" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Mapped Types</text>
+  <text x="440" y="210" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Conditional Types</text>
+  <text x="440" y="235" fill="#22c55e" font-size="13" font-family="Inter, sans-serif">✅ Computed Properties</text>
+  <text x="440" y="260" fill="#ef4444" font-size="13" font-family="Inter, sans-serif">❌ No Declaration Merging</text>
+  
+  <text x="400" y="405" text-anchor="middle" fill="#f59e0b" font-size="13" font-family="Inter, sans-serif">Prefer Interface for objects, Type for unions/advanced types</text>
+</svg>

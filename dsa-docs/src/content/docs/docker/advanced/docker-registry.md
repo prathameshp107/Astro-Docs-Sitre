@@ -2,7 +2,7 @@
 title: "Docker Registry"
 description: "---"
 sidebar:
-  order: 110
+  order: 111
 ---
 
 ## 10. Docker Registry

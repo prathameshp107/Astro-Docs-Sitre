@@ -259,7 +259,7 @@ export default function ReactLanding() {
 
   // ─── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="bg-[#070B18] text-slate-100 min-h-screen relative overflow-x-hidden">
+    <div id="react-landing" className="bg-[#070B18] text-slate-100 min-h-screen relative overflow-x-hidden">
 
       {/* ── Background: dot grid + top glow ── */}
       <div className="fixed inset-0 pointer-events-none z-0" style={{
@@ -268,30 +268,6 @@ export default function ReactLanding() {
       }} />
       <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none z-0"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(251,191,36,0.06) 0%, transparent 70%)" }} />
-
-      {/* ════════════════════════════════════════
-          NAV
-      ════════════════════════════════════════ */}
-      <nav className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#070B18]/90 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <a href={base} className="flex items-center gap-2.5 font-bold text-white">
-            <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center">
-              <Binary className="w-4 h-4 text-black" />
-            </div>
-            <span className="text-sm tracking-tight sg">DSA & Dev Notes</span>
-          </a>
-          <div className="hidden md:flex items-center gap-1 text-xs font-semibold text-slate-400">
-            {[["Docs", "/overview"], ["Visualizer", "/visualizer"], ["Labs", "/labs"], ["Problems", "/dsa/problems"], ["Interview", "/interview"]].map(([label, href]) => (
-              <a key={label} href={`${baseHref}${href}`}
-                className="px-3 py-2 rounded-lg hover:bg-white/5 hover:text-white transition-colors">{label}</a>
-            ))}
-          </div>
-          <a href={`${baseHref}/overview`}
-            className="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-black text-xs font-black transition-all shadow shadow-amber-400/20">
-            Start Learning
-          </a>
-        </div>
-      </nav>
 
       {/* ════════════════════════════════════════
           HERO — split layout

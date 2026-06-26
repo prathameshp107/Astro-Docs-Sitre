@@ -2,7 +2,7 @@
 title: "6. Enterprise Best Practices"
 description: "// DUMB: pure UI, @Input/@Output only, zero dependencies @Component({ selector: 'app-product-list', changeDetection: ChangeDetectionStrategy.OnPush }) expo"
 sidebar:
-  order: 6
+  order: 9
 ---
 
 ## 6. Enterprise Best Practices

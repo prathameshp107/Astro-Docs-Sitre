@@ -5,6 +5,8 @@ description: "Server Actions are async functions that run on the server but can 
 
 # Section 22: Advanced Next.js Concepts
 
+> 📖 **Server Actions are covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/data-and-forms/server-actions)**
+
 ## 22.1 Server Actions
 
 Server Actions are **async functions that run on the server** but can be called directly from Client Components. They eliminate the need to write separate API routes for form submissions and data mutations.
@@ -151,6 +153,8 @@ export default function NewPostPage() {
 
 ---
 
+> 📖 **Streaming & Suspense is covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/core-concepts/streaming-and-suspense)**
+
 ## 22.4 Streaming & React Suspense
 
 Streaming allows Next.js to **send HTML to the browser progressively** — the page shell renders immediately while slow data loads in the background. This dramatically improves Time-to-First-Byte (TTFB) and perceived performance.
@@ -222,6 +226,8 @@ export async function DashboardStats() {
 
 ---
 
+> 📖 **Edge Runtime vs Node.js is covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/advanced/edge-and-runtimes)**
+
 ## 22.6 Edge Runtime
 
 The Edge Runtime runs your code **as close to the user as possible** using a lightweight V8 isolate (not full Node.js), distributed globally via CDN edge nodes.
@@ -275,6 +281,8 @@ export function middleware(request: NextRequest) {
 | **Best for** | Auth, redirects, A/B tests | Complex logic, DB access |
 
 ---
+
+> 📖 **Parallel & Intercepting Routes are covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/advanced/parallel-and-intercepting-routes)**
 
 ## 22.8 Parallel Routes
 
@@ -363,6 +371,8 @@ export default function PhotoPage({ params }: { params: { id: string } }) {
 ![22.10 Route Hierarchy Diagram diagram](/DSA-Notes-Problems/assets/nextjs/advanced-advanced-concepts-22-10-route-hierarchy-diagram-3.svg)
 
 ---
+
+> 📖 **Caching & Revalidation is covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/core-concepts/caching-and-revalidation)**
 
 ## 22.11 Caching Strategies
 

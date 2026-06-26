@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 350" fill="none">
+  <rect width="800" height="350" rx="12" fill="#020617"/>
+  <text x="400" y="40" text-anchor="middle" fill="#a78bfa" font-size="20" font-weight="bold" font-family="Inter, sans-serif">TypeScript Type Inference Flow</text>
+  
+  <!-- Variable declaration -->
+  <rect x="280" y="70" width="240" height="50" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+  <text x="400" y="101" text-anchor="middle" fill="#f1f5f9" font-size="15" font-family="monospace">const age = 25</text>
+  
+  <!-- Arrow down -->
+  <line x1="400" y1="120" x2="400" y2="155" stroke="#475569" stroke-width="2"/>
+  <polygon points="395,150 400,160 405,150" fill="#475569"/>
+  
+  <!-- Inference box -->
+  <rect x="250" y="160" width="300" height="50" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="400" y="191" text-anchor="middle" fill="#fbbf24" font-size="14" font-family="Inter, sans-serif">TypeScript Infers Type</text>
+  
+  <!-- Arrow down -->
+  <line x1="400" y1="210" x2="400" y2="245" stroke="#475569" stroke-width="2"/>
+  <polygon points="395,240 400,250 405,240" fill="#475569"/>
+  
+  <!-- Result -->
+  <rect x="310" y="250" width="180" height="50" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <text x="400" y="281" text-anchor="middle" fill="#86efac" font-size="18" font-weight="bold" font-family="monospace">number</text>
+  
+  <!-- Side explanation -->
+  <rect x="50" y="70" width="190" height="50" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="145" y="101" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Inter, sans-serif">No type annotation needed</text>
+  
+  <rect x="560" y="70" width="190" height="50" rx="8" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <text x="655" y="101" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Inter, sans-serif">TypeScript analyzes the value</text>
+</svg>

@@ -2,7 +2,7 @@
 title: "Environment Variables"
 description: "Environment variables are key-value pairs passed into a container at runtime. They let you configure your app without hardcoding values."
 sidebar:
-  order: 11
+  order: 13
 ---
 
 ## 11. Environment Variables

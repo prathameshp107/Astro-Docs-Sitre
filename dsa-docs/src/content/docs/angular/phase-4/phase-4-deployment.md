@@ -2,7 +2,7 @@
 title: "5. Deployment"
 description: "// src/environments/environment.prod.ts export const environment = { production: true, apiUrl: 'https://api.mycompany.com/api', sentryDsn: 'https://abc@sen"
 sidebar:
-  order: 5
+  order: 8
 ---
 
 ## 5. Deployment

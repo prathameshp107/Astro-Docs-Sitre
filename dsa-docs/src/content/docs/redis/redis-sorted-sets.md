@@ -60,7 +60,26 @@ ZCOUNT leaderboard 1000 3000
 
 ### Leaderboard Diagram
 
-![Leaderboard Diagram diagram](/DSA-Notes-Problems/assets/redis/redis-sorted-sets-leaderboard-diagram.svg)
+```mermaid
+flowchart TB
+    Players[Players submit scores] --> ZADD["ZADD leaderboard score member<br/>Score determines rank"]
+    ZADD --> Sorted[Scores stored in ascending order]
+    
+    Sorted --> ZRANGE["ZRANGE 0 -1 WITHSCORES<br/>Ascending: lowest score first<br/>Diana 950 → Alice 1500 → Charlie 2100 → Bob 2800"]
+    Sorted --> ZREVRANGE["ZREVRANGE 0 -1 WITHSCORES<br/>Descending: highest score first<br/>Bob 2800 → Charlie 2100 → Alice 1500 → Diana 950"]
+    Sorted --> ZRANK["ZRANK 'Alice'<br/>Returns: 1 (0-indexed rank)"]
+    Sorted --> ZCOUNT["ZCOUNT 1000 3000<br/>Count players with score in range"]
+    
+    style Players fill:#3b82f6,color:#fff
+    style ZADD fill:#7c3aed,color:#fff
+    style Sorted fill:#059669,color:#fff
+    style ZRANGE fill:#f59e0b,color:#fff
+    style ZREVRANGE fill:#f59e0b,color:#fff
+    style ZRANK fill:#ec4899,color:#fff
+    style ZCOUNT fill:#06b6d4,color:#fff
+```
+
+> **Real-time leaderboard:** Sorted sets keep the order as scores change. Use `ZADD` to update a score, and the member automatically moves to its correct position. Perfect for gaming, trending topics, and real-time rankings.
 
 ---
 

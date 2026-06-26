@@ -14,6 +14,7 @@ Advanced Docker notes covering Dockerfiles, optimization, multi-stage builds, Co
 - [Deep Dive into Dockerfile](/DSA-Notes-Problems/docker/advanced/deep-dive-into-dockerfile)
 - [Dockerfile Optimization](/DSA-Notes-Problems/docker/advanced/dockerfile-optimization)
 - [Multi-Stage Builds](/DSA-Notes-Problems/docker/advanced/multi-stage-builds)
+- [BuildKit & Buildx](/DSA-Notes-Problems/docker/advanced/buildkit-and-buildx) — *NEW*
 - [Docker Compose](/DSA-Notes-Problems/docker/advanced/docker-compose)
 - [Real Multi-Container Projects](/DSA-Notes-Problems/docker/advanced/real-multi-container-projects)
 - [Docker Networking Advanced](/DSA-Notes-Problems/docker/advanced/docker-networking-advanced)
@@ -28,4 +29,5 @@ Advanced Docker notes covering Dockerfiles, optimization, multi-stage builds, Co
 - [Docker Troubleshooting](/DSA-Notes-Problems/docker/advanced/docker-troubleshooting)
 - [Docker vs Kubernetes](/DSA-Notes-Problems/docker/advanced/docker-vs-kubernetes)
 - [Docker Interview Questions](/DSA-Notes-Problems/docker/advanced/docker-interview-questions)
+- [Practice Exercises](/DSA-Notes-Problems/docker/advanced/practice-exercises) — *NEW*
 - [Final Learning Roadmap](/DSA-Notes-Problems/docker/advanced/final-learning-roadmap)

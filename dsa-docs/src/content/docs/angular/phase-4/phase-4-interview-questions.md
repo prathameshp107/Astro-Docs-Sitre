@@ -2,7 +2,7 @@
 title: "8. Interview Questions"
 description: "1. What is the difference between CoreModule, SharedModule, and feature modules? CoreModule: singleton services, interceptors, guards — imported ONCE in Ap"
 sidebar:
-  order: 8
+  order: 14
 ---
 
 ## 8. Interview Questions

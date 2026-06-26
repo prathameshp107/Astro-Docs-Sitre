@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 450" fill="none">
+  <rect width="700" height="450" rx="12" fill="#020617"/>
+  <text x="350" y="40" text-anchor="middle" fill="#a78bfa" font-size="20" font-weight="bold" font-family="Inter, sans-serif">Node.js + TypeScript Flow</text>
+  
+  <!-- Request -->
+  <rect x="250" y="70" width="200" height="45" rx="8" fill="#1e293b" stroke="#6366f1" stroke-width="2"/>
+  <text x="350" y="98" text-anchor="middle" fill="#a5b4fc" font-size="15" font-weight="bold" font-family="monospace">Request</text>
+  
+  <!-- Arrow -->
+  <line x1="350" y1="115" x2="350" y2="140" stroke="#475569" stroke-width="2"/>
+  <polygon points="345,135 350,145 355,135" fill="#475569"/>
+  
+  <!-- DTO -->
+  <rect x="250" y="145" width="200" height="45" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <text x="350" y="173" text-anchor="middle" fill="#86efac" font-size="15" font-weight="bold" font-family="monospace">DTO (Data Transfer)</text>
+  
+  <!-- Arrow -->
+  <line x1="350" y1="190" x2="350" y2="215" stroke="#475569" stroke-width="2"/>
+  <polygon points="345,210 350,220 355,210" fill="#475569"/>
+  
+  <!-- Service -->
+  <rect x="250" y="220" width="200" height="45" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="350" y="248" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="bold" font-family="monospace">Service Layer</text>
+  
+  <!-- Arrow -->
+  <line x1="350" y1="265" x2="350" y2="290" stroke="#475569" stroke-width="2"/>
+  <polygon points="345,285 350,295 355,285" fill="#475569"/>
+  
+  <!-- Repository -->
+  <rect x="250" y="295" width="200" height="45" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="350" y="323" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="bold" font-family="monospace">Repository Layer</text>
+  
+  <!-- Arrow -->
+  <line x1="350" y1="340" x2="350" y2="365" stroke="#475569" stroke-width="2"/>
+  <polygon points="345,360 350,370 355,360" fill="#475569"/>
+  
+  <!-- Database -->
+  <rect x="250" y="370" width="200" height="45" rx="8" fill="#1e293b" stroke="#22c55e" stroke-width="2"/>
+  <text x="350" y="398" text-anchor="middle" fill="#86efac" font-size="15" font-weight="bold" font-family="monospace">Database</text>
+</svg>

@@ -1,38 +1,19 @@
 ---
-title: "8. Assignments"
+title: "11. Assignments"
 description: "Goal: Practice creating components and using interpolation."
 sidebar:
-  order: 8
+  order: 11
 ---
 
 ## 8. Assignments
 
-### Assignment 1: Component Basics
+### In Simple Words 🧠
 
-**Goal:** Practice creating components and using interpolation.
-
-**Task:**
-Create a `ProfileCardComponent` that displays:
-- User's name, age, city, and bio
-- A "View Profile" button that logs a message to console when clicked
-- Display the current date using the `date` pipe
-
-```
-Expected HTML output:
-┌──────────────────────────┐
-│ 👤 Alice Johnson          │
-│ Age: 28 | Mumbai          │
-│ Bio: A passionate...      │
-│ Joined: January 15, 2024  │
-│ [View Profile]            │
-└──────────────────────────┘
-```
-
-**Hints:**
-- Create with: `ng g c profile-card`
-- Use `{{ }}` for interpolation
-- Use `(click)` for event binding
-- Use `{{ joinDate | date:'longDate' }}` for date formatting
+- Assignments are the best way to solidify what you've learned — code each one from scratch
+- Start with the basics (profile card) and work your way up to the full product catalog
+- Don't peek at solutions until you've tried for at least 15 minutes
+- Focus on understanding WHY each piece works, not just making it work
+- The skills you practice here (data binding, directives, pipes) are used in EVERY Angular project
 
 ---
 

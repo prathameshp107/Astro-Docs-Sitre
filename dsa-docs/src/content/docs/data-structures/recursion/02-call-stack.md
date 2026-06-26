@@ -18,6 +18,24 @@ When **any** function is called (not just recursive ones), the computer:
 2. **Pushes** this frame onto the **call stack**
 3. When the function returns, its frame is **popped** off the stack
 
+```mermaid
+flowchart TD
+    subgraph Stack[Call Stack - LIFO]
+        direction TB
+        F4["factorial(1)\nreturns 1"]
+        F3["factorial(2)\n2 × ?"]
+        F2["factorial(3)\n3 × ?"]
+        F1["factorial(4)\n4 × ?"]
+    end
+
+    F4 --> F3 --> F2 --> F1
+
+    style F4 fill:#7c3aed,color:#fff
+    style F3 fill:#4f46e5,color:#fff
+    style F2 fill:#4f46e5,color:#fff
+    style F1 fill:#6366f1,color:#fff
+```
+
 ```
 The Call Stack is a LIFO (Last In, First Out) data structure.
 

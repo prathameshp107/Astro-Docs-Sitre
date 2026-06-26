@@ -11,6 +11,38 @@ sidebar:
 
 A **decorator** is a function that takes another function and extends its behavior without modifying it directly. Decorators use the `@` syntax.
 
+### Decorator Wrapping
+
+```mermaid
+flowchart TB
+    Original["📦 Original Function
+say_hello()
+'Hello!'"]
+
+    Decorator["🎁 @my_decorator
+Wraps the function"]
+
+    WrapperFunc["🔄 wrapper()
+1. 'Before function call'
+2. Call say_hello()
+3. 'After function call'"]
+
+    Result["📤 Result
+Before function call
+Hello!
+After function call"]
+
+    Original -->|"@decorator"| Decorator
+    Decorator -->|"say_hello =
+my_decorator(say_hello)"| WrapperFunc
+    WrapperFunc -->|"When called..."| Result
+
+    style Original fill:#4f46e5,color:#fff
+    style Decorator fill:#7c3aed,color:#fff
+    style WrapperFunc fill:#059669,color:#fff
+    style Result fill:#f59e0b,color:#000
+```
+
 ## Basic Decorator
 
 ```python

@@ -15,6 +15,24 @@ There are two fundamental ways to traverse a tree: **DFS** (goes deep first) and
 
 DFS explores a branch fully before backtracking. There are three DFS orders:
 
+```mermaid
+flowchart TD
+    R[4] --> L[2]
+    R --> Ri[6]
+    L --> LL[1]
+    L --> LR[3]
+    Ri --> RL[5]
+    Ri --> RR[7]
+
+    style R fill:#7c3aed,color:#fff
+    style L fill:#4f46e5,color:#fff
+    style Ri fill:#4f46e5,color:#fff
+    style LL fill:#6366f1,color:#fff
+    style LR fill:#6366f1,color:#fff
+    style RL fill:#6366f1,color:#fff
+    style RR fill:#6366f1,color:#fff
+```
+
 ### Inorder Traversal (Left → Root → Right)
 
 ```

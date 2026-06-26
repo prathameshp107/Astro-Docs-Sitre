@@ -1,6 +1,6 @@
 ---
 title: "Data Structures"
-description: "Core data structure notes and practice problems covering arrays, linked lists, trees, graphs, recursion, stacks, queues, and more."
+description: "Core data structure notes and practice problems covering arrays, linked lists, trees, graphs, recursion, stacks, queues, strings, greedy, math, sorting, and more."
 sidebar:
   order: 1
 ---
@@ -42,10 +42,36 @@ Linear data structures and their operations.
 
 ---
 
+## 📝 Strings
+
+String manipulation, pattern matching, and common string interview problems.
+
+- [String Basics](/DSA-Notes-Problems/data-structures/strings/string-basics) — Immutability, char codes, common operations
+- [Two Pointer Strings](/DSA-Notes-Problems/data-structures/strings/two-pointer-strings) — Palindrome, reverse, valid anagram
+- [Pattern Matching](/DSA-Notes-Problems/data-structures/strings/pattern-matching) — Naive search, KMP, Rabin-Karp
+- [String Problems](/DSA-Notes-Problems/data-structures/strings/string-problems) — Anagrams, longest substring, compression
+
+---
+
+## 🔢 Matrix (2D Arrays)
+
+Grid traversal patterns and common matrix problems.
+
+- [Matrix Traversals](/DSA-Notes-Problems/data-structures/matrix/matrix-traversal) — Row/column, diagonal, spiral
+- [Matrix Problems](/DSA-Notes-Problems/data-structures/matrix/matrix-problems) — Rotate, spiral, set zeroes, search
+
+---
+
 ## 📚 Stacks & Queues
 
-- [Stack (LIFO)](/DSA-Notes-Problems/data-structures/stacks-queues/stack-lifo)
-- [Queue (FIFO)](/DSA-Notes-Problems/data-structures/stacks-queues/queue-fifo)
+- [Stack (LIFO)](/DSA-Notes-Problems/data-structures/stacks-queues/stack-lifo) — LIFO concept & operations
+- [Queue (FIFO)](/DSA-Notes-Problems/data-structures/stacks-queues/queue-fifo) — FIFO concept & operations
+- [Stack Implementation](/DSA-Notes-Problems/data-structures/stacks-queues/stack-implementation) — Array vs linked list
+- [Queue Implementation](/DSA-Notes-Problems/data-structures/stacks-queues/queue-implementation) — Array, linked list, circular queue
+- [Deque](/DSA-Notes-Problems/data-structures/stacks-queues/deque) — Double-ended queue
+- [Priority Queue & Heap](/DSA-Notes-Problems/data-structures/stacks-queues/priority-queue-and-heap) — Tree + array view
+- [Monotonic Stack](/DSA-Notes-Problems/data-structures/stacks-queues/monotonic-stack) — Next greater/smaller element
+- [Stack & Queue Problems](/DSA-Notes-Problems/data-structures/stacks-queues/stack-queue-problems) — Valid parentheses, min stack, RPN
 
 ---
 
@@ -80,7 +106,7 @@ Linear data structures and their operations.
 - [Trees Overview](/DSA-Notes-Problems/data-structures/trees)
 - [Introduction](/DSA-Notes-Problems/data-structures/trees/01-introduction) — Definition, terminologies, properties
 - [Types](/DSA-Notes-Problems/data-structures/trees/02-types) — Binary, BST, AVL, Red-Black, Full/Complete/Perfect
-- [Special Trees](/DSA-Notes-Problems/data-structures/trees/03-special-trees) — Trie, Heap, Segment Tree
+- [Special Trees](/DSA-Notes-Problems/data-structures/trees/03-special-trees) — Trie, Heap, Segment Tree links
 - [Representation](/DSA-Notes-Problems/data-structures/trees/04-representation) — Pointer-based & array-based
 - [Complexity](/DSA-Notes-Problems/data-structures/trees/05-complexity) — Time & space analysis
 - [Traversals](/DSA-Notes-Problems/data-structures/trees/06-traversals) — DFS (Inorder/Preorder/Postorder) & BFS
@@ -93,6 +119,13 @@ Linear data structures and their operations.
 - [Tips & Mistakes](/DSA-Notes-Problems/data-structures/trees/13-tips) — Expert advice & edge cases
 - [Real-World Apps](/DSA-Notes-Problems/data-structures/trees/14-applications) — File systems, databases, autocomplete
 
+### Advanced Trees (Dedicated Pages)
+- [Trie (Prefix Tree)](/DSA-Notes-Problems/data-structures/trees/15-trie) — String storage, autocomplete
+- [AVL Tree](/DSA-Notes-Problems/data-structures/trees/16-avl-tree) — Self-balancing BST
+- [Red-Black Tree](/DSA-Notes-Problems/data-structures/trees/17-red-black-tree) — Concept & comparison
+- [Segment Tree](/DSA-Notes-Problems/data-structures/trees/18-segment-tree) — Range queries
+- [Fenwick Tree (BIT)](/DSA-Notes-Problems/data-structures/trees/19-fenwick-bit) — Prefix sums
+
 ---
 
 ## 📊 Graphs
@@ -103,7 +136,17 @@ Linear data structures and their operations.
 - [Complexity](/DSA-Notes-Problems/data-structures/graphs/03-complexity) — Time & space analysis by representation
 - [Traversals (BFS & DFS)](/DSA-Notes-Problems/data-structures/graphs/04-traversals) — Breadth-First & Depth-First Search
 - [Patterns](/DSA-Notes-Problems/data-structures/graphs/05-patterns) — Shortest path, components, cycles, topo sort, union-find
-- [Algorithms](/DSA-Notes-Problems/data-structures/graphs/06-algorithms) — Dijkstra, Bellman-Ford, Kruskal, Prim
+- [Algorithms](/DSA-Notes-Problems/data-structures/graphs/06-algorithms) — Overview with links to dedicated pages
+
+### Dedicated Algorithm Pages
+- [Dijkstra's Algorithm](/DSA-Notes-Problems/data-structures/graphs/12-dijkstra) — Shortest path (non-negative weights)
+- [Bellman-Ford](/DSA-Notes-Problems/data-structures/graphs/13-bellman-ford) — Handles negative weights
+- [Floyd-Warshall](/DSA-Notes-Problems/data-structures/graphs/14-floyd-warshall) — All-pairs shortest path
+- [Topological Sort](/DSA-Notes-Problems/data-structures/graphs/15-topological-sort) — DAG ordering
+- [Union-Find (DSU)](/DSA-Notes-Problems/data-structures/graphs/16-union-find-dsu) — Connected components
+- [MST (Kruskal & Prim)](/DSA-Notes-Problems/data-structures/graphs/17-mst-kruskal-prim) — Minimum spanning tree
+- [Cycle Detection](/DSA-Notes-Problems/data-structures/graphs/18-cycle-detection) — Directed & undirected
+
 - [Problem Solving](/DSA-Notes-Problems/data-structures/graphs/07-problem-solving) — Decision framework & identification guide
 - [Code Examples](/DSA-Notes-Problems/data-structures/graphs/08-code-examples) — Full implementations in JavaScript
 - [Interview Questions](/DSA-Notes-Problems/data-structures/graphs/09-interview-questions) — LeetCode Easy/Medium/Hard
@@ -132,6 +175,52 @@ Linear data structures and their operations.
 
 ---
 
+## 📊 Sorting
+
+- [Sorting Overview](/DSA-Notes-Problems/data-structures/sorting)
+- [Introduction](/DSA-Notes-Problems/data-structures/sorting/01-introduction) — Comparison-based vs non-comparison
+- [Bubble Sort](/DSA-Notes-Problems/data-structures/sorting/02-bubble-sort)
+- [Selection Sort](/DSA-Notes-Problems/data-structures/sorting/03-selection-sort)
+- [Insertion Sort](/DSA-Notes-Problems/data-structures/sorting/04-insertion-sort)
+- [Merge Sort](/DSA-Notes-Problems/data-structures/sorting/05-merge-sort)
+- [Quick Sort](/DSA-Notes-Problems/data-structures/sorting/06-quick-sort)
+- [Heap Sort](/DSA-Notes-Problems/data-structures/sorting/07-heap-sort)
+- [Complexity Comparison](/DSA-Notes-Problems/data-structures/sorting/08-complexity-comparison)
+- [Interview Questions](/DSA-Notes-Problems/data-structures/sorting/09-interview-questions)
+
+### Non-Comparison Sorts
+- [Counting Sort](/DSA-Notes-Problems/data-structures/sorting/10-counting-sort) — Frequency counting, O(N+K)
+- [Radix Sort](/DSA-Notes-Problems/data-structures/sorting/11-radix-sort) — Digit-by-digit sort
+- [Bucket Sort](/DSA-Notes-Problems/data-structures/sorting/12-bucket-sort) — Distribution sort
+- [Stability & Choosing a Sort](/DSA-Notes-Problems/data-structures/sorting/13-stability-and-when-to-use) — When to use each
+
+---
+
+## 💡 Greedy
+
+- [Greedy Introduction](/DSA-Notes-Problems/data-structures/greedy/greedy-introduction) — Local best → global best
+- [Classic Greedy Problems](/DSA-Notes-Problems/data-structures/greedy/classic-greedy-problems) — Activity selection, jump game, gas station
+- [Huffman Coding](/DSA-Notes-Problems/data-structures/greedy/huffman-coding) — Building the Huffman tree
+
+---
+
+## 🔢 Bit Manipulation
+
+- [Bit Basics](/DSA-Notes-Problems/data-structures/bit-manipulation/01-introduction) — AND, OR, XOR, NOT, shifts
+- [Bit Tricks](/DSA-Notes-Problems/data-structures/bit-manipulation/02-tricks) — Set/clear/toggle, mask, `n & (n-1)`
+- [Bit Problems](/DSA-Notes-Problems/data-structures/bit-manipulation/03-problems) — Single number, count bits, subsets
+
+---
+
+## 🧮 Math
+
+- [GCD, LCM & Euclid's Algorithm](/DSA-Notes-Problems/data-structures/math/gcd-lcm-and-euclid) — Remainder-based GCD
+- [Primes & Sieve of Eratosthenes](/DSA-Notes-Problems/data-structures/math/primes-and-sieve) — Primality test, prime sieve
+- [Modular Arithmetic & Fast Power](/DSA-Notes-Problems/data-structures/math/modular-arithmetic-and-fast-power) — Mod rules, fast exponentiation
+- [Math Problems](/DSA-Notes-Problems/data-structures/math/math-problems) — Power of two, factorial, digit problems
+
+---
+
 ## 🎯 Interview Prep
 
 - [Interview Prep Overview](/DSA-Notes-Problems/data-structures/interview-prep)
@@ -144,3 +233,11 @@ Linear data structures and their operations.
 - [Coding Problems](/DSA-Notes-Problems/data-structures/interview-prep/07-coding-problems) — Two Sum, anagrams, intersection & more
 - [Pro Tips](/DSA-Notes-Problems/data-structures/interview-prep/08-pro-tips) — When to use Map vs Set, common pitfalls
 - [Study Plan & Cheat Sheet](/DSA-Notes-Problems/data-structures/interview-prep/09-study-plan) — Prioritized topics & learning path
+
+### More Patterns
+- [Prefix Sum](/DSA-Notes-Problems/data-structures/interview-prep/10-prefix-sum) — Range sum queries in O(1)
+- [Fast & Slow Pointers](/DSA-Notes-Problems/data-structures/interview-prep/11-fast-slow-pointers) — Cycle detection, find middle
+- [Merge Intervals](/DSA-Notes-Problems/data-structures/interview-prep/12-merge-intervals) — Overlapping interval problems
+- [Top K Elements (Heap)](/DSA-Notes-Problems/data-structures/interview-prep/13-top-k-heap) — Kth largest, frequent elements
+- [Monotonic Stack](/DSA-Notes-Problems/data-structures/interview-prep/14-monotonic-stack) — Next greater/smaller element
+- [Greedy Patterns](/DSA-Notes-Problems/data-structures/interview-prep/15-greedy-patterns) — When greedy works, classic examples

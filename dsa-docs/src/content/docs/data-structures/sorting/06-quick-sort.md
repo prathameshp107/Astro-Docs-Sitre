@@ -3,6 +3,11 @@ title: "Quick Sort"
 description: "How Quick Sort works (pivot and partition), Lomuto vs Hoare partition schemes, pivot selection strategies, JavaScript implementation, and complexity analysis."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/sorting
+  mcq: /mcq/algorithms
+  lab: /labs
+  playground: /playground
 ---
 
 # Quick Sort

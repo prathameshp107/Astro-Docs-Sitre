@@ -2,7 +2,7 @@
 title: "Docker vs Kubernetes"
 description: "---"
 sidebar:
-  order: 116
+  order: 117
 ---
 
 ## 16. Docker vs Kubernetes

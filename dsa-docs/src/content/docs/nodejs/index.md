@@ -1,27 +1,121 @@
 ---
 title: "Node.js"
-description: "Complete Node.js guide from beginner to advanced, covering core concepts, Express, databases, and production deployment."
+description: "Complete Node.js guide from beginner to advanced — fundamentals, Express, databases, caching, queues, and production deployment."
 ---
 
 # Node.js
 
-Complete Node.js guide from beginner to advanced, covering runtime architecture, core modules, Express.js, databases, authentication, and production deployment strategies.
+Complete Node.js guide covering the entire learning path — from runtime fundamentals and core modules to Express APIs, databases, caching, message queues, and production deployment.
+
+## 📖 Learning Path
+
+```mermaid
+flowchart TB
+    subgraph Fundamentals["1️⃣ Fundamentals"]
+        direction TB
+        Intro["Introduction to Node.js"]
+        Arch["Node.js Architecture & Event Loop"]
+        NPM["npm & package.json"]
+        Modules["Modules: CommonJS vs ESM"]
+        Core["Core Built-in Modules"]
+    end
+
+    subgraph Core["2️⃣ Core Concepts"]
+        direction TB
+        Async["Async Programming"]
+        Events["Event Emitter"]
+        Streams["Streams & Buffers"]
+        Errors["Error Handling"]
+    end
+
+    subgraph Web["3️⃣ Web Development"]
+        direction TB
+        API["Building REST APIs"]
+        Express["Express.js Framework"]
+        Validation["Input Validation"]
+        Uploads["File Uploads"]
+        Auth["Authentication & Security"]
+        WS["WebSockets & Real-Time"]
+        GraphQL["GraphQL"]
+    end
+
+    subgraph Data["4️⃣ Data Layer"]
+        direction TB
+        DB["Databases (MongoDB / SQL)"]
+        Cache["Caching (Redis)"]
+        Queues["Message Queues"]
+    end
+
+    subgraph Production["5️⃣ Production"]
+        direction TB
+        Config["Config & Environment"]
+        Logging["Logging & Monitoring"]
+        Perf["Performance Optimization"]
+        Patterns["Design Patterns"]
+        Clustering["Clustering & Worker Threads"]
+        ProdArch["Production Architecture"]
+        Deploy["Deployment"]
+        Testing["Testing"]
+        Micro["Microservices & Project Architecture"]
+    end
+
+    Interview["6️⃣ Interview Questions"]
+
+    Fundamentals --> Core --> Web --> Data --> Production --> Interview
+
+    style Fundamentals fill:#4f46e5,color:#fff
+    style Core fill:#7c3aed,color:#fff
+    style Web fill:#059669,color:#fff
+    style Data fill:#d97706,color:#fff
+    style Production fill:#dc2626,color:#fff
+    style Interview fill:#6366f1,color:#fff
+```
 
 ## Sections
 
-- [Introduction to Node.js](/DSA-Notes-Problems/nodejs/introduction)
-- [Node.js Architecture](/DSA-Notes-Problems/nodejs/architecture)
-- [Core Concepts & Built-in Modules](/DSA-Notes-Problems/nodejs/core-modules)
-- [Async Programming](/DSA-Notes-Problems/nodejs/async-programming)
-- [Building APIs](/DSA-Notes-Problems/nodejs/building-apis)
-- [Express.js Framework](/DSA-Notes-Problems/nodejs/express-framework)
-- [Authentication & Security](/DSA-Notes-Problems/nodejs/authentication-security)
-- [Databases](/DSA-Notes-Problems/nodejs/databases)
-- [Advanced Node.js](/DSA-Notes-Problems/nodejs/advanced)
-- [Production Architecture](/DSA-Notes-Problems/nodejs/production-architecture)
-- [Design Patterns](/DSA-Notes-Problems/nodejs/design-patterns)
-- [Performance Optimization](/DSA-Notes-Problems/nodejs/performance)
-- [Testing](/DSA-Notes-Problems/nodejs/testing)
-- [Deployment](/DSA-Notes-Problems/nodejs/deployment)
-- [Real-World Project Architecture](/DSA-Notes-Problems/nodejs/project-architecture)
-- [Interview Questions](/DSA-Notes-Problems/nodejs/interview-questions)
+### 1️⃣ Fundamentals
+
+- [Introduction to Node.js](/DSA-Notes-Problems/nodejs/fundamentals/introduction)
+- [Node.js Architecture](/DSA-Notes-Problems/nodejs/fundamentals/architecture)
+- [npm & package.json](/DSA-Notes-Problems/nodejs/fundamentals/npm-and-package-json)
+- [Modules: CommonJS vs ESM](/DSA-Notes-Problems/nodejs/fundamentals/modules-commonjs-vs-esm)
+- [Core Concepts & Built-in Modules](/DSA-Notes-Problems/nodejs/fundamentals/core-modules)
+
+### 2️⃣ Core Concepts
+
+- [Async Programming](/DSA-Notes-Problems/nodejs/core/async-programming)
+- [Event Emitter](/DSA-Notes-Problems/nodejs/core/event-emitter)
+- [Streams & Buffers](/DSA-Notes-Problems/nodejs/core/streams-and-buffers)
+- [Error Handling](/DSA-Notes-Problems/nodejs/core/error-handling)
+
+### 3️⃣ Web Development
+
+- [Building REST APIs](/DSA-Notes-Problems/nodejs/web/building-apis)
+- [Express.js Framework](/DSA-Notes-Problems/nodejs/web/express-framework)
+- [Input Validation](/DSA-Notes-Problems/nodejs/web/validation)
+- [File Uploads](/DSA-Notes-Problems/nodejs/web/file-uploads)
+- [Authentication & Security](/DSA-Notes-Problems/nodejs/web/authentication-security)
+- [WebSockets & Real-Time](/DSA-Notes-Problems/nodejs/web/websockets-realtime)
+- [GraphQL](/DSA-Notes-Problems/nodejs/web/graphql)
+
+### 4️⃣ Data Layer
+
+- [Databases (MongoDB / SQL)](/DSA-Notes-Problems/nodejs/data/databases)
+- [Caching (Redis)](/DSA-Notes-Problems/nodejs/data/caching)
+- [Message Queues](/DSA-Notes-Problems/nodejs/data/message-queues)
+
+### 5️⃣ Production
+
+- [Configuration & Environment](/DSA-Notes-Problems/nodejs/production/config-and-environment)
+- [Logging & Monitoring](/DSA-Notes-Problems/nodejs/production/logging-and-monitoring)
+- [Performance Optimization](/DSA-Notes-Problems/nodejs/production/performance)
+- [Design Patterns](/DSA-Notes-Problems/nodejs/production/design-patterns)
+- [Clustering & Worker Threads](/DSA-Notes-Problems/nodejs/production/clustering-and-worker-threads)
+- [Production Architecture](/DSA-Notes-Problems/nodejs/production/production-architecture)
+- [Deployment](/DSA-Notes-Problems/nodejs/production/deployment)
+- [Testing](/DSA-Notes-Problems/nodejs/production/testing)
+- [Microservices & Project Architecture](/DSA-Notes-Problems/nodejs/production/project-architecture)
+
+### 6️⃣ Interview
+
+- [Node.js Interview Questions](/DSA-Notes-Problems/nodejs/interview-questions)

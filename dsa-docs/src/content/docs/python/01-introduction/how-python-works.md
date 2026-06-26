@@ -13,7 +13,32 @@ Python is neither purely compiled nor purely interpreted — it uses a **hybrid 
 
 ## Execution Flow
 
-<img src="/DSA-Notes-Problems/assets/python/python-execution-flow.svg" alt="Python Code Execution Flow Diagram" width="700" />
+```mermaid
+flowchart LR
+    Source["📝 Source Code
+hello.py"] -->|"1. Tokenization
+Lexical Analysis"| Tokens["🔤 Tokens
+NAME, NUMBER, OP"]
+    Tokens -->|"2. Parsing
+Syntax Analysis"| AST["🌳 AST
+Abstract Syntax Tree"]
+    AST -->|"3. Compilation"| Bytecode["⚙️ Bytecode
+.pyc file
+Platform-independent"]
+    Bytecode -->|"4. Execution"| PVM["🖥️ Python VM
+Interprets bytecode
+one instruction at a time"]
+    PVM --> Output["✅ Result
+CPU executes
+(one thread at a time 🧵)"]
+
+    style Source fill:#7c3aed,color:#fff
+    style Tokens fill:#4f46e5,color:#fff
+    style AST fill:#059669,color:#fff
+    style Bytecode fill:#f59e0b,color:#000
+    style PVM fill:#dc2626,color:#fff
+    style Output fill:#9333ea,color:#fff
+```
 
 ```
 Step 1: You write Python source code (hello.py)

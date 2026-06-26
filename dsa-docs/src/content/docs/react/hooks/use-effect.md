@@ -29,6 +29,27 @@ useEffect(() => {
 👉 Runs only when `count` changes
  ### Simple idea:
  > "Run this code after UI is shown"
-### How it works
-![useEffect diagram](/DSA-Notes-Problems/assets/react/02-useeffect.svg)
+### useEffect Timeline
+
+```mermaid
+flowchart LR
+    Mount["Component\nMounts"] --> RunEffect["useEffect runs\nafter first paint"]
+    Mount --> CleanupPrev["Previous\ncleanup runs"]
+
+    RunEffect --> Deps["Dependencies\nchange?"]
+    Deps -->|"Yes"| Cleanup["Cleanup function\nruns first"]
+    Cleanup --> RunAgain["Effect runs\nagain"]
+    Deps -->|"No"| Skip["Effect skipped"]
+
+    Mount --> Unmount["Component\nUnmounts"]
+    Unmount --> FinalCleanup["Final cleanup\nruns"]
+
+    style Mount fill:#4f46e5,color:#fff
+    style RunEffect fill:#059669,color:#fff
+    style Deps fill:#d97706,color:#fff
+    style Cleanup fill:#f59e0b,color:#fff
+    style Unmount fill:#dc2626,color:#fff
+    style FinalCleanup fill:#dc2626,color:#fff
+```
+
 ---

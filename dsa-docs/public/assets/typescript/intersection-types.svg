@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 400" fill="none">
+  <rect width="750" height="400" rx="12" fill="#020617"/>
+  <text x="375" y="40" text-anchor="middle" fill="#a78bfa" font-size="20" font-weight="bold" font-family="Inter, sans-serif">Intersection Types — Venn Diagram</text>
+  
+  <!-- User circle -->
+  <circle cx="250" cy="200" r="90" fill="#1e293b" stroke="#6366f1" stroke-width="3" opacity="0.6"/>
+  <text x="250" y="190" text-anchor="middle" fill="#a5b4fc" font-size="16" font-weight="bold" font-family="Inter, sans-serif">User</text>
+  <text x="250" y="210" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Inter, sans-serif">name: string</text>
+  <text x="250" y="228" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Inter, sans-serif">email: string</text>
+  
+  <!-- Permissions circle -->
+  <circle cx="500" cy="200" r="90" fill="#1e293b" stroke="#22c55e" stroke-width="3" opacity="0.6"/>
+  <text x="500" y="190" text-anchor="middle" fill="#86efac" font-size="16" font-weight="bold" font-family="Inter, sans-serif">Permissions</text>
+  <text x="500" y="210" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Inter, sans-serif">role: string</text>
+  <text x="500" y="228" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Inter, sans-serif">access: string[]</text>
+  
+  <!-- Intersection box -->
+  <rect x="275" y="310" width="200" height="50" rx="10" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+  <text x="375" y="341" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="bold" font-family="monospace">AdminUser</text>
+  
+  <!-- Intersection lines -->
+  <line x1="285" y1="275" x2="305" y2="310" stroke="#475569" stroke-width="1.5"/>
+  <line x1="465" y1="275" x2="445" y2="310" stroke="#475569" stroke-width="1.5"/>
+  
+  <text x="375" y="390" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="Inter, sans-serif">type AdminUser = User &amp; Permissions;</text>
+</svg>

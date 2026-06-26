@@ -12,7 +12,27 @@ Data binding is the **bridge** between your component (where data lives) and the
 
 Angular has **4 types** of data binding.
 
-![Data Binding — How Data Flows](/DSA-Notes-Problems/assets/angular/phase-1-4-data-binding-how-data-flows.svg)
+### The 4 Data-Binding Types
+
+```mermaid
+flowchart TB
+    subgraph Legend["Data Binding Flow"]
+        Int["📥 Interpolation {{ }}\nComponent → Template\nShows data as text"]
+        Prop["📥 Property Binding [ ]\nComponent → Template\nSets element properties"]
+        Event["📤 Event Binding ( )\nTemplate → Component\nHandles user actions"]
+        TwoWay["📥📤 Two-Way Binding [( )]\nComponent ↔ Template\nSyncs both ways (ngModel)"]
+    end
+
+    Int -->|"one-way"| Temp1["Template displays 'Hello, Alice'"]
+    Prop -->|"one-way"| Temp2["Button disabled, image src set"]
+    Temp3["User clicks button"] -->|"one-way"| Event
+    TwoWay -->|"two-way"| Temp4["Input and property stay in sync"]
+
+    style Int fill:#7c3aed,color:#fff
+    style Prop fill:#4f46e5,color:#fff
+    style Event fill:#059669,color:#fff
+    style TwoWay fill:#d97706,color:#fff
+```
 
 ---
 

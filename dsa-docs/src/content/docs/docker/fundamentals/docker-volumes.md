@@ -2,7 +2,7 @@
 title: "Docker Volumes"
 description: "Problem: When a container is deleted, all data inside it is gone forever."
 sidebar:
-  order: 9
+  order: 11
 ---
 
 ## 9. Docker Volumes

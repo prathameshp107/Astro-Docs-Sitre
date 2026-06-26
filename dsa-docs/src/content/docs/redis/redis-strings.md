@@ -15,6 +15,33 @@ A String in Redis is the most basic type. Despite the name, it can hold:
 
 > **Analogy:** A String is like a labeled jar — the label is the key, and whatever you put inside is the value.
 
+### How Strings Work
+
+```mermaid
+flowchart LR
+    subgraph SET[SET key value]
+        K1["Key: username"] --> V1["Value: 'prathamesh'"]
+    end
+    
+    subgraph GET[GET key]
+        K2["Key: username"] --> V2["Returns: 'prathamesh'"]
+    end
+    
+    subgraph Counter[INCR key — Atomic Counter]
+        K3["Key: page:views"] --> V3["0 → INCR → 1 → INCR → 2"]
+    end
+    
+    subgraph TTL[SET key value EX seconds]
+        K4["Key: session:token"] --> V4["Stored with 3600s expiry
+        Auto-deletes after 1 hour ⏰"]
+    end
+    
+    style SET fill:#7c3aed,color:#fff
+    style GET fill:#3b82f6,color:#fff
+    style Counter fill:#059669,color:#fff
+    style TTL fill:#f59e0b,color:#fff
+```
+
 ---
 
 ### Core Commands

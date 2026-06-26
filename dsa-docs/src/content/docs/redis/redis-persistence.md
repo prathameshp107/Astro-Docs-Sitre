@@ -72,6 +72,36 @@ appendfsync everysec
 
 ### Persistence Flow Diagram
 
-![Persistence Flow Diagram diagram](/DSA-Notes-Problems/assets/redis/redis-persistence-persistence-flow-diagram.svg)
+```mermaid
+flowchart TB
+    Redis[Redis Server<br/>Data in RAM] --> RDB[RDB Snapshot
+Point-in-time dump.rdb]
+    Redis --> AOF[AOF Append-Only Log
+Every write command logged]
+    
+    RDB --> RDBHow["Saves periodically<br/>save 900 1 / save 300 10<br/>Compact binary file<br/>Fast recovery ⚡"]
+    AOF --> AOFHow["Logs every command<br/>appendfsync everysec<br/>Larger file, slower recovery
+Minimal data loss 🛡️"]
+    
+    RDB --> Best1["Best for: Backups,
+    disaster recovery"]
+    AOF --> Best2["Best for: High durability,
+    crash recovery"]
+    
+    Both["✅ Best Practice: Use BOTH<br/>RDB for fast restart + AOF for safety"]
+    RDBHow --> Both
+    AOFHow --> Both
+    
+    style Redis fill:#7c3aed,color:#fff
+    style RDB fill:#3b82f6,color:#fff
+    style AOF fill:#059669,color:#fff
+    style RDBHow fill:#3b82f6,color:#fff
+    style AOFHow fill:#059669,color:#fff
+    style Best1 fill:#3b82f6,color:#fff
+    style Best2 fill:#059669,color:#fff
+    style Both fill:#f59e0b,color:#fff
+```
+
+> **One-liner:** RDB takes photos of your data at set times. AOF records every single action. Use both for best results.
 
 ---

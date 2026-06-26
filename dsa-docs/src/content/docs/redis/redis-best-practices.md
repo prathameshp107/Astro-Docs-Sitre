@@ -5,6 +5,35 @@ description: "Use a consistent hierarchy separated by colons (:):"
 
 ## 20. Redis Best Practices
 
+### 7 Pillars of Redis Best Practices
+
+```mermaid
+flowchart TB
+    Pillars[Redis Best Practices 🏆]
+    
+    Pillars --> P1[1. Key Naming<br/>user:42:name<br/>Colons as separators]
+    Pillars --> P2[2. Always Set TTL<br/>EX / EXPIRE<br/>Prevent memory leaks]
+    Pillars --> P3[3. Memory Optimization<br/>Use Hashes over<br/>multiple keys]
+    Pillars --> P4[4. Pipelining<br/>Batch commands<br/>Reduce round trips]
+    Pillars --> P5[5. Connection Pooling<br/>ioredis built-in<br/>Reuse connections]
+    Pillars --> P6[6. Monitor Production<br/>INFO / SLOWLOG / MEMORY
+Watch your metrics]
+    Pillars --> P7[7. Separate Instances<br/>Session / Cache / Queue<br/>Isolate by purpose]
+    
+    style Pillars fill:#7c3aed,color:#fff
+    style P1 fill:#3b82f6,color:#fff
+    style P2 fill:#059669,color:#fff
+    style P3 fill:#f59e0b,color:#fff
+    style P4 fill:#ec4899,color:#fff
+    style P5 fill:#06b6d4,color:#fff
+    style P6 fill:#10b981,color:#fff
+    style P7 fill:#8b5cf6,color:#fff
+```
+
+> **Golden rule:** Redis is an in-memory cache, not a primary database. Design your architecture around that.
+
+---
+
 ### 1. Key Naming Conventions
 
 Use a consistent hierarchy separated by colons (`:`):

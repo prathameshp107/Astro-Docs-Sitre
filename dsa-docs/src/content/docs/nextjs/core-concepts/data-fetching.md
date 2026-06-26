@@ -103,6 +103,8 @@ export default BlogPage;
 
 ---
 
+> 📖 **Streaming & Suspense is covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/core-concepts/streaming-and-suspense)**
+
 ## 8.5 Suspense and Streaming
 
 **Suspense** lets you show a **loading placeholder** while a component is fetching data. **Streaming** sends parts of the page as they're ready — users see content faster.
@@ -154,6 +156,8 @@ async function RecentOrders() {
 ```
 
 ---
+
+> 📖 **Caching & Revalidation is covered in detail on the [dedicated page →](/DSA-Notes-Problems/nextjs/core-concepts/caching-and-revalidation)**
 
 ## 8.6 Caching and Revalidation
 

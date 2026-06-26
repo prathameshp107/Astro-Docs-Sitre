@@ -5,6 +5,59 @@ description: "const redis = new Redis({ host: '127.0.0.1', port: 6379, // passwo
 
 ## 16. Redis with Node.js
 
+### Architecture: Express + Redis + Database
+
+```mermaid
+flowchart TB
+    Client[Client / Browser] --> Express[Express.js Server]
+    
+    Express --> CacheMiddleware{Check Redis Cache<br/>cacheMiddleware}
+    CacheMiddleware -->|Cache HIT ✅| Response[Return cached data
+Instant response!]
+    CacheMiddleware -->|Cache MISS ❌| RouteHandler[Route Handler
+Fetch from DB]
+    
+    RouteHandler --> DB[Database<br/>MySQL / PostgreSQL]
+    DB --> StoreInRedis[Store in Redis<br/>SETEX with TTL]
+    StoreInRedis --> Response
+    
+    Express --> RateLimit{Check Rate Limit<br/>INCR key + EXPIRE}
+    RateLimit -->|Under limit ✅| Allow[Allow request]
+    RateLimit -->|Over limit ❌| Block[429 Too Many Requests]
+    
+    Express --> Session[Session Management
+connect-redis store]
+    
+    subgraph RedisOps[Redis Operations]
+        RO1[SET / GET / DEL
+Basic CRUD]
+        RO2[HSET / HGETALL
+Hash operations]
+        RO3[RPUSH / LPOP
+List queue]
+        RO4[INCR / DECR
+Atomic counters]
+    end
+    
+    Express --> RedisOps
+    
+    style Client fill:#3b82f6,color:#fff
+    style Express fill:#7c3aed,color:#fff
+    style CacheMiddleware fill:#f59e0b,color:#fff
+    style Response fill:#059669,color:#fff
+    style RouteHandler fill:#3b82f6,color:#fff
+    style DB fill:#3b82f6,color:#fff
+    style StoreInRedis fill:#7c3aed,color:#fff
+    style RateLimit fill:#ec4899,color:#fff
+    style Allow fill:#059669,color:#fff
+    style Block fill:#ef4444,color:#fff
+    style RedisOps fill:#10b981,color:#fff
+```
+
+> **Flow:** Express app uses Redis for: 1) caching (cache-aside middleware), 2) rate limiting (INCR + TTL), 3) session storage (connect-redis), and 4) basic data operations.
+
+---
+
 ### Installation
 
 ```bash
