@@ -1,0 +1,80 @@
+---
+title: "Access Modifiers"
+description: "Understanding access modifiers — controlling visibility and access to class members."
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Access Modifiers
+
+## Introduction
+
+**Access modifiers** (also called access specifiers) determine the **visibility** and **accessibility** of class members (properties and methods). They are fundamental to **encapsulation**.
+
+---
+
+## Common Access Modifiers
+
+| Modifier | Same Class | Subclass | External |
+|----------|-----------|----------|----------|
+| **public** | ✅ | ✅ | ✅ |
+| **protected** | ✅ | ✅ | ❌ |
+| **private** | ✅ | ❌ | ❌ |
+
+---
+
+## Code Examples
+
+<Tabs>
+<TabItem label="JavaScript">
+
+```javascript
+class BankAccount {
+  #balance = 0; // Private field (ES2020+)
+
+  deposit(amount) { this.#balance += amount; }
+  getBalance() { return this.#balance; }
+}
+```
+
+</TabItem>
+<TabItem label="TypeScript">
+
+```typescript
+class Employee {
+  public name: string;        // Accessible everywhere
+  private salary: number;     // Only within this class
+  protected department: string; // Within class and subclasses
+  readonly id: number;        // Can only be set in constructor
+}
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+class User:
+    def __init__(self, username, email, password):
+        self.username = username      # Public
+        self._email = email           # Protected (convention)
+        self.__password = password    # Private (name mangling)
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Best Practices
+
+- **Default to private** — Make fields private; expose only what's needed
+- **Use public for API** — Public members are your contract with consumers
+- **Use protected sparingly** — Protected creates coupling to subclasses
+- **Provide getters/setters** instead of making fields public
+
+---
+
+**Previous Topic:** [Advanced Concepts →](/DSA-Notes-Problems/oops/05-advanced-concepts/)
+**Next Topic:** [Static Members →](/DSA-Notes-Problems/oops/05-advanced-concepts/static-members)
