@@ -1,0 +1,101 @@
+---
+import StarlightHead from 'virtual:starlight/components/Head';
+
+const route = Astro.locals.starlightRoute;
+const { entry } = route;
+const fm = entry.data as Record<string, any>;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://prathameshp107.github.io';
+const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? '';
+const pathname = Astro.url.pathname;
+
+// Detect page type
+const seoType: string =
+  fm.seoType ??
+  (pathname.includes('interview-questions') ? 'faq' :
+   (pathname === base + '/' || pathname === base || pathname.match(/^\/[^/]+\/?$/) !== null) ? 'website' :
+   'article');
+
+const pageTitle = fm.title ?? 'DSA Dev Notes';
+const pageDescription = fm.description ?? 'Developer knowledge base for DSA, JavaScript, React, Angular, and interview preparation.';
+const canonicalUrl = siteUrl + pathname;
+
+// --- Build JSON-LD ---
+let jsonLd: Record<string, any> | null = null;
+
+if (seoType === 'faq' && Array.isArray(fm.faqItems) && fm.faqItems.length > 0) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: fm.faqItems.map((item: { q: string; a: string }) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+  };
+} else if (seoType === 'article') {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: pageTitle,
+    description: pageDescription,
+    url: canonicalUrl,
+    author: {
+      '@type': 'Person',
+      name: 'Prathamesh Pawar',
+      url: 'https://github.com/prathameshp107',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'DSA Dev Notes',
+      url: siteUrl,
+    },
+  };
+} else if (seoType === 'website') {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'DSA Dev Notes',
+    url: siteUrl + base + '/',
+    description: 'Comprehensive developer knowledge base for DSA, JavaScript, React, Angular, Node.js, and interview preparation.',
+    author: {
+      '@type': 'Person',
+      name: 'Prathamesh Pawar',
+      url: 'https://github.com/prathameshp107',
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: siteUrl + base + '/?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  };
+}
+
+const jsonLdString = jsonLd ? JSON.stringify(jsonLd) : null;
+
+// --- OG image fallback ---
+const ogImage = fm.ogImage ?? (siteUrl + base + '/favicon.svg');
+---
+
+<StarlightHead {...Astro.props} />
+
+{jsonLdString && (
+  <script type="application/ld+json" set:html={jsonLdString} />
+)}
+
+<!-- Enhanced Open Graph -->
+<meta property="og:type" content={seoType === 'article' ? 'article' : 'website'} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={pageDescription} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content="DSA Dev Notes" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={pageDescription} />
+<meta name="twitter:image" content={ogImage} />
