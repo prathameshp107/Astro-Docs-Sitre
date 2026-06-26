@@ -1,0 +1,49 @@
+# DSA Dev Notes
+
+> A comprehensive developer knowledge base covering DSA, JavaScript, React, Angular, Node.js, Next.js, SQL, MongoDB, Docker, AWS, System Design, and interview preparation. Built by Prathamesh Pawar.
+
+This site contains:
+- 900+ technical documentation pages
+- Interview question banks (easy → hard) for Angular, React, JavaScript, Node.js, TypeScript, SQL, and more
+- DSA problem sets with explanations (arrays, trees, graphs, DP, etc.)
+- Interactive playground and MCQ quiz tools
+- System design (HLD/LLD) notes
+
+## Key Interview Question Pages
+
+- Angular Interview Questions (100+): /angular/interview-questions/
+- JavaScript Interview Questions: /javascript/interview/
+- React Interview Questions: /react/interview/
+- Node.js Interview Questions: /nodejs/interview/
+- DSA Interview Questions: /data-structures/interview-prep/
+- Full-Stack Interview Questions: /interview/fullstack/
+
+## Topic Index
+
+- Angular (fundamentals → enterprise): /angular/
+- React & Hooks: /react/
+- JavaScript (Namaste JS series + advanced): /namaste-js/
+- Node.js: /nodejs/
+- Next.js: /nextjs/
+- TypeScript: /typescript/
+- HTML & CSS: /html-css/
+- Tailwind CSS: /tailwind/
+- SQL / MySQL: /sql/
+- MongoDB: /mongodb/
+- Docker: /docker/
+- AWS: /aws/
+- System Design (HLD): /hld/
+- Low-Level Design (LLD): /lld/
+- Data Structures & Algorithms: /data-structures/
+- Git & GitHub: /git/
+- Computer Networks: /networks/
+- OOP (Object-Oriented Programming): /oops/
+- AI & Machine Learning: /ai/
+
+## Author
+
+Prathamesh Pawar — https://github.com/prathameshp107
+
+## License
+
+Content is for educational and interview preparation purposes.
