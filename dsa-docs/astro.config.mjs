@@ -77,6 +77,10 @@ export default defineConfig({
           label: 'MCQ Dashboard',
           link: '/mcq/dashboard',
         },        {
+          label: 'Interview Questions',
+          link: '/interview-questions',
+        },
+        {
         label: 'AI Engineering',
         items: [
           { label: 'AI Engineering Overview', link: '/ai' },

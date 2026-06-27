@@ -3,7 +3,7 @@ import Skeleton, { SkeletonGrid } from '../Skeleton.jsx';
 import { FiArrowRight } from "react-icons/fi";
 
 import { motion } from 'framer-motion';
-import { MCQ_CATEGORIES } from './MCQData.js';
+import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, getAccuracy, getCategoryAccuracy, getStreakInfo, getAllAchievements } from './MCQStore.js';
 
 export default function MCQDashboard() {
@@ -131,6 +131,7 @@ export default function MCQDashboard() {
               {MCQ_CATEGORIES.slice(0, 8).map(cat => {
                 const cp = progress.categoryProgress[cat.id];
                 const a = cp ? getCategoryAccuracy(progress, cat.id) : 0;
+                const questionCount = getQuestionsForCategory(cat.id).length;
                 return (
                   <a key={cat.id} href={`${base}mcq/${cat.id}`}
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-[var(--mcq-surface-hover)] transition-colors no-underline group">
@@ -138,7 +139,7 @@ export default function MCQDashboard() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-0.5">
                         <span className="text-xs font-medium text-[var(--mcq-text-primary)] truncate">{cat.name}</span>
-                        <span className="text-[0.6rem] text-[var(--mcq-text-muted)]">{cp?.answered || 0}/{cat.questionCount}</span>
+                        <span className="text-[0.6rem] text-[var(--mcq-text-muted)]">{cp?.answered || 0}/{questionCount}</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-[var(--mcq-border)] overflow-hidden">
                         <div className="h-full rounded-full transition-all duration-700"
