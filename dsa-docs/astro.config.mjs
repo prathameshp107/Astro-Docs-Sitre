@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 import react from '@astrojs/react';
+import mdx from '@astrojs/mdx';
 
 import remarkPracticeLinks from './src/plugins/remark-practice-links.mjs';
 
@@ -38,6 +39,7 @@ export default defineConfig({
     defaultLocale: 'en',
     components: {
       Sidebar: './src/components/Sidebar.astro',
+      Head: './src/components/SEOHead.astro',
     },
     social: [
       {
@@ -75,6 +77,10 @@ export default defineConfig({
           label: 'MCQ Dashboard',
           link: '/mcq/dashboard',
         },        {
+          label: 'Interview Questions',
+          link: '/interview-questions',
+        },
+        {
         label: 'AI Engineering',
         items: [
           { label: 'AI Engineering Overview', link: '/ai' },
@@ -127,7 +133,91 @@ export default defineConfig({
       },
         {
         label: 'Object-Oriented Programming (OOP)',
-        items: [{ autogenerate: { directory: 'oops' } }],
+        items: [
+          { label: 'Overview', link: '/oops' },
+          {
+            label: '01. Introduction',
+            items: [
+              { label: 'What is OOP?', link: '/oops/01-introduction/what-is-oops' },
+              { label: 'Procedural vs OOP', link: '/oops/01-introduction/procedural-vs-oops' },
+            ],
+          },
+          {
+            label: '02. Classes & Objects',
+            items: [
+              { label: 'Class', link: '/oops/02-classes-objects/class' },
+              { label: 'Object', link: '/oops/02-classes-objects/object' },
+              { label: 'Constructor', link: '/oops/02-classes-objects/constructor' },
+              { label: 'this Keyword', link: '/oops/02-classes-objects/this-keyword' },
+            ],
+          },
+          {
+            label: '03. Four Pillars',
+            items: [
+              { label: 'Overview', link: '/oops/03-four-pillars/' },
+              { label: 'Encapsulation', link: '/oops/03-four-pillars/encapsulation' },
+              { label: 'Abstraction', link: '/oops/03-four-pillars/abstraction' },
+              {
+                label: 'Inheritance',
+                items: [
+                  { label: 'Overview', link: '/oops/03-four-pillars/inheritance/' },
+                  { label: 'Types', link: '/oops/03-four-pillars/inheritance/types/' },
+                  { label: 'Single', link: '/oops/03-four-pillars/inheritance/types/single-inheritance' },
+                  { label: 'Multilevel', link: '/oops/03-four-pillars/inheritance/types/multilevel-inheritance' },
+                  { label: 'Hierarchical', link: '/oops/03-four-pillars/inheritance/types/hierarchical-inheritance' },
+                  { label: 'Multiple', link: '/oops/03-four-pillars/inheritance/types/multiple-inheritance' },
+                  { label: 'Hybrid', link: '/oops/03-four-pillars/inheritance/types/hybrid-inheritance' },
+                  { label: 'super Keyword', link: '/oops/03-four-pillars/inheritance/super-keyword' },
+                  { label: 'Method Overriding', link: '/oops/03-four-pillars/inheritance/method-overriding' },
+                ],
+              },
+              {
+                label: 'Polymorphism',
+                items: [
+                  { label: 'Overview', link: '/oops/03-four-pillars/polymorphism/' },
+                  { label: 'Method Overloading', link: '/oops/03-four-pillars/polymorphism/method-overloading' },
+                ],
+              },
+            ],
+          },
+          {
+            label: '04. Object Relationships',
+            items: [
+              { label: 'Association', link: '/oops/04-object-relationships/association' },
+              { label: 'Aggregation', link: '/oops/04-object-relationships/aggregation' },
+              { label: 'Composition', link: '/oops/04-object-relationships/composition' },
+              { label: 'Dependency', link: '/oops/04-object-relationships/dependency' },
+              { label: 'Coupling vs Cohesion', link: '/oops/04-object-relationships/coupling-vs-cohesion' },
+            ],
+          },
+          {
+            label: '05. Advanced Concepts',
+            items: [
+              { label: 'Access Modifiers', link: '/oops/05-advanced-concepts/access-modifiers' },
+              { label: 'Static Members', link: '/oops/05-advanced-concepts/static-members' },
+              { label: 'Interfaces', link: '/oops/05-advanced-concepts/interfaces' },
+              { label: 'Abstract Classes', link: '/oops/05-advanced-concepts/abstract-classes' },
+              { label: 'Object Lifecycle', link: '/oops/05-advanced-concepts/object-lifecycle' },
+              { label: 'Memory Management', link: '/oops/05-advanced-concepts/memory-management' },
+            ],
+          },
+          {
+            label: '06. Design Principles',
+            items: [
+              { label: 'SOLID Principles', link: '/oops/06-design-principles/solid-principles' },
+              { label: 'DRY, KISS, YAGNI', link: '/oops/06-design-principles/design-principles' },
+            ],
+          },
+          {
+            label: '07. Practice',
+            items: [
+              { label: 'Real-World Examples', link: '/oops/07-practice/real-world-examples' },
+              { label: 'Machine Coding', link: '/oops/07-practice/machine-coding' },
+              { label: 'Interview Questions', link: '/oops/07-practice/interview-questions' },
+              { label: 'Cheat Sheet', link: '/oops/07-practice/cheatsheet' },
+            ],
+          },
+        ],
       },
       {
         label: 'Computer Networks',
@@ -305,7 +395,7 @@ export default defineConfig({
             label: 'Browser APIs',
             items: [{ autogenerate: { directory: 'javascript/browser-apis' } }],
           },
-          { label: '📋 JS Interview Questions (200+)', link: '/javascript/interview-questions' },
+          { label: '🎯 Interview Questions (150+)', link: '/javascript/interview-questions' },
           {
             label: 'Interview Questions',
             items: [
@@ -423,6 +513,7 @@ export default defineConfig({
               { label: 'Quick Cheatsheet', link: '/react/interview-questions/quick-cheatsheet' },
             ],
           },
+          { label: '🎯 Interview Questions (100+)', link: '/react/interview-questions' },
         ],
       },
       {
@@ -531,6 +622,7 @@ export default defineConfig({
             label: 'Phase 5: Modern Angular',
             items: [{ autogenerate: { directory: 'angular/phase-5' } }],
           },
+          { label: '🎯 Interview Questions (100+)', link: '/angular/interview-questions' },
         ],
       },
       {
@@ -607,6 +699,7 @@ export default defineConfig({
           {
             label: 'Interview & Revision',
             items: [
+              { label: '🎯 Interview Questions (150+)', link: '/sql/interview-questions' },
               { label: 'MySQL Interview Prep', link: '/sql/interview-prep' },
               { label: 'Common Interview Questions', link: '/sql/common-interview-questions-answers' },
               { label: 'Quick Revision Cheat Sheet', link: '/sql/quick-revision-cheat-sheet' },
@@ -677,6 +770,7 @@ export default defineConfig({
           {
             label: 'Interview & Revision',
             items: [
+              { label: '🎯 Interview Questions (150+)', link: '/mongodb/interview-questions' },
               { label: 'Top 100 Interview Questions', link: '/mongodb/top-100-interview-questions' },
               { label: 'Quick Reference Cheat Sheet', link: '/mongodb/quick-reference-cheat-sheet' },
               { label: 'Advanced Topics Hub', link: '/mongodb/advanced-topics' },
@@ -741,6 +835,7 @@ export default defineConfig({
           {
             label: 'Practice & Interview',
             items: [
+              { label: '🎯 Interview Questions (150+)', link: '/redis/interview-questions' },
               { label: 'Common Beginner Mistakes', link: '/redis/common-beginner-mistakes' },
               { label: 'Best Practices', link: '/redis/redis-best-practices' },
               { label: 'Interview Questions', link: '/redis/redis-interview-questions' },
@@ -896,7 +991,7 @@ export default defineConfig({
             label: '5. Production',
             items: [{ autogenerate: { directory: 'nodejs/production' } }],
           },
-          { label: '6. Interview Questions', link: '/nodejs/interview-questions' },
+          { label: '🎯 Interview Questions (150+)', link: '/nodejs/interview-questions' },
         ],
       },
       {
@@ -1005,6 +1100,7 @@ export default defineConfig({
             label: 'Testing',
             items: [{ autogenerate: { directory: 'python/18-testing' } }],
           },
+          { label: '🎯 Interview Questions (150+)', link: '/python/interview-questions' },
           {
             label: 'Interview Preparation',
             items: [{ autogenerate: { directory: 'python/19-interview-preparation' } }],
@@ -1161,6 +1257,7 @@ export default defineConfig({
             label: '06. Interview',
             items: [{ autogenerate: { directory: 'aws/06-interview' } }],
           },
+          { label: '🎯 Interview Questions (150+)', link: '/aws/interview-questions' },
         ],
       },
       {
@@ -1179,6 +1276,7 @@ export default defineConfig({
             label: 'Orchestration',
             items: [{ autogenerate: { directory: 'docker/orchestration' } }],
           },
+          { label: '🎯 Interview Questions (150+)', link: '/docker/interview-questions' },
         ],
       },
       {
@@ -1949,5 +2047,5 @@ export default defineConfig({
         `,
       },
     ],
-  }), react()],
+  }), mdx(), react()],
 });

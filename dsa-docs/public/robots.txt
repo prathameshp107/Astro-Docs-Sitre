@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Sitemap: https://prathameshp107.github.io/DSA-Notes-Problems/sitemap-index.xml
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /

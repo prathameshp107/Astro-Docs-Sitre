@@ -26,6 +26,7 @@ export default function MCQCategory({ categoryId }) {
   const cat = MCQ_CATEGORIES.find(c => c.id === categoryId);
   const topics = cat ? getTopicsForCategory(categoryId) : [];
   const questions = cat ? getQuestionsForCategory(categoryId) : [];
+  const questionCount = questions.length;
 
   useEffect(() => {
     setLoaded(true);
@@ -101,7 +102,7 @@ export default function MCQCategory({ categoryId }) {
               <div className="flex items-center gap-2 mb-1">
                 <span className="px-2.5 py-0.5 rounded-full text-[0.65rem] font-semibold border"
                   style={{ background: `${cat.color}15`, color: cat.color, borderColor: `${cat.color}25` }}>
-                  {cat.questionCount} Questions
+                  {questionCount} Questions
                 </span>
                 <div className="flex gap-1">
                   {cat.difficulties.map(d => (
@@ -123,8 +124,8 @@ export default function MCQCategory({ categoryId }) {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
             className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
             {[
-              { label: 'Questions', value: cat.questionCount, color: cat.color },
-              { label: 'Completed', value: `${answered}/${cat.questionCount}`, color: cat.color },
+              { label: 'Questions', value: questionCount, color: cat.color },
+              { label: 'Completed', value: `${answered}/${questionCount}`, color: cat.color },
               { label: 'Accuracy', value: `${accuracy}%`, color: accuracy >= 80 ? '#22c55e' : accuracy >= 50 ? '#f59e0b' : '#ef4444' },
               { label: 'Topics', value: topics.length, color: cat.color },
             ].map(s => (

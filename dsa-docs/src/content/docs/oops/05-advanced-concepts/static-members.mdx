@@ -1,0 +1,99 @@
+---
+title: "Static Members"
+description: "Understanding static members — properties and methods that belong to the class itself, not instances."
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Static Members
+
+## Introduction
+
+**Static members** (also called class-level members) belong to the **class itself**, not to individual instances. They are shared across all instances and can be accessed without creating an object.
+
+---
+
+## Real-World Analogy: School
+
+| Concept | Analogy |
+|---------|---------|
+| **Instance members** | Each student's name, grades, locker number |
+| **Static members** | School name, total enrollment, bell schedule |
+| **Static method** | Calculate GPA formula (same for all students) |
+
+---
+
+## Code Examples
+
+<Tabs>
+<TabItem label="JavaScript">
+
+```javascript
+class Configuration {
+  static appName = "MyApp";
+  static version = "1.0.0";
+  static #apiKey = "secret-key-123"; // Private static!
+
+  static getAppInfo() {
+    return `${Configuration.appName} v${Configuration.version}`;
+  }
+}
+
+console.log(Configuration.appName); // "MyApp"
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+class Circle:
+    pi = 3.14159
+    circle_count = 0
+
+    def __init__(self, radius):
+        self.radius = radius
+        Circle.circle_count += 1
+
+    @classmethod
+    def from_diameter(cls, diameter):
+        return cls(diameter / 2)
+
+    @staticmethod
+    def calculate_area(radius):
+        return Circle.pi * radius ** 2
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Static vs Instance Members
+
+| Aspect | Static Members | Instance Members |
+|--------|---------------|------------------|
+| **Belongs to** | The class | The instance |
+| **Access** | `ClassName.member` | `object.member` |
+| **Memory** | One copy shared | Copy per instance |
+| **Can access instance data?** | No | Yes |
+
+---
+
+## When to Use Static
+
+### ✅ Good Uses
+- Constants (`MAX_SIZE`, `PI`)
+- Factory methods (`Promise.resolve()`)
+- Utility functions (`Math.round()`)
+- Counters (track number of instances)
+
+### ❌ Bad Uses
+- Overuse of static methods (procedural code in OOP clothing)
+- Global mutable state
+
+---
+
+**Previous Topic:** [Access Modifiers →](/DSA-Notes-Problems/oops/05-advanced-concepts/access-modifiers)
+**Next Topic:** [Interfaces →](/DSA-Notes-Problems/oops/05-advanced-concepts/interfaces)

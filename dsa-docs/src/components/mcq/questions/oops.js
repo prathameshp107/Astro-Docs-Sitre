@@ -1027,7 +1027,7 @@ const house = new House();
     ],
     correctAnswer: [0],
     type: 'single',
-    explanation: 'Dependency is the weakest relationship. Class A depends on class B if B is used as a method parameter, local variable, or return type. Unlike association, the dependency is temporary and not stored as a field.',
+    explanation: 'Dependency is the weakest relationship. Class A depends on Class B if B is used as a method parameter, local variable, or return type. Unlike association, the dependency is temporary and not stored as a field.',
     keyConcept: 'Dependency = temporary use (method param, local var). Weaker than association, no field reference.',
     xpReward: 10,
     tags: ['relationships', 'dependency', 'usage'],
@@ -1264,5 +1264,261 @@ customer.getItemPrice(itemId);`,
     keyConcept: 'Law of Demeter: "Don\'t talk to strangers." Only interact with immediate dependencies. Avoid deep method chaining.',
     xpReward: 15,
     tags: ['design', 'law-of-demeter', 'coupling'],
+  },
+
+  // ─── New Questions ───
+  // ─── Design Patterns & Advanced OOP (oop-56 to oop-65) ───
+  {
+    id: 'oop-56',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the Observer design pattern?',
+    codeSnippet: `// Subject maintains a list of observers and notifies them
+class Subject {
+  constructor() { this.observers = []; }
+  subscribe(obs) { this.observers.push(obs); }
+  notify(data) { this.observers.forEach(o => o.update(data)); }
+}`,
+    options: [
+      'A pattern where an object (subject) maintains a list of dependents (observers) and notifies them of state changes',
+      'A pattern that restricts object creation to a single instance',
+      'A pattern that provides a simplified interface to a complex subsystem',
+      'A pattern that creates objects without specifying their concrete classes',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Observer pattern defines a one-to-many dependency between objects. When the subject changes state, all its observers are notified and updated automatically. Common in event-driven systems, MVC architecture, and reactive programming (RxJS Observables).',
+    keyConcept: 'Observer: one-to-many notification. Used in event systems, pub/sub, MVC. Loose coupling between subject and observers.',
+    xpReward: 15,
+    tags: ['design-patterns', 'observer', 'events'],
+  },
+  {
+    id: 'oop-57',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the Singleton pattern and when should it be used?',
+    options: [
+      'Ensures a class has only one instance and provides a global point of access to it; use for logging, config, thread pools',
+      'Creates multiple instances of a class for better performance',
+      'Allows a class to be instantiated multiple times with the same state',
+      'Provides a way to create objects without using the new keyword',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Singleton ensures a class has exactly one instance and provides a global access point. It is useful for shared resources like logging, configuration managers, connection pools, and caches. However, it can make code harder to test (tight coupling) and should be used sparingly.',
+    keyConcept: 'Singleton: private constructor, static instance, global access. Can cause hidden dependencies and testing difficulties.',
+    xpReward: 15,
+    tags: ['design-patterns', 'singleton', 'creation'],
+  },
+  {
+    id: 'oop-58',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the Factory pattern used for?',
+    codeSnippet: `// Factory method creates objects without exposing creation logic
+class LoggerFactory {
+  create(type) {
+    if (type === 'file') return new FileLogger();
+    if (type === 'console') return new ConsoleLogger();
+    if (type === 'cloud') return new CloudLogger();
+    throw new Error('Unknown logger type');
+  }
+}`,
+    options: [
+      'Defines an interface for creating objects but lets subclasses decide which class to instantiate',
+      'Creates a single instance of a class',
+      'Allows incompatible interfaces to work together',
+      'Provides a simplified interface to a complex system',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Factory Method pattern defines an interface for creating objects, but lets subclasses or methods decide which concrete class to instantiate. It encapsulates object creation, making the code more flexible and decoupled from specific implementations.',
+    keyConcept: 'Factory: encapsulates object creation, promotes loose coupling. Use when creation logic is complex or may vary.',
+    xpReward: 15,
+    tags: ['design-patterns', 'factory', 'creation'],
+  },
+  {
+    id: 'oop-59',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'medium',
+    question: 'What is dependency injection?',
+    codeSnippet: `// Without DI: class creates its own dependencies
+class EmailService {
+  constructor() { this.transporter = new SMTPTransport(); }
+}
+
+// With DI: dependencies are passed in
+class EmailService {
+  constructor(transporter) { this.transporter = transporter; }
+}`,
+    options: [
+      'A technique where an object receives its dependencies from an external source rather than creating them itself',
+      'A pattern that prevents any class from having dependencies',
+      'A method of copying dependencies between objects',
+      'A way to automatically detect class dependencies at compile time',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Dependency injection (DI) is a technique where dependencies (objects a class needs) are provided externally (via constructor, setter, or interface) rather than created internally. This promotes loose coupling, testability (easy to mock), and adherence to DIP.',
+    keyConcept: 'DI: inject dependencies from outside. Benefits: testability, flexibility, loose coupling. Common in frameworks like Angular, Spring.',
+    xpReward: 10,
+    tags: ['di', 'dependency-injection', 'design'],
+  },
+  {
+    id: 'oop-60',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'easy',
+    question: 'What is the difference between a class and an object?',
+    options: [
+      'A class is a blueprint; an object is an instance created from that blueprint',
+      'A class is created at runtime; an object is defined at compile time',
+      'A class can be used directly; an object is just a template',
+      'There is no difference — they are the same thing',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A class is a compile-time definition (blueprint) that specifies the structure and behavior of objects. An object is a runtime instance of a class with its own memory space and state. You can create many objects from one class.',
+    keyConcept: 'Class = cookie cutter. Object = cookie. Many objects can be created from one class, each with its own state.',
+    xpReward: 5,
+    tags: ['class', 'object', 'difference'],
+  },
+  {
+    id: 'oop-61',
+    technology: 'oops',
+    topic: 'Inheritance',
+    difficulty: 'medium',
+    question: 'What is the diamond problem in inheritance?',
+    codeSnippet: `// Diamond problem in C++
+class A { void foo() {} };
+class B : public A {};
+class C : public A {};
+class D : public B, public C {}; // D inherits foo from both B and C`,
+    options: [
+      'An ambiguity that arises when a class inherits from two classes that both inherit from the same base class',
+      'A problem with diamond-shaped ERD diagrams in databases',
+      'A performance issue with multi-level inheritance chains',
+      'A syntax error in all programming languages',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The diamond problem occurs in languages that support multiple inheritance (C++). When class D inherits from B and C, and both B and C inherit from A, there is ambiguity about which `foo()` method D should use. Languages like Java and C# avoid this by not supporting multiple class inheritance, using interfaces instead.',
+    keyConcept: 'Diamond problem: ambiguity from multiple inheritance. Languages solve it via virtual inheritance (C++) or interfaces (Java, C#).',
+    xpReward: 10,
+    tags: ['inheritance', 'diamond-problem', 'multiple-inheritance'],
+  },
+  {
+    id: 'oop-62',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'medium',
+    question: 'In TypeScript, what does the `protected` access modifier allow?',
+    options: [
+      'Access from the declaring class and its subclasses, but not from external code',
+      'Access from any code in any class',
+      'Access only from within the declaring class',
+      'Access only from within the same file or module',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`protected` falls between `private` and `public`. Protected members are accessible within the declaring class and any subclass (even across packages/modules), but not from external code. This is useful when subclasses need to use or override a method but external callers should not.',
+    keyConcept: 'Protected = accessible in class + subclasses. Private = class only. Public = everywhere.',
+    xpReward: 10,
+    tags: ['encapsulation', 'protected', 'access-modifiers'],
+  },
+  {
+    id: 'oop-63',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'hard',
+    question: 'What problem does the Interface Segregation Principle (ISP) address?',
+    codeSnippet: `// Violates ISP: fat interface
+interface Worker {
+  work(): void;
+  eat(): void;
+  sleep(): void;
+}
+// Better: segregated interfaces
+interface Workable { work(): void; }
+interface Eatable { eat(): void; }
+interface Sleepable { sleep(): void; }`,
+    options: [
+      'Interfaces should be small and specific so that implementing classes only need to implement what they actually use',
+      'Interfaces should have many methods to be useful',
+      'All classes should implement the same interface',
+      'Interfaces should be written in a single file',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'ISP states that no client should be forced to depend on methods it does not use. Large, "fat" interfaces should be split into smaller, more specific ones. For example, a Robot class that implements `Worker` should not be forced to implement `eat()` and `sleep()`. Segregated interfaces allow robots to only implement `Workable`.',
+    keyConcept: 'ISP: Split fat interfaces into smaller, role-specific interfaces. Avoids forcing classes to implement methods they don\'t need.',
+    xpReward: 15,
+    tags: ['solid', 'isp', 'interface-segregation'],
+  },
+  {
+    id: 'oop-64',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'hard',
+    question: 'What is method overriding vs method overloading?',
+    codeSnippet: `// Overloading (compile-time polymorphism):
+class Calc {
+  add(a, b) { return a + b; }
+  add(a, b, c) { return a + b + c; }
+}
+
+// Overriding (runtime polymorphism):
+class Animal {
+  speak() { return "sound"; }
+}
+class Dog extends Animal {
+  speak() { return "Woof"; }  // overrides parent
+}`,
+    options: [
+      'Overloading: same method name, different parameters (compile time). Overriding: same signature, different implementation in subclass (runtime)',
+      'Overloading happens at runtime; overriding happens at compile time',
+      'Overloading is only for constructors; overriding is for regular methods',
+      'They are the same concept with different terminology',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Method overloading: multiple methods with the same name but different parameters (number or types). Resolved at compile time. Method overriding: a subclass provides a specific implementation of a method already defined in its parent class. Same signature. Resolved at runtime (dynamic dispatch).',
+    keyConcept: 'Overloading: different params, compile time, does not require inheritance. Overriding: same signature, runtime, requires inheritance.',
+    xpReward: 10,
+    tags: ['polymorphism', 'overloading', 'overriding', 'comparison'],
+  },
+  {
+    id: 'oop-65',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'medium',
+    question: 'What is the Facade pattern?',
+    codeSnippet: `// Facade provides a simple interface to a complex subsystem
+class HomeTheaterFacade {
+  constructor(amp, player, lights) { /* ... */ }
+  watchMovie(movie) {
+    // Complex subsystem interactions simplified:
+    this.lights.dim(0.5);
+    this.player.play(movie);
+    this.amp.setVolume(30);
+    // User just calls: watchMovie("Inception")
+  }
+}`,
+    options: [
+      'A structural pattern that provides a simplified interface to a complex subsystem or library',
+      'A pattern for creating objects in a family',
+      'A pattern for notifying multiple objects of state changes',
+      'A pattern for adapting one interface to another',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Facade pattern provides a unified, simplified interface to a set of interfaces in a subsystem. It hides the complexity of the subsystem and makes it easier to use. For example, a home theater facade wraps amplifier, DVD player, projector, and lights into a simple `watchMovie()` method.',
+    keyConcept: 'Facade: simplifies complex subsystems. Reduces coupling between clients and subsystem components.',
+    xpReward: 10,
+    tags: ['design-patterns', 'facade', 'structural'],
   },
 ];

@@ -1,0 +1,142 @@
+---
+title: "The `super` Keyword"
+description: "Understanding the `super` keyword — accessing parent class members from child classes."
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# The `super` Keyword
+
+## Definition
+
+`super` (or `super()` in Java/Python) is used to access parent class members from within a child class. It allows:
+
+- **Calling the parent constructor** — initialize inherited state
+- **Calling parent methods** — extend, not replace, parent behavior
+
+---
+
+## How `super` Works
+
+```javascript
+class Parent {
+  constructor(x) { this.x = x; }
+  method() { return "parent"; }
+}
+
+class Child extends Parent {
+  constructor(x, y) {
+    super(x);      // Call parent constructor
+    this.y = y;
+  }
+
+  method() {
+    return super.method() + " + child"; // Call parent method
+  }
+}
+
+const child = new Child(10, 20);
+console.log(child.method()); // "parent + child"
+```
+
+---
+
+## `super` in Different Languages
+
+<Tabs>
+<TabItem label="JavaScript">
+
+```javascript
+class Animal {
+  constructor(name) { this.name = name; }
+  speak() { return `${this.name} makes a sound`; }
+}
+
+class Dog extends Animal {
+  constructor(name, breed) {
+    super(name); // MUST call parent constructor before using `this`
+    this.breed = breed;
+  }
+
+  speak() {
+    // Call parent method and extend
+    return `${super.speak()} — but specifically barks!`;
+  }
+}
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+
+    def work(self):
+        return f"{self.name} is working"
+
+class Manager(Employee):
+    def __init__(self, name, salary, department):
+        super().__init__(name, salary)  # Call parent constructor
+        self.department = department
+
+    def work(self):
+        parent_work = super().work()  # Call parent method
+        return f"{parent_work} in {self.department}"
+```
+
+</TabItem>
+<TabItem label="Java">
+
+```java
+class BankAccount {
+    protected double balance;
+
+    public BankAccount(double balance) {
+        this.balance = balance;
+    }
+
+    public void applyInterest() {
+        balance *= 1.01;
+    }
+}
+
+class SavingsAccount extends BankAccount {
+    private double interestRate;
+
+    public SavingsAccount(double balance, double interestRate) {
+        super(balance);  // Call parent constructor
+        this.interestRate = interestRate;
+    }
+
+    @Override
+    public void applyInterest() {
+        super.applyInterest();  // Call parent method
+        // Add additional bonus
+        balance += 10;
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Rules for Using `super`
+
+| Rule | Description |
+|------|-------------|
+| **Must be first** | `super()` must be called before accessing `this` |
+| **Only in derived classes** | Cannot use `super` in non-inheriting classes |
+| **One level only** | `super` accesses direct parent, not grandparent |
+| **Constructors** | Parent constructor must be called explicitly in JS/Python/Java |
+
+---
+
+**Previous Topic:** [Types of Inheritance →](/DSA-Notes-Problems/oops/03-four-pillars/inheritance/types/)
+**Next Topic:** [Method Overriding →](/DSA-Notes-Problems/oops/03-four-pillars/inheritance/method-overriding)

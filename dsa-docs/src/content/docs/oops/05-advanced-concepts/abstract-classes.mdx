@@ -1,0 +1,90 @@
+---
+title: "Abstract Classes"
+description: "Understanding abstract classes — classes that cannot be instantiated and are designed to be extended."
+sidebar:
+  order: 4
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Abstract Classes
+
+## Introduction
+
+An **abstract class** is a class that cannot be instantiated directly. It's designed to be a **base class** that other classes extend. It can contain both **abstract methods** (no implementation) and **concrete methods** (with implementation).
+
+---
+
+## Real-World Analogy: Vehicle Blueprint
+
+An abstract "Vehicle" blueprint:
+- It defines **shared parts** every vehicle has (wheels, engine, steering) — concrete methods
+- It says every vehicle must **move()**, but doesn't specify *how* — abstract methods
+- You **can't** build a "Vehicle" directly (it's abstract)
+- You **can** build a "Car", "Bike", or "Truck" from it
+
+---
+
+## Code Examples
+
+<Tabs>
+<TabItem label="TypeScript">
+
+```typescript
+abstract class Report {
+  constructor(protected title: string) {}
+
+  // Abstract methods — subclasses must implement
+  abstract generate(): string;
+  abstract getFormat(): string;
+
+  // Concrete method — shared behavior
+  print(): void {
+    console.log(`Printing report: ${this.title}`);
+  }
+}
+
+class PDFReport extends Report {
+  generate(): string { return "PDF content"; }
+  getFormat(): string { return "PDF"; }
+}
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    @abstractmethod
+    def area(self) -> float: pass
+
+    @abstractmethod
+    def perimeter(self) -> float: pass
+
+    def describe(self) -> str:
+        return f"Area: {self.area():.2f}, Perimeter: {self.perimeter():.2f}"
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## When to Use Abstract Class vs Interface
+
+**Use Abstract Class when:**
+- Classes share common **state** (fields)
+- Classes share common **code** (concrete methods)
+- Classes are closely **related** in hierarchy
+
+**Use Interface when:**
+- You want to define a **capability** across unrelated classes
+- You need **multiple inheritance** of behavior
+- You want a **pure contract** without any implementation
+
+---
+
+**Previous Topic:** [Interfaces →](/DSA-Notes-Problems/oops/05-advanced-concepts/interfaces)
+**Next Topic:** [Object Lifecycle →](/DSA-Notes-Problems/oops/05-advanced-concepts/object-lifecycle)

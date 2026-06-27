@@ -1,0 +1,104 @@
+---
+title: "Method Overloading"
+description: "Understanding method overloading — multiple methods with the same name but different parameters."
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+# Method Overloading
+
+## Introduction
+
+**Method overloading** is a feature that allows a class to have multiple methods with the **same name** but **different parameters** (different number or types of parameters). It's a form of **compile-time polymorphism**.
+
+### Why Does It Exist?
+- To provide **convenience** — different ways to call the same operation
+- To make code more **intuitive** — same operation, different inputs
+- To implement **compile-time polymorphism** (static polymorphism)
+
+---
+
+## Real-World Analogy: Ordering Coffee
+
+"Order coffee" could mean:
+- `order()` — Just coffee (default)
+- `order("Latte")` — Specify type
+- `order("Latte", "Large")` — Type and size
+- `order("Latte", "Large", "Oat Milk")` — Type, size, and milk
+
+Same operation, different ways to call it. That's overloading.
+
+---
+
+## Definition
+
+**Method overloading** is defining multiple methods with the same name in the same class, but with different parameter lists (different number, type, or order of parameters).
+
+---
+
+## Code Examples
+
+<Tabs>
+<TabItem label="JavaScript">
+
+```javascript
+class Calculator {
+  add(a, b, c) {
+    if (c !== undefined) return a + b + c;
+    return a + b;
+  }
+
+  format(input) {
+    if (typeof input === "number") return input.toFixed(2);
+    if (typeof input === "string") return input.trim();
+    return String(input);
+  }
+
+  sum(...numbers) {
+    return numbers.reduce((total, n) => total + n, 0);
+  }
+}
+```
+
+</TabItem>
+<TabItem label="Java">
+
+```java
+public class Printer {
+    public void print(int value) { /* ... */ }
+    public void print(double value) { /* ... */ }
+    public void print(String value) { /* ... */ }
+    public void print(String message, int times) { /* ... */ }
+}
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+class Display:
+    def show(self, a, b=None, c=None):
+        if b is None and c is None:
+            return f"One parameter: {a}"
+        elif c is None:
+            return f"Two parameters: {a}, {b}"
+        else:
+            return f"Three parameters: {a}, {b}, {c}"
+```
+
+</TabItem>
+</Tabs>
+
+---
+
+## Overloading vs Overriding
+
+**Overloading** = Same name, different parameters (compile-time)  
+**Overriding** = Child redefines parent method (run-time)
+
+---
+
+**Previous Topic:** [Polymorphism Overview →](/DSA-Notes-Problems/oops/03-four-pillars/polymorphism/)
+**Next Topic:** [Object Relationships →](/DSA-Notes-Problems/oops/04-object-relationships/)

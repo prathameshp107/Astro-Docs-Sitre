@@ -1113,6 +1113,27 @@ html, body {
   box-shadow: 0 0 16px rgba(139, 92, 246, 0.15);
 }
 
+.app-nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.25);
+  color: #c4b5fd;
+  font-size: 0.6rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition: all 0.2s ease;
+}
+.app-nav-link-highlight:hover .app-nav-badge {
+  background: rgba(139, 92, 246, 0.35);
+  color: #ddd6fe;
+}
+
 [data-theme='light'] .app-nav-link {
   color: #64748b;
 }
@@ -1128,6 +1149,13 @@ html, body {
   border-color: rgba(99, 102, 241, 0.35);
   background: rgba(99, 102, 241, 0.08);
   color: #6366f1;
+}
+[data-theme='light'] .app-nav-badge {
+  background: rgba(99, 102, 241, 0.2);
+  color: #6366f1;
+}
+[data-theme='light'] .app-nav-link-highlight:hover .app-nav-badge {
+  background: rgba(99, 102, 241, 0.3);
 }
 
 .app-nav-actions {
@@ -1333,6 +1361,14 @@ html, body {
   background: rgba(251, 191, 36, 0.15);
   box-shadow: 0 0 16px rgba(251, 191, 36, 0.15);
 }
+.app-nav-wrapper[data-variant="landing"] .app-nav-badge {
+  background: rgba(251, 191, 36, 0.25);
+  color: #fde68a;
+}
+.app-nav-wrapper[data-variant="landing"] .app-nav-link-highlight:hover .app-nav-badge {
+  background: rgba(251, 191, 36, 0.35);
+  color: #fef3c7;
+}
 .app-nav-wrapper[data-variant="landing"] .app-nav-link-ghost:hover {
   color: #fbbf24;
 }
@@ -1387,6 +1423,13 @@ html, body {
 [data-theme='light'] .app-nav-wrapper[data-variant="landing"] .app-nav-link-highlight:hover {
   border-color: rgba(217, 119, 6, 0.55);
   background: rgba(217, 119, 6, 0.12);
+}
+[data-theme='light'] .app-nav-wrapper[data-variant="landing"] .app-nav-badge {
+  background: rgba(217, 119, 6, 0.2);
+  color: #d97706;
+}
+[data-theme='light'] .app-nav-wrapper[data-variant="landing"] .app-nav-link-highlight:hover .app-nav-badge {
+  background: rgba(217, 119, 6, 0.3);
 }
 [data-theme='light'] .app-nav-wrapper[data-variant="landing"] .app-nav-link-ghost:hover {
   color: #d97706;

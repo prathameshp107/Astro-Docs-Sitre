@@ -14,10 +14,6 @@ import gitQuestions from './questions/git.js';
 import systemDesignQuestions from './questions/system-design.js';
 import dataStructuresQuestions from './questions/data-structures.js';
 import algorithmsQuestions from './questions/algorithms.js';
-import supplementaryPythonQuestions from './questions/supplementary-python.js';
-import supplementaryHtmlQuestions from './questions/supplementary-html.js';
-import supplementaryCssQuestions from './questions/supplementary-css.js';
-import supplementarySqlQuestions from './questions/supplementary-sql.js';
 import oopsQuestions from './questions/oops.js';
 
 // ─── Category Definitions ───
@@ -28,7 +24,7 @@ export const MCQ_CATEGORIES = [
     name: 'JavaScript',
     icon: '🟨',
     color: '#f7df1e',
-    questionCount: 20,
+    questionCount: 95,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Core JS concepts, closures, promises, prototypes, event loop, ES6+ features.',
     gradient: 'from-yellow-400/20 to-orange-500/10',
@@ -39,7 +35,7 @@ export const MCQ_CATEGORIES = [
     name: 'TypeScript',
     icon: '🔷',
     color: '#3178c6',
-    questionCount: 15,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Types, interfaces, generics, advanced types, decorators, utility types.',
     gradient: 'from-blue-500/20 to-indigo-500/10',
@@ -50,7 +46,7 @@ export const MCQ_CATEGORIES = [
     name: 'React',
     icon: '⚛️',
     color: '#61dafb',
-    questionCount: 5,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced', 'Expert'],
     description: 'Hooks, state management, components, performance, testing patterns.',
     gradient: 'from-cyan-400/20 to-blue-500/10',
@@ -61,7 +57,7 @@ export const MCQ_CATEGORIES = [
     name: 'Node.js',
     icon: '🟢',
     color: '#339933',
-    questionCount: 12,
+    questionCount: 50,
     difficulties: ['Intermediate', 'Advanced'],
     description: 'Express, async patterns, databases, streams, security, deployment.',
     gradient: 'from-green-500/20 to-emerald-500/10',
@@ -72,7 +68,7 @@ export const MCQ_CATEGORIES = [
     name: 'Angular',
     icon: '🅰️',
     color: '#dd0031',
-    questionCount: 12,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Components, RxJS, services, forms, routing, NgRx, testing.',
     gradient: 'from-red-500/20 to-rose-500/10',
@@ -83,7 +79,7 @@ export const MCQ_CATEGORIES = [
     name: 'Python',
     icon: '🐍',
     color: '#3776AB',
-    questionCount: 2,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Syntax, OOP, data structures, decorators, generators, async Python.',
     gradient: 'from-blue-600/20 to-cyan-500/10',
@@ -94,7 +90,7 @@ export const MCQ_CATEGORIES = [
     name: 'HTML',
     icon: '🌐',
     color: '#e34f26',
-    questionCount: 1,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate'],
     description: 'Semantic HTML, accessibility, forms, SEO, best practices.',
     gradient: 'from-orange-500/20 to-red-500/10',
@@ -105,7 +101,7 @@ export const MCQ_CATEGORIES = [
     name: 'CSS',
     icon: '🎨',
     color: '#1572b6',
-    questionCount: 2,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Flexbox, Grid, animations, responsive design, preprocessors.',
     gradient: 'from-blue-400/20 to-sky-500/10',
@@ -116,7 +112,7 @@ export const MCQ_CATEGORIES = [
     name: 'SQL',
     icon: '🗄️',
     color: '#f59e0b',
-    questionCount: 2,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Queries, joins, indexing, optimization, transactions, design.',
     gradient: 'from-amber-500/20 to-yellow-500/10',
@@ -127,7 +123,7 @@ export const MCQ_CATEGORIES = [
     name: 'MongoDB',
     icon: '🍃',
     color: '#47a248',
-    questionCount: 10,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'CRUD, aggregation, indexing, data modeling, replication.',
     gradient: 'from-green-600/20 to-emerald-500/10',
@@ -138,7 +134,7 @@ export const MCQ_CATEGORIES = [
     name: 'Git',
     icon: '📦',
     color: '#f05032',
-    questionCount: 10,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate'],
     description: 'Commands, branching, merging, rebasing, workflows, collaboration.',
     gradient: 'from-red-500/20 to-orange-500/10',
@@ -149,7 +145,7 @@ export const MCQ_CATEGORIES = [
     name: 'System Design',
     icon: '🏗️',
     color: '#a78bfa',
-    questionCount: 6,
+    questionCount: 50,
     difficulties: ['Advanced', 'Expert'],
     description: 'Architecture patterns, scalability, databases, caching, microservices.',
     gradient: 'from-purple-500/20 to-violet-500/10',
@@ -160,7 +156,7 @@ export const MCQ_CATEGORIES = [
     name: 'Data Structures',
     icon: '📊',
     color: '#6366f1',
-    questionCount: 0,
+    questionCount: 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Arrays, trees, graphs, hash tables, stacks, queues, heaps.',
     gradient: 'from-indigo-500/20 to-purple-500/10',
@@ -171,7 +167,7 @@ export const MCQ_CATEGORIES = [
     name: 'Algorithms',
     icon: '⚡',
     color: '#ec4899',
-    questionCount: 0,
+    questionCount: 50,
     difficulties: ['Intermediate', 'Advanced', 'Expert'],
     description: 'Sorting, searching, DP, graph algorithms, complexity analysis.',
     gradient: 'from-pink-500/20 to-rose-500/10',
@@ -182,7 +178,7 @@ export const MCQ_CATEGORIES = [
     name: 'OOP',
     icon: '🧱',
     color: '#a855f7',
-    questionCount: 0,
+    questionCount: 65,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Classes, objects, inheritance, polymorphism, encapsulation, abstraction, SOLID principles, and relationships.',
     gradient: 'from-purple-500/20 to-pink-500/10',
@@ -378,6 +374,8 @@ export const CATEGORY_TOPICS = {
     { name: 'Sliding Window', count: 10, icon: '🪟' },
     { name: 'Backtracking', count: 15, icon: '🔙' },
     { name: 'Complexity Analysis', count: 15, icon: '📈' },
+    { name: 'Bit Manipulation', count: 10, icon: '🔢' },
+    { name: 'Divide and Conquer', count: 10, icon: '🔪' },
   ],
   oops: [
     { name: 'What is OOP?', count: 5, icon: '🤔' },
@@ -404,10 +402,10 @@ const questionMap = {
   typescript: typescriptQuestions,
   nodejs: nodejsQuestions,
   angular: angularQuestions,
-  python: [...pythonQuestions, ...supplementaryPythonQuestions],
-  html: [...htmlQuestions, ...supplementaryHtmlQuestions],
-  css: [...cssQuestions, ...supplementaryCssQuestions],
-  sql: [...sqlQuestions, ...supplementarySqlQuestions],
+  python: pythonQuestions,
+  html: htmlQuestions,
+  css: cssQuestions,
+  sql: sqlQuestions,
   mongodb: mongodbQuestions,
   git: gitQuestions,
   'system-design': systemDesignQuestions,
@@ -435,7 +433,31 @@ export function getQuestionById(id) {
 }
 
 export function getTopicsForCategory(categoryId) {
-  return CATEGORY_TOPICS[categoryId] || [];
+  const questions = getQuestionsForCategory(categoryId);
+  const configuredTopics = CATEGORY_TOPICS[categoryId] || [];
+  const configuredTopicMap = new Map(configuredTopics.map((topic) => [topic.name, topic]));
+  const topicCounts = new Map();
+
+  questions.forEach((question) => {
+    if (!question.topic) return;
+    topicCounts.set(question.topic, (topicCounts.get(question.topic) || 0) + 1);
+  });
+
+  const topics = Array.from(topicCounts, ([name, count]) => ({
+    name,
+    count,
+    icon: configuredTopicMap.get(name)?.icon || '📘',
+  }));
+
+  return topics.sort((a, b) => {
+    const aIndex = configuredTopics.findIndex((topic) => topic.name === a.name);
+    const bIndex = configuredTopics.findIndex((topic) => topic.name === b.name);
+
+    if (aIndex === -1 && bIndex === -1) return a.name.localeCompare(b.name);
+    if (aIndex === -1) return 1;
+    if (bIndex === -1) return -1;
+    return aIndex - bIndex;
+  });
 }
 
 // Determine question type

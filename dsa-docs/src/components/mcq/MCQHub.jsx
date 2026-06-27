@@ -3,7 +3,7 @@ import Skeleton, { SkeletonStats, SkeletonGrid } from '../Skeleton.jsx';
 import { FiArrowRight, FiBarChart2 } from "react-icons/fi";
 
 import { motion } from 'framer-motion';
-import { MCQ_CATEGORIES } from './MCQData.js';
+import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, getAccuracy, getCategoryAccuracy, getStreakInfo } from './MCQStore.js';
 
 function useMCQTheme() {
@@ -149,6 +149,7 @@ export default function MCQHub() {
           {MCQ_CATEGORIES.map((cat) => {
             const catProgress = progress?.categoryProgress[cat.id];
             const catAccuracy = catProgress ? getCategoryAccuracy(progress, cat.id) : 0;
+            const questionCount = getQuestionsForCategory(cat.id).length;
             return (
               <motion.a
                 key={cat.id}
@@ -164,7 +165,7 @@ export default function MCQHub() {
                   <span className="text-2xl">{cat.icon}</span>
                   <span className="px-2.5 py-0.5 rounded-full text-[0.65rem] font-semibold border"
                     style={{ background: `${cat.color}15`, color: cat.color, borderColor: `${cat.color}25` }}>
-                    {cat.questionCount} Q
+                    {questionCount} Q
                   </span>
                 </div>
 
@@ -181,7 +182,7 @@ export default function MCQHub() {
                 <div className="mt-auto relative z-[1]">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[0.65rem] font-medium uppercase tracking-wider" style={{ color: 'var(--mcq-text-muted)' }}>
-                      {catProgress ? `${catProgress.answered}/${cat.questionCount}` : '0/' + cat.questionCount}
+                      {catProgress ? `${catProgress.answered}/${questionCount}` : `0/${questionCount}`}
                     </span>
                     <span className="text-[0.65rem] font-semibold" style={{ color: cat.color }}>
                       {catAccuracy}%
