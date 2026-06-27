@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { TABS, STORAGE_KEY } from '../../data/interview-questions-data.js';
+import { TABS, STORAGE_KEY, TOTAL_QUESTIONS } from '../../data/interview-questions-data.js';
 
 export default function InterviewQuestionHub() {
   const [activeTab, setActiveTab] = useState('js');
@@ -157,9 +157,15 @@ export default function InterviewQuestionHub() {
           max-width: 1100px;
           margin: 0 auto;
           gap: 1px;
+          overflow-x: auto;
+          scrollbar-width: thin;
+          scrollbar-color: var(--iq-border) transparent;
+          padding: 0 4px;
         }
+        .iq-nav-tabs::-webkit-scrollbar { height: 4px; }
+        .iq-nav-tabs::-webkit-scrollbar-thumb { background: var(--iq-border); border-radius: 4px; }
         .iq-nav-tab {
-          flex: 1;
+          flex-shrink: 0;
           padding: 14px 12px;
           background: none;
           border: none;
@@ -171,6 +177,7 @@ export default function InterviewQuestionHub() {
           cursor: pointer;
           transition: color 0.2s, border-color 0.2s;
           letter-spacing: 0.3px;
+          white-space: nowrap;
         }
         .iq-nav-tab:hover { color: var(--iq-text); }
         .iq-nav-tab.active { color: var(--iq-accent); border-color: var(--iq-accent); }
@@ -335,22 +342,14 @@ export default function InterviewQuestionHub() {
 
       {/* ── Header ── */}
       <header className="iq-header">
-        <div className="iq-badge">300 Questions · 3 Technologies</div>
+        <div className="iq-badge">{TOTAL_QUESTIONS} Questions · {TABS.length} Technologies</div>
         <h1 className="iq-title">
-          Frontend Interview<br />
-          <span className="js-color">JS</span> · <span className="react-color">React</span> · <span className="next-color">Next.js</span>
+          Interview<br />
+          <span style={{ color: '#f7df1e' }}>Questions</span> <span style={{ color: '#6b7280', fontWeight: 400, fontSize: '0.6em' }}>Hub</span>
         </h1>
         <p className="iq-subtitle">
-          High-frequency, hard-hitting questions asked at top product companies. Track what you've studied.
+          High-frequency, hard-hitting questions across all topics. Track what you've studied.
         </p>
-        <div className="iq-stats">
-          {TABS.map(tab => (
-            <div key={tab.id} className="iq-stat">
-              <div className="iq-stat-num" style={{ color: tab.accent }}>{tab.questions.length}</div>
-              <div className="iq-stat-label">{tab.label}</div>
-            </div>
-          ))}
-        </div>
       </header>
 
       {/* ── Nav tabs ── */}
@@ -389,7 +388,22 @@ export default function InterviewQuestionHub() {
               className="iq-section-icon"
               style={{ background: `${activeConfig.dim}`, color: activeConfig.accent }}
             >
-              {activeConfig.id === 'js' ? 'JS' : activeConfig.id === 'react' ? '⚛' : 'N'}
+              {{
+                'js': 'JS',
+                'react': '⚛',
+                'next': 'N',
+                'angular': 'A',
+                'nodejs': '🟢',
+                'python': 'Py',
+                'css': '#',
+                'html': '<>',
+                'dsa': 'Σ',
+                'mongodb': '🍃',
+                'mysql': 'SQL',
+                'redis': 'R',
+                'docker': 'D',
+                'oops': 'O',
+              }[activeConfig.id] || '?'}
             </div>
             <div>
               <div className="iq-section-title">{activeConfig.label}</div>
