@@ -5,6 +5,8 @@ sidebar:
   order: 4
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 # this Keyword
 
 ## Introduction
@@ -84,7 +86,8 @@ sequenceDiagram
 
 ## `this` in Different Languages
 
-### JavaScript — The Trickiest
+<Tabs>
+<TabItem label="JavaScript">
 
 `this` in JavaScript depends on **how** a function is called, not where it's defined.
 
@@ -144,7 +147,8 @@ const boundGreet = greet.bind(user);
 boundGreet("Hey"); // "Hey, David!"
 ```
 
-### TypeScript
+</TabItem>
+<TabItem label="TypeScript">
 
 ```typescript
 class Counter {
@@ -166,7 +170,8 @@ const c = new Counter();
 c.increment().increment().log(); // 2
 ```
 
-### Python (`self`)
+</TabItem>
+<TabItem label="Python (`self`)">
 
 Python uses `self` instead of `this`. It's explicitly declared as the first parameter.
 
@@ -177,7 +182,7 @@ class Person:
 
     def greet(self):
         # 'self' must be the first parameter
-        return f"Hello, {self.name}!"
+        return f"Hello, {self.name}! "
 
     def rename(self, new_name: str) -> 'Person':
         self.name = new_name
@@ -189,7 +194,8 @@ print(p.greet())  # "Hello, Alice!"
 p.rename("Bob").greet()  # Method chaining
 ```
 
-### Java
+</TabItem>
+<TabItem label="Java">
 
 ```java
 public class Employee {
@@ -213,6 +219,9 @@ public class Employee {
     }
 }
 ```
+
+</TabItem>
+</Tabs>
 
 ---
 
