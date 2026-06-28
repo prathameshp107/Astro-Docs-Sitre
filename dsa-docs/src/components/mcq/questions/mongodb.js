@@ -1567,4 +1567,1772 @@ try {
     xpReward: 5,
     tags: ['crud', 'find', 'cursor', 'iteration'],
   },
+  {
+    id: 'mongo-81',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'What is the difference between `insertOne()` and `insertMany()`?',
+    codeSnippet: `// insertOne - single document
+db.users.insertOne({ name: 'Alice', age: 30 });
+
+// insertMany - multiple documents
+db.users.insertMany([
+  { name: 'Bob', age: 25 },
+  { name: 'Carol', age: 28 }
+]);`,
+    options: [
+      'insertOne() inserts a single document and returns an InsertOneResult; insertMany() inserts an array of documents and returns an InsertManyResult with all inserted IDs',
+      'insertOne() is faster for multiple documents than insertMany()',
+      'insertMany() inserts documents one at a time internally',
+      'Both methods are identical — insertOne() accepts arrays too',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`insertOne()` accepts a single document object and returns `{ acknowledged, insertedId }`. `insertMany()` accepts an array and returns `{ acknowledged, insertedIds }` (an object mapping index to _id). `insertMany()` is more efficient than multiple `insertOne()` calls because it sends all documents in a single network round-trip. By default, documents are inserted in order; pass `{ ordered: false }` to continue on error.',
+    keyConcept: 'insertOne(): single doc → insertedId. insertMany(): array → insertedIds. ordered: false continues on partial failure.',
+    xpReward: 5,
+    tags: ['crud', 'insertOne', 'insertMany', 'write'],
+  },
+  {
+    id: 'mongo-82',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'Which update operator adds a value to a numeric field?',
+    codeSnippet: `db.products.updateOne(
+  { _id: ObjectId("...") },
+  { $inc: { stock: -5, views: 1 } }
+);`,
+    options: [
+      '$inc',
+      '$add',
+      '$plus',
+      '$increment',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$inc` increments (or decrements when negative) a numeric field by the specified amount. In the example, `stock` is decremented by 5 and `views` is incremented by 1 in a single atomic operation. If the field does not exist, `$inc` creates it with the given value. There is no `$add`, `$plus`, or `$increment` operator in MongoDB update syntax.',
+    keyConcept: '$inc: atomically increment/decrement a numeric field. Negative value = decrement. Creates field if absent.',
+    xpReward: 5,
+    tags: ['crud', 'update', '$inc', 'operators'],
+  },
+  {
+    id: 'mongo-83',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'How do you remove a field from a document using an update operation?',
+    codeSnippet: `db.users.updateOne(
+  { _id: ObjectId("...") },
+  { ??? : { temporaryField: "" } }
+);`,
+    options: [
+      '$unset',
+      '$remove',
+      '$delete',
+      '$drop',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$unset` removes the specified field from a document. The value provided (empty string, 1, etc.) does not matter — only the field key matters. After the operation, the field no longer exists in the document. There are no `$remove`, `$delete`, or `$drop` update operators in MongoDB; those names belong to collection/database operations.',
+    keyConcept: '$unset: removes a field entirely from a document. Value in the update spec is irrelevant.',
+    xpReward: 5,
+    tags: ['crud', 'update', '$unset', 'operators'],
+  },
+  {
+    id: 'mongo-84',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'What does the `upsert` option do in `updateOne()`?',
+    codeSnippet: `db.settings.updateOne(
+  { userId: 'user123' },
+  { $set: { theme: 'dark' } },
+  { upsert: true }
+);`,
+    options: [
+      'If no document matches the filter, a new document is inserted combining the filter fields and the update; otherwise the existing document is updated',
+      'It updates all matching documents instead of just one',
+      'It deletes the existing document and inserts a fresh one',
+      'It throws an error if no document matches',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'When `upsert: true` is set, MongoDB first attempts to find a matching document. If found, it applies the update. If not found, it inserts a new document that combines the filter criteria with the update operation. The result object includes an `upsertedId` field when an insert occurred. This is a powerful pattern for "insert or update" scenarios without needing two separate round trips.',
+    keyConcept: 'upsert: true → update if found, insert if not. Result includes upsertedId when new doc is created.',
+    xpReward: 5,
+    tags: ['crud', 'upsert', 'updateOne', 'write'],
+  },
+  {
+    id: 'mongo-85',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'How do you append an element to an array field in a document?',
+    codeSnippet: `db.posts.updateOne(
+  { _id: postId },
+  { ??? : { tags: 'mongodb' } }
+);`,
+    options: [
+      '$push',
+      '$append',
+      '$add',
+      '$concat',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$push` appends a value to an array field. If the field does not exist it creates it as a new array. To push multiple values at once use `$push` with `$each: [v1, v2]`. To limit array size while pushing use `$slice` modifier. `$addToSet` is similar but only adds if the value is not already present. There are no `$append`, `$add`, or `$concat` array update operators.',
+    keyConcept: '$push: append element to array. $push + $each: push multiple. $addToSet: push only if unique.',
+    xpReward: 5,
+    tags: ['crud', 'update', '$push', 'arrays'],
+  },
+  {
+    id: 'mongo-86',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'What is the difference between `deleteOne()` and `deleteMany()`?',
+    options: [
+      'deleteOne() removes the first document matching the filter; deleteMany() removes all documents matching the filter',
+      'deleteOne() is atomic; deleteMany() is not atomic',
+      'deleteMany() requires an index on the filter field; deleteOne() does not',
+      'deleteOne() permanently deletes and cannot be rolled back; deleteMany() can be undone',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`deleteOne()` removes exactly one document — the first one encountered in natural order that matches the filter — and returns `{ acknowledged, deletedCount }` with `deletedCount` of 0 or 1. `deleteMany()` removes every document matching the filter and returns the total `deletedCount`. Both operations are atomic at the document level. Neither is transactional across multiple documents unless wrapped in a multi-document transaction.',
+    keyConcept: 'deleteOne: removes first match (deletedCount 0 or 1). deleteMany: removes all matches.',
+    xpReward: 5,
+    tags: ['crud', 'delete', 'deleteOne', 'deleteMany'],
+  },
+  {
+    id: 'mongo-87',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'medium',
+    question: 'What does `findOneAndUpdate()` return by default, and how do you change it to return the updated document?',
+    codeSnippet: `// Return the UPDATED document
+db.inventory.findOneAndUpdate(
+  { item: 'notebook' },
+  { $inc: { qty: -1 } },
+  { returnDocument: 'after' }
+);`,
+    options: [
+      'By default it returns the document BEFORE the update; pass { returnDocument: "after" } to return the document after the update',
+      'By default it returns the document AFTER the update; pass { returnDocument: "before" } to get the original',
+      'It always returns null unless the document was inserted (upsert)',
+      'It returns a result object with both before and after versions',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`findOneAndUpdate()` atomically finds and modifies a document. By default (`returnDocument: "before"`) it returns the document as it was BEFORE the update — useful for capturing old values. Use `returnDocument: "after"` to get the document as it is AFTER the update — useful for getting server-generated values like auto-incremented fields. In older driver versions the option was called `returnOriginal: false` to get the after version.',
+    keyConcept: 'findOneAndUpdate() default: returns doc before update. returnDocument: "after" → returns updated doc.',
+    xpReward: 10,
+    tags: ['crud', 'findOneAndUpdate', 'returnDocument', 'atomic'],
+  },
+  {
+    id: 'mongo-88',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'medium',
+    question: 'What is the difference between `updateOne()` and `replaceOne()`?',
+    codeSnippet: `// updateOne: merges changes using operators
+db.users.updateOne({ _id: id }, { $set: { age: 31 } });
+
+// replaceOne: replaces entire document (keeps _id)
+db.users.replaceOne({ _id: id }, { name: 'Alice', age: 31 });`,
+    options: [
+      'updateOne() uses update operators to modify specific fields; replaceOne() replaces the entire document body (but keeps the _id)',
+      'replaceOne() is faster because it skips the diff computation',
+      'updateOne() can match many documents; replaceOne() only matches one',
+      'replaceOne() is the same as deleteOne() + insertOne()',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`updateOne()` uses update operators like `$set`, `$inc`, etc. to modify specific fields while leaving others untouched. `replaceOne()` takes a plain document (no operators) and replaces the entire document content — the `_id` is preserved but all other fields are replaced. If you accidentally pass a replacement document to `updateOne()` without operators, MongoDB will throw an error (it rejects update documents without operators).',
+    keyConcept: 'updateOne: operator-based partial update. replaceOne: full document replacement (keeps _id).',
+    xpReward: 10,
+    tags: ['crud', 'updateOne', 'replaceOne', 'write'],
+  },
+  {
+    id: 'mongo-89',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'medium',
+    question: 'How do you remove a specific element from an array field in a document?',
+    codeSnippet: `db.posts.updateOne(
+  { _id: postId },
+  { $pull: { tags: 'outdated' } }
+);`,
+    options: [
+      '$pull removes all array elements that match the specified condition or value',
+      '$pop removes a specific element by value from the array',
+      '$unset removes an array element at a specific index',
+      '$splice removes elements between two indices',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$pull` removes from an array all elements that match a specified value or condition. It can remove by exact value (`{ $pull: { tags: "outdated" } }`) or by a query condition (`{ $pull: { scores: { $lt: 50 } } }`). `$pop` removes the first (`-1`) or last (`1`) element by position — not by value. There is no `$splice` operator in MongoDB.',
+    keyConcept: '$pull: remove array elements by value or condition. $pop: remove first/last by position.',
+    xpReward: 10,
+    tags: ['crud', 'update', '$pull', 'arrays'],
+  },
+  {
+    id: 'mongo-90',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'easy',
+    question: 'What is the MongoDB Aggregation Pipeline?',
+    options: [
+      'A framework for data processing where documents pass through a sequence of stages, each transforming the data',
+      'A tool for importing data from SQL databases into MongoDB',
+      'A replication mechanism that keeps secondary nodes in sync',
+      'A query optimizer that automatically rewrites find() queries for performance',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Aggregation Pipeline processes documents through a series of stages. Each stage transforms the documents, and the output of one stage becomes the input of the next. Common stages include `$match` (filter), `$group` (aggregate), `$sort`, `$project` (reshape), `$lookup` (join), and `$unwind` (flatten arrays). Pipelines run server-side and can leverage indexes, making them far more powerful than client-side processing.',
+    keyConcept: 'Aggregation pipeline: sequential stages transform documents. Server-side processing, index-aware.',
+    xpReward: 5,
+    tags: ['aggregation', 'pipeline', 'stages', 'overview'],
+  },
+  {
+    id: 'mongo-91',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'easy',
+    question: 'What does the `$match` stage do in an aggregation pipeline?',
+    codeSnippet: `db.orders.aggregate([
+  { $match: { status: 'shipped', total: { $gt: 100 } } },
+  { $group: { _id: '$customerId', count: { $sum: 1 } } }
+]);`,
+    options: [
+      'Filters documents — only documents matching the condition pass to the next stage',
+      'Groups documents by a field and produces summary documents',
+      'Joins documents from another collection',
+      'Sorts documents by specified fields',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$match` filters the document stream using the same query syntax as `find()`. Placing `$match` early in the pipeline is crucial for performance — it reduces the number of documents processed by subsequent stages and can use indexes if it appears first. Think of `$match` as a WHERE clause in SQL. A `$match` at the very start of the pipeline can be combined with a sort to use a compound index.',
+    keyConcept: '$match: filter stage using find() syntax. Place early to leverage indexes and reduce document count.',
+    xpReward: 5,
+    tags: ['aggregation', '$match', 'filter', 'pipeline'],
+  },
+  {
+    id: 'mongo-92',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'medium',
+    question: 'How does the `$group` stage work, and what accumulators can it use?',
+    codeSnippet: `db.sales.aggregate([
+  {
+    $group: {
+      _id: '$region',
+      totalRevenue: { $sum: '$amount' },
+      avgOrder: { $avg: '$amount' },
+      allItems: { $push: '$item' }
+    }
+  }
+]);`,
+    options: [
+      '$group groups documents by _id expression and computes per-group values using accumulators: $sum, $avg, $min, $max, $push, $addToSet, $first, $last',
+      '$group works like $match but groups similar documents without aggregation',
+      '$group can only count documents, not sum or average field values',
+      '$group removes duplicate documents from the pipeline',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$group` collapses documents into groups defined by the `_id` expression (can be a field, computed value, or `null` for all docs). Each additional field uses an accumulator operator: `$sum` (count or total), `$avg` (mean), `$min`/`$max` (extremes), `$push` (collect into array), `$addToSet` (collect unique values), `$first`/`$last` (first/last value in group). The output is one document per group.',
+    keyConcept: '$group: _id = group key. Accumulators: $sum, $avg, $min, $max, $push, $addToSet, $first, $last.',
+    xpReward: 10,
+    tags: ['aggregation', '$group', 'accumulators', 'pipeline'],
+  },
+  {
+    id: 'mongo-93',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'medium',
+    question: 'What does `$lookup` do in an aggregation pipeline?',
+    codeSnippet: `db.orders.aggregate([
+  {
+    $lookup: {
+      from: 'products',
+      localField: 'productId',
+      foreignField: '_id',
+      as: 'productDetails'
+    }
+  }
+]);`,
+    options: [
+      'Performs a left outer join to another collection, adding matching documents as an array field',
+      'Performs a strict inner join that excludes documents with no match',
+      'Looks up an index on a field to speed up the query',
+      'Finds documents that reference a given document (back-reference lookup)',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$lookup` performs a left outer join between the current collection and a `from` collection. It matches `localField` to `foreignField` and adds the results as an array in `as`. Documents with no matches get an empty array (not removed — that is why it is a left outer join). For more complex join conditions use the pipeline form of `$lookup` with `let` and `pipeline` fields. Multiple `$lookup` stages can chain joins.',
+    keyConcept: '$lookup: left outer join. localField → foreignField. Results added as array. Empty array if no match.',
+    xpReward: 10,
+    tags: ['aggregation', '$lookup', 'join', 'pipeline'],
+  },
+  {
+    id: 'mongo-94',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'medium',
+    question: 'What does the `$unwind` stage do?',
+    codeSnippet: `// Document: { _id: 1, tags: ['a', 'b', 'c'] }
+db.posts.aggregate([
+  { $unwind: '$tags' }
+]);
+// Output: three separate documents, one per tag`,
+    options: [
+      'Deconstructs an array field, outputting one document per array element with the same values for all other fields',
+      'Merges multiple documents into a single document with an array field',
+      'Removes all array fields from documents',
+      'Flattens nested objects into top-level fields',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$unwind` takes a document with an array field and outputs N documents — one per element — each containing the individual element value (not the array). This is essential before grouping by array elements. By default, documents with a missing or empty array field are dropped; use `{ path: "$arr", preserveNullAndEmptyArrays: true }` to keep them. The `includeArrayIndex` option adds the element\'s original index.',
+    keyConcept: '$unwind: 1 doc with N-element array → N docs. preserveNullAndEmptyArrays: keep docs with missing arrays.',
+    xpReward: 10,
+    tags: ['aggregation', '$unwind', 'arrays', 'pipeline'],
+  },
+  {
+    id: 'mongo-95',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'medium',
+    question: 'How do `$sort`, `$skip`, and `$limit` work together for pagination?',
+    codeSnippet: `const page = 2, pageSize = 10;
+db.products.aggregate([
+  { $match: { inStock: true } },
+  { $sort: { price: 1 } },
+  { $skip: (page - 1) * pageSize },
+  { $limit: pageSize }
+]);`,
+    options: [
+      '$sort orders documents, $skip discards the first N documents, $limit keeps only the next N — ordering matters: sort before skip/limit',
+      '$limit must always come before $skip in a valid pipeline',
+      '$skip is applied after $limit, so $limit controls the total pool to skip from',
+      '$sort is optional; $skip and $limit alone guarantee consistent pagination',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The order of stages matters critically. `$sort` must come before `$skip`/`$limit` to ensure deterministic ordering. `$skip` removes the first N documents, and `$limit` keeps only the next N. For page 2 with pageSize 10: skip 10, limit 10. Note: deep pagination (large `$skip` values) is inefficient — consider cursor-based pagination using `$match: { _id: { $gt: lastId } }` instead.',
+    keyConcept: '$sort → $skip → $limit for pagination. Large $skip is slow; prefer cursor-based pagination.',
+    xpReward: 10,
+    tags: ['aggregation', '$sort', '$skip', '$limit', 'pagination'],
+  },
+  {
+    id: 'mongo-96',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    question: 'What is the `$facet` stage and when would you use it?',
+    codeSnippet: `db.products.aggregate([
+  { $match: { inStock: true } },
+  {
+    $facet: {
+      byCategory: [{ $group: { _id: '$category', count: { $sum: 1 } } }],
+      priceRanges: [{ $bucket: { groupBy: '$price', boundaries: [0, 50, 100, 500] } }],
+      total: [{ $count: 'count' }]
+    }
+  }
+]);`,
+    options: [
+      '$facet runs multiple independent sub-pipelines on the same input documents and returns all results in one document — ideal for multi-faceted search result pages',
+      '$facet shards the pipeline across multiple nodes for parallel execution',
+      '$facet merges results from multiple collections into a single pipeline',
+      '$facet is an alias for $group that supports multiple grouping keys simultaneously',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$facet` processes multiple independent sub-pipelines simultaneously on the same set of input documents, returning a single document where each key is the result of one sub-pipeline. This is perfect for e-commerce faceted search where you need category counts, price range buckets, and total count all from a single query. Each sub-pipeline is independent — a `$limit` in one does not affect others. The output is always a single document.',
+    keyConcept: '$facet: multiple independent sub-pipelines on same input. Single output doc. Great for search facets.',
+    xpReward: 15,
+    tags: ['aggregation', '$facet', 'faceted-search', 'pipeline'],
+  },
+  {
+    id: 'mongo-97',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    question: 'How does `$bucket` work in MongoDB aggregation?',
+    codeSnippet: `db.products.aggregate([
+  {
+    $bucket: {
+      groupBy: '$price',
+      boundaries: [0, 25, 50, 100, 500],
+      default: 'Other',
+      output: {
+        count: { $sum: 1 },
+        avgPrice: { $avg: '$price' }
+      }
+    }
+  }
+]);`,
+    options: [
+      '$bucket categorizes documents into groups (buckets) based on a field value and specified boundary ranges, similar to a histogram',
+      '$bucket is a storage optimization that groups documents into chunks on disk',
+      '$bucket assigns documents to random buckets for load distribution',
+      '$bucket is another name for $group with a range condition',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$bucket` groups documents into ranges defined by `boundaries`. Each boundary value is the lower bound of a bucket (upper bound is the next boundary). Documents must fall within a boundary range or go to `default`. The example creates buckets [0-25), [25-50), [50-100), [100-500). `$bucketAuto` automatically determines bucket boundaries to distribute documents evenly. Useful for price ranges, age groups, score distributions.',
+    keyConcept: '$bucket: range-based grouping (histogram). boundaries define lower bounds. default catches out-of-range docs.',
+    xpReward: 15,
+    tags: ['aggregation', '$bucket', 'histogram', 'pipeline'],
+  },
+  {
+    id: 'mongo-98',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'easy',
+    question: 'How do you create an index in MongoDB?',
+    codeSnippet: `// Single field index
+db.users.createIndex({ email: 1 });
+
+// Compound index
+db.orders.createIndex({ userId: 1, createdAt: -1 });`,
+    options: [
+      'db.collection.createIndex({ field: 1 }) where 1 = ascending, -1 = descending',
+      'db.collection.addIndex({ field: "asc" }) where "asc" or "desc" specifies direction',
+      'db.collection.index({ field: true }) to enable indexing on a field',
+      'Indexes are created automatically when a field is first queried',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`createIndex()` creates an index with a key specification where `1` means ascending order and `-1` means descending order. For single-field indexes the direction rarely matters for equality queries, but it matters for range queries and sorts. Compound indexes index multiple fields together. The `_id` field is always indexed automatically. Options like `{ unique: true }`, `{ sparse: true }`, and `{ expireAfterSeconds }` can be passed as a second argument.',
+    keyConcept: 'createIndex({ field: 1/-1 }). 1=ascending, -1=descending. _id always indexed. Options: unique, sparse, TTL.',
+    xpReward: 5,
+    tags: ['indexing', 'createIndex', 'compound', 'basics'],
+  },
+  {
+    id: 'mongo-99',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'easy',
+    question: 'What is a TTL (Time-To-Live) index?',
+    codeSnippet: `// Documents expire 1 hour (3600 seconds) after their 'createdAt' date
+db.sessions.createIndex(
+  { createdAt: 1 },
+  { expireAfterSeconds: 3600 }
+);`,
+    options: [
+      'A special single-field index on a Date field that automatically deletes documents after a specified number of seconds',
+      'An index that expires and must be manually recreated after a set time',
+      'An index that throttles queries to a maximum rate per second',
+      'A time-based index that only indexes documents created within the last N seconds',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'TTL indexes are special single-field indexes on Date fields that cause MongoDB to automatically delete documents when their date field plus the TTL duration has passed. A background thread (TTL Monitor) runs every 60 seconds to check for expired documents, so deletion is not instant. TTL indexes are ideal for session data, logs, caches, and anything with a natural expiration. The index must be on a single Date field — compound TTL indexes are not supported.',
+    keyConcept: 'TTL index: auto-deletes docs after expireAfterSeconds from a Date field. Background cleanup runs every ~60s.',
+    xpReward: 5,
+    tags: ['indexing', 'TTL', 'expiry', 'auto-delete'],
+  },
+  {
+    id: 'mongo-100',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'medium',
+    question: 'What is a covered query in MongoDB?',
+    codeSnippet: `// Index on { userId: 1, status: 1, createdAt: 1 }
+// This query is "covered" — all fields in query and projection are in the index
+db.orders.find(
+  { userId: 'u1', status: 'active' },
+  { userId: 1, status: 1, createdAt: 1, _id: 0 }
+);`,
+    options: [
+      'A query where all fields in the filter AND projection are part of the index, so MongoDB can satisfy it entirely from the index without fetching documents',
+      'A query that is covered by a security policy, restricting which users can run it',
+      'A query wrapped in a transaction, giving it ACID guarantees',
+      'A query where the result is cached for repeated access',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A covered query is one where the index contains all the fields needed for both the query predicate and the projection, so MongoDB never needs to access the actual documents (no "fetch" stage). This is the fastest type of query because it reads only the index B-tree. To achieve a covered query: ensure the projection includes only indexed fields, exclude `_id` if it is not in the index, and use `explain()` to confirm the plan shows "IXSCAN" without "FETCH".',
+    keyConcept: 'Covered query: filter + projection fields all in index → no document fetch. Fastest possible query. Use explain() to verify.',
+    xpReward: 10,
+    tags: ['indexing', 'covered-query', 'performance', 'explain'],
+  },
+  {
+    id: 'mongo-101',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'medium',
+    question: 'What is a text index and how do you use it?',
+    codeSnippet: `// Create text index on multiple fields
+db.articles.createIndex({ title: 'text', body: 'text' });
+
+// Full-text search
+db.articles.find({ $text: { $search: 'mongodb aggregation' } });
+
+// Sort by relevance score
+db.articles.find(
+  { $text: { $search: 'mongodb' } },
+  { score: { $meta: 'textScore' } }
+).sort({ score: { $meta: 'textScore' } });`,
+    options: [
+      'A special index that tokenizes string fields for full-text search using $text/$search operators, supporting stemming and stop-word filtering',
+      'An index that stores documents as plain text files for faster string comparison',
+      'An index that enforces that a field must contain only text (no numbers or objects)',
+      'A partial index that only indexes documents where a text field is non-empty',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Text indexes tokenize string fields, apply stemming (e.g., "running" matches "run"), and filter stop words (e.g., "the", "is"). Only one text index is allowed per collection, but it can cover multiple fields. The `$text` operator performs full-text search. `$meta: "textScore"` gives a relevance score for sorting. Phrase search: `"\\"exact phrase\\""`; exclude terms: `"-word"`. Atlas Search (Lucene-based) is more powerful for production full-text needs.',
+    keyConcept: 'Text index: tokenizes + stems string fields. One per collection. $text/$search for queries. $meta textScore for relevance.',
+    xpReward: 10,
+    tags: ['indexing', 'text-index', 'full-text-search', '$text'],
+  },
+  {
+    id: 'mongo-102',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'medium',
+    question: 'What is a partial index in MongoDB?',
+    codeSnippet: `// Only index active users (saves space, faster writes)
+db.users.createIndex(
+  { email: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { status: 'active' }
+  }
+);`,
+    options: [
+      'An index that only includes documents matching a filter expression, reducing index size and write overhead',
+      'An index that covers only part of a compound key (prefix index)',
+      'An index created on a subset of the collection\'s shards',
+      'A temporary index that is removed after a query completes',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A partial index uses `partialFilterExpression` to only index documents that match the specified condition. Benefits: smaller index size, faster writes (fewer index entries to maintain), less memory. Useful when only a subset of documents are ever queried — e.g., only indexing active users or unprocessed jobs. Important: queries must include the partial filter condition (or a superset of it) for MongoDB to use the partial index; otherwise MongoDB will not consider it a valid index for that query.',
+    keyConcept: 'Partial index: partialFilterExpression limits which docs are indexed. Smaller, faster. Query must include the filter condition.',
+    xpReward: 10,
+    tags: ['indexing', 'partial-index', 'partialFilterExpression', 'performance'],
+  },
+  {
+    id: 'mongo-103',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'hard',
+    question: 'How do you use `explain()` to analyze query performance in MongoDB?',
+    codeSnippet: `// Three verbosity levels
+db.users.find({ email: 'a@b.com' }).explain('queryPlanner');   // plan only
+db.users.find({ email: 'a@b.com' }).explain('executionStats'); // plan + stats
+db.users.find({ email: 'a@b.com' }).explain('allPlansExecution'); // all candidate plans`,
+    options: [
+      'explain() shows the query execution plan; "executionStats" reveals IXSCAN vs COLLSCAN, nReturned, totalKeysExamined, and totalDocsExamined for identifying slow queries',
+      'explain() prints the MongoDB query to the console for debugging purposes',
+      'explain() is only available in MongoDB Atlas and requires a paid plan',
+      'explain() shows the index structure but not query performance metrics',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`explain()` reveals how MongoDB executes a query. Key indicators: `COLLSCAN` (full collection scan — bad without filter), `IXSCAN` (index scan — good), `nReturned` (docs returned), `totalKeysExamined` (index entries scanned), `totalDocsExamined` (docs fetched). An efficient query has `totalKeysExamined ≈ nReturned`. High `totalDocsExamined` with low `nReturned` suggests a missing or wrong index. `winningPlan` shows the chosen plan; `rejectedPlans` shows alternatives MongoDB considered.',
+    keyConcept: 'explain(): COLLSCAN=bad, IXSCAN=good. totalKeysExamined ≈ nReturned = efficient. executionStats for real metrics.',
+    xpReward: 15,
+    tags: ['indexing', 'explain', 'query-planner', 'performance'],
+  },
+  {
+    id: 'mongo-104',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'hard',
+    question: 'What is the ESR rule for compound index design?',
+    options: [
+      'Equality fields first, then Sort fields, then Range fields — this ordering maximizes index efficiency',
+      'Ensure, Scan, Return — the three phases of any index-backed query',
+      'Every field must have a Specific Range when designing compound indexes',
+      'External Sort Rule: sort fields must always be external to the index key',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The ESR (Equality, Sort, Range) rule guides compound index key ordering for optimal performance. Place Equality fields first (exact match — these narrow the scan efficiently), then Sort fields (MongoDB can satisfy the sort from the index without an in-memory sort), then Range fields (field with $gt, $lt, $in, etc.). This ordering ensures the index scan is as narrow as possible and avoids in-memory sorts. Example: for `{ status: "active", createdAt: -1, price: { $gt: 10 } }`, index should be `{ status: 1, createdAt: -1, price: 1 }`.',
+    keyConcept: 'ESR rule: Equality first, Sort next, Range last. Maximizes index selectivity and avoids in-memory sorts.',
+    xpReward: 15,
+    tags: ['indexing', 'ESR', 'compound-index', 'performance'],
+  },
+  {
+    id: 'mongo-105',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'easy',
+    question: 'What is the primary trade-off between embedding and referencing documents in MongoDB schema design?',
+    options: [
+      'Embedding (denormalization) gives faster reads by keeping related data together; referencing (normalization) gives better data consistency but requires multiple queries or $lookup',
+      'Embedding is only for small documents; referencing is required for documents over 1MB',
+      'Referencing is always preferred because it matches relational database best practices',
+      'Embedding causes write conflicts; referencing prevents all write conflicts',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Embedding stores related data in a single document, giving atomic reads and no joins. Reference stores related data in separate documents with an ID link, requiring `$lookup` or multiple queries. Choose embedding when data is "owned" by the parent, read together always, and does not grow unboundedly. Choose referencing when data is shared across many documents, accessed independently, or could grow without bounds (e.g., array that keeps growing). The 16MB document size limit also constrains how much you can embed.',
+    keyConcept: 'Embed: fast reads, atomicity, denormalized. Reference: normalized, flexible, requires joins. Match access patterns.',
+    xpReward: 5,
+    tags: ['schema-design', 'embedding', 'referencing', 'data-modeling'],
+  },
+  {
+    id: 'mongo-106',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'easy',
+    question: 'What is the maximum document size in MongoDB?',
+    options: [
+      '16 MB',
+      '64 MB',
+      '4 MB',
+      '1 GB',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'MongoDB enforces a 16 MB limit per document (including all embedded documents and arrays). This limit prevents individual documents from consuming excessive RAM and ensures network transfer efficiency. If you need to store larger binary data (images, videos, audio), use GridFS — which splits data into 255 KB chunks stored as separate documents and provides a file-like interface. The 16 MB limit also naturally constrains how much you embed in a single document.',
+    keyConcept: 'Max document size: 16 MB. For larger data: use GridFS (chunks files into 255 KB pieces).',
+    xpReward: 5,
+    tags: ['schema-design', 'document-size', 'limits', 'GridFS'],
+  },
+  {
+    id: 'mongo-107',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'medium',
+    question: 'How would you model a many-to-many relationship in MongoDB?',
+    codeSnippet: `// Option A: Array of references (students ↔ courses)
+{ _id: 'student1', name: 'Alice', courseIds: ['c1', 'c2', 'c3'] }
+{ _id: 'course1', title: 'MongoDB', studentIds: ['s1', 's2'] }
+
+// Option B: Separate join collection
+{ studentId: 's1', courseId: 'c1', enrolledAt: ISODate('...') }`,
+    options: [
+      'Use arrays of references on one or both sides, or use a separate join collection when relationship data (like enrollment date) needs to be stored',
+      'Many-to-many is impossible in MongoDB; use a relational database instead',
+      'Always embed full documents on both sides to avoid joins entirely',
+      'Use a single collection with all data combined into one flat structure',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'MongoDB handles many-to-many with arrays of references or join collections. Arrays of IDs on one side work well when the relationship count is bounded and you query primarily from one direction. Bidirectional arrays work when queries go both ways but require updating two places on change. A join collection (like a SQL junction table) is best when the relationship itself has properties (enrollment date, role in project) or when counts are unbounded. Use `$lookup` to hydrate references at query time.',
+    keyConcept: 'Many-to-many: array of refs (bounded count) or join collection (relationship has properties or unbounded).',
+    xpReward: 10,
+    tags: ['schema-design', 'many-to-many', 'references', 'data-modeling'],
+  },
+  {
+    id: 'mongo-108',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'medium',
+    question: 'What is schema validation in MongoDB and how do you enforce it?',
+    codeSnippet: `db.createCollection('users', {
+  validator: {
+    $jsonSchema: {
+      bsonType: 'object',
+      required: ['name', 'email', 'age'],
+      properties: {
+        email: { bsonType: 'string', pattern: '^.+@.+$' },
+        age:   { bsonType: 'int', minimum: 0, maximum: 150 }
+      }
+    }
+  },
+  validationAction: 'error'  // or 'warn'
+});`,
+    options: [
+      'MongoDB supports JSON Schema validation via $jsonSchema in collection validators, enforcing field types, required fields, and patterns on insert/update',
+      'Schema validation in MongoDB only works in Atlas, not in community edition',
+      'MongoDB is schemaless by definition and cannot enforce any document structure',
+      'Schema validation only applies to new documents, not updates to existing ones',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'MongoDB supports schema validation using `$jsonSchema` (or query expression operators) in the collection\'s validator. `validationAction: "error"` rejects invalid writes; `"warn"` logs but allows them. `validationLevel: "strict"` (default) validates all inserts and updates; `"moderate"` only validates inserts and updates to existing valid documents. You can add validation to an existing collection with `db.runCommand({ collMod: "collection", validator: {...} })`. This bridges MongoDB\'s flexible schema with production data integrity needs.',
+    keyConcept: '$jsonSchema validator: enforce types, required fields, patterns. validationAction: error/warn. validationLevel: strict/moderate.',
+    xpReward: 10,
+    tags: ['schema-design', 'validation', '$jsonSchema', 'data-integrity'],
+  },
+  {
+    id: 'mongo-109',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'hard',
+    question: 'What is the "bucket pattern" in MongoDB schema design?',
+    codeSnippet: `// Instead of one doc per sensor reading (millions of docs):
+// { sensorId: 's1', timestamp: ISODate('...'), value: 23.5 }
+
+// Bucket by hour — one doc per sensor per hour:
+{
+  sensorId: 's1',
+  hour: ISODate('2024-01-01T10:00:00Z'),
+  readings: [
+    { t: 0, v: 23.5 }, { t: 60, v: 23.7 }, ...  // seconds offset
+  ],
+  count: 60, sum: 1420.5, min: 23.1, max: 24.0
+}`,
+    options: [
+      'Groups many small documents into fewer larger bucket documents by a time or ID range, reducing index size, improving compression, and enabling pre-aggregated statistics',
+      'Distributes documents into named S3-like storage buckets for archiving old data',
+      'Partitions a collection into logical buckets based on shard key ranges',
+      'Splits large embedded arrays into multiple smaller sibling documents',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The bucket pattern combats the "massive number of small documents" problem (e.g., IoT sensor data, event logs). By grouping N readings into one document per time window, you dramatically reduce the number of documents and index entries. Benefits: smaller indexes (fit in RAM), better WiredTiger compression on similar data, ability to pre-compute summary stats per bucket. MongoDB\'s native Time Series collections use this pattern internally. The trade-off is more complex insert logic and the need to handle bucket overflow when a bucket fills up.',
+    keyConcept: 'Bucket pattern: group N small docs into 1 larger doc by time/range. Reduces index size, enables pre-aggregation.',
+    xpReward: 15,
+    tags: ['schema-design', 'bucket-pattern', 'IoT', 'time-series'],
+  },
+  {
+    id: 'mongo-110',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'easy',
+    question: 'What are the roles in a MongoDB replica set?',
+    options: [
+      'Primary (accepts all writes), Secondary (replicates from primary, can serve reads), Arbiter (votes in elections but holds no data)',
+      'Master (writes), Slave (reads), Witness (backups)',
+      'Leader (writes), Follower (reads), Observer (monitoring only)',
+      'Active (reads and writes), Passive (reads only), Standby (failover only)',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A replica set has three roles: Primary receives all write operations and records them to the oplog. Secondaries replicate the primary\'s oplog and apply operations asynchronously; they can optionally serve read operations (with potential stale data). Arbiters vote in elections to break ties but store no data and handle no reads — they are lightweight members for odd-vote counts. A replica set requires an odd number of voting members (3, 5, 7) to guarantee a majority during elections.',
+    keyConcept: 'Replica set: Primary (writes), Secondary (replicates + optional reads), Arbiter (votes only, no data). Odd voting members.',
+    xpReward: 5,
+    tags: ['replication', 'replica-set', 'primary', 'secondary'],
+  },
+  {
+    id: 'mongo-111',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'medium',
+    question: 'What is the oplog in MongoDB replication?',
+    options: [
+      'A capped collection on the primary that records all write operations as idempotent transformations, which secondaries tail to replicate changes',
+      'A log file on disk that records all query operations for auditing purposes',
+      'An operation log that tracks failed writes and retries them automatically',
+      'A circular buffer in RAM that caches recent documents for faster reads',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The oplog (operations log) is a special capped collection stored in the `local` database. All write operations are recorded as idempotent operations (applying them multiple times produces the same result). Secondaries maintain a tailable cursor on the primary\'s oplog and apply each operation to stay in sync. The oplog size determines how long a secondary can be offline and still catch up (oplog window). If a secondary falls too far behind, it enters RECOVERING state and needs a full initial sync.',
+    keyConcept: 'Oplog: capped collection of idempotent write ops. Secondaries tail it. Oplog window = how long secondary can lag.',
+    xpReward: 10,
+    tags: ['replication', 'oplog', 'secondary', 'sync'],
+  },
+  {
+    id: 'mongo-112',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'medium',
+    question: 'What are read preferences in MongoDB and what options are available?',
+    codeSnippet: `// Read from nearest member (reduces latency)
+db.collection.find({}).readPref('nearest')
+
+// Options: primary, primaryPreferred, secondary, secondaryPreferred, nearest`,
+    options: [
+      'Read preference controls which replica set member handles read operations: primary (default, consistent), secondary (potentially stale, higher throughput), nearest (lowest latency)',
+      'Read preference sets the query priority level from 1 (lowest) to 5 (highest)',
+      'Read preference controls whether reads bypass indexes and scan the collection',
+      'Read preference is only relevant for sharded clusters, not replica sets',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Read preference controls from which replica set member reads are directed. `primary` (default): all reads from primary, always consistent. `primaryPreferred`: primary if available, else secondary. `secondary`: always secondary, potentially stale (eventual consistency). `secondaryPreferred`: secondary if available, else primary. `nearest`: lowest network latency regardless of role. Tags can further filter members by datacenter/region. Use secondary reads to scale read throughput but be aware of potential read-after-write inconsistency.',
+    keyConcept: 'Read preferences: primary (consistent), secondary (stale but scalable), nearest (low latency). Trade consistency for scale/latency.',
+    xpReward: 10,
+    tags: ['replication', 'read-preference', 'consistency', 'scalability'],
+  },
+  {
+    id: 'mongo-113',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'hard',
+    question: 'What is sharding in MongoDB and how do you choose a good shard key?',
+    codeSnippet: `// Enable sharding on database
+sh.enableSharding('mydb');
+
+// Shard a collection by userId (hashed for even distribution)
+sh.shardCollection('mydb.events', { userId: 'hashed' });`,
+    options: [
+      'Sharding horizontally distributes data across shards; a good shard key has high cardinality, even distribution, and aligns with query patterns to avoid scatter-gather',
+      'Sharding is MongoDB\'s term for vertical scaling by adding more RAM to one server',
+      'A shard key should always be the _id field because it is unique and auto-indexed',
+      'Any field can be used as a shard key without performance consequences',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Sharding splits data across multiple shards (servers/replica sets) using a shard key. A good shard key must have: high cardinality (many distinct values, enough chunks), even write distribution (avoid "hot shards" where one shard gets all writes), and query isolation (queries that include the shard key are routed to one shard — "targeted query"; queries without it fan out to all shards — "scatter-gather"). Hashed sharding distributes writes evenly but breaks range queries. Ranged sharding supports range scans but risks hot spots. Monotonically increasing keys (like ObjectId) are poor ranged shard keys.',
+    keyConcept: 'Good shard key: high cardinality + even distribution + query isolation. Hashed=even writes. Ranged=range queries. Avoid monotonic keys.',
+    xpReward: 15,
+    tags: ['sharding', 'shard-key', 'scalability', 'distribution'],
+  },
+  {
+    id: 'mongo-114',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'easy',
+    question: 'What is the difference between `$in` and `$or` when querying a single field?',
+    codeSnippet: `// $in — cleaner for same field, multiple values
+db.users.find({ role: { $in: ['admin', 'moderator', 'editor'] } });
+
+// $or — required for different fields
+db.users.find({ $or: [{ age: { $lt: 18 } }, { status: 'inactive' }] });`,
+    options: [
+      '$in checks if a single field\'s value is in a list — it uses the field index efficiently; $or evaluates multiple conditions (can span different fields) but may be less efficient on a single field',
+      '$in and $or are completely interchangeable in all situations',
+      '$or always performs better because it short-circuits on first match',
+      '$in only works with string values; $or is needed for numeric comparisons',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$in` is the preferred operator when checking if one field equals any of several values — it is semantically clearer and MongoDB can efficiently use an index for it (it becomes an index scan over the listed values). `$or` is necessary when conditions span different fields. Using `$or` on the same field (e.g., `{ $or: [{ x: 1 }, { x: 2 }] }`) works but is less readable and may perform differently than `{ x: { $in: [1, 2] } }`. Always prefer `$in` for same-field value lists.',
+    keyConcept: '$in: single field, multiple values — index-efficient. $or: multiple conditions/fields. Prefer $in for same-field value lists.',
+    xpReward: 5,
+    tags: ['query-operators', '$in', '$or', 'filtering'],
+  },
+  {
+    id: 'mongo-115',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'easy',
+    question: 'What does the `$exists` operator check?',
+    codeSnippet: `// Find documents that have an 'email' field
+db.users.find({ email: { $exists: true } });
+
+// Find documents missing the 'phone' field
+db.users.find({ phone: { $exists: false } });`,
+    options: [
+      'Whether a field exists in the document (true) or does not exist (false) — a field set to null still "exists"',
+      'Whether a field has a non-null, non-empty value',
+      'Whether the collection contains at least one document with that field',
+      'Whether the field is indexed in the collection',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$exists: true` matches documents that contain the specified field, regardless of the field\'s value — even if the value is `null`. `$exists: false` matches documents where the field is entirely absent. This is crucial in MongoDB\'s flexible schema environment where documents in the same collection may have different fields. To find documents where a field is present but explicitly null, use `{ field: null }` combined with `{ field: { $exists: true } }`.',
+    keyConcept: '$exists: true = field present (even if null). false = field absent. null value ≠ field absent.',
+    xpReward: 5,
+    tags: ['query-operators', '$exists', 'schema-flexible', 'filtering'],
+  },
+  {
+    id: 'mongo-116',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'medium',
+    question: 'How does `$elemMatch` work with array fields?',
+    codeSnippet: `// WITHOUT $elemMatch (incorrect):
+// matches if ANY element >= 80 AND ANY element <= 90 (could be different elements!)
+db.students.find({ scores: { $gte: 80, $lte: 90 } });
+
+// WITH $elemMatch (correct):
+// matches only if a SINGLE element is both >= 80 AND <= 90
+db.students.find({ scores: { $elemMatch: { $gte: 80, $lte: 90 } } });`,
+    options: [
+      '$elemMatch requires that a single array element satisfies ALL specified conditions — without it, each condition is checked independently across any element',
+      '$elemMatch limits results to only the matching array elements in the output',
+      '$elemMatch is identical to a regular query on array fields — it is just syntactic sugar',
+      '$elemMatch only works on arrays of embedded documents, not arrays of primitives',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Without `$elemMatch` on an array, MongoDB applies each condition independently to any element in the array — a document matches if element A satisfies condition 1 AND element B satisfies condition 2 (could be different elements). With `$elemMatch`, ALL conditions must be satisfied by a SINGLE element. This is critical for range queries on arrays and queries on arrays of embedded documents (where you want one sub-document to satisfy multiple conditions simultaneously).',
+    keyConcept: '$elemMatch: ALL conditions must match a SINGLE array element. Without it, conditions are checked across any element independently.',
+    xpReward: 10,
+    tags: ['query-operators', '$elemMatch', 'arrays', 'filtering'],
+  },
+  {
+    id: 'mongo-117',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'medium',
+    question: 'What do `$all` and `$size` do when querying array fields?',
+    codeSnippet: `// $all: document must have ALL these tags
+db.posts.find({ tags: { $all: ['mongodb', 'indexing'] } });
+
+// $size: document must have EXACTLY 3 tags
+db.posts.find({ tags: { $size: 3 } });`,
+    options: [
+      '$all matches documents where the array contains all specified elements (order-independent); $size matches documents where the array has exactly N elements',
+      '$all matches arrays with exactly those elements (no extras); $size gets the count of matching elements',
+      '$size can accept a range like { $size: { $gte: 2 } } for minimum array length',
+      '$all requires the array to be sorted; $size works on any array',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$all` checks that the array contains all specified values regardless of order or additional elements (like `$and` for array membership). `$size` matches documents where the array field has exactly the specified number of elements — it cannot accept comparison operators. To query arrays with a minimum/maximum length, add a dedicated size field to the document and index it, then query that field normally. `$all` can use a multikey index; `$size` cannot use an index efficiently.',
+    keyConcept: '$all: array contains all listed values (order-independent). $size: array has exactly N elements. $size does not accept ranges.',
+    xpReward: 10,
+    tags: ['query-operators', '$all', '$size', 'arrays'],
+  },
+  {
+    id: 'mongo-118',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'hard',
+    question: 'How does `$regex` work in MongoDB queries, and what are its performance implications?',
+    codeSnippet: `// Case-insensitive search (cannot use index efficiently)
+db.products.find({ name: { $regex: /laptop/i } });
+
+// Anchored prefix search (CAN use index)
+db.products.find({ name: { $regex: /^laptop/i } });
+
+// Better: use $text index for full-text search`,
+    options: [
+      '$regex matches strings against a pattern; only anchored prefix patterns (^pattern) can use an index efficiently — mid-string and suffix patterns always require a full collection scan',
+      '$regex always uses an index if the field is indexed, regardless of pattern',
+      '$regex is faster than $text for full-text search because it skips tokenization',
+      '$regex can only match exact whole-word patterns, not substrings',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$regex` applies JavaScript-compatible regular expressions to string fields. Performance is the critical concern: only patterns anchored at the start (`^pattern`) can use a B-tree index, because MongoDB can determine the key range to scan. Mid-string patterns (`/word/`) or suffix patterns (`/word$/`) require scanning every document. The case-insensitive flag (`i`) further prevents index usage in most cases. For full-text search, a text index + `$text` is far more efficient and feature-rich.',
+    keyConcept: '$regex: only ^anchored patterns use indexes. /pattern/ or /i → COLLSCAN. Use $text index for full-text needs.',
+    xpReward: 15,
+    tags: ['query-operators', '$regex', 'performance', 'indexing'],
+  },
+  {
+    id: 'mongo-119',
+    technology: 'mongodb',
+    topic: 'Transactions',
+    difficulty: 'medium',
+    question: 'What are multi-document ACID transactions in MongoDB and when should you use them?',
+    codeSnippet: `const session = client.startSession();
+try {
+  await session.withTransaction(async () => {
+    await accounts.updateOne({ _id: from }, { $inc: { balance: -100 } }, { session });
+    await accounts.updateOne({ _id: to },   { $inc: { balance: +100 } }, { session });
+  });
+} finally {
+  await session.endSession();
+}`,
+    options: [
+      'Multi-document transactions provide ACID guarantees across multiple documents/collections/databases in a replica set or sharded cluster — use when multiple writes must succeed or fail together',
+      'Transactions are only needed for single-document updates that use $set and $inc together',
+      'MongoDB transactions work without a replica set in standalone mode',
+      'Transactions should be used for all write operations to ensure data safety',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'MongoDB supports multi-document ACID transactions since v4.0 (replica sets) and v4.2 (sharded clusters). They guarantee Atomicity (all or nothing), Consistency (data rules maintained), Isolation (concurrent transactions do not interfere), and Durability (committed data survives failures). Use transactions when you must update multiple documents atomically — e.g., bank transfers, order + inventory deduction. However, they have performance overhead; for single-document updates, MongoDB is already atomic at the document level without needing a transaction.',
+    keyConcept: 'Multi-doc transactions: ACID across docs/collections. Requires replica set. Single-doc ops are already atomic without transactions.',
+    xpReward: 10,
+    tags: ['transactions', 'ACID', 'session', 'withTransaction'],
+  },
+  {
+    id: 'mongo-120',
+    technology: 'mongodb',
+    topic: 'Transactions',
+    difficulty: 'hard',
+    question: 'What are write concern and read concern in MongoDB, and how do they affect transactions?',
+    codeSnippet: `// High durability write: waits for majority of replica set to acknowledge
+db.orders.insertOne(doc, { writeConcern: { w: 'majority', wtimeout: 5000 } });
+
+// Transaction with majority read + write concern
+session.withTransaction(async () => { ... }, {
+  readConcern: { level: 'snapshot' },
+  writeConcern: { w: 'majority' }
+});`,
+    options: [
+      'Write concern controls how many nodes must acknowledge a write before success is returned; read concern controls the consistency level of data read (local, majority, snapshot for transactions)',
+      'Write concern is the maximum number of documents a write can affect; read concern limits how many documents are returned per query',
+      'Both are only relevant in sharded clusters and have no effect on replica sets',
+      'Write concern is set globally and cannot be overridden per-operation',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Write concern (`w: 1` = primary ack, `w: "majority"` = majority ack, `w: 0` = fire-and-forget) controls durability vs. latency. Higher `w` = more durable but slower. `wtimeout` prevents indefinite blocking. Read concern controls data freshness: `local` (default, may read uncommitted data), `majority` (read data acknowledged by majority), `snapshot` (point-in-time consistent view, required for transactions). In transactions, MongoDB recommends `readConcern: snapshot` + `writeConcern: majority` for true ACID guarantees.',
+    keyConcept: 'writeConcern w: how many nodes ack write. readConcern: local/majority/snapshot. Transactions need snapshot + majority for ACID.',
+    xpReward: 15,
+    tags: ['transactions', 'write-concern', 'read-concern', 'durability'],
+  },
+  {
+    id: 'mongo-121',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'medium',
+    question: 'How do you use projection in `find()` to control which fields are returned?',
+    codeSnippet: `// Inclusion projection: only return name and email (+ _id by default)
+db.users.find({}, { name: 1, email: 1 });
+
+// Exclusion projection: return everything EXCEPT password
+db.users.find({}, { password: 0 });
+
+// Exclude _id too
+db.users.find({}, { name: 1, email: 1, _id: 0 });`,
+    options: [
+      'Use 1 to include fields and 0 to exclude them; you cannot mix inclusion and exclusion (except _id which can be excluded from an inclusion projection)',
+      'Projection accepts only field names as strings in an array: find({}, ["name", "email"])',
+      'You can freely mix 1 and 0 in any combination for any fields',
+      'Projection only affects the fields sent over the network but all fields are always fetched from disk',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Projection in `find()` uses `1` (include) or `0` (exclude). You cannot mix inclusion and exclusion for regular fields — it\'s either an inclusion projection (list what you want) or an exclusion projection (list what you don\'t want). The only exception: `_id` can be set to `0` in an inclusion projection. Projection reduces network payload and client memory. For covered queries, the projection fields must be in the index. Array operators like `$slice`, `$elemMatch`, and `$` can also be used in projections.',
+    keyConcept: 'Projection: 1=include, 0=exclude. Cannot mix (except _id: 0 in inclusion). Reduces network payload.',
+    xpReward: 10,
+    tags: ['crud', 'projection', 'find', 'fields'],
+  },
+  {
+    id: 'mongo-122',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'medium',
+    question: 'What does the `$addFields` stage do and how does it differ from `$project`?',
+    codeSnippet: `db.orders.aggregate([
+  {
+    $addFields: {
+      totalWithTax: { $multiply: ['$total', 1.1] },
+      isLargeOrder: { $gt: ['$total', 500] }
+    }
+  }
+  // All original fields are preserved + new computed fields added
+]);`,
+    options: [
+      '$addFields adds new computed fields to documents while preserving all existing fields; $project requires you to explicitly include all fields you want to keep',
+      '$addFields permanently modifies the stored documents; $project only affects query output',
+      '$addFields can only add string-type fields; $project supports all types',
+      'Both stages are identical — $addFields is just an older alias for $project',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$addFields` (or its alias `$set`) adds or overwrites fields while keeping all existing fields intact — you only specify the new/changed fields. `$project` is more powerful but requires explicitly listing all fields to retain (inclusion mode) or all fields to remove (exclusion mode). When you just want to compute new fields without restructuring the document, `$addFields` is more concise. `$project` is better when you want to reshape the document significantly or remove many fields.',
+    keyConcept: '$addFields/$set: adds fields, keeps all existing. $project: must list fields to keep/remove. Use $addFields for computed additions.',
+    xpReward: 10,
+    tags: ['aggregation', '$addFields', '$project', 'pipeline'],
+  },
+  {
+    id: 'mongo-123',
+    technology: 'mongodb',
+    topic: 'Additional',
+    difficulty: 'medium',
+    question: 'What is a Change Stream in MongoDB?',
+    codeSnippet: `// Watch a collection for all changes
+const changeStream = db.collection('orders').watch();
+
+changeStream.on('change', (change) => {
+  console.log('Operation:', change.operationType); // insert, update, delete
+  console.log('Document:', change.fullDocument);
+});`,
+    options: [
+      'A real-time stream of document change events (insert/update/delete/replace) from a collection, database, or entire cluster that applications can subscribe to',
+      'A tool that exports all documents in a collection as a continuous JSON stream',
+      'A replication stream from primary to secondary nodes',
+      'A MongoDB Atlas feature that streams data to third-party services like Kafka',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Change Streams allow applications to subscribe to real-time notifications of changes in MongoDB (requires a replica set or sharded cluster). They use the oplog internally. Applications can watch at collection, database, or deployment level. Use cases: real-time dashboards, event-driven microservices, cache invalidation, CDC (Change Data Capture) pipelines. Change streams are resumable — store the `resumeToken` to restart from where you left off after a disconnect. `fullDocument: "updateLookup"` returns the full document after updates.',
+    keyConcept: 'Change Streams: real-time insert/update/delete events. Requires replica set. Resumable via resumeToken. fullDocument option for full doc.',
+    xpReward: 10,
+    tags: ['change-stream', 'real-time', 'events', 'CDC'],
+  },
+  {
+    id: 'mongo-124',
+    technology: 'mongodb',
+    topic: 'Additional',
+    difficulty: 'medium',
+    question: 'What is connection pooling in MongoDB drivers and why is it important?',
+    codeSnippet: `const client = new MongoClient(uri, {
+  maxPoolSize: 10,      // max concurrent connections
+  minPoolSize: 2,       // keep minimum connections alive
+  maxIdleTimeMS: 30000, // close idle connections after 30s
+});
+// Create client ONCE, reuse across requests
+await client.connect();`,
+    options: [
+      'Connection pooling reuses a set of established TCP connections instead of creating a new connection per operation — dramatically reducing latency and server load',
+      'Connection pooling caches query results in memory to avoid hitting the database',
+      'Connection pooling is a MongoDB Atlas feature that automatically scales the number of servers',
+      'Connection pooling compresses data on connections to reduce bandwidth usage',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Creating a MongoDB connection involves TCP handshake, authentication, and TLS negotiation — taking 5-100ms. Connection pooling maintains a pool of ready connections and reuses them, reducing per-operation latency to near zero for connection establishment. The MongoClient should be created once per application (singleton pattern) and reused across all requests. `maxPoolSize` (default: 100) controls concurrency — set it based on expected concurrent operations. In serverless environments (AWS Lambda), connection pools can exhaust MongoDB\'s connection limit — consider connection proxies like MongoDB Atlas Data API or mongocryptd.',
+    keyConcept: 'Connection pool: reuse established connections. Create MongoClient once (singleton). maxPoolSize controls concurrency.',
+    xpReward: 10,
+    tags: ['connection-pooling', 'performance', 'driver', 'scalability'],
+  },
+  {
+    id: 'mongo-125',
+    technology: 'mongodb',
+    topic: 'Additional',
+    difficulty: 'hard',
+    question: 'What is the difference between Mongoose and the native MongoDB Node.js driver?',
+    options: [
+      'Mongoose is an ODM (Object Document Mapper) that adds schema enforcement, validation, middleware hooks, and a richer API on top of the native driver; the native driver is lower-level with more control and less overhead',
+      'Mongoose is the official MongoDB driver; the native driver is a third-party alternative',
+      'The native driver only works with MongoDB Atlas; Mongoose works with any MongoDB deployment',
+      'Mongoose is faster because it compiles queries into native machine code',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Mongoose is an ODM built on top of the native driver that adds: Schemas (define document structure), validation (per-field validators), middleware/hooks (pre/post save, find, etc.), virtuals (computed properties), population (reference resolution), and model methods. Trade-offs: Mongoose adds ~overhead per query and can hide MongoDB-specific features. The native driver gives you full MongoDB API access, maximum performance, and flexibility but requires more manual validation. Use Mongoose for rapid development with structure; use the native driver for performance-critical services or when you need full MongoDB control.',
+    keyConcept: 'Mongoose: ODM with schema, validation, hooks, population. Native driver: lower-level, full control, less overhead. Both wrap the same wire protocol.',
+    xpReward: 15,
+    tags: ['mongoose', 'native-driver', 'ODM', 'nodejs'],
+  },
+  {
+    id: 'mongo-126',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'hard',
+    question: 'How does MongoDB\'s election process work in a replica set?',
+    options: [
+      'When the primary becomes unavailable, eligible secondaries call an election; a member wins by receiving votes from a majority of voting members, then becomes the new primary',
+      'MongoDB Atlas automatically designates a backup primary before any failure occurs',
+      'The oldest secondary (by age) automatically becomes primary when the primary fails',
+      'Elections only happen on restart; during runtime the primary is fixed',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'When the primary becomes unreachable, secondaries detect this via heartbeat timeouts (default 10s). An eligible secondary (oplog up-to-date, not hidden, not delayed) increments its term number and requests votes. A member grants a vote only once per term and only to candidates at least as up-to-date as itself (using oplog timestamp). The candidate with the most recent oplog that receives majority votes wins. Elections typically complete in ~12 seconds. During the election window, writes are refused. Priority settings influence which secondary is preferred for primary.',
+    keyConcept: 'Election: triggered by heartbeat timeout. Candidate needs majority votes. Most up-to-date oplog wins. ~12s downtime during election.',
+    xpReward: 15,
+    tags: ['replication', 'election', 'failover', 'availability'],
+  },
+  {
+    id: 'mongo-127',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'easy',
+    question: 'What does the `$ne` operator do?',
+    codeSnippet: `// Find all users who are NOT banned
+db.users.find({ status: { $ne: 'banned' } });`,
+    options: [
+      'Not Equal — matches documents where the field value does not equal the specified value (also matches documents where the field does not exist)',
+      'Not Empty — matches documents where the field is not null or undefined',
+      'Null Exclude — matches documents where the field exists and is not null',
+      'Negative — reverses the sign of a numeric field value in the result',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$ne` (not equal) matches documents where the field\'s value is NOT equal to the specified value. Importantly, it also matches documents where the field does not exist at all. This is distinct from checking if a field exists (`$exists`) or is not null. `$ne` cannot efficiently use a standard index because it matches most documents — it results in a collection scan or index scan of all non-matching entries. Prefer query patterns that use positive conditions when performance matters.',
+    keyConcept: '$ne: not equal, including missing fields. Poor index utilization — prefer positive conditions for performance.',
+    xpReward: 5,
+    tags: ['query-operators', '$ne', 'filtering', 'comparison'],
+  },
+  {
+    id: 'mongo-128',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'hard',
+    question: 'What is the "outlier pattern" in MongoDB schema design?',
+    codeSnippet: `// Most books: embed all reviews (typical case)
+{ _id: 'book1', title: 'Common Book', reviews: [{...}, {...}] }
+
+// Bestseller with 10,000+ reviews: use overflow flag
+{
+  _id: 'book2', title: 'Bestseller',
+  reviews: [{...} /* first 100 */],
+  hasOverflow: true
+}
+// Overflow reviews stored in separate documents referencing book2`,
+    options: [
+      'The outlier pattern handles the rare document that breaks the typical schema — e.g., a book with 10,000 reviews when most have < 50 — by using a flag and overflow documents',
+      'The outlier pattern identifies and removes abnormal documents that corrupt query results',
+      'The outlier pattern stores statistical outliers in a separate "exceptions" collection for data science analysis',
+      'The outlier pattern is a performance anti-pattern that should always be avoided',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The outlier pattern addresses the problem of "exceptional" documents that do not fit the normal schema. If you embed reviews in a book document, most books work great — but a bestseller with thousands of reviews could hit the 16MB limit and hurt performance. The solution: add a flag (e.g., `hasOverflow: true`) and store overflow data in separate linked documents. Your application logic checks the flag and fetches additional data if needed. This optimizes for the common case while handling edge cases gracefully.',
+    keyConcept: 'Outlier pattern: use flag + overflow docs for rare exceptions that break typical schema. Optimize for common case.',
+    xpReward: 15,
+    tags: ['schema-design', 'outlier-pattern', 'data-modeling', 'advanced'],
+  },
+  {
+    id: 'mongo-129',
+    technology: 'mongodb',
+    topic: 'Additional',
+    difficulty: 'easy',
+    question: 'What are Time Series Collections in MongoDB?',
+    codeSnippet: `db.createCollection('sensorReadings', {
+  timeseries: {
+    timeField: 'timestamp',
+    metaField: 'sensorId',
+    granularity: 'minutes'
+  }
+});`,
+    options: [
+      'A specialized collection type optimized for storing and querying time-stamped data (IoT, metrics, logs) using columnar storage for high compression and fast range queries',
+      'A regular collection with a mandatory createdAt field added automatically',
+      'A collection that automatically archives documents older than a specified date',
+      'A collection type only available in MongoDB Atlas Time Series tier',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Time Series Collections (introduced in MongoDB 5.0) are purpose-built for time-stamped data. Internally they use columnar storage (similar to the bucket pattern) which achieves much better compression (repeated field names and similar values compress well) and faster range queries on the time field. You define a `timeField` (required timestamp), `metaField` (e.g., sensor ID for grouping), and `granularity` (seconds/minutes/hours — affects internal bucketing). They support TTL via `expireAfterSeconds` and integrate naturally with the aggregation pipeline.',
+    keyConcept: 'Time Series Collections: columnar storage, high compression, fast range queries. timeField + metaField + granularity.',
+    xpReward: 5,
+    tags: ['time-series', 'IoT', 'collections', 'performance'],
+  },
+  {
+    id: 'mongo-130',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    question: 'How does the `$project` stage work with computed expressions?',
+    codeSnippet: `db.orders.aggregate([
+  {
+    $project: {
+      customerName: 1,
+      total: 1,
+      // Computed fields using aggregation expressions
+      discountedTotal: { $multiply: ['$total', 0.9] },
+      year: { $year: '$orderDate' },
+      isLarge: { $gt: ['$total', 1000] },
+      label: {
+        $cond: {
+          if: { $gte: ['$total', 500] },
+          then: 'premium',
+          else: 'standard'
+        }
+      }
+    }
+  }
+]);`,
+    options: [
+      '$project can compute new fields using aggregation expressions: arithmetic ($multiply, $add), date ($year, $month), conditional ($cond, $ifNull), string ($concat, $toUpper), and comparison operators',
+      '$project only copies fields from the source document; computed fields require a separate $addFields stage',
+      '$project expressions can only reference the document\'s top-level fields, not nested paths',
+      '$project computed fields are limited to string concatenation only',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$project` supports rich expression operators for computing new fields: arithmetic (`$add`, `$subtract`, `$multiply`, `$divide`, `$mod`), date extraction (`$year`, `$month`, `$dayOfMonth`, `$hour`), string manipulation (`$concat`, `$toUpper`, `$substr`), conditional logic (`$cond`, `$ifNull`, `$switch`), array operations (`$size`, `$arrayElemAt`, `$filter`), and type conversion (`$toInt`, `$toString`, `$toDate`). These make `$project` extremely powerful for reshaping data in the pipeline without writing application code.',
+    keyConcept: '$project expressions: arithmetic, date, string, conditional, array, type conversion. Powerful server-side data reshaping.',
+    xpReward: 15,
+    tags: ['aggregation', '$project', 'expressions', 'pipeline'],
+  },
+  {
+    id: 'mongo-131',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'What is the `_id` field in MongoDB?',
+    options: [
+      'A required unique identifier for every document, automatically created as an ObjectId if not provided, and always indexed',
+      'An optional field that you must manually add to every document for querying purposes',
+      'A sequential auto-increment integer like in SQL databases',
+      'A field that stores a hash of all other document fields for integrity checking',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Every MongoDB document must have an `_id` field that acts as the primary key. If you don\'t provide one, the driver automatically generates an ObjectId — a 12-byte value encoding timestamp, machine ID, process ID, and a random counter. The `_id` field is always indexed (unique index) and cannot be changed after insertion. You can use any value for `_id` (string, number, UUID, etc.) as long as it is unique within the collection. ObjectIds are sortable by creation time since they embed a timestamp.',
+    keyConcept: '_id: required primary key, always indexed. Default: ObjectId (12 bytes with timestamp). Cannot be changed after insert.',
+    xpReward: 5,
+    tags: ['crud', '_id', 'ObjectId', 'primary-key'],
+  },
+  {
+    id: 'mongo-132',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'medium',
+    question: 'What does the `$type` operator do?',
+    codeSnippet: `// Find documents where 'age' is stored as a number (not a string)
+db.users.find({ age: { $type: 'number' } });
+// or using BSON type number
+db.users.find({ age: { $type: 16 } }); // 16 = int32`,
+    options: [
+      'Matches documents where a field is of the specified BSON data type — useful when a flexible schema allows mixed types in the same field',
+      'Validates that a field matches a JavaScript typeof value',
+      'Changes the data type of a field during a query',
+      'Restricts the collection to only accept a specific data type for a field',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$type` matches documents where the specified field is of a given BSON type (specified as a string alias or BSON type number). It is particularly useful in schema migration scenarios where a field might have been stored as both strings and numbers across different documents. Common types: `"string"`, `"int"`, `"long"`, `"double"`, `"bool"`, `"date"`, `"objectId"`, `"null"`, `"array"`. You can pass an array to match multiple types: `{ $type: ["int", "long"] }`.',
+    keyConcept: '$type: matches documents where field has specified BSON type. Useful for mixed-type fields in flexible schemas.',
+    xpReward: 10,
+    tags: ['query-operators', '$type', 'BSON', 'schema-flexible'],
+  },
+  {
+    id: 'mongo-133',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'medium',
+    question: 'What is a sparse index in MongoDB?',
+    codeSnippet: `// Only indexes documents where 'phoneNumber' field exists
+db.users.createIndex(
+  { phoneNumber: 1 },
+  { sparse: true }
+);`,
+    options: [
+      'A sparse index only contains entries for documents that have the indexed field — documents missing the field are excluded from the index',
+      'A sparse index stores every Nth document to reduce index size',
+      'A sparse index is automatically created by MongoDB when less than 10% of documents have a field',
+      'A sparse index uses compressed storage with gaps between entries',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A sparse index skips documents that do not contain the indexed field (or where the value is null). This reduces index size when many documents lack the field. Sparse indexes are useful for optional fields — e.g., a `phoneNumber` field that only some users have. Important caveat: queries that use a sparse index will not return documents where the field is missing, even if those documents should match the query. For a unique sparse index, multiple documents can have the field absent (null is not a uniqueness violation for sparse indexes).',
+    keyConcept: 'Sparse index: only indexes docs with the field present. Smaller index. Queries miss docs where field is absent.',
+    xpReward: 10,
+    tags: ['indexing', 'sparse-index', 'optional-fields', 'performance'],
+  },
+  {
+    id: 'mongo-134',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'easy',
+    question: 'What does `$count` do in an aggregation pipeline?',
+    codeSnippet: `db.orders.aggregate([
+  { $match: { status: 'pending' } },
+  { $count: 'pendingOrders' }
+]);
+// Output: [{ pendingOrders: 42 }]`,
+    options: [
+      'Counts the number of documents that pass through the pipeline at that point and returns a single document with the count in the specified field name',
+      'Counts the number of fields in each document',
+      'Adds a running count field to each document in the pipeline',
+      '$count is equivalent to $group with $sum: 1 but less flexible',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$count` is a shorthand aggregation stage that counts the documents in the pipeline and returns a single document with the specified field name containing the count. It is equivalent to `{ $group: { _id: null, count: { $sum: 1 } } }, { $project: { _id: 0, count: 1 } }` but more concise. Place it after `$match` and other filtering stages to count only the relevant documents. The output is always a single document (or nothing if no documents passed through).',
+    keyConcept: '$count: returns single doc with count of pipeline documents. Shorthand for $group _id:null $sum:1.',
+    xpReward: 5,
+    tags: ['aggregation', '$count', 'pipeline', 'basics'],
+  },
+  {
+    id: 'mongo-135',
+    technology: 'mongodb',
+    topic: 'Additional',
+    difficulty: 'hard',
+    question: 'What is MongoDB Atlas Search and how does it differ from text indexes?',
+    options: [
+      'Atlas Search is a full-text search engine built on Apache Lucene integrated into Atlas — it supports fuzzy matching, autocomplete, facets, relevance scoring, and multi-language analyzers; text indexes are simpler, built-in, and don\'t require Atlas',
+      'Atlas Search is a faster version of the $text operator that works with any MongoDB deployment',
+      'Atlas Search replaces aggregation pipelines for all query needs in Atlas',
+      'Atlas Search is only for searching Atlas metadata (cluster info, user data) not your documents',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Atlas Search integrates Apache Lucene into MongoDB Atlas clusters, providing enterprise-grade full-text search. Advantages over text indexes: fuzzy matching (typo tolerance), autocomplete suggestions, synonym handling, custom analyzers per language, faceted navigation, highlight results, complex relevance scoring (BM25), geosearch, and vector search (semantic similarity). It uses `$search` aggregation stage. Text indexes are simpler (built into MongoDB core, no Atlas required) and sufficient for basic full-text needs but lack Lucene\'s power. Atlas Search requires Atlas and syncs changes from your collection in real time.',
+    keyConcept: 'Atlas Search: Lucene-based, fuzzy/autocomplete/facets/vector search, Atlas-only. Text indexes: simpler, built-in, no Atlas needed.',
+    xpReward: 15,
+    tags: ['atlas-search', 'full-text', 'Lucene', 'search'],
+  },
+  {
+    id: 'mongo-136',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'easy',
+    question: 'How do you update multiple documents at once in MongoDB?',
+    codeSnippet: `// Update ALL users with role 'guest' to have status 'inactive'
+db.users.updateMany(
+  { role: 'guest' },
+  { $set: { status: 'inactive', updatedAt: new Date() } }
+);`,
+    options: [
+      'Use updateMany() with a filter and update document — it updates all matching documents atomically per-document but not as a single atomic unit',
+      'Use updateOne() with { multi: true } option',
+      'Run a for loop and call updateOne() for each document',
+      'updateMany() is only available in MongoDB 5.0+',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`updateMany()` updates all documents matching the filter. Each individual document update is atomic, but the overall `updateMany()` operation is not — if the server crashes mid-operation, some documents may be updated and others not. This is different from a relational database transaction. The result includes `matchedCount` and `modifiedCount`. For true all-or-nothing semantics across multiple documents, wrap the operations in a multi-document transaction.',
+    keyConcept: 'updateMany(): updates all matching docs. Per-doc atomic, not all-or-nothing. Check matchedCount vs modifiedCount.',
+    xpReward: 5,
+    tags: ['crud', 'updateMany', 'bulk-update', 'write'],
+  },
+  {
+    id: 'mongo-137',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    question: 'How does the pipeline form of `$lookup` work (with `let` and `pipeline` fields)?',
+    codeSnippet: `db.orders.aggregate([
+  {
+    $lookup: {
+      from: 'products',
+      let: { orderedIds: '$productIds', minQty: '$minQuantity' },
+      pipeline: [
+        { $match: { $expr: { $and: [
+          { $in: ['$_id', '$$orderedIds'] },
+          { $gte: ['$stock', '$$minQty'] }
+        ]}}},
+        { $project: { name: 1, price: 1 } }
+      ],
+      as: 'availableProducts'
+    }
+  }
+]);`,
+    options: [
+      'The pipeline form allows complex join conditions using $expr with variables ($$varName from let), running a full sub-pipeline on the joined collection with filtering and projection',
+      'The pipeline form only allows a single $match stage; for more stages use the simple form',
+      'The let and pipeline fields are only available in MongoDB 6.0+ Atlas clusters',
+      'The pipeline form joins in memory on the application side, not on the server',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The pipeline form of `$lookup` (MongoDB 3.6+) enables complex join conditions. `let` defines variables from the local document (referenced as `$$varName`). `pipeline` runs an arbitrary pipeline on the foreign collection with access to those variables via `$expr`. This supports: multi-field joins, range joins, joins with transformations, filtering joined results before adding them. Much more powerful than the simple `localField/foreignField` form. Performance tip: ensure the foreign collection has an index on the fields used in the `$match` inside the pipeline.',
+    keyConcept: '$lookup pipeline form: let defines local vars ($$varName), pipeline runs on foreign collection. Enables complex multi-condition joins.',
+    xpReward: 15,
+    tags: ['aggregation', '$lookup', 'join', 'advanced'],
+  },
+  {
+    id: 'mongo-138',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'medium',
+    question: 'What is the difference between hashed and ranged sharding in MongoDB?',
+    options: [
+      'Hashed sharding distributes documents by hashing the shard key (even distribution, no range queries); ranged sharding partitions by key ranges (enables range queries but risks hotspots with monotonic keys)',
+      'Hashed sharding is for string fields only; ranged sharding is for numeric fields only',
+      'Ranged sharding is the default; hashed sharding must be explicitly enabled in Atlas',
+      'Hashed sharding uses more storage because it stores the hash alongside the original value',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Hashed sharding applies a hash function to the shard key value before determining the chunk assignment. This ensures uniform data distribution regardless of key patterns — great for avoiding hot shards when keys are monotonically increasing (like timestamps or ObjectIds). Drawback: range queries on the shard key become scatter-gather operations. Ranged sharding keeps adjacent key values on the same shard, enabling efficient range queries and sorted scans, but monotonically increasing keys cause all new writes to hit one shard (hot spot). A compound shard key can help mitigate hot spots with ranged sharding.',
+    keyConcept: 'Hashed: even distribution, no range queries. Ranged: range queries supported, hotspot risk with monotonic keys.',
+    xpReward: 10,
+    tags: ['sharding', 'hashed', 'ranged', 'distribution'],
+  },
+  {
+    id: 'mongo-139',
+    technology: 'mongodb',
+    topic: 'Transactions',
+    difficulty: 'medium',
+    question: 'What happens when a transaction in MongoDB times out or conflicts with another?',
+    codeSnippet: `// withTransaction automatically retries on transient errors
+await session.withTransaction(async () => {
+  // your operations here
+}, {
+  maxCommitTimeMS: 5000
+});`,
+    options: [
+      'Conflicting or timed-out transactions are automatically aborted; withTransaction() retries on transient errors (WriteConflict, TransientTransactionError) but not on permanent errors',
+      'MongoDB automatically queues conflicting transactions and runs them sequentially without errors',
+      'Transactions never time out — they wait indefinitely until the lock is released',
+      'A conflicting transaction causes a permanent error that cannot be retried',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'MongoDB uses optimistic concurrency for transactions. If two transactions try to modify the same document, the second one receives a `WriteConflict` error. `withTransaction()` helper automatically retries the transaction callback on transient errors labeled `TransientTransactionError` (including write conflicts). Transactions also have a default timeout of 60 seconds (`transactionLifetimeLimitSeconds`). After timeout, the transaction is automatically aborted. `maxCommitTimeMS` limits how long the commit phase waits. Always use `withTransaction()` instead of manual `startTransaction`/`commitTransaction` to get automatic retry logic.',
+    keyConcept: 'WriteConflict: second transaction aborted. withTransaction() auto-retries TransientTransactionError. Default 60s timeout.',
+    xpReward: 10,
+    tags: ['transactions', 'WriteConflict', 'retry', 'withTransaction'],
+  },
+  {
+    id: 'mongo-140',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'medium',
+    question: 'What is denormalization in MongoDB and when is it appropriate?',
+    codeSnippet: `// Normalized (separate collections, join required):
+// users: { _id: 'u1', name: 'Alice' }
+// orders: { _id: 'o1', userId: 'u1', total: 100 }
+
+// Denormalized (embed/duplicate user info in order):
+// orders: { _id: 'o1', userId: 'u1', userName: 'Alice', total: 100 }`,
+    options: [
+      'Denormalization duplicates data across documents to optimize reads — appropriate when data changes infrequently, read performance is critical, and data is always read together',
+      'Denormalization means removing all indexes to reduce write overhead',
+      'Denormalization is never appropriate in production MongoDB — always normalize to avoid data inconsistency',
+      'Denormalization only applies to array fields — scalar fields are always kept normalized',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Denormalization in MongoDB means deliberately duplicating data to avoid `$lookup` (join) operations. Trade-off: faster reads (single document has all needed data), but update anomalies (changing a user\'s name requires updating all denormalized copies). Use denormalization when: the duplicated data changes rarely (username, category name), reads are far more frequent than writes, the duplicated fields are always needed with the main document, and the document size stays manageable. Accept some data redundancy in exchange for dramatically simpler and faster read queries.',
+    keyConcept: 'Denormalization: duplicate data for read performance. Trade-off: faster reads vs. update complexity. Best for rarely-changing reference data.',
+    xpReward: 10,
+    tags: ['schema-design', 'denormalization', 'data-modeling', 'performance'],
+  },
+  {
+    id: 'mongo-141',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'medium',
+    question: 'What is a bulk write operation in MongoDB and why use it?',
+    codeSnippet: `const result = await db.collection('products').bulkWrite([
+  { insertOne: { document: { name: 'Widget A', price: 9.99 } } },
+  { updateOne: { filter: { sku: 'B01' }, update: { $inc: { stock: 50 } } } },
+  { deleteOne: { filter: { discontinued: true, stock: 0 } } }
+], { ordered: false });
+console.log(result.insertedCount, result.modifiedCount, result.deletedCount);`,
+    options: [
+      'bulkWrite() sends multiple write operations (insert/update/delete) in a single network round-trip, dramatically reducing latency for batch operations',
+      'bulkWrite() is only for insert operations — for mixed operations use separate calls',
+      'bulkWrite() makes all operations within it part of a single ACID transaction',
+      'bulkWrite() is slower than individual operations because it has more parsing overhead',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`bulkWrite()` batches multiple heterogeneous write operations (insertOne, insertMany, updateOne, updateMany, replaceOne, deleteOne, deleteMany) into a single network round-trip. This dramatically reduces latency for batch imports, ETL jobs, or any scenario with many writes. With `ordered: false`, MongoDB executes operations in parallel and continues past errors (collecting them in `result.writeErrors`). With `ordered: true` (default), it stops at the first error. Not a transaction — each operation is individually atomic but the batch as a whole is not.',
+    keyConcept: 'bulkWrite(): batch mixed writes in one round-trip. ordered:false = parallel + continue on error. Not a transaction.',
+    xpReward: 10,
+    tags: ['crud', 'bulkWrite', 'performance', 'batch'],
+  },
+  {
+    id: 'mongo-142',
+    technology: 'mongodb',
+    topic: 'Indexing',
+    difficulty: 'easy',
+    question: 'What does a compound index `{ a: 1, b: 1, c: 1 }` support in terms of query prefixes?',
+    codeSnippet: `// Compound index: { userId: 1, status: 1, createdAt: 1 }
+// These queries CAN use the index (prefix match):
+db.col.find({ userId: 'u1' })                          // prefix: userId
+db.col.find({ userId: 'u1', status: 'active' })        // prefix: userId + status
+db.col.find({ userId: 'u1', status: 'a', createdAt: d }) // all fields
+
+// These CANNOT efficiently use the index (no leading field):
+db.col.find({ status: 'active' })   // skips userId — no index prefix match`,
+    options: [
+      'A compound index supports any query that uses a prefix of the index key — queries on {a}, {a,b}, or {a,b,c} can use the index, but {b} or {b,c} alone cannot',
+      'A compound index on {a,b,c} only helps queries that filter on all three fields simultaneously',
+      'MongoDB automatically rearranges queries to use the compound index regardless of which fields are queried',
+      'Compound indexes only help sort operations, not filter operations',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Compound indexes follow the "prefix rule": a query can use the index if it includes the leftmost (leading) fields of the index key. An index on `{a, b, c}` supports queries on `{a}`, `{a, b}`, and `{a, b, c}`. Queries on `{b}`, `{c}`, or `{b, c}` alone cannot use this index. This is why field ordering in a compound index matters enormously — you should place the most frequently queried equality fields first (following the ESR rule). A query on `{a, c}` (skipping b) can use the index for the `a` field but cannot use it for `c`.',
+    keyConcept: 'Compound index prefix rule: index {a,b,c} supports {a}, {a,b}, {a,b,c} queries. Skipping leading fields = no index use.',
+    xpReward: 5,
+    tags: ['indexing', 'compound-index', 'prefix-rule', 'query-planning'],
+  },
+  {
+    id: 'mongo-143',
+    technology: 'mongodb',
+    topic: 'Additional',
+    difficulty: 'medium',
+    question: 'What is the aggregation `$out` and `$merge` stage used for?',
+    codeSnippet: `// $out: writes pipeline results to a new collection (replaces if exists)
+db.sales.aggregate([
+  { $group: { _id: '$region', total: { $sum: '$amount' } } },
+  { $out: 'regionSummaries' }
+]);
+
+// $merge: more flexible — can merge into existing collection
+db.sales.aggregate([
+  { $group: { _id: '$region', total: { $sum: '$amount' } } },
+  { $merge: { into: 'regionSummaries', on: '_id', whenMatched: 'merge' } }
+]);`,
+    options: [
+      '$out writes pipeline results to a collection (replacing it); $merge upserts/merges results into an existing collection with control over match/insert/update behavior',
+      '$out and $merge both export results to CSV files on the server filesystem',
+      '$out is for sharded clusters; $merge is for replica sets',
+      '$merge requires all documents to have identical schemas; $out is flexible',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$out` atomically replaces a target collection with the pipeline results — useful for pre-computing reports or materialized views. `$merge` (MongoDB 4.2+) is more flexible: it can insert new documents, update existing ones, merge fields, or replace matched documents based on `whenMatched`/`whenNotMatched` options. `$merge` supports merging into the same collection being aggregated (useful for incremental updates). Both stages must be the last stage in the pipeline. `$merge` is preferred for maintaining running aggregations without full replacement.',
+    keyConcept: '$out: replaces target collection atomically. $merge: flexible upsert into existing collection (insert/update/merge/replace).',
+    xpReward: 10,
+    tags: ['aggregation', '$out', '$merge', 'materialized-views'],
+  },
+  {
+    id: 'mongo-144',
+    technology: 'mongodb',
+    topic: 'Query Operators',
+    difficulty: 'easy',
+    question: 'What does the `$nor` operator do?',
+    codeSnippet: `// Match documents that are NEITHER deleted NOR archived
+db.posts.find({
+  $nor: [
+    { deleted: true },
+    { status: 'archived' }
+  ]
+});`,
+    options: [
+      '$nor matches documents that fail to satisfy ALL of the given conditions — the document must not match any of them',
+      '$nor matches documents where at least one condition is false',
+      '$nor is equivalent to $not applied to a single condition',
+      '$nor matches documents where exactly one condition is false',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$nor` is a logical operator that matches documents where NONE of the conditions are true. It is the inverse of `$or` — a document must fail all listed conditions to be returned. `$nor: [A, B]` is logically equivalent to `NOT A AND NOT B`. It can be combined with other operators and used with `$not`. Use it to exclude multiple categories in a single clean expression rather than using multiple `$ne` or `$not` operators.',
+    keyConcept: '$nor: matches docs satisfying NONE of the conditions. Inverse of $or. Equivalent to NOT(A) AND NOT(B).',
+    xpReward: 5,
+    tags: ['query-operators', '$nor', 'logical', 'filtering'],
+  },
+  {
+    id: 'mongo-145',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'medium',
+    question: 'How do you calculate a running total using the aggregation pipeline?',
+    codeSnippet: `db.transactions.aggregate([
+  { $sort: { date: 1 } },
+  {
+    $group: {
+      _id: null,
+      transactions: { $push: { amount: '$amount', date: '$date' } }
+    }
+  },
+  {
+    $project: {
+      transactions: {
+        $reduce: {
+          input: '$transactions',
+          initialValue: { total: 0, items: [] },
+          in: {
+            total: { $add: ['$$value.total', '$$this.amount'] },
+            items: { $concatArrays: ['$$value.items', [{
+              amount: '$$this.amount', running: { $add: ['$$value.total', '$$this.amount'] }
+            }]] }
+          }
+        }
+      }
+    }
+  }
+]);`,
+    options: [
+      'Sort first, then use $group with $push to collect all docs, then $reduce to accumulate a running total — or use $setWindowFields (MongoDB 5.0+) for a much cleaner approach',
+      'Running totals require application-side computation; MongoDB aggregation cannot do it',
+      'Use $sum in $project with $cond to accumulate values across documents',
+      'Running totals are only possible with the $out stage writing to a separate collection',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Pre-MongoDB 5.0, running totals required the `$reduce` trick shown above (sort, collect all into array, reduce). MongoDB 5.0 introduced `$setWindowFields` which provides SQL-window-function equivalents: `{ $setWindowFields: { partitionBy: "$category", sortBy: { date: 1 }, output: { runningTotal: { $sum: "$amount", window: { documents: ["unbounded", "current"] } } } } }`. This is far cleaner. `$setWindowFields` supports `$sum`, `$avg`, `$rank`, `$denseRank`, `$documentNumber`, and more.',
+    keyConcept: 'Running totals: use $setWindowFields (MongoDB 5.0+) with window: ["unbounded", "current"]. Pre-5.0: $group + $push + $reduce.',
+    xpReward: 10,
+    tags: ['aggregation', '$setWindowFields', 'running-total', 'window-functions'],
+  },
+  {
+    id: 'mongo-146',
+    technology: 'mongodb',
+    topic: 'Replication & Sharding',
+    difficulty: 'hard',
+    question: 'What is the role of the mongos router in a sharded MongoDB cluster?',
+    options: [
+      'mongos is a query router that sits between applications and shards — it reads the cluster metadata from config servers to route queries to the correct shard(s) and merges results',
+      'mongos is the primary shard that all writes go to before being distributed to other shards',
+      'mongos is a MongoDB-specific load balancer that replicates data between shards for redundancy',
+      'mongos is the monitoring agent that tracks shard health and triggers rebalancing',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'In a sharded cluster, applications connect to `mongos` (one or more for availability) rather than shards directly. `mongos` queries the config servers (replica set storing chunk metadata and shard map) to determine which shard(s) hold the relevant data. For targeted queries (shard key in filter), mongos routes to one shard. For scatter-gather queries (no shard key), mongos fans out to all shards and merges results. `mongos` also handles migrations: it coordinates with the balancer when chunks need to move between shards. Multiple mongos instances provide high availability.',
+    keyConcept: 'mongos: query router. Reads config servers for chunk locations. Targeted query: 1 shard. Scatter-gather: all shards. Merges results.',
+    xpReward: 15,
+    tags: ['sharding', 'mongos', 'router', 'cluster-architecture'],
+  },
+  {
+    id: 'mongo-147',
+    technology: 'mongodb',
+    topic: 'Transactions',
+    difficulty: 'hard',
+    question: 'What is the difference between "majority" and "snapshot" read concerns in MongoDB?',
+    options: [
+      '"majority" reads data acknowledged by a majority of replica set members (no uncommitted data, but not a consistent point-in-time view); "snapshot" provides a consistent point-in-time view of data as of transaction start, required for full transaction isolation',
+      '"snapshot" reads more data than "majority" by including uncommitted writes from all members',
+      '"majority" is only for reads; "snapshot" is only for writes',
+      'Both provide identical guarantees — "snapshot" is just the newer name for "majority"',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`readConcern: "majority"` guarantees you read data that has been acknowledged by a majority of the replica set (durable data), but in a multi-statement transaction you might see different consistent snapshots per read. `readConcern: "snapshot"` (required in transactions for true ACID isolation) gives you a consistent view of data as of the transaction\'s start point — all reads within the transaction see the same consistent snapshot regardless of concurrent writes. Without "snapshot", reads within a transaction could see different states. Use "majority" + "majority" writeConcern for durable non-transactional operations.',
+    keyConcept: 'majority readConcern: durable data but no consistent snapshot. snapshot: point-in-time consistent view, required for ACID transactions.',
+    xpReward: 15,
+    tags: ['transactions', 'read-concern', 'snapshot', 'isolation'],
+  },
+  {
+    id: 'mongo-148',
+    technology: 'mongodb',
+    topic: 'CRUD Operations',
+    difficulty: 'hard',
+    question: 'How does the `$push` operator work with the `$each`, `$sort`, and `$slice` modifiers?',
+    codeSnippet: `// Keep only the top 5 high scores, sorted descending
+db.players.updateOne(
+  { _id: playerId },
+  {
+    $push: {
+      scores: {
+        $each: [{ game: 'Chess', score: 950 }, { game: 'Go', score: 1200 }],
+        $sort: { score: -1 },
+        $slice: 5
+      }
+    }
+  }
+);`,
+    options: [
+      '$each pushes multiple values; $sort sorts the array after push; $slice trims the array to N elements — together they maintain a sorted, bounded "top N" list in a single atomic update',
+      '$each requires a separate $sort and $slice in different update operations',
+      '$slice removes elements from the beginning; $sort is applied before the push',
+      '$sort in $push only works with scalar array values, not objects',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The `$push` modifiers `$each`, `$sort`, and `$slice` combine into a powerful atomic operation. `$each` pushes multiple values in one update. `$sort` sorts the entire array after adding (can sort by object field or -1/1 for scalars). `$slice` then trims the array from the beginning if negative (keep last N) or end if positive (keep first N). Together they create the "top N" pattern: push new scores, sort by score descending, keep top 5 — all in a single atomic update without reading the document first. This is an extremely efficient pattern for leaderboards.',
+    keyConcept: '$push with $each (multi-push) + $sort (sort after push) + $slice (trim to N) = atomic bounded sorted list update.',
+    xpReward: 15,
+    tags: ['crud', '$push', '$each', '$sort', '$slice', 'arrays'],
+  },
+  {
+    id: 'mongo-149',
+    technology: 'mongodb',
+    topic: 'Aggregation Pipeline',
+    difficulty: 'hard',
+    question: 'What is `$setWindowFields` and what types of window calculations does it support?',
+    codeSnippet: `db.sales.aggregate([
+  {
+    $setWindowFields: {
+      partitionBy: '$region',
+      sortBy: { date: 1 },
+      output: {
+        runningTotal: { $sum: '$amount', window: { documents: ['unbounded', 'current'] } },
+        movingAvg:    { $avg: '$amount', window: { documents: [-2, 0] } },
+        rank:         { $rank: {} },
+        rowNumber:    { $documentNumber: {} }
+      }
+    }
+  }
+]);`,
+    options: [
+      '$setWindowFields (MongoDB 5.0+) provides SQL-style window functions: running totals, moving averages, rank, dense rank, row number, cumulative distributions — partitioned by a field and sorted within each partition',
+      '$setWindowFields only supports sum and average over a fixed window size',
+      '$setWindowFields requires a separate collection to store window metadata',
+      '$setWindowFields is only available when using Atlas Search',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`$setWindowFields` (MongoDB 5.0+) brings SQL window function power to MongoDB. Window types: `documents: ["unbounded", "current"]` = from start of partition to current row (running total); `documents: [-N, 0]` = last N+1 documents (moving average); `range: [-5, 0]` = value-based range. Supported functions: `$sum`, `$avg`, `$min`, `$max`, `$count`, `$stdDevPop`, `$stdDevSamp`, `$rank`, `$denseRank`, `$documentNumber` (row number), `$shift` (value from N rows away), `$first`/`$last`. `partitionBy` defines groups (like SQL PARTITION BY); `sortBy` defines order within each partition.',
+    keyConcept: '$setWindowFields: SQL window functions in MongoDB 5.0+. partitionBy, sortBy, output with window operators (rank, sum, avg, movingAvg).',
+    xpReward: 15,
+    tags: ['aggregation', '$setWindowFields', 'window-functions', 'advanced'],
+  },
+  {
+    id: 'mongo-150',
+    technology: 'mongodb',
+    topic: 'Schema Design',
+    difficulty: 'hard',
+    question: 'What is the "computed pattern" in MongoDB schema design?',
+    codeSnippet: `// Instead of computing on every read:
+// db.orders.aggregate([{ $group: { _id: '$productId', total: { $sum: '$qty' } } }])
+
+// Computed pattern: maintain pre-computed totals
+// On each order insert/update, atomically update the summary:
+db.productStats.updateOne(
+  { _id: productId },
+  {
+    $inc: { totalSold: orderQty, totalRevenue: orderTotal },
+    $max: { lastOrderDate: orderDate }
+  },
+  { upsert: true }
+);
+// Reads are instant — no aggregation needed`,
+    options: [
+      'The computed pattern pre-computes and stores aggregated values (totals, averages, counts) that are expensive to calculate at read time — trading slightly more complex writes for dramatically faster reads',
+      'The computed pattern uses MongoDB\'s computed storage engine to compress data before saving',
+      'The computed pattern runs aggregation pipelines automatically in the background on a schedule',
+      'The computed pattern uses JavaScript computed properties to lazily compute values on access',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The computed pattern pre-calculates expensive results and stores them in the document, updating them incrementally on writes. Example: instead of aggregating all orders to get total revenue per product on each page load, maintain a `productStats` document updated atomically with `$inc` on every order. Benefits: read performance is O(1) regardless of data volume, aggregation runs rarely or never. Trade-offs: slightly more complex write logic, potential for small discrepancy if writes fail mid-way (mitigated by transactions). Combine with the CQRS pattern for command/query separation.',
+    keyConcept: 'Computed pattern: pre-store aggregated values, update incrementally on write. O(1) reads. Trade write complexity for read speed.',
+    xpReward: 15,
+    tags: ['schema-design', 'computed-pattern', 'performance', 'data-modeling'],
+  },
 ];
