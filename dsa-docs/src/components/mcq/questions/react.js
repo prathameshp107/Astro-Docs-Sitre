@@ -1010,4 +1010,793 @@ export default [
     xpReward: 15,
     tags: ['forms', 'react-hook-form', 'performance', 'validation'],
   },
+
+  // ─── Additional Questions (react-51 to react-80) ───
+  {
+    id: 'react-51',
+    technology: 'react',
+    topic: 'Hooks',
+    difficulty: 'hard',
+    question: 'What is the useId hook used for?',
+    options: [
+      'Generates a unique ID string for accessibility attributes, avoiding hydration mismatches',
+      'Generates a new unique ID on every render',
+      'Creates a global ID for the application',
+      'Generates sequential IDs for list items',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`useId()` (React 18+) generates a unique, stable ID that is consistent across server and client rendering, preventing hydration mismatches. Use for: `htmlFor`/`id` pairing in forms, `aria-labelledby`, `aria-describedby`. Do not use for list keys — use data IDs instead.',
+    keyConcept: 'useId: unique IDs for a11y. Stable across SSR. Not for keys. Replaces ad-hoc ID generation (Math.random).',
+    xpReward: 10,
+    tags: ['hooks', 'useId', 'accessibility', 'ssr'],
+  },
+  {
+    id: 'react-52',
+    technology: 'react',
+    topic: 'Hooks',
+    difficulty: 'hard',
+    question: 'What is the useSyncExternalStore hook?',
+    codeSnippet: `import { useSyncExternalStore } from "react"
+
+function useOnlineStatus() {
+  return useSyncExternalStore(
+    callback => {
+      window.addEventListener("online", callback)
+      window.addEventListener("offline", callback)
+      return () => {
+        window.removeEventListener("online", callback)
+        window.removeEventListener("offline", callback)
+      }
+    },
+    () => navigator.onLine,  // client snapshot
+    () => true  // server snapshot (always online on server)
+  )
+}`,
+    options: [
+      'Subscribes to an external store and returns its value — ensures tear-free reads for concurrent rendering',
+      'Syncs state with an external API',
+      'Creates a synchronous state update',
+      'Syncs component state with localStorage',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`useSyncExternalStore` (React 18+) lets you read from external stores (Redux, Zustand, browser APIs) safely during concurrent rendering. It prevents "tearing" where different parts of the UI see different values. Use for: subscribing to browser APIs, third-party state managers, or any mutable external source.',
+    keyConcept: 'useSyncExternalStore: safe external store reads. Prevents tearing. Use for browser APIs (online, innerWidth) and state libraries.',
+    xpReward: 15,
+    tags: ['hooks', 'useSyncExternalStore', 'concurrent', 'tearing'],
+  },
+  {
+    id: 'react-53',
+    technology: 'react',
+    topic: 'Hooks',
+    difficulty: 'hard',
+    question: 'What is the useInsertionEffect hook?',
+    options: [
+      'Fires synchronously before DOM mutations — specifically for injecting CSS-in-JS styles',
+      'Same as useEffect but runs after DOM paint',
+      'Inserts elements into the DOM',
+      'Inserts code into the component for debugging',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`useInsertionEffect` (React 18+) runs synchronously before any DOM mutations. It is designed for CSS-in-JS libraries to inject styles before the browser paints. Unlike `useLayoutEffect`, it does not have access to refs or the DOM. Do NOT use it for data fetching or event handlers.',
+    keyConcept: 'useInsertionEffect: for CSS-in-JS libraries only. Runs before DOM mutations. No ref/DOM access. Pre-paint.',
+    xpReward: 15,
+    tags: ['hooks', 'useInsertionEffect', 'css-in-js', 'performance'],
+  },
+  {
+    id: 'react-54',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'hard',
+    question: 'What is Concurrent Mode in React 18?',
+    options: [
+      'A set of features that allows React to interrupt rendering to handle higher-priority updates, keeping the UI responsive',
+      'A mode where multiple React instances run concurrently',
+      'A mode that renders components in parallel threads',
+      'A mode that runs state updates simultaneously',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Concurrent Mode (React 18) is not a mode you opt into — it is a new behind-the-scenes mechanism enabling interruptible rendering. When an urgent update (user input) comes in, React can pause non-urgent work (rendering a large list), process the urgent update, then resume. Enabled by `createRoot()` and features like `useTransition`, `useDeferredValue`, and Suspense.',
+    keyConcept: 'Concurrent features: interruptible rendering, priority-based updates, Suspense. Enabled by createRoot. Keeps UI responsive.',
+    xpReward: 20,
+    tags: ['concurrent', 'react18', 'suspense', 'transition'],
+  },
+  {
+    id: 'react-55',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'medium',
+    question: 'What is the difference between createRoot and ReactDOM.render?',
+    options: [
+      'createRoot (React 18+) enables all concurrent features. ReactDOM.render (React 17) uses legacy mode without concurrent features.',
+      'ReactDOM.render is the new API; createRoot is legacy',
+      'They are identical — just different function names',
+      'createRoot is for server-side rendering only',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`createRoot(rootElement).render(<App />)` enables React 18 concurrent features (automatic batching, transitions, Suspense improvements). `ReactDOM.render(<App />, rootElement)` is the legacy API (React 17) — it still works but does not enable concurrent features. React 18 deprecates `ReactDOM.render` with a warning.',
+    keyConcept: 'createRoot: React 18 concurrent features. ReactDOM.render: legacy, no concurrent. Migrate to createRoot.',
+    xpReward: 10,
+    tags: ['react18', 'createroot', 'reactdom', 'concurrent'],
+  },
+  {
+    id: 'react-56',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'medium',
+    question: 'What is automatic batching in React 18?',
+    options: [
+      'Multiple state updates are automatically batched into a single re-render, even in timeouts, promises, and event handlers',
+      'State updates are never batched in React 18',
+      'Only event handlers batch state updates in React 18',
+      'Batching must be manually configured with flushSync',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'React 18 automatically batches all state updates — in event handlers, timeouts, Promises, and native events. Previously (React 17), only event handlers were batched. Use `flushSync` to opt out of batching when you need immediate DOM reads after an update. Automatic batching reduces unnecessary re-renders.',
+    keyConcept: 'Auto-batching: all state updates grouped into one re-render. flushSync: opt out of batching (rarely needed).',
+    xpReward: 10,
+    tags: ['react18', 'batching', 'performance', 'flushSync'],
+  },
+  {
+    id: 'react-57',
+    technology: 'react',
+    topic: 'Forms',
+    difficulty: 'medium',
+    question: 'What is the purpose of the key prop on an input element?',
+    codeSnippet: `// Force input reset when userId changes:
+<form key={userId}>
+  <input name="email" defaultValue={user.email} />
+</form>`,
+    options: [
+      'Changing the key forces React to unmount/remount the element, resetting its state — useful for form resets',
+      'Key uniquely identifies the input for form submission',
+      'Key controls the tab order of form elements',
+      'Key is ignored on form elements',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'When the key of a component changes, React destroys the old instance and creates a new one — resetting all state. This is useful for: resetting form fields when switching between different entities, resetting uncontrolled inputs, and forcing re-initialization of child component state.',
+    keyConcept: 'Key change = remount = state reset. Useful for forms, uncontrolled inputs, and re-initialization.',
+    xpReward: 10,
+    tags: ['forms', 'key', 'remount', 'state-reset'],
+  },
+  {
+    id: 'react-58',
+    technology: 'react',
+    topic: 'Performance',
+    difficulty: 'hard',
+    question: 'What is virtual scrolling and when should you use it?',
+    codeSnippet: `// Using react-window for virtual scrolling:
+import { FixedSizeList } from "react-window"
+
+function VirtualList({ items }) {
+  return (
+    <FixedSizeList
+      height={400}
+      itemCount={items.length}
+      itemSize={50}>
+      {({ index, style }) => (
+        <div style={style}>{items[index].name}</div>
+      )}
+    </FixedSizeList>
+  )
+}`,
+    options: [
+      'Rendering only the visible items in a scrollable list — essential for lists with thousands of items',
+      'Scrolling through a virtual DOM representation',
+      'A CSS technique for smooth scrolling',
+      'Rendering items one by one with a delay',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Virtual scrolling (windowing) renders only the items currently visible in the viewport, plus a small buffer. It uses absolute positioning to maintain correct scroll dimensions. Without it, rendering 10,000 items would create 10,000 DOM nodes. Libraries: react-window, react-virtualized, TanStack Virtual. Use when list size exceeds ~500 items.',
+    keyConcept: 'Virtual scroll: render only visible items. Libraries: react-window, TanStack Virtual. Critical for large lists.',
+    xpReward: 15,
+    tags: ['performance', 'virtual-scroll', 'windowing', 'large-lists'],
+  },
+  {
+    id: 'react-59',
+    technology: 'react',
+    topic: 'Patterns',
+    difficulty: 'hard',
+    question: 'What is the compound components pattern?',
+    codeSnippet: `function Tabs({ children }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  return (
+    <TabsContext.Provider value={{ activeIndex, setActiveIndex }}>
+      {children}
+    </TabsContext.Provider>
+  )
+}
+
+Tabs.Tab = function Tab({ index, children }) {
+  const { activeIndex, setActiveIndex } = useContext(TabsContext)
+  return (
+    <button onClick={() => setActiveIndex(index)}>
+      {children}
+    </button>
+  )
+}
+
+Tabs.Panel = function Panel({ index, children }) {
+  const { activeIndex } = useContext(TabsContext)
+  return activeIndex === index ? <div>{children}</div> : null
+}
+
+// Usage:
+<Tabs>
+  <Tabs.Tab index={0}>Profile</Tabs.Tab>
+  <Tabs.Tab index={1}>Settings</Tabs.Tab>
+  <Tabs.Panel index={0}>Profile content</Tabs.Panel>
+  <Tabs.Panel index={1}>Settings content</Tabs.Panel>
+</Tabs>`,
+    options: [
+      'A pattern where multiple components share implicit state via context, enabling expressive and declarative APIs',
+      'A pattern that compounds multiple components into one',
+      'A pattern for combining reducers',
+      'A pattern for optimizing render performance',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Compound components share implicit state through Context. Parent creates the state and provides it to children via context. Children access shared state without prop drilling. Examples: `<Tabs>` + `<Tab>` + `<Panel>`, `<Select>` + `<Option>`, `<Menu>` + `<MenuItem>`. Benefits: declarative API, implicit state management, flexible composition.',
+    keyConcept: 'Compound components: shared context, expressive API. Used in: select menus, tabs, accordions. Combine with Context.',
+    xpReward: 15,
+    tags: ['patterns', 'compound-components', 'context'],
+  },
+  {
+    id: 'react-60',
+    technology: 'react',
+    topic: 'Patterns',
+    difficulty: 'hard',
+    question: 'What is the state reducer pattern?',
+    codeSnippet: `function useToggle({ reducer = (state, action) => action } = {}) {
+  const [state, dispatch] = useReducer(
+    (state, action) => reducer(state, action),
+    { on: false }
+  )
+  const toggle = () => dispatch(state => ({ on: !state.on }))
+  return { on: state.on, toggle }
+}
+
+// Consumer can override behavior:
+function App() {
+  const { on, toggle } = useToggle({
+    reducer: (state, action) => {
+      if (action.on === true) {
+        return { on: false }  // prevent turning on
+      }
+      return action
+    }
+  })
+}`,
+    options: [
+      'A pattern that exposes the internal reducer so consumers can override state transitions — giving them control',
+      'A pattern that creates a state management store',
+      'A pattern for reducing component size',
+      'A pattern for reducing bundle size',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The state reducer pattern (popularized by Kent C. Dodds) inverts control by allowing consumers to override state transitions. The hook accepts a reducer function that wraps the internal reducer. This enables consumers to: intercept state changes, add validation, prevent certain transitions — all without modifying the hook.',
+    keyConcept: 'State reducer: invert control of state transitions. Consumers can override/add logic. Flexible and extensible pattern.',
+    xpReward: 20,
+    tags: ['patterns', 'state-reducer', 'inversion', 'useReducer'],
+  },
+  {
+    id: 'react-61',
+    technology: 'react',
+    topic: 'React Router',
+    difficulty: 'medium',
+    question: 'How does React Router v6 handle nested routes?',
+    codeSnippet: `// Parent route defines layout with <Outlet>
+<Route path="dashboard" element={<DashboardLayout />}>
+  <Route index element={<DashboardHome />} />
+  <Route path="settings" element={<Settings />} />
+  <Route path="users" element={<Users />} />
+</Route>
+
+function DashboardLayout() {
+  return (
+    <div>
+      <nav>...</nav>
+      <Outlet />  {/* Child route renders here */}
+    </div>
+  )
+}`,
+    options: [
+      'Use `<Outlet>` in parent layout — child route components render at the Outlet position',
+      'Nested routes are not supported in v6',
+      'Use {props.children} for nested route rendering',
+      'Nested routes render side by side',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'React Router v6 uses `<Outlet>` for nested routes. The parent layout component renders `<Outlet />` where child routes appear. The `<Route index>` matches the parent URL exactly. Benefits: layouts are composable, less prop drilling (shared layout owns the state). Use `<Outlet context={...}>` to pass data to children.',
+    keyConcept: '<Outlet>: nested route rendering. index: default child. Relative links work with nested routes. Context passing via Outlet.',
+    xpReward: 10,
+    tags: ['react-router', 'nested-routes', 'outlet', 'v6'],
+  },
+  {
+    id: 'react-62',
+    technology: 'react',
+    topic: 'React Router',
+    difficulty: 'medium',
+    question: 'What is the useNavigate hook?',
+    options: [
+      'Returns a function to programmatically navigate to different routes — replaces history.push() from v5',
+      'Returns the current URL location',
+      'Returns the navigation state object',
+      'Automatically navigates after component mount',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`useNavigate()` returns a navigate function: `navigate("/users")` (push), `navigate("/users", { replace: true })` (replace), `navigate(-1)` (go back). It replaces `history.push()`/`history.replace()` from v5. Use for: programmatic navigation after form submission, redirects, and link clicks.',
+    keyConcept: 'useNavigate: programmatic navigation. navigate(path): push. navigate(path, {replace}): replace. navigate(-1): go back.',
+    xpReward: 10,
+    tags: ['react-router', 'useNavigate', 'navigation'],
+  },
+  {
+    id: 'react-63',
+    technology: 'react',
+    topic: 'React Router',
+    difficulty: 'medium',
+    question: 'What is the useLocation hook?',
+    options: [
+      'Returns the current location object with pathname, search, hash, state, and key properties',
+      'Updates the current URL location',
+      'Listens for location changes',
+      'Returns a history of visited locations',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`useLocation()` returns the current location: `{ pathname, search, hash, state, key }`. Use for: reading URL search params (`new URLSearchParams(location.search)`), conditionally rendering based on current route, tracking page views for analytics. Component re-renders when the location changes.',
+    keyConcept: 'useLocation: current URL. pathname, search, hash. Use for analytics, conditional rendering, reading query params.',
+    xpReward: 10,
+    tags: ['react-router', 'useLocation', 'url'],
+  },
+  {
+    id: 'react-64',
+    technology: 'react',
+    topic: 'State Management',
+    difficulty: 'hard',
+    question: 'What is Jotai and how does it differ from Zustand?',
+    options: [
+      'Jotai uses atomic state (individual atoms) with a Recoil-like API; Zustand uses a single store with a hook-based API',
+      'Jotai is a CSS-in-JS library; Zustand is a state manager',
+      'Jotai is for class components; Zustand is for function components',
+      'They are identical — just different package names',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Jotai: atomic state model — each piece of state is an independent atom. Atoms can derive from other atoms. No Provider needed (by default). Zustand: single store with setState/getState. Both are simpler alternatives to Redux. Jotai is better for fine-grained subscriptions, Zustand for centralized state with actions.',
+    keyConcept: 'Jotai: atomic state, no Provider. Zustand: single store. Choose Jotai for independent state pieces, Zustand for centralized state.',
+    xpReward: 10,
+    tags: ['jotai', 'zustand', 'state-management', 'comparison'],
+  },
+  {
+    id: 'react-65',
+    technology: 'react',
+    topic: 'State Management',
+    difficulty: 'medium',
+    question: 'What is TanStack Query (React Query) used for?',
+    codeSnippet: `import { useQuery } from "@tanstack/react-query"
+
+function UserProfile({ userId }) {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => fetch(\`/api/users/\${userId}\`).then(r => r.json()),
+  })
+
+  if (isLoading) return <Spinner />
+  if (error) return <Error message={error.message} />
+  return <div>{data.name}</div>
+}`,
+    options: [
+      'Server state management library — handles caching, background refetching, pagination, and optimistic updates',
+      'A SQL query builder for React',
+      'A database management tool for React',
+      'A GraphQL client for React',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'TanStack Query (React Query) manages server state (data from APIs). Features: automatic caching, background refetching, stale-while-revalidate, pagination (infinite queries), optimistic updates, request deduplication, retry logic, and DevTools. Eliminates manual useEffect + useState for data fetching. Replaces Redux for server state.',
+    keyConcept: 'React Query: server state management. Cache, background refetch, pagination. Reduces boilerplate vs useEffect + useState.',
+    xpReward: 15,
+    tags: ['state-management', 'react-query', 'tanstack-query', 'caching'],
+  },
+  {
+    id: 'react-66',
+    technology: 'react',
+    topic: 'State Management',
+    difficulty: 'medium',
+    question: 'What is the difference between client state and server state?',
+    options: [
+      'Client state: UI-specific (modals, form inputs, theme). Server state: persisted on server (API data, DB records) — needs caching and syncing.',
+      'Client state is stored in a database; server state is in the browser',
+      'Client state is for backend; server state is for frontend',
+      'They are the same concept with different locations',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    example: true,
+    explanation: 'Client state: local UI concerns — modal open/close, dropdown selection, theme, form state. Server state: data from APIs — user profiles, product listings, messages. Server state requires: loading/error states, caching, stale data handling, background updates, optimistic mutations. Use React Query or Zustand for server state, useState/Context for client state.',
+    keyConcept: 'Client state: UI (useState/Context). Server state: API data (React Query, Zustand). Different tools for different state types.',
+    xpReward: 10,
+    tags: ['state-management', 'client-state', 'server-state'],
+  },
+  {
+    id: 'react-67',
+    technology: 'react',
+    topic: 'Testing',
+    difficulty: 'medium',
+    question: 'How do you test React components with React Testing Library?',
+    codeSnippet: `import { render, screen, fireEvent } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import Counter from "./Counter"
+
+test("increments counter", async () => {
+  render(<Counter />)
+  const button = screen.getByRole("button", { name: /increment/i })
+  await userEvent.click(button)
+  expect(screen.getByText("1")).toBeInTheDocument()
+})`,
+    options: [
+      'Render components, query by accessible roles/text, fire events, assert on rendered output — test behavior, not implementation',
+      'Test component implementation details like state and props',
+      'Render components in a real browser',
+      'Test by matching component class names',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'React Testing Library encourages testing by user behavior (accessible roles, text) rather than implementation (state, props, class names). Key principles: (1) query by accessibility (getByRole, getByText, getByLabelText), (2) fire events with userEvent (more realistic than fireEvent), (3) assert with jest-dom matchers (toBeInTheDocument, toHaveTextContent).',
+    keyConcept: 'RTL: test behavior, not implementation. Query by role/text. userEvent: realistic interactions. jest-dom: accessible matchers.',
+    xpReward: 15,
+    tags: ['testing', 'react-testing-library', 'jest', 'userEvent'],
+  },
+  {
+    id: 'react-68',
+    technology: 'react',
+    topic: 'Testing',
+    difficulty: 'hard',
+    question: 'What is the act() function in React testing?',
+    options: [
+      'A test utility that ensures all state updates and effects are flushed before assertions — React Testing Library wraps it automatically',
+      'A function that acts like a real user interaction',
+      'A helper that simulates browser actions',
+      'A function that activates component lifecycle',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`act()` wraps code that causes React state updates in tests, ensuring all updates are applied and flushed to the DOM before assertions. React Testing Library renders, fireEvent, and userEvent are all wrapped in act() automatically. You only need direct act() when using ReactDOM.render or manipulating refs directly in tests.',
+    keyConcept: 'act(): flush state updates in tests. RTL wraps automatically. Direct act() only for advanced use cases.',
+    xpReward: 10,
+    tags: ['testing', 'act', 'react-testing-library', 'state-updates'],
+  },
+  {
+    id: 'react-69',
+    technology: 'react',
+    topic: 'Performance',
+    difficulty: 'hard',
+    question: 'What is code splitting and how does React support it?',
+    codeSnippet: `import { lazy, Suspense } from "react"
+
+const Dashboard = lazy(() => import("./Dashboard"))
+const Settings = lazy(() => import("./Settings"))
+
+function App() {
+  return (
+    <Suspense fallback={<LoadingSkeleton />}>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
+    </Suspense>
+  )
+}`,
+    options: [
+      'Splitting the bundle into smaller chunks loaded on demand — React.lazy + Suspense enables per-route code splitting',
+      'Splitting code into multiple files for better organization',
+      'Splitting a component into smaller sub-components',
+      'A Webpack optimization that minifies code automatically',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Code splitting: dynamic import() creates a separate bundle chunk. `React.lazy()` wraps the dynamic import, and `<Suspense>` provides the fallback UI during loading. Best practice: split by route (each page loads only its code). Webpack/Rollup auto-generate chunk names. Measure with Lighthouse bundle analysis.',
+    keyConcept: 'React.lazy + Suspense: route-based code splitting. Reduces initial bundle size. Fallback UI during chunk load.',
+    xpReward: 10,
+    tags: ['performance', 'code-splitting', 'lazy', 'suspense'],
+  },
+  {
+    id: 'react-70',
+    technology: 'react',
+    topic: 'Performance',
+    difficulty: 'hard',
+    question: 'What is the Children pattern for avoiding re-renders?',
+    codeSnippet: `function SlowComponent() {
+  console.log("Slow component rendered")
+  return <div>I am slow to render</div>
+}
+
+function Parent({ children }) {
+  const [count, setCount] = useState(0)
+  // Parent re-renders, but children prop is stable
+  return (
+    <div>
+      <button onClick={() => setCount(c => c + 1)}>{count}</button>
+      {children}  {/* SlowComponent does NOT re-render */}
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <Parent>
+      <SlowComponent />
+    </Parent>
+  )
+}`,
+    options: [
+      'Passing components as children prevents them from re-rendering when the parent re-renders — the JSX is created once',
+      'Children always re-render when parent re-renders',
+      'Children pattern is only for layout components',
+      'Children pattern is deprecated in React 18',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A powerful optimisation: when JSX is passed as `children` (or any prop), it is created by the parent component (`App`). When `Parent` re-renders, the children prop reference stays the same — `SlowComponent` does not re-render. This avoids React.memo for specific scenarios. Works because the child JSX is created in the parent, not inside the re-rendering component.',
+    keyConcept: 'Children as props optimisation: create JSX in parent, pass to child. The child re-renders, but the JSX prop stays stable.',
+    xpReward: 20,
+    tags: ['performance', 'children', 're-render', 'optimization'],
+  },
+  {
+    id: 'react-71',
+    technology: 'react',
+    topic: 'Hooks',
+    difficulty: 'hard',
+    question: 'What is the useDebugValue hook?',
+    options: [
+      'Displays a label for custom hooks in React DevTools — helps debug hook state without extra console.logs',
+      'Logs debug information to the console',
+      'Enables debugging in production builds',
+      'Shows the component tree in DevTools',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: '`useDebugValue(value, formatterFn)` adds a label to custom hooks in React DevTools. It only shows when DevTools is open and the hook is selected. The optional formatter delays expensive formatting. Use for libraries and shared custom hooks — not needed for one-off hooks in your own app.',
+    keyConcept: 'useDebugValue: DevTools label for custom hooks. formatter: lazy formatting. Use for shared/reusable hooks.',
+    xpReward: 5,
+    tags: ['hooks', 'debugging', 'devtools'],
+  },
+  {
+    id: 'react-72',
+    technology: 'react',
+    topic: 'Hooks',
+    difficulty: 'easy',
+    question: 'Why can\'t hooks be called inside conditions or loops?',
+    options: [
+      'React relies on the order of hook calls across renders — conditional hooks break the order, corrupting internal state',
+      'JavaScript does not allow functions inside conditions',
+      'Hooks must be called synchronously',
+      'Conditions and loops cannot contain any React code',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'React tracks hooks by their call order (a linked list). On each render, hooks must be called in exactly the same order. Calling a hook inside a condition would change the order on subsequent renders, causing React to misidentify which hook corresponds to which state. This is the Rule of Hooks: only call hooks at the top level of your component.',
+    keyConcept: 'Rules of Hooks: top level only, no conditions/loops. Call order must be consistent across renders.',
+    xpReward: 10,
+    tags: ['hooks', 'rules-of-hooks', 'top-level'],
+  },
+  {
+    id: 'react-73',
+    technology: 'react',
+    topic: 'Patterns',
+    difficulty: 'hard',
+    question: 'What is the controlled vs uncontrolled pattern for a custom component?',
+    codeSnippet: `// Uncontrolled (internal state):
+function UncontrolledInput() {
+  const [value, setValue] = useState("")
+  return <input value={value} onChange={e => setValue(e.target.value)} />
+}
+
+// Controlled (state lifted to parent):
+function ControlledInput({ value, onChange }) {
+  return <input value={value} onChange={onChange} />
+}`,
+    options: [
+      'Uncontrolled: component manages its own state (defaultValue). Controlled: parent manages state via value + onChange.',
+      'Controlled: component manages its own state. Uncontrolled: parent manages state.',
+      'Uncontrolled components do not use state',
+      'Controlled components are always better',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    example: true,
+    explanation: 'An uncontrolled component manages its own state internally (simpler API). A controlled component exposes `value` and `onChange` so the parent controls state — enabling validation, transformation, and sync with other components. Many libraries support both patterns (e.g., React Hook Form uses uncontrolled by default for performance).',
+    keyConcept: 'Uncontrolled: internal state, simpler. Controlled: parent state, more flexible. Support both via value/onChange pattern.',
+    xpReward: 15,
+    tags: ['patterns', 'controlled', 'uncontrolled', 'component-design'],
+  },
+  {
+    id: 'react-74',
+    technology: 'react',
+    topic: 'Patterns',
+    difficulty: 'medium',
+    question: 'What is the proxy component pattern?',
+    codeSnippet: `// Redesign by proxy — enhance an existing component
+function EnhancedButton({ variant, ...props }) {
+  const variants = {
+    primary: "bg-blue-500 text-white",
+    secondary: "bg-gray-500 text-white",
+    danger: "bg-red-500 text-white",
+  }
+  return (
+    <button
+      className={variant ? variants[variant] : ""}
+      {...props}
+    />
+  )
+}`,
+    options: [
+      'A component that wraps an existing component and adds/modifies its behaviour — design by proxy',
+      'A component that acts as a proxy for API requests',
+      'A component that proxies data between parent and child',
+      'A component that creates a network proxy server',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Proxy components wrap existing native elements or library components to add application-specific defaults, styles, or behavior. Benefits: (1) single source of truth for component styles/behavior, (2) easy to change globally, (3) encapsulate library specifics. Common in component libraries built on top of UI kits.',
+    keyConcept: 'Proxy component: wrap + customize. Single source of truth for design system components. Encapsulate third-party library details.',
+    xpReward: 10,
+    tags: ['patterns', 'proxy-component', 'encapsulation'],
+  },
+  {
+    id: 'react-75',
+    technology: 'react',
+    topic: 'Components',
+    difficulty: 'medium',
+    question: 'What is the difference between a pure component and a regular component?',
+    options: [
+      'Pure component implements shouldComponentUpdate with shallow prop/state comparison — skips re-renders when props are the same',
+      'Pure component is faster because it uses a different rendering mechanism',
+      'Pure component cannot have state or use hooks',
+      'Regular component is a pure function; pure component is a class',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'In class components, `React.PureComponent` does shallow comparison of props and state in shouldComponentUpdate. If props have not changed (shallow), the component skips re-rendering. In functional components, use `React.memo` for the same effect. Shallow comparison means: primitive === check, reference check for objects. Mutation inside objects will NOT be detected.',
+    keyConcept: 'PureComponent/React.memo: shallow comparison → skip re-render. Mutation inside objects breaks shallow comparison.',
+    xpReward: 10,
+    tags: ['components', 'pure-component', 'react.memo', 'performance'],
+  },
+  {
+    id: 'react-76',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'hard',
+    question: 'What is the difference between Server Components and Client Components in React 19?',
+    options: [
+      'Server Components render on the server, have no state/effects, reduce bundle size. Client Components are interactive with state and effects.',
+      'Client Components render on the server; Server Components render in the browser',
+      'Server Components are for API calls; Client Components are for UI',
+      'They are the same — just different naming conventions',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    example: true,
+    explanation: 'React Server Components (RSC) run exclusively on the server — they can access databases, file systems directly, and send only HTML/JSON to the client. They cannot use state, effects, or event handlers. Client Components are the traditional React components with full interactivity. Use Server Components by default for data fetching, Client Components only when interactivity is needed. The "use client" directive marks a component as a Client Component.',
+    keyConcept: 'Server Components: server-only, zero JS bundle, direct data access. Client Components: interactive, state, effects. Use server by default.',
+    xpReward: 20,
+    tags: ['react19', 'server-components', 'rsc', 'client-components'],
+  },
+  {
+    id: 'react-77',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'hard',
+    question: 'What is the `use` hook in React 19?',
+    codeSnippet: `import { use } from "react"
+
+function Comments({ commentsPromise }) {
+  // use() can be called inside conditions and loops!
+  const comments = use(commentsPromise)
+  return <div>{comments.map(c => <p key={c.id}>{c.text}</p>)}</div>
+}
+
+// Also works with Context:
+function ThemeButton() {
+  const theme = use(ThemeContext)  // Like useContext but callable anywhere
+  return <button className={theme}>Click</button>
+}`,
+    options: [
+      'A new hook that unwraps Promises and Context — can be called conditionally, unlike other hooks',
+      'A hook that imports components dynamically',
+      'A hook that creates reusable utility functions',
+      'A hook that accesses browser APIs',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The `use` hook (React 19) unwraps Promises (similar to `await`) and reads Context (similar to `useContext`). Unlike other hooks, `use` can be called inside conditions and loops — it is not subject to the Rules of Hooks. Use with `<Suspense>` for Promise resolution. Use for: reading context conditionally, integrating with streaming data.',
+    keyConcept: 'use: unwrap Promise/Context. Callable anywhere (conditions, loops). Not subject to Rules of Hooks. Works with Suspense.',
+    xpReward: 15,
+    tags: ['react19', 'use', 'promises', 'context'],
+  },
+  {
+    id: 'react-78',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'hard',
+    question: 'What is the useOptimistic hook in React 19?',
+    codeSnippet: `import { useOptimistic } from "react"
+
+function MessageForm({ sendMessage }) {
+  const [optimisticMessages, addOptimisticMessage] = useOptimistic(
+    messages,
+    (state, newMessage) => [...state, { text: newMessage, sending: true }]
+  )
+
+  async function handleSubmit(formData) {
+    const message = formData.get("message")
+    addOptimisticMessage(message)  // Show immediately
+    await sendMessage(message)  // Actual API call
+  }
+}`,
+    options: [
+      'Shows the expected result immediately while the async operation is in progress — automatically reverts on failure',
+      'Optimizes state updates for better performance',
+      'Creates optimistic state loading for data fetching',
+      'Optimizes bundle size by removing unused state',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    example: true,
+    explanation: '`useOptimistic` (React 19) enables optimistic UI updates — show the expected result immediately while the async mutation is in flight. If the mutation succeeds, the optimistic state is kept. If it fails, it automatically reverts to the original state. Uses `startTransition` under the hood. Perfect for: likes, comments, messages, form submissions.',
+    keyConcept: 'useOptimistic: instant UI update, auto-revert on failure. Use with server actions/async mutations. Improves perceived performance.',
+    xpReward: 15,
+    tags: ['react19', 'useOptimistic', 'optimistic-ui', 'mutations'],
+  },
+  {
+    id: 'react-79',
+    technology: 'react',
+    topic: 'React Internals',
+    difficulty: 'medium',
+    question: 'What is the useActionState hook?',
+    options: [
+      'Manages form state and actions — returns the latest form data and pending state from a form action',
+      'An action dispatcher for component state',
+      'A hook for managing browser action history',
+      'A hook for creating action animations',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    example: true,
+    explanation: '`useActionState` (React 19) manages form state elegantly. It works with `<form action={...}>` and returns: `[state, formAction, isPending]`. The action receives the previous state and form data, returning the new state. Handles form validation, error messages, and pending states without manual state management.',
+    keyConcept: 'useActionState: form state management. [state, action, isPending]. Works with form action attribute. Built-in pending state.',
+    xpReward: 15,
+    tags: ['react19', 'useActionState', 'forms', 'actions'],
+  },
+  {
+    id: 'react-80',
+    technology: 'react',
+    topic: 'Hooks',
+    difficulty: 'hard',
+    question: 'What is the useEvent hook (experimental)?',
+    options: [
+      'Creates a stable function reference that always calls the latest callback — avoids stale closures without adding dependencies',
+      'An event listener hook for DOM events',
+      'A hook that creates custom DOM events',
+      'A hook for handling synthetic events in React',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    example: true,
+    explanation: '`useEvent(callback)` (experimental React 19) returns a stable function reference that always calls the latest callback. Unlike `useCallback` (which needs dependencies), `useEvent` does not need deps — the function identity stays stable across renders, but it always calls the most recent callback. Solves the stale closure problem in callbacks passed to memoized children or useEffect.',
+    keyConcept: 'useEvent: stable identity + latest callback. Eliminates stale closures without dependency array churn. Not yet stable.',
+    xpReward: 15,
+    tags: ['hooks', 'useEvent', 'stale-closure', 'experimental'],
+  },
 ];
