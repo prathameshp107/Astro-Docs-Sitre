@@ -1521,4 +1521,341 @@ class HomeTheaterFacade {
     xpReward: 10,
     tags: ['design-patterns', 'facade', 'structural'],
   },
+
+  // ─── Additional Questions (oop-66 to oop-80) ───
+  {
+    id: 'oop-66',
+    technology: 'oops',
+    topic: 'SOLID Principles',
+    difficulty: 'hard',
+    question: 'What happens when you violate the Liskov Substitution Principle?',
+    codeSnippet: `class Bird {
+  fly() { return "Flying"; }
+}
+class Penguin extends Bird {
+  fly() { throw new Error("Penguins can\'t fly!"); }
+}`,
+    options: [
+      'Code that works with Bird may break when substituted with Penguin — the subtype changes behavior in unexpected ways',
+      'Everything works fine — penguins just cannot fly',
+      'Penguin should not extend Bird because of the fly method',
+      'LSP only applies to statically typed languages',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'This classic LSP violation: a Penguin is a Bird but cannot fly. Code that calls `bird.fly()` expecting success will break. The fix: create a separate `FlyingBird` subclass or use a `Flyable` interface. LSP ensures that subclasses can replace their parent class without breaking the system.',
+    keyConcept: 'LSP: subtypes must be substitutable. If a subtype throws unexpected errors, it violates LSP. Design hierarchies to match behavior, not real-world analogies.',
+    xpReward: 15,
+    tags: ['solid', 'lsp', 'liskov-substitution', 'polymorphism'],
+  },
+  {
+    id: 'oop-67',
+    technology: 'oops',
+    topic: 'What is OOP?',
+    difficulty: 'easy',
+    question: 'What is the difference between procedural and object-oriented programming?',
+    options: [
+      'Procedural: functions operate on data (separated). OOP: data and methods are bundled together in objects.',
+      'Procedural uses objects; OOP uses functions',
+      'Procedural is always faster than OOP',
+      'OOP does not use functions, only methods',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'In procedural programming, data is separate from functions that operate on it. In OOP, data (properties) and behavior (methods) are encapsulated in objects. OOP makes it easier to model real-world entities, reuse code, and manage complexity in large systems.',
+    keyConcept: 'Procedural: data + functions separate. OOP: data + methods together. OOP scales better for complex systems.',
+    xpReward: 5,
+    tags: ['oops', 'procedural', 'comparison', 'paradigms'],
+  },
+  {
+    id: 'oop-68',
+    technology: 'oops',
+    topic: 'Class & Object',
+    difficulty: 'easy',
+    question: 'What is the relationship between a class and an object?',
+    options: [
+      'A class is a template/blueprint; an object is a concrete instance created from that template',
+      'An object is a template; a class is created from the object',
+      'They are the same concept with different names',
+      'A class exists at runtime; an object exists at compile time',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A class is a definition that describes structure and behavior. An object is a concrete instance of that class with its own memory and state. Multiple objects can be created from one class, each with different property values.',
+    keyConcept: 'Class = definition (blueprint). Object = concrete instance. Many objects from one class.',
+    xpReward: 5,
+    tags: ['class', 'object', 'relationship'],
+  },
+  {
+    id: 'oop-69',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'medium',
+    question: 'What is ad-hoc polymorphism (method overloading)?',
+    codeSnippet: `// Multiple methods with same name, different params
+class Calculator {
+  add(a: number, b: number): number;
+  add(a: string, b: string): string;
+  add(a: any, b: any): any {
+    return a + b;
+  }
+}`,
+    options: [
+      'Multiple functions with the same name but different parameter types/counts — resolved at compile time',
+      'A function that adapts to any type dynamically',
+      'Polymorphism through inheritance only',
+      'A function that can be called with any number of arguments',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Ad-hoc polymorphism (overloading) allows multiple functions with the same name but different parameters. The compiler selects the correct version based on argument types/count. Supported in Java, C++, C#, TypeScript (function overloads). JavaScript does not support true overloading — the last definition wins.',
+    keyConcept: 'Overloading: same name, different params, compile-time resolution. Also called ad-hoc polymorphism. Not supported in JS.',
+    xpReward: 10,
+    tags: ['polymorphism', 'overloading', 'ad-hoc'],
+  },
+  {
+    id: 'oop-70',
+    technology: 'oops',
+    topic: 'Encapsulation',
+    difficulty: 'hard',
+    question: 'How does encapsulation relate to information hiding?',
+    options: [
+      'Encapsulation bundles data with methods; information hiding restricts access to internal details. They work together.',
+      'Encapsulation and information hiding are the same thing',
+      'Information hiding prevents encapsulation',
+      'Encapsulation is about performance; information hiding is about security',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Encapsulation is the mechanism of bundling data and methods together. Information hiding is the principle of restricting access to internals (via private/protected). They are related but distinct: encapsulation enables hiding, but you can encapsulate without hiding (everything public). Good OOP uses both together.',
+    keyConcept: 'Encapsulation = bundling. Information hiding = restricting access. Both together = proper data protection.',
+    xpReward: 10,
+    tags: ['encapsulation', 'information-hiding', 'design'],
+  },
+  {
+    id: 'oop-71',
+    technology: 'oops',
+    topic: 'Abstraction',
+    difficulty: 'hard',
+    question: 'What is the difference between an abstract class and a concrete class?',
+    options: [
+      'Abstract class: cannot be instantiated, may have abstract methods. Concrete class: fully implemented, can be instantiated.',
+      'Abstract class can be instantiated; concrete class cannot',
+      'Abstract class has no methods; concrete class has all methods',
+      'They are the same — the terms are interchangeable',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'An abstract class serves as a base and cannot be instantiated on its own. It may contain abstract methods (no implementation) that subclasses must implement, plus concrete methods with full implementation. A concrete class has all methods implemented and can be instantiated.',
+    keyConcept: 'Abstract: incomplete, needs subclass. Concrete: complete, instantiable. Use abstract for shared base behavior.',
+    xpReward: 5,
+    tags: ['abstraction', 'abstract-class', 'concrete-class'],
+  },
+  {
+    id: 'oop-72',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'medium',
+    question: 'What is a dependency injection container?',
+    options: [
+      'A framework that automatically resolves and injects dependencies — maintains a registry of how to create objects',
+      'A container that stores all dependencies in a file',
+      'A class that contains all dependencies of an application',
+      'A database for storing dependency information',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'A DI container (or IoC container) is a framework that manages dependency creation and injection. You register interfaces/classes with their implementations and lifetimes (singleton, transient, scoped). The container automatically resolves the dependency graph and injects dependencies when creating objects. Examples: InversifyJS (TS), Awilix (JS), Angular DI, Spring DI.',
+    keyConcept: 'DI container: automatic dependency resolution. Register → Resolve → Inject. Lifetimes: singleton, transient, scoped.',
+    xpReward: 15,
+    tags: ['di', 'dependency-injection', 'container', 'ioc'],
+  },
+  {
+    id: 'oop-73',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the KISS principle?',
+    options: [
+      'Keep It Simple, Stupid — simplicity should be a key goal in design; avoid unnecessary complexity',
+      'Keep It Secure, Stupid — security should be the primary concern',
+      'Keep It Structured, Stupid — always use strict code structure',
+      'Keep It Synchronized, Stupid — keep data consistent across components',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'KISS (Keep It Simple, Stupid) advocates for simplicity in design. Simple code is easier to understand, test, maintain, and debug. Avoid over-engineering, premature abstractions, and unnecessary complexity. Write code for humans first — the simplest solution that works is often the best.',
+    keyConcept: 'KISS: simplicity over cleverness. Simple code = maintainable code. Avoid over-engineering for hypothetical future needs.',
+    xpReward: 5,
+    tags: ['design', 'kiss', 'principles', 'simplicity'],
+  },
+  {
+    id: 'oop-74',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the YAGNI principle?',
+    options: [
+      'You Ain\'t Gonna Need It — do not add functionality until it is actually needed',
+      'You Are Generally Not Infallible — always test your code',
+      'You Always Get Nifty Implementations — aim for elegant solutions',
+      'Your Application Gets New Integrations — plan for extensibility',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'YAGNI (You Ain\'t Gonna Need It) warns against building for hypothetical future requirements. Only implement what is currently needed — future needs often differ from predictions. Premature extensibility adds complexity, slows development, and may never be used. Refactor when the actual need arises.',
+    keyConcept: 'YAGNI: don\'t build for fantasy futures. Solve today\'s problems today. Refactor when real need emerges.',
+    xpReward: 5,
+    tags: ['design', 'yagni', 'principles', 'simplicity'],
+  },
+  {
+    id: 'oop-75',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'medium',
+    question: 'What is cohesion in software design?',
+    options: [
+      'A measure of how focused and related the responsibilities of a module/class are — high cohesion is good',
+      'A measure of how dependent a module is on other modules',
+      'The process of combining multiple classes into one',
+      'The ability of classes to work together',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Cohesion measures how closely related the elements within a module/class are. High cohesion: a class has a single, well-defined purpose (all methods work toward that purpose). Low cohesion: a class does unrelated things (violates SRP). High cohesion → easier to understand, maintain, and reuse.',
+    keyConcept: 'High cohesion = focused, single-purpose. Low cohesion = scattered, multiple purposes. SRP helps achieve high cohesion.',
+    xpReward: 10,
+    tags: ['design', 'cohesion', 'srp', 'modularity'],
+  },
+  {
+    id: 'oop-76',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'medium',
+    question: 'What is coupling in software design?',
+    options: [
+      'A measure of how dependent a module is on other modules — loose coupling is good, tight coupling is bad',
+      'A measure of how connected two classes are in the code',
+      'The process of linking modules together',
+      'The ability of a class to be used in different contexts',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Coupling measures dependencies between modules. Loose coupling: modules interact through well-defined interfaces, changes in one have minimal impact on others. Tight coupling: modules are highly dependent, changes ripple through. Aim for: high cohesion within modules, loose coupling between modules. DI, interfaces, and events help achieve loose coupling.',
+    keyConcept: 'Loose coupling: minimal dependencies, easier maintenance. Tight coupling: fragile, hard to change. DI and interfaces reduce coupling.',
+    xpReward: 10,
+    tags: ['design', 'coupling', 'loose-coupling', 'modularity'],
+  },
+  {
+    id: 'oop-77',
+    technology: 'oops',
+    topic: 'Polymorphism',
+    difficulty: 'hard',
+    question: 'What is subtype polymorphism vs parametric polymorphism?',
+    codeSnippet: `// Subtype: via inheritance
+Cat extends Animal → polymorphic: Animal a = new Cat()
+
+// Parametric: via generics
+Array<T> → Array<string>, Array<number>`,
+    options: [
+      'Subtype: polymorphism through inheritance (override). Parametric: polymorphism through generics/type parameters.',
+      'Subtype uses generics; parametric uses inheritance',
+      'They are the same thing',
+      'Subtype is for classes; parametric is for functions',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'Subtype polymorphism (inclusion polymorphism): a subclass can be used where its parent type is expected — achieved through inheritance and method overriding. Parametric polymorphism: a function/type works uniformly for any type — achieved through generics/templates. TypeScript generics and Java generics are parametric polymorphism.',
+    keyConcept: 'Subtype: inheritance + overriding. Parametric (generics): type parameters. Both enable code reuse with different mechanisms.',
+    xpReward: 15,
+    tags: ['polymorphism', 'subtype', 'parametric', 'generics'],
+  },
+  {
+    id: 'oop-78',
+    technology: 'oops',
+    topic: 'Relationships',
+    difficulty: 'hard',
+    question: 'What is a UML class diagram and what does it show?',
+    options: [
+      'A visual diagram showing classes, attributes, methods, and relationships (inheritance, association, composition, dependency)',
+      'A diagram showing only the inheritance hierarchy',
+      'A diagram showing database tables and relationships',
+      'A diagram showing user interfaces and navigation',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'UML class diagrams model the static structure of a system: classes (with attributes and methods), visibility (+ public, - private, # protected), relationships (inheritance: hollow triangle arrow, association: plain line, composition: filled diamond, aggregation: hollow diamond, dependency: dashed arrow), and multiplicities (1, 0..*, 1..*, etc.).',
+    keyConcept: 'UML class diagram: visual OOP design. Relationships: inherit (triangle), compose (filled diamond), aggregate (hollow diamond).',
+    xpReward: 10,
+    tags: ['uml', 'class-diagram', 'relationships', 'design'],
+  },
+  {
+    id: 'oop-79',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'hard',
+    question: 'What is the Strategy pattern?',
+    codeSnippet: `// Strategy interface + concrete strategies
+interface SortStrategy {
+  sort(data: number[]): number[];
+}
+class QuickSort implements SortStrategy {
+  sort(data: number[]) { /* quicksort */ }
+}
+class BubbleSort implements SortStrategy {
+  sort(data: number[]) { /* bubblesort */ }
+}
+
+// Context uses the strategy
+class Sorter {
+  constructor(private strategy: SortStrategy) {}
+  sort(data: number[]) { return this.strategy.sort(data); }
+}`,
+    options: [
+      'A behavioral pattern that lets you define a family of algorithms, encapsulate each one, and make them interchangeable',
+      'A pattern that creates a single algorithm optimized for all cases',
+      'A pattern that sorts data in the database',
+      'A pattern that defines a step-by-step sorting process',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Strategy pattern defines a family of interchangeable algorithms. Each algorithm is encapsulated in its own class implementing a common interface. The context class delegates to the strategy, allowing algorithms to be swapped at runtime. Use for: sorting algorithms, compression, validation rules, payment processing.',
+    keyConcept: 'Strategy: interchangeable algorithms. Open/Closed: add new strategies without changing context. Composition over inheritance.',
+    xpReward: 15,
+    tags: ['design-patterns', 'strategy', 'behavioral'],
+  },
+  {
+    id: 'oop-80',
+    technology: 'oops',
+    topic: 'Access & Design',
+    difficulty: 'medium',
+    question: 'What is the Decorator pattern?',
+    codeSnippet: `// Base component
+interface Coffee { cost(): number; }
+class SimpleCoffee implements Coffee {
+  cost() { return 5; }
+}
+
+// Decorator wraps and adds behavior
+class MilkDecorator implements Coffee {
+  constructor(private coffee: Coffee) {}
+  cost() { return this.coffee.cost() + 2; }
+}
+
+// Usage
+let coffee: Coffee = new SimpleCoffee();
+coffee = new MilkDecorator(coffee); // cost = 7`,
+    options: [
+      'A structural pattern that attaches additional responsibilities to an object dynamically by wrapping it',
+      'A pattern that decorates the UI with visual elements',
+      'A pattern that creates multiple decorator objects',
+      'A pattern that removes functionality from an object',
+    ],
+    correctAnswer: [0],
+    type: 'single',
+    explanation: 'The Decorator pattern wraps an object with a new class that adds behavior before/after delegating to the original. Multiple decorators can be stacked (each wraps the previous). Benefits: more flexible than inheritance for adding behavior, follows Open/Closed, and enables combining behaviors at runtime.',
+    keyConcept: 'Decorator: wrap and enhance. More flexible than subclassing. Stackable. Examples: middleware, streams, logging.',
+    xpReward: 15,
+    tags: ['design-patterns', 'decorator', 'structural', 'wrapper'],
+  },
 ];
