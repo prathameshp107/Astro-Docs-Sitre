@@ -142,6 +142,7 @@ export default function ReactLanding() {
   const [featuresRef, featuresInView] = useInView();
   const [roadmapRef, roadmapInView] = useInView();
   const [ctaRef, ctaInView] = useInView();
+const [whyRef, whyInView] = useInView();
 
   const triggerSortingDemo = async () => {
     if (isSorting) return;
@@ -405,6 +406,83 @@ export default function ReactLanding() {
         </div>
       </section>
 
+      {/* ═════════════════════════════════════════
+          WHY DSA & DEV NOTES?
+      ═════════════════════════════════════════ */}
+      <section ref={whyRef} className="relative z-10 max-w-7xl mx-auto px-6 pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={whyInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <Tag color="amber">Why Choose Us?</Tag>
+          <h2 className="sg mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            One Platform. Infinite Possibilities.
+          </h2>
+          <p className="text-slate-500 mt-6 text-base max-w-xl">
+            Stop juggling dozens of tabs and subscriptions. DSA & Dev Notes gives you everything you need to learn, practice, and prepare — all in one cohesive, interactive ecosystem.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={whyInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {/* Feature 1: All-in-One */}
+          <motion.div
+            key="all-in-one"
+            initial={{ opacity: 0, x: -20 }}
+            animate={whyInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="flex flex-col items-center bg-[#0D1326]/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/[0.12] transition-colors duration-300"
+          >
+            <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
+              <Layers className="w-6 h-6 text-amber-400" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">All-in-One Platform</h3>
+            <p className="text-slate-400 text-center text-sm">
+              DSA, web dev, databases, DevOps, interview prep — all integrated. No more context switching.
+            </p>
+          </motion.div>
+
+          {/* Feature 2: Interactive Learning */}
+          <motion.div
+            key="interactive"
+            initial={{ opacity: 0, x: 0 }}
+            animate={whyInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="flex flex-col items-center bg-[#0D1326]/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/[0.12] transition-colors duration-300"
+          >
+            <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
+              <Activity className="w-6 h-6 text-amber-400" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">Interactive Learning</h3>
+            <p className="text-slate-400 text-center text-sm">
+              Visualize algorithms, code in live labs, and test your knowledge with instant feedback.
+            </p>
+          </motion.div>
+
+          {/* Feature 3: Interview Ready */}
+          <motion.div
+            key="interview-ready"
+            initial={{ opacity: 0, x: 20 }}
+            animate={whyInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.4, delay: 0.4 }}
+            className="flex flex-col items-center bg-[#0D1326]/60 border border-white/[0.06] rounded-2xl p-6 hover:border-white/[0.12] transition-colors duration-300"
+          >
+            <div className="w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
+              <Briefcase className="w-6 h-6 text-amber-400" />
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2">Interview Ready</h3>
+            <p className="text-slate-400 text-center text-sm">
+              Company-tagged problems, mock interviews, and curated questions to ace your next interview.
+            </p>
+          </motion.div>
+        </motion.div>
+      </section>
       {/* ── Marquee strip ── */}
       <div className="border-y border-white/[0.05] bg-black/20 overflow-hidden py-2.5 relative z-10">
         <div className="flex">

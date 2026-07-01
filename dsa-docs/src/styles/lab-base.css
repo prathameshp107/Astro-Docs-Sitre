@@ -1,3 +1,5 @@
+@import "./tokens.css";
+
 /* ═══════════════════════════════════════════════════════════════
    LAB BASE — Shared Platform Layout
    Consolidated from practice-labs.css, sql-labs.css, mongodb-labs.css
@@ -6,195 +8,195 @@
 /* ─── Variable Declarations (dark default) ─── */
 
 .jsl-platform {
-  --lab-bg: #030712;
-  --lab-bg-panel: #050b18;
-  --lab-bg-sidebar: rgba(15,23,42,0.46);
+  --lab-bg: var(--ink-900);
+  --lab-bg-panel: var(--ink-750);
+  --lab-bg-sidebar: color-mix(in srgb, var(--slate-900) 46%, transparent);
   --lab-bg-top: rgba(3,7,18,0.96);
-  --lab-bg-console: rgba(15,23,42,0.28);
-  --lab-bg-editor: rgba(15,23,42,0.48);
-  --lab-text: #e2e8f0;
-  --lab-text-title: #f8fafc;
-  --lab-text-body: #cbd5e1;
-  --lab-text-muted: #94a3b8;
-  --lab-text-dim: #64748b;
-  --lab-text-green: #22c55e;
+  --lab-bg-console: color-mix(in srgb, var(--slate-900) 28%, transparent);
+  --lab-bg-editor: color-mix(in srgb, var(--slate-900) 48%, transparent);
+  --lab-text: var(--slate-200);
+  --lab-text-title: var(--slate-50);
+  --lab-text-body: var(--slate-300);
+  --lab-text-muted: var(--slate-400);
+  --lab-text-dim: var(--slate-500);
+  --lab-text-green: var(--green-500);
   --lab-border: rgba(255,255,255,0.08);
   --lab-border2: rgba(255,255,255,0.07);
   --lab-border3: rgba(255,255,255,0.06);
   --lab-border4: rgba(255,255,255,0.055);
-  --lab-btn-run-bg: rgba(34,197,94,0.14);
-  --lab-btn-run-color: #22c55e;
-  --lab-btn-run-hover: rgba(34,197,94,0.23);
-  --lab-accent-learn: #60a5fa;
-  --lab-accent-bugs: #f87171;
-  --lab-accent-projects: #a78bfa;
-  --lab-accent-challenge: #fbbf24;
-  --lab-progress-gradient: linear-gradient(90deg, #60a5fa, #a78bfa);
+  --lab-btn-run-bg: color-mix(in srgb, var(--green-500) 14%, transparent);
+  --lab-btn-run-color: var(--green-500);
+  --lab-btn-run-hover: color-mix(in srgb, var(--green-500) 23%, transparent);
+  --lab-accent-learn: var(--blue-400);
+  --lab-accent-bugs: var(--red-400);
+  --lab-accent-projects: var(--indigo-400);
+  --lab-accent-challenge: var(--amber-400);
+  --lab-progress-gradient: linear-gradient(90deg, var(--blue-400), var(--indigo-400));
   --lab-badge-bg: rgba(96,165,250,0.11);
   --lab-badge-border: rgba(96,165,250,0.18);
-  --lab-badge-color: #60a5fa;
-  --lab-spinner-border: rgba(34,197,94,0.28);
-  --lab-spinner-top: #22c55e;
+  --lab-badge-color: var(--blue-400);
+  --lab-spinner-border: color-mix(in srgb, var(--green-500) 28%, transparent);
+  --lab-spinner-top: var(--green-500);
   --lab-lang-bg: rgba(97,218,251,0.07);
   --lab-lang-border: rgba(97,218,251,0.15);
-  --lab-lang-color: #61dafb;
+  --lab-lang-color: var(--react-blue);
   --lab-highlight-learn-bg: rgba(96,165,250,0.07);
-  --lab-highlight-bugs-bg: rgba(239,68,68,0.07);
-  --lab-highlight-projects-bg: rgba(167,139,250,0.07);
+  --lab-highlight-bugs-bg: color-mix(in srgb, var(--red-500) 7%, transparent);
+  --lab-highlight-projects-bg: color-mix(in srgb, var(--indigo-400) 7%, transparent);
   --lab-si-active-bg: rgba(96,165,250,0.12);
-  --lab-si-active-color: #60a5fa;
-  --lab-top-percent-color: #a78bfa;
+  --lab-si-active-color: var(--blue-400);
+  --lab-top-percent-color: var(--indigo-400);
   --lab-section-concept-border: rgba(96,165,250,0.35);
-  --lab-section-concept-color: #7dd3fc;
+  --lab-section-concept-color: var(--cyan-300);
   --lab-section-problem-border: rgba(248,113,113,0.4);
-  --lab-section-problem-color: #fca5a5;
+  --lab-section-problem-color: var(--red-300);
   --lab-section-goal-border: rgba(245,158,11,0.35);
-  --lab-section-goal-color: #fcd34d;
-  --lab-section-result-border: rgba(34,197,94,0.35);
-  --lab-section-result-color: #86efac;
+  --lab-section-goal-color: var(--amber-300);
+  --lab-section-result-border: color-mix(in srgb, var(--green-500) 35%, transparent);
+  --lab-section-result-color: var(--green-300);
 }
 
 .sql-platform {
-  --lab-bg: #030712;
-  --lab-bg-panel: #050b18;
-  --lab-bg-sidebar: rgba(15,23,42,0.46);
+  --lab-bg: var(--ink-900);
+  --lab-bg-panel: var(--ink-750);
+  --lab-bg-sidebar: color-mix(in srgb, var(--slate-900) 46%, transparent);
   --lab-bg-top: rgba(3,7,18,0.96);
-  --lab-bg-console: rgba(15,23,42,0.28);
-  --lab-bg-editor: rgba(15,23,42,0.48);
-  --lab-text: #e2e8f0;
-  --lab-text-title: #f8fafc;
-  --lab-text-body: #cbd5e1;
-  --lab-text-muted: #94a3b8;
-  --lab-text-dim: #64748b;
-  --lab-text-green: #22c55e;
+  --lab-bg-console: color-mix(in srgb, var(--slate-900) 28%, transparent);
+  --lab-bg-editor: color-mix(in srgb, var(--slate-900) 48%, transparent);
+  --lab-text: var(--slate-200);
+  --lab-text-title: var(--slate-50);
+  --lab-text-body: var(--slate-300);
+  --lab-text-muted: var(--slate-400);
+  --lab-text-dim: var(--slate-500);
+  --lab-text-green: var(--green-500);
   --lab-border: rgba(255,255,255,0.08);
   --lab-border2: rgba(255,255,255,0.07);
   --lab-border3: rgba(255,255,255,0.06);
   --lab-border4: rgba(255,255,255,0.055);
   --lab-btn-run-bg: rgba(59,130,246,0.14);
-  --lab-btn-run-color: #60a5fa;
+  --lab-btn-run-color: var(--blue-400);
   --lab-btn-run-hover: rgba(59,130,246,0.23);
-  --lab-accent-learn: #60a5fa;
-  --lab-accent-bugs: #f87171;
-  --lab-accent-projects: #a78bfa;
-  --lab-accent-challenge: #fbbf24;
-  --lab-progress-gradient: linear-gradient(90deg, #f59e0b, #3b82f6);
+  --lab-accent-learn: var(--blue-400);
+  --lab-accent-bugs: var(--red-400);
+  --lab-accent-projects: var(--indigo-400);
+  --lab-accent-challenge: var(--amber-400);
+  --lab-progress-gradient: linear-gradient(90deg, var(--amber-500), var(--blue-500));
   --lab-badge-bg: rgba(59,130,246,0.11);
   --lab-badge-border: rgba(59,130,246,0.18);
-  --lab-badge-color: #60a5fa;
+  --lab-badge-color: var(--blue-400);
   --lab-spinner-border: rgba(59,130,246,0.28);
-  --lab-spinner-top: #60a5fa;
+  --lab-spinner-top: var(--blue-400);
   --lab-lang-bg: rgba(245,158,11,0.07);
   --lab-lang-border: rgba(245,158,11,0.15);
-  --lab-lang-color: #f59e0b;
+  --lab-lang-color: var(--amber-500);
   --lab-highlight-learn-bg: transparent;
   --lab-highlight-bugs-bg: transparent;
   --lab-highlight-projects-bg: transparent;
   --lab-si-active-bg: rgba(59,130,246,0.12);
-  --lab-si-active-color: #60a5fa;
-  --lab-top-percent-color: #3b82f6;
+  --lab-si-active-color: var(--blue-400);
+  --lab-top-percent-color: var(--blue-500);
   --lab-section-concept-border: rgba(96,165,250,0.35);
-  --lab-section-concept-color: #7dd3fc;
+  --lab-section-concept-color: var(--cyan-300);
   --lab-section-problem-border: rgba(248,113,113,0.4);
-  --lab-section-problem-color: #fca5a5;
+  --lab-section-problem-color: var(--red-300);
   --lab-section-goal-border: rgba(245,158,11,0.35);
-  --lab-section-goal-color: #fcd34d;
-  --lab-section-result-border: rgba(34,197,94,0.35);
-  --lab-section-result-color: #86efac;
+  --lab-section-goal-color: var(--amber-300);
+  --lab-section-result-border: color-mix(in srgb, var(--green-500) 35%, transparent);
+  --lab-section-result-color: var(--green-300);
 }
 
 .mongo-platform {
-  --lab-bg: #030712;
-  --lab-bg-panel: #050b18;
-  --lab-bg-sidebar: rgba(15,23,42,0.46);
+  --lab-bg: var(--ink-900);
+  --lab-bg-panel: var(--ink-750);
+  --lab-bg-sidebar: color-mix(in srgb, var(--slate-900) 46%, transparent);
   --lab-bg-top: rgba(3,7,18,0.96);
-  --lab-bg-console: rgba(15,23,42,0.28);
-  --lab-bg-editor: rgba(15,23,42,0.48);
-  --lab-text: #e2e8f0;
-  --lab-text-title: #f8fafc;
-  --lab-text-body: #cbd5e1;
-  --lab-text-muted: #94a3b8;
-  --lab-text-dim: #64748b;
-  --lab-text-green: #22c55e;
+  --lab-bg-console: color-mix(in srgb, var(--slate-900) 28%, transparent);
+  --lab-bg-editor: color-mix(in srgb, var(--slate-900) 48%, transparent);
+  --lab-text: var(--slate-200);
+  --lab-text-title: var(--slate-50);
+  --lab-text-body: var(--slate-300);
+  --lab-text-muted: var(--slate-400);
+  --lab-text-dim: var(--slate-500);
+  --lab-text-green: var(--green-500);
   --lab-border: rgba(255,255,255,0.08);
   --lab-border2: rgba(255,255,255,0.07);
   --lab-border3: rgba(255,255,255,0.06);
   --lab-border4: rgba(255,255,255,0.055);
   --lab-btn-run-bg: rgba(59,130,246,0.14);
-  --lab-btn-run-color: #60a5fa;
+  --lab-btn-run-color: var(--blue-400);
   --lab-btn-run-hover: rgba(59,130,246,0.23);
-  --lab-accent-learn: #60a5fa;
-  --lab-accent-bugs: #f87171;
-  --lab-accent-projects: #a78bfa;
-  --lab-accent-challenge: #fbbf24;
-  --lab-progress-gradient: linear-gradient(90deg, #f59e0b, #3b82f6);
+  --lab-accent-learn: var(--blue-400);
+  --lab-accent-bugs: var(--red-400);
+  --lab-accent-projects: var(--indigo-400);
+  --lab-accent-challenge: var(--amber-400);
+  --lab-progress-gradient: linear-gradient(90deg, var(--amber-500), var(--blue-500));
   --lab-badge-bg: rgba(59,130,246,0.11);
   --lab-badge-border: rgba(59,130,246,0.18);
-  --lab-badge-color: #60a5fa;
+  --lab-badge-color: var(--blue-400);
   --lab-spinner-border: rgba(59,130,246,0.28);
-  --lab-spinner-top: #60a5fa;
+  --lab-spinner-top: var(--blue-400);
   --lab-lang-bg: rgba(19,170,82,0.07);
   --lab-lang-border: rgba(19,170,82,0.15);
-  --lab-lang-color: #13aa52;
+  --lab-lang-color: var(--mongo-green);
   --lab-highlight-learn-bg: transparent;
   --lab-highlight-bugs-bg: transparent;
   --lab-highlight-projects-bg: transparent;
   --lab-si-active-bg: rgba(59,130,246,0.12);
-  --lab-si-active-color: #60a5fa;
-  --lab-top-percent-color: #3b82f6;
+  --lab-si-active-color: var(--blue-400);
+  --lab-top-percent-color: var(--blue-500);
   --lab-section-concept-border: rgba(96,165,250,0.35);
-  --lab-section-concept-color: #7dd3fc;
+  --lab-section-concept-color: var(--cyan-300);
   --lab-section-problem-border: rgba(248,113,113,0.4);
-  --lab-section-problem-color: #fca5a5;
+  --lab-section-problem-color: var(--red-300);
   --lab-section-goal-border: rgba(245,158,11,0.35);
-  --lab-section-goal-color: #fcd34d;
-  --lab-section-result-border: rgba(34,197,94,0.35);
-  --lab-section-result-color: #86efac;
+  --lab-section-goal-color: var(--amber-300);
+  --lab-section-result-border: color-mix(in srgb, var(--green-500) 35%, transparent);
+  --lab-section-result-color: var(--green-300);
 }
 
 /* ─── Light mode variable overrides ─── */
 
 [data-theme='light'] .jsl-platform {
-  --lab-bg: #ffffff;
-  --lab-bg-panel: #f8fafc;
-  --lab-bg-sidebar: #f1f5f9;
+  --lab-bg: var(--white);
+  --lab-bg-panel: var(--slate-50);
+  --lab-bg-sidebar: var(--slate-100);
   --lab-bg-top: rgba(255,255,255,0.96);
-  --lab-bg-console: #f1f5f9;
-  --lab-bg-editor: #f1f5f9;
-  --lab-text: #0f172a;
-  --lab-text-title: #0f172a;
-  --lab-text-body: #334155;
-  --lab-text-muted: #64748b;
-  --lab-text-dim: #94a3b8;
-  --lab-text-green: #16a34a;
+  --lab-bg-console: var(--slate-100);
+  --lab-bg-editor: var(--slate-100);
+  --lab-text: var(--slate-900);
+  --lab-text-title: var(--slate-900);
+  --lab-text-body: var(--slate-700);
+  --lab-text-muted: var(--slate-500);
+  --lab-text-dim: var(--slate-400);
+  --lab-text-green: var(--green-600);
   --lab-border: rgba(0,0,0,0.08);
   --lab-border2: rgba(0,0,0,0.07);
   --lab-border3: rgba(0,0,0,0.06);
   --lab-border4: rgba(0,0,0,0.055);
   --lab-si-active-bg: rgba(37,99,235,0.1);
-  --lab-si-active-color: #2563eb;
+  --lab-si-active-color: var(--blue-600);
 }
 
 [data-theme='light'] .sql-platform,
 [data-theme='light'] .mongo-platform {
-  --lab-bg: #ffffff;
-  --lab-bg-panel: #f8fafc;
-  --lab-bg-sidebar: #f1f5f9;
+  --lab-bg: var(--white);
+  --lab-bg-panel: var(--slate-50);
+  --lab-bg-sidebar: var(--slate-100);
   --lab-bg-top: rgba(255,255,255,0.96);
-  --lab-bg-console: #f1f5f9;
-  --lab-bg-editor: #f1f5f9;
-  --lab-text: #0f172a;
-  --lab-text-title: #0f172a;
-  --lab-text-body: #334155;
-  --lab-text-muted: #64748b;
-  --lab-text-dim: #94a3b8;
-  --lab-text-green: #16a34a;
+  --lab-bg-console: var(--slate-100);
+  --lab-bg-editor: var(--slate-100);
+  --lab-text: var(--slate-900);
+  --lab-text-title: var(--slate-900);
+  --lab-text-body: var(--slate-700);
+  --lab-text-muted: var(--slate-500);
+  --lab-text-dim: var(--slate-400);
+  --lab-text-green: var(--green-600);
   --lab-border: rgba(0,0,0,0.08);
   --lab-border2: rgba(0,0,0,0.07);
   --lab-border3: rgba(0,0,0,0.06);
   --lab-border4: rgba(0,0,0,0.055);
   --lab-si-active-bg: rgba(37,99,235,0.08);
-  --lab-si-active-color: #2563eb;
+  --lab-si-active-color: var(--blue-600);
 }
 
 /* ══════════════════════════════════════════════════
@@ -217,7 +219,7 @@ body:has(.mongo-platform) {
   min-height: 0;
   background: var(--lab-bg);
   color: var(--lab-text);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
   overflow: hidden;
 }
 
@@ -248,7 +250,7 @@ body:has(.mongo-platform) {
 .sql-platform code,
 .mongo-platform pre,
 .mongo-platform code {
-  font-family: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 /* ══════════════════════════════════════════════════
@@ -421,21 +423,21 @@ body:has(.mongo-platform) {
 
 .jsl-cat-chip.projects {
   color: var(--lab-accent-projects);
-  border-color: rgba(167,139,250,0.22);
-  background: rgba(167,139,250,0.07);
+  border-color: color-mix(in srgb, var(--indigo-400) 22%, transparent);
+  background: color-mix(in srgb, var(--indigo-400) 7%, transparent);
 }
 
 [data-theme='light'] .jsl-cat-chip.learn {
-  color: #2563eb;
+  color: var(--blue-600);
   border-color: rgba(37,99,235,0.22);
 }
 [data-theme='light'] .jsl-cat-chip.bugs {
-  color: #dc2626;
+  color: var(--red-600);
   border-color: rgba(220,38,38,0.22);
 }
 [data-theme='light'] .jsl-cat-chip.projects {
-  color: #7c3aed;
-  border-color: rgba(124,58,237,0.22);
+  color: var(--indigo-700);
+  border-color: color-mix(in srgb, var(--indigo-700) 22%, transparent);
 }
 
 /* ══════════════════════════════════════════════════
@@ -545,13 +547,13 @@ body:has(.mongo-platform) {
 }
 
 .jsl-sg-header.learn .jsl-sg-title {
-  color: #93c5fd;
+  color: var(--blue-300);
 }
 .jsl-sg-header.bugs .jsl-sg-title {
-  color: #fca5a5;
+  color: var(--red-300);
 }
 .jsl-sg-header.projects .jsl-sg-title {
-  color: #c4b5fd;
+  color: var(--indigo-300);
 }
 
 .jsl-sg-header.learn:hover,
@@ -568,11 +570,11 @@ body:has(.mongo-platform) {
 }
 
 .jsl-sidebar-group:has(.jsl-sg-header.bugs) .jsl-si.active {
-  background: rgba(239,68,68,0.1);
-  color: #f87171;
+  background: color-mix(in srgb, var(--red-500) 10%, transparent);
+  color: var(--red-400);
 }
 .jsl-sidebar-group:has(.jsl-sg-header.projects) .jsl-si.active {
-  background: rgba(167,139,250,0.1);
+  background: color-mix(in srgb, var(--indigo-400) 10%, transparent);
   color: var(--lab-accent-projects);
 }
 
@@ -670,18 +672,18 @@ body:has(.mongo-platform) {
 
 .jsl-si-level.beginner,
 .sql-si-level.beginner {
-  background: rgba(34,197,94,0.13);
-  color: #22c55e;
+  background: color-mix(in srgb, var(--green-500) 13%, transparent);
+  color: var(--green-500);
 }
 .jsl-si-level.intermediate,
 .sql-si-level.intermediate {
   background: rgba(245,158,11,0.13);
-  color: #f59e0b;
+  color: var(--amber-500);
 }
 .jsl-si-level.advanced,
 .sql-si-level.advanced {
-  background: rgba(239,68,68,0.13);
-  color: #ef4444;
+  background: color-mix(in srgb, var(--red-500) 13%, transparent);
+  color: var(--red-500);
 }
 
 .jsl-si-check,
@@ -692,18 +694,18 @@ body:has(.mongo-platform) {
 
 [data-theme='light'] .jsl-si.active {
   background: rgba(37,99,235,0.1);
-  color: #2563eb;
+  color: var(--blue-600);
 }
 [data-theme='light'] .jsl-sidebar-group:has(.jsl-sg-header.bugs) .jsl-si.active {
-  color: #dc2626;
+  color: var(--red-600);
 }
 [data-theme='light'] .jsl-sidebar-group:has(.jsl-sg-header.projects) .jsl-si.active {
-  color: #7c3aed;
+  color: var(--indigo-700);
 }
-[data-theme='light'] .jsl-si-level.beginner { color: #16a34a; }
-[data-theme='light'] .jsl-sg-header.learn .jsl-sg-title { color: #2563eb; }
-[data-theme='light'] .jsl-sg-header.bugs .jsl-sg-title { color: #dc2626; }
-[data-theme='light'] .jsl-sg-header.projects .jsl-sg-title { color: #7c3aed; }
+[data-theme='light'] .jsl-si-level.beginner { color: var(--green-600); }
+[data-theme='light'] .jsl-sg-header.learn .jsl-sg-title { color: var(--blue-600); }
+[data-theme='light'] .jsl-sg-header.bugs .jsl-sg-title { color: var(--red-600); }
+[data-theme='light'] .jsl-sg-header.projects .jsl-sg-title { color: var(--indigo-700); }
 
 /* ══════════════════════════════════════════════════
    CONTENT PANEL
@@ -763,7 +765,7 @@ body:has(.mongo-platform) {
 [data-theme='light'] .jsl-chapter-badge {
   background: rgba(37,99,235,0.08);
   border-color: rgba(37,99,235,0.18);
-  color: #2563eb;
+  color: var(--blue-600);
 }
 
 .jsl-chapter-badge.bug,
@@ -774,8 +776,8 @@ body:has(.mongo-platform) {
 }
 
 .jsl-chapter-badge.project {
-  background: rgba(167,139,250,0.11);
-  border-color: rgba(167,139,250,0.18);
+  background: color-mix(in srgb, var(--indigo-400) 11%, transparent);
+  border-color: color-mix(in srgb, var(--indigo-400) 18%, transparent);
   color: var(--lab-accent-projects);
 }
 
@@ -959,7 +961,7 @@ body:has(.mongo-platform) {
 
 .jsl-rule-item,
 .sql-rule-item {
-  color: #cbd5e1;
+  color: var(--slate-300);
   font-size: 0.86rem;
   padding: 0.18rem 0;
 }
@@ -971,19 +973,19 @@ body:has(.mongo-platform) {
 
 .jsl-task-text,
 .sql-task-text {
-  color: #cbd5e1;
+  color: var(--slate-300);
   font-size: 0.9rem;
   line-height: 1.65;
 }
 
 .jsl-task-item {
-  color: #cbd5e1;
+  color: var(--slate-300);
   list-style: none;
   margin: 0.15rem 0;
 }
 
 .sql-task-item {
-  color: #cbd5e1;
+  color: var(--slate-300);
   list-style: none;
   margin: 0.15rem 0;
 }
@@ -991,7 +993,7 @@ body:has(.mongo-platform) {
 .jsl-hint-box,
 .sql-hint-box {
   margin-bottom: 1rem;
-  color: #fef3c7;
+  color: var(--amber-50);
   background: rgba(245,158,11,0.08);
   border-color: rgba(245,158,11,0.2);
   border-left: 3px solid rgba(245,158,11,0.5);
@@ -1000,9 +1002,9 @@ body:has(.mongo-platform) {
 .jsl-solution-box,
 .sql-solution-box {
   margin-bottom: 1rem;
-  background: rgba(167,139,250,0.07);
-  border-color: rgba(167,139,250,0.15);
-  border-left: 3px solid rgba(167,139,250,0.4);
+  background: color-mix(in srgb, var(--indigo-400) 7%, transparent);
+  border-color: color-mix(in srgb, var(--indigo-400) 15%, transparent);
+  border-left: 3px solid color-mix(in srgb, var(--indigo-400) 40%, transparent);
 }
 
 .sql-solution-box {
@@ -1014,18 +1016,18 @@ body:has(.mongo-platform) {
 .jsl-solution-box h4,
 .sql-solution-box h4 {
   margin: 0 0 0.5rem;
-  color: #c4b5fd;
+  color: var(--indigo-300);
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .sql-solution-box h4 {
-  color: #93c5fd;
+  color: var(--blue-300);
 }
 
 [data-theme='light'] .jsl-solution-box h4 {
-  color: #7c3aed;
+  color: var(--indigo-700);
 }
 
 .jsl-code-block,
@@ -1034,7 +1036,7 @@ body:has(.mongo-platform) {
   padding: 0.8rem;
   border-radius: 0.45rem;
   border: 1px solid var(--lab-border);
-  background: #0a0f1e;
+  background: var(--ink-850);
   color: var(--lab-text);
   overflow-x: auto;
   font-size: 0.8rem;
@@ -1089,8 +1091,8 @@ body:has(.mongo-platform) {
 
 .jsl-btn-mark.done,
 .sql-btn-mark.done {
-  border-color: rgba(34,197,94,0.22);
-  background: rgba(34,197,94,0.12);
+  border-color: color-mix(in srgb, var(--green-500) 22%, transparent);
+  background: color-mix(in srgb, var(--green-500) 12%, transparent);
   color: var(--lab-text-green);
 }
 
@@ -1180,14 +1182,14 @@ body:has(.mongo-platform) {
 [data-theme='light'] .jsl-editor-lang {
   background: rgba(37,99,235,0.08);
   border-color: rgba(37,99,235,0.18);
-  color: #2563eb;
+  color: var(--blue-600);
 }
 
 .jsl-editor-shortcut,
 .sql-editor-shortcut {
   margin-left: auto;
   color: var(--lab-text-dim);
-  font-family: "JetBrains Mono", Consolas, monospace;
+  font-family: var(--font-mono);
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--lab-border3);
   border-radius: 3px;
@@ -1295,12 +1297,12 @@ body:has(.mongo-platform) {
 }
 
 .sql-results-error {
-  color: #f87171;
+  color: var(--red-400);
   font-size: 0.68rem;
 }
 
 .sql-results-success {
-  color: #22c55e;
+  color: var(--green-500);
   font-size: 0.68rem;
 }
 
@@ -1308,7 +1310,7 @@ body:has(.mongo-platform) {
   display: flex;
   align-items: center;
   gap: 0.3rem;
-  color: #61dafb;
+  color: var(--react-blue);
   font-size: 0.68rem;
   letter-spacing: 0;
   text-transform: none;
@@ -1355,7 +1357,7 @@ body:has(.mongo-platform) {
   display: flex;
   gap: 0.4rem;
   padding: 0.16rem 0.65rem;
-  font-family: "JetBrains Mono", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   line-height: 1.5;
 }
@@ -1370,15 +1372,15 @@ body:has(.mongo-platform) {
 .jsl-console-marker {
   width: 14px;
   flex-shrink: 0;
-  color: #64748b;
+  color: var(--slate-500);
   text-align: center;
 }
 
 .jsl-console-log pre { color: var(--lab-text); }
-.jsl-console-warn pre { color: #fbbf24; }
-.jsl-console-error pre { color: #f87171; }
-.jsl-console-info pre { color: #60a5fa; }
-.jsl-console-result pre { color: #34d399; }
+.jsl-console-warn pre { color: var(--amber-400); }
+.jsl-console-error pre { color: var(--red-400); }
+.jsl-console-info pre { color: var(--blue-400); }
+.jsl-console-result pre { color: var(--green-400); }
 
 [data-theme='light'] .jsl-console-marker {
   color: var(--lab-text-dim);
@@ -1415,9 +1417,9 @@ body:has(.mongo-platform) {
 .jsl-browser-dot.green { background: #28c840; }
 
 .jsl-preview-url {
-  font-family: "JetBrains Mono", Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.65rem;
-  color: #475569;
+  color: var(--slate-600);
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 3px;
@@ -1434,7 +1436,7 @@ body:has(.mongo-platform) {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  background: #ffffff;
+  background: var(--white);
   color: #111827;
 }
 
@@ -1456,14 +1458,14 @@ body:has(.mongo-platform) {
 .jsl-tests-score {
   padding: 0.16rem 0.5rem;
   border-radius: 999px;
-  background: rgba(239,68,68,0.1);
-  color: #f87171;
+  background: color-mix(in srgb, var(--red-500) 10%, transparent);
+  color: var(--red-400);
   font-size: 0.72rem;
 }
 
 .jsl-tests-score.all-pass {
-  background: rgba(34,197,94,0.12);
-  color: #22c55e;
+  background: color-mix(in srgb, var(--green-500) 12%, transparent);
+  color: var(--green-500);
 }
 
 .jsl-test-item {
@@ -1479,22 +1481,22 @@ body:has(.mongo-platform) {
 }
 
 .jsl-test-item.pass {
-  border-color: rgba(34,197,94,0.2);
-  background: rgba(34,197,94,0.08);
-  color: #22c55e;
+  border-color: color-mix(in srgb, var(--green-500) 20%, transparent);
+  background: color-mix(in srgb, var(--green-500) 8%, transparent);
+  color: var(--green-500);
 }
 
 .jsl-test-item.fail {
-  border-color: rgba(239,68,68,0.22);
-  background: rgba(239,68,68,0.08);
-  color: #f87171;
+  border-color: color-mix(in srgb, var(--red-500) 22%, transparent);
+  background: color-mix(in srgb, var(--red-500) 8%, transparent);
+  color: var(--red-400);
 }
 
 .jsl-test-item.pending {
   border-color: rgba(148,163,184,0.12);
   border-style: dashed;
   background: rgba(148,163,184,0.04);
-  color: #64748b;
+  color: var(--slate-500);
 }
 
 [data-theme='light'] .jsl-test-item.pending {
@@ -1511,7 +1513,7 @@ body:has(.mongo-platform) {
 
 .jsl-test-error {
   max-width: 180px;
-  color: #fca5a5;
+  color: var(--red-300);
 }
 
 /* ══════════════════════════════════════════════════
@@ -1529,7 +1531,7 @@ body:has(.mongo-platform) {
   text-align: left;
   font-weight: 700;
   color: var(--lab-text-muted);
-  background: rgba(15,23,42,0.35);
+  background: color-mix(in srgb, var(--slate-900) 35%, transparent);
   border-bottom: 1px solid var(--lab-border);
   white-space: nowrap;
   position: sticky;
@@ -1563,7 +1565,7 @@ body:has(.mongo-platform) {
 
 .sql-results-numeric {
   text-align: right;
-  font-family: "JetBrains Mono", Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 /* ══════════════════════════════════════════════════
@@ -1582,7 +1584,7 @@ body:has(.mongo-platform) {
   display: flex;
   align-items: flex-start;
   gap: 0.55rem;
-  color: #cbd5e1;
+  color: var(--slate-300);
   font-size: 0.86rem;
 }
 
@@ -1601,21 +1603,21 @@ body:has(.mongo-platform) {
   flex-shrink: 0;
   border-radius: 50%;
   background: rgba(96,165,250,0.12);
-  color: #60a5fa;
+  color: var(--blue-400);
   font-size: 0.75rem;
   font-weight: 900;
 }
 
 .jsl-milestone strong {
   display: block;
-  color: #f8fafc;
+  color: var(--slate-50);
   font-size: 0.85rem;
   margin-bottom: 0.12rem;
 }
 
 .jsl-milestone p {
   margin: 0;
-  color: #94a3b8;
+  color: var(--slate-400);
   font-size: 0.8rem;
 }
 

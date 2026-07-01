@@ -15,54 +15,33 @@ This is not just theory. AI Engineering means writing real code that uses AI mod
 
 ## The Learning Path
 
-This curriculum takes you from zero to production-ready AI engineer across 10 phases:
+This curriculum takes you from zero to production-ready AI engineer across 11 phases:
 
 | Phase | Topic | What You'll Learn |
 |-------|-------|-------------------|
 | **1** | AI Fundamentals | What AI is, how it works, terminology |
 | **2** | Machine Learning | Supervised/unsupervised learning, algorithms |
 | **3** | Deep Learning | Neural networks, CNNs, RNNs |
-| **4** | LLMs | How large language models work |
-| **5** | Prompt Engineering | Crafting effective prompts |
-| **6** | Embeddings | Semantic representations of text/data |
-| **7** | Vector Databases | Storing and querying embeddings |
-| **8** | RAG | Retrieval-Augmented Generation systems |
-| **9** | AI Agents & MCP | Autonomous agents, tool use, Model Context Protocol |
-| **10** | Production AI Engineering | Deployment, monitoring, cost, reliability |
+| **4** | Large Language Models | How LLMs work, tokenization, transformers |
+| **5** | Retrieval Systems & RAG | Embeddings, vector databases, retrieval-augmented generation |
+| **6** | AI Agents | Autonomous agents, tool use, planning |
+| **7** | Model Context Protocol | MCP architecture, servers, clients |
+| **8** | AI Frameworks & Ecosystem | LangChain, LlamaIndex, LangGraph, CrewAI, DSPy |
+| **9** | Production AI Engineering | LLMOps, deployment, monitoring, evaluation, security, cost optimization |
+| **10** | Real-World AI Projects | Build ChatGPT, Perplexity, Cursor, Copilot, enterprise AI platform |
+| **11** | AI Interview Preparation | Career guide, mock interviews, system design, portfolio building |
 
 ---
 
-## Phase 1 Goals
+## What You Can Build After Phase 10
 
-After Phase 1, you will clearly understand:
-
-- What AI is and why it exists
-- Where AI is used in the real world
-- How AI works at a high level
-- Core AI terminology
-- The relationship between **AI → ML → Deep Learning → Transformers → LLMs**
-
----
-
-## Phase 1 Topics
-
-| # | Topic |
-|---|-------|
-| 01 | Introduction to AI |
-| 02 | History of AI |
-| 03 | Why AI? |
-| 04 | Types of AI |
-| 05 | AI vs ML vs Deep Learning |
-| 06 | How AI Works |
-| 07 | AI Lifecycle |
-| 08 | Common AI Terminology |
-| 09 | Real-World AI |
-| 10 | AI Applications |
-| 11 | AI Limitations |
-| 12 | AI Myths |
-| 13 | AI Ethics |
-| 14 | Future of AI |
-| 15 | AI Cheat Sheet |
+✓ Complete ChatGPT clone with streaming and multi-model support
+✓ Perplexity-like AI search engine with citations
+✓ NotebookLM-style document research assistant
+✓ Cursor-like AI-first code editor
+✓ GitHub Copilot-style code completion
+✓ AI code reviewer with automated PR comments
+✓ Enterprise AI platform with RAG, agents, MCP, and monitoring
 
 ---
 
