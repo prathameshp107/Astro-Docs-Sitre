@@ -1,0 +1,246 @@
+/* ============================================================================
+   DESIGN TOKENS — single source of truth for color, type, spacing, elevation.
+   Loaded FIRST (see astro.config.mjs customCss) so every other stylesheet can
+   consume these vars. Use var(--...) — do NOT hardcode hex/rgba in components.
+
+   Layers:
+     1. Primitives  — raw palette ramps (--slate-500, --indigo-500, ...).
+     2. Semantic    — role-based, theme-aware (--surface, --text, --accent, ...).
+                      Components should prefer semantic tokens.
+     3. Type/space/elevation — fonts, radius, shadow, z-index.
+
+   Accent = INDIGO (unified across docs + landing + labs).
+   For translucent tints use color-mix, e.g.
+     background: color-mix(in srgb, var(--accent) 10%, transparent);
+============================================================================ */
+
+:root {
+  /* ── 1. PRIMITIVES ─────────────────────────────────────────────────── */
+
+  /* Slate (neutral ramp) */
+  --slate-50:  #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+  --white:     #ffffff;
+  --black:     #000000;
+
+  /* Deep backgrounds used by landing/labs dark surfaces */
+  --ink-900: #030712;
+  --ink-850: #0a0f1e;
+  --ink-800: #0d1326;
+  --ink-750: #050b18;
+  --ink-700: #0b1220;
+
+  /* Indigo / violet accent ramp */
+  --indigo-300: #c4b5fd;
+  --indigo-400: #a78bfa;
+  --indigo-500: #6366f1;  /* primary accent (light) */
+  --indigo-600: #8b5cf6;  /* primary accent (dark) */
+  --indigo-700: #7c3aed;
+  --indigo-800: #6d28d9;
+  --indigo-900: #4c1d95;
+  --indigo-100: #e0e7ff;
+  --indigo-50:  #ede9fe;
+  --violet-200: #ddd6fe;
+  --fuchsia-500: #c026d3;
+  --fuchsia-300: #f0abfc;
+
+  /* Blue */
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+
+  /* Cyan */
+  --cyan-300: #7dd3fc;
+  --cyan-500: #06b6d4;
+  --cyan-600: #0891b2;
+
+  /* Green */
+  --green-300: #86efac;
+  --green-400: #34d399;
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+  --green-700: #15803d;
+  --green-900: #14532d;
+  --emerald-500: #10b981;
+  --green-50:  #dcfce7;
+  --green-100: #d1fae5;
+  --green-200: #a7f3d0;
+
+  /* Amber */
+  --amber-300: #fcd34d;
+  --amber-400: #fbbf24;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --amber-700: #b45309;
+  --amber-900: #78350f;
+  --amber-100: #fde68a;
+  --amber-50:  #fef3c7;
+  --amber-25:  #fffbeb;
+
+  /* Red */
+  --red-300: #fca5a5;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --red-900: #7f1d1d;
+  --red-100: #fecaca;
+  --red-50:  #fee2e2;
+  --rose-50: #ffe4e6;
+
+  /* Brand / misc */
+  --react-blue: #61dafb;
+  --mongo-green: #13aa52;
+
+  /* ── 2. SEMANTIC (LIGHT DEFAULT) ───────────────────────────────────── */
+
+  /* Surfaces */
+  --bg:            var(--white);
+  --surface:       var(--slate-50);
+  --surface-2:     var(--slate-100);
+  --border:        var(--slate-200);
+  --border-strong: var(--slate-300);
+  --hairline:      var(--slate-200);
+
+  /* Text */
+  --text:          var(--slate-900);
+  --text-secondary:var(--slate-500);
+  --text-muted:    var(--slate-400);
+  --text-inverse:  var(--white);
+
+  /* Accent (INDIGO) */
+  --accent:        var(--indigo-500);
+  --accent-hover:  var(--indigo-700);
+  --accent-strong: var(--indigo-900);
+  --accent-soft:   var(--indigo-400);
+  --accent-contrast: var(--white);
+  --accent-tint:   color-mix(in srgb, var(--accent) 8%, transparent);
+  --accent-tint-strong: color-mix(in srgb, var(--accent) 15%, transparent);
+  --accent-gradient: linear-gradient(135deg, var(--indigo-500) 0%, var(--fuchsia-500) 100%);
+
+  /* Semantic status */
+  --success:   var(--green-500);
+  --success-fg:var(--green-700);
+  --success-bg:var(--green-50);
+  --warning:   var(--amber-400);
+  --warning-fg:var(--amber-700);
+  --warning-bg:var(--amber-50);
+  --danger:    var(--red-500);
+  --danger-fg: var(--red-700);
+  --danger-bg: var(--red-50);
+  --info:      var(--blue-500);
+
+  /* Starlight bridge tokens (keep Starlight themed to our accent) */
+  --sl-color-accent-low:  var(--indigo-50);
+  --sl-color-accent:      var(--accent);
+  --sl-color-accent-high: var(--accent-strong);
+  --sl-color-bg:          var(--bg);
+  --sl-color-bg-sidebar:  var(--surface);
+  --sl-color-bg-nav:      var(--bg);
+  --sl-color-hairline:    var(--hairline);
+
+  /* Legacy --app-* aliases (kept so existing rules keep working) */
+  --app-bg:             var(--bg);
+  --app-surface:        var(--surface);
+  --app-border:         var(--border);
+  --app-text:           var(--text);
+  --app-text-secondary: var(--text-secondary);
+  --app-accent:         var(--accent);
+  --app-accent-light:   var(--accent-tint);
+  --app-accent-gradient:var(--accent-gradient);
+
+  /* ── 3. TYPOGRAPHY ─────────────────────────────────────────────────── */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-lg:   1.125rem;
+  --fs-xl:   1.25rem;
+  --fs-2xl:  1.5rem;
+  --fs-3xl:  1.875rem;
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+
+  --lh-tight: 1.2;
+  --lh-snug:  1.5;
+  --lh-normal:1.7;
+
+  /* ── 4. RADIUS ─────────────────────────────────────────────────────── */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 20px;
+  --radius-pill: 999px;
+
+  /* ── 5. ELEVATION ──────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --shadow-accent: 0 8px 24px color-mix(in srgb, var(--accent) 30%, transparent);
+
+  /* ── 6. Z-INDEX ────────────────────────────────────────────────────── */
+  --z-nav: 1000;
+  --z-dropdown: 1001;
+  --z-overlay: 99999;
+  --z-modal: 100000;
+
+  /* ── 7. MOTION ─────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s var(--ease-out);
+}
+
+/* ── DARK THEME OVERRIDES ────────────────────────────────────────────── */
+:root[data-theme='dark'] {
+  /* Surfaces */
+  --bg:            var(--slate-950);
+  --surface:       var(--slate-900);
+  --surface-2:     var(--ink-800);
+  --border:        var(--slate-800);
+  --border-strong: var(--slate-700);
+  --hairline:      var(--slate-800);
+
+  /* Text */
+  --text:          var(--slate-100);
+  --text-secondary:var(--slate-400);
+  --text-muted:    var(--slate-500);
+
+  /* Accent shifts lighter in dark */
+  --accent:        var(--indigo-600);
+  --accent-hover:  var(--indigo-400);
+  --accent-strong: var(--violet-200);
+  --accent-soft:   var(--indigo-400);
+  --accent-gradient: linear-gradient(135deg, var(--indigo-400) 0%, var(--fuchsia-300) 100%);
+
+  /* Status backgrounds go deep in dark */
+  --success-fg:var(--green-300);
+  --success-bg:var(--green-900);
+  --warning-fg:var(--amber-100);
+  --warning-bg:var(--amber-900);
+  --danger-fg: var(--red-300);
+  --danger-bg: var(--red-900);
+
+  /* Starlight bridge */
+  --sl-color-accent-low:  var(--indigo-900);
+  --sl-color-accent:      var(--accent);
+  --sl-color-accent-high: var(--accent-strong);
+}

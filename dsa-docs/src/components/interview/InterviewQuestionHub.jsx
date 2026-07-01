@@ -77,7 +77,7 @@ export default function InterviewQuestionHub() {
           --iq-muted: #6b7280;
           --iq-radius: 10px;
           color: var(--iq-text);
-          font-family: 'Inter', 'Space Grotesk', sans-serif;
+          font-family: var(--font-sans);
           min-height: 100vh;
           max-width: 1100px;
           margin: 0 auto;
@@ -102,7 +102,7 @@ export default function InterviewQuestionHub() {
         }
         .iq-badge {
           display: inline-block;
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-mono);
           font-size: 11px;
           letter-spacing: 2px;
           text-transform: uppercase;
@@ -121,7 +121,7 @@ export default function InterviewQuestionHub() {
         }
         .iq-title .js-color { color: #f7df1e; }
         .iq-title .react-color { color: #61dafb; }
-        .iq-title .next-color { color: #ffffff; }
+        .iq-title .next-color { color: var(--white); }
         .iq-subtitle {
           color: var(--iq-muted);
           font-size: 0.95rem;
@@ -136,7 +136,7 @@ export default function InterviewQuestionHub() {
         }
         .iq-stat { text-align: center; }
         .iq-stat-num {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-mono);
           font-size: 1.8rem;
           font-weight: 700;
           line-height: 1;
@@ -171,7 +171,7 @@ export default function InterviewQuestionHub() {
           border: none;
           border-bottom: 2px solid transparent;
           color: var(--iq-muted);
-          font-family: 'Inter', 'Space Grotesk', sans-serif;
+          font-family: var(--font-sans);
           font-size: 0.85rem;
           font-weight: 600;
           cursor: pointer;
@@ -198,7 +198,7 @@ export default function InterviewQuestionHub() {
           border: 1px solid var(--iq-border);
           border-radius: var(--iq-radius);
           color: var(--iq-text);
-          font-family: 'Inter', 'Space Grotesk', sans-serif;
+          font-family: var(--font-sans);
           font-size: 0.9rem;
           padding: 12px 18px 12px 44px;
           outline: none;
@@ -221,7 +221,7 @@ export default function InterviewQuestionHub() {
           border-bottom: 1px solid var(--iq-border);
         }
         .iq-section-icon {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-mono);
           font-size: 1.3rem;
           font-weight: 700;
           width: 48px; height: 48px;
@@ -274,7 +274,7 @@ export default function InterviewQuestionHub() {
         .iq-card:hover { background: var(--iq-surface2); }
         .iq-card.done { opacity: 0.45; }
         .iq-num {
-          font-family: 'JetBrains Mono', monospace;
+          font-family: var(--font-mono);
           font-size: 0.7rem;
           font-weight: 600;
           min-width: 28px;
@@ -295,7 +295,7 @@ export default function InterviewQuestionHub() {
           display: flex; align-items: center; justify-content: center;
           transition: background 0.15s, border-color 0.15s;
         }
-        .iq-card.done .iq-check { background: #22c55e; border-color: #22c55e; }
+        .iq-card.done .iq-check { background: var(--green-500); border-color: var(--green-500); }
         .iq-check::after {
           content: '';
           display: none;
@@ -315,7 +315,7 @@ export default function InterviewQuestionHub() {
           letter-spacing: 0.5px;
           flex-shrink: 0;
         }
-        .iq-diff-hard  { background: rgba(239,68,68,0.15); color: #f87171; }
+        .iq-diff-hard  { background: color-mix(in srgb, var(--red-500) 15%, transparent); color: var(--red-400); }
         .iq-diff-med   { background: rgba(251,146,60,0.15); color: #fb923c; }
         .iq-diff-easy  { background: rgba(34,197,94,0.15);  color: #4ade80; }
 

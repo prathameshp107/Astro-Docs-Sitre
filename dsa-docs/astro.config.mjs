@@ -53,7 +53,7 @@ export default defineConfig({
       alt: 'DSA Notes',
       src: './src/assets/logo.svg',
     },
-    customCss: ['./src/styles/custom.css', './src/styles/docs-overview.css'],
+    customCss: ['./src/styles/tokens.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
     sidebar,
     head: [
       {
@@ -82,11 +82,11 @@ export default defineConfig({
               startOnLoad: false,
               theme: theme === 'light' ? 'default' : 'dark',
               themeVariables: {
-                primaryColor: theme === 'light' ? '#7c3aed' : '#a78bfa',
+                primaryColor: theme === 'light' ? '#6366f1' : '#8b5cf6',
                 primaryTextColor: '#ffffff',
-                primaryBorderColor: theme === 'light' ? '#7c3aed' : '#a78bfa',
+                primaryBorderColor: theme === 'light' ? '#6366f1' : '#8b5cf6',
                 lineColor: theme === 'light' ? '#64748b' : '#94a3b8',
-                secondaryColor: theme === 'light' ? '#f5f3ff' : '#1e1b4b',
+                secondaryColor: theme === 'light' ? '#e0e7ff' : '#1e1b4b',
                 tertiaryColor: theme === 'light' ? '#f8fafc' : '#0f172a',
               }
             });
