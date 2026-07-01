@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TABS, STORAGE_KEY, TOTAL_QUESTIONS } from '../../data/interview-questions-data.js';
 
@@ -25,6 +25,7 @@ export default function InterviewQuestionHub() {
   const [mounted, setMounted] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [showOverview, setShowOverview] = useState(true);
+  const [difficultyFilter, setDifficultyFilter] = useState('all');
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -84,10 +85,25 @@ export default function InterviewQuestionHub() {
 
   const filtered = useMemo(() => {
     if (!activeConfig) return [];
-    if (!search.trim()) return activeConfig.questions;
-    const q = search.toLowerCase();
-    return activeConfig.questions.filter(([text]) => text.toLowerCase().includes(q));
-  }, [activeConfig, search]);
+    let items = activeConfig.questions;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      items = items.filter(([text]) => text.toLowerCase().includes(q));
+    }
+    if (difficultyFilter !== 'all') {
+      items = items.filter(([, d]) => d === difficultyFilter);
+    }
+    return items;
+  }, [activeConfig, search, difficultyFilter]);
+
+  const difficultyCounts = useMemo(() => {
+    if (!activeConfig) return { easy: 0, med: 0, hard: 0 };
+    const counts = { easy: 0, med: 0, hard: 0 };
+    activeConfig.questions.forEach(([, d]) => {
+      if (counts[d] !== undefined) counts[d]++;
+    });
+    return counts;
+  }, [activeConfig]);
 
   const hasAnswer = (q) => q.length >= 3 && q[2] && q[2].trim().length > 0;
 
@@ -102,6 +118,37 @@ export default function InterviewQuestionHub() {
     if (d === 'med') return 'Medium';
     return 'Easy';
   };
+
+  /* ─── Format answer text with inline code & code block highlighting ─── */
+  function formatAnswer(text) {
+    if (!text) return null;
+    const segments = text.split(/(```[\s\S]*?```)/g);
+    return segments.flatMap((segment, i) => {
+      if (segment.startsWith('```') && segment.endsWith('```')) {
+        const code = segment.slice(3, -3).replace(/^[a-zA-Z]+\n/, '');
+        return [<pre key={i} className="iq-code-block"><code>{code}</code></pre>];
+      }
+      if (!segment.trim()) return [];
+      return segment.split(/\n\n+/).map((para, j) => {
+        const inlineParts = para.split(/(`[^`]+`)/g);
+        const formatted = inlineParts.map((part, k) => {
+          if (part.startsWith('`') && part.endsWith('`')) {
+            return <code key={k} className="iq-inline-code">{part.slice(1, -1)}</code>;
+          }
+          if (part.includes('\n')) {
+            return part.split('\n').map((line, li) => (
+              <Fragment key={li}>
+                {li > 0 && <br />}
+                {line}
+              </Fragment>
+            ));
+          }
+          return part;
+        });
+        return <p key={`${i}-${j}`} className="iq-answer-para">{formatted}</p>;
+      });
+    });
+  }
 
   if (!mounted) return null;
 
@@ -444,6 +491,89 @@ export default function InterviewQuestionHub() {
           opacity: 0.6;
         }
 
+        /* ═══ Difficulty Filter Bar ═══ */
+        .iq-filter-bar {
+          display: flex;
+          gap: 6px;
+          padding: 10px 0 4px;
+          flex-wrap: wrap;
+        }
+        .iq-filter-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          border-radius: 999px;
+          border: 1px solid var(--iq-border);
+          background: var(--iq-surface);
+          color: var(--iq-muted);
+          font-family: var(--font-sans);
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+          letter-spacing: 0.2px;
+        }
+        .iq-filter-btn:hover {
+          border-color: var(--iq-border-light);
+          color: var(--iq-text);
+          background: var(--iq-surface2);
+        }
+        .iq-filter-btn.active-all {
+          background: var(--iq-surface2);
+          border-color: var(--iq-border-light);
+          color: var(--iq-text);
+        }
+        .iq-filter-btn.active-easy {
+          background: rgba(34,197,94,0.12);
+          border-color: rgba(34,197,94,0.3);
+          color: #4ade80;
+        }
+        .iq-filter-btn.active-med {
+          background: rgba(251,146,60,0.12);
+          border-color: rgba(251,146,60,0.3);
+          color: #fb923c;
+        }
+        .iq-filter-btn.active-hard {
+          background: rgba(239,68,68,0.12);
+          border-color: rgba(239,68,68,0.3);
+          color: #f87171;
+        }
+        .iq-filter-count {
+          font-size: 0.6rem;
+          font-family: var(--font-mono);
+          opacity: 0.6;
+          min-width: 16px;
+          text-align: center;
+        }
+        .iq-filter-spacer {
+          flex: 1;
+        }
+        .iq-filter-clear {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: none;
+          background: none;
+          color: var(--iq-muted);
+          font-family: var(--font-sans);
+          font-size: 0.7rem;
+          cursor: pointer;
+          transition: color 0.2s;
+          opacity: 0;
+          pointer-events: none;
+        }
+        .iq-filter-clear.visible {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .iq-filter-clear:hover {
+          color: var(--iq-text);
+        }
+
         /* ═══ Section Header ═══ */
         .iq-section-header {
           display: flex;
@@ -553,6 +683,8 @@ export default function InterviewQuestionHub() {
         .iq-card.expanded {
           border-color: var(--iq-card-accent, var(--iq-border-light));
           background: var(--iq-surface2);
+          box-shadow: 0 0 40px color-mix(in srgb, var(--iq-card-accent, transparent) 6%, transparent),
+                      0 8px 32px rgba(0,0,0,0.12);
         }
         .iq-card-row {
           display: flex;
@@ -612,35 +744,94 @@ export default function InterviewQuestionHub() {
           overflow: hidden;
         }
         .iq-answer-inner {
-          padding: 16px 0 4px 40px;
+          padding: 20px 20px 16px;
           border-top: 1px solid var(--iq-border);
-          margin-top: 12px;
-          font-size: 0.85rem;
-          line-height: 1.7;
-          color: var(--iq-muted);
+          margin-top: 14px;
+          background: color-mix(in srgb, var(--iq-bg) 60%, var(--iq-surface2));
+          border-radius: 0 0 var(--iq-radius) var(--iq-radius);
+          position: relative;
+        }
+        .iq-answer-inner::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 16px;
+          right: 16px;
+          height: 1.5px;
+          border-radius: 2px;
+          background: var(--iq-card-accent, var(--iq-border-light));
+          opacity: 0.3;
         }
         .iq-answer-label {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-size: 0.65rem;
+          font-size: 0.58rem;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 1px;
+          letter-spacing: 1.2px;
           color: var(--iq-card-accent, var(--iq-text));
-          margin-bottom: 10px;
+          margin-bottom: 14px;
+          padding: 4px 12px;
+          border-radius: 4px;
+          background: color-mix(in srgb, var(--iq-card-accent, transparent) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--iq-card-accent, transparent) 15%, transparent);
+          width: fit-content;
         }
-        .iq-answer-label svg { width: 14px; height: 14px; }
+        .iq-answer-label svg { width: 12px; height: 12px; }
         .iq-answer-text {
           color: var(--iq-text);
-          opacity: 0.85;
+        }
+        .iq-answer-para {
+          margin: 0 0 12px;
+          font-size: 0.88rem;
+          line-height: 1.8;
+          color: var(--iq-text);
+          opacity: 0.88;
+        }
+        .iq-answer-para:last-child {
+          margin-bottom: 0;
+        }
+        .iq-inline-code {
+          background: var(--iq-surface3);
+          color: var(--iq-card-accent, var(--iq-text));
+          padding: 0.15em 0.45em;
+          border-radius: 4px;
+          font-family: var(--font-mono);
+          font-size: 0.82em;
+          font-weight: 500;
+          border: 1px solid color-mix(in srgb, var(--iq-card-accent, var(--iq-border)) 20%, transparent);
+        }
+        .iq-code-block {
+          margin: 10px 0;
+          padding: 14px 16px;
+          background: var(--iq-surface3);
+          border: 1px solid var(--iq-border);
+          border-radius: 8px;
+          overflow-x: auto;
+          font-family: var(--font-mono);
+          font-size: 0.78rem;
+          line-height: 1.65;
+          color: var(--iq-text);
+          white-space: pre;
+          tab-size: 2;
+        }
+        .iq-code-block code {
+          font-family: inherit;
+          color: inherit;
+          background: none;
+          padding: 0;
+          border: none;
         }
         .iq-no-answer {
-          padding: 10px 0 2px 40px;
-          font-size: 0.78rem;
+          padding: 24px 20px;
+          font-size: 0.82rem;
           color: var(--iq-muted);
           font-style: italic;
           opacity: 0.5;
+          text-align: center;
+          border-top: 1px solid var(--iq-border);
+          margin-top: 12px;
         }
 
         .iq-diff {
@@ -755,7 +946,7 @@ export default function InterviewQuestionHub() {
                     key={tab.id}
                     className={`iq-ov-item${isActive ? ' active' : ''}`}
                     style={{ '--iq-tab-accent': tab.accent }}
-                  onClick={() => { setActiveTab(tab.id); setSearch(''); setSelectedCard(null); }}
+                  onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
                   whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -790,7 +981,7 @@ export default function InterviewQuestionHub() {
               <button
                 key={tab.id}                    className={`iq-nav-tab${isActive ? ' active' : ''}`}
                     style={{ '--iq-tab-accent': tab.accent }}
-                    onClick={() => { setActiveTab(tab.id); setSearch(''); setSelectedCard(null); }}
+                    onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
                   >
                     <span className="iq-nav-dot" style={{ background: tab.accent }} />
                 {tab.label}
@@ -841,10 +1032,48 @@ export default function InterviewQuestionHub() {
         </div>
       </motion.div>
 
+      {/* ═══ Difficulty Filter ═══ */}
+      <motion.div
+        className="iq-filter-bar"
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.3 }}
+      >
+        {[
+          { id: 'all', label: 'All', activeClass: 'active-all' },
+          { id: 'easy', label: 'Easy', activeClass: 'active-easy' },
+          { id: 'med', label: 'Medium', activeClass: 'active-med' },
+          { id: 'hard', label: 'Hard', activeClass: 'active-hard' },
+        ].map(f => {
+          const isActive = difficultyFilter === f.id;
+          const count = f.id === 'all' ? activeConfig?.questions.length : difficultyCounts[f.id];
+          return (
+            <button
+              key={f.id}
+              className={`iq-filter-btn${isActive ? ' ' + f.activeClass : ''}`}
+              onClick={() => setDifficultyFilter(f.id)}
+            >
+              {f.label}
+              <span className="iq-filter-count">{count || 0}</span>
+            </button>
+          );
+        })}
+        <span className="iq-filter-spacer" />
+        <button
+          className={`iq-filter-clear${difficultyFilter !== 'all' ? ' visible' : ''}`}
+          onClick={() => setDifficultyFilter('all')}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+          Clear
+        </button>
+      </motion.div>
+
       {/* ═══ Content ═══ */}
       {activeConfig && (
         <motion.div
-          key={activeTab + search}
+          key={activeTab + search + difficultyFilter}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
@@ -934,7 +1163,7 @@ export default function InterviewQuestionHub() {
                                 </svg>
                                 Answer
                               </div>
-                              <div className="iq-answer-text">{answer}</div>
+                              <div className="iq-answer-text">{formatAnswer(answer)}</div>
                             </div>
                           ) : (
                             <div className="iq-no-answer">Answer not yet added</div>
@@ -952,7 +1181,16 @@ export default function InterviewQuestionHub() {
                 >
                   <div className="iq-empty-icon">🔍</div>
                   <div className="iq-empty-text">No questions match your search</div>
-                  <div className="iq-empty-hint">Try different keywords or browse another category</div>
+                  <div className="iq-empty-hint">
+                    {search && difficultyFilter !== 'all'
+                      ? 'Try different keywords or a different difficulty'
+                      : search
+                        ? 'Try different keywords'
+                        : difficultyFilter !== 'all'
+                          ? 'Try selecting a different difficulty'
+                          : 'Try browsing another category'
+                    }
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
