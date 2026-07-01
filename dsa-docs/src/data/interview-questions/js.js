@@ -1,10 +1,31 @@
-// ─── JavaScript Interview Questions (100) ─────────────────────────────────
+// ─── JavaScript Interview Questions (200) ─────────────────────────────────
+// Each entry: [question, difficulty, answer?]
 export const JS_QUESTIONS = [
-  ["What is the difference between var, let, and const?", "easy"],
-  ["Explain hoisting in JavaScript.", "med"],
-  ["What are closures and how do they work?", "hard"],
-  ["What is the event loop in JavaScript?", "hard"],
-  ["Explain the concept of prototypal inheritance.", "hard"],
+  [
+    "What is the difference between var, let, and const?",
+    "easy",
+    "`var` is function-scoped, hoisted and initialized as `undefined`, can be redeclared. `let` is block-scoped, hoisted but not initialized (Temporal Dead Zone), cannot be redeclared in same scope. `const` same as `let` but must be assigned at declaration and cannot be reassigned. Use `const` by default, `let` when rebinding needed, never `var` in modern code."
+  ],
+  [
+    "Explain hoisting in JavaScript.",
+    "med",
+    "Hoisting moves declarations (not initializations) to top of their scope at compile time. `var` declarations are hoisted and initialized to `undefined`. `let`/`const` hoisted but uninitialized (TDZ). Function declarations are hoisted entirely (can call before definition). Function expressions are NOT hoisted (treated as variable assignment)."
+  ],
+  [
+    "What are closures and how do they work?",
+    "hard",
+    "A closure is a function that retains access to its outer (lexical) scope even after the outer function has returned. Created automatically when a function is defined inside another function and references outer variables. Enables data privacy (module pattern), factory functions, partial application, and callbacks. Memory cost: each closure retains entire outer scope chain."
+  ],
+  [
+    "What is the event loop in JavaScript?",
+    "hard",
+    "The event loop coordinates execution between the call stack, microtask queue, and macrotask (callback) queue. Synchronous code runs first on the call stack. Microtasks (Promise.then, queueMicrotask, MutationObserver) run after each macrotask, before next render. Macrotasks (setTimeout, setInterval, I/O, UI events) run one per loop iteration. Order: sync → microtasks → (render) → macrotask → repeat."
+  ],
+  [
+    "Explain the concept of prototypal inheritance.",
+    "hard",
+    "Every JS object has an internal `[[Prototype]]` link to another object. Property access walks the prototype chain until found or null. `Object.create(proto)` sets prototype directly. Classes are syntactic sugar over prototype chains. `obj.__proto__` is the legacy accessor; `Object.getPrototypeOf()` is the standard way. Prototypal inheritance is more flexible than classical — objects inherit from objects, no classes needed."
+  ],
   ["What is the difference between == and ===", "easy"],
   ["What are Promises and how do they work?", "med"],
   ["Explain async/await and how it relates to Promises.", "med"],
