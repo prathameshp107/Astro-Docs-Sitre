@@ -138,7 +138,7 @@
   content: "\2192";
   position: absolute;
   left: 0;
-  color: #60a5fa;
+  color: var(--blue-400);
   font-weight: 700;
 }
 
@@ -182,13 +182,13 @@
   margin-bottom: 0.6rem;
   font-size: 0.8rem;
   line-height: 1.6;
-  color: #f59e0b;
+  color: var(--amber-500);
   animation: gitFadeIn 0.3s ease;
 }
 
 .jsl-solution-box {
-  background: rgba(34,197,94,0.06);
-  border: 1px solid rgba(34,197,94,0.15);
+  background: color-mix(in srgb, var(--green-500) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--green-500) 15%, transparent);
   border-radius: 10px;
   padding: 0.75rem;
   margin-bottom: 0.6rem;
@@ -198,7 +198,7 @@
 .jsl-solution-box h4 {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #22c55e;
+  color: var(--green-500);
   margin: 0 0 0.4rem 0;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -214,8 +214,8 @@
 }
 
 .jsl-code-block code {
-  font-family: 'JetBrains Mono', monospace;
-  color: #e2e8f0;
+  font-family: var(--font-mono);
+  color: var(--slate-200);
 }
 
 .jsl-content-actions {
@@ -251,9 +251,9 @@
 .jsl-btn-mark {
   padding: 0.35rem 0.85rem;
   border-radius: 8px;
-  border: 1px solid rgba(34,197,94,0.2);
-  background: rgba(34,197,94,0.08);
-  color: #22c55e;
+  border: 1px solid color-mix(in srgb, var(--green-500) 20%, transparent);
+  background: color-mix(in srgb, var(--green-500) 8%, transparent);
+  color: var(--green-500);
   font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
@@ -262,13 +262,13 @@
 }
 
 .jsl-btn-mark:hover {
-  background: rgba(34,197,94,0.15);
-  border-color: rgba(34,197,94,0.35);
+  background: color-mix(in srgb, var(--green-500) 15%, transparent);
+  border-color: color-mix(in srgb, var(--green-500) 35%, transparent);
 }
 
 .jsl-btn-mark.done {
-  background: rgba(34,197,94,0.12);
-  border-color: rgba(34,197,94,0.25);
+  background: color-mix(in srgb, var(--green-500) 12%, transparent);
+  border-color: color-mix(in srgb, var(--green-500) 25%, transparent);
   opacity: 0.8;
   cursor: default;
 }
@@ -284,7 +284,7 @@
   padding: 0.1rem 0.4rem;
   border-radius: 4px;
   background: rgba(148,163,184,0.08);
-  color: #64748b;
+  color: var(--slate-500);
   font-weight: 500;
   border: 1px solid rgba(148,163,184,0.1);
 }
@@ -348,12 +348,12 @@
 .git-graph-empty-cmd {
   display: inline-block;
   padding: 0.2rem 0.5rem;
-  background: rgba(34,197,94,0.08);
-  border: 1px solid rgba(34,197,94,0.15);
+  background: color-mix(in srgb, var(--green-500) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--green-500) 15%, transparent);
   border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: #22c55e;
+  color: var(--green-500);
   margin-top: 0.25rem;
 }
 
@@ -417,8 +417,8 @@
 .git-branch-label {
   font-size: 11px;
   font-weight: 600;
-  font-family: 'JetBrains Mono', monospace;
-  fill: #e2e8f0;
+  font-family: var(--font-mono);
+  fill: var(--slate-200);
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -434,43 +434,43 @@
 }
 
 .git-branch-label.active {
-  fill: #f59e0b !important;
+  fill: var(--amber-500) !important;
 }
 
 /* HEAD Indicator */
 .git-head-indicator {
   font-size: 10px;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-  fill: #f59e0b;
+  font-family: var(--font-mono);
+  fill: var(--amber-500);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .git-commit-sha {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  fill: #64748b;
+  fill: var(--slate-500);
   font-weight: 500;
 }
 
 .git-commit-message {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-size: 11px;
-  fill: #94a3b8;
+  fill: var(--slate-400);
   font-weight: 400;
 }
 
 /* ===== Terminal Panel ===== */
 
 .git-terminal {
-  background: #0a0f1e;
+  background: var(--ink-850);
   border: 1px solid var(--lab-border);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
 }
 
 .git-terminal-header {
@@ -496,9 +496,9 @@
   border-radius: 50%;
 }
 
-.git-terminal-dot.red { background: #ef4444; }
-.git-terminal-dot.yellow { background: #f59e0b; }
-.git-terminal-dot.green { background: #22c55e; }
+.git-terminal-dot.red { background: var(--red-500); }
+.git-terminal-dot.yellow { background: var(--amber-500); }
+.git-terminal-dot.green { background: var(--green-500); }
 
 .git-terminal-body {
   flex: 1;
@@ -519,27 +519,27 @@
   line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-all;
-  color: #94a3b8;
+  color: var(--slate-400);
 }
 
 .git-terminal-line.output {
-  color: #e2e8f0;
+  color: var(--slate-200);
 }
 
 .git-terminal-line.error {
-  color: #ef4444;
+  color: var(--red-500);
 }
 
 .git-terminal-line.success {
-  color: #22c55e;
+  color: var(--green-500);
 }
 
 .git-terminal-line.info {
-  color: #60a5fa;
+  color: var(--blue-400);
 }
 
 .git-terminal-line.warning {
-  color: #f59e0b;
+  color: var(--amber-500);
 }
 
 /* Terminal Input */
@@ -553,7 +553,7 @@
 }
 
 .git-terminal-prompt {
-  color: #22c55e;
+  color: var(--green-500);
   font-size: 0.82rem;
   font-weight: 600;
   white-space: nowrap;
@@ -564,10 +564,10 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
+  color: var(--slate-200);
+  font-family: var(--font-mono);
   font-size: 0.82rem;
-  caret-color: #22c55e;
+  caret-color: var(--green-500);
 }
 
 .git-terminal-input::placeholder {
@@ -576,10 +576,10 @@
 
 .git-terminal-run {
   padding: 0.3rem 0.7rem;
-  background: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: color-mix(in srgb, var(--green-500) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--green-500) 20%, transparent);
   border-radius: 6px;
-  color: #22c55e;
+  color: var(--green-500);
   font-size: 0.7rem;
   font-weight: 600;
   cursor: pointer;
@@ -588,7 +588,7 @@
 }
 
 .git-terminal-run:hover {
-  background: rgba(34, 197, 94, 0.2);
+  background: color-mix(in srgb, var(--green-500) 20%, transparent);
 }
 
 /* ===== Command History ===== */
@@ -609,7 +609,7 @@
   border-radius: 4px;
   font-size: 0.65rem;
   color: var(--lab-text-dim);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
 }
 
 /* ===== Mission Panel ===== */
@@ -658,34 +658,34 @@
   align-items: flex-start;
   gap: 0.5rem;
   font-size: 0.78rem;
-  color: #94a3b8;
+  color: var(--slate-400);
   line-height: 1.5;
 }
 
 .git-mission-step::before {
   content: "\2192";
-  color: #60a5fa;
+  color: var(--blue-400);
   font-weight: 700;
   flex-shrink: 0;
 }
 
 .git-mission-step.done {
-  color: #22c55e;
+  color: var(--green-500);
 }
 
 .git-mission-step.done::before {
   content: "\2713";
-  color: #22c55e;
+  color: var(--green-500);
 }
 
 /* ===== Conflict Arena ===== */
 
 .git-conflict-editor {
-  background: #0a0f1e;
+  background: var(--ink-850);
   border: 1px solid var(--lab-border);
   border-radius: 10px;
   overflow: hidden;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.82rem;
   line-height: 1.6;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
@@ -703,7 +703,7 @@
 .git-conflict-filename {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #60a5fa;
+  color: var(--blue-400);
 }
 
 .git-conflict-difficulty {
@@ -713,29 +713,29 @@
   font-weight: 600;
 }
 
-.git-conflict-difficulty.easy { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
-.git-conflict-difficulty.medium { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
-.git-conflict-difficulty.hard { background: rgba(239, 68, 68, 0.12); color: #ef4444; }
-.git-conflict-difficulty.nightmare { background: rgba(139, 92, 246, 0.12); color: #a78bfa; }
+.git-conflict-difficulty.easy { background: color-mix(in srgb, var(--green-500) 12%, transparent); color: var(--green-500); }
+.git-conflict-difficulty.medium { background: rgba(245, 158, 11, 0.12); color: var(--amber-500); }
+.git-conflict-difficulty.hard { background: color-mix(in srgb, var(--red-500) 12%, transparent); color: var(--red-500); }
+.git-conflict-difficulty.nightmare { background: color-mix(in srgb, var(--indigo-600) 12%, transparent); color: var(--indigo-400); }
 
 .git-conflict-code {
   padding: 0.75rem;
   margin: 0;
   white-space: pre;
   overflow-x: auto;
-  color: #e2e8f0;
+  color: var(--slate-200);
   font-size: 0.78rem;
   line-height: 1.5;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
 }
 
 .git-conflict-marker {
-  color: #ef4444;
+  color: var(--red-500);
   font-weight: 700;
 }
 
 .git-conflict-separator {
-  color: #60a5fa;
+  color: var(--blue-400);
   font-weight: 700;
 }
 
@@ -745,8 +745,8 @@
   background: #0d1525;
   border: none;
   border-top: 1px solid var(--lab-border);
-  color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
+  color: var(--slate-200);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   padding: 0.75rem;
   resize: vertical;
@@ -848,7 +848,7 @@
 
 .git-achievement-title {
   font-size: 0.65rem;
-  color: #94a3b8;
+  color: var(--slate-400);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -859,14 +859,14 @@
 }
 
 .git-achievement.unlocked .git-achievement-title {
-  color: #f59e0b;
+  color: var(--amber-500);
 }
 
 /* ===== Graph Tooltip ===== */
 
 .git-graph-tooltip {
   position: absolute;
-  background: #0f172a;
+  background: var(--slate-900);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 0.6rem 0.8rem;
@@ -878,14 +878,14 @@
 }
 
 .git-tooltip-sha {
-  font-family: 'JetBrains Mono', monospace;
-  color: #f59e0b;
+  font-family: var(--font-mono);
+  color: var(--amber-500);
   font-weight: 600;
   margin-bottom: 0.2rem;
 }
 
 .git-tooltip-message {
-  color: #e2e8f0;
+  color: var(--slate-200);
   margin-bottom: 0.15rem;
 }
 
@@ -908,14 +908,14 @@
   height: 100%;
   border-radius: 2px;
   transition: width 0.5s ease;
-  background: linear-gradient(90deg, #f59e0b, #a78bfa);
+  background: linear-gradient(90deg, var(--amber-500), var(--indigo-400));
 }
 
 /* ===== Boss Battle ===== */
 
 .git-boss-banner {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(245, 158, 11, 0.12));
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--red-500) 12%, transparent), rgba(245, 158, 11, 0.12));
+  border: 1px solid color-mix(in srgb, var(--red-500) 20%, transparent);
   border-radius: 12px;
   padding: 1.25rem;
   text-align: center;
@@ -924,13 +924,13 @@
 .git-boss-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #ef4444;
+  color: var(--red-500);
   margin-bottom: 0.3rem;
 }
 
 .git-boss-subtitle {
   font-size: 0.78rem;
-  color: #94a3b8;
+  color: var(--slate-400);
   margin-bottom: 0.75rem;
 }
 
@@ -957,7 +957,7 @@
 }
 
 .git-boss-step.done {
-  border-color: rgba(34, 197, 94, 0.3);
+  border-color: color-mix(in srgb, var(--green-500) 30%, transparent);
 }
 
 /* ===== Zoom Controls ===== */
@@ -981,7 +981,7 @@
   border: none;
   border-radius: 4px;
   background: transparent;
-  color: #94a3b8;
+  color: var(--slate-400);
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
@@ -992,7 +992,7 @@
 
 .git-zoom-btn:hover {
   background: rgba(255,255,255,0.08);
-  color: #e2e8f0;
+  color: var(--slate-200);
 }
 
 .git-zoom-label {
@@ -1050,40 +1050,40 @@
 /* ===== Light Theme ===== */
 
 [data-theme='light'] .git-terminal {
-  background: #f1f5f9;
+  background: var(--slate-100);
 }
 
 [data-theme='light'] .git-terminal-body {
-  background: #f8fafc;
+  background: var(--slate-50);
 }
 
 [data-theme='light'] .git-terminal-line.output {
-  color: #1e293b;
+  color: var(--slate-800);
 }
 
 [data-theme='light'] .git-terminal-input {
-  color: #1e293b;
+  color: var(--slate-800);
 }
 
 [data-theme='light'] .git-conflict-editor {
-  background: #f1f5f9;
+  background: var(--slate-100);
 }
 
 [data-theme='light'] .git-conflict-code {
-  color: #1e293b;
+  color: var(--slate-800);
 }
 
 [data-theme='light'] .git-conflict-resolution {
-  background: #f8fafc;
-  color: #1e293b;
+  background: var(--slate-50);
+  color: var(--slate-800);
 }
 
 [data-theme='light'] .git-conflict-resolution:focus {
-  background: #ffffff;
+  background: var(--white);
 }
 
 [data-theme='light'] .git-graph-container {
-  background: #ffffff;
+  background: var(--white);
 }
 
 [data-theme='light'] .git-graph-container:hover {
@@ -1099,20 +1099,20 @@
 }
 
 [data-theme='light'] .git-graph-tooltip {
-  background: #ffffff;
+  background: var(--white);
   border-color: rgba(0, 0, 0, 0.1);
 }
 
 [data-theme='light'] .git-commit-message {
-  fill: #64748b;
+  fill: var(--slate-500);
 }
 
 [data-theme='light'] .git-commit-sha {
-  fill: #94a3b8;
+  fill: var(--slate-400);
 }
 
 [data-theme='light'] .git-branch-label {
-  fill: #1e293b;
+  fill: var(--slate-800);
 }
 
 [data-theme='light'] .git-boss-step:hover {
@@ -1133,7 +1133,7 @@
 }
 
 [data-theme='light'] .jsl-code-block code {
-  color: #1e293b;
+  color: var(--slate-800);
 }
 
 [data-theme='light'] .git-team-panel {
@@ -1146,7 +1146,7 @@
 
 [data-theme='light'] .git-zoom-btn:hover {
   background: rgba(0,0,0,0.06);
-  color: #1e293b;
+  color: var(--slate-800);
 }
 
 [data-theme='light'] .git-sprint-card:hover {

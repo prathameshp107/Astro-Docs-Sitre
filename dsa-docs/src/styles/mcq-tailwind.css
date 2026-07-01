@@ -1,52 +1,53 @@
+@import "./tokens.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ─── Theme Variables ─── */
 :root {
-  --mcq-bg: #ffffff;
+  --mcq-bg: var(--white);
   --mcq-bg-rgb: 255, 255, 255;
-  --mcq-text: #1e293b;
-  --mcq-text-primary: #0f172a;
-  --mcq-text-secondary: #475569;
-  --mcq-text-muted: #94a3b8;
-  --mcq-text-body: #334155;
-  --mcq-surface: #f8fafc;
-  --mcq-surface-20: #f8fafc;
-  --mcq-surface-30: #f8fafc;
-  --mcq-surface-40: #ffffff;
-  --mcq-surface-hover: #f1f5f9;
-  --mcq-surface-hover-40: #e2e8f0;
+  --mcq-text: var(--slate-800);
+  --mcq-text-primary: var(--slate-900);
+  --mcq-text-secondary: var(--slate-600);
+  --mcq-text-muted: var(--slate-400);
+  --mcq-text-body: var(--slate-700);
+  --mcq-surface: var(--slate-50);
+  --mcq-surface-20: var(--slate-50);
+  --mcq-surface-30: var(--slate-50);
+  --mcq-surface-40: var(--white);
+  --mcq-surface-hover: var(--slate-100);
+  --mcq-surface-hover-40: var(--slate-200);
   --mcq-nav-bg: rgba(255, 255, 255, 0.85);
-  --mcq-border: #e2e8f0;
-  --mcq-border-hover: #2563eb;
-  --mcq-border-strong: #cbd5e1;
-  --mcq-border-light: #f1f5f9;
-  --mcq-code-bg: #f8fafc;
-  --mcq-snippet-header: #f1f5f9;
+  --mcq-border: var(--slate-200);
+  --mcq-border-hover: var(--blue-600);
+  --mcq-border-strong: var(--slate-300);
+  --mcq-border-light: var(--slate-100);
+  --mcq-code-bg: var(--slate-50);
+  --mcq-snippet-header: var(--slate-100);
 }
 
 :root[data-theme='dark'] {
-  --mcq-bg: #0f172a;
+  --mcq-bg: var(--slate-900);
   --mcq-bg-rgb: 15, 23, 42;
-  --mcq-text: #e2e8f0;
-  --mcq-text-primary: #f8fafc;
-  --mcq-text-secondary: #94a3b8;
-  --mcq-text-muted: #64748b;
-  --mcq-text-body: #cbd5e1;
-  --mcq-surface: #1e293b;
-  --mcq-surface-20: #1e293b;
-  --mcq-surface-30: #1e293b;
-  --mcq-surface-40: #1e293b;
-  --mcq-surface-hover: #334155;
-  --mcq-surface-hover-40: #334155;
+  --mcq-text: var(--slate-200);
+  --mcq-text-primary: var(--slate-50);
+  --mcq-text-secondary: var(--slate-400);
+  --mcq-text-muted: var(--slate-500);
+  --mcq-text-body: var(--slate-300);
+  --mcq-surface: var(--slate-800);
+  --mcq-surface-20: var(--slate-800);
+  --mcq-surface-30: var(--slate-800);
+  --mcq-surface-40: var(--slate-800);
+  --mcq-surface-hover: var(--slate-700);
+  --mcq-surface-hover-40: var(--slate-700);
   --mcq-nav-bg: rgba(15, 23, 42, 0.85);
-  --mcq-border: #334155;
-  --mcq-border-hover: #3b82f6;
-  --mcq-border-strong: #475569;
-  --mcq-border-light: #1e293b;
-  --mcq-code-bg: #0a0f1e;
-  --mcq-snippet-header: #1e293b;
+  --mcq-border: var(--slate-700);
+  --mcq-border-hover: var(--blue-500);
+  --mcq-border-strong: var(--slate-600);
+  --mcq-border-light: var(--slate-800);
+  --mcq-code-bg: var(--ink-850);
+  --mcq-snippet-header: var(--slate-800);
 }
 
 @layer base {
@@ -70,11 +71,11 @@
 
   .mcq-card:hover {
     border-color: var(--mcq-border-hover);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-600) 8%, transparent);
   }
 
   :root[data-theme='dark'] .mcq-card:hover {
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-500) 12%, transparent);
   }
 
   .mcq-btn-primary {
@@ -85,14 +86,14 @@
     border-radius: 0.5rem;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #ffffff;
-    background: #2563eb;
+    color: var(--white);
+    background: var(--blue-600);
     border: none;
     transition: all 0.15s ease;
   }
 
   .mcq-btn-primary:hover {
-    background: #1d4ed8;
+    background: var(--blue-700);
   }
 
   .mcq-btn-secondary {
@@ -124,13 +125,13 @@
   }
 
   .mcq-btn-ghost:hover {
-    color: #2563eb;
-    background: rgba(37, 99, 235, 0.05);
+    color: var(--blue-600);
+    background: color-mix(in srgb, var(--blue-600) 5%, transparent);
   }
 
   :root[data-theme='dark'] .mcq-btn-ghost:hover {
-    color: #60a5fa;
-    background: rgba(59, 130, 246, 0.08);
+    color: var(--blue-400);
+    background: color-mix(in srgb, var(--blue-500) 8%, transparent);
   }
 
   .mcq-badge {

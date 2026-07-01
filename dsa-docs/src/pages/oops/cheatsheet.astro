@@ -20,12 +20,12 @@ import '../../styles/landing.css';
     <style>
       body {
         background: #0a0a0f;
-        color: #e2e8f0;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: var(--slate-200);
+        font-family: var(--font-sans);
         min-height: 100vh;
       }
       .oop-cheatsheet code {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--font-mono);
         font-size: 0.8125rem;
       }
       .oop-cheatsheet pre {
@@ -69,8 +69,8 @@ import '../../styles/landing.css';
       }
       /* Starlight theme integration */
       [data-theme="light"] body {
-        background: #ffffff;
-        color: #1e293b;
+        background: var(--white);
+        color: var(--slate-800);
       }
       [data-theme="light"] .oop-section {
         border-color: rgba(0,0,0,0.08);
@@ -80,7 +80,7 @@ import '../../styles/landing.css';
         background: rgba(0,0,0,0.03);
       }
       [data-theme="light"] .oop-section-btn span.text-white {
-        color: #1e293b;
+        color: var(--slate-800);
       }
       [data-theme="light"] .oop-table thead tr {
         background: rgba(0,0,0,0.04);
@@ -89,25 +89,25 @@ import '../../styles/landing.css';
         color: rgba(30,41,59,0.7);
       }
       [data-theme="light"] .oop-table td code {
-        color: #1e293b;
+        color: var(--slate-800);
       }
       [data-theme="light"] .oop-table td:first-child code {
         color: #d97706;
       }
       /* Light theme code blocks */
       [data-theme="light"] .oop-cheatsheet pre {
-        background: #f8fafc !important;
-        color: #1e293b !important;
+        background: var(--slate-50) !important;
+        color: var(--slate-800) !important;
       }
       [data-theme="light"] .oop-cheatsheet pre code {
-        color: #1e293b !important;
+        color: var(--slate-800) !important;
       }
       [data-theme="light"] .oop-cheatsheet .rounded-xl.border.border-white\/10.bg-\[\#0d1117\] {
-        background: #f1f5f9 !important;
-        border-color: #e2e8f0 !important;
+        background: var(--slate-100) !important;
+        border-color: var(--slate-200) !important;
       }
       [data-theme="light"] .oop-cheatsheet .bg-\[\#161b22\] {
-        background: #e2e8f0 !important;
+        background: var(--slate-200) !important;
       }
     </style>
   </head>
