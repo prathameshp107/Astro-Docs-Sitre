@@ -195,6 +195,28 @@ const labs = [
     challengeCount: 50,
     difficulty: "Beginner to Advanced",
   },
+  {
+    id: "tailwind",
+    title: "Tailwind CSS Playground",
+    icon: "🌊",
+    shortIcon: "TW",
+    description:
+      "Master Tailwind CSS through interactive learning. 50+ guided lessons across 20 chapters covering utility classes, flexbox, grid, responsive design, dark mode, animations, and components.",
+    status: "Ready",
+    statusColor: "#22c55e",
+    path: "/labs/tailwind-lab",
+    color: "#38bdf8",
+    features: [
+      "50+ Interactive Lessons",
+      "20 Chapters of Content",
+      "Live HTML Preview",
+      "Tailwind CDN Support",
+      "Responsive Preview Modes",
+      "Automated Tests",
+    ],
+    challengeCount: 50,
+    difficulty: "Beginner to Advanced",
+  },
 ];
 
 function useInView(threshold = 0.15) {

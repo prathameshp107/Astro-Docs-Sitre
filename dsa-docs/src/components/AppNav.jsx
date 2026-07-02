@@ -13,6 +13,7 @@ import {
   DiMongodb,
   DiGitBranch,
 } from "react-icons/di";
+import { SiTailwindcss } from "react-icons/si";
 
 const NAV_SECTIONS = [
   {
@@ -120,6 +121,13 @@ const LABS_SUB_ITEMS = [
     href: '/labs/git',
     icon: <DiGitBranch />,
     color: '#f59e0b',
+  },
+  {
+    id: 'tailwind-lab',
+    label: 'Tailwind CSS Playground',
+    href: '/labs/tailwind-lab',
+    icon: <SiTailwindcss />,
+    color: '#38bdf8',
   },
 ];
 

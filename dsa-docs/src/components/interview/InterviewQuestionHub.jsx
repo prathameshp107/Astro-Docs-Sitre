@@ -5,7 +5,7 @@ import { TABS, STORAGE_KEY, TOTAL_QUESTIONS } from '../../data/interview-questio
 /* ─── Accent colors per tab ─── */
 const ACCENT = {
   js: '#f7df1e', react: '#61dafb', next: '#ffffff', angular: '#dd0031',
-  nodejs: '#68a063', python: '#306998', css: '#1572b6', html: '#e34f26',
+  nodejs: '#68a063', python: '#306998', ai: '#ff6b35', css: '#1572b6', html: '#e34f26',
   dsa: '#8b5cf6', mongodb: '#47a248', mysql: '#4479a1', redis: '#dc382d',
   docker: '#2496ed', oops: '#ec4899',
 };
@@ -13,7 +13,7 @@ const ACCENT = {
 /* ─── Icons per tab ─── */
 const ICON = {
   js: '🟨', react: '⚛️', next: '▲', angular: '🅰️',
-  nodejs: '🟢', python: '🐍', css: '🎨', html: '🌐',
+  nodejs: '🟢', python: '🐍', ai: '🤖', css: '🎨', html: '🌐',
   dsa: '📊', mongodb: '🍃', mysql: '🐬', redis: '🔴',
   docker: '🐳', oops: '🧩',
 };
@@ -26,6 +26,11 @@ export default function InterviewQuestionHub() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [showOverview, setShowOverview] = useState(true);
   const [difficultyFilter, setDifficultyFilter] = useState('all');
+  const [quizMode, setQuizMode] = useState(false);
+  const [quizQueue, setQuizQueue] = useState([]);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
   const searchRef = useRef(null);
 
   useEffect(() => {
@@ -62,6 +67,51 @@ export default function InterviewQuestionHub() {
 
   const toggleExpand = (id) => {
     setSelectedCard(selectedCard === id ? null : id);
+  };
+
+  const startQuiz = () => {
+    if (!activeConfig) return;
+    const incomplete = [];
+    activeConfig.questions.forEach((q, i) => {
+      const id = `${activeTab}-${i}`;
+      if (!doneMap[id] && hasAnswer(q)) {
+        incomplete.push({ q, index: i });
+      }
+    });
+    // Shuffle
+    for (let i = incomplete.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [incomplete[i], incomplete[j]] = [incomplete[j], incomplete[i]];
+    }
+    setQuizQueue(incomplete);
+    setQuizIndex(0);
+    setShowAnswer(false);
+    setQuizFinished(false);
+    setQuizMode(true);
+  };
+
+  const quizNext = (markDone) => {
+    if (markDone && quizQueue[quizIndex]) {
+      const item = quizQueue[quizIndex];
+      const id = `${activeTab}-${item.index}`;
+      const next = { ...doneMap, [id]: true };
+      setDoneMap(next);
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+    }
+    if (quizIndex + 1 >= quizQueue.length) {
+      setQuizFinished(true);
+    } else {
+      setQuizIndex(i => i + 1);
+      setShowAnswer(false);
+    }
+  };
+
+  const exitQuiz = () => {
+    setQuizMode(false);
+    setQuizQueue([]);
+    setQuizIndex(0);
+    setShowAnswer(false);
+    setQuizFinished(false);
   };
 
   const activeConfig = TABS.find(t => t.id === activeTab);
@@ -573,6 +623,279 @@ export default function InterviewQuestionHub() {
         .iq-filter-clear:hover {
           color: var(--iq-text);
         }
+        .iq-practice-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          border-radius: 999px;
+          border: 1px solid var(--iq-border);
+          background: var(--iq-surface);
+          color: var(--iq-muted);
+          font-family: var(--font-sans);
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+          letter-spacing: 0.2px;
+          margin-left: auto;
+        }
+        .iq-practice-btn:hover {
+          border-color: var(--iq-tab-accent, var(--iq-border-light));
+          color: var(--iq-tab-accent, var(--iq-text));
+          background: color-mix(in srgb, var(--iq-tab-accent, transparent) 8%, var(--iq-surface2));
+        }
+
+        /* ═══ Quiz / Practice Mode ═══ */
+        .iq-quiz-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 200;
+          background: var(--iq-bg);
+          display: flex;
+          flex-direction: column;
+          padding: 0;
+          overflow-y: auto;
+        }
+        .iq-quiz-header {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 16px 28px;
+          border-bottom: 1px solid var(--iq-border);
+          background: rgba(10,12,18,0.95);
+          backdrop-filter: blur(12px);
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        }
+        .iq-quiz-back {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 14px;
+          border-radius: 8px;
+          border: 1px solid var(--iq-border);
+          background: var(--iq-surface);
+          color: var(--iq-muted);
+          font-family: var(--font-sans);
+          font-size: 0.78rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .iq-quiz-back:hover {
+          border-color: var(--iq-border-light);
+          color: var(--iq-text);
+        }
+        .iq-quiz-progress-text {
+          font-family: var(--font-mono);
+          font-size: 0.78rem;
+          color: var(--iq-muted);
+          flex: 1;
+          text-align: center;
+        }
+        .iq-quiz-progress-text span {
+          color: var(--iq-text);
+          font-weight: 700;
+        }
+        .iq-quiz-tab-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 0.72rem;
+          font-weight: 600;
+          background: color-mix(in srgb, var(--iq-tab-accent, #f7df1e) 12%, var(--iq-surface2));
+          color: var(--iq-tab-accent, var(--iq-text));
+          border: 1px solid color-mix(in srgb, var(--iq-tab-accent, #f7df1e) 20%, transparent);
+        }
+        .iq-quiz-body {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 40px 28px;
+        }
+        .iq-quiz-card {
+          width: 100%;
+          max-width: 800px;
+          background: var(--iq-surface);
+          border: 1px solid var(--iq-border);
+          border-radius: 16px;
+          padding: 40px 44px;
+          position: relative;
+          overflow: hidden;
+        }
+        .iq-quiz-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: var(--iq-tab-accent, var(--iq-border-light));
+          opacity: 0.4;
+        }
+        .iq-quiz-question-num {
+          font-family: var(--font-mono);
+          font-size: 0.7rem;
+          font-weight: 700;
+          color: var(--iq-muted);
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          margin-bottom: 8px;
+        }
+        .iq-quiz-question-num span {
+          color: var(--iq-tab-accent, var(--iq-text));
+        }
+        .iq-quiz-question-text {
+          font-size: 1.2rem;
+          font-weight: 600;
+          line-height: 1.6;
+          margin-bottom: 20px;
+          color: var(--iq-text);
+        }
+        .iq-quiz-diff {
+          display: inline-flex;
+          font-size: 0.6rem;
+          padding: 4px 12px;
+          border-radius: 999px;
+          font-weight: 600;
+          letter-spacing: 0.4px;
+          text-transform: uppercase;
+          margin-bottom: 24px;
+        }
+        .iq-quiz-actions {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-top: 28px;
+        }
+        .iq-quiz-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          border-radius: 10px;
+          border: 1px solid var(--iq-border);
+          font-family: var(--font-sans);
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .iq-quiz-btn-primary {
+          background: var(--iq-tab-accent, #f7df1e);
+          color: #000;
+          border-color: var(--iq-tab-accent, #f7df1e);
+        }
+        .iq-quiz-btn-primary:hover {
+          filter: brightness(1.15);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 16px color-mix(in srgb, var(--iq-tab-accent, #f7df1e) 25%, transparent);
+        }
+        .iq-quiz-btn-success {
+          background: #22c55e;
+          color: #000;
+          border-color: #22c55e;
+        }
+        .iq-quiz-btn-success:hover {
+          filter: brightness(1.1);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 16px rgba(34,197,94,0.25);
+        }
+        .iq-quiz-btn-skip {
+          background: var(--iq-surface2);
+          color: var(--iq-muted);
+          border-color: var(--iq-border);
+        }
+        .iq-quiz-btn-skip:hover {
+          border-color: var(--iq-border-light);
+          color: var(--iq-text);
+        }
+        .iq-quiz-btn-ghost {
+          background: transparent;
+          color: var(--iq-muted);
+          border-color: transparent;
+          padding: 12px 16px;
+        }
+        .iq-quiz-btn-ghost:hover {
+          color: var(--iq-text);
+        }
+        .iq-quiz-answer-panel {
+          margin-top: 28px;
+          padding: 20px 24px;
+          background: color-mix(in srgb, var(--iq-bg) 60%, var(--iq-surface2));
+          border-radius: 12px;
+          border: 1px solid var(--iq-border);
+          border-left: 3px solid var(--iq-tab-accent, var(--iq-border-light));
+        }
+        .iq-quiz-answer-label {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 0.6rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+          color: var(--iq-tab-accent, var(--iq-text));
+          margin-bottom: 12px;
+          padding: 4px 10px;
+          border-radius: 4px;
+          background: color-mix(in srgb, var(--iq-tab-accent, transparent) 10%, transparent);
+          border: 1px solid color-mix(in srgb, var(--iq-tab-accent, transparent) 15%, transparent);
+          width: fit-content;
+        }
+        .iq-quiz-answer-label svg { width: 12px; height: 12px; }
+
+        /* Quiz completion */
+        .iq-quiz-done {
+          text-align: center;
+          padding: 60px 40px;
+        }
+        .iq-quiz-done-icon {
+          font-size: 4rem;
+          margin-bottom: 16px;
+        }
+        .iq-quiz-done-title {
+          font-size: 1.8rem;
+          font-weight: 800;
+          margin-bottom: 8px;
+          background: linear-gradient(135deg, #22c55e, #4ade80);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        .iq-quiz-done-sub {
+          color: var(--iq-muted);
+          font-size: 1rem;
+          margin-bottom: 32px;
+        }
+        .iq-quiz-done-stats {
+          display: flex;
+          justify-content: center;
+          gap: 32px;
+          margin-bottom: 32px;
+        }
+        .iq-quiz-done-stat {
+          text-align: center;
+        }
+        .iq-quiz-done-stat-num {
+          font-family: var(--font-mono);
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--iq-text);
+        }
+        .iq-quiz-done-stat-label {
+          font-size: 0.72rem;
+          color: var(--iq-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-top: 4px;
+        }
 
         /* ═══ Section Header ═══ */
         .iq-section-header {
@@ -596,7 +919,14 @@ export default function InterviewQuestionHub() {
         }
         .iq-section-info { flex: 1; }
         .iq-section-title { font-size: 1.15rem; font-weight: 700; }
-        .iq-section-count { font-size: 0.75rem; color: var(--iq-muted); margin-top: 2px; }
+        .iq-section-count { font-size: 0.75rem; color: var(--iq-muted); margin-top: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .iq-section-count-sep { opacity: 0.4; }
+        .iq-section-count-filtered {
+          color: var(--iq-card-accent, var(--iq-muted));
+          font-weight: 600;
+          font-family: var(--font-mono);
+          font-size: 0.65rem;
+        }
         .iq-section-pct {
           font-size: 0.85rem;
           font-family: 'JetBrains Mono', monospace;
@@ -1068,6 +1398,17 @@ export default function InterviewQuestionHub() {
           </svg>
           Clear
         </button>
+        <button
+          className="iq-practice-btn"
+          style={{ '--iq-tab-accent': activeAccent }}
+          onClick={startQuiz}
+          title={`Practice ${activeConfig?.label || ''} questions you haven't completed`}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          Practice
+        </button>
       </motion.div>
 
       {/* ═══ Content ═══ */}
@@ -1082,7 +1423,17 @@ export default function InterviewQuestionHub() {
             <div className="iq-section-icon">{ICON[activeConfig.id] || '?'}</div>
             <div className="iq-section-info">
               <div className="iq-section-title">{activeConfig.label}</div>
-              <div className="iq-section-count">100 most-asked interview questions</div>
+              <div className="iq-section-count">
+                {activeConfig.questions.length} questions
+                {(search.trim() || difficultyFilter !== 'all') && filtered.length < activeConfig.questions.length && (
+                  <>
+                    <span className="iq-section-count-sep">·</span>
+                    <span className="iq-section-count-filtered" style={{ color: activeConfig.accent }}>
+                      {filtered.length} shown
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
             <div className="iq-section-pct" style={{ color: activeConfig.accent }}>
               {pct.pct.toFixed(0)}%
@@ -1190,6 +1541,178 @@ export default function InterviewQuestionHub() {
                           ? 'Try selecting a different difficulty'
                           : 'Try browsing another category'
                     }
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
+      {/* ═══ Quiz / Practice Mode Overlay ═══ */}
+      {quizMode && (
+        <motion.div
+          className="iq-quiz-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          style={{ '--iq-tab-accent': activeAccent }}
+        >
+          {/* Quiz Header */}
+          <div className="iq-quiz-header">
+            <button className="iq-quiz-back" onClick={exitQuiz}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              Browse
+            </button>
+            {!quizFinished ? (
+              <div className="iq-quiz-progress-text">
+                <span>{quizQueue.length - quizIndex}</span> of <span>{quizQueue.length}</span> remaining
+              </div>
+            ) : (
+              <div className="iq-quiz-progress-text">Complete!</div>
+            )}
+            <div className="iq-quiz-tab-badge">
+              {ICON[activeTab] || '📁'} {activeConfig?.label || ''}
+            </div>
+          </div>
+
+          {/* Quiz Body */}
+          <div className="iq-quiz-body">
+            <AnimatePresence mode="wait">
+              {quizFinished ? (
+                <motion.div
+                  key="done"
+                  className="iq-quiz-card"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <div className="iq-quiz-done">
+                    <div className="iq-quiz-done-icon">🎉</div>
+                    <div className="iq-quiz-done-title">Practice Complete!</div>
+                    <div className="iq-quiz-done-sub">
+                      You've reviewed all remaining {activeConfig?.label} questions.
+                    </div>
+                    <div className="iq-quiz-done-stats">
+                      <div className="iq-quiz-done-stat">
+                        <div className="iq-quiz-done-stat-num">{quizQueue.length}</div>
+                        <div className="iq-quiz-done-stat-label">Reviewed</div>
+                      </div>
+                      <div className="iq-quiz-done-stat">
+                        <div className="iq-quiz-done-stat-num">{pct.pct.toFixed(0)}%</div>
+                        <div className="iq-quiz-done-stat-label">Progress</div>
+                      </div>
+                    </div>
+                    <button
+                      className="iq-quiz-btn iq-quiz-btn-primary"
+                      onClick={exitQuiz}
+                    >
+                      Back to Browse
+                    </button>
+                  </div>
+                </motion.div>
+              ) : quizQueue.length === 0 ? (
+                <motion.div
+                  key="empty"
+                  className="iq-quiz-card"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <div className="iq-quiz-done">
+                    <div className="iq-quiz-done-icon">✅</div>
+                    <div className="iq-quiz-done-title">Nothing to Practice</div>
+                    <div className="iq-quiz-done-sub">
+                      You've completed all {activeConfig?.label} questions, or none have answers yet.
+                    </div>
+                    <button
+                      className="iq-quiz-btn iq-quiz-btn-primary"
+                      onClick={exitQuiz}
+                    >
+                      Back to Browse
+                    </button>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={quizIndex}
+                  className="iq-quiz-card"
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -40 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <div className="iq-quiz-question-num">
+                    Question <span>{quizIndex + 1}</span> of {quizQueue.length}
+                  </div>
+                  <div className="iq-quiz-question-text">
+                    {quizQueue[quizIndex].q[0]}
+                  </div>
+                  <div className={`iq-quiz-diff ${diffClass(quizQueue[quizIndex].q[1])}`}>
+                    {diffLabel(quizQueue[quizIndex].q[1])}
+                  </div>
+
+                  {/* Answer (conditionally shown) */}
+                  <AnimatePresence>
+                    {showAnswer && (
+                      <motion.div
+                        className="iq-quiz-answer-panel"
+                        initial={{ height: 0, opacity: 0, marginTop: 0 }}
+                        animate={{ height: 'auto', opacity: 1, marginTop: 28 }}
+                        exit={{ height: 0, opacity: 0, marginTop: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      >
+                        <div className="iq-quiz-answer-label">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 16v-4" /><path d="M12 8h.01" />
+                          </svg>
+                          Answer
+                        </div>
+                        <div className="iq-answer-text">
+                          {formatAnswer(quizQueue[quizIndex].q[2])}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Actions */}
+                  <div className="iq-quiz-actions">
+                    {!showAnswer ? (
+                      <button
+                        className="iq-quiz-btn iq-quiz-btn-primary"
+                        onClick={() => setShowAnswer(true)}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        Show Answer
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          className="iq-quiz-btn iq-quiz-btn-success"
+                          onClick={() => quizNext(true)}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          Got It
+                        </button>
+                        <button
+                          className="iq-quiz-btn iq-quiz-btn-skip"
+                          onClick={() => quizNext(false)}
+                        >
+                          Skip
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                          </svg>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </motion.div>
               )}
