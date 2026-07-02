@@ -1,0 +1,47 @@
+{
+  "id": "search-rotated-array",
+  "title": "Search in Rotated Sorted Array",
+  "difficulty": "medium",
+  "topics": ["binary-search", "arrays"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "uber"],
+  "statement": "There is an integer array `nums` sorted in ascending order (with **distinct** values) that is **rotated** at an unknown pivot index. For example, `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`.\n\nGiven the rotated array `nums` and an integer `target`, return the index of `target` if it is in `nums`, or `-1` if it is not.\n\nYou must write an algorithm with **O(log n)** runtime complexity.\n\nThe trick is that even in a rotated array, at least one half of the array (left or right of mid) is always fully sorted. Determine which half is sorted, then check if the target lies in it.",
+  "constraints": [
+    "1 <= nums.length <= 5000",
+    "-10^4 <= nums[i] <= 10^4",
+    "All values in nums are unique",
+    "nums was sorted in ascending order and then rotated"
+  ],
+  "examples": [
+    { "input": "nums = [4,5,6,7,0,1,2], target = 0", "output": "4", "explanation": "Target 0 is at index 4." },
+    { "input": "nums = [4,5,6,7,0,1,2], target = 3", "output": "-1", "explanation": "Target 3 is not in the array." },
+    { "input": "nums = [1], target = 0", "output": "-1", "explanation": "Single element, not the target." }
+  ],
+  "functionName": "search",
+  "starterCode": {
+    "javascript": "function search(nums, target) {\n  // your code here\n}",
+    "python": "def search(nums, target):\n    pass"
+  },
+  "tests": [
+    { "args": [[4,5,6,7,0,1,2], 0], "expected": 4, "hidden": false },
+    { "args": [[4,5,6,7,0,1,2], 3], "expected": -1, "hidden": false },
+    { "args": [[1], 0], "expected": -1, "hidden": true },
+    { "args": [[1,3], 3], "expected": 1, "hidden": true },
+    { "args": [[3,1], 1], "expected": 1, "hidden": true },
+    { "args": [[3,1], 3], "expected": 0, "hidden": true },
+    { "args": [[5,1,2,3,4], 1], "expected": 1, "hidden": true },
+    { "args": [[5,1,2,3,4], 5], "expected": 0, "hidden": true },
+    { "args": [[4,5,6,7,8,9,0,1,2,3], 9], "expected": 5, "hidden": true },
+    { "args": [[4,5,6,7,8,9,0,1,2,3], 10], "expected": -1, "hidden": true },
+    { "args": [[6,7,8,9,10,0,1,2,3,4,5], 0], "expected": 5, "hidden": true },
+    { "args": [[6,7,8,9,10,0,1,2,3,4,5], 7], "expected": 1, "hidden": true },
+    { "args": [[1,2,3,4,5,6,7,8,9,10], 1], "expected": 0, "hidden": true },
+    { "args": [[10,1,2,3,4,5,6,7,8,9], 10], "expected": 0, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a modified binary search. Compute `mid` as usual. Check if the left half `nums[left..mid]` is sorted (i.e., `nums[left] <= nums[mid]`). If it is sorted and the target falls in its range (`nums[left] <= target < nums[mid]`), search the left half; otherwise search the right half. If the left half is not sorted, then the right half must be sorted — check the target against the right half's range (`nums[mid] < target <= nums[right]`) and binary search accordingly. This works because every rotation guarantees at least one half is fully sorted at every step.",
+    "complexity": "O(log n) time / O(1) space"
+  },
+  "relatedProblems": ["binary-search"]
+}

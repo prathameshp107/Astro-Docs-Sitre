@@ -1,0 +1,41 @@
+{
+  "id": "valid-anagram",
+  "title": "Valid Anagram",
+  "difficulty": "easy",
+  "topics": ["strings", "hashmap", "sorting"],
+  "companies": ["amazon", "bloomberg", "microsoft"],
+  "statement": "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.\n\nAn anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.\n\nBoth strings consist of lowercase English letters only. Think about what must be true about the character counts of `s` and `t` for one to be a rearrangement of the other, and how quickly you can compare those counts.",
+  "constraints": [
+    "1 <= s.length, t.length <= 5 * 10^4",
+    "s and t consist of lowercase English letters"
+  ],
+  "examples": [
+    { "input": "s = \"anagram\", t = \"nagaram\"", "output": "true", "explanation": "t is a rearrangement of every letter in s." },
+    { "input": "s = \"rat\", t = \"car\"", "output": "false", "explanation": "t contains a 'c' that does not appear in s." }
+  ],
+  "functionName": "isAnagram",
+  "starterCode": {
+    "javascript": "function isAnagram(s, t) {\n  // your code here\n}",
+    "python": "def is_anagram(s, t):\n    pass"
+  },
+  "tests": [
+    { "args": ["anagram", "nagaram"], "expected": true, "hidden": false },
+    { "args": ["rat", "car"], "expected": false, "hidden": false },
+    { "args": ["a", "a"], "expected": true, "hidden": true },
+    { "args": ["ab", "a"], "expected": false, "hidden": true },
+    { "args": ["abc", "abd"], "expected": false, "hidden": true },
+    { "args": ["aabbcc", "abcabc"], "expected": true, "hidden": true },
+    { "args": ["aaaa", "aaaa"], "expected": true, "hidden": true },
+    { "args": ["aaaa", "aaab"], "expected": false, "hidden": true },
+    { "args": ["abcdefghij", "jihgfedcba"], "expected": true, "hidden": true },
+    { "args": ["abcdefghijklmnopqrstuvwxyzabcd", "dcbazyxwvutsrqponmlkjihgfedcba"], "expected": true, "hidden": true },
+    { "args": ["abcdefghijklmnopqrstuvwxyzabcd", "abcdefghijklmnopqrstuvwxyzabce"], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "If the two strings have different lengths, they can never be anagrams, so return false immediately. Otherwise, build a frequency count of each character in `s` using a hash map (or a fixed-size array of 26 counters since the alphabet is lowercase English letters). Then walk through `t`, decrementing the count for each character it contains. If any character in `t` has a zero or missing count at the time you see it, `t` uses a letter more often than `s` does, so return false. If you make it through the whole string without that happening, the counts balance out and the strings are anagrams.",
+    "complexity": "O(n) time / O(1) space (bounded alphabet) or O(n) space for a general hash map"
+  },
+  "relatedProblems": []
+}

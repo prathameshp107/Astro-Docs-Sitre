@@ -1,0 +1,42 @@
+{
+  "id": "valid-parentheses",
+  "title": "Valid Parentheses",
+  "difficulty": "easy",
+  "topics": ["stack", "strings"],
+  "companies": ["google", "meta", "amazon"],
+  "statement": "Given a string `s` containing just the characters `'('`, `')'`, `'['`, `']'`, `'{'`, and `'}'`, determine if the input string is valid.\n\nAn input string is valid if: open brackets are closed by the same type of bracket, and open brackets are closed in the correct order (the most recently opened bracket must be the next one closed). Every opening bracket must also have a corresponding closing bracket.\n\nThink about what data structure naturally tracks 'the most recently opened thing that still needs to be closed' — that structure is the key to solving this in a single pass.",
+  "constraints": [
+    "1 <= s.length <= 10^4",
+    "s consists only of the characters '(', ')', '[', ']', '{', and '}'"
+  ],
+  "examples": [
+    { "input": "s = \"()\"", "output": "true", "explanation": "The single pair of parentheses is opened and closed correctly." },
+    { "input": "s = \"(]\"", "output": "false", "explanation": "The opening '(' is closed by a mismatched ']' bracket." }
+  ],
+  "functionName": "isValid",
+  "starterCode": {
+    "javascript": "function isValid(s) {\n  // your code here\n}",
+    "python": "def is_valid(s):\n    pass"
+  },
+  "tests": [
+    { "args": ["()"], "expected": true, "hidden": false },
+    { "args": ["(]"], "expected": false, "hidden": false },
+    { "args": ["("], "expected": false, "hidden": true },
+    { "args": ["{[]}"], "expected": true, "hidden": true },
+    { "args": ["([)]"], "expected": false, "hidden": true },
+    { "args": [")("], "expected": false, "hidden": true },
+    { "args": ["(((())))"], "expected": true, "hidden": true },
+    { "args": ["((()"], "expected": false, "hidden": true },
+    { "args": ["{[()()]}"], "expected": true, "hidden": true },
+    { "args": ["{[()()]})"], "expected": false, "hidden": true },
+    { "args": ["()[]{}()[]{}()[]{}()[]{}()[]{}"], "expected": true, "hidden": true },
+    { "args": ["()[]{}()[]{}()[]{}()[]{}()[]{"], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a stack to track open brackets that are waiting to be closed. Scan the string left to right: whenever you see an opening bracket, push it onto the stack. Whenever you see a closing bracket, pop the top of the stack and check that it is the matching opening bracket for the one you just saw — if the stack is empty (nothing to pop) or the popped bracket doesn't match, the string is invalid and you can return false immediately. After processing the whole string, the string is valid only if the stack is empty (every opening bracket found its match); if brackets are still on the stack, they were never closed.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": []
+}

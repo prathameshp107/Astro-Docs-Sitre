@@ -4,13 +4,23 @@ import Skeleton from '../Skeleton.jsx';
 import { FiArrowLeft, FiPlay, FiArrowRight, FiHome, FiCornerDownLeft } from "react-icons/fi";
 import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
-import { getInitialProgress, recordAnswer, getAccuracy, getStreakInfo } from './MCQStore.js';
+import { getInitialProgress, recordAnswer, getAccuracy, getStreakInfo, arraysEqual } from './MCQStore.js';
 
 const MODE_CONFIG = {
   practice: { label: 'Practice', desc: 'Instant feedback. Learn as you go.', icon: '📝' },
   assessment: { label: 'Assessment', desc: 'Timed test. Results at the end.', icon: '⏱️' },
   interview: { label: 'Interview', desc: 'Random mix. Real simulation.', icon: '🎯' },
 };
+
+// Fisher-Yates shuffle — unbiased
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export default function MCQQuiz({ categoryId, initialTopic }) {
   const [loaded, setLoaded] = useState(false);
@@ -22,13 +32,14 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
   const [submitted, setSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
   const [mode, setMode] = useState('practice');
-  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(!!initialTopic);
   const [quizFinished, setQuizFinished] = useState(false);
   const [quizResults, setQuizResults] = useState([]);
   const [timeLeft, setTimeLeft] = useState(null);
-  const [showSetup, setShowSetup] = useState(true);
+  const [showSetup, setShowSetup] = useState(!initialTopic);
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [questionCount, setQuestionCount] = useState(10);
+  const [secondsPerQuestion, setSecondsPerQuestion] = useState(60);
   const [xpGained, setXpGained] = useState(0);
   const [streakCount, setStreakCount] = useState(0);
   const timerRef = useRef(null);
@@ -74,13 +85,14 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
 
   const shuffledQuestions = useMemo(() => {
     const qs = [...filteredQuestions];
+    const count = Math.min(questionCount, qs.length);
     if (mode === 'interview') {
-      return qs.sort(() => Math.random() - 0.5).slice(0, Math.min(questionCount, qs.length));
+      return shuffle(qs).slice(0, count);
     }
     if (mode === 'assessment') {
-      return qs.slice(0, Math.min(questionCount, qs.length));
+      return qs.slice(0, count);
     }
-    return qs.slice(0, Math.min(questionCount, qs.length));
+    return qs.slice(0, count);
   }, [filteredQuestions, mode, questionCount]);
 
   const currentQuestion = shuffledQuestions[currentIndex];
@@ -160,7 +172,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
     setStreakCount(0);
 
     if (mode === 'assessment') {
-      setTimeLeft(totalQuestions * 60);
+      setTimeLeft(totalQuestions * secondsPerQuestion);
     }
   }, [mode, totalQuestions]);
 
@@ -224,6 +236,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
             <div className="grid grid-cols-3 gap-2">
               {Object.entries(MODE_CONFIG).map(([key, config]) => (
                 <button key={key} onClick={() => setMode(key)}
+                  aria-label={`${config.label} mode: ${config.desc}`}
                   className={`p-3 rounded-lg border text-left transition-all ${
                     mode === key ? 'border-blue-400/40 bg-blue-500/10' : 'border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] hover:bg-[var(--mcq-surface-hover)]'
                   }`}>
@@ -241,6 +254,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
             <div className="flex gap-2">
               {['all', 'easy', 'medium', 'hard'].map(d => (
                 <button key={d} onClick={() => setSelectedDifficulty(d)}
+                  aria-label={`Difficulty: ${d}`}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
                     selectedDifficulty === d ? 'border-blue-400/30 bg-blue-500/10 text-blue-400' : 'border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] hover:bg-[var(--mcq-surface-20)]'
                   }`}>
@@ -251,11 +265,12 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
           </div>
 
           {/* Question count */}
-          <div className="space-y-2 mb-8">
+          <div className="space-y-2 mb-6">
             <label className="text-[0.65rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Questions</label>
             <div className="flex gap-2">
               {[5, 10, 15, 20].map(n => (
                 <button key={n} onClick={() => setQuestionCount(n)}
+                  aria-label={`${n} questions`}
                   className={`px-4 py-1.5 rounded-lg text-xs font-medium border transition-all ${
                     questionCount === n ? 'border-blue-400/30 bg-blue-500/10 text-blue-400' : 'border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] hover:bg-[var(--mcq-surface-20)]'
                   }`}>
@@ -264,6 +279,24 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
               ))}
             </div>
           </div>
+
+          {/* Time per question (assessment only) */}
+          {mode === 'assessment' && (
+            <div className="space-y-2 mb-8">
+              <label className="text-[0.65rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Time Per Question</label>
+              <div className="flex gap-2">
+                {[30, 45, 60, 90, 120].map(n => (
+                  <button key={n} onClick={() => setSecondsPerQuestion(n)}
+                    aria-label={`${n < 60 ? n + ' seconds' : n === 60 ? '1 minute' : Math.floor(n / 60) + ' minutes'} per question`}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                      secondsPerQuestion === n ? 'border-blue-400/30 bg-blue-500/10 text-blue-400' : 'border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] hover:bg-[var(--mcq-surface-20)]'
+                    }`}>
+                    {n < 60 ? `${n}s` : `${Math.floor(n / 60)}m`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <button onClick={startQuiz} className="mcq-btn-primary w-full justify-center text-base py-3">
             {mode === 'practice' ? 'Start Practice' : mode === 'assessment' ? 'Start Assessment' : 'Start Interview'}
@@ -416,7 +449,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
           )}
 
           {/* Options */}
-          <div className="space-y-2.5 mb-6">
+          <div className="space-y-2.5 mb-6" role="radiogroup" aria-label="Answer options">
             {currentQuestion.options.map((opt, i) => {
               let optionClass = 'border-[var(--mcq-border-strong)] bg-[var(--mcq-surface-20)] hover:bg-[var(--mcq-surface-hover)] hover:border-[var(--mcq-border-hover)]';
               let isSelected = selectedAnswers.includes(i);
@@ -436,6 +469,9 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
 
               return (
                 <button key={i} onClick={() => handleOptionClick(i)}
+                  role="radio"
+                  aria-checked={isSelected}
+                  aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}`}
                   className={`w-full flex items-center gap-3 p-3.5 rounded-lg border text-left transition-all duration-200 ${
                     submitted ? 'cursor-default' : 'cursor-pointer'
                   } ${optionClass}`}
@@ -460,6 +496,7 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
           {/* Submit / Next */}
           {!submitted ? (
             <button onClick={handleSubmit} disabled={selectedAnswers.length === 0}
+              aria-label="Submit your answer"
               className={`mcq-btn-primary px-8 py-2.5 text-sm ${selectedAnswers.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}>
               Submit Answer
               <FiCornerDownLeft size={14} />
@@ -513,10 +550,4 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
   );
 }
 
-function arraysEqual(a, b) {
-  if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] !== b[i]) return false;
-  }
-  return true;
-}
+

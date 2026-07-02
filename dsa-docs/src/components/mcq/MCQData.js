@@ -16,6 +16,37 @@ import dataStructuresQuestions from './questions/data-structures.js';
 import algorithmsQuestions from './questions/algorithms.js';
 import oopsQuestions from './questions/oops.js';
 
+// ─── All Questions Mapped (must be before MCQ_CATEGORIES for auto-counts) ───
+
+const questionMap = {
+  javascript: javascriptQuestions,
+  react: reactQuestions,
+  typescript: typescriptQuestions,
+  nodejs: nodejsQuestions,
+  angular: angularQuestions,
+  python: pythonQuestions,
+  html: htmlQuestions,
+  css: cssQuestions,
+  sql: sqlQuestions,
+  mongodb: mongodbQuestions,
+  git: gitQuestions,
+  'system-design': systemDesignQuestions,
+  'data-structures': dataStructuresQuestions,
+  algorithms: algorithmsQuestions,
+  oops: oopsQuestions,
+};
+
+// Auto-compute from actual imported data — keeps counts in sync
+function computeQuestionCounts() {
+  const counts = {};
+  for (const [id, questions] of Object.entries(questionMap)) {
+    counts[id] = questions.length;
+  }
+  return counts;
+}
+
+const ACTUAL_COUNTS = computeQuestionCounts();
+
 // ─── Category Definitions ───
 
 export const MCQ_CATEGORIES = [
@@ -24,7 +55,7 @@ export const MCQ_CATEGORIES = [
     name: 'JavaScript',
     icon: '🟨',
     color: '#f7df1e',
-    questionCount: 95,
+    questionCount: ACTUAL_COUNTS.javascript || 95,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Core JS concepts, closures, promises, prototypes, event loop, ES6+ features.',
     gradient: 'from-yellow-400/20 to-orange-500/10',
@@ -35,7 +66,7 @@ export const MCQ_CATEGORIES = [
     name: 'TypeScript',
     icon: '🔷',
     color: '#3178c6',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.typescript || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Types, interfaces, generics, advanced types, decorators, utility types.',
     gradient: 'from-blue-500/20 to-indigo-500/10',
@@ -46,7 +77,7 @@ export const MCQ_CATEGORIES = [
     name: 'React',
     icon: '⚛️',
     color: '#61dafb',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.react || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced', 'Expert'],
     description: 'Hooks, state management, components, performance, testing patterns.',
     gradient: 'from-cyan-400/20 to-blue-500/10',
@@ -57,7 +88,7 @@ export const MCQ_CATEGORIES = [
     name: 'Node.js',
     icon: '🟢',
     color: '#339933',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.nodejs || 50,
     difficulties: ['Intermediate', 'Advanced'],
     description: 'Express, async patterns, databases, streams, security, deployment.',
     gradient: 'from-green-500/20 to-emerald-500/10',
@@ -68,7 +99,7 @@ export const MCQ_CATEGORIES = [
     name: 'Angular',
     icon: '🅰️',
     color: '#dd0031',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.angular || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Components, RxJS, services, forms, routing, NgRx, testing.',
     gradient: 'from-red-500/20 to-rose-500/10',
@@ -79,7 +110,7 @@ export const MCQ_CATEGORIES = [
     name: 'Python',
     icon: '🐍',
     color: '#3776AB',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.python || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Syntax, OOP, data structures, decorators, generators, async Python.',
     gradient: 'from-blue-600/20 to-cyan-500/10',
@@ -90,7 +121,7 @@ export const MCQ_CATEGORIES = [
     name: 'HTML',
     icon: '🌐',
     color: '#e34f26',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.html || 50,
     difficulties: ['Beginner', 'Intermediate'],
     description: 'Semantic HTML, accessibility, forms, SEO, best practices.',
     gradient: 'from-orange-500/20 to-red-500/10',
@@ -101,7 +132,7 @@ export const MCQ_CATEGORIES = [
     name: 'CSS',
     icon: '🎨',
     color: '#1572b6',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.css || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Flexbox, Grid, animations, responsive design, preprocessors.',
     gradient: 'from-blue-400/20 to-sky-500/10',
@@ -112,7 +143,7 @@ export const MCQ_CATEGORIES = [
     name: 'SQL',
     icon: '🗄️',
     color: '#f59e0b',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.sql || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Queries, joins, indexing, optimization, transactions, design.',
     gradient: 'from-amber-500/20 to-yellow-500/10',
@@ -123,7 +154,7 @@ export const MCQ_CATEGORIES = [
     name: 'MongoDB',
     icon: '🍃',
     color: '#47a248',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.mongodb || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'CRUD, aggregation, indexing, data modeling, replication.',
     gradient: 'from-green-600/20 to-emerald-500/10',
@@ -134,7 +165,7 @@ export const MCQ_CATEGORIES = [
     name: 'Git',
     icon: '📦',
     color: '#f05032',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.git || 50,
     difficulties: ['Beginner', 'Intermediate'],
     description: 'Commands, branching, merging, rebasing, workflows, collaboration.',
     gradient: 'from-red-500/20 to-orange-500/10',
@@ -145,7 +176,7 @@ export const MCQ_CATEGORIES = [
     name: 'System Design',
     icon: '🏗️',
     color: '#a78bfa',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS['system-design'] || 50,
     difficulties: ['Advanced', 'Expert'],
     description: 'Architecture patterns, scalability, databases, caching, microservices.',
     gradient: 'from-purple-500/20 to-violet-500/10',
@@ -156,7 +187,7 @@ export const MCQ_CATEGORIES = [
     name: 'Data Structures',
     icon: '📊',
     color: '#6366f1',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS['data-structures'] || 50,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Arrays, trees, graphs, hash tables, stacks, queues, heaps.',
     gradient: 'from-indigo-500/20 to-purple-500/10',
@@ -167,7 +198,7 @@ export const MCQ_CATEGORIES = [
     name: 'Algorithms',
     icon: '⚡',
     color: '#ec4899',
-    questionCount: 50,
+    questionCount: ACTUAL_COUNTS.algorithms || 50,
     difficulties: ['Intermediate', 'Advanced', 'Expert'],
     description: 'Sorting, searching, DP, graph algorithms, complexity analysis.',
     gradient: 'from-pink-500/20 to-rose-500/10',
@@ -178,7 +209,7 @@ export const MCQ_CATEGORIES = [
     name: 'OOP',
     icon: '🧱',
     color: '#a855f7',
-    questionCount: 65,
+    questionCount: ACTUAL_COUNTS.oops || 65,
     difficulties: ['Beginner', 'Intermediate', 'Advanced'],
     description: 'Classes, objects, inheritance, polymorphism, encapsulation, abstraction, SOLID principles, and relationships.',
     gradient: 'from-purple-500/20 to-pink-500/10',
@@ -393,26 +424,6 @@ export const CATEGORY_TOPICS = {
 };
 
 // ─── MCQ Questions ───
-
-// ─── All Questions Mapped ───
-
-const questionMap = {
-  javascript: javascriptQuestions,
-  react: reactQuestions,
-  typescript: typescriptQuestions,
-  nodejs: nodejsQuestions,
-  angular: angularQuestions,
-  python: pythonQuestions,
-  html: htmlQuestions,
-  css: cssQuestions,
-  sql: sqlQuestions,
-  mongodb: mongodbQuestions,
-  git: gitQuestions,
-  'system-design': systemDesignQuestions,
-  'data-structures': dataStructuresQuestions,
-  algorithms: algorithmsQuestions,
-  oops: oopsQuestions,
-};
 
 export function getQuestionsForCategory(categoryId) {
   return questionMap[categoryId] || [];
