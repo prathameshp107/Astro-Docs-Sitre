@@ -18,8 +18,14 @@ const ICON = {
   docker: '🐳', oops: '🧩',
 };
 
+function getInitialTab() {
+  if (typeof window === 'undefined') return 'js';
+  const tabParam = new URLSearchParams(window.location.search).get('tab');
+  return TABS.some((t) => t.id === tabParam) ? tabParam : 'js';
+}
+
 export default function InterviewQuestionHub() {
-  const [activeTab, setActiveTab] = useState('js');
+  const [activeTab, setActiveTab] = useState(getInitialTab);
   const [search, setSearch] = useState('');
   const [doneMap, setDoneMap] = useState({});
   const [mounted, setMounted] = useState(false);
