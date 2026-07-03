@@ -45,9 +45,9 @@ export default function ArrayVisualizer() {
         const pos = isNaN(idx) ? array.length : Math.min(idx, array.length);
         const clampedPos = Math.max(0, pos);
         if (clampedPos === array.length) {
-          showStep(`Appending \${val} to the end of the array â€” O(1) amortized operation`);
+          showStep(`Appending ${val} to the end of the array â€” O(1) amortized operation`);
         } else {
-          showStep(`Inserting \${val} at index \${clampedPos} â€” shifting elements [\${clampedPos}..\${array.length - 1}] right by 1 position â€” O(n) operation`);
+          showStep(`Inserting ${val} at index ${clampedPos} â€” shifting elements [${clampedPos}..${array.length - 1}] right by 1 position â€” O(n) operation`);
         }
         insert(val, clampedPos);
         break;
@@ -55,19 +55,19 @@ export default function ArrayVisualizer() {
       case 'delete': {
         const delIdx = isNaN(idx) ? array.indexOf(val) : idx;
         if (delIdx >= 0 && delIdx < array.length) {
-          showStep(`Deleting element \${array[delIdx]} at index \${delIdx} â€” shifting elements [\${delIdx + 1}..\${array.length - 1}] left by 1 position â€” O(n) operation`);
+          showStep(`Deleting element ${array[delIdx]} at index ${delIdx} â€” shifting elements [${delIdx + 1}..${array.length - 1}] left by 1 position â€” O(n) operation`);
           deleteAt(delIdx);
         } else {
-          showStep(`Value \${val} not found in array â€” nothing to delete`);
+          showStep(`Value ${val} not found in array â€” nothing to delete`);
         }
         break;
       }
       case 'update': {
         if (!isNaN(idx) && idx >= 0 && idx < array.length) {
-          showStep(`Updating array[\${idx}] from \${array[idx]} to \${val} â€” O(1) random access operation`);
+          showStep(`Updating array[${idx}] from ${array[idx]} to ${val} â€” O(1) random access operation`);
           update(idx, val);
         } else {
-          showStep(`Invalid index: \${idx} â€” valid range is [0..\${array.length - 1}]`);
+          showStep(`Invalid index: ${idx} â€” valid range is [0..${array.length - 1}]`);
         }
         break;
       }
@@ -82,9 +82,9 @@ export default function ArrayVisualizer() {
     const idx = search(val);
     setSearchResult(idx);
     if (idx >= 0) {
-      showStep(`Linear search: scanning array element by element â€” found \${val} at index \${idx} âœ…`);
+      showStep(`Linear search: scanning array element by element â€” found ${val} at index ${idx} âœ…`);
     } else {
-      showStep(`Linear search: scanned all \${array.length} elements â€” value \${val} is not in the array âŒ`);
+      showStep(`Linear search: scanned all ${array.length} elements â€” value ${val} is not in the array âŒ`);
     }
   };
 
@@ -280,22 +280,22 @@ export default function ArrayVisualizer() {
               <span className="flex-shrink-0 mr-2">â–¶</span>
               <span>Direct index-based access: O(1) time complexity</span>
             </div>
-            <div class="flex items-start">
+            <div className="flex items-start">
               <span className="flex-shrink-0 mr-2">â–¶</span>
               <span>Insertion/deletion at beginning/middle: O(n) due to element shifting</span>
             </div>
-            <div class="flex items-start">
+            <div className="flex items-start">
               <span className="flex-shrink-0 mr-2">â–¶</span>
               <span>Insertion/deletion at end: O(1) amortized (with dynamic arrays)</span>
             </div>
-            <div class="flex items-start">
+            <div className="flex items-start">
               <span className="flex-shrink-0 mr-2">â–¶</span>
               <span>Memory efficient: no pointer overhead, excellent cache locality</span>
             </div>
           </div>
           <div className="mt-3 pt-2 border-t border-[var(--mcq-border)/20]">
             <span className="text-xs text-[var(--mcq-text-muted)] font-mono">
-              Current: [{array.map((v, i) => \`\${i}:\${v}\`).join(', ')}]
+              Current: [{array.map((v, i) => `${i}:${v}`).join(', ')}]
             </span>
           </div>
         </div>
@@ -320,7 +320,7 @@ export default function ArrayVisualizer() {
                 : 'rgba(96, 165, 250, 0.15)',
               color: stepDesc.includes('âœ…') || stepDesc.includes('Found')
                 ? '#22c55e'
-                : stepDesc.includes('âŒ)'
+                : stepDesc.includes('âŒ')
                 ? '#f87171'
                 : 'var(--mcq-text-body)',
             }}
@@ -342,7 +342,7 @@ export default function ArrayVisualizer() {
             {/* Index labels (below the bars) */}
             <div className="flex space-x-2 mb-2">
               {array.map((_, i) => (
-                <div key={\`index-\${i}\`} className="text-xs text-[var(--mcq-text-muted)] w-[40px] text-center">
+                <div key={`index-${i}`} className="text-xs text-[var(--mcq-text-muted)] w-[40px] text-center">
                   [{i}]
                 </div>
               ))}
@@ -356,7 +356,7 @@ export default function ArrayVisualizer() {
 
                 return (
                   <motion.div
-                    key={\`bar-\${i}\`}
+                    key={`bar-${i}`}
                     initial={{ opacity: 0, x: i > Math.min(...(highlighted.length ? highlighted : [-1])) ? 30 : -30 }}
                     animate={{
                       opacity: 1,
@@ -390,7 +390,7 @@ export default function ArrayVisualizer() {
           {array.map((val, i) => (
             <span
               key={i}
-              className={\`${
+              className={`${
                 selected === i
                   ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                   : highlighted.includes(i)
