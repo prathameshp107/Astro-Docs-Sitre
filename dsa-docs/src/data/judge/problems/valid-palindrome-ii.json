@@ -1,0 +1,50 @@
+{
+  "id": "valid-palindrome-ii",
+  "title": "Valid Palindrome II",
+  "difficulty": "easy",
+  "topics": ["string", "two-pointers"],
+  "companies": ["facebook", "microsoft", "uber"],
+  "statement": "Given a string `s`, return `true` if the `s` can be palindrome after deleting at most one character from it.",
+  "constraints": [
+    "1 <= s.length <= 10^5",
+    "s consists only of lowercase English letters."
+  ],
+  "examples": [
+    {
+      "input": "\"aba\"",
+      "output": "true",
+      "explanation": "You can already see that \"aba\" is a palindrome."
+    },
+    {
+      "input": "\"abca\"",
+      "output": "true",
+      "explanation": "You could delete the character 'c'."
+    },
+    {
+      "input": "\"abc\"",
+      "output": "false",
+      "explanation": "You cannot make it a palindrome by deleting only one character."
+    }
+  ],
+  "functionName": "validPalindrome",
+  "starterCode": {
+    "javascript": "function validPalindrome(s) {\n  // your code here\n}",
+    "python": "def valid_palindrome(s):\n    pass"
+  },
+  "tests": [
+    { "args": [[\"aba\"]], "expected": [true], "hidden": false },
+    { "args": [[\"abca\"]], "expected": [true], "hidden": false },
+    { "args": [[\"abc\"]], "expected": [false], "hidden": false },
+    { "args": [[\"deeee\"]], "expected": [true], "hidden": true },
+    { "args": [[\"abcdefdba\"]], "expected": [true], "hidden": true },
+    { "args": [[\"abcca\"]], "expected": [true], "hidden": true },
+    { "args": [[\"accac\"]], "expected": [true], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use two pointers from both ends. When characters don't match, try skipping either the left or right character and check if the remaining substring is a palindrome.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["valid-palindrome", "palindromic-substrings"]
+}
