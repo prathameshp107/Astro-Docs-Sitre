@@ -1170,6 +1170,32 @@ html, body {
   padding: 0.4rem;
 }
 
+.app-nav-search-trigger {
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0.35rem 0.6rem;
+}
+.app-nav-search-trigger:hover {
+  background: color-mix(in srgb, var(--indigo-600) 12%, transparent);
+}
+.app-nav-search-kbd {
+  font-size: 0.65rem;
+  font-family: var(--font-mono, monospace);
+  padding: 0.1rem 0.35rem;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.45);
+}
+[data-theme='light'] .app-nav-search-trigger {
+  background: rgba(0, 0, 0, 0.05);
+}
+[data-theme='light'] .app-nav-search-kbd {
+  background: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.45);
+}
+
 /* Mobile Hamburger */
 .app-nav-hamburger {
   display: none;

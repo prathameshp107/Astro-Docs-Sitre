@@ -1,0 +1,43 @@
+{
+  "id": "majority-element",
+  "title": "Majority Element",
+  "difficulty": "easy",
+  "topics": ["arrays", "hash-map"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "adobe"],
+  "statement": "Given an array `nums` of size `n`, return the **majority element**.\n\nThe majority element is the element that appears **more than `⌊n / 2⌋` times**. You may assume that the majority element **always exists** in the array.\n\nFollow up: Can you solve it in O(n) time and O(1) space? (Hint: Look up the **Boyer-Moore Voting Algorithm** — it uses the idea that canceling a non-majority element with the majority element still leaves the majority element as the winner.)",
+  "constraints": [
+    "n == nums.length",
+    "1 <= n <= 5 * 10^4",
+    "-10^9 <= nums[i] <= 10^9"
+  ],
+  "examples": [
+    { "input": "nums = [3,2,3]", "output": "3", "explanation": "3 appears 2 times out of 3." },
+    { "input": "nums = [2,2,1,1,1,2,2]", "output": "2", "explanation": "2 appears 4 times out of 7 (more than ⌊7/2⌋ = 3)." }
+  ],
+  "functionName": "majorityElement",
+  "starterCode": {
+    "javascript": "function majorityElement(nums) {\n  // your code here\n}",
+    "python": "def majority_element(nums):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,2,3]], "expected": 3, "hidden": false },
+    { "args": [[2,2,1,1,1,2,2]], "expected": 2, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": true },
+    { "args": [[1,1,2]], "expected": 1, "hidden": true },
+    { "args": [[1,2,1]], "expected": 1, "hidden": true },
+    { "args": [[5,5,5,5,5]], "expected": 5, "hidden": true },
+    { "args": [[-1,-1,2,-1]], "expected": -1, "hidden": true },
+    { "args": [[10,10,10,20,20,30,10,10,10]], "expected": 10, "hidden": true },
+    { "args": [[1000000000,1000000000,-1000000000]], "expected": 1000000000, "hidden": true },
+    { "args": [[6,5,5]], "expected": 5, "hidden": true },
+    { "args": [[1,1,1,2,2,2,1,1,1]], "expected": 1, "hidden": true },
+    { "args": [[1,2,3,4,5,1,1,1,1,1]], "expected": 1, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use the Boyer-Moore Voting Algorithm: maintain a `candidate` and a `count`. Iterate through the array — if `count === 0`, set `candidate = nums[i]` and `count = 1`. Otherwise, if `nums[i] === candidate`, increment `count`; else decrement `count`. Since the problem guarantees a majority element exists, the final `candidate` after one pass will be the majority element. This works because majority elements survive the canceling process — non-majority elements get canceled out by the majority element.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": []
+}

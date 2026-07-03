@@ -1,0 +1,41 @@
+{
+  "id": "product-of-array-except-self",
+  "title": "Product of Array Except Self",
+  "difficulty": "medium",
+  "topics": ["arrays"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "adobe"],
+  "statement": "Given an integer array `nums`, return an array `answer` such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.\n\nThe product of any prefix or suffix of `nums` is guaranteed to fit in a **32-bit integer**.\n\nYou must solve it **without division** and in **O(n)** time.\n\nCan you solve it using O(1) extra space (excluding the output array)? The key realization is that each position's result is the product of everything to its left times everything to its right.",
+  "constraints": [
+    "2 <= nums.length <= 10^5",
+    "-30 <= nums[i] <= 30"
+  ],
+  "examples": [
+    { "input": "nums = [1,2,3,4]", "output": "[24,12,8,6]", "explanation": "answer[0] = 2*3*4 = 24, answer[1] = 1*3*4 = 12, etc." },
+    { "input": "nums = [-1,1,0,-3,3]", "output": "[0,0,9,0,0]", "explanation": "All positions except index 2 include a 0 factor, making the product 0." }
+  ],
+  "functionName": "productExceptSelf",
+  "starterCode": {
+    "javascript": "function productExceptSelf(nums) {\n  // your code here\n}",
+    "python": "def product_except_self(nums):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,4]], "expected": [24,12,8,6], "hidden": false },
+    { "args": [[-1,1,0,-3,3]], "expected": [0,0,9,0,0], "hidden": false },
+    { "args": [[1,2]], "expected": [2,1], "hidden": true },
+    { "args": [[-1,-2,-3,-4]], "expected": [-24,-12,-8,-6], "hidden": true },
+    { "args": [[5,5,5,5]], "expected": [125,125,125,125], "hidden": true },
+    { "args": [[2,3,4,5,6]], "expected": [360,240,180,144,120], "hidden": true },
+    { "args": [[10,20,30,40,50]], "expected": [1200000,600000,400000,300000,240000], "hidden": true },
+    { "args": [[0,0,0,0]], "expected": [0,0,0,0], "hidden": true },
+    { "args": [[1,1,1,1,1,1,1,1]], "expected": [1,1,1,1,1,1,1,1], "hidden": true },
+    { "args": [[-5,5,-5,5,-5,5]], "expected": [-3125,3125,-3125,3125,-3125,3125], "hidden": true },
+    { "args": [[3,7,2,9,4,6,8,1,5]], "expected": [120960,51840,181440,40320,90720,60480,45360,362880,72576], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use two passes over the array. In the first (left-to-right) pass, fill `answer[i]` with the product of all elements to the left of `i` (track a running `prefix` variable). In the second (right-to-left) pass, multiply each `answer[i]` by the product of all elements to its right (track a running `suffix` variable). This avoids division and uses only O(1) extra space, since the result array does not count toward the space complexity.",
+    "complexity": "O(n) time / O(1) space (excluding output)"
+  },
+  "relatedProblems": []
+}

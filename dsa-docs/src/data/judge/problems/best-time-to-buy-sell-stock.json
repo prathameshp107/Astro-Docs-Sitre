@@ -1,0 +1,41 @@
+{
+  "id": "best-time-to-buy-sell-stock",
+  "title": "Best Time to Buy and Sell Stock",
+  "difficulty": "easy",
+  "topics": ["arrays", "dynamic-programming", "greedy"],
+  "companies": ["amazon", "meta", "apple"],
+  "statement": "You are given an array `prices` where `prices[i]` is the price of a given stock on day `i`.\n\nYou want to maximize your profit by choosing a single day to buy one share of the stock and choosing a different day in the future to sell it. The sale must happen strictly after the purchase — you only get one buy and one sell, not multiple transactions.\n\nReturn the maximum profit you can achieve from this transaction. If no profit is possible (prices only ever go down, or the array has fewer than two elements), return `0`.",
+  "constraints": [
+    "1 <= prices.length <= 10^5",
+    "0 <= prices[i] <= 10^4"
+  ],
+  "examples": [
+    { "input": "prices = [7,1,5,3,6,4]", "output": "5", "explanation": "Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6 - 1 = 5." },
+    { "input": "prices = [7,6,4,3,1]", "output": "0", "explanation": "Prices only decrease, so no transaction is profitable and the best result is 0." }
+  ],
+  "functionName": "maxProfit",
+  "starterCode": {
+    "javascript": "function maxProfit(prices) {\n  // your code here\n}",
+    "python": "def max_profit(prices):\n    pass"
+  },
+  "tests": [
+    { "args": [[7,1,5,3,6,4]], "expected": 5, "hidden": false },
+    { "args": [[7,6,4,3,1]], "expected": 0, "hidden": false },
+    { "args": [[1]], "expected": 0, "hidden": true },
+    { "args": [[1,2]], "expected": 1, "hidden": true },
+    { "args": [[2,1]], "expected": 0, "hidden": true },
+    { "args": [[3,3,3,3]], "expected": 0, "hidden": true },
+    { "args": [[5,5,5,1,5]], "expected": 4, "hidden": true },
+    { "args": [[9,1,5,3,8,2,7]], "expected": 7, "hidden": true },
+    { "args": [[0,4,2,7]], "expected": 7, "hidden": true },
+    { "args": [[10,9,8,7,6,5,4,3,2,1]], "expected": 0, "hidden": true },
+    { "args": [[45,42,39,36,33,30,27,24,21,18,15,12,9,6,3,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75]], "expected": 72, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Scan the prices once while tracking the lowest price seen so far (`minSoFar`). For each day's price, first check whether selling today (at `price - minSoFar`) beats the best profit found so far, then update `minSoFar` if today's price is a new low. Equivalently: update `minSoFar` first and compute `price - minSoFar` after — either ordering works as long as you never 'sell' before the cheapest day you've tracked has occurred. Because `minSoFar` always reflects a day that occurred at or before the current one, every candidate profit you compute corresponds to a valid buy-then-sell pair, and taking the maximum over all days gives the optimal single transaction.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": []
+}

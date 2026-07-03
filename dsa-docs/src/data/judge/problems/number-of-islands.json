@@ -1,0 +1,58 @@
+{
+  "id": "number-of-islands",
+  "title": "Number of Islands",
+  "difficulty": "medium",
+  "topics": ["graphs", "recursion", "arrays"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "uber"],
+  "statement": "Given an `m x n` 2D binary grid `grid` which represents a map of '1's (land) and '0's (water), return the number of islands.\n\nAn **island** is surrounded by water and is formed by connecting adjacent lands **horizontally** or **vertically**. You may assume all four edges of the grid are surrounded by water.\n\nThis is the quintessential grid graph traversal problem. When you find a '1', traverse all connected '1's — that's one island.",
+  "constraints": [
+    "m == grid.length",
+    "n == grid[i].length",
+    "1 <= m, n <= 300",
+    "grid[i][j] is '0' or '1'"
+  ],
+  "examples": [
+    {
+      "input": "grid = [[\"1\",\"1\",\"1\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"1\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\"]]",
+      "output": "1",
+      "explanation": "All land is connected into a single island."
+    },
+    {
+      "input": "grid = [[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"1\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"1\"]]",
+      "output": "3",
+      "explanation": "Three separate islands: top-left block, center single cell, and bottom-right block."
+    }
+  ],
+  "functionName": "numIslands",
+  "starterCode": {
+    "javascript": "function numIslands(grid) {\n  // your code here\n}",
+    "python": "def num_islands(grid):\n    pass"
+  },
+  "tests": [
+    {
+      "args": [[["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]],
+      "expected": 1,
+      "hidden": false
+    },
+    {
+      "args": [[["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]],
+      "expected": 3,
+      "hidden": false
+    },
+    { "args": [[["0"]]], "expected": 0, "hidden": true },
+    { "args": [[["1"]]], "expected": 1, "hidden": true },
+    { "args": [[["1","0","1","0","1"]]], "expected": 3, "hidden": true },
+    { "args": [[["1"],["0"],["1"],["0"],["1"]]], "expected": 3, "hidden": true },
+    { "args": [[["1","1","1"],["1","1","1"],["1","1","1"]]], "expected": 1, "hidden": true },
+    { "args": [[["1","0","0"],["0","1","0"],["0","0","1"]]], "expected": 3, "hidden": true },
+    { "args": [[["1","1","0","0"],["1","1","0","0"],["0","0","1","1"],["0","0","1","1"]]], "expected": 2, "hidden": true },
+    { "args": [[["1","1","1","1","1","1","1"],["0","0","0","0","0","0","0"],["1","1","1","1","1","1","1"],["0","0","0","0","0","0","0"],["1","1","1","1","1","1","1"]]], "expected": 3, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Iterate through every cell in the grid. When you find an unvisited '1', increment the island counter and perform a DFS traversal to mark all cells in that island as visited (by sinking them to '0'). The DFS visits the four adjacent directions (up, down, left, right) recursively, stopping at grid boundaries or water ('0'). This 'sink' approach achieves O(m * n) time and avoids needing a separate visited array.",
+    "complexity": "O(m * n) time / O(m * n) space in worst case for call stack"
+  },
+  "relatedProblems": []
+}
