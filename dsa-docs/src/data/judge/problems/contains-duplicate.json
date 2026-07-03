@@ -1,0 +1,42 @@
+{
+  "id": "contains-duplicate",
+  "title": "Contains Duplicate",
+  "difficulty": "easy",
+  "topics": ["arrays", "hashmap", "sorting"],
+  "companies": ["google", "amazon", "microsoft"],
+  "statement": "Given an integer array `nums`, return `true` if any value appears at least twice in the array, and return `false` if every element is distinct.\n\nThis is a warm-up problem for recognizing when a hash-based lookup structure turns an O(n^2) pairwise comparison into a single linear pass.\n\nThink about what a set data structure naturally gives you for free, and how comparing sizes (or checking membership as you go) can answer the question without nested loops.",
+  "constraints": [
+    "1 <= nums.length <= 10^5",
+    "-10^9 <= nums[i] <= 10^9"
+  ],
+  "examples": [
+    { "input": "nums = [1,2,3,1]", "output": "true", "explanation": "The value 1 appears at indices 0 and 3." },
+    { "input": "nums = [1,2,3,4]", "output": "false", "explanation": "All four values are distinct." }
+  ],
+  "functionName": "containsDuplicate",
+  "starterCode": {
+    "javascript": "function containsDuplicate(nums) {\n  // your code here\n}",
+    "python": "def contains_duplicate(nums):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,1]], "expected": true, "hidden": false },
+    { "args": [[1,2,3,4]], "expected": false, "hidden": false },
+    { "args": [[1]], "expected": false, "hidden": true },
+    { "args": [[1,1]], "expected": true, "hidden": true },
+    { "args": [[1,2]], "expected": false, "hidden": true },
+    { "args": [[-1,-2,-3,-1]], "expected": true, "hidden": true },
+    { "args": [[-1,-2,-3,-4]], "expected": false, "hidden": true },
+    { "args": [[7,7,7,7,7]], "expected": true, "hidden": true },
+    { "args": [[1,2,3,4,5,6,7,8,9,10,10]], "expected": true, "hidden": true },
+    { "args": [[0,0]], "expected": true, "hidden": true },
+    { "args": [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]], "expected": false, "hidden": true },
+    { "args": [[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,17]], "expected": true, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Walk through the array while adding each value to a hash set. Before inserting a value, check if it is already present in the set — if so, you've found a duplicate and can return true immediately. If you finish scanning without ever finding a value already in the set, all elements are distinct and you return false. An equivalent one-liner is to build a `Set` from the whole array and compare its size to the original array's length: if any duplicates existed, the set will be smaller.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["two-sum"]
+}

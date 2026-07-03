@@ -1,0 +1,42 @@
+{
+  "id": "group-anagrams",
+  "title": "Group Anagrams",
+  "difficulty": "medium",
+  "topics": ["strings", "hash-map", "sorting"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "uber"],
+  "statement": "Given an array of strings `strs`, group the **anagrams** together. You can return the answer in **any order**.\n\nAn anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.\n\nTwo strings are anagrams if they have the same character frequency — sorting them will give the same result. Can you use this property to group them efficiently?",
+  "constraints": [
+    "1 <= strs.length <= 10^4",
+    "0 <= strs[i].length <= 100",
+    "strs[i] consists of lowercase English letters only"
+  ],
+  "examples": [
+    { "input": "strs = [\"eat\",\"tea\",\"tan\",\"ate\",\"nat\",\"bat\"]", "output": "[[\"bat\"],[\"nat\",\"tan\"],[\"ate\",\"eat\",\"tea\"]]", "explanation": "Anagrams are grouped together. The order of groups and strings within groups does not matter." },
+    { "input": "strs = [\"\"]", "output": "[[\"\"]]", "explanation": "A single empty string forms its own group." },
+    { "input": "strs = [\"a\"]", "output": "[[\"a\"]]", "explanation": "A single character forms its own group." }
+  ],
+  "functionName": "groupAnagrams",
+  "starterCode": {
+    "javascript": "function groupAnagrams(strs) {\n  // your code here\n}",
+    "python": "def group_anagrams(strs):\n    pass"
+  },
+  "tests": [
+    { "args": [["eat","tea","tan","ate","nat","bat"]], "expected": [["bat"],["nat","tan"],["ate","eat","tea"]], "hidden": false },
+    { "args": [[""]], "expected": [[""]], "hidden": false },
+    { "args": [["a"]], "expected": [["a"]], "hidden": true },
+    { "args": [["",""]], "expected": [["",""]], "hidden": true },
+    { "args": [["abc","bca","cab","xyz","zyx","yxz"]], "expected": [["abc","bca","cab"],["xyz","zyx","yxz"]], "hidden": true },
+    { "args": [["ab","ba","abc","bca","acb"]], "expected": [["ab","ba"],["abc","bca","acb"]], "hidden": true },
+    { "args": [["a","b","c","d"]], "expected": [["a"],["b"],["c"],["d"]], "hidden": true },
+    { "args": [["dddddddddd","dddddddddd"]], "expected": [["dddddddddd","dddddddddd"]], "hidden": true },
+    { "args": [["ab","ba","ab","ba","ab"]], "expected": [["ab","ba","ab","ba","ab"]], "hidden": true },
+    { "args": [["cab","pug","pei","nay","ron","rae","nag","nag"]], "expected": [["nag","nag"],["cab"],["pug"],["pei"],["nay"],["ron"],["rae"]], "hidden": true }
+  ],
+  "compareMode": "unordered",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a hash map where the key is a signature that all anagrams share. The simplest signature is the sorted version of each string (e.g., \"ate\", \"eat\", \"tea\" all become \"aet\"). Iterate through the input array, sort each string, and add the original string to the hash map entry for that sorted key. If a key does not exist in the map, create a new list. At the end, return all values from the map. Sorting each string is O(k log k) where k is the string length, but since k ≤ 100, this is fine. A more optimized signature uses a 26-character frequency array encoded as a string.",
+    "complexity": "O(n * k log k) time / O(n * k) space"
+  },
+  "relatedProblems": ["valid-anagram"]
+}

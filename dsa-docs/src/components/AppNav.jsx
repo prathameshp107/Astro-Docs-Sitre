@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import ThemeToggle from './ThemeToggle.jsx';
+import GlobalSearch from './GlobalSearch.jsx';
 import { FaGithub } from "react-icons/fa";
-import { Binary } from "lucide-react";
+import { Binary, Search } from "lucide-react";
 import {
   DiHtml5,
   DiCss3,
@@ -13,6 +14,7 @@ import {
   DiMongodb,
   DiGitBranch,
 } from "react-icons/di";
+import { SiTailwindcss } from "react-icons/si";
 
 const NAV_SECTIONS = [
   {
@@ -120,6 +122,13 @@ const LABS_SUB_ITEMS = [
     href: '/labs/git',
     icon: <DiGitBranch />,
     color: '#f59e0b',
+  },
+  {
+    id: 'tailwind-lab',
+    label: 'Tailwind CSS Playground',
+    href: '/labs/tailwind-lab',
+    icon: <SiTailwindcss />,
+    color: '#38bdf8',
   },
 ];
 
@@ -367,6 +376,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
 
           {/* Desktop Actions */}
           <div className="app-nav-actions">
+            <GlobalSearch />
             {variant === 'landing' && (
               <a href={`${baseHref}/overview`}
                 className="app-nav-cta"
@@ -476,6 +486,17 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
             })}
             <div className="app-nav-mobile-divider" />
             <div className="app-nav-mobile-actions">
+              <button
+                type="button"
+                className="app-nav-mobile-link"
+                onClick={() => {
+                  setMobileOpen(false);
+                  window.dispatchEvent(new CustomEvent('dsa-open-search'));
+                }}
+              >
+                <Search size={16} />
+                <span>Search</span>
+              </button>
               <a
                 href="https://github.com/prathameshp107/DSA-Notes-Problems"
                 target="_blank"

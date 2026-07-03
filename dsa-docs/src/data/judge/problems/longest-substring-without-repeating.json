@@ -1,0 +1,46 @@
+{
+  "id": "longest-substring-without-repeating",
+  "title": "Longest Substring Without Repeating Characters",
+  "difficulty": "medium",
+  "topics": ["sliding-window", "strings", "hash-map"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "adobe", "uber"],
+  "statement": "Given a string `s`, find the length of the **longest substring** without repeating characters.\n\nA substring is a contiguous sequence of characters within the string. This is the quintessential sliding window problem — it teaches the expand-contract pattern for finding optimal subarrays.",
+  "constraints": [
+    "0 <= s.length <= 5 * 10^4",
+    "s consists of English letters, digits, symbols, and spaces"
+  ],
+  "examples": [
+    { "input": "s = \"abcabcbb\"", "output": "3", "explanation": "The answer is \"abc\", with the length of 3." },
+    { "input": "s = \"bbbbb\"", "output": "1", "explanation": "The answer is \"b\", with the length of 1." },
+    { "input": "s = \"pwwkew\"", "output": "3", "explanation": "The answer is \"wke\", with the length of 3." },
+    { "input": "s = \"\"", "output": "0", "explanation": "Empty string has no substrings." }
+  ],
+  "functionName": "lengthOfLongestSubstring",
+  "starterCode": {
+    "javascript": "function lengthOfLongestSubstring(s) {\n  // your code here\n}",
+    "python": "def length_of_longest_substring(s):\n    pass"
+  },
+  "tests": [
+    { "args": ["abcabcbb"], "expected": 3, "hidden": false },
+    { "args": ["bbbbb"], "expected": 1, "hidden": false },
+    { "args": ["pwwkew"], "expected": 3, "hidden": false },
+    { "args": [""], "expected": 0, "hidden": true },
+    { "args": [" "], "expected": 1, "hidden": true },
+    { "args": ["au"], "expected": 2, "hidden": true },
+    { "args": ["dvdf"], "expected": 3, "hidden": true },
+    { "args": ["abba"], "expected": 2, "hidden": true },
+    { "args": ["abcdef"], "expected": 6, "hidden": true },
+    { "args": ["aabbcdefgh"], "expected": 8, "hidden": true },
+    { "args": ["abcdefghijklmnopqrstuvwxyz"], "expected": 26, "hidden": true },
+    { "args": ["aaaaaaaaaaaaaaaaaaaaaab"], "expected": 2, "hidden": true },
+    { "args": ["tmmzuxt"], "expected": 5, "hidden": true },
+    { "args": ["abcabcbbabcdefghijklmnopqrstuvwxyz"], "expected": 26, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a sliding window with two pointers (`left` and `right`) and a hash map storing the most recent index of each character. Expand the `right` pointer one character at a time. If the character at `right` was seen before and its last occurrence is at or after `left`, jump `left` to `lastIndex + 1`. Update the character's index in the map and track the maximum window size (`right - left + 1`). Each character is visited at most twice (once by right, once when left jumps past it), yielding O(n) time.",
+    "complexity": "O(n) time / O(min(m, n)) space where m is the character set size"
+  },
+  "relatedProblems": []
+}

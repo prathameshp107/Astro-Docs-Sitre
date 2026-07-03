@@ -1,0 +1,45 @@
+{
+  "id": "valid-palindrome",
+  "title": "Valid Palindrome",
+  "difficulty": "easy",
+  "topics": ["two-pointers", "strings"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg"],
+  "statement": "A phrase is a **palindrome** if, after converting all uppercase letters to lowercase and removing all non-alphanumeric characters, it reads the same forward and backward.\n\nGiven a string `s`, return `true` if it is a **palindrome**, or `false` otherwise.\n\nAlphanumeric characters include letters and numbers. This is the gateway problem for the two-pointer technique — can you solve it in O(1) extra space?",
+  "constraints": [
+    "1 <= s.length <= 2 * 10^5",
+    "s consists only of printable ASCII characters"
+  ],
+  "examples": [
+    { "input": "s = \"A man, a plan, a canal: Panama\"", "output": "true", "explanation": "\"amanaplanacanalpanama\" is a palindrome." },
+    { "input": "s = \"race a car\"", "output": "false", "explanation": "\"raceacar\" is not a palindrome." },
+    { "input": "s = \" \"", "output": "true", "explanation": "s is an empty string \"\" after removing non-alphanumeric characters." }
+  ],
+  "functionName": "isPalindrome",
+  "starterCode": {
+    "javascript": "function isPalindrome(s) {\n  // your code here\n}",
+    "python": "def is_palindrome(s):\n    pass"
+  },
+  "tests": [
+    { "args": ["A man, a plan, a canal: Panama"], "expected": true, "hidden": false },
+    { "args": ["race a car"], "expected": false, "hidden": false },
+    { "args": [" "], "expected": true, "hidden": true },
+    { "args": ["a"], "expected": true, "hidden": true },
+    { "args": ["ab"], "expected": false, "hidden": true },
+    { "args": ["aa"], "expected": true, "hidden": true },
+    { "args": ["0P"], "expected": false, "hidden": true },
+    { "args": [".,"], "expected": true, "hidden": true },
+    { "args": ["ab_a"], "expected": true, "hidden": true },
+    { "args": ["Was it a car or a cat I saw?"], "expected": true, "hidden": true },
+    { "args": ["No 'x' in Nixon"], "expected": true, "hidden": true },
+    { "args": ["A man, a plan, a canal: Panama0"], "expected": false, "hidden": true },
+    { "args": ["abc123cba"], "expected": true, "hidden": true },
+    { "args": ["abc123cba0"], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use two pointers: one starting at the left (`left = 0`) and one at the right (`right = s.length - 1`). While `left < right`, skip non-alphanumeric characters by advancing `left` or retreating `right` as needed. After both pointers land on alphanumeric characters, compare them case-insensitively. If they differ, return `false`. If the loop completes without returning `false`, the string is a palindrome. No extra space beyond a few variables.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": []
+}

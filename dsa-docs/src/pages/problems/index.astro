@@ -1,0 +1,28 @@
+---
+import AppNav from '../../components/AppNav.jsx';
+import ProblemList from '../../components/judge/ProblemList.jsx';
+import '../../styles/judge.css';
+
+const { getJudgeManifest } = await import('../../data/judge/index.js');
+const problems = getJudgeManifest();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Problems — Online Judge</title>
+    <meta name="description" content="Solve DSA problems with instant, in-browser judging." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <AppNav activeSection="problems" client:load />
+    <h1 style="text-align:center; margin: 24px 0 4px; font-family: var(--font-display);">Problems</h1>
+    <p style="text-align:center; color: var(--text-secondary); margin-bottom: 20px;">Instant in-browser verdicts. No server, no queue.</p>
+    <ProblemList problems={problems} client:only="react" />
+  </body>
+</html>

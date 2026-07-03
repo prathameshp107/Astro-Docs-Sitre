@@ -1,0 +1,43 @@
+{
+  "id": "container-with-most-water",
+  "title": "Container With Most Water",
+  "difficulty": "medium",
+  "topics": ["arrays", "two-pointers", "greedy"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg", "adobe"],
+  "statement": "You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i-th` line are `(i, 0)` and `(i, height[i])`.\n\nFind two lines that together with the x-axis form a container, such that the container contains the most water.\n\nReturn the maximum amount of water a container can store.\n\n**Notice** that you may not slant the container — the water level is determined by the shorter of the two lines.\n\nThe classic two-pointer approach works by starting with the widest container and moving the pointer for the shorter line inward — because moving the taller line would only decrease width without any chance of increasing the height.",
+  "constraints": [
+    "n == height.length",
+    "2 <= n <= 10^5",
+    "0 <= height[i] <= 10^4"
+  ],
+  "examples": [
+    { "input": "height = [1,8,6,2,5,4,8,3,7]", "output": "49", "explanation": "The lines at indices 1 and 8 (heights 8 and 7) form the container with most water: min(8,7) * 7 = 49." },
+    { "input": "height = [1,1]", "output": "1", "explanation": "Only two lines: min(1,1) * 1 = 1." }
+  ],
+  "functionName": "maxArea",
+  "starterCode": {
+    "javascript": "function maxArea(height) {\n  // your code here\n}",
+    "python": "def max_area(height):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,8,6,2,5,4,8,3,7]], "expected": 49, "hidden": false },
+    { "args": [[1,1]], "expected": 1, "hidden": false },
+    { "args": [[4,3,2,1,4]], "expected": 16, "hidden": true },
+    { "args": [[1,2,1]], "expected": 2, "hidden": true },
+    { "args": [[2,3,10,5,7,8,9]], "expected": 36, "hidden": true },
+    { "args": [[10,9,8,7,6,5,4,3,2,1]], "expected": 25, "hidden": true },
+    { "args": [[1,2,3,4,5,6,7,8,9,10]], "expected": 25, "hidden": true },
+    { "args": [[5,5,5,5,5]], "expected": 20, "hidden": true },
+    { "args": [[1,3,2,5,25,24,5]], "expected": 24, "hidden": true },
+    { "args": [[0,0,0,0,5]], "expected": 5, "hidden": true },
+    { "args": [[10000,1,1,1,1,1,1,1,1,1,10000]], "expected": 100000, "hidden": true },
+    { "args": [[1,2,3,4,5,25,24,3,4]], "expected": 24, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use two pointers: one at the start (`left = 0`) and one at the end (`right = height.length - 1`). Track the maximum area seen so far. Calculate the area at each step as `min(height[left], height[right]) * (right - left)`. Then move the pointer corresponding to the **shorter** line inward — because the area is limited by the shorter height, and moving the taller line would only decrease the width without any possibility of increasing the effective height. Continue until the pointers meet.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": []
+}

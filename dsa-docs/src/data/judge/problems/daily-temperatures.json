@@ -1,0 +1,43 @@
+{
+  "id": "daily-temperatures",
+  "title": "Daily Temperatures",
+  "difficulty": "medium",
+  "topics": ["stack", "arrays"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "bloomberg"],
+  "statement": "Given an array of integers `temperatures` that represents the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you would have to wait until a warmer temperature.\n\nIf there is no future day for which this is possible, keep `answer[i] = 0` instead.\n\nThis is a classic **monotonic stack** problem. Rather than scanning forward from each day (which would be O(n^2)), think about processing temperatures in a single pass and tracking unresolved days.",
+  "constraints": [
+    "1 <= temperatures.length <= 10^5",
+    "30 <= temperatures[i] <= 100"
+  ],
+  "examples": [
+    { "input": "temperatures = [73,74,75,71,69,72,76,73]", "output": "[1,1,4,2,1,1,0,0]", "explanation": "Day 1 (73) -> Day 2 (74) is 1 day. Day 2 (74) -> Day 3 (75) is 1 day. Day 3 (75) -> Day 7 (76) is 4 days, etc." },
+    { "input": "temperatures = [30,40,50,60]", "output": "[1,1,1,0]", "explanation": "Each day has a warmer temperature the very next day, except the last." },
+    { "input": "temperatures = [30,60,90]", "output": "[1,1,0]", "explanation": "Day 1 waits 1 day for 60; Day 2 waits 1 day for 90; Day 3 has no warmer day." }
+  ],
+  "functionName": "dailyTemperatures",
+  "starterCode": {
+    "javascript": "function dailyTemperatures(temperatures) {\n  // your code here\n}",
+    "python": "def daily_temperatures(temperatures):\n    pass"
+  },
+  "tests": [
+    { "args": [[73,74,75,71,69,72,76,73]], "expected": [1,1,4,2,1,1,0,0], "hidden": false },
+    { "args": [[30,40,50,60]], "expected": [1,1,1,0], "hidden": false },
+    { "args": [[30,60,90]], "expected": [1,1,0], "hidden": true },
+    { "args": [[50]], "expected": [0], "hidden": true },
+    { "args": [[50,50,50,50]], "expected": [0,0,0,0], "hidden": true },
+    { "args": [[30,31,32,33,34,35]], "expected": [1,1,1,1,1,0], "hidden": true },
+    { "args": [[100,90,80,70,60]], "expected": [0,0,0,0,0], "hidden": true },
+    { "args": [[60,50,40,50,60]], "expected": [4,2,1,1,0], "hidden": true },
+    { "args": [[55,56,57,55,54,53,58]], "expected": [1,1,4,3,2,1,0], "hidden": true },
+    { "args": [[50,51,50,51,50,51,50,51,50,51,50,51]], "expected": [1,0,1,0,1,0,1,0,1,0,1,0], "hidden": true },
+    { "args": [[71,72,71,72,71,72,71,72,73]], "expected": [1,0,1,0,1,0,1,1,0], "hidden": true },
+    { "args": [[30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]], "expected": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a monotonic decreasing stack that stores indices (not values). Iterate through the temperatures. While the current temperature is greater than the temperature at the index on top of the stack, pop that index and set `result[poppedIndex] = currentIndex - poppedIndex`. Then push the current index onto the stack. This works because each index is pushed once and popped at most once, giving O(n) time. The stack always maintains indices with decreasing temperatures — when a warmer day arrives, it 'resolves' all cooler days waiting on the stack.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": []
+}

@@ -13,12 +13,13 @@ import { NODEJS_QUESTIONS } from './interview-questions/nodejs.js';
 import { OOPS_QUESTIONS } from './interview-questions/oops.js';
 import { PYTHON_QUESTIONS } from './interview-questions/python.js';
 import { REDIS_QUESTIONS } from './interview-questions/redis.js';
+import { AI_QUESTIONS } from './interview-questions/ai.js';
 
 export {
   JS_QUESTIONS, REACT_QUESTIONS, NEXT_QUESTIONS,
   ANGULAR_QUESTIONS, CSS_QUESTIONS, DOCKER_QUESTIONS, DSA_QUESTIONS,
   HTML_QUESTIONS, MONGODB_QUESTIONS, MYSQL_QUESTIONS, NODEJS_QUESTIONS,
-  OOPS_QUESTIONS, PYTHON_QUESTIONS, REDIS_QUESTIONS
+  OOPS_QUESTIONS, PYTHON_QUESTIONS, REDIS_QUESTIONS, AI_QUESTIONS
 };
 
 export const TABS = [
@@ -28,6 +29,7 @@ export const TABS = [
   { id: "angular", label: "Angular", accent: "#dd0031", dim: "#2d000a", questions: ANGULAR_QUESTIONS },
   { id: "nodejs", label: "Node.js", accent: "#68a063", dim: "#0d2b0a", questions: NODEJS_QUESTIONS },
   { id: "python", label: "Python", accent: "#306998", dim: "#091a33", questions: PYTHON_QUESTIONS },
+  { id: "ai", label: "AI / ML", accent: "#ff6b35", dim: "#2d1407", questions: AI_QUESTIONS },
   { id: "css", label: "CSS", accent: "#1572b6", dim: "#08233a", questions: CSS_QUESTIONS },
   { id: "html", label: "HTML", accent: "#e34f26", dim: "#2d0f05", questions: HTML_QUESTIONS },
   { id: "dsa", label: "DSA", accent: "#8b5cf6", dim: "#1f0d3f", questions: DSA_QUESTIONS },

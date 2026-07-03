@@ -1,0 +1,40 @@
+{
+  "id": "climbing-stairs",
+  "title": "Climbing Stairs",
+  "difficulty": "easy",
+  "topics": ["dp"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "adobe"],
+  "statement": "You are climbing a staircase. It takes `n` steps to reach the top.\n\nEach time you can either climb **1** or **2** steps. In how many **distinct ways** can you climb to the top?\n\nThis is the \"Hello World\" of dynamic programming. The recurrence `ways(n) = ways(n-1) + ways(n-2)` is the same as the Fibonacci sequence — can you see why?",
+  "constraints": [
+    "1 <= n <= 45"
+  ],
+  "examples": [
+    { "input": "n = 2", "output": "2", "explanation": "1. 1 step + 1 step, 2. 2 steps" },
+    { "input": "n = 3", "output": "3", "explanation": "1. 1+1+1, 2. 1+2, 3. 2+1" }
+  ],
+  "functionName": "climbStairs",
+  "starterCode": {
+    "javascript": "function climbStairs(n) {\n  // your code here\n}",
+    "python": "def climb_stairs(n):\n    pass"
+  },
+  "tests": [
+    { "args": [1], "expected": 1, "hidden": false },
+    { "args": [2], "expected": 2, "hidden": false },
+    { "args": [3], "expected": 3, "hidden": true },
+    { "args": [4], "expected": 5, "hidden": true },
+    { "args": [5], "expected": 8, "hidden": true },
+    { "args": [6], "expected": 13, "hidden": true },
+    { "args": [10], "expected": 89, "hidden": true },
+    { "args": [15], "expected": 987, "hidden": true },
+    { "args": [20], "expected": 10946, "hidden": true },
+    { "args": [30], "expected": 1346269, "hidden": true },
+    { "args": [45], "expected": 1836311903, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "The number of ways to reach step `n` equals the number of ways to reach step `n-1` (then take 1 step) plus the number of ways to reach step `n-2` (then take 2 steps). This gives the recurrence `ways(n) = ways(n-1) + ways(n-2)` with base cases `ways(1) = 1` and `ways(2) = 2`. Solve with bottom-up DP using two variables (O(1) space) instead of a full array: iterate from 3 to n, updating `prev1` and `prev2` at each step.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": []
+}

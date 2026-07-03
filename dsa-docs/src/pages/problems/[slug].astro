@@ -1,0 +1,35 @@
+---
+import AppNav from '../../components/AppNav.jsx';
+import JudgeView from '../../components/judge/JudgeView.jsx';
+import '../../styles/judge.css';
+
+export async function getStaticPaths() {
+  const { getJudgeProblems } = await import('../../data/judge/index.js');
+  return getJudgeProblems().map((problem) => ({
+    params: { slug: problem.id },
+  }));
+}
+
+const { slug } = Astro.params;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{slug} — Online Judge</title>
+    <meta name="description" content="Solve DSA problems with instant, in-browser judging." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body style="display:flex; flex-direction:column; height:100vh; margin:0; overflow:hidden;">
+    <AppNav activeSection="problems" client:load />
+    <div class="jdg-topbar">
+      <a href="../" class="jdg-topbar-back">← Problems</a>
+    </div>
+    <JudgeView problemId={slug} client:only="react" />
+  </body>
+</html>

@@ -12,19 +12,21 @@
   --mcq-text-secondary: var(--slate-600);
   --mcq-text-muted: var(--slate-400);
   --mcq-text-body: var(--slate-700);
-  --mcq-surface: var(--slate-50);
-  --mcq-surface-20: var(--slate-50);
-  --mcq-surface-30: var(--slate-50);
-  --mcq-surface-40: var(--white);
+  /* Light surfaces: progressive depth */
+  --mcq-surface: var(--slate-50);          /* base surface */
+  --mcq-surface-20: var(--slate-100);       /* +1 elevation */
+  --mcq-surface-30: var(--slate-200);       /* +2 elevation */
+  --mcq-surface-40: var(--white);           /* topmost (lightest) */
   --mcq-surface-hover: var(--slate-100);
   --mcq-surface-hover-40: var(--slate-200);
   --mcq-nav-bg: rgba(255, 255, 255, 0.85);
   --mcq-border: var(--slate-200);
-  --mcq-border-hover: var(--blue-600);
+  --mcq-border-hover: var(--indigo-500);
   --mcq-border-strong: var(--slate-300);
   --mcq-border-light: var(--slate-100);
-  --mcq-code-bg: var(--slate-50);
-  --mcq-snippet-header: var(--slate-100);
+  /* Code: distinct from surface */
+  --mcq-code-bg: var(--slate-100);
+  --mcq-snippet-header: var(--slate-200);
 }
 
 :root[data-theme='dark'] {
@@ -35,19 +37,21 @@
   --mcq-text-secondary: var(--slate-400);
   --mcq-text-muted: var(--slate-500);
   --mcq-text-body: var(--slate-300);
-  --mcq-surface: var(--slate-800);
-  --mcq-surface-20: var(--slate-800);
-  --mcq-surface-30: var(--slate-800);
-  --mcq-surface-40: var(--slate-800);
+  /* Dark surfaces: progressive depth */
+  --mcq-surface: var(--slate-800);          /* base surface */
+  --mcq-surface-20: var(--slate-750);       /* +1 elevation — one step lighter */
+  --mcq-surface-30: var(--slate-700);       /* +2 elevation */
+  --mcq-surface-40: var(--ink-800);         /* deepest inset */
   --mcq-surface-hover: var(--slate-700);
   --mcq-surface-hover-40: var(--slate-700);
   --mcq-nav-bg: rgba(15, 23, 42, 0.85);
   --mcq-border: var(--slate-700);
-  --mcq-border-hover: var(--blue-500);
+  --mcq-border-hover: var(--indigo-400);
   --mcq-border-strong: var(--slate-600);
   --mcq-border-light: var(--slate-800);
+  /* Code: distinct from surface */
   --mcq-code-bg: var(--ink-850);
-  --mcq-snippet-header: var(--slate-800);
+  --mcq-snippet-header: var(--ink-800);
 }
 
 @layer base {
@@ -71,11 +75,11 @@
 
   .mcq-card:hover {
     border-color: var(--mcq-border-hover);
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-600) 8%, transparent);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--indigo-500) 8%, transparent);
   }
 
   :root[data-theme='dark'] .mcq-card:hover {
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--blue-500) 12%, transparent);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--indigo-400) 12%, transparent);
   }
 
   .mcq-btn-primary {
@@ -87,13 +91,13 @@
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--white);
-    background: var(--blue-600);
+    background: var(--indigo-500);
     border: none;
     transition: all 0.15s ease;
   }
 
   .mcq-btn-primary:hover {
-    background: var(--blue-700);
+    background: var(--indigo-700);
   }
 
   .mcq-btn-secondary {
@@ -125,13 +129,13 @@
   }
 
   .mcq-btn-ghost:hover {
-    color: var(--blue-600);
-    background: color-mix(in srgb, var(--blue-600) 5%, transparent);
+    color: var(--indigo-500);
+    background: color-mix(in srgb, var(--indigo-500) 5%, transparent);
   }
 
   :root[data-theme='dark'] .mcq-btn-ghost:hover {
-    color: var(--blue-400);
-    background: color-mix(in srgb, var(--blue-500) 8%, transparent);
+    color: var(--indigo-400);
+    background: color-mix(in srgb, var(--indigo-500) 8%, transparent);
   }
 
   .mcq-badge {
