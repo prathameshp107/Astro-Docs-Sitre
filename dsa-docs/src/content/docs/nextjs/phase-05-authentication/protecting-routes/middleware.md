@@ -1,3 +1,8 @@
+---
+title: "Middleware"
+description: "Next.js middleware runs before a request reaches your page or API route. It's the ideal place for authentication checks — redirecting unauthenticated users"
+---
+
 # Middleware
 
 ## Introduction

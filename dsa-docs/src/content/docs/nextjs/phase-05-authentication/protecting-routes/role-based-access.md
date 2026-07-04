@@ -1,3 +1,8 @@
+---
+title: "Role-Based Access Control"
+description: "Role-Based Access Control (RBAC) restricts access based on a user's role. Common roles include admin, editor, and user. Each role has different permissions"
+---
+
 # Role-Based Access Control
 
 ## Introduction

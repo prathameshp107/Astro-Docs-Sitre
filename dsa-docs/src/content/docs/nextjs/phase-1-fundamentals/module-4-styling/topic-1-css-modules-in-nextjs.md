@@ -1,3 +1,8 @@
+---
+title: "CSS Modules in Next.js"
+description: "With CSS Modules, Sarah names her file ProfileCard.module.css and John names his BillingCard.module.css. The generated class names become .ProfileCardmodul"
+---
+
 # CSS Modules in Next.js
 
 ## Introduction

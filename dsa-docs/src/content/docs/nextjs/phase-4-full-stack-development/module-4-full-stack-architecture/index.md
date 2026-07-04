@@ -1,3 +1,8 @@
+---
+title: "Module 4: Full Stack Architecture"
+description: "Full-stack Next.js applications involve more than databases and APIs. This module covers file uploads, email and notifications, and background job processi"
+---
+
 # Module 4: Full Stack Architecture
 
 ## Introduction

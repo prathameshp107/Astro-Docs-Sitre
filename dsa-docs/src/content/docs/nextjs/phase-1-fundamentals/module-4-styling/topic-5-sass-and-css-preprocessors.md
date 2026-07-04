@@ -1,3 +1,8 @@
+---
+title: "Sass and CSS Preprocessors"
+description: "With a hand saw, you measure and cut each piece. With a power saw, you set the guide (variable/mixin) and cut many pieces identically."
+---
+
 # Sass and CSS Preprocessors
 
 ## Introduction

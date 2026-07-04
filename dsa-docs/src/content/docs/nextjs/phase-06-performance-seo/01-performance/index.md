@@ -1,3 +1,8 @@
+---
+title: "Performance"
+description: "Performance optimization in Next.js is largely built-in — the framework handles code splitting, image optimization, and font loading automatically. This mo"
+---
+
 # Performance
 
 ## Introduction

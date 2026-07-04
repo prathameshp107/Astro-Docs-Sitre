@@ -1,3 +1,8 @@
+---
+title: "01 — Authentication Basics"
+description: "Study notes and interview preparation material for 01 — Authentication Basics."
+---
+
 # 01 — Authentication Basics
 
 ## Introduction

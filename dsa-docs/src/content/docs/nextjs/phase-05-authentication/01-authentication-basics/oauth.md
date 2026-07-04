@@ -1,3 +1,8 @@
+---
+title: "OAuth 2.0"
+description: "export default NextAuth({ providers: [ GoogleProvider({ clientId: process.env.GOOGLECLIENTID, clientSecret: process.env.GOOGLECLIENTSECRET, authorization:"
+---
+
 # OAuth 2.0
 
 ## Introduction

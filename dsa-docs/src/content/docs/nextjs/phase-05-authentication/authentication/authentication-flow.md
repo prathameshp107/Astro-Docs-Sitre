@@ -1,3 +1,8 @@
+---
+title: "Authentication Flow"
+description: "export const authOptions = { providers: [ CredentialsProvider({ name: 'Credentials', credentials: { email: { label: 'Email', type: 'email' }, password: { l"
+---
+
 # Authentication Flow
 
 ## Introduction

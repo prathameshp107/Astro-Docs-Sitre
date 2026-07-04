@@ -1,3 +1,8 @@
+---
+title: "Tailwind CSS Integration"
+description: "Lego bricks are small, reusable, and predictable. You don't need to carve each brick — you just snap them together. Similarly, Tailwind utilities like flex"
+---
+
 # Tailwind CSS Integration
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Performance Best Practices"
+description: "This topic summarizes the key performance practices for Next.js applications. Use it as a checklist when building and reviewing your projects."
+---
+
 # Performance Best Practices
 
 ## Introduction

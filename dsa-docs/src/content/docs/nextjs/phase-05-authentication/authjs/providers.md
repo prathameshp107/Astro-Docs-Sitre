@@ -1,3 +1,8 @@
+---
+title: "Providers"
+description: "Providers are the ways users can log in. Auth.js supports OAuth providers (Google, GitHub), email (magic links), and credentials (email/password). You can"
+---
+
 # Providers
 
 ## Introduction

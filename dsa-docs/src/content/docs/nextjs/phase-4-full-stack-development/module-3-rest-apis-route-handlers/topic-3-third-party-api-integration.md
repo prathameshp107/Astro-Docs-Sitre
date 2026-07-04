@@ -1,3 +1,8 @@
+---
+title: "Third-party API Integration"
+description: "Modern applications integrate with external services: payment processors, email providers, AI APIs, and more. This topic covers patterns for calling extern"
+---
+
 # Third-party API Integration
 
 ## Introduction

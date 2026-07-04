@@ -1,3 +1,8 @@
+---
+title: "GitHub Login"
+description: "GitHub Login lets users sign in with their GitHub account. It's one of the most popular OAuth providers for developer-facing applications."
+---
+
 # GitHub Login
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Shared Components"
+description: "Shared components are reusable UI elements used across multiple features — buttons, inputs, cards, modals. They ensure visual consistency and reduce duplic"
+---
+
 # Shared Components
 
 ## Introduction

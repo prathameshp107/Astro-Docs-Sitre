@@ -1,3 +1,8 @@
+---
+title: "Client-Side Data Fetching"
+description: "Client-Side Fetching: --------------------- [Browser] → [useEffect triggers] → [Fetch API] → [API Server] → [Data] → [Browser] → [setState] → [Re-render] →"
+---
+
 # Client-Side Data Fetching
 
 ## Introduction

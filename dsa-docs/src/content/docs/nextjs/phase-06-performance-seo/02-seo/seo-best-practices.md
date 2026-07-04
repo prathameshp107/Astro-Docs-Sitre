@@ -1,3 +1,8 @@
+---
+title: "SEO Best Practices"
+description: "This topic summarizes the key SEO practices for Next.js applications. Use it as a checklist to ensure your application is well-optimized for search engines"
+---
+
 # SEO Best Practices
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Database Patterns"
+description: "Beyond basic CRUD, production applications need pagination, search, query caching, and transactional integrity. This topic covers common database patterns"
+---
+
 # Database Patterns
 
 ## Introduction

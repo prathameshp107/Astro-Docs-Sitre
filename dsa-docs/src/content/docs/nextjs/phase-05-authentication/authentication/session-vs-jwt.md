@@ -1,3 +1,8 @@
+---
+title: "Session vs Token Authentication"
+description: "Tokens (JWT): 1. Login validates credentials 2. Server creates JSON payload (user ID, roles, expiry) 3. Signs payload with secret key (HMAC) or private key"
+---
+
 # Session vs Token Authentication
 
 ## Introduction

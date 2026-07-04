@@ -1,3 +1,8 @@
+---
+title: "Folder Structure"
+description: "Understanding the project structure is essential for navigating and maintaining your portfolio efficiently. This overview explains the purpose of each dire"
+---
+
 # Folder Structure
 
 Understanding the project structure is essential for navigating and maintaining your portfolio efficiently. This overview explains the purpose of each directory and file in your Next.js portfolio application.

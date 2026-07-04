@@ -1,3 +1,8 @@
+---
+title: "Introduction to Auth.js"
+description: "Auth.js (formerly NextAuth.js) is the most popular authentication library for Next.js. It handles sessions, providers (Google, GitHub, email, credentials),"
+---
+
 # Introduction to Auth.js
 
 ## Introduction

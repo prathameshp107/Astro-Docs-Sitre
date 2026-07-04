@@ -1,3 +1,8 @@
+---
+title: "Error Monitoring"
+description: "Error monitoring captures unhandled exceptions and unexpected errors in your application. Instead of waiting for users to report bugs, error monitoring ale"
+---
+
 # Error Monitoring
 
 ## Introduction

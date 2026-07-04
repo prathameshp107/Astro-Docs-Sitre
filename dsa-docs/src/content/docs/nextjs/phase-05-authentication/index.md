@@ -1,3 +1,8 @@
+---
+title: "Phase 5 — Authentication & Authorization"
+description: "Study notes and interview preparation material for Phase 5 — Authentication & Authorization."
+---
+
 # Phase 5 — Authentication & Authorization
 
 ## Introduction

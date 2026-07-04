@@ -1,3 +1,8 @@
+---
+title: "SEO Introduction"
+description: "SEO is the practice of optimizing your website to rank higher in search engine results. Next.js helps by providing built-in metadata APIs, server-side rend"
+---
+
 # SEO Introduction
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Module 2: Forms & Validation"
+description: "Production forms require validation, error handling, accessible markup, and a smooth user experience. This module covers advanced form patterns using Serve"
+---
+
 # Module 2: Forms & Validation
 
 ## Introduction

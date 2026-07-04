@@ -1,3 +1,8 @@
+---
+title: "Google Provider"
+description: "export const { GET, POST } = NextAuth({ providers: [ GoogleProvider({ clientId: process.env.GOOGLEID, clientSecret: process.env.GOOGLESECRET, }) ] })"
+---
+
 # Google Provider
 
 ## Introduction

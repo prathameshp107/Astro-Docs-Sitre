@@ -1,3 +1,8 @@
+---
+title: "Build Analysis"
+description: "Build analysis helps you understand what's in your JavaScript bundles. By identifying large dependencies or duplicate code, you can reduce bundle sizes and"
+---
+
 # Build Analysis
 
 ## Introduction

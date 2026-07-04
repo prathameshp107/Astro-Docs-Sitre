@@ -1,3 +1,8 @@
+---
+title: "Caching"
+description: "Caching is one of the most powerful performance tools in Next.js. The framework automatically caches data, rendered pages, and routes at multiple levels —"
+---
+
 # Caching
 
 ## Introduction

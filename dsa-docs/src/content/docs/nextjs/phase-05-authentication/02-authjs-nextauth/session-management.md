@@ -1,3 +1,8 @@
+---
+title: "Session Management"
+description: "Database Strategy: Login → Create random session ID → Store {id, userData, expires} in DB → Send session ID to client → Client sends ID with requests → Loo"
+---
+
 # Session Management
 
 ## Introduction

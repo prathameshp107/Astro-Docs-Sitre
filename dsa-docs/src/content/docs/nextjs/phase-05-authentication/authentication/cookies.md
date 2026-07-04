@@ -1,3 +1,8 @@
+---
+title: "Cookies in Authentication"
+description: "Cookie attributes: - Name=value: The actual data (e.g., sessionid=abc123) - Expires/Max-Age: When cookie should be deleted - Domain: Which hosts can send t"
+---
+
 # Cookies in Authentication
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Production Build"
+description: "Running next build creates an optimized version of your application. It compiles TypeScript, bundles JavaScript, optimizes images, and generates static pag"
+---
+
 # Production Build
 
 ## Introduction

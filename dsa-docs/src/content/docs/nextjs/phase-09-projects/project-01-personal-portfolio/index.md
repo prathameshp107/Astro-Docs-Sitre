@@ -1,3 +1,8 @@
+---
+title: "Personal Portfolio"
+description: "Welcome to your first real-world Next.js project! In this project, you'll build a professional portfolio website to showcase your skills, projects, and exp"
+---
+
 # Personal Portfolio
 
 ## Introduction

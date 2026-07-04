@@ -1,3 +1,8 @@
+---
+title: "Cache Headers & CDN Caching"
+description: "The most powerful pattern for production APIs:"
+---
+
 # Cache Headers & CDN Caching
 
 ## Introduction

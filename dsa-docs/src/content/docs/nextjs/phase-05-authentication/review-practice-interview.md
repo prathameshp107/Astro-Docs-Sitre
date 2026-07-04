@@ -1,3 +1,8 @@
+---
+title: "Review, Practice & Interview Prep"
+description: "Phase 5 covered authentication and authorization in Next.js:"
+---
+
 # Review, Practice & Interview Prep
 
 ## Phase Summary

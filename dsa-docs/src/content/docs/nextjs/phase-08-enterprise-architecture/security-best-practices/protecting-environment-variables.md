@@ -1,3 +1,8 @@
+---
+title: "Protecting Environment Variables"
+description: "Environment variables contain secrets — database URLs, API keys, and auth tokens. If they leak, your application and users are at risk."
+---
+
 # Protecting Environment Variables
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Production Best Practices"
+description: "This topic summarizes the key practices for running Next.js applications in production."
+---
+
 # Production Best Practices
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Incremental Static Regeneration (ISR)"
+description: "Request 2 (after revalidate window): ----------------------------------- User Request → [CDN] → [Stale HTML] → [Next.js] → [Regenerate in Background] → [Up"
+---
+
 # Incremental Static Regeneration (ISR)
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Drizzle ORM with Next.js"
+description: "Drizzle is a lightweight TypeScript ORM with a SQL-like query syntax. Unlike Prisma's generated client, Drizzle lets you write queries that look like SQL w"
+---
+
 # Drizzle ORM with Next.js
 
 ## Introduction

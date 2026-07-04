@@ -1,3 +1,8 @@
+---
+title: "Module 4: Streaming & Suspense"
+description: "Study notes and interview preparation material for Module 4: Streaming & Suspense."
+---
+
 # Module 4: Streaming & Suspense
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Server Actions with Database"
+description: "Server Actions naturally integrate with databases. Since they run on the server, they can directly use Prisma, Drizzle, or any other ORM. This eliminates t"
+---
+
 # Server Actions with Database
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Background Jobs & Queues"
+description: "Some operations don't belong in the request-response cycle: sending emails, resizing images, generating PDFs, processing data. Background jobs handle these"
+---
+
 # Background Jobs & Queues
 
 ## Introduction

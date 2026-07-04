@@ -1,3 +1,8 @@
+---
+title: "Server-Side Rendering (SSR)"
+description: "export default function Dashboard({ user, stats }) { if (!user) { // Redirect to login if not authenticated const router = useRouter(); router.replace('/lo"
+---
+
 # Server-Side Rendering (SSR)
 
 ## Introduction

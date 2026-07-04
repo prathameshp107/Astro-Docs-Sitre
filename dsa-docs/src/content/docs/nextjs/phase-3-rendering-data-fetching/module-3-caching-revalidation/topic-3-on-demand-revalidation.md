@@ -1,3 +1,8 @@
+---
+title: "On-demand Revalidation"
+description: "// After creating a new post export default async function createPost(formData: FormData) { const post = await db.post.create({ data: { title: formData.get"
+---
+
 # On-demand Revalidation
 
 ## Introduction

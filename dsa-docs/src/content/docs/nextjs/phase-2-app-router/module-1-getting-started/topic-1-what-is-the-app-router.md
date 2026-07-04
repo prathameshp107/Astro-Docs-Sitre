@@ -1,3 +1,8 @@
+---
+title: "What is the App Router?"
+description: "The layout.tsx file is the floor plan that stays the same across rooms. The page.tsx is the furniture you change for each room. The loading.tsx is the \"und"
+---
+
 # What is the App Router?
 
 ## Introduction

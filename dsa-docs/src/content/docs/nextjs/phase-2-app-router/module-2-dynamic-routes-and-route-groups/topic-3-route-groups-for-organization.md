@@ -1,3 +1,8 @@
+---
+title: "Route Groups for Organization"
+description: "- Apply different layouts to different sections of your app - Separate public and authenticated routes - Organize routes by feature or team - Prevent layou"
+---
+
 # Route Groups for Organization
 
 ## Introduction

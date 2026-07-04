@@ -1,3 +1,8 @@
+---
+title: "Module 1: Database Integration"
+description: "Modern Next.js applications need databases. This module covers how to connect Next.js to databases using Prisma and Drizzle ORMs, handle connection pooling"
+---
+
 # Module 1: Database Integration
 
 ## Introduction

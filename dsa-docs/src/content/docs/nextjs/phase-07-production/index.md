@@ -1,3 +1,8 @@
+---
+title: "Phase 7: Production & Deployment"
+description: "This phase covers everything you need to take a Next.js application from development to production — deploying, monitoring, testing, and maintaining your a"
+---
+
 # Phase 7: Production & Deployment
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "API Layer"
+description: "An API layer centralizes how your application communicates with backend services. Instead of scattering fetch() calls across components, you create a consi"
+---
+
 # API Layer
 
 ## Introduction

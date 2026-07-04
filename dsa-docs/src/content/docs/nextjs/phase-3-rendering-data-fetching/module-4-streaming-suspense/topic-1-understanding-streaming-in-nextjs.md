@@ -1,3 +1,8 @@
+---
+title: "Understanding Streaming in Next.js"
+description: "Streaming is a rendering technique where the server progressively sends HTML to the client as it becomes available, rather than waiting for the entire page"
+---
+
 # Understanding Streaming in Next.js
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Monitoring"
+description: "Monitoring helps you understand what's happening in your production application — errors, performance, usage patterns. Without monitoring, you're flying bl"
+---
+
 # Monitoring
 
 ## Introduction

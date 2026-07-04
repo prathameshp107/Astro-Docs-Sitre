@@ -1,3 +1,8 @@
+---
+title: "Font Optimization"
+description: "Fonts can significantly impact page performance. A typical Google Font request blocks rendering until the CSS and font files download. Next.js's next/font"
+---
+
 # Font Optimization
 
 ## Introduction

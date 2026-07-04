@@ -1,3 +1,8 @@
+---
+title: "Module 2: Dynamic Routes & Route Groups"
+description: "---"
+---
+
 # Module 2: Dynamic Routes & Route Groups
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Feature-Based Architecture"
+description: "Feature-based architecture organizes code by the feature it belongs to (e.g., auth, posts, billing) rather than by file type (e.g., components, hooks, util"
+---
+
 # Feature-Based Architecture
 
 ## Introduction

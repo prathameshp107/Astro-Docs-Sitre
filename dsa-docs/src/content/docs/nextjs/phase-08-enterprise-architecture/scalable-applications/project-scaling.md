@@ -1,3 +1,8 @@
+---
+title: "Project Scaling"
+description: "As your Next.js application grows from a few pages to dozens of features and multiple team members, you need patterns that scale."
+---
+
 # Project Scaling
 
 ## Introduction

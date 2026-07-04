@@ -1,3 +1,8 @@
+---
+title: "Global Styles and Custom CSS"
+description: "Pages Router: pages/app.js → imports global.css → applies to ALL pages"
+---
+
 # Global Styles and Custom CSS
 
 ## Introduction

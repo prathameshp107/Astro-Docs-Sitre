@@ -1,3 +1,8 @@
+---
+title: "Authentication Best Practices"
+description: "Authentication is the first line of defense for your application. Getting it wrong can expose user accounts to attackers."
+---
+
 # Authentication Best Practices
 
 ## Introduction

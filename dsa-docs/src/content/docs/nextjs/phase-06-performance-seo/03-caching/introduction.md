@@ -1,3 +1,8 @@
+---
+title: "Caching Introduction"
+description: "Caching stores the result of an expensive operation so it can be reused later. In Next.js, caching happens at multiple levels — from database queries to re"
+---
+
 # Caching Introduction
 
 ## Introduction

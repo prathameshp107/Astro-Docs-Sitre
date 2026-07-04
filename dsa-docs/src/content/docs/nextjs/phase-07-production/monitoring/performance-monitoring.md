@@ -1,3 +1,8 @@
+---
+title: "Performance Monitoring"
+description: "Performance monitoring tracks how fast your application loads for real users. It captures Core Web Vitals — the metrics Google uses for search rankings."
+---
+
 # Performance Monitoring
 
 ## Introduction

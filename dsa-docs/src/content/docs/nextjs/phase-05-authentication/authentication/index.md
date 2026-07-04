@@ -1,3 +1,8 @@
+---
+title: "Authentication"
+description: "Study notes and interview preparation material for Authentication."
+---
+
 # Authentication
 
 ## Introduction

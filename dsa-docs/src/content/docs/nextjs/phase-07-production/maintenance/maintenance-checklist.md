@@ -1,3 +1,8 @@
+---
+title: "Maintenance Checklist"
+description: "Regular maintenance keeps your Next.js application healthy. Use this checklist for recurring maintenance tasks."
+---
+
 # Maintenance Checklist
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Review, Practice & Interview Prep"
+description: "Phase 6 covered three areas of Next.js optimization:"
+---
+
 # Review, Practice & Interview Prep
 
 ## Phase Summary

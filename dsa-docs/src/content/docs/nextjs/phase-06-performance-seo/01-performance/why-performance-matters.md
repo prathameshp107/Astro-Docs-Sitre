@@ -1,3 +1,8 @@
+---
+title: "Why Performance Matters"
+description: "Performance isn't just about speed — it's about how users perceive your application. A fast-loading page keeps users engaged, improves conversion rates, an"
+---
+
 # Why Performance Matters
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Forms & Mutations"
+description: "Forms are the primary way users interact with web applications. Next.js Server Actions integrate deeply with HTML forms, providing progressive enhancement,"
+---
+
 # Forms & Mutations
 
 ## Introduction

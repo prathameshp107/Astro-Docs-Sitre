@@ -1,3 +1,8 @@
+---
+title: "Code Organization"
+description: "Organizing code goes beyond folder structure. This module covers how to separate concerns, build reusable utilities, manage configuration, structure API ca"
+---
+
 # Code Organization
 
 ## Introduction

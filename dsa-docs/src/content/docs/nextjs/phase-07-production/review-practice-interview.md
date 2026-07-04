@@ -1,3 +1,8 @@
+---
+title: "Review, Practice & Interview Prep"
+description: "Phase 7 covered production-deploying and maintaining Next.js applications:"
+---
+
 # Review, Practice & Interview Prep
 
 ## Phase Summary

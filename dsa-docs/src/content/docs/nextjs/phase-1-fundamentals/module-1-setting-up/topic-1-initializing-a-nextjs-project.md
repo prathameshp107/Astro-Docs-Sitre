@@ -1,3 +1,8 @@
+---
+title: "Initializing a Next.js Project"
+description: "export default function Home() { return ( <div <h1Welcome to Next.js!</h1 <pThis is your first Next.js page.</p <Link href=\"/about\" <aAbout Page</a </Link"
+---
+
 # Initializing a Next.js Project
 
 ## Introduction

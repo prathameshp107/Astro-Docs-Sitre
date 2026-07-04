@@ -1,3 +1,8 @@
+---
+title: "Installation"
+description: "export default NextAuth({ / options / })"
+---
+
 # Installation
 
 ## Introduction

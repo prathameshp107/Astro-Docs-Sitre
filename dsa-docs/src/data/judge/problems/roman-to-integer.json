@@ -43,14 +43,14 @@
     "python": "def roman_to_int(s):\n    pass"
   },
   "tests": [
-    { "args": [[\"III\"]], "expected": [3], "hidden": false },
-    { "args": [[\"IV\"]], "expected": [4], "hidden": false },
-    { "args": [[\"IX\"]], "expected": [9], "hidden": false },
-    { "args": [[\"LVIII\"]], "expected": [54], "hidden": false },
-    { "args": [[\"MCMXCIV\"]], "expected": [1994], "hidden": false },
-    { "args": [[\"I\"]], "expected": [1], "hidden": true },
-    { "args": [[\"II\"]], "expected": [2], "hidden": true },
-    { "args": [[\"MMMCMXCIX\"]], "expected": [3999], "hidden": true }
+    { "args": [["III"]], "expected": [3], "hidden": false },
+    { "args": [["IV"]], "expected": [4], "hidden": false },
+    { "args": [["IX"]], "expected": [9], "hidden": false },
+    { "args": [["LVIII"]], "expected": [54], "hidden": false },
+    { "args": [["MCMXCIV"]], "expected": [1994], "hidden": false },
+    { "args": [["I"]], "expected": [1], "hidden": true },
+    { "args": [["II"]], "expected": [2], "hidden": true },
+    { "args": [["MMMCMXCIX"]], "expected": [3999], "hidden": true }
   ],
   "compareMode": "exact",
   "timeLimitMs": 4000,

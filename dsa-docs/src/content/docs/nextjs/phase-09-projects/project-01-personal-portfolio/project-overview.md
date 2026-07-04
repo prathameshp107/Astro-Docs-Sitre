@@ -1,3 +1,8 @@
+---
+title: "Project Overview"
+description: "In this project, you'll create a professional portfolio website that showcases your skills, projects, and experience as a developer. The portfolio will inc"
+---
+
 # Project Overview
 
 ## What You'll Build

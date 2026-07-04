@@ -1,3 +1,8 @@
+---
+title: "Running the Development Server"
+description: "2. What feature allows React component state to be preserved during hot reloading? a) Hot Module Replacement (HMR) b) Fast Refresh c) Server-Side Rendering"
+---
+
 # Running the Development Server
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Canonical URLs"
+description: "A canonical URL tells search engines which version of a page is the \"official\" one. This prevents duplicate content issues when the same content is accessi"
+---
+
 # Canonical URLs
 
 ## Introduction

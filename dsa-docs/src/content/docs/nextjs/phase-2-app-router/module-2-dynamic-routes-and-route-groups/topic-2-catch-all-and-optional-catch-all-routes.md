@@ -1,3 +1,8 @@
+---
+title: "Catch-all and Optional Catch-all Routes"
+description: "- Documentation sites: /docs/guide/getting-started/installation — multiple levels of hierarchy - Category trees: /products/electronics/laptops/gaming — nes"
+---
+
 # Catch-all and Optional Catch-all Routes
 
 ## Introduction

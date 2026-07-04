@@ -1,3 +1,8 @@
+---
+title: "JSON Web Tokens (JWT)"
+description: "Validation: 1. Split token on . into three parts 2. Decode header and payload (base64URL) 3. Verify signature matches expected algorithm and secret/key 4."
+---
+
 # JSON Web Tokens (JWT)
 
 ## Introduction

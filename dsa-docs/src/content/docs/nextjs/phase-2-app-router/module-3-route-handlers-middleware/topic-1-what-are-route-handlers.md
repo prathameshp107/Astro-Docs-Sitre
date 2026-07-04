@@ -1,3 +1,8 @@
+---
+title: "What are Route Handlers?"
+description: "- Serve JSON data to client components for dynamic updates - Handle form submissions (though Server Actions are often better for mutations) - Create webhoo"
+---
+
 # What are Route Handlers?
 
 ## Introduction

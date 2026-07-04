@@ -1,3 +1,8 @@
+---
+title: "Image Optimization"
+description: "Images are often the largest assets on a webpage. Next.js's next/image component automatically optimizes images — resizing, compressing, and serving modern"
+---
+
 # Image Optimization
 
 ## Introduction

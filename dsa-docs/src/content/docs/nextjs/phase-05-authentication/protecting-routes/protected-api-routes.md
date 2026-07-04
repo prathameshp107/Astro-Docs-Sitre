@@ -1,3 +1,8 @@
+---
+title: "Protected API Routes"
+description: "API routes (Route Handlers) often need authentication — they should only return data if the user is logged in. Protecting them is essential for data securi"
+---
+
 # Protected API Routes
 
 ## Introduction

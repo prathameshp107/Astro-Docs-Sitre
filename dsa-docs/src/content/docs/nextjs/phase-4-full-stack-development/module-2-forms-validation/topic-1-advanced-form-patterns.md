@@ -1,3 +1,8 @@
+---
+title: "Advanced Form Patterns"
+description: "Beyond basic form submissions, real applications need multi-step forms, dynamic field arrays, file uploads, and optimistic updates. This topic covers these"
+---
+
 # Advanced Form Patterns
 
 ## Introduction

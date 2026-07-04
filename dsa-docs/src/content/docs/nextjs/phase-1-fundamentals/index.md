@@ -1,3 +1,8 @@
+---
+title: "Phase 1: Next.js Fundamentals"
+description: "export default function Home() { return ( <div <h1My Next.js Blog</h1 <nav <Link href=\"/\"Home</Link | <Link href=\"/about\"About</Link | <Link href=\"/posts\"P"
+---
+
 # Phase 1: Next.js Fundamentals
 
 ## Introduction

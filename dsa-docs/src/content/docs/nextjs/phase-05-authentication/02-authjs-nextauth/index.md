@@ -1,3 +1,8 @@
+---
+title: "02 — Auth.js (NextAuth.js)"
+description: "Study notes and interview preparation material for 02 — Auth.js (NextAuth.js)."
+---
+
 # 02 — Auth.js (NextAuth.js)
 
 ## Introduction

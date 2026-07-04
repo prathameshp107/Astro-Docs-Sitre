@@ -1,3 +1,8 @@
+---
+title: "Bundle Optimization"
+description: "The JavaScript bundle is the code the browser must download, parse, and execute before a page becomes interactive. Optimizing the bundle — making it smalle"
+---
+
 # Bundle Optimization
 
 ## Introduction

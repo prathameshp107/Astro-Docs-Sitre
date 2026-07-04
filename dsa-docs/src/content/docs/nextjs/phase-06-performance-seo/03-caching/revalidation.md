@@ -1,3 +1,8 @@
+---
+title: "Revalidation"
+description: "Revalidation is the process of updating cached content when the source data changes. Next.js supports two revalidation strategies: time-based (ISR) and on-"
+---
+
 # Revalidation
 
 ## Introduction

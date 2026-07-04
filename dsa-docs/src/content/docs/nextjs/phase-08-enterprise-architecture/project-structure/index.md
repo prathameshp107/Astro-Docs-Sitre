@@ -1,3 +1,8 @@
+---
+title: "Project Structure"
+description: "How you organize files and folders has a huge impact on development speed and team collaboration. A consistent structure makes it easy to find code and und"
+---
+
 # Project Structure
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "SEO"
+description: "Search Engine Optimization (SEO) helps your application rank higher in search results and look good when shared on social media. Next.js provides built-in"
+---
+
 # SEO
 
 ## Introduction

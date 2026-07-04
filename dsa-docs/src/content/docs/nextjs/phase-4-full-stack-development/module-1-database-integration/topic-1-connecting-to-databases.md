@@ -1,3 +1,8 @@
+---
+title: "Connecting to Databases"
+description: "Next.js runs in serverless and edge environments where database connections behave differently than traditional servers. This topic covers how to configure"
+---
+
 # Connecting to Databases
 
 ## Introduction

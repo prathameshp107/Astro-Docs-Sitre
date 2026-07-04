@@ -1,3 +1,8 @@
+---
+title: "Phase 4: Full Stack Development"
+description: "This phase covers the server-side aspects of Next.js — connecting to databases, building APIs, handling forms and validation, and integrating with third-pa"
+---
+
 # Phase 4: Full Stack Development
 
 ## Introduction

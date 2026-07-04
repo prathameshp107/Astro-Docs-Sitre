@@ -1,3 +1,8 @@
+---
+title: "Module 1: React Server Components (RSC)"
+description: "Study notes and interview preparation material for Module 1: React Server Components (RSC)."
+---
+
 # Module 1: React Server Components (RSC)
 
 ## Introduction

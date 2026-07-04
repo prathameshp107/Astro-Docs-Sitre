@@ -1,3 +1,8 @@
+---
+title: "Phase 2: App Router"
+description: "--- Module 1: Getting Started with App Router"
+---
+
 # Phase 2: App Router
 
 ## Introduction

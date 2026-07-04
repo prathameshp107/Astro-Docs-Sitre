@@ -1,3 +1,8 @@
+---
+title: "Module Organization"
+description: "Modules are the building blocks of your application. A well-organized module has clear boundaries, a defined public API, and minimal dependencies on other"
+---
+
 # Module Organization
 
 ## Introduction

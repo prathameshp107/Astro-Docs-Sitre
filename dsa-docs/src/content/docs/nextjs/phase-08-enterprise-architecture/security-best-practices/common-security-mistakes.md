@@ -1,3 +1,8 @@
+---
+title: "Common Security Mistakes"
+description: "This topic covers the most common security mistakes in Next.js applications. Avoiding these will prevent the majority of security issues."
+---
+
 # Common Security Mistakes
 
 ## Introduction

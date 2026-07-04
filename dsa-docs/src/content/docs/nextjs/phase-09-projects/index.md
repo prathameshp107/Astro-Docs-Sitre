@@ -1,3 +1,8 @@
+---
+title: "Phase 9 — Real-World Projects"
+description: "Welcome to Phase 9 of the Next.js learning path! In this phase, you'll apply everything you've learned by building complete, production-style Next.js appli"
+---
+
 # Phase 9 — Real-World Projects
 
 ## Introduction

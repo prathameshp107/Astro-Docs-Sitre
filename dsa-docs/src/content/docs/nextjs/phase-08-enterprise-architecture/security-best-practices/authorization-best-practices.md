@@ -1,3 +1,8 @@
+---
+title: "Authorization Best Practices"
+description: "Authorization determines what an authenticated user can do. While authentication answers \"who are you?\", authorization answers \"what are you allowed to do?"
+---
+
 # Authorization Best Practices
 
 ## Introduction

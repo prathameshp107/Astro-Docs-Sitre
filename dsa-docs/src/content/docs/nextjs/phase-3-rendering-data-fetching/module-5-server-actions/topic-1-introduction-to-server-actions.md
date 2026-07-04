@@ -1,3 +1,8 @@
+---
+title: "Introduction to Server Actions"
+description: "Server Actions are async functions that run on the server but can be called directly from Client Components. They reimagine form handling and data mutation"
+---
+
 # Introduction to Server Actions
 
 ## Introduction

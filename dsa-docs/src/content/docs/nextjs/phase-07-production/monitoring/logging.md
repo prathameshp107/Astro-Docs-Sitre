@@ -1,3 +1,8 @@
+---
+title: "Logging"
+description: "Logging captures information about what your application is doing. In production, logs help you debug issues, monitor performance, and understand user beha"
+---
+
 # Logging
 
 ## Introduction

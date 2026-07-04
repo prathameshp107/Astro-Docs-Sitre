@@ -1,3 +1,8 @@
+---
+title: "Protected Pages"
+description: "Protected pages require authentication to view. In Next.js, you protect pages by checking the session server-side with getServerSession and redirecting if"
+---
+
 # Protected Pages
 
 ## Introduction

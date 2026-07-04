@@ -1,3 +1,8 @@
+---
+title: "Basic Example"
+description: "This topic puts everything together — a complete working authentication setup with Auth.js, including a login page, protected dashboard, and sign-out butto"
+---
+
 # Basic Example
 
 ## Introduction

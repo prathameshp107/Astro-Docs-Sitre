@@ -1,3 +1,8 @@
+---
+title: "Introduction to Deployment"
+description: "Next.js applications can be deployed in several ways. The most common are Vercel (the platform built by the creators of Next.js) and self-hosting (your own"
+---
+
 # Introduction to Deployment
 
 ## Introduction

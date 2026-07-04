@@ -1,3 +1,8 @@
+---
+title: "Middleware Basics"
+description: "Middleware runs at the Edge (before your application code), making it the perfect place for these pre-processing tasks — they happen with minimal latency a"
+---
+
 # Middleware Basics
 
 ## Introduction

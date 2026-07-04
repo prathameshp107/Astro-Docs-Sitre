@@ -1,3 +1,8 @@
+---
+title: "Understanding File-System Routing"
+description: "export default function Home() { return ( <div <h1Home</h1 <nav <Link href=\"/about\" <aAbout</a </Link | <Link href=\"/blog\" <aBlog</a </Link </nav </div );"
+---
+
 # Understanding File-System Routing
 
 ## Introduction

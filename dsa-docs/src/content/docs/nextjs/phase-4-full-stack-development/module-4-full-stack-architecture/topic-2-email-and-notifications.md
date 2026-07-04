@@ -1,3 +1,8 @@
+---
+title: "Email & Notifications"
+description: "Sending emails is a core requirement for most applications — welcome emails, password resets, order confirmations. This topic covers sending transactional"
+---
+
 # Email & Notifications
 
 ## Introduction

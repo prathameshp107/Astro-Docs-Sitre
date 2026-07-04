@@ -1,3 +1,8 @@
+---
+title: "Getting Started with App Router"
+description: "Study notes and interview preparation material for Getting Started with App Router."
+---
+
 # Getting Started with App Router
 
 ## Introduction

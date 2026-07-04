@@ -1,3 +1,8 @@
+---
+title: "Metadata"
+description: "Metadata is information about a page that doesn't appear in the visible content — the page title, description, and other tags that help search engines and"
+---
+
 # Metadata
 
 ## Introduction

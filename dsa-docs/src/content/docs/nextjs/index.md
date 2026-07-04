@@ -1,3 +1,8 @@
+---
+title: "Next.js"
+description: "Overview and introduction to Next.js, including rendering strategies, request lifecycle, data fetching, and syntax examples."
+---
+
 # Overview of Next.js
 
 ## Introduction
@@ -314,8 +319,25 @@ export async function getStaticProps({ params }) {
   const post = {
     slug: params.slug,
     title: 'Understanding ISR in Next.js',
-    .
-```
+    content: '<p>Incremental Static Regeneration (ISR) enables you to use static-generation on a per-page basis, without needing to rebuild the entire site.</p>'
+  };
+  
+  return {
+    props: { post },
+    // Revalidate every 60 seconds
+    revalidate: 60
+  };
+}
 
-But the that the 
-We need to with the replacement. Let's assume the exact string exactly do that.
+export default function BlogPost({ post }) {
+  return (
+    <article className="container mx-auto py-8">
+      <h1 className="text-2xl font-bold mb-4">{post.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <Link href="/" className="mt-6 inline-block text-blue-500 hover:underline">
+        ← Back to Home
+      </Link>
+    </article>
+  );
+}
+```

@@ -1,3 +1,8 @@
+---
+title: "Client-side Data Fetching Patterns"
+description: "import { useEffect, useState } from 'react'"
+---
+
 # Client-side Data Fetching Patterns
 
 ## Introduction

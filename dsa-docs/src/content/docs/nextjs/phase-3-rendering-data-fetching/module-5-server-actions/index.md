@@ -1,3 +1,8 @@
+---
+title: "Module 5: Server Actions"
+description: "Both get you food, but the drive-through is faster and requires fewer steps."
+---
+
 # Module 5: Server Actions
 
 ## Introduction

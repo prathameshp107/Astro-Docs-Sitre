@@ -1,3 +1,8 @@
+---
+title: "Rendering & Data Fetching"
+description: "1. Static Generation (SSG): User Request → CDN (pre-built HTML) → Browser (No server execution at request time)"
+---
+
 # Rendering & Data Fetching
 
 ## Introduction

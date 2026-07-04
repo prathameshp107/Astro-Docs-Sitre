@@ -1,3 +1,8 @@
+---
+title: "OpenID Connect (OIDC)"
+description: "Flow (Authorization Code with OIDC): 1. Client requests scope openid (and optionally profile, email) 2. Authorization server authenticates user and obtains"
+---
+
 # OpenID Connect (OIDC)
 
 ## Introduction

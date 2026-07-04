@@ -1,3 +1,8 @@
+---
+title: "Choosing the Right Data Fetching Method"
+description: "1. Data Freshness Requirements: - How frequently does the data change? - Is stale acceptable for a period of time? - Do users need to see updates immediate"
+---
+
 # Choosing the Right Data Fetching Method
 
 ## Introduction

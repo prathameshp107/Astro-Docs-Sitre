@@ -1,3 +1,8 @@
+---
+title: "Script Optimization"
+description: "Third-party scripts (analytics, ads, chat widgets) are a common source of performance problems. The next/script component gives you control over when and h"
+---
+
 # Script Optimization
 
 ## Introduction

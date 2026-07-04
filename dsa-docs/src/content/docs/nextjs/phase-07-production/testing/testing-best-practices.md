@@ -1,3 +1,8 @@
+---
+title: "Testing Best Practices"
+description: "This topic summarizes the key practices for testing Next.js applications effectively."
+---
+
 # Testing Best Practices
 
 ## Introduction

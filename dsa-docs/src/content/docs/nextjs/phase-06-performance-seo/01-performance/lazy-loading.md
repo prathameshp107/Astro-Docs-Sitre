@@ -1,3 +1,8 @@
+---
+title: "Lazy Loading"
+description: "Lazy loading defers loading of non-critical resources until they're actually needed. This reduces the initial bundle size and speeds up the first paint. Ne"
+---
+
 # Lazy Loading
 
 ## Introduction

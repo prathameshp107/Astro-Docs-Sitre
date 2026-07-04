@@ -1,3 +1,8 @@
+---
+title: "Phase 8: Enterprise Architecture & Best Practices"
+description: "This phase covers how to organize, scale, and maintain Next.js applications in a professional setting. Good architecture makes applications easier to under"
+---
+
 # Phase 8: Enterprise Architecture & Best Practices
 
 ## Introduction

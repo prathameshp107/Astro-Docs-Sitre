@@ -1,3 +1,8 @@
+---
+title: "HTTP Methods & Dynamic Routes in Route Handlers"
+description: "- Create resources with POST - Read resources with GET (list and single) - Update resources with PUT or PATCH - Delete resources with DELETE - Handle CORS"
+---
+
 # HTTP Methods & Dynamic Routes in Route Handlers
 
 ## Introduction

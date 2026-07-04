@@ -1,3 +1,8 @@
+---
+title: "Basic Routes and Index Files"
+description: "// pages/about.js export default function About() { return ( <div <h1About Us</h1 <pWe build amazing websites.</p <a href=\"/\"Back to Home</a </div ); }"
+---
+
 # Basic Routes and Index Files
 
 ## Introduction

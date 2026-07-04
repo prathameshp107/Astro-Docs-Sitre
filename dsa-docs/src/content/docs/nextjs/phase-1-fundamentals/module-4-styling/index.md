@@ -1,3 +1,8 @@
+---
+title: "Module 4: Styling in Next.js"
+description: "---"
+---
+
 # Module 4: Styling in Next.js
 
 ## Introduction

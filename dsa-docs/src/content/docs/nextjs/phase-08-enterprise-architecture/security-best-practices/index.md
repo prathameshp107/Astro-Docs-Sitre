@@ -1,3 +1,8 @@
+---
+title: "Security Best Practices"
+description: "Security should be built into your application from the start, not added as an afterthought. This module covers the essential security practices for Next.j"
+---
+
 # Security Best Practices
 
 ## Introduction

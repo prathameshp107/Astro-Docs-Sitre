@@ -1,3 +1,8 @@
+---
+title: "robots.txt"
+description: "robots.txt is a file that tells search engine crawlers which pages they can and cannot access. It's placed at the root of your site and is checked by crawl"
+---
+
 # robots.txt
 
 ## Introduction

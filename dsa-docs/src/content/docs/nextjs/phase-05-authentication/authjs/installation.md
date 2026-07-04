@@ -1,3 +1,8 @@
+---
+title: "Installation"
+description: "Setting up Auth.js in a Next.js project takes just a few steps. This guide covers installation, environment variables, and the basic project structure."
+---
+
 # Installation
 
 ## Introduction

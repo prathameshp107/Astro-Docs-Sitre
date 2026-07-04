@@ -1,3 +1,8 @@
+---
+title: "Lazy Loading"
+description: "Lazy loading defers loading of non-critical code until it's needed. This reduces initial bundle size and speeds up the first page load. For large applicati"
+---
+
 # Lazy Loading
 
 ## Introduction

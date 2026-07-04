@@ -1,3 +1,8 @@
+---
+title: "Module 3: Caching & Revalidation"
+description: "Study notes and interview preparation material for Module 3: Caching & Revalidation."
+---
+
 # Module 3: Caching & Revalidation
 
 ## Introduction

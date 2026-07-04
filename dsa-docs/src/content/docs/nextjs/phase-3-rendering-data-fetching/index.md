@@ -1,3 +1,8 @@
+---
+title: "Phase 3: Rendering & Data Fetching"
+description: "Study notes and interview preparation material for Phase 3: Rendering & Data Fetching."
+---
+
 # Phase 3: Rendering & Data Fetching
 
 ## Introduction

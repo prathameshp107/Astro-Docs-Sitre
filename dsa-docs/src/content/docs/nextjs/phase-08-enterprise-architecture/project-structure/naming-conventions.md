@@ -1,3 +1,8 @@
+---
+title: "Naming Conventions"
+description: "Consistent naming makes code easier to read and find. When every file follows the same pattern, developers can predict where to find things."
+---
+
 # Naming Conventions
 
 ## Introduction

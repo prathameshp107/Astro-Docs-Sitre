@@ -1,3 +1,8 @@
+---
+title: "Setting up Your First Next.js Project"
+description: "2. Which directory holds pages that automatically become routes? a) components/ b) pages/ c) routes/ d) views/ <details <summaryAnswer</summary b) pages/ <"
+---
+
 # Setting up Your First Next.js Project
 
 ## Introduction

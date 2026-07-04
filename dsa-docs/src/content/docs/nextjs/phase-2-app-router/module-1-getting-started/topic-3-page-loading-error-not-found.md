@@ -1,3 +1,8 @@
+---
+title: "Page, Loading, Error & Not Found Files"
+description: "Each state provides a smooth, informative experience instead of a blank screen or confusing error."
+---
+
 # Page, Loading, Error & Not Found Files
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Exploring the Initial Page (pages/index.js)"
+description: "export default function Home() { return ( <div <Head <titleMy Page Title</title <meta name=\"description\" content=\"This is my page.\" / </Head <h1Welcome</h1"
+---
+
 # Exploring the Initial Page (pages/index.js)
 
 ## Introduction

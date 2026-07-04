@@ -1,3 +1,8 @@
+---
+title: "Advanced Middleware Patterns"
+description: "- Geo-routing — Serve different content based on visitor country (GDPR compliance, regional pricing) - Subdomain routing — Route app.example.com to dashboa"
+---
+
 # Advanced Middleware Patterns
 
 ## Introduction

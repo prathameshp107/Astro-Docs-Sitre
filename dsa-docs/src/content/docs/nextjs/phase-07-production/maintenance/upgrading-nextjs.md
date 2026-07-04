@@ -1,3 +1,8 @@
+---
+title: "Upgrading Next.js"
+description: "Next.js releases major versions with new features, performance improvements, and breaking changes. Upgrading requires planning and testing."
+---
+
 # Upgrading Next.js
 
 ## Introduction

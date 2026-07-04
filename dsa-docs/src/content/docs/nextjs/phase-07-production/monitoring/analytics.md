@@ -1,3 +1,8 @@
+---
+title: "Analytics"
+description: "Analytics tells you how users interact with your application — which pages they visit, where they come from, and how long they stay."
+---
+
 # Analytics
 
 ## Introduction

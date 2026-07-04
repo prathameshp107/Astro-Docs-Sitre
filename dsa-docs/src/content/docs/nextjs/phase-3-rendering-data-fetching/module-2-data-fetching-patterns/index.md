@@ -1,3 +1,8 @@
+---
+title: "Module 2: Data Fetching Patterns"
+description: "Study notes and interview preparation material for Module 2: Data Fetching Patterns."
+---
+
 # Module 2: Data Fetching Patterns
 
 ## Introduction

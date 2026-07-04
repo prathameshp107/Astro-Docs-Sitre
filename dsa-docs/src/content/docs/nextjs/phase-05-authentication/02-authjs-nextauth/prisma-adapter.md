@@ -1,3 +1,8 @@
+---
+title: "Prisma Adapter"
+description: "Data flow: 1. Sign-in: - Adapter.findUserByEmail() → Prisma.user.findUnique({ where: { email } }) - Adapter.findUserByAccount({ where: { provider, provider"
+---
+
 # Prisma Adapter
 
 ## Introduction

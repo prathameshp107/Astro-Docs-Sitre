@@ -1,3 +1,8 @@
+---
+title: "Validation with Zod"
+description: "Zod is a TypeScript-first schema validation library. It lets you define the shape of your data once, then infer types, validate inputs, and generate error"
+---
+
 # Validation with Zod
 
 ## Introduction

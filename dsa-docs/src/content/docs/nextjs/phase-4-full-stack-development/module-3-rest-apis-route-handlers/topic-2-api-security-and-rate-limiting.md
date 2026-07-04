@@ -1,3 +1,8 @@
+---
+title: "API Security & Rate Limiting"
+description: "Public APIs need protection against abuse, unauthorized access, and common web vulnerabilities. This topic covers securing Next.js Route Handlers with auth"
+---
+
 # API Security & Rate Limiting
 
 ## Introduction

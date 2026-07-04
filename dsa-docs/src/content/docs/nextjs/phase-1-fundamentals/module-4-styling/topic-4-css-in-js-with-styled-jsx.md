@@ -1,3 +1,8 @@
+---
+title: "CSS-in-JS with styled-jsx"
+description: "MyComponent.jsx ┌─────────────────────────────────────┐ │ export default function Component { │ │ return ( │ │ <div │ │ <pHello</p │ │ <style jsx{ │ │ div"
+---
+
 # CSS-in-JS with styled-jsx
 
 ## Introduction

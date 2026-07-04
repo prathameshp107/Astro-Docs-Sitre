@@ -1,3 +1,8 @@
+---
+title: "Session Management"
+description: "Auth.js supports two session strategies: JWT (stateless) and database (stateful). Each has tradeoffs for security, scalability, and complexity."
+---
+
 # Session Management
 
 ## Introduction

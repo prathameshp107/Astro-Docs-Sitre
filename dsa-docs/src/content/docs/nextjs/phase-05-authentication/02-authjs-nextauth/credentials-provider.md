@@ -1,3 +1,8 @@
+---
+title: "Credentials Provider"
+description: "export const { GET, POST } = NextAuth({ providers: [ CredentialsProvider({ // The name to display on the sign in form (e.g. \"Sign in with...\") name: \"Crede"
+---
+
 # Credentials Provider
 
 ## Introduction

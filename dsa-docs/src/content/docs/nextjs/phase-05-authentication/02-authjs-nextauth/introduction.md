@@ -1,3 +1,8 @@
+---
+title: "Introduction to Auth.js"
+description: "export const { handlers, auth, signIn, signOut } = NextAuth({ providers: [ GoogleProvider({ clientId: process.env.GOOGLEID, clientSecret: process.env.GOOGL"
+---
+
 # Introduction to Auth.js
 
 ## Introduction

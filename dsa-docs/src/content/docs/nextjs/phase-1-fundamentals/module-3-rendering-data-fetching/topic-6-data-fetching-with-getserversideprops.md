@@ -1,3 +1,8 @@
+---
+title: "Data Fetching with getServerSideProps"
+description: "export default function Dashboard({ user, stats }) { if (!user) { // Redirect to login if not authenticated const router = useRouter(); router.replace('/lo"
+---
+
 # Data Fetching with getServerSideProps
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Data Fetching with Route Handlers"
+description: "export async function GET() { const products = await db.product.findMany() return NextResponse.json(products) }"
+---
+
 # Data Fetching with Route Handlers
 
 ## Introduction

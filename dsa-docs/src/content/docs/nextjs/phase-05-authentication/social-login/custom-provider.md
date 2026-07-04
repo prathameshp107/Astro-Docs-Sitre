@@ -1,3 +1,8 @@
+---
+title: "Custom Provider"
+description: "In addition to built-in providers, Auth.js lets you configure custom OAuth providers. This is useful for OAuth-compatible services not in the default provi"
+---
+
 # Custom Provider
 
 ## Introduction

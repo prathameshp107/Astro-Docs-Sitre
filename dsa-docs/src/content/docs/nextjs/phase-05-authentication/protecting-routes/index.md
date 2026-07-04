@@ -1,3 +1,8 @@
+---
+title: "Protecting Routes"
+description: "Protecting routes ensures only authenticated users can access certain pages and API endpoints. Next.js provides multiple layers for this: middleware, serve"
+---
+
 # Protecting Routes
 
 ## Introduction

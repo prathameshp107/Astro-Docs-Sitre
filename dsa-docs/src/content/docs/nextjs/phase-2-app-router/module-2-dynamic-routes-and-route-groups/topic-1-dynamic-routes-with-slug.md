@@ -1,3 +1,8 @@
+---
+title: "Dynamic Routes with [slug]"
+description: "Without dynamic routes, you'd need to create a separate file for every possible URL — which is impossible for user-generated or database-driven content."
+---
+
 # Dynamic Routes with [slug]
 
 ## Introduction

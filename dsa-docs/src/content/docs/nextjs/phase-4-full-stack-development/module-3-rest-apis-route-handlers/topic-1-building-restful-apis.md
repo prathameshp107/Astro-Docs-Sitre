@@ -1,3 +1,8 @@
+---
+title: "Building RESTful APIs"
+description: "Route Handlers (route.ts) are Next.js's native way to build API endpoints. They run on the server, support all HTTP methods, and integrate with Next.js's c"
+---
+
 # Building RESTful APIs
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Best Practices"
+description: "This topic summarizes the key practices for building scalable Next.js applications."
+---
+
 # Best Practices
 
 ## Introduction

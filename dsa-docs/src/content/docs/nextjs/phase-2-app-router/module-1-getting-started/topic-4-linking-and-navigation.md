@@ -1,3 +1,8 @@
+---
+title: "Linking and Navigation"
+description: "The difference is the difference between a slow, jarring experience and a smooth, app-like feel."
+---
+
 # Linking and Navigation
 
 ## Introduction

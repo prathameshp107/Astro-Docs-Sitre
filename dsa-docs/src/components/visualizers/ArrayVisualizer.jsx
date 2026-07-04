@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useArrayStore } from '../../store/visualizers/arrayStore';
 
@@ -378,7 +378,7 @@ export default function ArrayVisualizer() {
                     </div>
                     {/* Optional: show index on hover */}
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-xs text-white/60 mb-2">@{i}</div>
-                  </div>
+                  </motion.div>
                 );
               })}  
             </AnimatePresence>

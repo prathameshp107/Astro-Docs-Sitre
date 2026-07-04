@@ -1,3 +1,8 @@
+---
+title: "Fetching Data in Server Components"
+description: "Both get you food, but the direct approach is faster and has fewer steps."
+---
+
 # Fetching Data in Server Components
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Constants and Config"
+description: "Centralizing constants and configuration makes your application easier to maintain. When a value changes — an API endpoint, a pagination limit, a feature f"
+---
+
 # Constants and Config
 
 ## Introduction

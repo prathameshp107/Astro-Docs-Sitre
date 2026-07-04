@@ -1,3 +1,8 @@
+---
+title: "Security Updates"
+description: "Security vulnerabilities are discovered in software regularly. Applying security updates promptly protects your application and users."
+---
+
 # Security Updates
 
 ## Introduction

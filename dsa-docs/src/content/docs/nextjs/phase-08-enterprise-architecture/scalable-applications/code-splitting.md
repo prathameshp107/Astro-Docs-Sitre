@@ -1,3 +1,8 @@
+---
+title: "Code Splitting"
+description: "Code splitting is the practice of splitting your JavaScript bundle into smaller chunks that load on demand. It's essential for large applications to keep i"
+---
+
 # Code Splitting
 
 ## Introduction

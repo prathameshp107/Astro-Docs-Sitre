@@ -1,3 +1,8 @@
+---
+title: "Module 3: Route Handlers & Middleware"
+description: "- API endpoints to serve data to client components, mobile apps, or third-party services - Authentication checks that run before protected pages load - Req"
+---
+
 # Module 3: Route Handlers & Middleware
 
 ## Introduction

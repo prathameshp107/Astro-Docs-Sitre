@@ -1,3 +1,8 @@
+---
+title: "Dynamic Routes and Parameter Handling"
+description: "export default function Post() { const router = useRouter(); const { slug } = router.query;"
+---
+
 # Dynamic Routes and Parameter Handling
 
 ## Introduction

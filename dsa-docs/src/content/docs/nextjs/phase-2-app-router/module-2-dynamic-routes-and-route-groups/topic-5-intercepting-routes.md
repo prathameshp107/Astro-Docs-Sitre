@@ -1,3 +1,8 @@
+---
+title: "Intercepting Routes"
+description: "- A user clicks a link and a modal appears, but the URL updates to the modal's page - A slide-in panel shows content from another page without leaving the"
+---
+
 # Intercepting Routes
 
 ## Introduction

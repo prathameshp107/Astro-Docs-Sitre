@@ -1,3 +1,8 @@
+---
+title: "Production Build"
+description: "A production build optimizes your Next.js application for speed and efficiency. Understanding what happens during next build helps you identify and fix per"
+---
+
 # Production Build
 
 ## Introduction

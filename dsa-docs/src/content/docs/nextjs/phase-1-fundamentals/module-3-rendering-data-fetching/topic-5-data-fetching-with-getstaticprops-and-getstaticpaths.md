@@ -1,3 +1,8 @@
+---
+title: "Data Fetching with getStaticProps and getStaticPaths"
+description: "Request Time (ISR): ------------------ [User] → Request /blog/post-1 → [Check cache age] ↓ [Fresh?] → Serve cached HTML ↓ [Stale?] → Serve cached + trigger"
+---
+
 # Data Fetching with getStaticProps and getStaticPaths
 
 ## Introduction

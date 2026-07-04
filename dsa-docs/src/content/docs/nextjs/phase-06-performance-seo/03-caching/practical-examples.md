@@ -1,3 +1,8 @@
+---
+title: "Practical Examples"
+description: "This topic brings together the caching concepts into practical, real-world patterns you can apply to your Next.js applications."
+---
+
 # Practical Examples
 
 ## Introduction

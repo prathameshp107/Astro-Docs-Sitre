@@ -1,3 +1,8 @@
+---
+title: "GitHub Provider"
+description: "export const { GET, POST } = NextAuth({ providers: [ GitHubProvider({ clientId: process.env.GITHUBID, clientSecret: process.env.GITHUBSECRET, }) ], // Opti"
+---
+
 # GitHub Provider
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "End-to-End Testing"
+description: "End-to-end (E2E) tests simulate real user interactions — clicking buttons, filling forms, navigating between pages. They give the highest confidence but ar"
+---
+
 # End-to-End Testing
 
 ## Introduction

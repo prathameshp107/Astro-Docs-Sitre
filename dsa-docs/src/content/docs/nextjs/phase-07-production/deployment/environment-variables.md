@@ -1,3 +1,8 @@
+---
+title: "Environment Variables"
+description: "Environment variables keep configuration — API keys, database URLs, secrets — out of your code. They change per environment (development, preview, producti"
+---
+
 # Environment Variables
 
 ## Introduction

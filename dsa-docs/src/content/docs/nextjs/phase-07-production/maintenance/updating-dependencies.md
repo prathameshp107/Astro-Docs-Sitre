@@ -1,3 +1,8 @@
+---
+title: "Updating Dependencies"
+description: "Dependencies in your package.json need regular updates to receive bug fixes, security patches, and new features."
+---
+
 # Updating Dependencies
 
 ## Introduction

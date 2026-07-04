@@ -1,3 +1,8 @@
+---
+title: "Adapters"
+description: "Required methods (similar for each entity type): - create(entity): Create new record - get(id): Retrieve record by ID - getByEmail(email): Get user by emai"
+---
+
 # Adapters
 
 ## Introduction

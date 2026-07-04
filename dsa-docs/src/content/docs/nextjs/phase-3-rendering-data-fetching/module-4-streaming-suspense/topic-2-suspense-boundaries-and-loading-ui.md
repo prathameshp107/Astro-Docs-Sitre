@@ -1,3 +1,8 @@
+---
+title: "Suspense Boundaries & Loading UI"
+description: "React's Suspense boundary is the primitive that enables streaming. It lets you declare what to show while a component is loading, and React automatically s"
+---
+
 # Suspense Boundaries & Loading UI
 
 ## Introduction

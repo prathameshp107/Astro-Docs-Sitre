@@ -1,3 +1,8 @@
+---
+title: "Social Login"
+description: "Social login lets users authenticate with their existing accounts from providers like Google, GitHub, and others. It improves sign-up conversion by removin"
+---
+
 # Social Login
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Auth.js"
+description: "Study notes and interview preparation material for Auth.js."
+---
+
 # Auth.js
 
 ## Introduction

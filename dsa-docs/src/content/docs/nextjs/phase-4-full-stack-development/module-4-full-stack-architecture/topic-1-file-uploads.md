@@ -1,3 +1,8 @@
+---
+title: "File Uploads"
+description: "File uploads are a common requirement — user avatars, product images, document attachments. This topic covers upload patterns using Server Actions, blob st"
+---
+
 # File Uploads
 
 ## Introduction

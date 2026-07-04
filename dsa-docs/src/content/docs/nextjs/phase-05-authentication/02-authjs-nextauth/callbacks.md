@@ -1,3 +1,8 @@
+---
+title: "Callbacks"
+description: "Important characteristics: - All callbacks are asynchronous and must return a value (or Promise resolving to value) - Returning false or null from signIn c"
+---
+
 # Callbacks
 
 ## Introduction

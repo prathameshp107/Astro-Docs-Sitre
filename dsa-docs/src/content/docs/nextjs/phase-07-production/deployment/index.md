@@ -1,3 +1,8 @@
+---
+title: "Deployment"
+description: "Deployment is the process of making your Next.js application available on the internet. This module covers the most common deployment targets and best prac"
+---
+
 # Deployment
 
 ## Introduction

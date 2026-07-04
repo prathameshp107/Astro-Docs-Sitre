@@ -1,3 +1,8 @@
+---
+title: "Phase 6: Performance & SEO"
+description: "Performance and SEO are essential for any production Next.js application. Fast pages rank higher in search engines, keep users engaged, and improve convers"
+---
+
 # Phase 6: Performance & SEO
 
 ## Introduction

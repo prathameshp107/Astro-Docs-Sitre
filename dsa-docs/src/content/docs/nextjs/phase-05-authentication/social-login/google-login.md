@@ -1,3 +1,8 @@
+---
+title: "Google Login"
+description: "Google Login lets users sign in with their Google account. Auth.js makes this straightforward — you just configure the provider and add the environment var"
+---
+
 # Google Login
 
 ## Introduction

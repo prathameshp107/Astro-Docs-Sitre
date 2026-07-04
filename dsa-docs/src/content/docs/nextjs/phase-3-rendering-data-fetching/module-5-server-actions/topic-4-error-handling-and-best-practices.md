@@ -1,3 +1,8 @@
+---
+title: "Error Handling & Best Practices"
+description: "Production-ready Server Actions need robust error handling, logging, and consistent response patterns. This topic covers how to structure errors, handle ed"
+---
+
 # Error Handling & Best Practices
 
 ## Introduction

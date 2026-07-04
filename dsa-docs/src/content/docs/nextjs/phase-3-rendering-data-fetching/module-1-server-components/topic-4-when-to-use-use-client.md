@@ -1,3 +1,8 @@
+---
+title: "When to Use \"use client\""
+description: "- If you need electricity (interactivity), you install an outlet (add \"use client\") - But you don't install outlets on every wall — only where you need the"
+---
+
 # When to Use "use client"
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Cache-Control"
+description: "Cache-Control headers tell browsers and CDNs how long to cache content. While Next.js manages server-side caching internally, you still need to set Cache-C"
+---
+
 # Cache-Control
 
 ## Introduction

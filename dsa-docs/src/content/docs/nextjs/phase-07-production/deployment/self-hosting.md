@@ -1,3 +1,8 @@
+---
+title: "Self-Hosting"
+description: "Self-hosting means running your Next.js application on your own infrastructure — a VPS, Docker container, or cloud platform like AWS or Google Cloud."
+---
+
 # Self-Hosting
 
 ## Introduction

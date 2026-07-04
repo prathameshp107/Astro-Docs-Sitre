@@ -1,3 +1,8 @@
+---
+title: "Understanding Next.js Caching"
+description: "Controls: dynamic = 'force-dynamic', revalidate export, generateStaticParams"
+---
+
 # Understanding Next.js Caching
 
 ## Introduction

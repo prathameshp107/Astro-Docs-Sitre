@@ -1,3 +1,8 @@
+---
+title: "Static Assets"
+description: "Static assets — images, fonts, videos, documents — are files that don't change between deployments. Next.js handles them differently depending on where the"
+---
+
 # Static Assets
 
 ## Introduction

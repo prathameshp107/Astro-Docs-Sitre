@@ -1,3 +1,8 @@
+---
+title: "Reusable Utilities"
+description: "Utility functions are small, focused helpers that perform common operations — formatting dates, parsing data, validating inputs. They're the most reusable"
+---
+
 # Reusable Utilities
 
 ## Introduction

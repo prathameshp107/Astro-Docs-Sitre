@@ -1,3 +1,8 @@
+---
+title: "What are React Server Components?"
+description: "Server Components solve all of these problems by running on the server, sending only the rendered output to the client."
+---
+
 # What are React Server Components?
 
 ## Introduction

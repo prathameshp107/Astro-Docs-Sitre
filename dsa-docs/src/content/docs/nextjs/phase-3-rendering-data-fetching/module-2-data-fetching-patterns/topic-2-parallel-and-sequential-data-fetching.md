@@ -1,3 +1,8 @@
+---
+title: "Parallel & Sequential Data Fetching"
+description: "Fetch independent data in parallel using Promise.all:"
+---
+
 # Parallel & Sequential Data Fetching
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Folder Structure"
+description: "A well-organized folder structure makes your codebase predictable. New team members should be able to find any file by guessing where it lives."
+---
+
 # Folder Structure
 
 ## Introduction

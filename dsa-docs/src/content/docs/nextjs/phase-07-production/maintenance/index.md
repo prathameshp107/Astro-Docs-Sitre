@@ -1,3 +1,8 @@
+---
+title: "Maintenance"
+description: "Production applications need ongoing maintenance — dependency updates, security patches, and version upgrades. Regular maintenance prevents issues and keep"
+---
+
 # Maintenance
 
 ## Introduction

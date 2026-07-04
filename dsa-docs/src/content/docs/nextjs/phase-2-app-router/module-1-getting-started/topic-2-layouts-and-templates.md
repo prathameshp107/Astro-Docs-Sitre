@@ -1,3 +1,8 @@
+---
+title: "Layouts and Templates"
+description: "Each of these sections needs its own layout that persists as the user navigates within that section. When the student opens a course, a new layout mounts."
+---
+
 # Layouts and Templates
 
 ## Introduction

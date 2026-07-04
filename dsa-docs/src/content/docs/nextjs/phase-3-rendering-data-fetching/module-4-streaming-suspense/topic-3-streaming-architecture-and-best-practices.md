@@ -1,3 +1,8 @@
+---
+title: "Streaming Architecture & Best Practices"
+description: "Streaming isn't just about adding <Suspense boundaries. Designing an effective streaming architecture requires thinking about data dependencies, component"
+---
+
 # Streaming Architecture & Best Practices
 
 ## Introduction

@@ -1,3 +1,8 @@
+---
+title: "Separating Concerns"
+description: "Separation of concerns means organizing code so that different responsibilities live in different places. UI rendering, business logic, data access, and co"
+---
+
 # Separating Concerns
 
 ## Introduction

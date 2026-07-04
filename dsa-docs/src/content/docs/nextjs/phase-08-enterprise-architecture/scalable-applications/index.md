@@ -1,3 +1,8 @@
+---
+title: "Scalable Applications"
+description: "As applications grow, patterns that worked for small projects break down. This module covers how to structure code and architecture so your application can"
+---
+
 # Scalable Applications
 
 ## Introduction

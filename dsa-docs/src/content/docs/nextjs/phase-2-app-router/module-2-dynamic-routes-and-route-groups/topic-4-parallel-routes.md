@@ -1,3 +1,8 @@
+---
+title: "Parallel Routes"
+description: "- Dashboards — Main content and sidebar both change based on navigation - Modals — A modal opens over the current page without losing the page state - Spli"
+---
+
 # Parallel Routes
 
 ## Introduction

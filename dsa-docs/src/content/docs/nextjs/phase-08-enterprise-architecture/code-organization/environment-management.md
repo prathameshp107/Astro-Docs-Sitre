@@ -1,3 +1,8 @@
+---
+title: "Environment Management"
+description: "Applications run in multiple environments — local development, preview/staging, and production. Each environment has different configuration, databases, an"
+---
+
 # Environment Management
 
 ## Introduction

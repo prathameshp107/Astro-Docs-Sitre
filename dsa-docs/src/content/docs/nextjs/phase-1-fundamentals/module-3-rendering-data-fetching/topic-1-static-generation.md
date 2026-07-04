@@ -1,3 +1,8 @@
+---
+title: "Static Generation (SSG)"
+description: "Request Time: ------------- User Request → [CDN] → [Browser] → [HTML] → [Interactive Page]"
+---
+
 # Static Generation (SSG)
 
 ## Introduction

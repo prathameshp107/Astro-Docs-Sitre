@@ -1,3 +1,8 @@
+---
+title: "Module 3: REST APIs & Route Handlers"
+description: "Next.js Route Handlers let you build RESTful APIs directly in your app directory. This module expands on the Route Handler basics from Phase 2, covering pr"
+---
+
 # Module 3: REST APIs & Route Handlers
 
 ## Introduction

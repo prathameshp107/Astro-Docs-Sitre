@@ -1,3 +1,8 @@
+---
+title: "Open Graph"
+description: "Open Graph (OG) tags control how your page appears when shared on social media platforms like Twitter, LinkedIn, Facebook, and Discord. A well-designed OG"
+---
+
 # Open Graph
 
 ## Introduction

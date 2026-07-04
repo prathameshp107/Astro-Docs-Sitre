@@ -1,3 +1,8 @@
+---
+title: "Server Components vs Client Components"
+description: "- Server Components (cookbook): The entire book is printed (rendered) before it reaches you. You can read everything (HTML), but you can't change the conte"
+---
+
 # Server Components vs Client Components
 
 ## Introduction

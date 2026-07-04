@@ -1,3 +1,8 @@
+---
+title: "Preview Mode"
+description: "Preview User Flow: ----------------- [Editor] → Request /blog/post-1?preview=true&previewData=... ↓ [Next.js Server detects preview mode] ↓ [Bypass static"
+---
+
 # Preview Mode
 
 ## Introduction

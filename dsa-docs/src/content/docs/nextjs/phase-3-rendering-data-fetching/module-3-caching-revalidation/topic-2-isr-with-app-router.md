@@ -1,3 +1,8 @@
+---
+title: "ISR with the App Router"
+description: "export default async function ProductPage({ params }: { params: { id: string } }) { const product = await fetch(https://api.example.com/products/${params.i"
+---
+
 # ISR with the App Router
 
 ## Introduction

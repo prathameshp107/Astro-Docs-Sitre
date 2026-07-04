@@ -1,3 +1,8 @@
+---
+title: "Component Trees & Nesting Rules"
+description: "- Server Components are things inside the room (bed, desk, TV) — they exist and are ready when you arrive - Client Components are things you interact with"
+---
+
 # Component Trees & Nesting Rules
 
 ## Introduction

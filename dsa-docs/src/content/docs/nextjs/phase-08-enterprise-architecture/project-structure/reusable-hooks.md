@@ -1,3 +1,8 @@
+---
+title: "Reusable Hooks"
+description: "Custom hooks let you extract stateful logic from components into reusable functions. They reduce duplication and make components easier to understand."
+---
+
 # Reusable Hooks
 
 ## Introduction

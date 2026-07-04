@@ -1,3 +1,8 @@
+---
+title: "Deployment Checklist"
+description: "Before deploying your Next.js application to production, verify these items. This checklist helps prevent common deployment issues."
+---
+
 # Deployment Checklist
 
 ## Introduction

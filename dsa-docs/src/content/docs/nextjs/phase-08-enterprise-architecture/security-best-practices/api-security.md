@@ -1,3 +1,8 @@
+---
+title: "API Security"
+description: "API routes handle sensitive operations — creating data, processing payments, accessing user information. Securing them is critical."
+---
+
 # API Security
 
 ## Introduction

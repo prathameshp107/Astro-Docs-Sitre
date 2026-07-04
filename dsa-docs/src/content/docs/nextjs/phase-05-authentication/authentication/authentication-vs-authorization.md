@@ -1,3 +1,8 @@
+---
+title: "Authentication vs Authorization"
+description: "Authorization phase: 1. Security principal presented with resource request 2. System evaluates policies (RBAC, ABAC, etc.) 3. Grant or deny based on rules"
+---
+
 # Authentication vs Authorization
 
 ## Introduction
