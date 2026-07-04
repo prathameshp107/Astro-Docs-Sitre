@@ -1,0 +1,77 @@
+{
+  "id": "blind-75-guided",
+  "title": "Blind 75 (Guided)",
+  "tagline": "The 75 questions every FAANG interviewer expects — with our notes, visualizers, and verdicts.",
+  "difficulty": "intermediate",
+  "durationDays": 56,
+  "hoursPerDay": 1.5,
+  "tags": ["dsa", "faang", "leetcode"],
+  "heroTopics": ["Arrays", "Trees", "DP", "Graphs"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Arrays & Hashing — The Foundation",
+      "items": [
+        { "type": "note",       "ref": "/docs/data-structures/arrays",     "label": "Read: Array fundamentals",              "minutes": 15 },
+        { "type": "visualizer", "ref": "/visualizer",                      "label": "Visualize: Array operations",           "minutes": 10 },
+        { "type": "problem",    "ref": "two-sum",                          "label": "Solve: Two Sum",                        "minutes": 25 },
+        { "type": "problem",    "ref": "contains-duplicate",               "label": "Solve: Contains Duplicate",             "minutes": 20 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "More Arrays — Sliding Window & Prefix",
+      "items": [
+        { "type": "problem",    "ref": "best-time-to-buy-sell-stock",      "label": "Solve: Best Time to Buy/Sell Stock",    "minutes": 25 },
+        { "type": "problem",    "ref": "maximum-subarray",                 "label": "Solve: Maximum Subarray (Kadane's)",    "minutes": 30 },
+        { "type": "problem",    "ref": "product-of-array-except-self",     "label": "Solve: Product of Array Except Self",   "minutes": 35 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Two Pointers",
+      "items": [
+        { "type": "note",       "ref": "/docs/algorithms/two-pointers",    "label": "Read: Two Pointers technique",          "minutes": 15 },
+        { "type": "problem",    "ref": "valid-palindrome",                 "label": "Solve: Valid Palindrome",               "minutes": 20 },
+        { "type": "problem",    "ref": "three-sum",                        "label": "Solve: Three Sum",                      "minutes": 35 },
+        { "type": "problem",    "ref": "container-with-most-water",        "label": "Solve: Container With Most Water",      "minutes": 30 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Strings & Hashmaps",
+      "items": [
+        { "type": "problem",    "ref": "valid-anagram",                    "label": "Solve: Valid Anagram",                  "minutes": 20 },
+        { "type": "problem",    "ref": "group-anagrams",                   "label": "Solve: Group Anagrams",                 "minutes": 30 },
+        { "type": "problem",    "ref": "longest-substring-without-repeating", "label": "Solve: Longest Substring Without Repeating", "minutes": 30 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Stack Problems",
+      "items": [
+        { "type": "note",       "ref": "/docs/data-structures/stack",      "label": "Read: Stack data structure",            "minutes": 10 },
+        { "type": "problem",    "ref": "valid-parentheses",                "label": "Solve: Valid Parentheses",              "minutes": 20 },
+        { "type": "problem",    "ref": "daily-temperatures",               "label": "Solve: Daily Temperatures",             "minutes": 30 }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "Binary Search",
+      "items": [
+        { "type": "note",       "ref": "/docs/algorithms/binary-search",   "label": "Read: Binary Search",                  "minutes": 15 },
+        { "type": "visualizer", "ref": "/visualizer",                      "label": "Visualize: Binary Search",             "minutes": 10 },
+        { "type": "problem",    "ref": "binary-search",                    "label": "Solve: Binary Search",                  "minutes": 20 },
+        { "type": "problem",    "ref": "search-rotated-array",             "label": "Solve: Search in Rotated Array",        "minutes": 35 }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Week 1 Review & Arrays Revision",
+      "items": [
+        { "type": "problem",    "ref": "majority-element",                 "label": "Solve: Majority Element",               "minutes": 25 },
+        { "type": "mcq",        "ref": "arrays-review",                    "label": "Quiz: Arrays & Hashing Review (10 Qs)", "minutes": 15 }
+      ]
+    }
+  ]
+}

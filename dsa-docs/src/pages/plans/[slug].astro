@@ -1,0 +1,38 @@
+---
+import AppNav from '../../components/AppNav.jsx';
+import PlanDetail from '../../components/plans/PlanDetail.jsx';
+import '../../styles/landing.css';
+import '../../styles/plans.css';
+
+export async function getStaticPaths() {
+  const { getPlans } = await import('../../data/plans/index.js');
+  return getPlans().map((plan) => ({
+    params: { slug: plan.id },
+    props: { plan },
+  }));
+}
+
+const { slug } = Astro.params;
+const { plan } = Astro.props;
+
+const { getPlans } = await import('../../data/plans/index.js');
+const allPlans = getPlans();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{plan.title} — Study Plan | DSA & Dev Notes</title>
+    <meta name="description" content={`${plan.tagline} ${plan.durationDays} days, ${plan.hoursPerDay} hr/day.`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="plan-page">
+    <AppNav activeSection="plans" client:load />
+    <PlanDetail plan={plan} allPlans={allPlans} client:only="react" />
+  </body>
+</html>
