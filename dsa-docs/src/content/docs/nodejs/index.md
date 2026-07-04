@@ -59,15 +59,35 @@ flowchart TB
         Micro["Microservices & Project Architecture"]
     end
 
-    Interview["6️⃣ Interview Questions"]
+    subgraph Advanced["6️⃣ Advanced Topics"]
+        direction TB
+        Addons["Native Addons"]
+        CLI["CLI Tools"]
+        ES["Event Sourcing"]
+        Mono["Monorepos"]
+        Wasm["WebAssembly"]
+    end
 
-    Fundamentals --> Core --> Web --> Data --> Production --> Interview
+    subgraph SysDesign["7️⃣ System Design"]
+        direction TB
+        URL["URL Shortener"]
+        Chat["Chat System"]
+        Rate["Rate Limiter"]
+        Task["Task Management"]
+        Ecom["E-Commerce Backend"]
+    end
+
+    Interview["🎯 Interview Questions"]
+
+    Fundamentals --> Core --> Web --> Data --> Production --> Advanced --> SysDesign --> Interview
 
     style Fundamentals fill:#4f46e5,color:#fff
     style Core fill:#7c3aed,color:#fff
     style Web fill:#059669,color:#fff
     style Data fill:#d97706,color:#fff
     style Production fill:#dc2626,color:#fff
+    style Advanced fill:#0891b2,color:#fff
+    style SysDesign fill:#db2777,color:#fff
     style Interview fill:#6366f1,color:#fff
 ```
 
@@ -116,6 +136,22 @@ flowchart TB
 - [Testing](/DSA-Notes-Problems/nodejs/production/testing)
 - [Microservices & Project Architecture](/DSA-Notes-Problems/nodejs/production/project-architecture)
 
-### 6️⃣ Interview
+### 6️⃣ Advanced Topics
+
+- [Native Addons (C++)](/DSA-Notes-Problems/nodejs/advanced/addons)
+- [Building CLI Tools](/DSA-Notes-Problems/nodejs/advanced/cli-tools)
+- [Event Sourcing & CQRS](/DSA-Notes-Problems/nodejs/advanced/event-sourcing)
+- [Monorepos & Workspaces](/DSA-Notes-Problems/nodejs/advanced/monorepos)
+- [WebAssembly (WASM)](/DSA-Notes-Problems/nodejs/advanced/wasm)
+
+### 7️⃣ System Design
+
+- [URL Shortener](/DSA-Notes-Problems/nodejs/system-design/url-shortener)
+- [Real-Time Chat System](/DSA-Notes-Problems/nodejs/system-design/chat-system)
+- [Rate Limiter](/DSA-Notes-Problems/nodejs/system-design/rate-limiter)
+- [Task Management App](/DSA-Notes-Problems/nodejs/system-design/task-management)
+- [E-Commerce Backend](/DSA-Notes-Problems/nodejs/system-design/ecommerce-backend)
+
+### 🎯 Interview
 
 - [Node.js Interview Questions](/DSA-Notes-Problems/nodejs/interview-questions)

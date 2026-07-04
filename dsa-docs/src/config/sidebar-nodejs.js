@@ -23,6 +23,14 @@ const sidebar = [
             label: '5. Production',
             items: [{ autogenerate: { directory: 'nodejs/production' } }],
           },
+          {
+            label: '6. Advanced Topics',
+            items: [{ autogenerate: { directory: 'nodejs/advanced' } }],
+          },
+          {
+            label: '7. System Design',
+            items: [{ autogenerate: { directory: 'nodejs/system-design' } }],
+          },
           { label: '🎯 Interview Questions (150+)', link: '/nodejs/interview-questions' },
         ],
       },
