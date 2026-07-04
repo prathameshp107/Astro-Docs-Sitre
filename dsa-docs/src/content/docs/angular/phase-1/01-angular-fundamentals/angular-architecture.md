@@ -1,0 +1,109 @@
+---
+title: "Angular Architecture"
+description: "Understanding Angular application architecture, modules, components, and services."
+sidebar:
+  order: 4
+---
+
+## 1.6 Angular Architecture Overview
+
+### Simple Words First 🟡
+Imagine a **large company building**:
+- The **building itself** is your Angular Application
+- Each **floor** is a **Module** (a section of features)
+- Each **room** is a **Component** (a specific UI piece)
+- The **intercom system** is the **Service** (shared logic between rooms)
+- The **hallways** are the **Router** (navigation between rooms)
+- The **electrical wiring** is **Dependency Injection** (connecting services to components automatically)
+
+```svg
+<svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <!-- Background -->
+  <rect width="800" height="520" fill="#0f172a" rx="12"/>
+
+  <!-- Title -->
+  <text x="400" y="38" text-anchor="middle" fill="#e2e8f0" font-size="20" font-weight="bold">Angular Application Architecture</text>
+
+  <!-- AppModule box -->
+  <rect x="40" y="60" width="720" height="420" rx="10" fill="#1e293b" stroke="#3b82f6" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="400" y="88" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="bold">AppModule (Root Module)</text>
+
+  <!-- Router box -->
+  <rect x="60" y="100" width="680" height="50" rx="8" fill="#1d4ed8" opacity="0.3" stroke="#3b82f6" stroke-width="1"/>
+  <text x="400" y="131" text-anchor="middle" fill="#93c5fd" font-size="13">🔀 Angular Router — Manages Navigation Between Views</text>
+
+  <!-- Feature Modules row -->
+  <text x="400" y="175" text-anchor="middle" fill="#94a3b8" font-size="12">Feature Modules</text>
+
+  <!-- Module 1 -->
+  <rect x="60" y="185" width="200" height="170" rx="8" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="160" y="208" text-anchor="middle" fill="#86efac" font-size="12" font-weight="bold">UserModule</text>
+
+  <rect x="75" y="218" width="170" height="40" rx="5" fill="#166534" stroke="#4ade80" stroke-width="1"/>
+  <text x="160" y="243" text-anchor="middle" fill="#dcfce7" font-size="11">UserListComponent</text>
+
+  <rect x="75" y="266" width="170" height="40" rx="5" fill="#166534" stroke="#4ade80" stroke-width="1"/>
+  <text x="160" y="291" text-anchor="middle" fill="#dcfce7" font-size="11">UserDetailComponent</text>
+
+  <rect x="75" y="314" width="170" height="30" rx="5" fill="#065f46" stroke="#34d399" stroke-width="1"/>
+  <text x="160" y="334" text-anchor="middle" fill="#a7f3d0" font-size="11">UserService</text>
+
+  <!-- Module 2 -->
+  <rect x="300" y="185" width="200" height="170" rx="8" fill="#4c1d95" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="400" y="208" text-anchor="middle" fill="#d8b4fe" font-size="12" font-weight="bold">ProductModule</text>
+
+  <rect x="315" y="218" width="170" height="40" rx="5" fill="#5b21b6" stroke="#c084fc" stroke-width="1"/>
+  <text x="400" y="243" text-anchor="middle" fill="#ede9fe" font-size="11">ProductListComponent</text>
+
+  <rect x="315" y="266" width="170" height="40" rx="5" fill="#5b21b6" stroke="#c084fc" stroke-width="1"/>
+  <text x="400" y="291" text-anchor="middle" fill="#ede9fe" font-size="11">ProductCardComponent</text>
+
+  <rect x="315" y="314" width="170" height="30" rx="5" fill="#3b0764" stroke="#e879f9" stroke-width="1"/>
+  <text x="400" y="334" text-anchor="middle" fill="#f5d0fe" font-size="11">ProductService</text>
+
+  <!-- Module 3 -->
+  <rect x="540" y="185" width="200" height="170" rx="8" fill="#7c2d12" stroke="#f97316" stroke-width="1.5"/>
+  <text x="640" y="208" text-anchor="middle" fill="#fed7aa" font-size="12" font-weight="bold">OrderModule</text>
+
+  <rect x="555" y="218" width="170" height="40" rx="5" fill="#9a3412" stroke="#fb923c" stroke-width="1"/>
+  <text x="640" y="243" text-anchor="middle" fill="#ffedd5" font-size="11">OrderFormComponent</text>
+
+  <rect x="555" y="266" width="170" height="40" rx="5" fill="#9a3412" stroke="#fb923c" stroke-width="1"/>
+  <text x="640" y="291" text-anchor="middle" fill="#ffedd5" font-size="11">OrderHistoryComponent</text>
+
+  <rect x="555" y="314" width="170" height="30" rx="5" fill="#7c2d12" stroke="#fdba74" stroke-width="1"/>
+  <text x="640" y="334" text-anchor="middle" fill="#ffe4c4" font-size="11">OrderService</text>
+
+  <!-- Shared Services layer -->
+  <rect x="60" y="375" width="680" height="50" rx="8" fill="#1e3a5f" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="400" y="394" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">Shared Services (Available Globally)</text>
+  <text x="200" y="414" text-anchor="middle" fill="#bfdbfe" font-size="11">HttpClient</text>
+  <text x="400" y="414" text-anchor="middle" fill="#bfdbfe" font-size="11">AuthService</text>
+  <text x="600" y="414" text-anchor="middle" fill="#bfdbfe" font-size="11">LoggingService</text>
+
+  <!-- AppComponent at bottom -->
+  <rect x="60" y="440" width="680" height="30" rx="6" fill="#374151" stroke="#9ca3af" stroke-width="1"/>
+  <text x="400" y="460" text-anchor="middle" fill="#f3f4f6" font-size="12">AppComponent — The Root Component (<app-root>)</text>
+
+  <!-- Legend -->
+  <rect x="60" y="490" width="12" height="12" fill="#22c55e" rx="2"/>
+  <text x="78" y="501" fill="#94a3b8" font-size="10">Module</text>
+  <rect x="130" y="490" width="12" height="12" fill="#3b82f6" rx="2"/>
+  <text x="148" y="501" fill="#94a3b8" font-size="10">Component</text>
+  <rect x="215" y="490" width="12" height="12" fill="#065f46" rx="2"/>
+  <text x="233" y="501" fill="#94a3b8" font-size="10">Service</text>
+  <rect x="280" y="490" width="12" height="12" fill="#1d4ed8" rx="2"/>
+  <text x="298" y="501" fill="#94a3b8" font-size="10">Router</text>
+</svg>
+
+### The 5 Core Building Blocks of Angular
+
+| Block | Simple Analogy | Purpose |
+|-------|---------------|---------|
+| **Module** | Floor of a building | Groups related features together |
+| **Component** | A room | Controls a piece of the UI |
+| **Template** | The room's interior design | The HTML view of the component |
+| **Service** | A utility company | Shared business logic (API calls, data) |
+| **Dependency Injection** | Automatic service delivery | Angular delivers services to components automatically |
+
+---

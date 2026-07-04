@@ -1,0 +1,49 @@
+{
+  "id": "any-even-pair",
+  "title": "Find Any Adjacent Even Pair",
+  "difficulty": "easy",
+  "topics": ["array"],
+  "companies": ["amazon", "google"],
+  "statement": "Given an array of integers, find any pair of adjacent elements where both elements are even. Return the pair as an array of two integers. If no such pair exists, return an empty array.\n\nIf multiple valid pairs exist, you may return any one of them.",
+  "constraints": [
+    "1 <= arr.length <= 10^5",
+    "-10^9 <= arr[i] <= 10^9"
+  ],
+  "examples": [
+    {
+      "input": "[1,2,4,3,6,8]",
+      "output": "[2,4]",
+      "explanation": "The pairs (2,4) and (6,8) are both valid adjacent even pairs. Either one is acceptable."
+    },
+    {
+      "input": "[1,3,5,7]",
+      "output": "[]",
+      "explanation": "There are no adjacent even pairs."
+    },
+    {
+      "input": "[2,4,6,8]",
+      "output": "[2,4]",
+      "explanation": "The pairs (2,4), (4,6), and (6,8) are all valid. Returning any one is acceptable."
+    }
+  ],
+  "functionName": "findAnyEvenPair",
+  "starterCode": {
+    "javascript": "function findAnyEvenPair(arr) {\n  // your code here\n}",
+    "python": "def find_any_even_pair(arr):\n    pass"
+  },
+  "tests": [
+    { "args": [[[1,2,4,3,6,8]]], "expected": [[2,4]], "hidden": false },
+    { "args": [[[1,3,5,7]]], "expected": [[]], "hidden": false },
+    { "args": [[[2,4,6,8]]], "expected": [[2,4]], "hidden": false },
+    { "args": [[[2,4,6,8]]], "expected": [[4,6]], "hidden": true },
+    { "args": [[[2,4,6,8]]], "expected": [[6,8]], "hidden": true },
+    { "args": [[[1,2,3,4]]], "expected": [], "hidden": true }
+  ],
+  "compareMode": "anyValid",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Iterate through the array once, checking each pair of adjacent elements. When you find a pair where both elements are even, return it immediately.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["two-sum", "container-with-most-water"]
+}

@@ -21,6 +21,23 @@ function compareOutputs(actual, expected, mode) {
     }
     return JSON.stringify(actual) === JSON.stringify(expected);
   }
+  if (mode === "anyValid") {
+    if (typeof expected === "string") {
+      try {
+        // Create a function from the string and call it with the actual value
+        // The expected string should be a function body that returns boolean
+        const validatorFn = new Function("return " + expected)();
+        if (typeof validatorFn === "function") {
+          return validatorFn(actual);
+        }
+        return false;
+      } catch (e) {
+        // If we can't create the function or it throws, treat as invalid
+        return false;
+      }
+    }
+    return false;
+  }
   return JSON.stringify(actual) === JSON.stringify(expected);
 }
 

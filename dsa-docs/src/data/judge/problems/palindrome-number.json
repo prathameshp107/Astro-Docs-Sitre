@@ -1,0 +1,50 @@
+{
+  "id": "palindrome-number",
+  "title": "Palindrome Number",
+  "difficulty": "easy",
+  "topics": ["math"],
+  "companies": ["facebook", "microsoft", "uber"],
+  "statement": "Given an integer `x`, return `true` if `x` is palindrome integer.\n\nAn integer is a **palindrome** when it reads the same backward as forward.\n\nFor example, `121` is a palindrome while `123` is not.",
+  "constraints": [
+    "-2^31 <= x <= 2^31 - 1"
+  ],
+  "examples": [
+    {
+      "input": "121",
+      "output": "true",
+      "explanation": "121 reads as 121 from left to right and from right to left."
+    },
+    {
+      "input": "-121",
+      "output": "false",
+      "explanation": "From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome."
+    },
+    {
+      "input": "10",
+      "output": "false",
+      "explanation": "Reads 01 from right to left. Therefore it is not a palindrome."
+    }
+  ],
+  "functionName": "isPalindrome",
+  "starterCode": {
+    "javascript": "function isPalindrome(x) {\n  // your code here\n}",
+    "python": "def is_palindrome(x):\n    pass"
+  },
+  "tests": [
+    { "args": [[121]], "expected": [true], "hidden": false },
+    { "args": [[-121]], "expected": [false], "hidden": false },
+    { "args": [[10]], "expected": [false], "hidden": false },
+    { "args": [[-101]], "expected": [false], "hidden": true },
+    { "args": [[0]], "expected": [true], "hidden": true },
+    { "args": [[12321]], "expected": [true], "hidden": true },
+    { "args": [[123321]], "expected": [true], "hidden": true },
+    { "args": [[123456]], "expected": [false], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Negative numbers are not palindromes due to the minus sign. For non-negative numbers, we can reverse the number and compare it with the original. To avoid overflow, we can reverse only half of the number.",
+    "complexity": "O(log n) time / O(1) space"
+  },
+  "relatedProblems": ["reverse-string", "valid-palindrome"]
+}

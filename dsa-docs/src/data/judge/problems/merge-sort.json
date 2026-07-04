@@ -1,0 +1,42 @@
+{
+  "id": "merge-sort",
+  "title": "Merge Sort",
+  "difficulty": "medium",
+  "topics": ["array", "divide-and-conquer"],
+  "companies": ["google", "microsoft", "amazon"],
+  "statement": "Given an array of integers, sort the array using the merge sort algorithm.\n\nMerge sort is a divide-and-conquer algorithm that divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves.",
+  "constraints": [
+    "1 <= arr.length <= 10^4",
+    "-10^4 <= arr[i] <= 10^4"
+  ],
+  "examples": [
+    {
+      "input": "[5,2,3,1]",
+      "output": "[1,2,3,5]",
+      "explanation": "After sorting, the array becomes [1,2,3,5]."
+    },
+    {
+      "input": "[5,1,1,2,0,0]",
+      "output": "[0,0,1,1,2,5]",
+      "explanation": "After sorting, the array becomes [0,0,1,1,2,5]."
+    }
+  ],
+  "functionName": "mergeSort",
+  "starterCode": {
+    "javascript": "function mergeSort(arr) {\n  // your code here\n}",
+    "python": "def merge_sort(arr):\n    pass"
+  },
+  "tests": [
+    { "args": [[[5,2,3,1]]], "expected": [[1,2,3,5]], "hidden": false },
+    { "args": [[[5,1,1,2,0,0]]], "expected": [[0,0,1,1,2,5]], "hidden": false },
+    { "args": [[[1]]], "expected": [[1]], "hidden": true },
+    { "args": [[[3,1,2]]], "expected": [[1,2,3]], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Merge sort works by recursively dividing the array into two halves until each subarray contains a single element, then merging those subarrays in sorted order.",
+    "complexity": "O(n log n) time / O(n) space"
+  },
+  "relatedProblems": ["quick-sort", "heap-sort"]
+}
