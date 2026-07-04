@@ -1,0 +1,74 @@
+{
+  "id": "frontend-interview-21-days",
+  "title": "Frontend Interview in 21 Days",
+  "tagline": "Master JS, React, and DSA problem-solving for frontend engineering interviews.",
+  "difficulty": "intermediate",
+  "durationDays": 21,
+  "hoursPerDay": 2,
+  "tags": ["javascript", "react", "frontend", "interview"],
+  "heroTopics": ["JavaScript", "React", "DSA", "MCQs"],
+  "days": [
+    {
+      "day": 1,
+      "title": "JavaScript Core — Fundamentals",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/basics",          "label": "Read: JS Variables, Types, Operators",  "minutes": 20 },
+        { "type": "mcq",        "ref": "js-fundamentals",                  "label": "Quiz: JS Fundamentals (10 Qs)",         "minutes": 15 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: JS Output Guessing Lab",      "minutes": 25 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "JavaScript — Functions & Closures",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/functions",       "label": "Read: Functions, Arrow Fns, Closures",  "minutes": 20 },
+        { "type": "mcq",        "ref": "js-closures",                      "label": "Quiz: Closures & Scope (8 Qs)",         "minutes": 12 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Closure-based output labs",   "minutes": 25 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "JavaScript — Promises & Async/Await",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/async",           "label": "Read: Promises, Async/Await, Event Loop", "minutes": 25 },
+        { "type": "mcq",        "ref": "js-async",                        "label": "Quiz: Async JS (8 Qs)",                 "minutes": 12 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Async output labs",           "minutes": 20 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "DSA for Interviews — Arrays",
+      "items": [
+        { "type": "problem",    "ref": "two-sum",                          "label": "Solve: Two Sum",                        "minutes": 25 },
+        { "type": "problem",    "ref": "contains-duplicate",               "label": "Solve: Contains Duplicate",             "minutes": 20 },
+        { "type": "problem",    "ref": "best-time-to-buy-sell-stock",      "label": "Solve: Best Time to Buy/Sell",          "minutes": 25 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "DSA for Interviews — Strings",
+      "items": [
+        { "type": "problem",    "ref": "valid-anagram",                    "label": "Solve: Valid Anagram",                  "minutes": 20 },
+        { "type": "problem",    "ref": "valid-palindrome",                 "label": "Solve: Valid Palindrome",               "minutes": 20 },
+        { "type": "problem",    "ref": "longest-substring-without-repeating", "label": "Solve: Longest Substring",          "minutes": 30 }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "React — Hooks & Component Model",
+      "items": [
+        { "type": "note",       "ref": "/docs/react/hooks",                "label": "Read: useState, useEffect, useRef",     "minutes": 25 },
+        { "type": "mcq",        "ref": "react-hooks",                      "label": "Quiz: React Hooks (10 Qs)",             "minutes": 15 },
+        { "type": "lab",        "ref": "/labs/react-lab",                  "label": "Practice: React Component Lab",         "minutes": 30 }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Week 1 Checkpoint",
+      "items": [
+        { "type": "problem",    "ref": "valid-parentheses",                "label": "Solve: Valid Parentheses",              "minutes": 20 },
+        { "type": "mcq",        "ref": "frontend-week1-review",            "label": "Quiz: Week 1 Review (12 Qs)",           "minutes": 18 }
+      ]
+    }
+  ]
+}

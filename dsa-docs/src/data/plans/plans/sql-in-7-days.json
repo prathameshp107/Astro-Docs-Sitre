@@ -1,0 +1,78 @@
+{
+  "id": "sql-in-7-days",
+  "title": "SQL in 7 Days",
+  "tagline": "Go from zero to confident with SQL — queries, joins, aggregations, and subqueries.",
+  "difficulty": "beginner",
+  "durationDays": 7,
+  "hoursPerDay": 1.5,
+  "tags": ["sql", "database", "backend"],
+  "heroTopics": ["SELECT", "JOINs", "Aggregations", "Subqueries"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Introduction to SQL & SELECT",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/introduction",           "label": "Read: SQL Introduction & Setup",        "minutes": 20 },
+        { "type": "note",       "ref": "/docs/sql/select-basics",          "label": "Read: SELECT statement fundamentals",   "minutes": 15 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: Run basic SELECT queries",    "minutes": 20 },
+        { "type": "mcq",        "ref": "sql-basics",                       "label": "Quiz: SQL Basics (5 Qs)",               "minutes": 10 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Filtering & Sorting",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/where-clause",           "label": "Read: WHERE, AND, OR, NOT",             "minutes": 15 },
+        { "type": "note",       "ref": "/docs/sql/order-by-limit",         "label": "Read: ORDER BY, LIMIT, OFFSET",         "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: Filter & sort queries",       "minutes": 25 },
+        { "type": "mcq",        "ref": "sql-filtering",                    "label": "Quiz: Filtering (5 Qs)",                "minutes": 10 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Aggregations & GROUP BY",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/aggregate-functions",    "label": "Read: COUNT, SUM, AVG, MIN, MAX",       "minutes": 20 },
+        { "type": "note",       "ref": "/docs/sql/group-by-having",        "label": "Read: GROUP BY & HAVING",               "minutes": 15 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: Aggregation queries",         "minutes": 30 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "JOINs — Combining Tables",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/joins",                  "label": "Read: INNER, LEFT, RIGHT, FULL JOIN",   "minutes": 25 },
+        { "type": "visualizer", "ref": "/visualizer",                      "label": "Visualize: Join types diagram",         "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: Multi-table JOIN queries",    "minutes": 30 },
+        { "type": "mcq",        "ref": "sql-joins",                        "label": "Quiz: JOINs (8 Qs)",                   "minutes": 10 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Subqueries & Nested Queries",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/subqueries",             "label": "Read: Subqueries & correlated queries", "minutes": 20 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: Subquery exercises",          "minutes": 30 },
+        { "type": "mcq",        "ref": "sql-subqueries",                   "label": "Quiz: Subqueries (5 Qs)",               "minutes": 10 }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "String, Date & Advanced Functions",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/string-functions",       "label": "Read: String functions (CONCAT, LIKE)", "minutes": 15 },
+        { "type": "note",       "ref": "/docs/sql/date-functions",         "label": "Read: Date/time functions",             "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: Advanced function queries",   "minutes": 25 }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Revision & Mock Interview",
+      "items": [
+        { "type": "note",       "ref": "/docs/sql/cheatsheet",             "label": "Read: SQL Cheat Sheet",                 "minutes": 15 },
+        { "type": "lab",        "ref": "/labs/mysql",                      "label": "Practice: 5 mixed SQL exercises",       "minutes": 35 },
+        { "type": "mcq",        "ref": "sql-advanced",                     "label": "Quiz: SQL Advanced (10 Qs)",            "minutes": 15 }
+      ]
+    }
+  ]
+}

@@ -32,6 +32,7 @@ export default defineConfig({
     },
     optimizeDeps: {
       include: ['@babel/standalone', 'react', 'react-dom', 'react/jsx-runtime'],
+      exclude: ['pyodide', 'sql.js'],
     },
   },
   integrations: [starlight({

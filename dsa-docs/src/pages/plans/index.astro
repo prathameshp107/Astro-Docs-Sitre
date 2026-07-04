@@ -1,0 +1,36 @@
+---
+import AppNav from '../../components/AppNav.jsx';
+import PlanGallery from '../../components/plans/PlanGallery.jsx';
+import '../../styles/landing.css';
+import '../../styles/plans.css';
+
+const { getPlanManifest, getPlans } = await import('../../data/plans/index.js');
+const plans = getPlans();
+const manifest = getPlanManifest();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Plans — DSA & Dev Notes</title>
+    <meta name="description" content="Structured day-by-day study plans for DSA, JavaScript, SQL, React, and interview prep. Start a guided plan and the site tells you exactly what to do each day." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="plan-page">
+    <AppNav activeSection="plans" client:load />
+    <div class="plan-page-header">
+      <div class="plan-page-header-badge">
+        <span class="plan-page-header-badge-dot"></span>
+        Structured Learning Paths
+      </div>
+      <h1>Study Plans</h1>
+      <p>Pick a plan. The site tells you exactly what to do every day.</p>
+    </div>
+    <PlanGallery plans={plans} client:only="react" />
+  </body>
+</html>

@@ -1,0 +1,136 @@
+{
+  "id": "javascript-mastery",
+  "title": "JavaScript Mastery",
+  "tagline": "The complete Namaste JS track — closures, prototypes, async, event loop, and output-guessing labs.",
+  "difficulty": "intermediate",
+  "durationDays": 14,
+  "hoursPerDay": 1.5,
+  "tags": ["javascript", "namaste-js", "output-guessing"],
+  "heroTopics": ["Closures", "Prototypes", "Async", "Event Loop"],
+  "days": [
+    {
+      "day": 1,
+      "title": "How JavaScript Works — Execution Context",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/execution-context", "label": "Read: Execution Context & Call Stack", "minutes": 20 },
+        { "type": "mcq",        "ref": "js-execution-context",             "label": "Quiz: Execution Context (5 Qs)",        "minutes": 8 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Output Guessing Lab",         "minutes": 20 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Hoisting & Temporal Dead Zone",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/hoisting",        "label": "Read: Hoisting, var vs let vs const",   "minutes": 18 },
+        { "type": "mcq",        "ref": "js-hoisting",                      "label": "Quiz: Hoisting (8 Qs)",                 "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Hoisting output labs",        "minutes": 20 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Closures — The Heart of JavaScript",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/closures",        "label": "Read: Closures in depth",               "minutes": 25 },
+        { "type": "mcq",        "ref": "js-closures",                      "label": "Quiz: Closures (10 Qs)",                "minutes": 12 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Closure output labs",         "minutes": 25 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Scope Chain & Lexical Environment",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/scope",           "label": "Read: Scope, Scope Chain, Lexical Env", "minutes": 20 },
+        { "type": "mcq",        "ref": "js-scope",                         "label": "Quiz: Scope (8 Qs)",                   "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Scope tracing labs",          "minutes": 20 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Prototypes & Prototype Chain",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/prototypes",      "label": "Read: __proto__, prototype chain",      "minutes": 25 },
+        { "type": "mcq",        "ref": "js-prototypes",                    "label": "Quiz: Prototypes (8 Qs)",               "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: OOP/Prototype labs",          "minutes": 20 }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "this keyword — The Chameleon",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/this-keyword",    "label": "Read: 'this' in all contexts",          "minutes": 20 },
+        { "type": "mcq",        "ref": "js-this",                          "label": "Quiz: 'this' keyword (10 Qs)",          "minutes": 12 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: 'this' output labs",          "minutes": 20 }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Week 1 Checkpoint — Core JS",
+      "items": [
+        { "type": "mcq",        "ref": "js-week1-review",                  "label": "Quiz: Core JS Review (15 Qs)",          "minutes": 20 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Mixed core JS labs",          "minutes": 30 }
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Promises & Microtask Queue",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/promises",        "label": "Read: Promise, .then, .catch, .finally", "minutes": 22 },
+        { "type": "mcq",        "ref": "js-promises",                      "label": "Quiz: Promises (8 Qs)",                 "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Promise output labs",         "minutes": 25 }
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Async/Await & Error Handling",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/async-await",     "label": "Read: async/await, try/catch",          "minutes": 20 },
+        { "type": "mcq",        "ref": "js-async-await",                   "label": "Quiz: Async/Await (8 Qs)",              "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Async/await labs",            "minutes": 25 }
+      ]
+    },
+    {
+      "day": 10,
+      "title": "Event Loop — Deep Dive",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/event-loop",      "label": "Read: Event Loop, Macrotasks, Microtasks", "minutes": 25 },
+        { "type": "mcq",        "ref": "js-event-loop",                    "label": "Quiz: Event Loop (10 Qs)",              "minutes": 12 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Event loop tracing labs",     "minutes": 25 }
+      ]
+    },
+    {
+      "day": 11,
+      "title": "Higher-Order Functions & Functional JS",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/higher-order-functions", "label": "Read: map, filter, reduce, curry", "minutes": 20 },
+        { "type": "mcq",        "ref": "js-hof",                           "label": "Quiz: HOF (8 Qs)",                     "minutes": 10 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Functional JS labs",          "minutes": 25 }
+      ]
+    },
+    {
+      "day": 12,
+      "title": "Generators & Iterators",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/generators",      "label": "Read: Generators, Iterators, for..of",  "minutes": 20 },
+        { "type": "mcq",        "ref": "js-generators",                    "label": "Quiz: Generators (5 Qs)",               "minutes": 8 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Generator labs",              "minutes": 20 }
+      ]
+    },
+    {
+      "day": 13,
+      "title": "Modules & Bundling Concepts",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/modules",         "label": "Read: ESModules, CommonJS, import/export", "minutes": 15 },
+        { "type": "mcq",        "ref": "js-modules",                       "label": "Quiz: Modules (5 Qs)",                  "minutes": 8 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Module-related output labs",  "minutes": 20 }
+      ]
+    },
+    {
+      "day": 14,
+      "title": "Final Review — Full JS Mock",
+      "items": [
+        { "type": "mcq",        "ref": "js-full-review",                   "label": "Quiz: Full JS Mock (20 Qs)",            "minutes": 25 },
+        { "type": "lab",        "ref": "/labs/js-lab",                     "label": "Practice: Advanced mixed output labs",  "minutes": 35 }
+      ]
+    }
+  ]
+}

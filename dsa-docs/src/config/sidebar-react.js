@@ -1,6 +1,6 @@
 const sidebar = [
       {
-        label: 'React Academy',
+          label: 'React Academy',
         items: [
           {
             label: 'Phase 1: React Fundamentals',

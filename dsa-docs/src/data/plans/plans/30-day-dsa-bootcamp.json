@@ -1,0 +1,76 @@
+{
+  "id": "30-day-dsa-bootcamp",
+  "title": "30-Day DSA Bootcamp",
+  "tagline": "From absolute beginner to confidently solving medium problems — notes, visualizers, and judged problems daily.",
+  "difficulty": "beginner",
+  "durationDays": 30,
+  "hoursPerDay": 2,
+  "tags": ["dsa", "beginners", "bootcamp"],
+  "heroTopics": ["Arrays", "Strings", "Linked Lists", "Trees"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Arrays — The Most Important Data Structure",
+      "items": [
+        { "type": "note",       "ref": "/docs/data-structures/arrays",     "label": "Read: What is an Array?",               "minutes": 15 },
+        { "type": "visualizer", "ref": "/visualizer",                      "label": "Visualize: Array operations",           "minutes": 10 },
+        { "type": "problem",    "ref": "contains-duplicate",               "label": "Solve: Contains Duplicate (Easy)",      "minutes": 20 },
+        { "type": "problem",    "ref": "two-sum",                          "label": "Solve: Two Sum (Easy)",                 "minutes": 25 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Arrays — Sliding Window",
+      "items": [
+        { "type": "problem",    "ref": "best-time-to-buy-sell-stock",      "label": "Solve: Best Time to Buy/Sell Stock",    "minutes": 25 },
+        { "type": "problem",    "ref": "maximum-subarray",                 "label": "Solve: Maximum Subarray",               "minutes": 30 },
+        { "type": "mcq",        "ref": "arrays-basics",                    "label": "Quiz: Array Basics (5 Qs)",             "minutes": 10 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Strings — Manipulation & Patterns",
+      "items": [
+        { "type": "problem",    "ref": "valid-anagram",                    "label": "Solve: Valid Anagram",                  "minutes": 20 },
+        { "type": "problem",    "ref": "valid-palindrome",                 "label": "Solve: Valid Palindrome",               "minutes": 20 },
+        { "type": "problem",    "ref": "longest-substring-without-repeating", "label": "Solve: Longest Substring",          "minutes": 30 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Hashmaps — O(1) Lookups",
+      "items": [
+        { "type": "note",       "ref": "/docs/data-structures/hashmap",    "label": "Read: Hashmap / Dictionary",           "minutes": 15 },
+        { "type": "problem",    "ref": "group-anagrams",                   "label": "Solve: Group Anagrams",                "minutes": 30 },
+        { "type": "problem",    "ref": "majority-element",                 "label": "Solve: Majority Element",              "minutes": 20 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Two Pointers & Stack",
+      "items": [
+        { "type": "problem",    "ref": "three-sum",                        "label": "Solve: Three Sum",                     "minutes": 35 },
+        { "type": "problem",    "ref": "valid-parentheses",                "label": "Solve: Valid Parentheses",             "minutes": 20 },
+        { "type": "problem",    "ref": "container-with-most-water",        "label": "Solve: Container With Most Water",     "minutes": 30 }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "Binary Search",
+      "items": [
+        { "type": "note",       "ref": "/docs/algorithms/binary-search",   "label": "Read: Binary Search",                  "minutes": 15 },
+        { "type": "problem",    "ref": "binary-search",                    "label": "Solve: Binary Search",                 "minutes": 20 },
+        { "type": "problem",    "ref": "search-rotated-array",             "label": "Solve: Search Rotated Array",          "minutes": 35 }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Week 1 Checkpoint",
+      "items": [
+        { "type": "problem",    "ref": "product-of-array-except-self",     "label": "Solve: Product of Array Except Self",  "minutes": 35 },
+        { "type": "problem",    "ref": "daily-temperatures",               "label": "Solve: Daily Temperatures",            "minutes": 30 },
+        { "type": "mcq",        "ref": "week1-dsa-review",                 "label": "Quiz: Week 1 Review (10 Qs)",          "minutes": 15 }
+      ]
+    }
+  ]
+}

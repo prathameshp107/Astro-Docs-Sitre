@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import ContinueBanner from "./plans/ContinueBanner.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen, Code, Activity, Award, ArrowRight, ArrowUpRight,
@@ -112,6 +113,25 @@ function Tag({ children, color = "amber" }) {
     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-widest ${map[color]}`}>
       {children}
     </span>
+  );
+}
+
+// ─── Landing continue banner (loads plan data lazily) ──────────────────────
+function LandingContinueBanner({ baseHref }) {
+  const [plans, setPlans] = useState(null);
+
+  useEffect(() => {
+    import("../data/plans/index.js").then((mod) => {
+      setPlans(mod.getPlans());
+    });
+  }, []);
+
+  if (!plans) return null;
+
+  return (
+    <div style={{ marginBottom: "20px" }}>
+      <ContinueBanner plans={plans} />
+    </div>
   );
 }
 
@@ -312,6 +332,9 @@ const [whyRef, whyInView] = useInView();
                 Solve Problems
               </a>
             </div>
+
+            {/* Study Plan continue banner */}
+            <LandingContinueBanner baseHref={baseHref} />
 
             {/* Inline mini stats */}
             <div className="flex items-center gap-8 pt-6 border-t border-white/[0.06]">

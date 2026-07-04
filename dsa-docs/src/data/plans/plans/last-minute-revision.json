@@ -1,0 +1,48 @@
+{
+  "id": "last-minute-revision",
+  "title": "Last-Minute Revision",
+  "tagline": "3 days before your interview — cheat sheets, top 30 MCQs, and 10 must-solve problems.",
+  "difficulty": "advanced",
+  "durationDays": 3,
+  "hoursPerDay": 3,
+  "tags": ["revision", "interview", "quick"],
+  "heroTopics": ["Cheat Sheets", "Top MCQs", "Must-Solve"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1 — DSA Pattern Cheat Sheets",
+      "items": [
+        { "type": "note",       "ref": "/docs/algorithms/sorting",         "label": "Read: Sorting Algorithms Cheat Sheet",  "minutes": 15 },
+        { "type": "note",       "ref": "/docs/data-structures/trees",      "label": "Read: Tree Traversals Cheat Sheet",     "minutes": 15 },
+        { "type": "note",       "ref": "/docs/algorithms/dynamic-programming", "label": "Read: DP Patterns Cheat Sheet",   "minutes": 20 },
+        { "type": "problem",    "ref": "two-sum",                          "label": "Solve: Two Sum (warm-up)",              "minutes": 15 },
+        { "type": "problem",    "ref": "valid-anagram",                    "label": "Solve: Valid Anagram (warm-up)",        "minutes": 15 },
+        { "type": "problem",    "ref": "contains-duplicate",               "label": "Solve: Contains Duplicate",             "minutes": 15 },
+        { "type": "mcq",        "ref": "dsa-patterns-review",              "label": "Quiz: DSA Patterns (10 Qs)",            "minutes": 15 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2 — JavaScript & System Design",
+      "items": [
+        { "type": "note",       "ref": "/docs/javascript/closures",        "label": "Read: Closures & Scope (quick recap)",  "minutes": 10 },
+        { "type": "note",       "ref": "/docs/javascript/event-loop",      "label": "Read: Event Loop (quick recap)",        "minutes": 10 },
+        { "type": "problem",    "ref": "binary-search",                    "label": "Solve: Binary Search",                  "minutes": 20 },
+        { "type": "problem",    "ref": "valid-parentheses",                "label": "Solve: Valid Parentheses",              "minutes": 20 },
+        { "type": "problem",    "ref": "maximum-subarray",                 "label": "Solve: Maximum Subarray",               "minutes": 25 },
+        { "type": "mcq",        "ref": "js-interview-rapid",               "label": "Quiz: JS Interview Rapid-fire (10 Qs)", "minutes": 12 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3 — Final Run-Through",
+      "items": [
+        { "type": "problem",    "ref": "best-time-to-buy-sell-stock",      "label": "Solve: Best Time to Buy/Sell Stock",    "minutes": 20 },
+        { "type": "problem",    "ref": "climbing-stairs",                  "label": "Solve: Climbing Stairs (DP warmup)",    "minutes": 20 },
+        { "type": "problem",    "ref": "coin-change",                      "label": "Solve: Coin Change",                    "minutes": 35 },
+        { "type": "problem",    "ref": "number-of-islands",                "label": "Solve: Number of Islands",              "minutes": 35 },
+        { "type": "mcq",        "ref": "final-interview-mock",             "label": "Quiz: Final Mock (10 Qs)",              "minutes": 12 }
+      ]
+    }
+  ]
+}
