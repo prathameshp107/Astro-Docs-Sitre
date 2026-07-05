@@ -1,4 +1,5 @@
 @import "./tokens.css";
+@import "./mcq-enterprise.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -30,25 +31,25 @@
 }
 
 :root[data-theme='dark'] {
-  --mcq-bg: var(--slate-900);
-  --mcq-bg-rgb: 15, 23, 42;
-  --mcq-text: var(--slate-200);
+  --mcq-bg: var(--slate-950);
+  --mcq-bg-rgb: 2, 6, 23;
+  --mcq-text: var(--slate-100);
   --mcq-text-primary: var(--slate-50);
   --mcq-text-secondary: var(--slate-400);
   --mcq-text-muted: var(--slate-500);
   --mcq-text-body: var(--slate-300);
   /* Dark surfaces: progressive depth */
-  --mcq-surface: var(--slate-800);          /* base surface */
+  --mcq-surface: var(--slate-900);          /* base surface */
   --mcq-surface-20: var(--slate-750);       /* +1 elevation — one step lighter */
   --mcq-surface-30: var(--slate-700);       /* +2 elevation */
   --mcq-surface-40: var(--ink-800);         /* deepest inset */
   --mcq-surface-hover: var(--slate-700);
   --mcq-surface-hover-40: var(--slate-700);
-  --mcq-nav-bg: rgba(15, 23, 42, 0.85);
-  --mcq-border: var(--slate-700);
+  --mcq-nav-bg: rgba(2, 6, 23, 0.85);
+  --mcq-border: var(--slate-800);
   --mcq-border-hover: var(--indigo-400);
-  --mcq-border-strong: var(--slate-600);
-  --mcq-border-light: var(--slate-800);
+  --mcq-border-strong: var(--slate-700);
+  --mcq-border-light: var(--slate-900);
   /* Code: distinct from surface */
   --mcq-code-bg: var(--ink-850);
   --mcq-snippet-header: var(--ink-800);
@@ -56,7 +57,15 @@
 
 @layer base {
   .mcq-body {
-    @apply bg-[var(--mcq-bg)] text-[var(--mcq-text)] font-sans min-h-screen overflow-x-hidden;
+    @apply bg-[var(--mcq-bg)] text-[var(--mcq-text)] min-h-screen overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6,
+  .mcq-hero-title,
+  .mcq-cmd-item-title,
+  .mcq-question-text {
+    font-family: var(--font-display);
   }
 }
 

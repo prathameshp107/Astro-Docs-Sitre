@@ -12,7 +12,6 @@ export function getStaticPaths() {
 }
 
 const { category } = Astro.params;
-const { topic } = Astro.url.searchParams;
 const cat = MCQ_CATEGORIES.find(c => c.id === category);
 ---
 
@@ -23,13 +22,14 @@ const cat = MCQ_CATEGORIES.find(c => c.id === category);
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz: {cat?.name || 'Loading'} — MCQ Hub</title>
-    <meta name="description" content={`${cat?.name || 'Quiz'} — Interactive quiz with instant feedback.`} />
+    <meta name="description" content={`${cat?.name || 'Quiz'} — Interactive quiz with instant feedback, keyboard shortcuts, XP rewards.`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body class="mcq-body">
     <AppNav activeSection="mcq" client:load />
-    <MCQQuiz client:load categoryId={category} initialTopic={topic} />
+    <!-- categoryId only — topic/mode are read client-side from URL params -->
+    <MCQQuiz client:load categoryId={category} />
   </body>
 </html>
