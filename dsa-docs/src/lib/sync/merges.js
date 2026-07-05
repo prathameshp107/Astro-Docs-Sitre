@@ -168,3 +168,41 @@ export function mergeMcq(a = {}, b = {}) {
     lastActive
   };
 }
+
+// ─── Spaced Repetition (SRS) Store Merge ───
+export function mergeSrs(a = {}, b = {}) {
+  // 1. Decks: union of subscribed decks
+  const decks = Array.from(new Set([...(a.decks || []), ...(b.decks || [])]));
+
+  // 2. Cards: resolve states by choosing the one with higher reps or later dueTs
+  const cards = { ...(a.cards || {}) };
+  for (const [id, cardB] of Object.entries(b.cards || {})) {
+    const cardA = cards[id];
+    if (!cardA) {
+      cards[id] = cardB;
+    } else {
+      // Pick the more advanced card state (higher repetitions) or later timestamp
+      if (cardB.reps > cardA.reps || (cardB.reps === cardA.reps && cardB.dueTs > cardA.dueTs)) {
+        cards[id] = cardB;
+      }
+    }
+  }
+
+  // 3. Auto-Cards (wrong MCQs): union of records
+  const autoCards = { ...(a.autoCards || {}), ...(b.autoCards || {}) };
+
+  // 4. Logs: union logs by timestamp and card ID, sorted by timestamp
+  const logMap = new Map();
+  [...(a.logs || []), ...(b.logs || [])].forEach(l => {
+    if (l && l.ts && l.cardId) {
+      logMap.set(`${l.ts}-${l.cardId}`, l);
+    }
+  });
+  const logs = Array.from(logMap.values()).sort((l1, l2) => l1.ts - l2.ts);
+
+  // 5. Daily Caps: merge caps
+  const dailyCaps = b.dailyCaps || a.dailyCaps || { reviews: 20, new: 10 };
+
+  return { decks, cards, autoCards, logs, dailyCaps };
+}
+

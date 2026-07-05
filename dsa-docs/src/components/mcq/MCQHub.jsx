@@ -1,62 +1,97 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton, { SkeletonStats, SkeletonGrid } from '../Skeleton.jsx';
-import { FiArrowRight, FiBarChart2 } from "react-icons/fi";
-
-import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, getAccuracy, getCategoryAccuracy, getStreakInfo } from './MCQStore.js';
+import CommandPalette from './CommandPalette.jsx';
+import { CategoryIcon, CATEGORY_ICONS } from './CategoryIcons.jsx';
 
-function useMCQTheme() {
-  const [isDark, setIsDark] = useState(true);
-  useEffect(() => {
-    const html = document.documentElement;
-    const update = () => setIsDark(html.getAttribute('data-theme') !== 'light');
-    update();
-    const obs = new MutationObserver(update);
-    obs.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
-    return () => obs.disconnect();
-  }, []);
-  return isDark;
-}
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.34, 1.56, 0.64, 1] } },
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.34, 1.56, 0.64, 1] } },
-};
+function ProgressRing({ value, size = 44, color = '#2563eb' }) {
+  const r = (size - 6) / 2;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (value / 100) * circ;
+  return (
+    <div className="mcq-progress-ring-wrap" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <circle className="mcq-progress-ring-track" cx={size/2} cy={size/2} r={r} />
+        <circle
+          className="mcq-progress-ring-fill"
+          cx={size/2} cy={size/2} r={r}
+          stroke={color}
+          strokeDasharray={circ}
+          strokeDashoffset={value > 0 ? offset : circ}
+        />
+      </svg>
+      <div className="mcq-progress-ring-label">{value > 0 ? `${value}%` : ''}</div>
+    </div>
+  );
+}
 
 export default function MCQHub() {
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
+  const [showCmd, setShowCmd] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     setLoaded(true);
     setProgress(getInitialProgress());
-    const timer = setTimeout(() => setLoading(false), 400);
+    const timer = setTimeout(() => setLoading(false), 350);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Ctrl+K global shortcut
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowCmd(true);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
   }, []);
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
   const accuracy = progress ? getAccuracy(progress) : 0;
   const streak = progress ? getStreakInfo(progress) : { current: 0, best: 0 };
+  const totalQuestions = MCQ_CATEGORIES.reduce((sum, c) => sum + getQuestionsForCategory(c.id).length, 0);
+
+  // Last used category (continue banner)
+  const lastCategoryId = progress
+    ? Object.entries(progress.categoryProgress || {}).sort(([,a], [,b]) => (b.lastActive || 0) - (a.lastActive || 0))[0]?.[0]
+    : null;
+  const lastCategory = lastCategoryId ? MCQ_CATEGORIES.find(c => c.id === lastCategoryId) : null;
+
+  // Filter categories by search
+  const filteredCategories = searchQuery.trim()
+    ? MCQ_CATEGORIES.filter(c =>
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : MCQ_CATEGORIES;
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '80px 24px 0' }}>
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', padding: '80px 24px 0' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {/* Hero skeleton */}
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <Skeleton variant="badge" width="160px" height="28px" style={{ margin: '0 auto 16px' }} />
-            <Skeleton variant="text" width="60%" height="40px" style={{ margin: '0 auto 12px' }} />
+            <Skeleton variant="text" width="60%" height="48px" style={{ margin: '0 auto 12px' }} />
             <Skeleton variant="text" width="40%" height="16px" style={{ margin: '0 auto 32px' }} />
           </div>
-          {/* Stats skeleton */}
           <SkeletonStats count={5} />
-          {/* Category cards skeleton */}
           <SkeletonGrid count={9} variant="card" columns={3} cardHeight="220px" />
         </div>
       </div>
@@ -65,151 +100,269 @@ export default function MCQHub() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)' }}>
-      {/* Hero */}
-      <section className="relative z-10 pt-16 pb-8 overflow-hidden">
+      {/* Animated Background Orbs */}
+      <div className="mcq-orb-container" aria-hidden>
+        <div className="mcq-orb mcq-orb-1" />
+        <div className="mcq-orb mcq-orb-2" />
+        <div className="mcq-orb mcq-orb-3" />
+      </div>
+
+      {/* Command Palette */}
+      <AnimatePresence>
+        {showCmd && <CommandPalette base={base} onClose={() => setShowCmd(false)} />}
+      </AnimatePresence>
+
+      {/* ── Hero ── */}
+      <section className="relative z-10 pt-16 pb-6 overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-medium mb-6"
-              style={{ borderColor: 'var(--mcq-border)', background: 'var(--mcq-surface)', color: 'var(--mcq-text-muted)' }}>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#2563eb' }} />
-              Interactive Quizzes
+            <div className="mcq-hero-badge">
+              <span className="mcq-hero-pulse" />
+              Interactive MCQ Hub
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-[-0.02em] max-w-4xl mx-auto mb-4"
-              style={{ color: 'var(--mcq-text-primary)' }}>
-              Master Programming Concepts{' '}
-              <span style={{ color: '#2563eb' }}>Through Interactive Quizzes</span>
+            <h1 className="mcq-hero-title">
+              Master Dev Concepts{' '}
+              <span className="mcq-hero-gradient-text">Through Quizzes</span>
             </h1>
 
-            <p className="text-lg max-w-xl mx-auto leading-relaxed mb-8"
-              style={{ color: 'var(--mcq-text-secondary)' }}>
-              Test your knowledge. Track your progress. Prepare for interviews with thousands of curated questions across 14+ technologies.
+            <p className="text-base max-w-lg mx-auto leading-relaxed mb-8" style={{ color: 'var(--mcq-text-secondary)' }}>
+              {totalQuestions.toLocaleString()}+ curated questions across 15 technologies. Practice, assess, and ace your interviews.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-3">
-              <a href="#categories" className="mcq-btn-primary text-base px-6 py-3">
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              <a href="#categories" className="mcq-btn-primary text-sm px-5 py-2.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
                 Start Learning
-                <FiArrowRight size={16} />
               </a>
-              <a href={`${base}mcq/dashboard`} className="mcq-btn-secondary text-base px-6 py-3">
-                <FiBarChart2 size={16} />
-                View Dashboard
+              <button
+                onClick={() => setShowCmd(true)}
+                className="mcq-btn-secondary text-sm px-5 py-2.5 flex items-center gap-2"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                Search
+                <span style={{ fontSize: '0.6rem', background: 'var(--mcq-surface-20)', border: '1px solid var(--mcq-border)', borderRadius: 4, padding: '1px 5px', fontFamily: 'monospace' }}>
+                  ⌘K
+                </span>
+              </button>
+              <a href={`${base}mcq/dashboard`} className="mcq-btn-secondary text-sm px-5 py-2.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                Dashboard
               </a>
             </div>
 
-            {/* Topic pills */}
-            <div className="flex flex-wrap justify-center gap-2 mt-8 max-w-2xl mx-auto">
-              {['JavaScript','React','TypeScript','Python','SQL','CSS','Git','DSA','System Design'].map((t, i) => (
-                <span key={t} className="px-3 py-1 rounded-full border text-xs font-medium transition-all"
+            {/* Stats ticker */}
+            <div className="mcq-stats-ticker max-w-3xl mx-auto">
+              {[
+                { value: MCQ_CATEGORIES.length, label: 'Categories' },
+                { value: totalQuestions.toLocaleString(), label: 'Questions' },
+                { value: progress?.totalAnswered || 0, label: 'Answered' },
+                { value: `${accuracy}%`, label: 'Accuracy' },
+                { value: streak.current > 0 ? `🔥 ${streak.current}` : `Lv.${progress?.level || 1}`, label: streak.current > 0 ? 'Streak' : 'Level' },
+              ].map(s => (
+                <div key={s.label} className="mcq-stats-ticker-item">
+                  <span className="mcq-stats-ticker-value">{s.value}</span>
+                  <span className="mcq-stats-ticker-label">{s.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Tech pills with real brand icons */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px', marginTop: '20px', maxWidth: '680px', margin: '16px auto 0' }}>
+              {[
+                { id: 'javascript', label: 'JavaScript' },
+                { id: 'react', label: 'React' },
+                { id: 'typescript', label: 'TypeScript' },
+                { id: 'python', label: 'Python' },
+                { id: 'nodejs', label: 'Node.js' },
+                { id: 'css', label: 'CSS' },
+                { id: 'git', label: 'Git' },
+                { id: 'mongodb', label: 'MongoDB' },
+                { id: 'system-design', label: 'System Design' },
+              ].map(({ id, label }) => (
+                <a key={id} href={`${base}mcq/${id}`}
                   style={{
-                    borderColor: 'var(--mcq-border)',
-                    background: 'var(--mcq-surface)',
-                    color: 'var(--mcq-text-muted)',
-                    animationDelay: `${0.8 + i * 0.06}s`,
-                    animation: 'fadeUp 0.4s ease both',
-                  }}>
-                  {t}
-                </span>
+                    display: 'inline-flex', alignItems: 'center', gap: '5px',
+                    padding: '4px 12px', borderRadius: 999,
+                    border: '1px solid var(--mcq-border)',
+                    background: 'var(--mcq-surface-20)', color: 'var(--mcq-text-secondary)',
+                    fontSize: '0.72rem', fontWeight: 500, textDecoration: 'none',
+                    transition: 'all 0.15s',
+                  }}
+                  className="hover:border-[var(--mcq-border-hover)] hover:text-[var(--mcq-text-primary)]"
+                >
+                  <CategoryIcon categoryId={id} size={12} />
+                  {label}
+                </a>
               ))}
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      {progress && (
-        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.5 }}
-          className="relative z-10 max-w-6xl mx-auto px-6 mb-8">
-          <div className="flex items-center justify-center gap-0 rounded-xl border p-4"
-            style={{ borderColor: 'var(--mcq-border)', background: 'var(--mcq-surface)' }}>
-            {[
-              { value: MCQ_CATEGORIES.length, label: 'Categories' },
-              { value: progress.totalAnswered, label: 'Answered' },
-              { value: `${accuracy}%`, label: 'Accuracy' },
-              { value: `${progress.xp}`, label: 'XP' },
-              { value: `Lv.${progress.level}`, label: 'Level' },
-            ].map((s) => (
-              <div key={s.label} className="flex flex-col items-center px-4 sm:px-6">
-                <span className="text-lg font-extrabold" style={{ color: 'var(--mcq-text-primary)' }}>{s.value}</span>
-                <span className="text-[0.65rem] font-semibold uppercase tracking-wider mt-0.5" style={{ color: 'var(--mcq-text-muted)' }}>{s.label}</span>
+
+      {/* ── Continue Banner ── */}
+      {lastCategory && progress?.categoryProgress[lastCategoryId]?.answered > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 max-w-6xl mx-auto px-6 mb-6"
+        >
+          <div className="mcq-continue-banner">
+            <div className="flex items-center gap-3 min-w-0">
+              <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{lastCategory.icon}</span>
+              <div className="min-w-0">
+                <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--mcq-text-primary)' }}>
+                  Continue: {lastCategory.name}
+                </p>
+                <p style={{ fontSize: '0.65rem', color: 'var(--mcq-text-muted)' }}>
+                  {progress.categoryProgress[lastCategoryId]?.answered} questions answered
+                </p>
               </div>
-            ))}
+            </div>
+            <a href={`${base}mcq/quiz/${lastCategoryId}`} className="mcq-btn-primary text-xs px-4 py-1.5 whitespace-nowrap flex-shrink-0">
+              Resume →
+            </a>
           </div>
-        </motion.section>
+        </motion.div>
       )}
 
-      {/* Categories Grid */}
-      <section id="categories" className="relative z-10 max-w-6xl mx-auto px-6 py-8 mb-16">
-        <div className="mcq-section-header">
-          <span className="mcq-section-tag">Categories</span>
-          <h2 className="text-3xl sm:text-4xl font-bold mb-3" style={{ color: 'var(--mcq-text-primary)' }}>Choose Your Path</h2>
-          <p className="max-w-md mx-auto" style={{ color: 'var(--mcq-text-secondary)' }}>Browse all technology categories and start testing your knowledge.</p>
+      {/* ── Category Grid ── */}
+      <section id="categories" className="relative z-10 max-w-6xl mx-auto px-6 pb-20">
+        <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+          <div>
+            <h2 className="text-2xl font-bold" style={{ color: 'var(--mcq-text-primary)' }}>Choose Your Path</h2>
+            <p className="text-sm mt-1" style={{ color: 'var(--mcq-text-secondary)' }}>
+              {filteredCategories.length} {filteredCategories.length === 1 ? 'category' : 'categories'} available
+            </p>
+          </div>
+          <div className="relative" style={{ minWidth: '220px' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--mcq-text-muted)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              className="mcq-search-input"
+              placeholder="Filter categories..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MCQ_CATEGORIES.map((cat) => {
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mcq-bento-grid"
+        >
+          {filteredCategories.map(cat => {
             const catProgress = progress?.categoryProgress[cat.id];
             const catAccuracy = catProgress ? getCategoryAccuracy(progress, cat.id) : 0;
-            const questionCount = getQuestionsForCategory(cat.id).length;
+            const qCount = getQuestionsForCategory(cat.id).length;
+            const answered = catProgress?.answered || 0;
+            const masteryTier =
+              catAccuracy >= 90 ? 'mastered' :
+              catAccuracy >= 60 ? 'proficient' :
+              answered > 0 ? 'learning' : 'new';
+            const masteryLabel =
+              masteryTier === 'mastered' ? '★ Mastered' :
+              masteryTier === 'proficient' ? '✓ Proficient' :
+              masteryTier === 'learning' ? '⚡ Learning' : 'New';
+
             return (
               <motion.a
                 key={cat.id}
                 href={`${base}mcq/${cat.id}`}
                 variants={cardVariants}
-                className="group relative flex flex-col p-5 rounded-xl border transition-all duration-200 hover:-translate-y-1 overflow-hidden no-underline"
+                className="mcq-bento-card"
                 style={{
-                  borderColor: cat.borderColor || 'var(--mcq-border)',
-                  background: 'var(--mcq-surface)',
+                  '--card-color': cat.color,
+                  '--card-color-border': `${cat.color}40`,
+                  '--card-color-bg': `${cat.color}12`,
+                  '--card-color-glow': `${cat.color}10`,
+                  textDecoration: 'none',
                 }}
               >
-                <div className="flex items-center justify-between mb-3 relative z-[1]">
-                  <span className="text-2xl">{cat.icon}</span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[0.65rem] font-semibold border"
-                    style={{ background: `${cat.color}15`, color: cat.color, borderColor: `${cat.color}25` }}>
-                    {questionCount} Q
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-semibold mb-1.5 relative z-[1]" style={{ color: 'var(--mcq-text-primary)' }}>{cat.name}</h3>
-                <p className="text-xs leading-relaxed mb-3 relative z-[1] line-clamp-2" style={{ color: 'var(--mcq-text-secondary)' }}>{cat.description}</p>
-
-                <div className="flex flex-wrap gap-1.5 mb-3 relative z-[1]">
-                  {cat.difficulties.map(d => (
-                    <span key={d} className="px-2 py-0.5 rounded text-[0.6rem] font-medium"
-                      style={{ background: 'var(--mcq-surface)', color: 'var(--mcq-text-muted)' }}>{d}</span>
-                  ))}
-                </div>
-
-                <div className="mt-auto relative z-[1]">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[0.65rem] font-medium uppercase tracking-wider" style={{ color: 'var(--mcq-text-muted)' }}>
-                      {catProgress ? `${catProgress.answered}/${questionCount}` : `0/${questionCount}`}
-                    </span>
-                    <span className="text-[0.65rem] font-semibold" style={{ color: cat.color }}>
-                      {catAccuracy}%
-                    </span>
+                {/* Header row */}
+                <div className="mcq-bento-header">
+                  <div className="mcq-bento-icon-wrap"
+                    style={{ background: `${cat.color}15`, borderColor: `${cat.color}25` }}>
+                    <CategoryIcon categoryId={cat.id} size={24} />
                   </div>
-                  <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--mcq-border)' }}>
-                    <div className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${catAccuracy}%`, background: `linear-gradient(90deg, ${cat.color}, ${cat.color}aa)` }} />
+                  <ProgressRing value={catAccuracy} color={cat.color} />
+                </div>
+
+                {/* Content */}
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--mcq-text-primary)', lineHeight: 1.2 }}>
+                      {cat.name}
+                    </h3>
+                    <span className={`mastery-badge ${masteryTier}`}>{masteryLabel}</span>
+                  </div>
+                  <p style={{ fontSize: '0.72rem', color: 'var(--mcq-text-secondary)', lineHeight: 1.5, marginBottom: '10px' }}>
+                    {cat.description}
+                  </p>
+
+                  {/* Difficulty tags */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '12px' }}>
+                    {cat.difficulties.map(d => (
+                      <span key={d} style={{
+                        padding: '2px 7px', borderRadius: 999, fontSize: '0.58rem', fontWeight: 600,
+                        background: 'var(--mcq-surface-20)', color: 'var(--mcq-text-muted)',
+                        border: '1px solid var(--mcq-border)',
+                      }}>{d}</span>
+                    ))}
                   </div>
                 </div>
 
-                <div className="relative z-[1] mt-3 pt-3 border-t flex items-center justify-between"
-                  style={{ borderColor: 'var(--mcq-border)' }}>
-                  <span className="text-xs font-medium transition-colors" style={{ color: '#2563eb' }}>
-                    {catProgress ? 'Continue →' : 'Start Quiz →'}
-                  </span>
+                {/* Progress bar + footer */}
+                <div style={{ position: 'relative', zIndex: 1, marginTop: 'auto' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--mcq-text-muted)', fontWeight: 500 }}>
+                      {answered}/{qCount} questions
+                    </span>
+                    {answered > 0 && (
+                      <span style={{ fontSize: '0.65rem', fontWeight: 700, color: cat.color }}>{catAccuracy}%</span>
+                    )}
+                  </div>
+                  <div style={{ height: '3px', borderRadius: 999, background: 'var(--mcq-border)', overflow: 'hidden' }}>
+                    <div style={{
+                      height: '100%', borderRadius: 999, transition: 'width 0.6s ease',
+                      width: `${answered > 0 ? Math.max(2, (answered / qCount) * 100) : 0}%`,
+                      background: `linear-gradient(90deg, ${cat.color}, ${cat.color}90)`,
+                    }} />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px', paddingTop: '10px', borderTop: '1px solid var(--mcq-border)' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#2563eb' }}>
+                      {answered > 0 ? 'Continue →' : 'Start Quiz →'}
+                    </span>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--mcq-text-muted)' }}>{qCount} Q</span>
+                  </div>
                 </div>
               </motion.a>
             );
           })}
+
+          {filteredCategories.length === 0 && (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '48px', color: 'var(--mcq-text-muted)' }}>
+              <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '12px' }}>🔍</span>
+              <p>No categories match "<strong>{searchQuery}</strong>"</p>
+            </div>
+          )}
         </motion.div>
       </section>
 
       {/* Footer */}
       <footer className="relative z-10 border-t py-6" style={{ borderColor: 'var(--mcq-border)' }}>
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between text-xs" style={{ color: 'var(--mcq-text-muted)' }}>
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
+          <p>Built by <strong>Prathamesh Pawar</strong> · Press <kbd className="mcq-cmd-key">⌘K</kbd> to search</p>
           <div className="flex gap-4">
             <a href={`${base}mcq/dashboard`} className="hover:opacity-80 transition-opacity">Dashboard</a>
             <a href={base} className="hover:opacity-80 transition-opacity">Home</a>

@@ -1,0 +1,77 @@
+{
+  "id": "sql-core",
+  "title": "SQL Core",
+  "description": "Master SQL query structures, joins, indexes, ACID transactions, and normalization.",
+  "cards": [
+    {
+      "id": "sql-core-001",
+      "type": "basic",
+      "front": "Compare **INNER JOIN** and **LEFT JOIN**.",
+      "back": "- **INNER JOIN**: Returns rows only when there is a match in **both** tables.\n- **LEFT JOIN (Outer)**: Returns all rows from the left table, and matching rows from the right table. If no match exists, `NULL` values are returned for the right table columns.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-002",
+      "type": "basic",
+      "front": "What is the difference between **WHERE** and **HAVING**?",
+      "back": "- **WHERE**: Filters rows **before** any grouping (`GROUP BY`) or aggregation takes place.\n- **HAVING**: Filters grouped groups **after** aggregation. Used exclusively with aggregate functions like `SUM`, `COUNT`, `AVG`.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-003",
+      "type": "basic",
+      "front": "Explain SQL **Indexes**.",
+      "back": "An index is a performance database structure that speed up data retrieval operations on a table (at the cost of slower writes and additional disk space).\n\nUsually structured as B-Trees, indexes avoid full-table scans when executing `WHERE` filters.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-004",
+      "type": "basic",
+      "front": "Explain the **ACID** properties of transactions.",
+      "back": "- **Atomicity**: All statements in a transaction succeed, or the entire transaction is rolled back (all-or-nothing).\n- **Consistency**: The database state moves only from one valid state to another, respecting constraints.\n- **Isolation**: Concurrent transactions execute without interfering with one another.\n- **Durability**: Committed data is saved permanently, even on power loss.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-005",
+      "type": "basic",
+      "front": "Compare Primary Key and Unique Key.",
+      "back": "- **Primary Key**: Uniquely identifies each row in a table. Does **not** allow `NULL` values. Only **one** primary key is allowed per table.\n- **Unique Key**: Ensures all values in a column are unique. Allows **one** `NULL` value. Multiple unique keys are allowed per table.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-006",
+      "type": "basic",
+      "front": "What is Database Normalization?",
+      "back": "Normalization is the process of organizing table structures to reduce data redundancy and dependency.\n\n- **1NF**: Eliminate duplicate columns, create atomic values.\n- **2NF**: Meet 1NF, ensure no partial dependencies on primary key.\n- **3NF**: Meet 2NF, ensure no transitive dependencies.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-007",
+      "type": "basic",
+      "front": "What is SQL Injection?",
+      "back": "SQL Injection is a security vulnerability where an attacker inserts malicious SQL statement segments into input fields to execute unauthorized actions on the database.\n\n**Prevention**: Use **Prepared Statements** (parameterized queries) and input sanitization.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-008",
+      "type": "basic",
+      "front": "Compare `UNION` and `UNION ALL`.",
+      "back": "- **`UNION`**: Combines results of two SELECT statements, removing duplicate rows (performing additional sorting overhead).\n- **`UNION ALL`**: Combines results directly, keeping all duplicates (faster performance).",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-009",
+      "type": "basic",
+      "front": "What is a Foreign Key?",
+      "back": "A Foreign Key is a constraint that references the Primary Key of another table, establishing a relationship between rows and maintaining **referential integrity** between the two tables.",
+      "sourceNote": "/sql"
+    },
+    {
+      "id": "sql-core-010",
+      "type": "basic",
+      "front": "What is the role of `GROUP BY`?",
+      "back": "`GROUP BY` groups rows that share values in specified columns into summary rows (e.g. finding sum or counts per category). Typically used with aggregate functions.",
+      "sourceNote": "/sql"
+    }
+  ]
+}

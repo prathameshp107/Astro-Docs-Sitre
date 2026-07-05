@@ -3,7 +3,8 @@ import { useAuthStore } from '../../store/authStore';
 import { useJudgeStore } from '../../store/judgeStore';
 import { usePlanStore } from '../../store/planStore';
 import { getInitialProgress, saveProgress, subscribeMCQ } from '../../components/mcq/MCQStore';
-import { mergeJudge, mergePlans, mergeMcq } from './merges';
+import { useSrsStore } from '../../store/srsStore';
+import { mergeJudge, mergePlans, mergeMcq, mergeSrs } from './merges';
 
 class SyncManager {
   constructor() {
@@ -45,6 +46,22 @@ class SyncManager {
       set: (data) => saveProgress(data),
       subscribe: (cb) => subscribeMCQ(cb),
       merge: mergeMcq
+    });
+
+    this.registerStore('srs', {
+      get: () => {
+        const state = useSrsStore.getState();
+        return {
+          decks: state.decks,
+          cards: state.cards,
+          autoCards: state.autoCards,
+          logs: state.logs,
+          dailyCaps: state.dailyCaps
+        };
+      },
+      set: (data) => useSrsStore.setState(data),
+      subscribe: (cb) => useSrsStore.subscribe(cb),
+      merge: mergeSrs
     });
   }
 

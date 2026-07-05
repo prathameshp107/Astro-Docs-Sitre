@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import ThemeToggle from './ThemeToggle.jsx';
 import GlobalSearch from './GlobalSearch.jsx';
 import { FaGithub } from "react-icons/fa";
@@ -17,6 +17,10 @@ import {
   DiGitBranch,
 } from "react-icons/di";
 import { SiTailwindcss } from "react-icons/si";
+import { useSrsStore } from '../store/srsStore.js';
+import jsCoreDeckData from '../data/srs/decks/js-core.json';
+import reactDeckData from '../data/srs/decks/react.json';
+import sqlDeckData from '../data/srs/decks/sql.json';
 
 const NAV_SECTIONS = [
   {
@@ -55,7 +59,6 @@ const NAV_SECTIONS = [
     label: 'Interview Q',
     href: '/interview-questions',
     icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
-    highlight: true,
     badge: '300',
   },
   {
@@ -63,6 +66,18 @@ const NAV_SECTIONS = [
     label: 'Docs',
     href: '/overview',
     icon: 'M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z',
+  },
+  {
+    id: 'review',
+    label: 'Review',
+    href: '/review',
+    icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+  },
+  {
+    id: 'system-design',
+    label: 'Sys Design',
+    href: '/system-design',
+    icon: 'M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6',
   },
 ];
 
@@ -147,7 +162,7 @@ const LABS_SUB_ITEMS = [
  * @param {string[]} props.hideSections - Optional array of section ids to hide
  * @param {boolean} props.showOnStarlight - If true, renders minimal version suitable for Starlight docs
  */
-export default function AppNav({ activeSection, hideSections = [], showOnStarlight = false, variant = 'default' }) {
+export default function AppNav({ activeSection, hideSections = [], showOnStarlight = false, variant = 'landing' }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -208,7 +223,28 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
   const baseHref = base.replace(/\/$/, '');
 
-  const filteredSections = NAV_SECTIONS.filter(s => !hideSections.includes(s.id));
+  const srsDecks = useSrsStore(state => state.decks);
+  const srsGetQueue = useSrsStore(state => state.getQueue);
+  const srsCards = useSrsStore(state => state.cards);
+  const srsAutoCards = useSrsStore(state => state.autoCards);
+
+  const [srsDueCount, setSrsDueCount] = useState(0);
+
+  useEffect(() => {
+    try {
+      const { counts } = srsGetQueue([jsCoreDeckData, reactDeckData, sqlDeckData]);
+      setSrsDueCount(counts.remainingReviews + counts.remainingNew);
+    } catch {
+      setSrsDueCount(0);
+    }
+  }, [srsGetQueue, srsDecks, srsCards, srsAutoCards]);
+
+  const filteredSections = NAV_SECTIONS.filter(s => !hideSections.includes(s.id)).map(s => {
+    if (s.id === 'review') {
+      return { ...s, badge: srsDueCount > 0 ? srsDueCount.toString() : undefined };
+    }
+    return s;
+  });
 
   const renderNavLink = (section) => {
     const isActive = activeSection === section.id;
@@ -388,7 +424,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
           {/* Desktop Actions */}
           <div className="app-nav-actions">
             <GlobalSearch />
-            {variant === 'landing' && (
+            {variant === 'landing' && activeSection === 'home' && (
               <a href={`${baseHref}/overview`}
                 className="app-nav-cta"
               >

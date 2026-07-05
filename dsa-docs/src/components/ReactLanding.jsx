@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import ContinueBanner from "./plans/ContinueBanner.jsx";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import {
   BookOpen, Code, Activity, Award, ArrowRight, ArrowUpRight,
   Briefcase, Map, Users, Play, Sparkles, Laptop, Trophy,
@@ -113,6 +113,66 @@ function Tag({ children, color = "amber" }) {
     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-bold uppercase tracking-widest ${map[color]}`}>
       {children}
     </span>
+  );
+}
+
+// ─── 3D: mouse-parallax tilt wrapper ────────────────────────────────────────
+function Tilt3D({ children, max = 8, className = "" }) {
+  const ref = useRef(null);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 140, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 140, damping: 18 });
+
+  const handleMove = (e) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    ry.set(px * max * 2);
+    rx.set(-py * max * 2);
+  };
+  const reset = () => { rx.set(0); ry.set(0); };
+
+  return (
+    <div ref={ref} className={className} style={{ perspective: 1200 }}
+      onMouseMove={handleMove} onMouseLeave={reset}>
+      <motion.div style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── 3D: floating hero decorations (pure CSS transforms) ────────────────────
+const CUBE_FACES = ["front", "back", "right", "left", "top", "bottom"];
+
+function Cube3D({ className = "" }) {
+  return (
+    <div className={`l3d-cube ${className}`}>
+      {CUBE_FACES.map(f => <div key={f} className={`l3d-face l3d-face--${f}`} />)}
+    </div>
+  );
+}
+
+function Hero3DShapes() {
+  return (
+    <div className="l3d-scene" aria-hidden="true">
+      <div className="l3d-float" style={{ top: "-2%", left: "45%" }}>
+        <Cube3D className="l3d-cube--lg" />
+      </div>
+      <div className="l3d-float l3d-float--slow" style={{ bottom: "6%", left: "40%" }}>
+        <Cube3D className="l3d-cube--sm" />
+      </div>
+      <div className="l3d-ring l3d-ring--1"><span className="l3d-ring-dot" /></div>
+      <div className="l3d-ring l3d-ring--2"><span className="l3d-ring-dot l3d-ring-dot--violet" /></div>
+      <span className="l3d-orb l3d-orb--1" />
+      <span className="l3d-orb l3d-orb--2" />
+      <span className="l3d-orb l3d-orb--3" />
+      <div className="l3d-chip l3d-chip--1">&lt;/&gt;</div>
+      <div className="l3d-chip l3d-chip--2">O(log n)</div>
+      <div className="l3d-chip l3d-chip--3">{"{ }"}</div>
+    </div>
   );
 }
 
@@ -294,10 +354,12 @@ const [whyRef, whyInView] = useInView();
           HERO — split layout
       ════════════════════════════════════════ */}
       <section ref={heroRef} className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-28">
+        <Hero3DShapes />
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-14 xl:gap-20 items-center">
 
           {/* ── Left: text ── */}
           <motion.div
+            className="relative z-[1]"
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
@@ -347,13 +409,15 @@ const [whyRef, whyInView] = useInView();
             </div>
           </motion.div>
 
-          {/* ── Right: demo stack ── */}
+          {/* ── Right: demo stack (3D tilt follows the mouse) ── */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="flex flex-col gap-4"
+            className="relative z-[1]"
           >
+          <Tilt3D max={7}>
+          <div className="flex flex-col gap-4">
             {/* Terminal */}
             <div className="bg-[#0D1326]/90 border border-white/[0.07] rounded-2xl overflow-hidden shadow-2xl">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-black/20">
@@ -425,6 +489,8 @@ const [whyRef, whyInView] = useInView();
                 </div>
               </div>
             </div>
+          </div>
+          </Tilt3D>
           </motion.div>
         </div>
       </section>
@@ -443,7 +509,7 @@ const [whyRef, whyInView] = useInView();
           <h2 className="sg mt-4 text-3xl sm:text-4xl font-bold text-white tracking-tight">
             One Platform. Infinite Possibilities.
           </h2>
-          <p className="text-slate-500 mt-6 text-base max-w-xl">
+          <p className="text-slate-500 mt-6 text-base max-w-xl mx-auto text-center">
             Stop juggling dozens of tabs and subscriptions. DSA & Dev Notes gives you everything you need to learn, practice, and prepare — all in one cohesive, interactive ecosystem.
           </p>
         </motion.div>
@@ -575,7 +641,8 @@ const [whyRef, whyInView] = useInView();
               initial={{ opacity: 0, y: 16 }}
               animate={tracksInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: i * 0.04 }}
-              whileHover={{ y: -4, scale: 1.02 }}
+              whileHover={{ y: -6, scale: 1.03, rotateX: 7, rotateY: -7 }}
+              style={{ transformPerspective: 800 }}
               className={`relative p-5 rounded-xl bg-gradient-to-br ${track.color} border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 cursor-pointer`}
             >
               <div className="text-3xl mb-3">{track.icon}</div>
@@ -1151,12 +1218,19 @@ const [whyRef, whyInView] = useInView();
           CTA
       ════════════════════════════════════════ */}
       <section ref={ctaRef} className="relative z-10 max-w-7xl mx-auto px-6 pb-24">
+        <Tilt3D max={3}>
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={ctaInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.6 }}
           className="relative bg-[#0D1326]/70 border border-amber-500/15 rounded-3xl px-8 py-24 md:py-32 text-center overflow-hidden"
         >
+          <div className="l3d-cta-cube" aria-hidden="true">
+            <div className="l3d-float"><Cube3D className="l3d-cube--sm" /></div>
+          </div>
+          <div className="l3d-cta-cube l3d-cta-cube--left" aria-hidden="true">
+            <div className="l3d-float l3d-float--slow"><Cube3D className="l3d-cube--xs" /></div>
+          </div>
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
           <div className="absolute inset-0 pointer-events-none" style={{
             background: "radial-gradient(ellipse at 50% 0%, rgba(251,191,36,0.06) 0%, transparent 70%)"
@@ -1166,7 +1240,7 @@ const [whyRef, whyInView] = useInView();
             <h2 className="sg text-4xl md:text-5xl font-bold text-white leading-tight tracking-tight">
               Your complete developer<br />prep platform
             </h2>
-            <p className="text-slate-500 text-base md:text-lg leading-relaxed max-w-lg">
+            <p className="text-slate-500 text-base md:text-lg leading-relaxed max-w-lg text-center">
               Notes, labs, visualizers, problems, quizzes, and interview prep — no scattered bookmarks, no half-finished tutorials.
             </p>
             <div className="flex flex-wrap gap-3 justify-center mt-2">
@@ -1185,6 +1259,7 @@ const [whyRef, whyInView] = useInView();
             </div>
           </div>
         </motion.div>
+        </Tilt3D>
       </section>
 
       {/* ════════════════════════════════════════

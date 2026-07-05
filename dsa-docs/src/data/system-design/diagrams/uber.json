@@ -1,0 +1,98 @@
+{
+  "id": "uber",
+  "title": "Design Ride-Sharing Service (Uber)",
+  "subtitle": "High-concurrency geospatial matching at global scale",
+  "stages": [
+    {
+      "title": "Stage 1 — Monolith & Relational DB",
+      "bottleneck": "Database reads/writes fail at scale. Querying active drivers using standard SQL `SELECT` with `WHERE distance < 5km` takes O(N) time — locking the DB at >100 concurrent requests.",
+      "nodes": [
+        { "id": "rider", "type": "client", "label": "Rider App", "position": { "x": 50, "y": 120 } },
+        { "id": "driver", "type": "client", "label": "Driver App", "position": { "x": 50, "y": 280 } },
+        { "id": "monolith", "type": "server", "label": "Monolith Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "rider", "target": "monolith", "label": "Request ride" },
+        { "id": "e2", "source": "driver", "target": "monolith", "label": "Ping location" },
+        { "id": "e3", "source": "monolith", "target": "db", "label": "Geo Queries / Updates" }
+      ],
+      "requestPath": ["rider", "monolith", "db", "monolith", "rider"],
+      "narrative": "**The simplest ride matching service.** Driver locations are updated every 4 seconds via HTTP POST and saved to PostgreSQL. When a rider requests a ride, the server does a bounding-box coordinate search using SQL index.\n\n**Bottleneck:** High write volume (pings) from thousands of drivers locks rows. Geospatial queries scan the entire table, making it impossible to support more than a few hundred active users."
+    },
+    {
+      "title": "Stage 2 — Geospatial Service & Redis Cache",
+      "bottleneck": "Drivers send pings every 4 seconds. Disk storage is overwhelmed. We need an in-memory Geospatial Index (Geohash) for driver locations.",
+      "nodes": [
+        { "id": "rider", "type": "client", "label": "Rider", "position": { "x": 50, "y": 120 } },
+        { "id": "driver", "type": "client", "label": "Driver", "position": { "x": 50, "y": 280 } },
+        { "id": "app", "type": "server", "label": "API Gateway", "position": { "x": 280, "y": 200 } },
+        { "id": "geo", "type": "service", "label": "Geo Service", "position": { "x": 500, "y": 300 } },
+        { "id": "redis", "type": "cache", "label": "Redis (Geohash)", "position": { "x": 750, "y": 300 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL\n(Trips / Users)", "position": { "x": 500, "y": 100 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "rider", "target": "app", "label": "" },
+        { "id": "e2", "source": "driver", "target": "app", "label": "" },
+        { "id": "e3", "source": "app", "target": "db", "label": "Get metadata" },
+        { "id": "e4", "source": "app", "target": "geo", "label": "Locate / Update" },
+        { "id": "e5", "source": "geo", "target": "redis", "label": "GEOADD / GEORADIUS" }
+      ],
+      "requestPath": ["rider", "app", "geo", "redis", "geo", "app", "rider"],
+      "narrative": "**Introduce Spatial Indexing.** We move active driver locations from PostgreSQL to Redis. Redis has built-in geospatial data structures (`GEOADD` and `GEORADIUS`) based on **Geohash** (representing 2D coordinates as alphanumeric keys).\n\n**Geohash logic:** Divide the world into grids. Adjacent points share prefixes. Lookups are O(log N) inside Redis memory, handling 100K+ reads/writes per second easily."
+    },
+    {
+      "title": "Stage 3 — WebSockets & Dedicated Match Service",
+      "bottleneck": "Polled HTTP is slow and leads to wasted bandwidth. Match request timing out. We need real-time bi-directional messaging.",
+      "nodes": [
+        { "id": "rider", "type": "client", "label": "Rider", "position": { "x": 50, "y": 80 } },
+        { "id": "driver", "type": "client", "label": "Driver", "position": { "x": 50, "y": 280 } },
+        { "id": "ws", "type": "server", "label": "WebSocket Server\n(Gateway)", "position": { "x": 280, "y": 200 } },
+        { "id": "geo", "type": "service", "label": "Geo Service", "position": { "x": 520, "y": 320 } },
+        { "id": "redis", "type": "cache", "label": "Redis (Geo)", "position": { "x": 750, "y": 320 } },
+        { "id": "match", "type": "service", "label": "Match Service", "position": { "x": 520, "y": 140 } },
+        { "id": "queue", "type": "queue", "label": "Match Queue", "position": { "x": 750, "y": 140 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "rider", "target": "ws", "label": "WebSocket (WS)" },
+        { "id": "e2", "source": "driver", "target": "ws", "label": "WS Connection" },
+        { "id": "e3", "source": "ws", "target": "geo", "label": "Driver ping" },
+        { "id": "e4", "source": "geo", "target": "redis", "label": "" },
+        { "id": "e5", "source": "ws", "target": "match", "label": "Request match" },
+        { "id": "e6", "source": "match", "target": "geo", "label": "Get nearby" },
+        { "id": "e7", "source": "match", "target": "queue", "label": "Offer ride" },
+        { "id": "e8", "source": "queue", "target": "ws", "label": "Notify driver", "animated": true }
+      ],
+      "requestPath": ["rider", "ws", "match", "geo", "redis", "geo", "match", "queue", "ws", "driver"],
+      "narrative": "**Real-time matching.** Riders and drivers maintain persistent WebSocket connections. A dedicated Match Service matches requests asynchronously.\n\n**The workflow:** Rider requests match → WS forwards to Match Service → Queries Geo Service for nearby drivers → Publishes ride offers to queue → WebSocket server pushes offer to driver immediately. If rejected, fallback to next driver."
+    },
+    {
+      "title": "Stage 4 — Global Scale, Sharding by City",
+      "bottleneck": "At global scale, a single Redis cluster overflows. Kafka is needed for analytics/pings. Shard Geospatial index by city ID.",
+      "nodes": [
+        { "id": "rider", "type": "client", "label": "Global Riders", "position": { "x": 50, "y": 100 } },
+        { "id": "driver", "type": "client", "label": "Global Drivers", "position": { "x": 50, "y": 300 } },
+        { "id": "lb", "type": "lb", "label": "Load Balancer\n(Consistent Hash)", "position": { "x": 220, "y": 200 } },
+        { "id": "ws", "type": "server", "label": "WS Server Pool", "position": { "x": 390, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka\n(Location Stream)", "position": { "x": 560, "y": 320 } },
+        { "id": "geo1", "type": "service", "label": "Geo (NYC Shard)", "position": { "x": 730, "y": 230 } },
+        { "id": "geo2", "type": "service", "label": "Geo (SF Shard)", "position": { "x": 730, "y": 350 } },
+        { "id": "match", "type": "service", "label": "Match Service", "position": { "x": 560, "y": 80 } },
+        { "id": "db", "type": "database", "label": "Sharded DB\n(Cassandra)", "position": { "x": 730, "y": 80 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "rider", "target": "lb", "label": "" },
+        { "id": "e2", "source": "driver", "target": "lb", "label": "" },
+        { "id": "e3", "source": "lb", "target": "ws", "label": "" },
+        { "id": "e4", "source": "ws", "target": "kafka", "label": "Driver pings" },
+        { "id": "e5", "source": "kafka", "target": "geo1", "label": "NYC" },
+        { "id": "e6", "source": "kafka", "target": "geo2", "label": "SF" },
+        { "id": "e7", "source": "ws", "target": "match", "label": "" },
+        { "id": "e8", "source": "match", "target": "geo1", "label": "" },
+        { "id": "e9", "source": "match", "target": "db", "label": "Persist trip" }
+      ],
+      "requestPath": ["driver", "lb", "ws", "kafka", "geo1"],
+      "narrative": "**Production scale.** Since riders and drivers are localized to cities (you can't match a rider in NY with a driver in SF), we **shard drivers by city ID**.\n\n**Consistent Hashing:** Route WebSocket connections based on user location so adjacent cities share pools.\n\n**Kafka integration:** Driver location updates are stream-written to Kafka, allowing multiple consumers (Matching, ETAs, Map data, and Fraud logs) to digest updates asynchronously without locking the critical path."
+    }
+  ]
+}

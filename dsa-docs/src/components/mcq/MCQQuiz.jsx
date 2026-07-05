@@ -1,18 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import ThemeToggle from '../ThemeToggle.jsx';
+import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../Skeleton.jsx';
-import { FiArrowLeft, FiPlay, FiArrowRight, FiHome, FiCornerDownLeft } from "react-icons/fi";
-import { motion } from 'framer-motion';
 import { MCQ_CATEGORIES, getQuestionsForCategory } from './MCQData.js';
-import { getInitialProgress, recordAnswer, getAccuracy, getStreakInfo, arraysEqual } from './MCQStore.js';
+import { getInitialProgress, recordAnswer, getAccuracy, arraysEqual } from './MCQStore.js';
+import { useSrsStore } from '../../store/srsStore.js';
 
-const MODE_CONFIG = {
-  practice: { label: 'Practice', desc: 'Instant feedback. Learn as you go.', icon: '📝' },
-  assessment: { label: 'Assessment', desc: 'Timed test. Results at the end.', icon: '⏱️' },
-  interview: { label: 'Interview', desc: 'Random mix. Real simulation.', icon: '🎯' },
-};
-
-// Fisher-Yates shuffle — unbiased
+// ─── Fisher-Yates Shuffle ───────────────────────────────────
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -22,36 +15,172 @@ function shuffle(arr) {
   return a;
 }
 
-export default function MCQQuiz({ categoryId, initialTopic }) {
-  const [loaded, setLoaded] = useState(false);
+// ─── Progress Dot Mini-map ─────────────────────────────────
+function ProgressMinimap({ results, total, current }) {
+  return (
+    <div className="mcq-progress-dots">
+      {Array.from({ length: total }, (_, i) => {
+        const r = results[i];
+        const cls = i === current ? 'current' :
+          r === undefined ? '' :
+          r.correct ? 'answered-correct' : 'answered-wrong';
+        return <div key={i} className={`mcq-progress-dot ${cls}`} title={`Q${i+1}`} />;
+      })}
+    </div>
+  );
+}
+
+// ─── Timer Ring ─────────────────────────────────────────────
+function TimerRing({ timeLeft, totalTime, size = 36 }) {
+  const r = (size - 4) / 2;
+  const circ = 2 * Math.PI * r;
+  const pct = totalTime > 0 ? (timeLeft / totalTime) : 1;
+  const offset = circ - pct * circ;
+  const color = pct > 0.5 ? 'var(--mcq-timer-safe)' : pct > 0.2 ? 'var(--mcq-timer-warn)' : 'var(--mcq-timer-danger)';
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  return (
+    <div className="mcq-timer-ring-wrap" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)' }}>
+        <circle fill="none" stroke="var(--mcq-border)" strokeWidth="3" cx={size/2} cy={size/2} r={r} />
+        <circle fill="none" stroke={color} strokeWidth="3" strokeLinecap="round"
+          cx={size/2} cy={size/2} r={r}
+          strokeDasharray={circ} strokeDashoffset={offset}
+          style={{ transition: 'stroke-dashoffset 1s linear, stroke 0.5s ease' }}
+        />
+      </svg>
+      <div className="mcq-timer-label" style={{ color }}>
+        {mins > 0 ? `${mins}:${secs.toString().padStart(2,'0')}` : `${secs}s`}
+      </div>
+    </div>
+  );
+}
+
+// ─── XP Flyout ─────────────────────────────────────────────
+function XPFlyout({ xp, show }) {
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          key="xp"
+          initial={{ opacity: 0, y: 0, scale: 0.8 }}
+          animate={{ opacity: 1, y: -60, scale: 1.1 }}
+          exit={{ opacity: 0, y: -90, scale: 0.9 }}
+          transition={{ duration: 1.1, ease: 'easeOut' }}
+          style={{
+            position: 'fixed', bottom: '30%', right: '2rem', zIndex: 9999,
+            pointerEvents: 'none', fontSize: '1.3rem', fontWeight: 900,
+            color: '#fbbf24', textShadow: '0 0 16px rgba(251,191,36,0.6)',
+          }}
+        >
+          +{xp} XP ✦
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ─── Confetti (CSS particle burst) ─────────────────────────
+function ConfettiParticles() {
+  const particles = Array.from({ length: 40 }, (_, i) => ({
+    id: i,
+    x: 20 + Math.random() * 60,
+    color: ['#2563eb','#22c55e','#f59e0b','#ec4899','#a78bfa','#06b6d4'][i % 6],
+    delay: Math.random() * 0.4,
+    dur: 1.2 + Math.random() * 0.8,
+    size: 5 + Math.random() * 6,
+  }));
+  return (
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9998, overflow: 'hidden' }} aria-hidden>
+      {particles.map(p => (
+        <motion.div key={p.id}
+          style={{
+            position: 'absolute', top: 0, left: `${p.x}%`,
+            width: p.size, height: p.size, borderRadius: Math.random() > 0.5 ? '50%' : 2,
+            background: p.color,
+          }}
+          initial={{ y: -20, opacity: 1, rotate: 0, scale: 1 }}
+          animate={{ y: '110vh', opacity: 0, rotate: 360 * (Math.random() > 0.5 ? 1 : -1), scale: 0.5 }}
+          transition={{ duration: p.dur, delay: p.delay, ease: 'easeIn' }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Bookmark Store ─────────────────────────────────────────
+function getBookmarks() {
+  try { return JSON.parse(localStorage.getItem('mcq-bookmarks') || '[]'); } catch { return []; }
+}
+function toggleBookmark(id) {
+  const bm = getBookmarks();
+  const idx = bm.indexOf(id);
+  if (idx >= 0) bm.splice(idx, 1); else bm.push(id);
+  localStorage.setItem('mcq-bookmarks', JSON.stringify(bm));
+  return bm.includes(id) ? false : true;
+}
+
+// ─── Main Quiz Component ────────────────────────────────────
+export default function MCQQuiz({ categoryId }) {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
   const [allQuestions, setAllQuestions] = useState([]);
+
+  // Quiz config — read from URL client-side (fixes static build bug)
+  const [initialTopic, setInitialTopic] = useState(null);
+  const [initialMode, setInitialMode] = useState('practice');
+
+  // Setup state
+  const [showSetup, setShowSetup] = useState(false);
+  const [mode, setMode] = useState('practice');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
+  const [questionCount, setQuestionCount] = useState(10);
+  const [secondsPerQuestion, setSecondsPerQuestion] = useState(60);
+
+  // Quiz state
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
-  const [mode, setMode] = useState('practice');
-  const [quizStarted, setQuizStarted] = useState(!!initialTopic);
-  const [quizFinished, setQuizFinished] = useState(false);
   const [quizResults, setQuizResults] = useState([]);
   const [timeLeft, setTimeLeft] = useState(null);
-  const [showSetup, setShowSetup] = useState(!initialTopic);
-  const [selectedDifficulty, setSelectedDifficulty] = useState('all');
-  const [questionCount, setQuestionCount] = useState(10);
-  const [secondsPerQuestion, setSecondsPerQuestion] = useState(60);
+  const [totalTime, setTotalTime] = useState(null);
   const [xpGained, setXpGained] = useState(0);
   const [streakCount, setStreakCount] = useState(0);
-  const timerRef = useRef(null);
+  const [bookmarks, setBookmarks] = useState([]);
+  const [showXP, setShowXP] = useState(false);
+  const [lastXP, setLastXP] = useState(10);
+  const [showConfetti, setShowConfetti] = useState(false);
 
+  const timerRef = useRef(null);
   const cat = MCQ_CATEGORIES.find(c => c.id === categoryId);
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+
+  // ── Read URL params client-side (the critical static-site fix) ──
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const topicParam = params.get('topic');
+    const modeParam = params.get('mode') || 'practice';
+    setInitialTopic(topicParam || null);
+    setInitialMode(modeParam);
+    setMode(modeParam);
+    // If topic is in URL: jump straight to quiz, skip setup
+    if (topicParam) {
+      setShowSetup(false);
+      setQuizStarted(true);
+    } else {
+      // No topic: show setup screen
+      setShowSetup(true);
+    }
+  }, []);
 
   useEffect(() => {
-    setLoaded(true);
     setProgress(getInitialProgress());
-    const qs = getQuestionsForCategory(categoryId);
-    setAllQuestions(qs);
-    const timer = setTimeout(() => setLoading(false), 300);
+    setAllQuestions(getQuestionsForCategory(categoryId));
+    setBookmarks(getBookmarks());
+    const timer = setTimeout(() => setLoading(false), 280);
     return () => clearTimeout(timer);
   }, [categoryId]);
 
@@ -59,104 +188,85 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
   useEffect(() => {
     if (mode === 'assessment' && quizStarted && !quizFinished && timeLeft > 0) {
       timerRef.current = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current);
-            finishQuiz();
-            return 0;
-          }
-          return prev - 1;
+        setTimeLeft(p => {
+          if (p <= 1) { clearInterval(timerRef.current); finishQuiz(); return 0; }
+          return p - 1;
         });
       }, 1000);
       return () => clearInterval(timerRef.current);
     }
   }, [mode, quizStarted, quizFinished]);
 
+  // Filtered + shuffled questions
   const filteredQuestions = useMemo(() => {
     let qs = [...allQuestions];
-    if (initialTopic && initialTopic !== 'all') {
-      qs = qs.filter(q => q.topic === initialTopic);
-    }
-    if (selectedDifficulty !== 'all') {
-      qs = qs.filter(q => q.difficulty === selectedDifficulty);
-    }
+    if (initialTopic && initialTopic !== 'all') qs = qs.filter(q => q.topic === initialTopic);
+    if (selectedDifficulty !== 'all') qs = qs.filter(q => q.difficulty === selectedDifficulty);
     return qs;
   }, [allQuestions, initialTopic, selectedDifficulty]);
 
   const shuffledQuestions = useMemo(() => {
     const qs = [...filteredQuestions];
     const count = Math.min(questionCount, qs.length);
-    if (mode === 'interview') {
-      return shuffle(qs).slice(0, count);
-    }
-    if (mode === 'assessment') {
-      return qs.slice(0, count);
-    }
-    return qs.slice(0, count);
+    return mode === 'interview' ? shuffle(qs).slice(0, count) : qs.slice(0, count);
   }, [filteredQuestions, mode, questionCount]);
 
   const currentQuestion = shuffledQuestions[currentIndex];
-  const totalQuestions = shuffledQuestions.length;
-  const isMultiSelect = currentQuestion?.correctAnswer.length > 1;
-  const progressPct = totalQuestions > 0 ? ((currentIndex + (submitted ? 1 : 0)) / totalQuestions) * 100 : 0;
+  const totalQ = shuffledQuestions.length;
+  const isMultiSelect = currentQuestion?.correctAnswer?.length > 1;
 
-  const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
-
-  // ─── Handlers ───
-
-  const handleOptionClick = useCallback((index) => {
+  // ── Handlers ──────────────────────────────────────────────
+  const handleOptionClick = useCallback((idx) => {
     if (submitted) return;
     setSelectedAnswers(prev => {
-      if (isMultiSelect) {
-        return prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index];
-      }
-      return [index];
+      if (isMultiSelect) return prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx];
+      return [idx];
     });
   }, [submitted, isMultiSelect]);
 
   const handleSubmit = useCallback(() => {
     if (!currentQuestion || selectedAnswers.length === 0) return;
     setSubmitted(true);
-
-    const correct = arraysEqual(
-      [...selectedAnswers].sort(),
-      [...currentQuestion.correctAnswer].sort()
-    );
+    const correct = arraysEqual([...selectedAnswers].sort(), [...currentQuestion.correctAnswer].sort());
     setIsCorrect(correct);
-
     if (correct) {
-      setStreakCount(prev => prev + 1);
+      setStreakCount(p => p + 1);
+      const xp = currentQuestion.xpReward || 10;
+      setXpGained(p => p + xp);
+      setLastXP(xp);
+      setShowXP(true);
+      setTimeout(() => setShowXP(false), 1200);
     } else {
       setStreakCount(0);
+      // Auto-create spaced repetition flashcard for incorrect answer
+      useSrsStore.getState().addAutoCard({
+        id: `mcq-wrong-${currentQuestion.id}`,
+        type: 'mcq-replay',
+        front: `Replay MCQ: **${currentQuestion.question}**`,
+        back: `Correct answer: **${currentQuestion.options[currentQuestion.correctAnswer[0]]}**\n\nExplanation: ${currentQuestion.explanation}`,
+        categoryId: categoryId,
+        mcqRef: currentQuestion.id
+      });
     }
-
-    setXpGained(prev => prev + (correct ? currentQuestion.xpReward : 0));
-
     const newProgress = recordAnswer(progress, currentQuestion, selectedAnswers);
     setProgress(newProgress);
   }, [currentQuestion, selectedAnswers, progress]);
 
   const handleNext = useCallback(() => {
-    const result = {
-      question: currentQuestion,
-      selected: selectedAnswers,
-      correct: isCorrect,
-    };
-    setQuizResults(prev => [...prev, result]);
-
-    if (currentIndex + 1 >= totalQuestions) {
+    setQuizResults(prev => [...prev, { question: currentQuestion, selected: selectedAnswers, correct: isCorrect }]);
+    if (currentIndex + 1 >= totalQ) {
       finishQuiz();
     } else {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex(p => p + 1);
       setSelectedAnswers([]);
       setSubmitted(false);
       setIsCorrect(null);
     }
-  }, [currentIndex, totalQuestions, currentQuestion, selectedAnswers, isCorrect]);
+  }, [currentIndex, totalQ, currentQuestion, selectedAnswers, isCorrect]);
 
   function finishQuiz() {
     setQuizFinished(true);
-    if (timerRef.current) clearInterval(timerRef.current);
+    clearInterval(timerRef.current);
   }
 
   const startQuiz = useCallback(() => {
@@ -170,206 +280,242 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
     setQuizResults([]);
     setXpGained(0);
     setStreakCount(0);
-
     if (mode === 'assessment') {
-      setTimeLeft(totalQuestions * secondsPerQuestion);
+      const t = Math.min(questionCount, filteredQuestions.length) * secondsPerQuestion;
+      setTimeLeft(t);
+      setTotalTime(t);
     }
-  }, [mode, totalQuestions]);
+  }, [mode, questionCount, filteredQuestions, secondsPerQuestion]);
 
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter' && !submitted && selectedAnswers.length > 0) {
-      handleSubmit();
-    } else if ((e.key === 'Enter' || e.key === ' ') && submitted) {
-      handleNext();
-    }
-  }, [submitted, selectedAnswers, handleSubmit, handleNext]);
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e) => {
+      if (showSetup || quizFinished) return;
+      const n = parseInt(e.key);
+      if (!submitted && n >= 1 && n <= 4 && currentQuestion?.options?.length >= n) {
+        handleOptionClick(n - 1);
+      } else if (e.key === 'Enter' && !submitted && selectedAnswers.length > 0) {
+        handleSubmit();
+      } else if ((e.key === 'Enter' || e.key === ' ') && submitted) {
+        e.preventDefault();
+        handleNext();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [submitted, selectedAnswers, showSetup, quizFinished, currentQuestion, handleOptionClick, handleSubmit, handleNext]);
+
+  const handleBookmark = () => {
+    if (!currentQuestion) return;
+    toggleBookmark(currentQuestion.id);
+    setBookmarks(getBookmarks());
+  };
 
   const diffColor = {
-    easy: '#22c55e',
-    medium: '#f59e0b',
-    hard: '#ef4444',
-    expert: '#a78bfa',
+    easy: '#22c55e', medium: '#f59e0b', hard: '#ef4444', expert: '#a78bfa',
   }[currentQuestion?.difficulty] || '#64748b';
 
+  const isBookmarked = currentQuestion && bookmarks.includes(currentQuestion.id);
+
+  // ── Loading ────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)', padding: '48px 24px' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', padding: '48px 24px' }}>
+        <div style={{ maxWidth: '640px', margin: '0 auto' }}>
           <Skeleton variant="text" width="100px" height="14px" style={{ marginBottom: '32px' }} />
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <Skeleton variant="avatar" size="48px" style={{ margin: '0 auto 16px' }} />
-            <Skeleton variant="text" width="50%" height="28px" style={{ margin: '0 auto 8px' }} />
-            <Skeleton variant="text" width="60%" height="14px" style={{ margin: '0 auto' }} />
-          </div>
           <Skeleton variant="text" width="100%" height="80px" style={{ marginBottom: '16px' }} />
-          <Skeleton variant="text" width="100%" height="44px" style={{ marginBottom: '16px' }} />
-          <Skeleton variant="text" width="100%" height="44px" style={{ marginBottom: '24px' }} />
-          <Skeleton variant="text" width="100%" height="48px" borderRadius="12px" />
+          {[1,2,3,4].map(i => (
+            <Skeleton key={i} variant="text" width="100%" height="52px" style={{ marginBottom: '10px', borderRadius: '14px' }} />
+          ))}
+          <Skeleton variant="text" width="140px" height="42px" style={{ marginTop: '20px', borderRadius: '10px' }} />
         </div>
       </div>
     );
   }
 
   if (!cat) {
-    return <div className="min-h-screen bg-[var(--mcq-bg)] flex items-center justify-center"><p className="text-[var(--mcq-text-secondary)]">Category not found</p></div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--mcq-bg)' }}>
+        <p style={{ color: 'var(--mcq-text-secondary)' }}>Category not found</p>
+      </div>
+    );
   }
 
-  // ─── Setup Screen ───
-  if (showSetup) {
+  // ─── Setup Screen ─────────────────────────────────────────
+  if (showSetup && !quizStarted) {
+    const MODE_CONFIG = {
+      practice: { label: 'Practice', desc: 'Instant feedback. Learn as you go.', icon: '📝' },
+      assessment: { label: 'Assessment', desc: 'Timed test. Results at the end.', icon: '⏱️' },
+      interview: { label: 'Interview', desc: 'Random mix. Real simulation.', icon: '🎯' },
+    };
     return (
-      <div className="min-h-screen bg-[var(--mcq-bg)] text-[var(--mcq-text)] flex items-center justify-center p-6">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg w-full">
-          <a href={`${base}mcq/${categoryId}`} className="inline-flex items-center gap-1.5 text-sm text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] mb-8 transition-colors no-underline">
-            <FiArrowLeft size={14} />
-            Back to {cat.name}
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)' }}>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} style={{ maxWidth: '480px', width: '100%' }}>
+          <a href={`${base}mcq/${categoryId}`}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: 'var(--mcq-text-secondary)', textDecoration: 'none', marginBottom: '32px' }}
+            className="hover:text-blue-400 transition-colors">
+            ← Back to {cat.name}
           </a>
 
-          <div className="text-center mb-8">
-            <span className="text-4xl mb-3 block">{cat.icon}</span>
-            <h1 className="text-2xl font-bold text-[var(--mcq-text-primary)] mb-2">Quiz Setup</h1>
-            <p className="text-sm text-[var(--mcq-text-secondary)]">{cat.name} — {filteredQuestions.length} questions available</p>
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+            <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '8px' }}>{cat.icon}</span>
+            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--mcq-text-primary)', marginBottom: '4px' }}>Quiz Setup</h1>
+            <p style={{ fontSize: '0.8rem', color: 'var(--mcq-text-secondary)' }}>{cat.name} — {filteredQuestions.length} questions available</p>
           </div>
 
-          {/* Mode selection */}
-          <div className="space-y-2 mb-6">
-            <label className="text-[0.65rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Quiz Mode</label>
-            <div className="grid grid-cols-3 gap-2">
-              {Object.entries(MODE_CONFIG).map(([key, config]) => (
+          {/* Mode */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--mcq-text-muted)', display: 'block', marginBottom: '8px' }}>Quiz Mode</label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+              {Object.entries(MODE_CONFIG).map(([key, cfg]) => (
                 <button key={key} onClick={() => setMode(key)}
-                  aria-label={`${config.label} mode: ${config.desc}`}
-                  className={`p-3 rounded-lg border text-left transition-all ${
-                    mode === key ? 'border-blue-400/40 bg-blue-500/10' : 'border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] hover:bg-[var(--mcq-surface-hover)]'
-                  }`}>
-                  <span className="text-lg block mb-1">{config.icon}</span>
-                  <span className="text-xs font-semibold text-[var(--mcq-text-primary)] block">{config.label}</span>
-                  <span className="text-[0.6rem] text-[var(--mcq-text-muted)]">{config.desc}</span>
+                  style={{
+                    padding: '10px 8px', borderRadius: 12, border: `1.5px solid ${mode === key ? 'rgba(37,99,235,0.4)' : 'var(--mcq-border)'}`,
+                    background: mode === key ? 'rgba(37,99,235,0.08)' : 'var(--mcq-surface-20)',
+                    cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
+                  }}>
+                  <span style={{ fontSize: '1.1rem', display: 'block', marginBottom: '4px' }}>{cfg.icon}</span>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--mcq-text-primary)', display: 'block' }}>{cfg.label}</span>
+                  <span style={{ fontSize: '0.58rem', color: 'var(--mcq-text-muted)' }}>{cfg.desc}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Difficulty */}
-          <div className="space-y-2 mb-6">
-            <label className="text-[0.65rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Difficulty</label>
-            <div className="flex gap-2">
-              {['all', 'easy', 'medium', 'hard'].map(d => (
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--mcq-text-muted)', display: 'block', marginBottom: '8px' }}>Difficulty</label>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              {['all','easy','medium','hard'].map(d => (
                 <button key={d} onClick={() => setSelectedDifficulty(d)}
-                  aria-label={`Difficulty: ${d}`}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                    selectedDifficulty === d ? 'border-blue-400/30 bg-blue-500/10 text-blue-400' : 'border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] hover:bg-[var(--mcq-surface-20)]'
-                  }`}>
+                  className={`mcq-mode-pill ${selectedDifficulty === d ? 'active' : ''}`}>
                   {d.charAt(0).toUpperCase() + d.slice(1)}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Question count */}
-          <div className="space-y-2 mb-6">
-            <label className="text-[0.65rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Questions</label>
-            <div className="flex gap-2">
-              {[5, 10, 15, 20].map(n => (
+          {/* Count */}
+          <div style={{ marginBottom: mode === 'assessment' ? '16px' : '24px' }}>
+            <label style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--mcq-text-muted)', display: 'block', marginBottom: '8px' }}>Questions</label>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              {[5,10,15,20].map(n => (
                 <button key={n} onClick={() => setQuestionCount(n)}
-                  aria-label={`${n} questions`}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                    questionCount === n ? 'border-blue-400/30 bg-blue-500/10 text-blue-400' : 'border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] hover:bg-[var(--mcq-surface-20)]'
-                  }`}>
-                  {n}
-                </button>
+                  className={`mcq-mode-pill ${questionCount === n ? 'active' : ''}`}>{n}</button>
               ))}
             </div>
           </div>
 
-          {/* Time per question (assessment only) */}
+          {/* Timer (assessment) */}
           {mode === 'assessment' && (
-            <div className="space-y-2 mb-8">
-              <label className="text-[0.65rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Time Per Question</label>
-              <div className="flex gap-2">
-                {[30, 45, 60, 90, 120].map(n => (
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ fontSize: '0.62rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--mcq-text-muted)', display: 'block', marginBottom: '8px' }}>Seconds Per Question</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {[30,45,60,90,120].map(n => (
                   <button key={n} onClick={() => setSecondsPerQuestion(n)}
-                    aria-label={`${n < 60 ? n + ' seconds' : n === 60 ? '1 minute' : Math.floor(n / 60) + ' minutes'} per question`}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                      secondsPerQuestion === n ? 'border-blue-400/30 bg-blue-500/10 text-blue-400' : 'border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-[var(--mcq-text-primary)] hover:bg-[var(--mcq-surface-20)]'
-                    }`}>
-                    {n < 60 ? `${n}s` : `${Math.floor(n / 60)}m`}
+                    className={`mcq-mode-pill ${secondsPerQuestion === n ? 'active' : ''}`}>
+                    {n < 60 ? `${n}s` : `${n/60}m`}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          <button onClick={startQuiz} className="mcq-btn-primary w-full justify-center text-base py-3">
-            {mode === 'practice' ? 'Start Practice' : mode === 'assessment' ? 'Start Assessment' : 'Start Interview'}
-            <FiPlay size={16} fill="currentColor" />
+          <button onClick={startQuiz} className="mcq-btn-primary w-full justify-center text-sm py-3">
+            {mode === 'practice' ? '📝 Start Practice' : mode === 'assessment' ? '⏱️ Start Assessment' : '🎯 Start Interview'}
           </button>
         </motion.div>
       </div>
     );
   }
 
-  // ─── Results Screen ───
+  // ─── Results Screen ───────────────────────────────────────
   if (quizFinished) {
     const correctCount = quizResults.filter(r => r.correct).length;
-    const finalAccuracy = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+    const finalAccuracy = totalQ > 0 ? Math.round((correctCount / totalQ) * 100) : 0;
+    const isGreat = finalAccuracy >= 80;
+
+    if (isGreat && !showConfetti) setShowConfetti(true);
+
+    const r = (54);
+    const circ = 2 * Math.PI * r;
+    const ringColor = finalAccuracy >= 70 ? '#22c55e' : finalAccuracy >= 40 ? '#f59e0b' : '#ef4444';
+
     return (
-      <div className="min-h-screen bg-[var(--mcq-bg)] text-[var(--mcq-text)] flex items-center justify-center p-6">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-lg w-full">
-          {/* Result header */}
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border-4"
-              style={{ borderColor: finalAccuracy >= 70 ? '#22c55e' : finalAccuracy >= 40 ? '#f59e0b' : '#ef4444' }}>
-              {finalAccuracy >= 70 ? '🎉' : finalAccuracy >= 40 ? '👍' : '💪'}
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)' }}>
+        {isGreat && <ConfettiParticles />}
+
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} style={{ maxWidth: '520px', width: '100%' }}>
+          {/* Score Ring */}
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <div style={{ position: 'relative', width: 120, height: 120, margin: '0 auto 16px' }}>
+              <svg width={120} height={120} viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
+                <circle fill="none" stroke="var(--mcq-border)" strokeWidth="8" cx="60" cy="60" r={r} />
+                <circle fill="none" stroke={ringColor} strokeWidth="8" strokeLinecap="round"
+                  cx="60" cy="60" r={r}
+                  strokeDasharray={circ}
+                  strokeDashoffset={circ - (finalAccuracy / 100) * circ}
+                  style={{ transition: 'stroke-dashoffset 1.2s ease' }}
+                />
+              </svg>
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: ringColor }}>{finalAccuracy}%</span>
+                <span style={{ fontSize: '0.55rem', color: 'var(--mcq-text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Accuracy</span>
+              </div>
             </div>
-            <h1 className="text-2xl font-bold text-[var(--mcq-text-primary)] mb-1">
-              {finalAccuracy >= 90 ? 'Outstanding!' : finalAccuracy >= 70 ? 'Great Job!' : finalAccuracy >= 50 ? 'Nice Try!' : 'Keep Practicing!'}
+            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--mcq-text-primary)', marginBottom: '4px' }}>
+              {finalAccuracy >= 90 ? '🏆 Outstanding!' : finalAccuracy >= 70 ? '🎉 Great Job!' : finalAccuracy >= 50 ? '👍 Nice Try!' : '💪 Keep Practicing!'}
             </h1>
-            <p className="text-[var(--mcq-text-secondary)] text-sm">{mode === 'assessment' ? 'Assessment Complete' : 'Quiz Complete'}</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--mcq-text-secondary)' }}>
+              {mode === 'assessment' ? 'Assessment' : 'Quiz'} Complete
+            </p>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="p-4 rounded-xl border border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] text-center">
-              <span className="text-2xl font-extrabold text-[var(--mcq-text-primary)] block">{finalAccuracy}%</span>
-              <span className="text-[0.6rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Accuracy</span>
-            </div>
-            <div className="p-4 rounded-xl border border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] text-center">
-              <span className="text-2xl font-extrabold text-[var(--mcq-text-primary)] block">{correctCount}/{totalQuestions}</span>
-              <span className="text-[0.6rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Correct</span>
-            </div>
-            <div className="p-4 rounded-xl border border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] text-center">
-              <span className="text-2xl font-extrabold text-[var(--mcq-text-primary)] block">+{xpGained}</span>
-              <span className="text-[0.6rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">XP Earned</span>
-            </div>
-            <div className="p-4 rounded-xl border border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] text-center">
-              <span className="text-2xl font-extrabold text-[var(--mcq-text-primary)] block">{streakCount > 0 ? `🔥 ${streakCount}` : '—'}</span>
-              <span className="text-[0.6rem] font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider">Best Streak</span>
-            </div>
+          {/* Stats Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '20px' }}>
+            {[
+              { v: `${correctCount}/${totalQ}`, l: 'Correct', c: '#22c55e' },
+              { v: `+${xpGained}`, l: 'XP', c: '#fbbf24' },
+              { v: streakCount > 0 ? `🔥 ${streakCount}` : '—', l: 'Best Streak', c: '#f59e0b' },
+              { v: `${totalQ - correctCount}`, l: 'Wrong', c: '#ef4444' },
+            ].map(s => (
+              <div key={s.l} style={{ padding: '12px 8px', borderRadius: 12, border: '1px solid var(--mcq-border)', background: 'var(--mcq-surface-20)', textAlign: 'center' }}>
+                <span style={{ fontSize: '1rem', fontWeight: 800, color: s.c, display: 'block' }}>{s.v}</span>
+                <span style={{ fontSize: '0.55rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--mcq-text-muted)' }}>{s.l}</span>
+              </div>
+            ))}
           </div>
 
           {/* Breakdown */}
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-[var(--mcq-text-muted)] uppercase tracking-wider mb-3">Question Breakdown</h3>
-            <div className="space-y-1.5">
+          <div style={{ marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--mcq-text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px' }}>
+              Question Breakdown
+            </h3>
+            <div className="mcq-results-breakdown">
               {quizResults.map((r, i) => (
-                <div key={i} className={`flex items-center justify-between p-2.5 rounded-lg text-xs border ${
-                  r.correct ? 'border-green-500/15 bg-green-500/5' : 'border-red-500/15 bg-red-500/5'
-                }`}>
-                  <span className="flex items-center gap-2">
-                    <span>{r.correct ? '✅' : '❌'}</span>
-                    <span className="text-[var(--mcq-text-body)] truncate max-w-[200px]">{r.question.question.slice(0, 50)}...</span>
+                <div key={i} className={`mcq-result-row ${r.correct ? 'correct' : 'wrong'}`}>
+                  <span>{r.correct ? '✅' : '❌'}</span>
+                  <span style={{ flex: 1, color: 'var(--mcq-text-body)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {r.question.question.slice(0, 55)}...
                   </span>
-                  <span className="text-[var(--mcq-text-muted)]">{r.question.xpReward} XP</span>
+                  <span style={{ fontSize: '0.6rem', color: 'var(--mcq-text-muted)', flexShrink: 0 }}>+{r.question.xpReward} XP</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3">
-            <button onClick={startQuiz} className="mcq-btn-primary flex-1 justify-center">Try Again</button>
-            <a href={`${base}mcq/${categoryId}`} className="mcq-btn-secondary flex-1 justify-center">Category</a>
-            <a href={`${base}mcq`} className="mcq-btn-ghost flex-shrink-0">
-              <FiHome size={16} />
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={startQuiz} className="mcq-btn-primary" style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem' }}>
+              Try Again
+            </button>
+            <a href={`${base}mcq/${categoryId}`} className="mcq-btn-secondary" style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem' }}>
+              Back to {cat.name}
+            </a>
+            <a href={`${base}mcq`} className="mcq-btn-ghost" style={{ padding: '10px 12px', flexShrink: 0 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
             </a>
           </div>
         </motion.div>
@@ -377,177 +523,255 @@ export default function MCQQuiz({ categoryId, initialTopic }) {
     );
   }
 
-  // ─── Quiz Active ───
+  // ─── Empty State ──────────────────────────────────────────
   if (!currentQuestion) {
-    return <div className="min-h-screen bg-[var(--mcq-bg)] flex items-center justify-center"><p className="text-[var(--mcq-text-secondary)]">No questions available</p></div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--mcq-bg)' }}>
+        <div style={{ textAlign: 'center' }}>
+          <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '12px' }}>📭</span>
+          <p style={{ color: 'var(--mcq-text-secondary)', marginBottom: '16px' }}>No questions available for this filter.</p>
+          <a href={`${base}mcq/${categoryId}`} className="mcq-btn-secondary" style={{ fontSize: '0.8rem' }}>← Change Filters</a>
+        </div>
+      </div>
+    );
   }
 
+  const progressPct = totalQ > 0 ? ((currentIndex + (submitted ? 1 : 0)) / totalQ) * 100 : 0;
+
+  // ─── Quiz Active ──────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[var(--mcq-bg)] text-[var(--mcq-text)]" onKeyDown={handleKeyDown} tabIndex={0}>
-      {/* Quiz Top Bar */}
-      <div className="sticky top-0 z-50 bg-[var(--mcq-nav-bg)] backdrop-blur-md border-b border-[var(--mcq-border)]">
-        <div className="max-w-4xl mx-auto px-6 flex items-center justify-between h-12">
-          <div className="flex items-center gap-3">
-            <a href={`${base}mcq/${categoryId}`} className="text-[var(--mcq-text-muted)] hover:text-[var(--mcq-text-primary)] transition-colors no-underline">
-              <FiArrowLeft size={16} />
+    <div className="min-h-screen" style={{ background: 'var(--mcq-bg)', color: 'var(--mcq-text)' }}>
+      {/* XP Flyout */}
+      <XPFlyout xp={lastXP} show={showXP} />
+
+      {/* Top Bar */}
+      <div className="mcq-quiz-topbar">
+        <div className="mcq-quiz-topbar-inner">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+            <a href={`${base}mcq/${categoryId}`} style={{ color: 'var(--mcq-text-muted)', textDecoration: 'none', flexShrink: 0 }}
+              className="hover:text-blue-400 transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
             </a>
-            <span className="text-xs text-[var(--mcq-text-muted)] font-medium">{cat.icon} {cat.name}</span>
-            <span className="text-[0.6rem] font-semibold px-2 py-0.5 rounded border"
-              style={{ background: `${MODE_CONFIG[mode] ? 'rgba(96,165,250,0.1)' : 'rgba(255,255,255,0.05)'}`, borderColor: 'var(--mcq-border)', color: '#93c5fd' }}>
-              {MODE_CONFIG[mode]?.label}
+            <span style={{ fontSize: '0.75rem', color: 'var(--mcq-text-muted)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {cat.icon} {cat.name}{initialTopic ? ` · ${initialTopic}` : ''}
+            </span>
+            <span style={{
+              padding: '2px 8px', borderRadius: 999, fontSize: '0.58rem', fontWeight: 700,
+              background: 'rgba(96,165,250,0.1)', borderColor: 'rgba(96,165,250,0.2)', border: '1px solid',
+              color: '#93c5fd', flexShrink: 0,
+            }}>
+              {mode === 'practice' ? '📝' : mode === 'assessment' ? '⏱️' : '🎯'} {mode}
             </span>
           </div>
-          <div className="flex items-center gap-4">
-            {mode === 'assessment' && timeLeft !== null && (
-              <span className={`text-xs font-mono font-semibold ${timeLeft < 60 ? 'text-red-400 animate-pulse' : 'text-[var(--mcq-text-muted)]'}`}>
-                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-              </span>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+            {streakCount >= 3 && (
+              <span className="mcq-streak-badge">🔥 {streakCount}</span>
             )}
-            <span className="text-xs text-[var(--mcq-text-muted)]">{currentIndex + 1}/{totalQuestions}</span>
-            <span className="text-xs text-yellow-400">✦ {progress?.xp || 0}</span>
-            <ThemeToggle />
+            {mode === 'assessment' && timeLeft !== null && (
+              <TimerRing timeLeft={timeLeft} totalTime={totalTime} />
+            )}
+            <span style={{ fontSize: '0.72rem', color: 'var(--mcq-text-muted)', fontVariantNumeric: 'tabular-nums' }}>
+              {currentIndex + 1} / {totalQ}
+            </span>
+            <span style={{ fontSize: '0.72rem', color: '#fbbf24', fontWeight: 700 }}>✦ {progress?.xp || 0}</span>
           </div>
         </div>
-        {/* Progress bar */}
-        <div className="h-0.5 bg-[var(--mcq-border-light)]">
-          <div className="h-full bg-gradient-to-r from-blue-500 to-emerald-400 transition-all duration-300" style={{ width: `${progressPct}%` }} />
+
+        {/* Progress dots */}
+        <div style={{ padding: '6px 24px 8px', borderTop: '1px solid var(--mcq-border)', background: 'var(--mcq-nav-bg)' }}>
+          <ProgressMinimap results={quizResults} total={totalQ} current={currentIndex} />
+        </div>
+
+        {/* Thin progress line */}
+        <div style={{ height: '2px', background: 'var(--mcq-border)' }}>
+          <div style={{
+            height: '100%', background: 'linear-gradient(90deg, #2563eb, #06b6d4)',
+            width: `${progressPct}%`, transition: 'width 0.3s ease',
+          }} />
         </div>
       </div>
 
       {/* Question Area */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <motion.div key={currentQuestion.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-          {/* Question Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-[0.65rem] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full border"
-              style={{ background: `${diffColor}15`, color: diffColor, borderColor: `${diffColor}25` }}>
-              {currentQuestion.difficulty}
-            </span>
-            <span className="text-xs text-[var(--mcq-text-muted)]">Topic: {currentQuestion.topic}</span>
-            {isMultiSelect && (
-              <span className="text-[0.6rem] font-semibold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">
-                Multiple Select
+      <div className="mcq-question-area">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentQuestion.id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.25 }}
+          >
+            {/* Meta row */}
+            <div className="mcq-question-meta">
+              <span style={{
+                padding: '3px 10px', borderRadius: 999, fontSize: '0.62rem', fontWeight: 700,
+                background: `${diffColor}15`, color: diffColor, border: `1px solid ${diffColor}25`,
+              }}>
+                {currentQuestion.difficulty}
               </span>
-            )}
-            <span className="text-[0.6rem] text-yellow-500/70 ml-auto">+{currentQuestion.xpReward} XP</span>
-          </div>
-
-          {/* Question */}
-          <h2 className="text-xl font-semibold text-[var(--mcq-text-primary)] mb-4 leading-relaxed">{currentQuestion.question}</h2>
-
-          {/* Code Snippet */}
-          {currentQuestion.codeSnippet && (
-            <div className="mb-6 rounded-xl border border-[var(--mcq-border)] bg-[var(--mcq-code-bg)] overflow-hidden">
-              <div className="flex items-center gap-1.5 px-4 py-2 border-b border-[var(--mcq-border)] bg-[var(--mcq-snippet-header)]">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
-                <span className="text-[0.6rem] text-[var(--mcq-text-muted)] ml-2 font-mono">code.js</span>
-              </div>
-              <pre className="p-4 text-sm leading-relaxed font-mono text-[var(--mcq-text-body)] overflow-x-auto whitespace-pre-wrap m-0">{currentQuestion.codeSnippet}</pre>
-            </div>
-          )}
-
-          {/* Options */}
-          <div className="space-y-2.5 mb-6" role="radiogroup" aria-label="Answer options">
-            {currentQuestion.options.map((opt, i) => {
-              let optionClass = 'border-[var(--mcq-border-strong)] bg-[var(--mcq-surface-20)] hover:bg-[var(--mcq-surface-hover)] hover:border-[var(--mcq-border-hover)]';
-              let isSelected = selectedAnswers.includes(i);
-
-              if (submitted) {
-                const isCorrectOpt = currentQuestion.correctAnswer.includes(i);
-                if (isCorrectOpt) {
-                  optionClass = 'border-green-500/30 bg-green-500/10';
-                } else if (isSelected && !isCorrectOpt) {
-                  optionClass = 'border-red-500/30 bg-red-500/10';
-                } else {
-                  optionClass = 'border-[var(--mcq-border)] bg-[var(--mcq-surface-20)] opacity-50';
-                }
-              } else if (isSelected) {
-                optionClass = 'border-blue-400/40 bg-blue-500/10';
-              }
-
-              return (
-                <button key={i} onClick={() => handleOptionClick(i)}
-                  role="radio"
-                  aria-checked={isSelected}
-                  aria-label={`Option ${String.fromCharCode(65 + i)}: ${opt}`}
-                  className={`w-full flex items-center gap-3 p-3.5 rounded-lg border text-left transition-all duration-200 ${
-                    submitted ? 'cursor-default' : 'cursor-pointer'
-                  } ${optionClass}`}
-                  disabled={submitted}>
-                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 transition-all ${
-                    submitted && currentQuestion.correctAnswer.includes(i)
-                      ? 'bg-green-500/20 text-green-400'
-                      : submitted && isSelected
-                      ? 'bg-red-500/20 text-red-400'
-                      : isSelected
-                      ? 'bg-blue-500/20 text-blue-400'
-                      : 'bg-[var(--mcq-surface-20)] text-[var(--mcq-text-muted)]'
-                  }`}>
-                    {submitted && currentQuestion.correctAnswer.includes(i) ? '✓' : submitted && isSelected ? '✗' : String.fromCharCode(65 + i)}
-                  </span>
-                  <span className="text-sm text-[var(--mcq-text-body)] leading-relaxed">{opt}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Submit / Next */}
-          {!submitted ? (
-            <button onClick={handleSubmit} disabled={selectedAnswers.length === 0}
-              aria-label="Submit your answer"
-              className={`mcq-btn-primary px-8 py-2.5 text-sm ${selectedAnswers.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}>
-              Submit Answer
-              <FiCornerDownLeft size={14} />
-            </button>
-          ) : (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-              {/* Feedback */}
-              <div className={`p-4 rounded-xl border mb-4 ${
-                isCorrect ? 'border-green-500/20 bg-green-500/5' : 'border-red-500/20 bg-red-500/5'
-              }`}>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">{isCorrect ? '✅' : '❌'}</span>
-                  <span className={`font-semibold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                    {isCorrect ? 'Correct!' : 'Incorrect'}
-                  </span>
-                </div>
-
-                {/* Explanation */}
-                <div className="text-xs text-[var(--mcq-text-body)] leading-relaxed mb-2">{currentQuestion.explanation}</div>
-
-                {/* Key Concept */}
-                <div className="mt-2 p-2.5 rounded-lg border border-blue-400/10 bg-blue-500/5">
-                  <span className="text-[0.6rem] font-semibold text-blue-400 uppercase tracking-wider">Key Concept</span>
-                  <p className="text-xs text-[var(--mcq-text-body)] mt-0.5">{currentQuestion.keyConcept}</p>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {currentQuestion.tags.map(t => (
-                    <span key={t} className="px-1.5 py-0.5 rounded text-[0.55rem] bg-[var(--mcq-surface-20)] text-[var(--mcq-text-muted)]">{t}</span>
-                  ))}
-                </div>
-              </div>
-
-              <button onClick={handleNext} className="mcq-btn-primary px-8 py-2.5 text-sm">
-                {currentIndex + 1 >= totalQuestions ? 'See Results' : 'Next Question'}
-                <FiArrowRight size={14} />
+              {currentQuestion.topic && (
+                <span style={{ fontSize: '0.7rem', color: 'var(--mcq-text-muted)' }}>
+                  {currentQuestion.topic}
+                </span>
+              )}
+              {isMultiSelect && (
+                <span style={{
+                  padding: '2px 8px', borderRadius: 999, fontSize: '0.6rem', fontWeight: 700,
+                  background: 'rgba(168,85,247,0.1)', color: '#c084fc', border: '1px solid rgba(168,85,247,0.2)',
+                }}>
+                  Multi-Select
+                </span>
+              )}
+              <span style={{ marginLeft: 'auto', fontSize: '0.65rem', color: '#fbbf24', fontWeight: 600 }}>
+                +{currentQuestion.xpReward || 10} XP
+              </span>
+              <button onClick={handleBookmark} className={`mcq-bookmark-btn ${isBookmarked ? 'saved' : ''}`}>
+                {isBookmarked ? '★ Saved' : '☆ Save'}
               </button>
-            </motion.div>
-          )}
-        </motion.div>
-      </div>
+            </div>
 
-      {/* Footer */}
-      <footer className="mcq-quiz-footer">
-        <div className="quiz-footer-inner">
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-        </div>
-      </footer>
+            {/* Question text */}
+            <h2 className="mcq-question-text">{currentQuestion.question}</h2>
+
+            {/* Code Snippet */}
+            {currentQuestion.codeSnippet && (
+              <div className="mcq-code-block">
+                <div className="mcq-code-header">
+                  <span className="mcq-code-dot" style={{ background: '#ef4444' }} />
+                  <span className="mcq-code-dot" style={{ background: '#f59e0b' }} />
+                  <span className="mcq-code-dot" style={{ background: '#22c55e' }} />
+                  <span style={{ fontSize: '0.6rem', color: 'var(--mcq-text-muted)', marginLeft: '8px', fontFamily: 'monospace' }}>
+                    {currentQuestion.technology || 'code'}.js
+                  </span>
+                </div>
+                <pre className="mcq-code-pre">{currentQuestion.codeSnippet}</pre>
+              </div>
+            )}
+
+            {/* Options */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}
+              role="group" aria-label="Answer options">
+              {currentQuestion.options.map((opt, i) => {
+                const isSelected = selectedAnswers.includes(i);
+                const isCorrectOpt = submitted && currentQuestion.correctAnswer.includes(i);
+                const isWrongSelected = submitted && isSelected && !isCorrectOpt;
+                const isDimmed = submitted && !isCorrectOpt && !isSelected;
+
+                let cls = '';
+                if (submitted) {
+                  cls = isCorrectOpt ? 'correct' : isWrongSelected ? 'wrong' : isDimmed ? 'dimmed' : '';
+                } else if (isSelected) {
+                  cls = 'selected';
+                }
+
+                return (
+                  <button
+                    key={i}
+                    className={`mcq-option-btn ${cls}`}
+                    onClick={() => handleOptionClick(i)}
+                    disabled={submitted}
+                    role={isMultiSelect ? 'checkbox' : 'radio'}
+                    aria-checked={isSelected}
+                    aria-label={`Option ${String.fromCharCode(65+i)}: ${opt}`}
+                  >
+                    <span className="mcq-option-letter">
+                      {submitted && isCorrectOpt ? '✓' : submitted && isWrongSelected ? '✗' : String.fromCharCode(65+i)}
+                    </span>
+                    <span className="mcq-option-text">{opt}</span>
+                    {!submitted && (
+                      <span style={{ marginLeft: 'auto', fontSize: '0.6rem', color: 'var(--mcq-text-muted)', flexShrink: 0, fontFamily: 'monospace', opacity: 0.6 }}>
+                        {i + 1}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Keyboard hints */}
+            {!submitted && (
+              <div className="mcq-kbd-hints" style={{ marginBottom: '16px' }}>
+                <span className="mcq-kbd-hint"><span className="mcq-kbd">1-4</span> select</span>
+                <span className="mcq-kbd-hint"><span className="mcq-kbd">↵</span> submit</span>
+              </div>
+            )}
+
+            {/* Submit / Feedback / Next */}
+            {!submitted ? (
+              <button
+                onClick={handleSubmit}
+                disabled={selectedAnswers.length === 0}
+                className="mcq-btn-primary"
+                style={{ fontSize: '0.85rem', padding: '10px 24px', opacity: selectedAnswers.length === 0 ? 0.4 : 1, cursor: selectedAnswers.length === 0 ? 'not-allowed' : 'pointer' }}
+                aria-label="Submit answer"
+              >
+                Submit Answer
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/>
+                </svg>
+              </button>
+            ) : (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+                {/* Feedback Panel */}
+                <div className={`mcq-feedback-panel ${isCorrect ? 'correct' : 'wrong'}`}>
+                  <div className="mcq-feedback-header">
+                    <div className="mcq-feedback-icon">
+                      {isCorrect ? '✅' : '❌'}
+                    </div>
+                    <span style={{ fontWeight: 700, color: isCorrect ? '#4ade80' : '#f87171', fontSize: '0.9rem' }}>
+                      {isCorrect ? 'Correct!' : 'Incorrect'}
+                    </span>
+                    {isCorrect && (
+                      <span style={{ marginLeft: 'auto', fontSize: '0.75rem', fontWeight: 700, color: '#fbbf24' }}>
+                        +{currentQuestion.xpReward || 10} XP
+                      </span>
+                    )}
+                  </div>
+
+                  <p style={{ fontSize: '0.78rem', color: 'var(--mcq-text-body)', lineHeight: 1.6, marginBottom: '10px' }}>
+                    {currentQuestion.explanation}
+                  </p>
+
+                  <div style={{
+                    padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(37,99,235,0.1)',
+                    background: 'rgba(37,99,235,0.04)',
+                  }}>
+                    <span style={{ fontSize: '0.58rem', fontWeight: 700, color: '#60a5fa', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '3px' }}>
+                      Key Concept
+                    </span>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--mcq-text-body)', lineHeight: 1.5, margin: 0 }}>
+                      {currentQuestion.keyConcept}
+                    </p>
+                  </div>
+
+                  {currentQuestion.tags?.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '8px' }}>
+                      {currentQuestion.tags.map(t => (
+                        <span key={t} style={{
+                          padding: '2px 6px', borderRadius: 4, fontSize: '0.58rem',
+                          background: 'var(--mcq-surface-20)', color: 'var(--mcq-text-muted)',
+                        }}>{t}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button onClick={handleNext} className="mcq-btn-primary" style={{ fontSize: '0.85rem', padding: '10px 24px' }}>
+                    {currentIndex + 1 >= totalQ ? 'See Results 🎯' : 'Next Question →'}
+                  </button>
+                  <span className="mcq-kbd-hint" style={{ fontSize: '0.65rem' }}>
+                    <span className="mcq-kbd">Space</span> or <span className="mcq-kbd">↵</span> to continue
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
-
-

@@ -5,6 +5,9 @@ sidebar:
   order: 1
 ---
 
+import StagedArchitectureDiagram from '../../../../components/system-design/StagedArchitectureDiagram.jsx';
+import urlShortenerData from '../../../../data/system-design/diagrams/url-shortener.json';
+
 ## Case Study 1 — Design URL Shortener
 
 **Problem:** Design a URL shortening service like TinyURL or bit.ly that converts long URLs into short, shareable links and redirects users to the original URL.
@@ -33,24 +36,13 @@ sidebar:
 
 ---
 
-### Architecture Overview
+### Staged Architecture Walkthrough
 
-```mermaid
-flowchart LR
-    Client["User"] --> LB["Load Balancer"]
-    LB --> Web["Web Servers<br/>(Stateless)"]
-    Web --> Cache["Redis Cache<br/>Hot URLs"]
-    Web --> DB["Database<br/>URL mappings"]
-    Web --> KV["Key Generator<br/>Base-62 / Snowflake"]
+Interact with the stages below to see how the system design scales from a single server to serving millions of users.
 
-    Cache --> DB
-
-    style Client fill:#f59e0b,color:#fff
-    style LB fill:#3b82f6,color:#fff
-    style Web fill:#7c3aed,color:#fff
-    style Cache fill:#059669,color:#fff
-    style DB fill:#ef4444,color:#fff
-```
+<div className="not-prose" style={{ margin: '2rem 0' }}>
+  <StagedArchitectureDiagram client:only="react" diagramData={urlShortenerData} />
+</div>
 
 ---
 
@@ -155,5 +147,5 @@ CREATE TABLE click_events (
 - **Base-62 encoding** of a numeric ID gives short, unique keys
 - **302 redirect** for analytics, **301** for permanent URLs
 - Heavy **caching** (Redis) for redirects (100:1 read/write ratio)
-- **Asynchronous logging** of click events — don't block the redirect
+- **Asynchronous logging of click events** — don't block the redirect
 - Scale by **sharding the database** and **adding cache nodes**

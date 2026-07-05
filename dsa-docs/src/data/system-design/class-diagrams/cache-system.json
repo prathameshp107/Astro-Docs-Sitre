@@ -1,0 +1,77 @@
+{
+  "id": "cache-system",
+  "title": "LLD Class Diagram — Cache System (LRU/LFU)",
+  "nodes": [
+    {
+      "id": "node",
+      "label": "Node<K, V>",
+      "position": { "x": 50, "y": 50 },
+      "fields": [
+        { "visibility": "+", "name": "key", "type": "K" },
+        { "visibility": "+", "name": "value", "type": "V" },
+        { "visibility": "+", "name": "prev", "type": "Node" },
+        { "visibility": "+", "name": "next", "type": "Node" }
+      ],
+      "methods": []
+    },
+    {
+      "id": "dll",
+      "label": "DoublyLinkedList<K, V>",
+      "position": { "x": 50, "y": 280 },
+      "fields": [
+        { "visibility": "-", "name": "head", "type": "Node<K,V>" },
+        { "visibility": "-", "name": "tail", "type": "Node<K,V>" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "addAtHead", "params": "Node n", "returnType": "void" },
+        { "visibility": "+", "name": "removeNode", "params": "Node n", "returnType": "void" },
+        { "visibility": "+", "name": "moveToHead", "params": "Node n", "returnType": "void" },
+        { "visibility": "+", "name": "removeTail", "params": "", "returnType": "Node" }
+      ]
+    },
+    {
+      "id": "evictionpolicy",
+      "label": "EvictionPolicy<K>",
+      "isInterface": true,
+      "position": { "x": 480, "y": 50 },
+      "fields": [],
+      "methods": [
+        { "visibility": "+", "name": "keyAccessed", "params": "K key", "returnType": "void" },
+        { "visibility": "+", "name": "evictKey", "params": "", "returnType": "K" }
+      ]
+    },
+    {
+      "id": "lrupolicy",
+      "label": "LRUEvictionPolicy<K>",
+      "position": { "x": 480, "y": 280 },
+      "fields": [
+        { "visibility": "-", "name": "dll", "type": "DoublyLinkedList<K,K>" },
+        { "visibility": "-", "name": "mapper", "type": "Map<K, Node>" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "keyAccessed", "params": "K key", "returnType": "void" },
+        { "visibility": "+", "name": "evictKey", "params": "", "returnType": "K" }
+      ]
+    },
+    {
+      "id": "cache",
+      "label": "Cache<K, V>",
+      "position": { "x": 820, "y": 50 },
+      "fields": [
+        { "visibility": "-", "name": "capacity", "type": "int" },
+        { "visibility": "-", "name": "storage", "type": "Map<K, V>" },
+        { "visibility": "-", "name": "evictionPolicy", "type": "EvictionPolicy" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "get", "params": "K key", "returnType": "V" },
+        { "visibility": "+", "name": "put", "params": "K key, V val", "returnType": "void" }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "dll", "target": "node", "type": "composition", "label": "contains" },
+    { "id": "e2", "source": "lrupolicy", "target": "evictionpolicy", "type": "implements" },
+    { "id": "e3", "source": "lrupolicy", "target": "dll", "type": "has-a" },
+    { "id": "e4", "source": "cache", "target": "evictionpolicy", "type": "has-a" }
+  ]
+}

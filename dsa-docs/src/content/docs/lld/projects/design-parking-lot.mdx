@@ -5,6 +5,9 @@ sidebar:
   order: 1
 ---
 
+import ClassDiagram from '../../../../components/system-design/ClassDiagram.jsx';
+import parkingLotSchema from '../../../../data/system-design/class-diagrams/parking-lot.json';
+
 ## Project 1 — Design Parking Lot
 
 **Problem:** Design a parking lot system that manages multiple floors, different spot types, vehicle entry/exit, and fee calculation.
@@ -25,66 +28,11 @@ sidebar:
 
 ### Class Design
 
-```mermaid
-classDiagram
-    class ParkingLot {
-        -floors: ParkingFloor[]
-        +getInstance(): ParkingLot
-        +parkVehicle(type: SpotType): Ticket
-        +removeVehicle(ticket: Ticket): number
-        +getAvailability(): AvailabilityReport
-    }
-    class ParkingFloor {
-        -floorNumber: int
-        -spots: ParkingSpot[]
-        +addSpot(spot: ParkingSpot): void
-        +findAvailableSpot(type: SpotType): ParkingSpot
-        +getAvailableSpots(): Map~SpotType, int~
-    }
-    class ParkingSpot {
-        +id: string
-        +type: SpotType
-        -isOccupied: boolean
-        +park(): void
-        +removeVehicle(): void
-    }
-    class Vehicle {
-        +licensePlate: string
-        +type: VehicleType
-    }
-    class Ticket {
-        +id: string
-        +entryTime: Date
-        +exitTime: Date
-        +spot: ParkingSpot
-        +calculateFee(strategy: FeeStrategy): number
-    }
-    class SpotType {
-        <<enumeration>>
-        COMPACT LARGE HANDICAPPED MOTORCYCLE
-    }
-    class VehicleType {
-        <<enumeration>>
-        CAR TRUCK MOTORCYCLE VAN
-    }
-    class FeeStrategy {
-        <<interface>>
-        +calculate(hours: number, spotType: SpotType): number
-    }
-    class HourlyFeeStrategy {
-        +calculate(hours: number, spotType: SpotType): number
-    }
-    class DailyFeeStrategy {
-        +calculate(hours: number, spotType: SpotType): number
-    }
+Hover or drag the classes below to inspect fields, methods, and relationship associations.
 
-    ParkingLot *-- ParkingFloor
-    ParkingFloor *-- ParkingSpot
-    Ticket --> ParkingSpot
-    Ticket --> FeeStrategy
-    FeeStrategy <|.. HourlyFeeStrategy
-    FeeStrategy <|.. DailyFeeStrategy
-```
+<div className="not-prose" style={{ margin: '2rem 0' }}>
+  <ClassDiagram client:only="react" schema={parkingLotSchema} />
+</div>
 
 ---
 

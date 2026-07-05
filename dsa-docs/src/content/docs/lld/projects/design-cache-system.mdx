@@ -5,6 +5,9 @@ sidebar:
   order: 15
 ---
 
+import ClassDiagram from '../../../../components/system-design/ClassDiagram.jsx';
+import cacheSchema from '../../../../data/system-design/class-diagrams/cache-system.json';
+
 ## Project 15 — Design Cache System
 
 **Problem:** Design an in-memory cache system supporting multiple eviction policies (LRU, LFU), TTL, and concurrent access.
@@ -26,61 +29,11 @@ sidebar:
 
 ### Class Design
 
-```mermaid
-classDiagram
-    class Cache {
-        -evictionPolicy: EvictionPolicy
-        -storage: Map~string, CacheEntry~
-        -capacity: int
-        -ttl: int
-        +get(key: string): any
-        +put(key: string, value: any): void
-        +delete(key: string): void
-        +clear(): void
-        +size(): int
-    }
-    class CacheEntry {
-        +key: string
-        +value: any
-        +createdAt: Date
-        +lastAccessedAt: Date
-        +accessCount: int
-        +isExpired(ttl: int): boolean
-    }
-    class EvictionPolicy {
-        <<interface>>
-        +recordAccess(key: string): void
-        +evictKey(): string
-        +removeKey(key: string): void
-    }
-    class LRUPolicy {
-        -accessOrder: LinkedList~string~
-        +recordAccess(key: string): void
-        +evictKey(): string
-        +removeKey(key: string): void
-    }
-    class LFUPolicy {
-        -frequencyMap: Map~int, LinkedList~string~~
-        -minFrequency: int
-        +recordAccess(key: string): void
-        +evictKey(): string
-        +removeKey(key: string): void
-    }
-    class LinkedList~T~ {
-        -head: Node~T~
-        -tail: Node~T~
-        +addToHead(data: T): Node
-        +removeNode(node: Node): void
-        +removeTail(): T
-    }
+Hover or drag the classes below to inspect fields, methods, and relationship associations.
 
-    Cache --> EvictionPolicy
-    Cache *-- CacheEntry
-    EvictionPolicy <|.. LRUPolicy
-    EvictionPolicy <|.. LFUPolicy
-    LRUPolicy --> LinkedList
-    LFUPolicy --> LinkedList
-```
+<div className="not-prose" style={{ margin: '2rem 0' }}>
+  <ClassDiagram client:only="react" schema={cacheSchema} />
+</div>
 
 ---
 
