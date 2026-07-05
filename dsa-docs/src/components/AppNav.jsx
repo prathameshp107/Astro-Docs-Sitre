@@ -3,6 +3,8 @@ import ThemeToggle from './ThemeToggle.jsx';
 import GlobalSearch from './GlobalSearch.jsx';
 import { FaGithub } from "react-icons/fa";
 import { Binary, Search } from "lucide-react";
+import AuthProvider from './auth/AuthProvider.jsx';
+import AuthButton from './auth/AuthButton.jsx';
 import {
   DiHtml5,
   DiCss3,
@@ -306,43 +308,46 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   if (showOnStarlight) {
     // Minimal version for Starlight docs pages (just brand + theme + back link)
     return (
-      <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
-        <nav className="app-nav" role="navigation" aria-label="Site navigation">
-          <div className="app-nav-inner">
-            <a href={base} className="app-nav-brand" aria-label="Home">
-              <span className="app-nav-logo">
-                <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                  <defs>
-                    <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#6366f1" />
-                      <stop offset="100%" stopColor="#8b5cf6" />
-                    </linearGradient>
-                  </defs>
-                  <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
-                  <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
-                </svg>
-              </span>
-              <span className="app-nav-brand-text">DSA & Dev Notes</span>
-            </a>
-            <div className="app-nav-links">
-              <a href={base} className="app-nav-link app-nav-link-ghost">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                <span>Back to App</span>
+      <AuthProvider>
+        <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
+          <nav className="app-nav" role="navigation" aria-label="Site navigation">
+            <div className="app-nav-inner">
+              <a href={base} className="app-nav-brand" aria-label="Home">
+                <span className="app-nav-logo">
+                  <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                    <defs>
+                      <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#6366f1" />
+                        <stop offset="100%" stopColor="#8b5cf6" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
+                    <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
+                  </svg>
+                </span>
+                <span className="app-nav-brand-text">DSA & Dev Notes</span>
               </a>
-              <ThemeToggle />
+              <div className="app-nav-links">
+                <a href={base} className="app-nav-link app-nav-link-ghost">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                  </svg>
+                  <span>Back to App</span>
+                </a>
+                <ThemeToggle />
+              </div>
             </div>
-          </div>
-        </nav>
-      </div>
+          </nav>
+        </div>
+      </AuthProvider>
     );
   }
 
   return (
-    <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
+    <AuthProvider>
+      <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
       <nav className="app-nav" role="navigation" aria-label="Site navigation">
         <div className="app-nav-inner">
           {/* Brand */}
@@ -390,6 +395,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
                 Start Learning
               </a>
             )}
+            <AuthButton />
             <a
               href="https://github.com/prathameshp107/DSA-Notes-Problems"
               target="_blank"
@@ -492,6 +498,9 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
             })}
             <div className="app-nav-mobile-divider" />
             <div className="app-nav-mobile-actions">
+              <div className="px-4 py-2 flex justify-start">
+                <AuthButton />
+              </div>
               <button
                 type="button"
                 className="app-nav-mobile-link"
@@ -520,5 +529,6 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
         )}
       </nav>
     </div>
+    </AuthProvider>
   );
 }

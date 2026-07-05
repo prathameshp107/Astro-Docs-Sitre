@@ -14,13 +14,20 @@ export const useJudgeStore = create(
         set((state) => ({
           drafts: {
             ...state.drafts,
-            [problemId]: { ...state.drafts[problemId], [lang]: code },
+            [problemId]: {
+              ...state.drafts[problemId],
+              [lang]: { code, timestamp: Date.now() },
+            },
           },
         })),
 
       getDraft: (problemId, lang, fallback) => {
         const draft = get().drafts[problemId];
-        return draft && typeof draft[lang] === "string" ? draft[lang] : fallback;
+        if (!draft) return fallback;
+        const entry = draft[lang];
+        if (typeof entry === "string") return entry;
+        if (entry && typeof entry === "object" && typeof entry.code === "string") return entry.code;
+        return fallback;
       },
 
       recordSubmission: (problemId, entry) =>

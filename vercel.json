@@ -4,6 +4,10 @@
   "outputDirectory": "dsa-docs/dist",
   "rewrites": [
     {
+      "source": "/u/:username",
+      "destination": "/u/placeholder"
+    },
+    {
       "source": "/DSA-Notes-Problems/:path*",
       "destination": "/:path*"
     }
