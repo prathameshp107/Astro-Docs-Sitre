@@ -1,0 +1,49 @@
+{
+  "id": "amazon",
+  "name": "Amazon",
+  "region": ["us", "india"],
+  "type": "product",
+  "difficulty": 4,
+  "rounds": [
+    {
+      "name": "Online Assessment",
+      "duration": "105 min",
+      "tests": ["2 DSA problems", "work simulation"],
+      "tips": "Practice speed and correctness on LeetCode Mediums. The work simulation section is extremely important — align your answers strictly with Customer Obsession and Bias for Action."
+    },
+    {
+      "name": "Technical Phone Screen",
+      "duration": "60 min",
+      "tests": ["1-2 DSA questions", "1 Leadership Principle question"],
+      "tips": "Start coding only after clarifying constraints and walking through an example. Leave 10 minutes at the end for behavioral questions, and explain your thought process out loud."
+    },
+    {
+      "name": "Onsite Loop — Coding",
+      "duration": "4 rounds x 60 min",
+      "tests": ["1-2 DSA + LP behavioral questions per round"],
+      "tips": "Amazon onsite loops weave LPs into coding rounds. Expect questions like 'Tell me about a time you had to deliver under pressure' alongside your graph/tree questions."
+    },
+    {
+      "name": "Onsite Loop — System Design",
+      "duration": "60 min",
+      "tests": ["System Architecture (HLD/LLD) + LPs"],
+      "tips": "Focus on horizontal scaling, load balancing, and db sharding. Be ready to justify architectural decisions using trade-offs."
+    }
+  ],
+  "distinctives": [
+    "Every round (even pure coding) allocates 15-20 minutes for Amazon's 16 Leadership Principles (LPs).",
+    "One interviewer is a designated 'Bar Raiser' who focuses entirely on cultural alignment and long-term potential.",
+    "Coding questions focus heavily on Trees, Graphs, Heap/Priority Queues, and Dynamic Programming."
+  ],
+  "problemFrequency": {
+    "two-sum": "high",
+    "lru-cache": "high",
+    "number-of-islands": "high",
+    "valid-parentheses": "medium",
+    "coin-change": "medium"
+  },
+  "planRef": "company-amazon",
+  "behavioralStyle": "amazon",
+  "levelsNote": "SDE I (L4) · SDE II (L5) · SDE III (L6) · Principal (L7)",
+  "sources": ["https://amazon.jobs", "https://levels.fyi"]
+}

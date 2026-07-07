@@ -23,6 +23,18 @@ function compareOutputs(actual, expected, mode) {
   }
   if (mode === "anyValid") {
     if (typeof expected === "string") {
+      // SECURITY WARNING: Running dynamic code from expected validator string.
+      // Guard: Ensure validator string doesn't contain malicious patterns to prevent code injection
+      // if test definitions are ever loaded from a remote/untrusted source.
+      const blockedPatterns = [
+        /postMessage/i, /onmessage/i, /self/i, /globalThis/i, /window/i,
+        /eval/i, /Function/i, /importScripts/i, /Worker/i, /fetch/i,
+        /XMLHttpRequest/i, /constructor/i, /prototype/i, /__proto__/i
+      ];
+      if (blockedPatterns.some(pattern => pattern.test(expected))) {
+        return false;
+      }
+
       try {
         // Create a function from the string and call it with the actual value
         // The expected string should be a function body that returns boolean

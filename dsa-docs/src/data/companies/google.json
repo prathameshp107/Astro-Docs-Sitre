@@ -1,0 +1,42 @@
+{
+  "id": "google",
+  "name": "Google",
+  "region": ["us", "india"],
+  "type": "product",
+  "difficulty": 5,
+  "rounds": [
+    {
+      "name": "Technical Phone Screen",
+      "duration": "45 min",
+      "tests": ["1 complex DSA question"],
+      "tips": "Focus on writing modular, readable code. Talk through your design before typing, and expect to walk through dry runs with custom input cases."
+    },
+    {
+      "name": "Onsite Loop — Coding",
+      "duration": "3-4 rounds x 45 min",
+      "tests": ["DSA + progressive follow-up constraints"],
+      "tips": "Expect the interviewer to add layers of constraints (e.g. 'What if data doesn't fit in RAM?' or 'What if reads are 99% of traffic?'). Keep your code modular so it is easy to adapt."
+    },
+    {
+      "name": "Onsite Loop — Googlyness",
+      "duration": "45 min",
+      "tests": ["GCA (General Cognitive Ability) & behavioral fit"],
+      "tips": "Showcase how you navigate ambiguity, resolve technical disagreements constructively, and demonstrate humble, inclusive leadership."
+    }
+  ],
+  "distinctives": [
+    "Google interviewers rarely use standard LeetCode questions; they author unique variations that test fundamental problem-solving.",
+    "Rigor: High evaluation weight is placed on math-like precision, edge-case proofing, and strict Big-O proof.",
+    "Progressive follow-ups: Evaluates how fast you can adapt your data structures to scale."
+  ],
+  "problemFrequency": {
+    "longest-substring-without-repeating": "high",
+    "search-rotated-array": "high",
+    "valid-sudoku": "medium",
+    "binary-search": "medium"
+  },
+  "planRef": "company-google",
+  "behavioralStyle": "google",
+  "levelsNote": "SWE II (L3) · Senior (L5) · Staff (L6) · Principal (L7+)",
+  "sources": ["https://careers.google.com", "https://levels.fyi"]
+}

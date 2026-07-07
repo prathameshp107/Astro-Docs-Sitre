@@ -14,5 +14,5 @@ export function getJudgeProblemById(id) {
 }
 
 export function getJudgeManifest() {
-  return PROBLEMS.map(({ id, title, difficulty, topics }) => ({ id, title, difficulty, topics }));
+  return PROBLEMS.map(({ id, title, difficulty, topics, companies }) => ({ id, title, difficulty, topics, companies }));
 }

@@ -1,0 +1,1504 @@
+{
+  "questions": [
+    {
+      "id": "conflict-01",
+      "question": "Tell me about a time you had a conflict with a teammate. How did you resolve it?",
+      "category": "conflict",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior answers show they addressed the root cause (a process gap, unclear ownership) rather than just smoothing over one incident, and that they kept the relationship intact afterward.",
+      "whatTheyWant": "Can you disagree with someone and still work productively with them? Do you go to the person directly, or escalate/avoid?",
+      "rubric": [
+        "Went to the person directly and privately before escalating",
+        "Focused on the issue/behavior, not the person's character",
+        "Names a concrete, lasting outcome (changed process, repaired relationship)"
+      ],
+      "failureModes": [
+        "Blames the teammate with no self-reflection",
+        "Vague — no specific incident, no specific resolution",
+        "Resolution was just 'we agreed to disagree' with no real outcome"
+      ],
+      "sampleAnswers": {
+        "strong": "A teammate and I disagreed over who owned a flaky test suite. I asked for 15 minutes 1:1, we mapped out who touched the code last, agreed on clear ownership going forward, and I wrote it into the team's onboarding doc so it wouldn't recur.",
+        "weak": "We just didn't get along on a project, but I stayed professional and it eventually blew over.",
+        "weakWhy": "No specific incident, no action taken, no measurable resolution — sounds like passive waiting, not conflict resolution."
+      }
+    },
+    {
+      "id": "conflict-02",
+      "question": "Describe a situation where you disagreed with a peer on a technical approach.",
+      "category": "conflict",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior answers use data or a prototype to resolve the disagreement objectively, not just seniority or persistence, and are explicit about what would have changed their mind.",
+      "whatTheyWant": "Do you argue with evidence, or with volume? Can you lose a technical argument gracefully?",
+      "rubric": [
+        "Used data, a spike, or a prototype to settle the disagreement",
+        "Stated clearly what evidence would change their position",
+        "Committed fully once a decision was made, even if it wasn't their preferred approach"
+      ],
+      "failureModes": [
+        "Won the argument through seniority/persistence, not evidence",
+        "Kept relitigating the decision after it was made",
+        "No mention of how the disagreement was actually settled"
+      ],
+      "sampleAnswers": {
+        "strong": "I wanted to use a queue-based approach, a peer wanted synchronous calls for simplicity. We timeboxed a half-day spike on both, load-tested them, and the queue version handled 3x the throughput — so we went with it and I documented why for the next debate.",
+        "weak": "I explained why my approach was better and eventually they came around.",
+        "weakWhy": "No evidence, no process — sounds like the disagreement was won by wearing the other person down."
+      }
+    },
+    {
+      "id": "conflict-03",
+      "question": "Tell me about a time you had to keep working closely with someone whose working style clashed with yours.",
+      "category": "conflict",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates adapt their own style deliberately (e.g. writing things down for an async-preferring teammate) rather than expecting the other person to change.",
+      "whatTheyWant": "Meta cares about moving fast with diverse working styles — can you adapt without losing velocity or resenting the other person?",
+      "rubric": [
+        "Identified the specific style mismatch (pace, communication medium, planning depth)",
+        "Adapted their own behavior, not just asked the other person to change",
+        "Team velocity/output didn't suffer"
+      ],
+      "failureModes": [
+        "Frames the other person as simply 'difficult' with no adaptation on their end",
+        "No concrete change in how they worked together",
+        "Complains about the person rather than describing the collaboration fix"
+      ],
+      "sampleAnswers": {
+        "strong": "A teammate liked long design docs before any code; I liked prototyping first. We agreed I'd build a throwaway spike first, then he'd write the doc capturing what we learned — got both speed and clarity, and we used that pattern for the rest of the project.",
+        "weak": "They were very slow and detail-oriented and I'm fast-paced, so it was hard, but I got used to it.",
+        "weakWhy": "No adaptation described, no concrete process, and it reads as mild complaint rather than resolution."
+      }
+    },
+    {
+      "id": "conflict-04",
+      "question": "Have you ever had a conflict with your manager? How did you handle it?",
+      "category": "conflict",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior answers show they raised the issue calmly through the right channel, gave the manager a real chance to respond, and preserved the working relationship regardless of outcome.",
+      "whatTheyWant": "Can you push back on someone with power over your career without being either a pushover or insubordinate?",
+      "rubric": [
+        "Raised the issue directly and calmly, not through gossip or passive resistance",
+        "Separated the disagreement from the relationship — stayed professional",
+        "Names the actual outcome, good or not fully resolved"
+      ],
+      "failureModes": [
+        "Badmouths the manager or is clearly still bitter",
+        "Never actually raised it — just endured silently",
+        "Outcome is implausibly perfect with no friction described"
+      ],
+      "sampleAnswers": {
+        "strong": "My manager wanted to cut QA time on a release; I was worried about risk. I asked for 10 minutes, laid out the specific failure scenarios and their likely cost, and we agreed to keep one day of QA and monitor closely post-launch. It shipped clean.",
+        "weak": "My manager was wrong about something but I didn't want to make waves so I just did what he said.",
+        "weakWhy": "Describes avoidance, not conflict handling — doesn't answer the question asked."
+      }
+    },
+    {
+      "id": "conflict-05",
+      "question": "Tell me about a time you had to rebuild trust with a colleague after a conflict.",
+      "category": "conflict",
+      "companyStyle": "amazon",
+      "principle": "Earn Trust",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior answers show sustained, small consistent actions over time to rebuild trust, not a single grand gesture — and acknowledge their own contribution to the original breakdown.",
+      "whatTheyWant": "Earn Trust is about listening, being transparent about mistakes, and treating others with respect even under stress. Can you repair a relationship, not just win a dispute?",
+      "rubric": [
+        "Explicitly owns their part in the original breakdown",
+        "Describes specific, repeated actions taken to rebuild trust, not just an apology",
+        "Relationship demonstrably improved afterward with evidence"
+      ],
+      "failureModes": [
+        "One-sided account where the other person is entirely at fault",
+        "Trust rebuilding described as a single apology with no follow-through",
+        "No evidence the relationship actually improved"
+      ],
+      "sampleAnswers": {
+        "strong": "I'd dismissed a colleague's concern about a migration risk, and it bit us. I acknowledged I was wrong in front of the team, then made a point of looping her into every risk review for the next quarter and acting visibly on her input — she later asked to pair with me on the next big migration.",
+        "weak": "I apologized and things got better after that.",
+        "weakWhy": "No ownership specifics, no sustained action, no evidence of the trust actually returning."
+      }
+    },
+    {
+      "id": "conflict-06",
+      "question": "Tell me about a time you helped resolve a conflict between two other people on your team.",
+      "category": "conflict",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates get both sides talking to each other directly rather than positioning themselves as the sole mediator or decision-maker.",
+      "whatTheyWant": "Googleyness/collaboration — do you help the team function even when you're not personally involved in the dispute?",
+      "rubric": [
+        "Stayed neutral and got both parties to state their actual underlying concern",
+        "Facilitated rather than dictated the resolution",
+        "Names a concrete outcome the two people arrived at together"
+      ],
+      "failureModes": [
+        "Took sides and just backed the person they agreed with",
+        "Vague 'I helped them talk it out' with no method or outcome",
+        "Inserted themselves as the decision-maker rather than facilitator"
+      ],
+      "sampleAnswers": {
+        "strong": "Two teammates were at odds over a schema change — one wanted speed, one wanted correctness. I asked each what they were actually worried about, realized it was a timeline miscommunication, and got them to agree on a phased rollout that satisfied both concerns directly with each other, not through me.",
+        "weak": "I told them both to calm down and be professional and they worked it out.",
+        "weakWhy": "No facilitation method, no understanding of the actual disagreement, no concrete outcome."
+      }
+    },
+    {
+      "id": "failure-01",
+      "question": "Tell me about your biggest professional failure.",
+      "category": "failure",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior answers pick a failure with real stakes (not trivial), own it without excuses, and describe a systemic fix — not just a personal lesson.",
+      "whatTheyWant": "Self-awareness and growth from failure — will you own mistakes honestly, or deflect blame?",
+      "rubric": [
+        "Picks a real failure with genuine consequences, not a disguised humble-brag",
+        "Takes clear personal ownership without blaming others",
+        "Describes a specific, lasting change made afterward"
+      ],
+      "failureModes": [
+        "'Failure' is actually a strength in disguise (\"I worked too hard\")",
+        "Blames tools, teammates, or circumstances more than self",
+        "No concrete change afterward — just \"I learned to be more careful\""
+      ],
+      "sampleAnswers": {
+        "strong": "I pushed a config change directly to production without a staging test to save time before a deadline — it took down checkout for 20 minutes. I owned it immediately, wrote the postmortem, and got a staging-gate added to the deploy pipeline so it couldn't happen again.",
+        "weak": "I sometimes take on too much work because I care so much about quality.",
+        "weakWhy": "Classic disguised-strength answer — no real failure, no ownership, no fix."
+      }
+    },
+    {
+      "id": "failure-02",
+      "question": "Tell me about a project that didn't go as planned.",
+      "category": "failure",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates distinguish between what was foreseeable and what wasn't, and show they now build in checkpoints to catch this class of problem earlier.",
+      "whatTheyWant": "How do you react when reality diverges from the plan — panic, blame, or adapt?",
+      "rubric": [
+        "Identifies the specific point where the plan diverged from reality",
+        "Describes the adaptation made in-flight, not just after the fact",
+        "Names what they'd do differently or what process now catches it earlier"
+      ],
+      "failureModes": [
+        "No clear divergence point identified — just generic \"things were hard\"",
+        "No adaptation, just endurance until it was over",
+        "No forward-looking process change"
+      ],
+      "sampleAnswers": {
+        "strong": "We planned a 3rd-party API integration assuming stable rate limits; two weeks in, the vendor throttled us to 1/10th the expected rate. I redesigned around a caching layer and batch requests, added a fallback path, and we now do a rate-limit stress test before committing to any vendor integration.",
+        "weak": "The project ran late because requirements kept changing, but we eventually got it done.",
+        "weakWhy": "No specifics on the divergence, no description of an adaptation, no lasting change."
+      }
+    },
+    {
+      "id": "failure-03",
+      "question": "Tell me about a time you shipped something with a bug that impacted customers.",
+      "category": "failure",
+      "companyStyle": "amazon",
+      "principle": "Insist on the Highest Standards",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior answers show they raised the bar afterward for everyone, not just themselves — a new check, a new review step, a new alert.",
+      "whatTheyWant": "Do you catch your own quality gaps and raise the bar, or just quietly move past defects?",
+      "rubric": [
+        "Names the actual customer impact honestly, without minimizing it",
+        "Took fast, direct action to contain and fix it",
+        "Introduced a standard/check that prevents the same class of bug"
+      ],
+      "failureModes": [
+        "Minimizes the impact (\"it was a small thing, barely anyone noticed\")",
+        "No containment action described, jumps straight to \"we fixed it\"",
+        "No lasting quality-bar improvement"
+      ],
+      "sampleAnswers": {
+        "strong": "A rounding bug in a discount calculator overcharged a small number of customers for two days before a support ticket flagged it. I refunded everyone affected same-day, added a reconciliation job that flags totals outside expected bounds, and made it a required check for any pricing-logic change going forward.",
+        "weak": "We had a bug in production once but support handled the tickets and we patched it in the next release.",
+        "weakWhy": "No ownership of the fix, no urgency, no lasting standard raised."
+      }
+    },
+    {
+      "id": "failure-04",
+      "question": "Tell me about a time you moved too fast and it caused a problem.",
+      "category": "failure",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates don't conclude \"so I should move slower\" — they identify the specific missing guardrail that lets them keep moving fast safely.",
+      "whatTheyWant": "Meta values speed — but do you learn the right lesson from a speed-related mistake, rather than becoming slow and risk-averse?",
+      "rubric": [
+        "Names the specific corner cut and its consequence",
+        "Fixed the immediate problem quickly",
+        "Adds a guardrail that preserves speed rather than abandoning it"
+      ],
+      "failureModes": [
+        "Learns the wrong lesson: \"I now go slower and more carefully\" with no specific mechanism",
+        "No real consequence described",
+        "Blames the culture of moving fast rather than their own judgment call"
+      ],
+      "sampleAnswers": {
+        "strong": "I skipped writing a migration rollback script to save an hour before a release; the migration failed halfway and we had a rough two hours of manual cleanup. I still ship fast, but now every migration gets an auto-generated rollback script as a template — the guardrail, not the speed, was missing.",
+        "weak": "I learned that I need to slow down and double-check things before shipping.",
+        "weakWhy": "Vague, no specific guardrail, sounds like abandoning speed rather than fixing the actual gap."
+      }
+    },
+    {
+      "id": "failure-05",
+      "question": "Tell me about a time you missed a deadline.",
+      "category": "failure",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior answers show they flagged the risk early rather than hoping to catch up silently, and negotiated scope/timeline proactively instead of missing it silently.",
+      "whatTheyWant": "Do you communicate risk early, or hide it and hope for the best?",
+      "rubric": [
+        "Flagged the risk as soon as it was known, not at the deadline itself",
+        "Gave stakeholders options (cut scope, extend, add help) rather than just an apology",
+        "Names what changed in their estimation/communication process afterward"
+      ],
+      "failureModes": [
+        "Deadline miss discovered by others, not proactively flagged",
+        "No options given to stakeholders — just \"I was late\"",
+        "No change to estimation or communication habits afterward"
+      ],
+      "sampleAnswers": {
+        "strong": "Two weeks into a four-week project I realized a dependency would push us a week late. I flagged it immediately with three options — cut a feature, add a contractor, or slip the date — and the PM chose to cut scope. Now I do a formal risk check-in at the 25% mark on every project.",
+        "weak": "I underestimated how long the work would take and it came in a few days late.",
+        "weakWhy": "No proactive flag, no options given, no lasting process change."
+      }
+    },
+    {
+      "id": "failure-06",
+      "question": "Tell me about a time you made a mistake that affected your team's trust in you.",
+      "category": "failure",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates rebuild trust through visible, verifiable behavior change over weeks, not a single conversation.",
+      "whatTheyWant": "Trust and psychological safety matter at Google — can you repair damage to your credibility with the team?",
+      "rubric": [
+        "Names specifically how the trust was damaged",
+        "Took a direct, transparent approach to acknowledging it with the team",
+        "Describes concrete, sustained behavior change that rebuilt credibility"
+      ],
+      "failureModes": [
+        "Downplays that trust was actually damaged",
+        "Rebuilding trust described as a single reassurance, not sustained proof",
+        "No specific evidence trust was actually restored"
+      ],
+      "sampleAnswers": {
+        "strong": "I gave an overconfident estimate that turned out to be off by 3x, and the team started double-checking my numbers. I started showing my estimation math openly in planning and flagging uncertainty explicitly, and within two sprints people stopped re-verifying my estimates.",
+        "weak": "I made an error and people were a little annoyed, but it blew over after a while.",
+        "weakWhy": "No specifics on the trust damage, no concrete rebuilding action, no evidence of resolution."
+      }
+    },
+    {
+      "id": "leadership-01",
+      "question": "Tell me about a time you led a project without being the manager.",
+      "category": "leadership",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates describe how they got buy-in and delegated, not just did the most work themselves.",
+      "whatTheyWant": "Can you drive outcomes through influence rather than authority?",
+      "rubric": [
+        "Explains how they got the team aligned without formal power",
+        "Delegated and coordinated rather than doing everything solo",
+        "Names a measurable project outcome"
+      ],
+      "failureModes": [
+        "Sounds like they just did all the work alone and called it \"leading\"",
+        "No mention of how buy-in was earned from peers",
+        "No measurable outcome"
+      ],
+      "sampleAnswers": {
+        "strong": "No one owned a cross-cutting perf initiative, so I wrote a one-page plan, got two teammates to each own a slice, ran weekly 15-minute syncs, and we cut page load 40% in six weeks without anyone being assigned by a manager.",
+        "weak": "I took charge of a project and made sure it got done on time.",
+        "weakWhy": "No detail on how influence/alignment was achieved, no measurable result."
+      }
+    },
+    {
+      "id": "leadership-02",
+      "question": "Tell me about a time you mentored or developed a junior engineer.",
+      "category": "leadership",
+      "companyStyle": "amazon",
+      "principle": "Hire and Develop the Best",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates tailor their mentoring approach to the individual and can point to the mentee's growth in their own words or actions, not just \"they improved.\"",
+      "whatTheyWant": "Do you invest in growing others, and can you show it moved the needle for that person specifically?",
+      "rubric": [
+        "Identifies a specific growth gap in the mentee",
+        "Describes a tailored approach (not generic advice)",
+        "Names a concrete change in the mentee's skill or confidence afterward"
+      ],
+      "failureModes": [
+        "Generic \"I helped them whenever they had questions\" with no structure",
+        "Takes all the credit, mentee sounds passive",
+        "No evidence of actual growth"
+      ],
+      "sampleAnswers": {
+        "strong": "A junior engineer was strong technically but froze in code reviews. I started pairing on reviews, having her draft comments first and walking through my reasoning after, and within two months she was running reviews independently and later mentored the next hire herself.",
+        "weak": "I answered a lot of questions from a junior teammate and tried to be a good resource.",
+        "weakWhy": "No specific gap, no method, no measurable growth in the mentee."
+      }
+    },
+    {
+      "id": "leadership-03",
+      "question": "Tell me about a time you pushed for a bigger, bolder solution than what was originally proposed.",
+      "category": "leadership",
+      "companyStyle": "amazon",
+      "principle": "Think Big",
+      "levels": ["senior"],
+      "seniorNote": "This question is calibrated for senior candidates — the bar is a solution with real scope and business impact, not a minor scope increase.",
+      "whatTheyWant": "Do you default to the safe, incremental option, or do you push the team toward more ambitious, higher-leverage solutions when justified?",
+      "rubric": [
+        "Original proposal was genuinely small/safe, and the bigger version had real justification",
+        "Explains how they built the case and got others on board",
+        "Names the larger impact actually achieved"
+      ],
+      "failureModes": [
+        "\"Bigger\" idea was actually just slightly larger scope, not a real step-change",
+        "No description of how buy-in was won for the bigger bet",
+        "No evidence the bigger bet paid off"
+      ],
+      "sampleAnswers": {
+        "strong": "The team proposed patching a one-off reporting script; I made the case for a proper internal analytics platform instead, prototyped a slice in a weekend to show feasibility, got leadership sign-off, and it became the reporting backbone for four other teams within a year.",
+        "weak": "I suggested we add a couple more features to the original plan and people agreed.",
+        "weakWhy": "Not actually a bigger bet, just a scope tweak — doesn't demonstrate Think Big."
+      }
+    },
+    {
+      "id": "leadership-04",
+      "question": "Describe a time you had to motivate a team through a difficult period.",
+      "category": "leadership",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior answers name the specific morale problem and a specific, non-generic intervention — not just \"I stayed positive.\"",
+      "whatTheyWant": "Can you read team morale and act on it, not just push harder yourself?",
+      "rubric": [
+        "Names the specific cause of low morale (burnout, repeated setbacks, unclear direction)",
+        "Took a concrete, targeted action, not just cheerleading",
+        "Team outcome improved measurably (delivery, retention, engagement)"
+      ],
+      "failureModes": [
+        "Vague \"I kept everyone's spirits up\" with no mechanism",
+        "Takes sole credit for team recovery with no team perspective",
+        "No measurable improvement"
+      ],
+      "sampleAnswers": {
+        "strong": "After a third failed launch attempt morale was low and people stopped speaking up in standups. I ran a blameless retro focused only on systemic causes, we fixed the top two, and I made a point of publicly crediting small wins each week — standup participation and on-time delivery both recovered within a month.",
+        "weak": "The team was down after a rough sprint, so I tried to keep things positive and it worked out.",
+        "weakWhy": "No specific cause, no specific action, no measurable result."
+      }
+    },
+    {
+      "id": "leadership-05",
+      "question": "Tell me about a time you made a fast decision as the de facto leader of a project.",
+      "category": "leadership",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates show they made the call with a clear time-box and communicated the decision and reasoning immediately, not just acted unilaterally.",
+      "whatTheyWant": "Meta values decisive action without waiting for consensus — can you make a good call under time pressure and own it?",
+      "rubric": [
+        "Decision had a genuine time constraint that justified speed over consensus",
+        "Communicated the decision and reasoning to the team immediately",
+        "Names the outcome and whether it held up"
+      ],
+      "failureModes": [
+        "No real time pressure — decision could have waited for input",
+        "Made the call silently, team found out after the fact with no explanation",
+        "No reflection on whether the fast call was actually right"
+      ],
+      "sampleAnswers": {
+        "strong": "Our primary vendor had an outage two hours before a launch; I decided on the spot to fail over to the backup provider rather than delay, posted the decision and reasoning in our channel immediately, and we launched on time with one minor cosmetic issue we fixed post-launch.",
+        "weak": "I made the call to change our approach quickly and it worked out fine.",
+        "weakWhy": "No detail on the time pressure, no communication described, no real outcome."
+      }
+    },
+    {
+      "id": "leadership-06",
+      "question": "Tell me about a time you demonstrated leadership without formal authority.",
+      "category": "leadership",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates show they made others more effective, not just themselves — the mark of Googleyness leadership.",
+      "whatTheyWant": "Googleyness rewards leadership that emerges from peers wanting to follow you, not title.",
+      "rubric": [
+        "No formal authority in the situation — this must be explicit",
+        "Others visibly adopted their direction voluntarily",
+        "Describes impact on the team, not just personal output"
+      ],
+      "failureModes": [
+        "Actually had some formal authority (tech lead, senior title) undermining the premise",
+        "No evidence others actually followed — just personal initiative",
+        "Impact framed only in terms of the narrator's own work"
+      ],
+      "sampleAnswers": {
+        "strong": "As the newest and most junior person on the team, I noticed our on-call docs were outdated and confusing. I rewrote them, walked two senior engineers through the new format, and within a month the whole team was using and contributing to them without being asked.",
+        "weak": "I try to set a good example at work and people generally respect that.",
+        "weakWhy": "No specific situation, no evidence others followed, nothing measurable."
+      }
+    },
+    {
+      "id": "ambiguity-01",
+      "question": "Tell me about a time you had to start a project with unclear requirements.",
+      "category": "ambiguity",
+      "companyStyle": "amazon",
+      "principle": "Invent and Simplify",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates proactively define the requirements themselves through research/prototyping rather than waiting to be told, and simplify scope rather than gold-plating.",
+      "whatTheyWant": "Can you create structure and move forward when nobody has fully defined the problem for you?",
+      "rubric": [
+        "Took concrete steps to reduce ambiguity (talked to stakeholders, prototyped, researched)",
+        "Made and documented reasonable assumptions rather than stalling",
+        "Simplified scope to the smallest version that delivered value"
+      ],
+      "failureModes": [
+        "Waited passively for someone else to clarify everything",
+        "Built something over-scoped based on unstated assumptions",
+        "No documentation of the assumptions made, causing later confusion"
+      ],
+      "sampleAnswers": {
+        "strong": "I was asked to 'improve onboarding' with no further detail. I interviewed five recently onboarded engineers, found time-to-first-commit was the real pain point, wrote a one-pager scoping just that, and shipped a fix in two weeks instead of a months-long broad overhaul.",
+        "weak": "The requirements were unclear so I just did my best interpretation and it worked out.",
+        "weakWhy": "No concrete steps taken to reduce the ambiguity, no documented assumptions."
+      }
+    },
+    {
+      "id": "ambiguity-02",
+      "question": "Describe a time the goalposts moved mid-project.",
+      "category": "ambiguity",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates re-negotiate scope/timeline explicitly when goals shift, rather than silently absorbing the extra work.",
+      "whatTheyWant": "Can you adapt to changing goals without either resisting change or silently absorbing scope creep?",
+      "rubric": [
+        "Names the specific change and why it happened",
+        "Re-planned deliberately rather than just working harder to cover the gap",
+        "Communicated the tradeoff of the change to stakeholders"
+      ],
+      "failureModes": [
+        "Change described vaguely with no reason given",
+        "Just absorbed extra scope with no renegotiation, leading to burnout",
+        "No stakeholder communication about the tradeoff"
+      ],
+      "sampleAnswers": {
+        "strong": "Halfway through building a reporting feature, legal required PII redaction that wasn't in the original spec. I re-scoped the timeline with my PM, cut a nice-to-have export format to absorb the new work, and we still launched only three days later than planned.",
+        "weak": "Requirements changed partway through so I adjusted and kept going.",
+        "weakWhy": "No specifics, no renegotiation, no visible tradeoff communicated."
+      }
+    },
+    {
+      "id": "ambiguity-03",
+      "question": "Tell me about a time you had to make a decision with incomplete information.",
+      "category": "ambiguity",
+      "companyStyle": "amazon",
+      "principle": "Bias for Action",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates explicitly calculate the cost of waiting for more information versus deciding now, and choose a reversible action when possible.",
+      "whatTheyWant": "Can you act decisively under uncertainty rather than stalling for perfect information?",
+      "rubric": [
+        "Named the specific missing information and why waiting for it wasn't worth it",
+        "Chose an action that was reversible or low-risk given the uncertainty",
+        "Names the outcome, including any correction made once more information arrived"
+      ],
+      "failureModes": [
+        "Decision was actually made with full information, undermining the premise",
+        "No consideration of reversibility/risk given the uncertainty",
+        "No acknowledgment of what happened once more info came in"
+      ],
+      "sampleAnswers": {
+        "strong": "We didn't know if a new payment provider would handle our peak load, and waiting for their load-test results would cost us a launch window. I chose a feature-flagged rollout to 5% of traffic first — reversible if it failed — and it let us catch a latency issue before a full rollout.",
+        "weak": "I didn't have all the info I wanted but I made a decision and moved forward.",
+        "weakWhy": "No specifics on the missing information, no risk mitigation, no outcome."
+      }
+    },
+    {
+      "id": "ambiguity-04",
+      "question": "Tell me about a time you had to bring structure to an ambiguous problem.",
+      "category": "ambiguity",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates create a framework or artifact (a doc, a decision matrix) that others reuse afterward, not just a one-off decision.",
+      "whatTheyWant": "Structured thinking under ambiguity — Google's interviews look for this heavily.",
+      "rubric": [
+        "Breaks the ambiguous problem into concrete, answerable sub-questions",
+        "Produces an artifact (doc, framework, checklist) others can reuse",
+        "Names the resulting clarity/decision"
+      ],
+      "failureModes": [
+        "No real structuring — just \"I thought about it and figured it out\"",
+        "No reusable artifact produced",
+        "Structure applied but no resulting decision or clarity described"
+      ],
+      "sampleAnswers": {
+        "strong": "Asked to 'fix our flaky CI,' I broke it into failure categories, tallied frequency for two weeks, and built a triage doc ranking fixes by impact/effort. The team used that doc to prioritize the next quarter of CI work without me being involved further.",
+        "weak": "The problem was pretty open-ended so I broke it down into smaller pieces and worked through them.",
+        "weakWhy": "No specifics on the breakdown, no artifact, no lasting reuse."
+      }
+    },
+    {
+      "id": "ambiguity-05",
+      "question": "Tell me about a time priorities changed suddenly and you had to adapt.",
+      "category": "ambiguity",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates protect the team from thrashing by absorbing the ambiguity themselves and giving the team a clear, single new direction.",
+      "whatTheyWant": "Meta reprioritizes often — can you pivot without losing momentum or morale?",
+      "rubric": [
+        "Names the specific sudden change and its cause",
+        "Re-planned quickly with minimal wasted motion",
+        "Kept the team focused on one clear direction rather than confusion"
+      ],
+      "failureModes": [
+        "No specifics on the change or its cause",
+        "Lots of wasted work/thrash described with no mitigation",
+        "Team left confused about direction"
+      ],
+      "sampleAnswers": {
+        "strong": "A competitor launch made leadership pull forward a feature by six weeks mid-sprint. I immediately cut our current sprint to the two items that mattered for the new feature, communicated the single new priority in one message to the team, and we shipped in the compressed window.",
+        "weak": "Priorities shifted and I just went with the flow and adjusted my work.",
+        "weakWhy": "No specifics, no active re-planning, no leadership shown in the pivot."
+      }
+    },
+    {
+      "id": "ambiguity-06",
+      "question": "Tell me about a project you built where there was no existing playbook or precedent.",
+      "category": "ambiguity",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates create the playbook as they go so the next person doesn't face the same ambiguity.",
+      "whatTheyWant": "Can you operate as a pioneer, not just an executor of known patterns?",
+      "rubric": [
+        "Explains what made this genuinely precedent-free, not just new-to-them",
+        "Describes how they de-risked the unknown (small experiments, external research)",
+        "Left something reusable behind for others"
+      ],
+      "failureModes": [
+        "The 'novel' project was actually a well-known pattern they just hadn't seen before",
+        "No de-risking process, just built and hoped",
+        "Nothing documented for future use"
+      ],
+      "sampleAnswers": {
+        "strong": "We were the first team at the company to need real-time multiplayer sync with no internal precedent. I researched three architecture patterns, built small spikes of each, picked CRDT-based sync after testing conflict scenarios, and wrote up the findings as the company's first real-time-systems guide.",
+        "weak": "I built something new that hadn't been done at the company before and figured it out as I went.",
+        "weakWhy": "No detail on de-risking, no reusable artifact left behind."
+      }
+    },
+    {
+      "id": "delivery-deadlines-01",
+      "question": "Tell me about a time you delivered a project under a tight deadline.",
+      "category": "delivery-deadlines",
+      "companyStyle": "amazon",
+      "principle": "Deliver Results",
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates show they protected quality on the critical path while cutting elsewhere, not just worked more hours.",
+      "whatTheyWant": "Can you hit a hard deadline through smart prioritization rather than brute-force overtime alone?",
+      "rubric": [
+        "Names the specific deadline and what made it hard",
+        "Describes deliberate prioritization (what got cut, what stayed)",
+        "Delivered on time with a stated quality bar maintained"
+      ],
+      "failureModes": [
+        "Success attributed only to working long hours, no prioritization shown",
+        "No mention of what was cut or deprioritized",
+        "Vague on whether quality held up"
+      ],
+      "sampleAnswers": {
+        "strong": "We had three weeks to ship a compliance feature for a hard regulatory deadline. I cut the nice-to-have admin UI and focused the team entirely on the core enforcement logic and its tests, and we shipped on time with zero post-launch compliance bugs.",
+        "weak": "We had a tight deadline so everyone worked extra hours and we made it.",
+        "weakWhy": "No prioritization strategy, just effort — doesn't show judgment."
+      }
+    },
+    {
+      "id": "delivery-deadlines-02",
+      "question": "Tell me about a time you had to cut scope to hit a deadline.",
+      "category": "delivery-deadlines",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates make the cut transparently with stakeholders and negotiate what comes back later, rather than quietly dropping scope.",
+      "whatTheyWant": "Can you make hard tradeoffs and communicate them, rather than either missing the deadline or hiding the cut scope?",
+      "rubric": [
+        "Explains the criteria used to decide what to cut",
+        "Communicated the cut transparently to stakeholders before the deadline, not after",
+        "Names what happened to the cut scope afterward (shipped later, dropped, etc.)"
+      ],
+      "failureModes": [
+        "Cut scope silently without telling stakeholders",
+        "No clear criteria for what got cut — seems arbitrary",
+        "No follow-up on what happened to the cut item"
+      ],
+      "sampleAnswers": {
+        "strong": "Two weeks before launch it was clear multi-language support wouldn't make it. I flagged it to the PM immediately with the impact, we agreed to ship English-only and fast-follow the rest, and I had the localization framework ready so the follow-up shipped two weeks later with minimal extra work.",
+        "weak": "We were behind so we just dropped a feature to make the date.",
+        "weakWhy": "No criteria, no stakeholder communication, no resolution of the dropped feature."
+      }
+    },
+    {
+      "id": "delivery-deadlines-03",
+      "question": "Tell me about a time you shipped fast and iterated later.",
+      "category": "delivery-deadlines",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates deliberately scope a real v1 (not a fake demo) and have a concrete plan for what iteration comes next, rather than shipping something half-broken.",
+      "whatTheyWant": "Meta's 'move fast' culture rewards shipping a real, usable v1 quickly — not shipping broken things.",
+      "rubric": [
+        "V1 was genuinely usable, not a broken placeholder",
+        "Explicit plan for what iteration would follow and why it was deferred",
+        "Names the actual iteration that happened afterward"
+      ],
+      "failureModes": [
+        "\"Fast\" version was actually broken/unusable, not a real v1",
+        "No plan for follow-up — iteration never actually happened",
+        "Framed as cutting corners rather than deliberate scoping"
+      ],
+      "sampleAnswers": {
+        "strong": "I shipped a manual CSV-export feature in two days instead of the full automated-reporting pipeline that would've taken three weeks, validated it covered 90% of requests, then built the automated version over the following month based on which exports people actually used most.",
+        "weak": "I shipped something quickly to hit the deadline and then fixed the issues later.",
+        "weakWhy": "Sounds like it shipped broken, not a real deliberate v1, and no clear iteration plan."
+      }
+    },
+    {
+      "id": "delivery-deadlines-04",
+      "question": "Describe a time you were behind schedule and how you got back on track.",
+      "category": "delivery-deadlines",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates diagnose the root cause of the slip (bad estimate, blocked dependency, unclear scope) rather than just working harder to catch up.",
+      "whatTheyWant": "Can you recover from being behind through diagnosis and adjustment, not just panic?",
+      "rubric": [
+        "Diagnoses why the schedule slipped specifically",
+        "Takes a targeted corrective action addressing that root cause",
+        "Ends with the project actually back on track, stated concretely"
+      ],
+      "failureModes": [
+        "No diagnosis of why it slipped, just \"we were behind\"",
+        "Recovery action is just \"worked harder,\" not targeted",
+        "Unclear if the project actually recovered"
+      ],
+      "sampleAnswers": {
+        "strong": "We fell a week behind because a third-party API's docs were wrong and we lost days debugging. Once I traced the root cause, I got direct vendor support access to unblock us fast, reallocated a teammate from a lower-priority task for the final week, and we landed only two days late instead of the projected week.",
+        "weak": "We got behind schedule so we pushed hard in the final days and finished the project.",
+        "weakWhy": "No root-cause diagnosis, no targeted fix, vague on the actual recovery."
+      }
+    },
+    {
+      "id": "delivery-deadlines-05",
+      "question": "Tell me about a time you balanced quality and speed under a deadline.",
+      "category": "delivery-deadlines",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates identify exactly which quality dimensions were non-negotiable and which could flex, rather than treating quality as one monolithic thing.",
+      "whatTheyWant": "Do you have a principled way of deciding where to preserve quality and where to accept debt?",
+      "rubric": [
+        "Distinguishes which quality aspects were protected (correctness, security) vs relaxed (polish, edge cases)",
+        "Deadline was met without violating the protected quality bar",
+        "Names a plan to pay down any accepted debt"
+      ],
+      "failureModes": [
+        "No distinction made — quality treated as all-or-nothing",
+        "Deadline met by silently sacrificing something that should have been protected (e.g. security)",
+        "No plan to address any deliberately accepted debt"
+      ],
+      "sampleAnswers": {
+        "strong": "Under a launch deadline I kept full test coverage and security review non-negotiable, but relaxed the UI polish and deferred edge-case handling for rare inputs, logging a ticket for each. We hit the date with zero correctness bugs and cleaned up the deferred items over the next two sprints.",
+        "weak": "I tried to write good code but also move quickly, and it worked out okay.",
+        "weakWhy": "No specific tradeoff logic, no evidence quality was actually protected anywhere specific."
+      }
+    },
+    {
+      "id": "delivery-deadlines-06",
+      "question": "Tell me about a time you delivered results with limited resources or budget.",
+      "category": "delivery-deadlines",
+      "companyStyle": "amazon",
+      "principle": "Frugality",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates find a creative low-cost substitute for what a bigger budget would have bought, rather than just doing a smaller version of the same plan.",
+      "whatTheyWant": "Frugality is about accomplishing more with less — resourcefulness, not just cost-cutting.",
+      "rubric": [
+        "Names the specific constraint (headcount, budget, tooling)",
+        "Describes a genuinely creative workaround, not just a scaled-down plan",
+        "Result was comparable to what a larger budget would have achieved"
+      ],
+      "failureModes": [
+        "Just did a smaller/worse version of the project, calling it frugal",
+        "No creativity in the workaround described",
+        "Result was clearly inferior with no acknowledgment of the tradeoff"
+      ],
+      "sampleAnswers": {
+        "strong": "We couldn't afford a commercial APM tool, so I built a lightweight monitoring layer on open-source Prometheus/Grafana in a week, tuned to our exact use case — it ended up giving us more relevant alerts than the commercial tool a neighboring team paid for, at zero licensing cost.",
+        "weak": "We didn't have much budget so we just did a simpler version of the project.",
+        "weakWhy": "No creativity or resourcefulness shown, just reduced scope."
+      }
+    },
+    {
+      "id": "disagreement-01",
+      "question": "Tell me about a time you disagreed with your manager's decision.",
+      "category": "disagreement",
+      "companyStyle": "amazon",
+      "principle": "Have Backbone; Disagree and Commit",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates state their disagreement once, clearly and with evidence, then commit fully — no lingering resentment or half-hearted execution.",
+      "whatTheyWant": "Can you voice disagreement respectfully and then execute fully once a decision is made, even against your preference?",
+      "rubric": [
+        "Voiced the disagreement directly and with reasoning/evidence",
+        "Manager made the final call and candidate committed fully afterward",
+        "No lingering resentment or sabotage described — full execution"
+      ],
+      "failureModes": [
+        "Never actually voiced disagreement — passive compliance",
+        "Committed only half-heartedly, undermining the decision after the fact",
+        "Frames the manager as simply wrong with no resolution of the tension"
+      ],
+      "sampleAnswers": {
+        "strong": "My manager wanted to launch a feature without A/B testing to save time; I laid out the risk with data from a similar past launch, she still decided to go without it given the business urgency, so I fully committed, built extra monitoring to compensate, and flagged that I'd log this decision for the retro either way.",
+        "weak": "I didn't agree with a decision my manager made but I went along with it anyway.",
+        "weakWhy": "No evidence of voicing the disagreement, no active commitment — just passive compliance."
+      }
+    },
+    {
+      "id": "disagreement-02",
+      "question": "Tell me about a time you pushed back on a plan you thought was wrong.",
+      "category": "disagreement",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates pick their battles — pushing back on plans with real stakes, not every minor disagreement — and know when to let go.",
+      "whatTheyWant": "Do you speak up when you see a real problem, using judgment about when it matters?",
+      "rubric": [
+        "The plan had a genuine, material flaw worth pushing back on",
+        "Pushback was constructive (alternative proposed), not just criticism",
+        "Names the actual outcome of the pushback"
+      ],
+      "failureModes": [
+        "Pushed back on something trivial, showing poor judgment about what matters",
+        "Pure criticism with no alternative offered",
+        "Outcome of the pushback is unclear or omitted"
+      ],
+      "sampleAnswers": {
+        "strong": "A plan proposed storing user sessions in a way that would break under our expected 10x traffic growth. I raised it with a concrete alternative and a rough load estimate, the team adjusted the design before build started, and we avoided a costly rework six months later when traffic did spike.",
+        "weak": "I thought a plan had some issues so I mentioned my concerns to the team.",
+        "weakWhy": "No specifics on the flaw, no alternative proposed, no outcome."
+      }
+    },
+    {
+      "id": "disagreement-03",
+      "question": "Tell me about a time your judgment turned out to be right despite pushback.",
+      "category": "disagreement",
+      "companyStyle": "amazon",
+      "principle": "Are Right, A Lot",
+      "levels": ["senior"],
+      "seniorNote": "This question is calibrated for senior candidates — the bar is a judgment call with real stakes and a track record, not luck on a small decision.",
+      "whatTheyWant": "Do you have strong, well-calibrated judgment, and can you hold a position under pushback without being stubborn for stubbornness's sake?",
+      "rubric": [
+        "The initial pushback came from credible people, not a strawman",
+        "Explains the actual reasoning/evidence behind their judgment, not just intuition",
+        "Vindication is concrete and measurable"
+      ],
+      "failureModes": [
+        "Pushback came from an easily-dismissed source, making the story feel one-sided",
+        "No real reasoning given — just \"I had a hunch and I was right\"",
+        "Vindication is vague or unverifiable"
+      ],
+      "sampleAnswers": {
+        "strong": "Most of the team wanted to rewrite our data pipeline from scratch; I argued for incremental refactoring based on a cost analysis showing the rewrite would take twice the estimated time given past rewrite history. Leadership sided with the majority at first, the rewrite stalled at month four, and we switched to my incremental plan and finished in six weeks.",
+        "weak": "I had a strong feeling about a decision and it turned out I was right in the end.",
+        "weakWhy": "No reasoning basis for the judgment, no concrete measure of vindication."
+      }
+    },
+    {
+      "id": "disagreement-04",
+      "question": "Tell me about a time you lost an argument at work. How did you handle it?",
+      "category": "disagreement",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates show genuine intellectual honesty — updating their view when the other side had a good point, not just grudging compliance.",
+      "whatTheyWant": "Can you lose gracefully and actually update your thinking, rather than just outwardly complying while inwardly resentful?",
+      "rubric": [
+        "Names what specifically changed their mind or why they still disagreed but committed",
+        "No visible resentment or passive resistance afterward",
+        "Reflects honestly on what they learned from being wrong (if they were)"
+      ],
+      "failureModes": [
+        "No real reflection — sounds like they still think they were right and just complied",
+        "Describes ongoing resentment or subtle sabotage",
+        "Picks a trivial argument with no real stakes"
+      ],
+      "sampleAnswers": {
+        "strong": "I argued we should build a custom auth system for flexibility; a teammate showed data on how much maintenance burden it would create long-term and I realized I'd underweighted that cost. We used the managed service, and I now default to totaling maintenance cost, not just build cost, in these debates.",
+        "weak": "I lost an argument once but I handled it professionally and moved on.",
+        "weakWhy": "No specifics, no evidence of genuine reflection or change in thinking."
+      }
+    },
+    {
+      "id": "disagreement-05",
+      "question": "Tell me about a time you disagreed with a product decision and how you voiced it.",
+      "category": "disagreement",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates bring user data or metrics to the disagreement rather than just personal opinion, and respect the final call even if unresolved.",
+      "whatTheyWant": "Engineers at Meta are expected to have product opinions — can you voice them with data, not just preference?",
+      "rubric": [
+        "Grounds the disagreement in user data/metrics, not just taste",
+        "Raised it through the right channel/forum, not a side conversation",
+        "Names the final decision and how it was handled afterward"
+      ],
+      "failureModes": [
+        "Disagreement based purely on personal preference with no data",
+        "Voiced only informally/behind the scenes, not in the actual decision forum",
+        "No resolution stated"
+      ],
+      "sampleAnswers": {
+        "strong": "PM wanted to remove a filter option to simplify the UI; usage data showed 30% of power users relied on it daily. I brought that data to the planning review, we kept the filter but redesigned its visibility, and engagement from that segment held steady instead of dropping.",
+        "weak": "I didn't think a product decision was right so I said so and they considered my input.",
+        "weakWhy": "No data grounding, no specifics on the forum or the resolution."
+      }
+    },
+    {
+      "id": "disagreement-06",
+      "question": "Tell me about a time you had a respectful disagreement with a peer that led to a better outcome.",
+      "category": "disagreement",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates show the disagreement process itself improving — both people updating their view partway, not just one side winning.",
+      "whatTheyWant": "Google looks for collaborative disagreement that produces synthesis, not just a winner and a loser.",
+      "rubric": [
+        "Both perspectives had genuine merit, not a strawman on one side",
+        "Final outcome is a synthesis or improvement on both original ideas",
+        "Relationship stayed positive/respectful throughout"
+      ],
+      "failureModes": [
+        "One side is clearly a strawman, making the 'respectful disagreement' feel hollow",
+        "Outcome is just one person's original idea winning outright",
+        "Some tension/disrespect leaks through in the telling"
+      ],
+      "sampleAnswers": {
+        "strong": "A peer wanted a strict validation layer for safety; I wanted a lenient one for developer speed. Talking it through, we landed on strict validation only at the system boundary and lenient internally — safer than my idea, faster than theirs, and we still pair on API design regularly.",
+        "weak": "A colleague and I disagreed on something but talked it through respectfully and found a solution.",
+        "weakWhy": "No specifics on either position or the actual synthesis reached."
+      }
+    },
+    {
+      "id": "growth-feedback-01",
+      "question": "Tell me about tough feedback you received. What did you do with it?",
+      "category": "growth-feedback",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates pick feedback that was genuinely hard to hear (not softened) and show a lasting behavior change verified by others, not just self-assessment.",
+      "whatTheyWant": "Can you receive hard feedback without defensiveness and actually change behavior?",
+      "rubric": [
+        "Feedback described is genuinely uncomfortable, not a disguised compliment",
+        "No defensiveness in how it's described — real acceptance",
+        "Names a specific, lasting behavior change, ideally confirmed by someone else later"
+      ],
+      "failureModes": [
+        "Feedback is actually mild or a backhanded compliment",
+        "Describes initial defensiveness with no resolution",
+        "No concrete behavior change described"
+      ],
+      "sampleAnswers": {
+        "strong": "My manager told me my code reviews came across as condescending even when I thought I was just being thorough. It stung, but I started asking questions instead of stating corrections in reviews, and two teammates later told me reviews from me felt collaborative instead of judgmental.",
+        "weak": "I was told I could improve my communication skills, so I've been working on that.",
+        "weakWhy": "Vague, no specifics on the feedback, no concrete change, no verification."
+      }
+    },
+    {
+      "id": "growth-feedback-02",
+      "question": "Tell me about a skill you deliberately worked on developing.",
+      "category": "growth-feedback",
+      "companyStyle": "amazon",
+      "principle": "Learn and Be Curious",
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates show a deliberate, structured learning approach (not just \"I read some articles\") and apply the new skill to real work with measurable impact.",
+      "whatTheyWant": "Do you invest in your own growth proactively, and can you apply what you learn?",
+      "rubric": [
+        "Names a specific skill gap they identified themselves",
+        "Describes a structured approach to closing it (practice, courses, mentorship, projects)",
+        "Applied the new skill to real work with a measurable result"
+      ],
+      "failureModes": [
+        "Skill is vague (\"communication,\" \"leadership\") with no specific learning plan",
+        "No application to real work, just theoretical learning",
+        "No measurable outcome from applying the new skill"
+      ],
+      "sampleAnswers": {
+        "strong": "I realized I didn't understand distributed systems deeply enough to design our next service well, so I spent six weeks working through a systems course and rebuilding a toy version of our actual service with proper consistency guarantees — I then used those patterns to redesign our real service, cutting a class of race-condition bugs to zero.",
+        "weak": "I've been trying to get better at system design by reading more about it.",
+        "weakWhy": "No structured plan, no application, no measurable result."
+      }
+    },
+    {
+      "id": "growth-feedback-03",
+      "question": "Tell me about a time a mentor changed the way you work.",
+      "category": "growth-feedback",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid"],
+      "seniorNote": "For senior candidates, this is often better reframed as being the mentor — consider pairing this story with growth-feedback-02 or leadership-02 if applying at senior level.",
+      "whatTheyWant": "Can you absorb guidance from others and let it genuinely reshape your habits?",
+      "rubric": [
+        "Names the specific habit or mindset that changed",
+        "Describes what the mentor actually said or modeled, not just \"they were helpful\"",
+        "Shows the change persisting well after the mentorship ended"
+      ],
+      "failureModes": [
+        "Change described is superficial or unverifiable",
+        "No specifics on what the mentor actually did differently",
+        "No evidence the change persisted"
+      ],
+      "sampleAnswers": {
+        "strong": "A senior engineer noticed I jumped straight to coding without writing anything down first, and made me write a one-paragraph plan before every task for a month. It felt slow at first, but two years later I still write that paragraph — it's cut my rework rate significantly.",
+        "weak": "A mentor gave me good advice early in my career and I still think about it sometimes.",
+        "weakWhy": "No specifics on the advice, no concrete behavior change, no evidence of persistence."
+      }
+    },
+    {
+      "id": "growth-feedback-04",
+      "question": "Tell me about a time you held yourself to a higher bar than what was asked.",
+      "category": "growth-feedback",
+      "companyStyle": "amazon",
+      "principle": "Insist on the Highest Standards",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates raise the bar for the team or the system, not just for their own individual output.",
+      "whatTheyWant": "Do you have an internal quality bar independent of what's minimally acceptable, and do you spread that standard to others?",
+      "rubric": [
+        "The 'ask' was genuinely lower than what they delivered — not a strawman",
+        "Explains why the higher bar mattered (not perfectionism for its own sake)",
+        "Ideally shows the higher standard spreading beyond just their own work"
+      ],
+      "failureModes": [
+        "The 'ask' was already high, making the higher bar claim hollow",
+        "Sounds like perfectionism/scope creep rather than a justified higher standard",
+        "No spread of the standard beyond the individual's own task"
+      ],
+      "sampleAnswers": {
+        "strong": "I was asked to just make a script work for one dataset; I also added input validation and clear error messages because I knew other teams would reuse it. It got adopted by two other teams without a single support request, and I turned the validation pattern into a shared internal library.",
+        "weak": "I always try to do my best work even when the bar set for me is lower.",
+        "weakWhy": "No specific example, no justification for the higher bar, no evidence it mattered."
+      }
+    },
+    {
+      "id": "growth-feedback-05",
+      "question": "Tell me about a time you gave difficult feedback to a peer.",
+      "category": "growth-feedback",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates deliver feedback with specific, actionable detail and check in afterward to confirm it landed and helped — not a one-time drop.",
+      "whatTheyWant": "Can you deliver hard feedback kindly and effectively, a core part of Google's collaborative culture?",
+      "rubric": [
+        "Feedback was specific and behavior-focused, not personality-focused",
+        "Delivered privately and with care for the relationship",
+        "Followed up to confirm it landed and check on the resulting change"
+      ],
+      "failureModes": [
+        "Feedback given publicly or without care for how it would land",
+        "Vague/personality-based feedback (\"be more proactive\") instead of specific behavior",
+        "No follow-up to see if it actually helped"
+      ],
+      "sampleAnswers": {
+        "strong": "A peer's PRs were taking three review cycles because of missing context in descriptions. I told him privately, with two specific examples of what a good description includes, and offered to review his next one live. His PRs now typically pass in one round.",
+        "weak": "I told a coworker they needed to improve in a certain area and they took it well.",
+        "weakWhy": "No specifics on the feedback content, no evidence of care in delivery or follow-up."
+      }
+    },
+    {
+      "id": "growth-feedback-06",
+      "question": "Tell me about the fastest you've had to learn something new on the job.",
+      "category": "growth-feedback",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates identify the minimum viable understanding needed to act, rather than trying to learn everything before starting.",
+      "whatTheyWant": "Meta moves fast — can you get productive in an unfamiliar area quickly without needing full mastery first?",
+      "rubric": [
+        "Names the real time constraint and unfamiliar domain",
+        "Describes a targeted learning strategy focused on what was needed to act",
+        "Delivered a real result despite the compressed learning time"
+      ],
+      "failureModes": [
+        "Learning wasn't actually that fast or under real pressure",
+        "Tried to learn everything broadly instead of just what was needed",
+        "No concrete result from applying the fast-learned skill"
+      ],
+      "sampleAnswers": {
+        "strong": "I had three days to get productive in a GraphQL codebase I'd never touched to unblock a launch. I skipped the full spec and instead traced two existing resolvers end-to-end to understand our specific patterns, then shipped the needed resolver on day three with a working PR reviewed and merged same day.",
+        "weak": "I had to pick up a new technology quickly for a project and I managed to learn enough to contribute.",
+        "weakWhy": "No specifics on the time pressure, learning approach, or the actual delivered result."
+      }
+    },
+    {
+      "id": "cross-team-01",
+      "question": "Tell me about a time you had to collaborate with a team outside your own.",
+      "category": "cross-team",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates proactively set up shared processes (joint syncs, shared docs) rather than relying on ad hoc messages back and forth.",
+      "whatTheyWant": "Can you work effectively across a team boundary where you have less context and less authority?",
+      "rubric": [
+        "Names the specific coordination challenge across the team boundary",
+        "Set up a repeatable process, not just one-off communication",
+        "Names the shared outcome delivered"
+      ],
+      "failureModes": [
+        "No real boundary challenge — sounds like working with close teammates",
+        "No repeatable process, just occasional messages",
+        "No shared, measurable outcome"
+      ],
+      "sampleAnswers": {
+        "strong": "My feature depended on an API another team was building on a different timeline. I set up a shared contract doc and a biweekly 15-minute sync so we could catch mismatches early instead of at integration time, and we integrated with zero surprises on launch day.",
+        "weak": "I worked with another team on a project and communicated regularly with them.",
+        "weakWhy": "No specifics on the challenge, process, or outcome."
+      }
+    },
+    {
+      "id": "cross-team-02",
+      "question": "Tell me about a time you had to earn the trust of a team that didn't know you.",
+      "category": "cross-team",
+      "companyStyle": "amazon",
+      "principle": "Earn Trust",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates earn trust by delivering small, visible wins early and being transparent about constraints, not by asserting authority.",
+      "whatTheyWant": "Earn Trust values listening carefully and treating others with respect, especially when you have no existing relationship or authority.",
+      "rubric": [
+        "Started by listening/understanding the other team's concerns, not asserting a position",
+        "Built trust through small, delivered commitments rather than promises",
+        "Names the resulting change in the relationship (more openness, faster collaboration)"
+      ],
+      "failureModes": [
+        "Skipped listening and went straight to pushing their own agenda",
+        "Trust described as won through a single big gesture rather than consistent delivery",
+        "No evidence the relationship actually changed"
+      ],
+      "sampleAnswers": {
+        "strong": "A platform team was wary of my team's requests after a bad past experience. I started by just fixing a small, low-risk bug they'd flagged before asking for anything, delivered it fast and as promised, and within a month they were proactively looping us into their roadmap discussions.",
+        "weak": "I worked hard to build a good relationship with a team that didn't know me well and it improved over time.",
+        "weakWhy": "No specific action, no evidence of a concrete trust-building step or resulting change."
+      }
+    },
+    {
+      "id": "cross-team-03",
+      "question": "Describe a time a dependency on another team put your deadline at risk.",
+      "category": "cross-team",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates de-risk dependencies proactively (mocking interfaces, negotiating timelines early) rather than just escalating when the risk materializes.",
+      "whatTheyWant": "Can you manage risk from dependencies you don't control, rather than just being a passive victim of them?",
+      "rubric": [
+        "Identified the dependency risk early, not at the last minute",
+        "Took action to de-risk (mocking, parallel work, negotiation) rather than just waiting",
+        "Names the actual outcome for the deadline"
+      ],
+      "failureModes": [
+        "Risk only noticed once it had already caused a problem",
+        "No mitigation action, just complaint about the other team",
+        "Outcome for the deadline is unclear"
+      ],
+      "sampleAnswers": {
+        "strong": "A backend team's API was tracking two weeks behind our need. I got their contract spec early, built against a mock of it so my team's work could proceed in parallel, and when their real API landed a week late we only lost two days of integration time instead of two weeks.",
+        "weak": "Another team was late delivering something we needed, which put us behind, but we eventually caught up.",
+        "weakWhy": "No proactive mitigation described, sounds reactive rather than managed."
+      }
+    },
+    {
+      "id": "cross-team-04",
+      "question": "Tell me about a time you got buy-in from stakeholders who didn't report to you.",
+      "category": "cross-team",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates tailor the pitch to each stakeholder's specific incentives rather than using one generic pitch for everyone.",
+      "whatTheyWant": "Influence without authority — a core Google leadership competency.",
+      "rubric": [
+        "Identifies multiple stakeholders with potentially different incentives",
+        "Tailors the case made to each stakeholder's actual priorities",
+        "Names the buy-in actually achieved and its result"
+      ],
+      "failureModes": [
+        "Only one stakeholder involved, understating the real challenge",
+        "Generic pitch used for everyone with no tailoring",
+        "Buy-in claimed but no concrete evidence or result"
+      ],
+      "sampleAnswers": {
+        "strong": "To get a shared caching layer adopted, I pitched cost savings to finance, reduced on-call load to the infra team, and faster page loads to the product team — each got the framing relevant to them, and three teams adopted it within the quarter, cutting shared infra costs 18%.",
+        "weak": "I explained the benefits of my proposal to a few stakeholders and they agreed to support it.",
+        "weakWhy": "No differentiation across stakeholders, no concrete measurable result."
+      }
+    },
+    {
+      "id": "cross-team-05",
+      "question": "Tell me about a time you had to align multiple teams quickly on a decision.",
+      "category": "cross-team",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["senior"],
+      "seniorNote": "This question is calibrated for senior candidates coordinating org-level decisions, not just two close collaborators.",
+      "whatTheyWant": "Can you drive fast alignment across teams with competing priorities, a common need at Meta's pace?",
+      "rubric": [
+        "Multiple distinct teams with genuinely different priorities involved",
+        "Used a fast, structured mechanism (a single decision doc, a time-boxed meeting) rather than endless discussion",
+        "Reached and executed a decision within a tight window"
+      ],
+      "failureModes": [
+        "Only really involved one other team, or teams with aligned priorities already",
+        "Alignment took a long, unstructured process — undermines the 'quickly' premise",
+        "Decision reached but no execution follow-through shown"
+      ],
+      "sampleAnswers": {
+        "strong": "Three teams disagreed on how to handle a shared rate limit during an incident. I wrote a one-page options doc with tradeoffs, called a 30-minute meeting with a decider named in advance, and we had a shipped fix within four hours of the incident starting.",
+        "weak": "I got a few teams together to talk about a decision and we came to an agreement.",
+        "weakWhy": "No structure, no time constraint shown, no concrete execution result."
+      }
+    },
+    {
+      "id": "cross-team-06",
+      "question": "Tell me about a time you had to dig into another team's system or data to solve a cross-team problem.",
+      "category": "cross-team",
+      "companyStyle": "amazon",
+      "principle": "Dive Deep",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates go past the surface explanation from the other team and verify with primary data/logs themselves.",
+      "whatTheyWant": "Dive Deep means not accepting a surface-level explanation — do you dig into details others gloss over, even outside your own domain?",
+      "rubric": [
+        "Went beyond the other team's stated explanation to verify with actual data/logs",
+        "Found something the surface-level explanation missed",
+        "Resolved the cross-team problem based on that deeper finding"
+      ],
+      "failureModes": [
+        "Accepted the other team's explanation at face value, undermining the Dive Deep premise",
+        "No specific data or artifact examined, just \"I looked into it\"",
+        "No new finding or resolution resulting from the dive"
+      ],
+      "sampleAnswers": {
+        "strong": "Another team said a shared queue was 'just slow,' but I pulled the actual consumer lag metrics myself and found one specific message type was retried in a hot loop, not general slowness. Fixing that one message handler resolved the cross-team latency complaint entirely.",
+        "weak": "I looked into an issue that another team reported and eventually figured out what was going on.",
+        "weakWhy": "No specific data examined, no concrete finding beyond the surface explanation."
+      }
+    },
+    {
+      "id": "customer-focus-01",
+      "question": "Tell me about a time you advocated for the customer against internal pressure.",
+      "category": "customer-focus",
+      "companyStyle": "amazon",
+      "principle": "Customer Obsession",
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates back the customer position with data, not just intuition, and find a way to satisfy the internal pressure too rather than just overriding it.",
+      "whatTheyWant": "Customer Obsession means starting with the customer and working backward — even when it's inconvenient internally.",
+      "rubric": [
+        "Names the specific internal pressure (deadline, cost, convenience) working against the customer",
+        "Backs the customer position with evidence, not just opinion",
+        "Finds or negotiates a resolution that serves the customer without ignoring the internal constraint entirely"
+      ],
+      "failureModes": [
+        "Internal pressure described is a strawman with no real stakes",
+        "Customer position based on assumption, not evidence",
+        "Resolution ignores the internal constraint entirely, which is unrealistic in most orgs"
+      ],
+      "sampleAnswers": {
+        "strong": "The team wanted to ship a redesign that tested well internally but that our usability data showed would confuse existing power users. I brought session-recording clips showing the confusion to the review, and we shipped with an opt-in toggle instead of a forced switch — meeting the deadline while protecting the existing user base.",
+        "weak": "I pushed for what I thought was better for the customer even though it wasn't the easiest option internally.",
+        "weakWhy": "No evidence backing the customer position, no specifics on the resolution."
+      }
+    },
+    {
+      "id": "customer-focus-02",
+      "question": "Tell me about a customer complaint that changed your roadmap or priorities.",
+      "category": "customer-focus",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates check whether the single complaint represents a broader pattern before reprioritizing the whole roadmap around it.",
+      "whatTheyWant": "Do you actually listen to customer signal and act on it, or treat complaints as noise?",
+      "rubric": [
+        "Verified the complaint represented a real pattern, not just one loud voice",
+        "Made a concrete roadmap change as a result",
+        "Names the measurable impact of the change"
+      ],
+      "failureModes": [
+        "Reacted to a single complaint without checking if it generalized",
+        "No actual roadmap change resulted",
+        "No measurable impact stated"
+      ],
+      "sampleAnswers": {
+        "strong": "One enterprise customer complained about export limits, and checking usage data showed 15% of accounts hit that same limit monthly. We moved a scalable export system up two sprints ahead of a planned feature, and churn in that segment dropped noticeably the following quarter.",
+        "weak": "A customer complained about something and we made a change to address it.",
+        "weakWhy": "No verification of pattern, no concrete change, no measurable impact."
+      }
+    },
+    {
+      "id": "customer-focus-03",
+      "question": "Tell me about a time you prioritized user experience over a technically simpler solution.",
+      "category": "customer-focus",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates quantify the UX cost of the simpler technical option before rejecting it, rather than relying on taste alone.",
+      "whatTheyWant": "Can you push for user-centric quality even when it costs engineering time or elegance?",
+      "rubric": [
+        "Names the specific UX cost of the simpler technical path",
+        "Quantifies or evidences that cost, not just personal preference",
+        "Delivered the better-UX option within reasonable engineering cost"
+      ],
+      "failureModes": [
+        "UX cost of the simpler option is asserted but not evidenced",
+        "Chose the harder path for its own sake, not clearly tied to user benefit",
+        "Engineering cost of the chosen path was unreasonable or unaddressed"
+      ],
+      "sampleAnswers": {
+        "strong": "The simple technical option was a full-page reload on form submit; I pushed for optimistic UI updates instead after seeing our data showed a measurable drop-off during that reload wait. It took an extra three days to build but cut form abandonment by double digits.",
+        "weak": "I chose to build something more complex because I thought it would be better for the user.",
+        "weakWhy": "No evidence for the claimed UX benefit, no cost/benefit specifics."
+      }
+    },
+    {
+      "id": "customer-focus-04",
+      "question": "Tell me about a time you used user data to change a decision.",
+      "category": "customer-focus",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates are specific about the metric moved and the magnitude, and are honest if the data contradicted their own initial intuition.",
+      "whatTheyWant": "Meta is heavily data-driven — can you let evidence override your own opinion?",
+      "rubric": [
+        "Names the specific metric/data source examined",
+        "Data changed a decision that would otherwise have gone a different way",
+        "States the actual result with a real number or clear magnitude"
+      ],
+      "failureModes": [
+        "Data mentioned vaguely with no specific metric",
+        "Decision would have been the same regardless — data wasn't actually decisive",
+        "No concrete result reported afterward"
+      ],
+      "sampleAnswers": {
+        "strong": "I was confident a new onboarding flow would improve activation, but the A/B test showed it was flat for new users and negative for returning ones. I killed the rollout despite my own attachment to the idea, and we kept the simpler original flow instead.",
+        "weak": "I looked at some user data and it influenced a decision we made.",
+        "weakWhy": "No specific metric, no clear decision reversal, no honest account of being wrong."
+      }
+    },
+    {
+      "id": "customer-focus-05",
+      "question": "Tell me about a time 'good enough for the business' wasn't good enough for the user.",
+      "category": "customer-focus",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates make the business case for closing the gap, rather than just asserting the user deserves better.",
+      "whatTheyWant": "Can you identify when internal 'ship it' pressure creates a real user cost, and push back constructively?",
+      "rubric": [
+        "Names the specific gap between the shipped-quality bar and the user's actual need",
+        "Made a business (not just moral) case for closing the gap",
+        "Names the resolution and its effect on the user"
+      ],
+      "failureModes": [
+        "Gap described is vague or trivial",
+        "Case made is purely moral/idealistic with no business framing, unlikely to land internally",
+        "No resolution or effect on the user described"
+      ],
+      "sampleAnswers": {
+        "strong": "Leadership considered error messages 'good enough' if they didn't crash, but support tickets showed users were abandoning checkout on cryptic errors. I quantified the lost revenue from those abandonments, got buy-in to rewrite the top five error messages in plain language, and checkout completion on those paths improved measurably.",
+        "weak": "The business thought something was fine to ship but I felt it wasn't good enough for users, so I pushed to improve it.",
+        "weakWhy": "No specific gap, no business case, no measurable resolution."
+      }
+    },
+    {
+      "id": "customer-focus-06",
+      "question": "Tell me about a time you considered the broader impact of a decision on customers or society.",
+      "category": "customer-focus",
+      "companyStyle": "amazon",
+      "principle": "Success and Scale Bring Broad Responsibility",
+      "levels": ["senior"],
+      "seniorNote": "This principle is typically reserved for senior/principal-level questions — the bar is a decision with genuine scale or societal stakes, not a routine feature choice.",
+      "whatTheyWant": "At scale, decisions have consequences beyond the immediate team — do you think about second-order effects on customers, communities, or the environment?",
+      "rubric": [
+        "Decision genuinely had broader stakes beyond the immediate feature/team",
+        "Identifies a specific second-order effect considered (accessibility, fairness, environmental, safety)",
+        "Made a concrete change as a result of that broader consideration"
+      ],
+      "failureModes": [
+        "Impact claimed is abstract/unconvincing for the scale of the decision",
+        "No specific second-order effect identified",
+        "No concrete action taken as a result — just \"we thought about it\""
+      ],
+      "sampleAnswers": {
+        "strong": "While designing an automated fraud-detection threshold, I noticed our proposed cutoff would disproportionately flag a specific low-income user segment with thinner credit history. I pushed to add a manual review path for edge cases instead of a hard auto-decline, which cut false positives for that segment by a meaningful margin without materially increasing fraud losses.",
+        "weak": "I try to think about how my work affects users and society more broadly whenever I can.",
+        "weakWhy": "No specific decision, no identified second-order effect, no concrete action taken."
+      }
+    },
+    {
+      "id": "innovation-01",
+      "question": "Tell me about a time you simplified a complex process.",
+      "category": "innovation",
+      "companyStyle": "amazon",
+      "principle": "Invent and Simplify",
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates simplify a process that affects multiple people/teams, not just their own personal workflow.",
+      "whatTheyWant": "Can you find and remove unnecessary complexity rather than just tolerating it?",
+      "rubric": [
+        "Names the specific complexity/friction in the original process",
+        "Describes the concrete simplification made",
+        "Names measurable time/effort saved, ideally for more than just the individual"
+      ],
+      "failureModes": [
+        "Complexity described is trivial or unconvincing",
+        "Simplification described vaguely with no specifics",
+        "No measurable savings, or savings only benefit the individual narrator"
+      ],
+      "sampleAnswers": {
+        "strong": "Our deploy process required six manual steps across three tools and took engineers roughly 40 minutes each time. I consolidated it into a single script with one confirmation prompt, cutting deploy time to under five minutes for the whole team and removing a common source of manual-step mistakes.",
+        "weak": "I found a way to make one of my tasks quicker and easier to do.",
+        "weakWhy": "No specifics on the original complexity, the fix, or the measurable benefit to others."
+      }
+    },
+    {
+      "id": "innovation-02",
+      "question": "Tell me about the most innovative solution you've built.",
+      "category": "innovation",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates are honest about what was genuinely novel versus a known pattern applied well — overclaiming novelty is a common failure mode interviewers watch for.",
+      "whatTheyWant": "Can you find non-obvious solutions, and are you calibrated about what actually counts as innovative?",
+      "rubric": [
+        "Explains specifically what made the solution non-obvious, not just \"it worked well\"",
+        "Acknowledges what existing ideas it built on, if any — avoids overclaiming novelty",
+        "Names the measurable impact of the solution"
+      ],
+      "failureModes": [
+        "Solution described is actually a standard, well-known pattern with no real novelty",
+        "Overclaims originality without acknowledging prior art",
+        "No measurable impact given"
+      ],
+      "sampleAnswers": {
+        "strong": "Instead of the standard approach of full-table nightly reconciliation, I combined an existing change-data-capture pattern with a lightweight checksum tree so we could reconcile only the changed subtree in near real-time — cutting reconciliation lag from 12 hours to under 5 minutes.",
+        "weak": "I built a really innovative feature that solved a problem in a clever new way.",
+        "weakWhy": "No specifics on what made it innovative or what impact it had — just an assertion."
+      }
+    },
+    {
+      "id": "innovation-03",
+      "question": "Tell me about a time you challenged 'that's how we've always done it.'",
+      "category": "innovation",
+      "companyStyle": "meta",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates account for why the old way existed in the first place before proposing to change it, showing respect for prior context.",
+      "whatTheyWant": "Can you question entrenched practices constructively, without being dismissive of the reasons they existed?",
+      "rubric": [
+        "Understood why the existing practice existed before challenging it",
+        "Proposed a specific, concrete alternative, not just criticism",
+        "Names the outcome of the change"
+      ],
+      "failureModes": [
+        "Dismisses the old practice without understanding its original rationale",
+        "No concrete alternative proposed, just complaint",
+        "No outcome described after the change"
+      ],
+      "sampleAnswers": {
+        "strong": "Our team always did a full regression pass before every release, originally set up when the app was much smaller. I mapped which regression tests actually caught bugs historically, proposed cutting the suite to the high-signal 30%, and release cycle time dropped by half with no increase in post-release bugs over the following quarter.",
+        "weak": "I thought one of our long-standing practices was outdated so I suggested we change it.",
+        "weakWhy": "No understanding of why the old practice existed, no specific alternative, no outcome."
+      }
+    },
+    {
+      "id": "innovation-04",
+      "question": "Tell me about a time you automated something manual and tedious.",
+      "category": "innovation",
+      "companyStyle": "google",
+      "principle": null,
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates automate something that scales across the team or org, not just a personal script only they use.",
+      "whatTheyWant": "Do you notice and eliminate toil, and can you make that benefit others, not just yourself?",
+      "rubric": [
+        "Names the specific manual task and its time cost",
+        "Describes the automation built and how it was adopted by others",
+        "Names measurable time saved across the team, not just personally"
+      ],
+      "failureModes": [
+        "Automation only ever used by the narrator personally",
+        "No measurable time savings given",
+        "Task automated was trivial, undermining the significance of the story"
+      ],
+      "sampleAnswers": {
+        "strong": "New team members spent roughly a full day manually provisioning local dev environments across five different tools. I wrote a single setup script covering all five steps, documented it, and it became the default onboarding step for every new hire — cutting day-one setup from a full day to under an hour, team-wide.",
+        "weak": "I wrote a script to automate a task I used to do manually, which saved me some time.",
+        "weakWhy": "Benefit limited to the individual, no team-wide adoption or measurable scale of savings."
+      }
+    },
+    {
+      "id": "innovation-05",
+      "question": "Tell me about an unconventional approach you proposed that others were skeptical of.",
+      "category": "innovation",
+      "companyStyle": "generic",
+      "principle": null,
+      "levels": ["mid", "senior"],
+      "seniorNote": "Senior candidates address the skepticism directly with evidence or a small proof-of-concept, rather than just pushing through by authority or persistence.",
+      "whatTheyWant": "Can you propose genuinely different ideas and win over skeptics with evidence, not force of personality?",
+      "rubric": [
+        "Explains the specific skepticism/objections raised by others",
+        "Addressed the skepticism with a proof-of-concept or evidence, not persuasion alone",
+        "Names the outcome, including whether it was fully adopted"
+      ],
+      "failureModes": [
+        "Skepticism described is vague or unconvincing",
+        "Won people over through persistence/authority rather than evidence",
+        "No clear outcome or adoption result given"
+      ],
+      "sampleAnswers": {
+        "strong": "I proposed replacing our nightly batch ETL with an event-streaming approach; the team was skeptical of the operational complexity. I built a small proof-of-concept handling our messiest data source over one weekend, showed it working reliably for two weeks, and the team greenlit a phased migration based on that evidence.",
+        "weak": "I proposed a different way of doing things that people were initially unsure about, but I convinced them to try it.",
+        "weakWhy": "No specifics on the objections, no evidence-based approach to winning them over, no outcome."
+      }
+    },
+    {
+      "id": "innovation-06",
+      "question": "Tell me about a time you noticed a problem nobody assigned to you and fixed it anyway.",
+      "category": "innovation",
+      "companyStyle": "amazon",
+      "principle": "Ownership",
+      "levels": ["junior", "mid", "senior"],
+      "seniorNote": "Senior candidates pick problems with real organizational cost, and often fix the systemic cause, not just the visible symptom.",
+      "whatTheyWant": "Ownership means acting on behalf of the whole company, not just your role's narrow scope — will you fix things nobody asked you to?",
+      "rubric": [
+        "The problem genuinely wasn't part of their assigned responsibilities",
+        "Took action without waiting for permission or assignment",
+        "Fixed the systemic cause where possible, not just a visible symptom, with measurable benefit"
+      ],
+      "failureModes": [
+        "Problem was arguably already part of their role, weakening the 'nobody assigned it' premise",
+        "Waited for approval/assignment before acting, undermining the ownership angle",
+        "Fixed only a surface symptom with no lasting or measurable benefit"
+      ],
+      "sampleAnswers": {
+        "strong": "I noticed our internal wiki search was so broken that people had stopped using it and were re-asking questions in chat instead, wasting everyone's time — not my team's responsibility, but I spent a weekend reindexing it properly and wrote a short guide on keeping it current, and chat-repeated-questions dropped noticeably afterward.",
+        "weak": "I saw a small issue that wasn't really my job and I fixed it when I had some spare time.",
+        "weakWhy": "No specifics on the problem's scope or cost, no measurable benefit from the fix."
+      }
+    }
+  ]
+}

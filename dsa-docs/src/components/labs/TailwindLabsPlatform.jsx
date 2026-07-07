@@ -103,6 +103,7 @@ export default function TailwindLabsPlatform() {
   const [monacoTheme, setMonacoTheme] = useState("jsl-dark");
   const [progress, setProgress] = useState({ lessons: [] });
   const [previewMode, setPreviewMode] = useState("desktop");
+  const [previewCode, setPreviewCode] = useState(code);
   const editorRef = useRef(null);
   const iframeRef = useRef(null);
   const codeVersionRef = useRef(0);
@@ -166,14 +167,9 @@ export default function TailwindLabsPlatform() {
   codeRef.current = code;
 
   const updatePreview = useCallback(() => {
-    if (!iframeRef.current) return;
-    const iframe = iframeRef.current;
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
     const currentCode = codeRef.current;
     if (!currentCode) return;
-    doc.open();
-    doc.write(currentCode);
-    doc.close();
+    setPreviewCode(currentCode);
   }, []);
 
   useEffect(() => {
@@ -502,7 +498,8 @@ export default function TailwindLabsPlatform() {
                         width: "100%", height: "100%", border: "none",
                         background: "#ffffff", borderRadius: "0 0 8px 8px",
                       }}
-                      sandbox="allow-scripts allow-same-origin"
+                      sandbox="allow-scripts"
+                      srcDoc={previewCode}
                     />
                   </div>
                 </div>

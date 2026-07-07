@@ -170,6 +170,7 @@ export default function HTMLLabsPlatform() {
   const [progress, setProgress] = useState({ lessons: [], challenges: [], projects: [], interview: [] });
   const [previewMode, setPreviewMode] = useState("desktop"); // desktop, tablet, mobile
   const [editorMode, setEditorMode] = useState("html"); // html, htmlcss, htmlcssjs
+  const [previewCode, setPreviewCode] = useState(code);
   const [isRunning, setIsRunning] = useState(false);
   const editorRef = useRef(null);
   const iframeRef = useRef(null);
@@ -312,14 +313,9 @@ export default function HTMLLabsPlatform() {
   codeRef.current = code;
 
   const updatePreview = useCallback(() => {
-    if (!iframeRef.current) return;
-    const iframe = iframeRef.current;
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
     const currentCode = codeRef.current;
     if (!currentCode || view === "interview") return;
-    doc.open();
-    doc.write(currentCode);
-    doc.close();
+    setPreviewCode(currentCode);
   }, [view]);
 
   // Update preview whenever code changes (debounced via ref)
@@ -757,7 +753,8 @@ export default function HTMLLabsPlatform() {
                         width: "100%", height: "100%", border: "none",
                         background: "#ffffff", borderRadius: "0 0 8px 8px",
                       }}
-                      sandbox="allow-scripts allow-same-origin"
+                      sandbox="allow-scripts"
+                      srcDoc={previewCode}
                     />
                   </div>
                 </div>

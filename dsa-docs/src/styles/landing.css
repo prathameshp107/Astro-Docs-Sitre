@@ -1368,6 +1368,14 @@ html, body {
   display: inline;
 }
 
+/* Keep nav icons crisp: never shrink, always optically centered */
+.app-nav-link svg,
+.app-nav-mobile-link svg,
+.app-nav-dropdown-item-icon svg {
+  flex-shrink: 0;
+  display: block;
+}
+
 /* ─── Landing Variant — Amber Accents ─── */
 
 .app-nav-wrapper[data-variant="landing"] .app-nav-link:hover {

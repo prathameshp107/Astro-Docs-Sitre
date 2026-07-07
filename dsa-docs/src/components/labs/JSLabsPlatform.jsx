@@ -12,7 +12,15 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  runCodeInSandbox,
+  celebrate,
+  awardXP,
+  LabXPBadge,
+  LabCommandPalette,
+  useCommandPalette,
 } from "./shared/index.js";
+
+const JS_CONFETTI = ["#f7df1e", "#60a5fa", "#34d399", "#a78bfa"];
 
 // ─── SIDEBAR ───
 
@@ -151,6 +159,7 @@ export default function JSLabsPlatform() {
   const [testsPanelHeight, setTestsPanelHeight] = useState(130);
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
+  const terminateRef = useRef(null);
 
   // Load progress from sessionStorage
   useEffect(() => {
@@ -168,15 +177,24 @@ export default function JSLabsPlatform() {
   }, []);
 
   const markLessonDone = useCallback((id) => {
-    if (!progress.lessons.includes(id)) saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+    if (!progress.lessons.includes(id)) {
+      saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+      if (awardXP(`js:lesson:${id}`, 10, "Lesson complete")) celebrate(JS_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const markBugDone = useCallback((id) => {
-    if (!progress.bugs.includes(id)) saveProgress({ ...progress, bugs: [...progress.bugs, id] });
+    if (!progress.bugs.includes(id)) {
+      saveProgress({ ...progress, bugs: [...progress.bugs, id] });
+      if (awardXP(`js:bug:${id}`, 20, "Bug squashed")) celebrate(JS_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const markProjectDone = useCallback((id) => {
-    if (!progress.projects.includes(id)) saveProgress({ ...progress, projects: [...progress.projects, id] });
+    if (!progress.projects.includes(id)) {
+      saveProgress({ ...progress, projects: [...progress.projects, id] });
+      if (awardXP(`js:project:${id}`, 30, "Project shipped")) celebrate(JS_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const progressStats = useMemo(() => ({
@@ -496,38 +514,32 @@ export default function JSLabsPlatform() {
   };
 
   const runCode = useCallback(() => {
+    if (terminateRef.current) {
+      terminateRef.current();
+    }
     setIsRunning(true);
     setOutput([]);
-    const logs = [];
-    const origLog = console.log, origErr = console.error, origWarn = console.warn;
-
-    console.log = (...args) => {
-      const text = args.map(a => typeof a === "object" ? JSON.stringify(a, null, 2) : String(a)).join(" ");
-      logs.push({ type: "log", content: text });
-      origLog(...args);
-    };
-    console.error = (...args) => {
-      logs.push({ type: "error", content: args.join(" ") });
-      origErr(...args);
-    };
-    console.warn = (...args) => {
-      logs.push({ type: "warn", content: args.join(" ") });
-      origWarn(...args);
-    };
-
-    try {
-      const result = Function(code)();
-      if (result !== undefined && logs.length === 0) logs.push({ type: "result", content: String(result) });
-      if (logs.length === 0) logs.push({ type: "info", content: "✓ Code executed (no output)" });
-      setOutput(logs);
-    } catch (e) {
-      logs.push({ type: "error", content: `✗ ${e.message}` });
-      setOutput(logs);
-    } finally {
-      console.log = origLog; console.error = origErr; console.warn = origWarn;
-      setIsRunning(false);
-    }
+    
+    terminateRef.current = runCodeInSandbox(
+      code,
+      (type, content) => {
+        setOutput(prev => [...prev, { type, content }]);
+      },
+      () => {
+        setIsRunning(false);
+        terminateRef.current = null;
+      }
+    );
   }, [code]);
+
+  // Clean up worker on unmount
+  useEffect(() => {
+    return () => {
+      if (terminateRef.current) {
+        terminateRef.current();
+      }
+    };
+  }, []);
 
   const runTests = useCallback(() => {
     const tests = view === "learn" ? currentLesson?.tests || []
@@ -566,6 +578,11 @@ export default function JSLabsPlatform() {
   }, [code, view, currentLesson, currentBug, currentProject, markLessonDone, markBugDone, markProjectDone]);
 
   useKeyboardShortcut(runCode);
+
+  // Ctrl+K command palette + Ctrl+B focus mode
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+  const [hideSidebar, setHideSidebar] = useState(false);
+  useKeyboardShortcut(() => setHideSidebar(v => !v), "b");
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
@@ -625,22 +642,45 @@ export default function JSLabsPlatform() {
         progressStats={progressStats}
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+      >
+        <LabXPBadge />
+      </LabTopbar>
+
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#f7df1e"
+        commands={[
+          { id: "run", section: "Actions", label: "Run code", hint: "Ctrl+Enter", action: runCode },
+          { id: "tests", section: "Actions", label: "Run tests", action: runTests },
+          { id: "reset", section: "Actions", label: "Reset editor to starter code", action: handleReset },
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
+          { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
+          ...JS_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
+          ...JS_BUG_CHALLENGES.map(b => ({ id: `b-${b.id}`, section: "Bug Challenges", label: b.title, done: progress.bugs.includes(b.id), action: () => selectBug(b.id) })),
+          ...JS_MINI_PROJECTS.map(p => ({ id: `p-${p.id}`, section: "Mini Projects", label: p.title, done: progress.projects.includes(p.id), action: () => selectProject(p.id) })),
+        ]}
       />
 
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
-          <JSSidebar
-            activeSection={view}
-            activeLesson={activeLesson}
-            activeBug={activeBug}
-            activeProject={activeProject}
-            onSelectLesson={selectLesson}
-            onSelectBug={selectBug}
-            onSelectProject={selectProject}
-            progress={progressStats}
-            style={{ width: sidebarWidth }}
-          />
-          <LabResizableHandle onDrag={handleSidebarDrag} />
+          {!hideSidebar && (
+            <>
+              <JSSidebar
+                activeSection={view}
+                activeLesson={activeLesson}
+                activeBug={activeBug}
+                activeProject={activeProject}
+                onSelectLesson={selectLesson}
+                onSelectBug={selectBug}
+                onSelectProject={selectProject}
+                progress={progressStats}
+                style={{ width: sidebarWidth }}
+              />
+              <LabResizableHandle onDrag={handleSidebarDrag} />
+            </>
+          )}
 
           <div className="jsl-workspace" ref={workspaceRef}>
             {/* Content Panel */}

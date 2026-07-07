@@ -3,8 +3,27 @@ import Editor from "@monaco-editor/react";
 import ThemeToggle from "../ThemeToggle.jsx";
 import Skeleton from "../Skeleton.jsx";
 import { DiDatabase } from "react-icons/di";
-import { getProblemById, DIFFICULTY, DSA_TOPICS } from "../../data/dsa-problems.js";
+import { getProblemById, DIFFICULTY, DSA_TOPICS, DSA_PROBLEMS } from "../../data/dsa-problems.js";
 import { FiArrowLeft, FiSun, FiMoon, FiPlay, FiRefreshCw } from "react-icons/fi";
+import {
+  runCodeInSandbox,
+  celebrate,
+  awardXP,
+  LabXPBadge,
+  LabCommandPalette,
+  useCommandPalette,
+} from "../labs/shared/index.js";
+
+const DSA_CONFETTI = ["#6366f1", "#a78bfa", "#34d399", "#f59e0b"];
+const SOLVED_KEY = "dsa-solved-v1";
+
+function readSolved() {
+  try {
+    return JSON.parse(localStorage.getItem(SOLVED_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
 
 
 // ─── RESIZABLE HANDLE ───
@@ -103,9 +122,12 @@ export default function DSAProblemView({ problemId }) {
   const [showSolution, setShowSolution] = useState(false);
   const [revealedHints, setRevealedHints] = useState([]);
   const [consoleHeight, setConsoleHeight] = useState(160);
+  const [solved, setSolved] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
   const editorRef = useRef(null);
   const editorPanelRef = useRef(null);
   const codeVersionRef = useRef(0);
+  const terminateRef = useRef(null);
 
   useEffect(() => {
     if (problem) {
@@ -114,6 +136,7 @@ export default function DSAProblemView({ problemId }) {
       setTestResults([]);
       setShowSolution(false);
       setRevealedHints([]);
+      setSolved(readSolved().includes(problem.id));
       codeVersionRef.current++;
     }
   }, [problemId, problem]);
@@ -152,37 +175,34 @@ export default function DSAProblemView({ problemId }) {
   }, []);
 
   const runCode = useCallback(() => {
+    if (terminateRef.current) {
+      terminateRef.current();
+    }
     setIsRunning(true);
     setOutput([]);
-    const logs = [];
-    const origLog = console.log, origErr = console.error, origWarn = console.warn;
 
-    console.log = (...args) => {
-      logs.push({ type: "log", content: args.map(a => typeof a === "object" ? JSON.stringify(a, null, 2) : String(a)).join(" ") });
-      origLog(...args);
-    };
-    console.error = (...args) => {
-      logs.push({ type: "error", content: args.join(" ") });
-      origErr(...args);
-    };
-    console.warn = (...args) => {
-      logs.push({ type: "warn", content: args.join(" ") });
-      origWarn(...args);
-    };
-
-    try {
-      const result = new Function(code)();
-      if (result !== undefined && logs.length === 0) logs.push({ type: "info", content: `→ ${JSON.stringify(result)}` });
-      if (logs.length === 0) logs.push({ type: "info", content: "✓ Code executed (no output)" });
-      setOutput(logs);
-    } catch (e) {
-      logs.push({ type: "error", content: `✗ ${e.message}` });
-      setOutput(logs);
-    } finally {
-      console.log = origLog; console.error = origErr; console.warn = origWarn;
-      setIsRunning(false);
-    }
+    terminateRef.current = runCodeInSandbox(
+      code,
+      (type, content) => {
+        const displayType = type === "result" ? "info" : type;
+        const displayContent = type === "result" ? `→ ${content}` : content;
+        setOutput(prev => [...prev, { type: displayType, content: displayContent }]);
+      },
+      () => {
+        setIsRunning(false);
+        terminateRef.current = null;
+      }
+    );
   }, [code]);
+
+  // Clean up worker on unmount
+  useEffect(() => {
+    return () => {
+      if (terminateRef.current) {
+        terminateRef.current();
+      }
+    };
+  }, []);
 
   const runTests = useCallback(() => {
     if (!problem) return;
@@ -234,6 +254,19 @@ export default function DSAProblemView({ problemId }) {
         outputLines.push({ type: "error", content: `  ✗ ${r.name} — ${r.error || "Failed"}` });
       }
     });
+
+    // first full pass → persist solved + award XP
+    if (results.length > 0 && passedCount === results.length) {
+      const solvedIds = readSolved();
+      if (!solvedIds.includes(problem.id)) {
+        try { localStorage.setItem(SOLVED_KEY, JSON.stringify([...solvedIds, problem.id])); } catch {}
+      }
+      setSolved(true);
+      if (awardXP(`dsa:${problem.id}`, problem.xp || 20, `Solved ${problem.title}`)) {
+        celebrate(DSA_CONFETTI);
+      }
+      outputLines.push({ type: "info", content: `🎉 Accepted — ${problem.title} solved!` });
+    }
     setOutput(outputLines);
   }, [code, problem]);
 
@@ -323,9 +356,19 @@ export default function DSAProblemView({ problemId }) {
           <div className="dsa-top-brand">
             <DiDatabase size={20} color="#6366f1" />
             <span className="dsa-top-title">{problem.number}. {problem.title}</span>
+            {solved && (
+              <span style={{
+                fontFamily: '"JetBrains Mono", monospace', fontSize: "0.68rem", fontWeight: 700,
+                color: "#4ade80", border: "1px solid rgba(74,222,128,0.4)", borderRadius: 999,
+                padding: "2px 9px", background: "rgba(74,222,128,0.1)", marginLeft: 8,
+              }}>
+                ✓ Solved
+              </span>
+            )}
           </div>
         </div>
         <div className="dsa-topbar-right">
+          <LabXPBadge />
           <button className="dsa-btn-icon" onClick={() => setMonacoTheme(t => t === "dsa-dark" ? "dsa-light" : "dsa-dark")} title="Toggle theme">
             {monacoTheme === "dsa-dark" ? (
               <FiSun size={16} />
@@ -336,6 +379,35 @@ export default function DSAProblemView({ problemId }) {
           <ThemeToggle />
         </div>
       </div>
+
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#6366f1"
+        placeholder="Type a command or jump to another problem…"
+        commands={[
+          { id: "run", section: "Actions", label: "Run code", hint: "Ctrl+Enter", action: runCode },
+          { id: "submit", section: "Actions", label: "Submit solution", action: submitSolution },
+          { id: "reset", section: "Actions", label: "Reset to starter code", action: () => {
+            if (editorRef.current) editorRef.current.setValue(problem.starterCode);
+            setCode(problem.starterCode);
+            setOutput([]);
+            setTestResults([]);
+            codeVersionRef.current++;
+          } },
+          { id: "solution", section: "Actions", label: showSolution ? "Hide solutions" : "View solutions", action: () => setShowSolution(s => !s) },
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "dsa-dark" ? "dsa-light" : "dsa-dark") },
+          { id: "back", section: "Actions", label: "Back to all problems", action: () => { window.location.href = `${base}dsa/problems`; } },
+          ...DSA_PROBLEMS.map(p => ({
+            id: `prob-${p.id}`,
+            section: "Problems",
+            label: `${p.number}. ${p.title}`,
+            hint: p.difficulty,
+            done: readSolved().includes(p.id),
+            action: () => { window.location.href = `${base}dsa/problems/${p.id}`; },
+          })),
+        ]}
+      />
 
       {/* Main Layout */}
       <div className="dsa-detail-page">

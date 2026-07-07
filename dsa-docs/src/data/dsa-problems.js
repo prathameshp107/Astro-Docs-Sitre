@@ -887,6 +887,170 @@ export const DSA_PROBLEMS = [
       },
     ],
   },
+  {
+    id: "lru-cache",
+    number: 15,
+    title: "LRU Cache",
+    difficulty: "Medium",
+    topics: ["hash-map", "linked-list"],
+    companies: ["Amazon", "Google", "Microsoft", "Meta", "Bloomberg"],
+    acceptance: 42,
+    xp: 30,
+    problemStatement: "Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**.\n\nImplement the `LRUCache` class:\n- `LRUCache(capacity)` Initialize the LRU cache with positive size `capacity`.\n- `get(key)` Return the value of the `key` if the `key` exists, otherwise return `-1`.\n- `put(key, value)` Update the value of the `key` if the `key` exists. Otherwise, add the `key-value` pair to the cache. If the number of keys exceeds the `capacity` from this operation, **evict the least recently used key**.\n\nThe functions `get` and `put` must each run in **O(1)** average time complexity.",
+    examples: [
+      {
+        input: "LRUCache cache = new LRUCache(2);\ncache.put(1, 1);\ncache.put(2, 2);\ncache.get(1);       // returns 1\ncache.put(3, 3);       // evicts key 2\ncache.get(2);       // returns -1",
+        output: "1, -1"
+      }
+    ],
+    constraints: [
+      "1 <= capacity <= 3000",
+      "0 <= key <= 10^4",
+      "0 <= value <= 10^5",
+      "At most 2 * 10^5 calls will be made to get and put."
+    ],
+    conceptOverview: "LRU Cache tests your capacity to combine a Hash Map (for O(1) key lookup) and a Doubly Linked List (for O(1) access-priority updates/eviction).",
+    patternRecognition: "**Pattern: Hash Map + Doubly Linked List**\n\nWhen you need O(1) lookups combined with O(1) removals/inserts at arbitrary locations, look up elements using a Hash Map pointing to Doubly Linked List nodes.",
+    sampleTests: [
+      {
+        name: "Basic Operations",
+        input: [],
+        expected: []
+      }
+    ],
+    starterCode: "class LRUCache {\n  /**\n   * @param {number} capacity\n   */\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.cache = new Map();\n  }\n\n  /**\n   * @param {number} key\n   * @return {number}\n   */\n  get(key) {\n    if (!this.cache.has(key)) return -1;\n    const value = this.cache.get(key);\n    this.cache.delete(key);\n    this.cache.set(key, value);\n    return value;\n  }\n\n  /**\n   * @param {number} key\n   * @param {number} value\n   * @return {void}\n   */\n  put(key, value) {\n    if (this.cache.has(key)) {\n      this.cache.delete(key);\n    } else if (this.cache.size >= this.capacity) {\n      const lruKey = this.cache.keys().next().value;\n      this.cache.delete(lruKey);\n    }\n    this.cache.set(key, value);\n  }\n}",
+    hints: [
+      "Map in JavaScript maintains insertion order. Setting an existing key doesn't move it, but deleting and re-setting it does.",
+      "To evict the LRU item, find the first key in the Map using `map.keys().next().value`.",
+      "Ensure all operations take O(1) time."
+    ],
+    bruteForceSolution: {
+      code: "class LRUCache {\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.cache = {};\n    this.timestamps = [];\n  }\n  get(key) { /* scans array */ }\n}",
+      timeComplexity: "O(n)",
+      spaceComplexity: "O(n)",
+      explanation: "Store items in an object and keep a separate array of keys sorted by usage timestamp. get() scans and moves items in the array."
+    },
+    optimizedSolution: {
+      code: "class LRUCache {\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.cache = new Map();\n  }\n  get(key) {\n    if (!this.cache.has(key)) return -1;\n    const val = this.cache.get(key);\n    this.cache.delete(key);\n    this.cache.set(key, val);\n    return val;\n  }\n  put(key, value) {\n    if (this.cache.has(key)) { this.cache.delete(key); }\n    else if (this.cache.size >= this.capacity) {\n      const firstKey = this.cache.keys().next().value;\n      this.cache.delete(firstKey);\n    }\n    this.cache.set(key, value);\n  }\n}",
+      timeComplexity: "O(1)",
+      spaceComplexity: "O(n)",
+      explanation: "Using JavaScript's ordered Map to track usage in O(1) time."
+    },
+    interviewExplanation: "1. Focus on O(1) timing constraints.\n2. Detail the Map + Doubly Linked List approach.\n3. Demonstrate how map re-inserts manage the priority queue.",
+    tests: [
+      {
+        name: "Basic Put and Get",
+        validate: (code) => {
+          try {
+            const fn = new Function(`${code};\nconst c = new LRUCache(2);\nc.put(1, 10);\nc.put(2, 20);\nreturn c.get(1);`)();
+            return fn === 10;
+          } catch { return false; }
+        }
+      },
+      {
+        name: "Evicts Least Recently Used key",
+        validate: (code) => {
+          try {
+            const fn = new Function(`${code};\nconst c = new LRUCache(2);\nc.put(1, 10);\nc.put(2, 20);\nc.get(1);\nc.put(3, 30);\nconst r1 = c.get(2);\nconst r2 = c.get(1);\nreturn JSON.stringify({ r1, r2 });`)();
+            return fn === JSON.stringify({ r1: -1, r2: 10 });
+          } catch { return false; }
+        }
+      },
+      {
+        name: "Handles existing key updates",
+        validate: (code) => {
+          try {
+            const fn = new Function(`${code};\nconst c = new LRUCache(2);\nc.put(1, 10);\nc.put(1, 100);\nreturn c.get(1);`)();
+            return fn === 100;
+          } catch { return false; }
+        }
+      }
+    ]
+  },
+  {
+    id: "valid-sudoku",
+    number: 16,
+    title: "Valid Sudoku",
+    difficulty: "Medium",
+    topics: ["arrays", "hash-map"],
+    companies: ["Google", "Amazon", "Meta", "Microsoft"],
+    acceptance: 57,
+    xp: 20,
+    problemStatement: "Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:\n1. Each row must contain the digits `1-9` without repetition.\n2. Each column must contain the digits `1-9` without repetition.\n3. Each of the nine `3 x 3` sub-boxes of the grid must contain the digits `1-9` without repetition.\n\nNote:\n- A Sudoku board (partially filled) could be valid but is not necessarily solvable.\n- Only the filled cells need to be validated according to the mentioned rules.",
+    examples: [
+      {
+        input: 'board = [["5","3",".",".","7",".",".",".","."],[...]]',
+        output: "true"
+      }
+    ],
+    constraints: [
+      "board.length == 9",
+      "board[i].length == 9",
+      "board[i][j] is a digit '1-9' or '.'"
+    ],
+    conceptOverview: "Valid Sudoku checks your ability to use Sets and String keys to validate multidimensional row, column, and box constraints in a single pass.",
+    patternRecognition: "**Pattern: Constraint Hashing**\n\nWhen verifying uniqueness across multiple overlapping groups (like rows, cols, and cells), map each item to distinct hashed identifier strings inside a Set.",
+    sampleTests: [],
+    starterCode: "/**\n * @param {character[][]} board\n * @return {boolean}\n */\nfunction isValidSudoku(board) {\n  // Write your solution here\n}",
+    hints: [
+      "Separate validations for rows, columns, and 3x3 grids.",
+      "For 3x3 boxes, map rows and columns using Math.floor(r/3) and Math.floor(c/3).",
+      "A single Set with string keys like `row:i:val`, `col:j:val`, and `box:r-c:val` works in one pass."
+    ],
+    bruteForceSolution: {
+      code: "function isValidSudoku(board) { /* validates row by row, then col by col... */ }",
+      timeComplexity: "O(1) - fixed 9x9 size",
+      spaceComplexity: "O(1)",
+      explanation: "Run three separate loops: one verifying rows, one columns, and one box grids."
+    },
+    optimizedSolution: {
+      code: "function isValidSudoku(board) {\n  const seen = new Set();\n  for (let r = 0; r < 9; r++) {\n    for (let c = 0; c < 9; c++) {\n      const val = board[r][c];\n      if (val === '.') continue;\n      const boxRow = Math.floor(r / 3);\n      const boxCol = Math.floor(c / 3);\n      const rKey = `row:${r}:${val}`;\n      const cKey = `col:${c}:${val}`;\n      const bKey = `box:${boxRow}-${boxCol}:${val}`;\n      if (seen.has(rKey) || seen.has(cKey) || seen.has(bKey)) return false;\n      seen.add(rKey); seen.add(cKey); seen.add(bKey);\n    }\n  }\n  return true;\n}",
+      timeComplexity: "O(1) - constant grid operations",
+      spaceComplexity: "O(1) - constant space limit",
+      explanation: "Single pass validation using string-encoded constraints mapped into a single Set."
+    },
+    interviewExplanation: "1. Outline row, column, and box constraints.\n2. Detail Math.floor(r/3) mapping to group cells into sub-boxes.\n3. Show how string formatting checks unique constraints.",
+    tests: [
+      {
+        name: "Validates correct sudoku board",
+        validate: (code) => {
+          const b = [
+            ["5","3",".",".","7",".",".",".","."],
+            ["6",".",".","1","9","5",".",".","."],
+            [".","9","8",".",".",".",".","6","."],
+            ["8",".",".",".","6",".",".",".","3"],
+            ["4",".",".","8",".","3",".",".","1"],
+            ["7",".",".",".","2",".",".",".","6"],
+            [".","6",".",".",".",".","2","8","."],
+            [".",".",".","4","1","9",".",".","5"],
+            [".",".",".",".","8",".",".","7","9"]
+          ];
+          try {
+            return new Function(`${code};\nreturn isValidSudoku(${JSON.stringify(b)});`)() === true;
+          } catch { return false; }
+        }
+      },
+      {
+        name: "Detects duplicate values in rows",
+        validate: (code) => {
+          const b = [
+            ["8","3",".",".","7",".",".",".","."],
+            ["6",".",".","1","9","5",".",".","."],
+            [".","9","8",".",".",".",".","6","."],
+            ["8",".",".",".","6",".",".",".","3"],
+            ["4",".",".","8",".","3",".",".","1"],
+            ["7",".",".",".","2",".",".",".","6"],
+            [".","6",".",".",".",".","2","8","."],
+            [".",".",".","4","1","9",".",".","5"],
+            [".",".",".",".","8",".",".","7","9"]
+          ];
+          try {
+            return new Function(`${code};\nreturn isValidSudoku(${JSON.stringify(b)});`)() === false;
+          } catch { return false; }
+        }
+      }
+    ]
+  }
 ];
 
 // ─── HELPERS ───

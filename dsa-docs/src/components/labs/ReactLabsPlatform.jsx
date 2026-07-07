@@ -41,71 +41,120 @@ function transpileReactCode(code) {
 
 // ─── LIVE REACT PREVIEW ───
 
-function ReactPreview({ code, previewKey, style }) {
-  const previewContainerRef = useRef(null);
+function ReactPreview({ code, previewKey, style, onClearLogs }) {
+  const [compiledHtml, setCompiledHtml] = useState("");
+  const [compilationError, setCompilationError] = useState(null);
 
   useEffect(() => {
-    if (!previewContainerRef.current) return;
+    onClearLogs();
+    try {
+      const transpiled = transpileReactCode(code);
+      setCompilationError(null);
 
-    const container = previewContainerRef.current;
-    container.innerHTML = '<div style="padding: 1rem; color: #64748b;">⏳ Compiling...</div>';
-
-    const handle = setTimeout(() => {
-      try {
-        const transpiled = transpileReactCode(code);
-
-        // Create a fresh preview root
-        container.innerHTML = `<div id="react-preview-root" style="padding: 1rem;"></div>`;
-
-        // Execute transpiled code in a scope with React globals
-        const deps = [
-          'React', 'ReactDOM', 'useState', 'useEffect', 'useRef',
-          'useMemo', 'useCallback', 'useReducer', 'useContext', 'createContext'
-        ];
-        const vals = [
-          window.React, window.ReactDOM, window.useState, window.useEffect, window.useRef,
-          window.useMemo, window.useCallback, window.useReducer, window.useContext, window.createContext
-        ];
-
-        // If the user defined an App function, render it after execution
-        const renderBlock = `
-          if (typeof App === 'function') {
-            const root = document.getElementById('react-preview-root');
-            if (root) {
-              const container = root;
-              container.innerHTML = '';
-              ReactDOM.createRoot(container).render(React.createElement(App));
+      const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+              margin: 0;
+              padding: 1rem;
+              color: #f8fafc;
+              background: transparent;
             }
-          }
-        `;
+          </style>
+          <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+          <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+          <script>
+            const { useState, useEffect, useRef, useMemo, useCallback, useReducer, useContext, createContext } = React;
+            
+            const sendLog = (type, args) => {
+              const content = args.map(arg => {
+                try {
+                  return typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg);
+                } catch (e) {
+                  return String(arg);
+                }
+              }).join(' ');
+              window.parent.postMessage({ type: 'CONSOLE_LOG', logType: type, content }, '*');
+            };
+            
+            console.log = (...args) => sendLog('log', args);
+            console.error = (...args) => sendLog('error', args);
+            console.warn = (...args) => sendLog('warn', args);
 
-        const wrapped = `
-          (function(${deps.join(', ')}) {
-            ${transpiled}
-            ${renderBlock}
-          })
-        `;
+            window.addEventListener('error', (e) => {
+              sendLog('error', [e.message]);
+            });
+          </script>
+        </head>
+        <body>
+          <div id="react-preview-root"></div>
+          <script>
+            try {
+              ${transpiled}
+              if (typeof App === 'function') {
+                const root = ReactDOM.createRoot(document.getElementById('react-preview-root'));
+                root.render(React.createElement(App));
+              } else {
+                document.getElementById('react-preview-root').innerHTML = \`
+                  <div style="color: #94a3b8; font-family: monospace; font-size: 0.85rem; padding: 1rem; text-align: center; border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;">
+                    <p>No <code>App</code> component found.</p>
+                    <p style="font-size: 0.78rem;">Make sure to declare <code>function App() { ... }</code> to render your UI.</p>
+                  </div>
+                \`;
+              }
+            } catch (err) {
+              console.error(err.message);
+              document.getElementById('react-preview-root').innerHTML = \`
+                <div style="color: #ef4444; font-family: monospace; font-size: 0.85rem;">
+                  <strong>✗ Runtime Error:</strong>
+                  <pre style="margin: 0; white-space: pre-wrap;">\${err.message}</pre>
+                </div>
+              \`;
+            }
+          </script>
+        </body>
+        </html>
+      `;
 
-        const fn = eval(wrapped);
-        fn(...vals);
+      const handle = setTimeout(() => {
+        setCompiledHtml(html);
+      }, 150);
 
-        // Check if user had no App function
-        const rootEl = document.getElementById('react-preview-root');
-        if (rootEl && (rootEl.children.length === 0 || rootEl.innerHTML.trim() === '' || rootEl.innerHTML.trim() === '<div style="padding: 1rem;"></div>')) {
-          // The render block either found no App, or App rendered nothing visible
-          // Just leave the result as-is — something might have been logged
-        }
+      return () => clearTimeout(handle);
+    } catch (err) {
+      setCompilationError(err.message);
+    }
+  }, [code, previewKey, onClearLogs]);
 
-      } catch (err) {
-        container.innerHTML = `<div style="padding:1rem;color:#ef4444;font-family:monospace;font-size:0.85rem;">
-          <strong style="display:block;margin-bottom:0.5rem;">✗ Error:</strong>
-          <pre style="margin:0;white-space:pre-wrap;">${err.message}</pre>
-        </div>`;
-      }
-    }, 150);
-
-    return () => clearTimeout(handle);
-  }, [code, previewKey]);
+  if (compilationError) {
+    return (
+      <div className="jsl-preview-panel" style={style}>
+        <div className="jsl-preview-header">
+          <span className="jsl-preview-header-left">
+            <span className="jsl-browser-dots">
+              <span className="jsl-browser-dot red"/>
+              <span className="jsl-browser-dot yellow"/>
+              <span className="jsl-browser-dot green"/>
+            </span>
+            <span className="jsl-preview-url">preview</span>
+          </span>
+          <span className="jsl-preview-info">
+            <DiReact size={11} />
+            React
+          </span>
+        </div>
+        <div className="jsl-preview-body" style={{ height: 'calc(100% - 38px)', padding: 0 }}>
+          <div style={{ padding: '1rem', color: '#ef4444', fontFamily: 'monospace', fontSize: '0.85rem' }}>
+            <strong style={{ display: 'block', marginBottom: '0.5rem' }}>✗ Transpilation Error:</strong>
+            <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{compilationError}</pre>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="jsl-preview-panel" style={style}>
@@ -123,11 +172,21 @@ function ReactPreview({ code, previewKey, style }) {
           React
         </span>
       </div>
-      <div className="jsl-preview-body" ref={previewContainerRef}>
-        <div className="jsl-preview-placeholder">
-          <FiPlay size={24} opacity={0.2} />
-          <p>Run your React code to see a live preview</p>
-        </div>
+      <div className="jsl-preview-body" style={{ height: 'calc(100% - 38px)', padding: 0 }}>
+        {compiledHtml ? (
+          <iframe
+            key={previewKey}
+            title="React Preview"
+            style={{ width: '100%', height: '100%', border: 'none', background: '#0a0f1e' }}
+            sandbox="allow-scripts"
+            srcDoc={compiledHtml}
+          />
+        ) : (
+          <div className="jsl-preview-placeholder">
+            <FiPlay size={24} opacity={0.2} />
+            <p>Run your React code to see a live preview</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -276,33 +335,16 @@ export default function ReactLabsPlatform() {
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
 
-  // Set up React globals for transpiled code execution
+  // Add log listener for React sandboxed iframe
   useEffect(() => {
-    // We need these as globals so code executed via new Function() can access them
-    window.React = React;
-    window.ReactDOM = { createRoot };
-    window.useState = useState;
-    window.useEffect = useEffect;
-    window.useRef = useRef;
-    window.useMemo = useMemo;
-    window.useCallback = useCallback;
-    window.useReducer = useReducer;
-    window.useContext = useContext;
-    window.createContext = createContext;
-
-    return () => {
-      // Cleanup on unmount
-      delete window.React;
-      delete window.ReactDOM;
-      delete window.useState;
-      delete window.useEffect;
-      delete window.useRef;
-      delete window.useMemo;
-      delete window.useCallback;
-      delete window.useReducer;
-      delete window.useContext;
-      delete window.createContext;
+    const handleMessage = (event) => {
+      if (event.data && event.data.type === "CONSOLE_LOG") {
+        const { logType, content } = event.data;
+        setOutput(prev => [...prev, { type: logType, content }]);
+      }
     };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   // Load progress from sessionStorage
@@ -679,50 +721,11 @@ export default function ReactLabsPlatform() {
   const runCode = useCallback(() => {
     setIsRunning(true);
     setOutput([]);
-    const logs = [];
-    const origLog = console.log, origErr = console.error, origWarn = console.warn;
-
-    console.log = (...args) => {
-      const text = args.map(a => typeof a === "object" ? JSON.stringify(a, null, 2) : String(a)).join(" ");
-      logs.push({ type: "log", content: text });
-      origLog(...args);
-    };
-    console.error = (...args) => {
-      logs.push({ type: "error", content: args.join(" ") });
-      origErr(...args);
-    };
-    console.warn = (...args) => {
-      logs.push({ type: "warn", content: args.join(" ") });
-      origWarn(...args);
-    };
-
-    try {
-      // Strip imports (they'd become require() calls that fail outside modules)
-      // then transpile JSX to JS
-      const transpiled = transpileReactCode(code);
-
-      // Execute in a scope with React globals
-      const deps = [
-        'React', 'ReactDOM', 'useState', 'useEffect', 'useRef',
-        'useMemo', 'useCallback', 'useReducer', 'useContext', 'createContext'
-      ];
-      const vals = [
-        window.React, window.ReactDOM, window.useState, window.useEffect, window.useRef,
-        window.useMemo, window.useCallback, window.useReducer, window.useContext, window.createContext
-      ];
-      const fn = new Function(...deps, transpiled);
-      fn(...vals);
-      if (logs.length === 0) logs.push({ type: "info", content: "✓ Code executed successfully" });
-      setOutput(logs);
-    } catch (e) {
-      logs.push({ type: "error", content: `✗ ${e.message}` });
-      setOutput(logs);
-    } finally {
-      console.log = origLog; console.error = origErr; console.warn = origWarn;
+    setPreviewKey(prev => prev + 1);
+    setTimeout(() => {
       setIsRunning(false);
-      setPreviewKey(prev => prev + 1);
-    }
-  }, [code]);
+    }, 300);
+  }, []);
 
   // Run tests
   const runTests = useCallback(() => {
@@ -1018,7 +1021,12 @@ export default function ReactLabsPlatform() {
 
             {/* Resizable Preview Panel (React-specific) */}
             <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
-            <ReactPreview code={code} previewKey={previewKey} style={{ height: previewHeight }} />
+            <ReactPreview
+              code={code}
+              previewKey={previewKey}
+              style={{ height: previewHeight }}
+              onClearLogs={useCallback(() => setOutput([]), [])}
+            />
 
             {/* Resizable Console Output (in editor panel, below preview) */}
             <LabResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />

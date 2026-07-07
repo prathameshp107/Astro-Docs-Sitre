@@ -7,3 +7,8 @@ export { default as LabTopbar } from "./LabTopbar.jsx";
 export { default as useProgress } from "./useProgress.js";
 export { default as useKeyboardShortcut } from "./useKeyboardShortcut.js";
 export { useSidebarResize, useContentResize, usePanelDrag } from "./usePanelResize.js";
+export { runCodeInSandbox } from "./workerSandbox.js";
+export { default as celebrate } from "./labCelebration.js";
+export { default as useLabXP, awardXP, onXPAward, levelFromXP, getStreak } from "./useLabXP.js";
+export { default as LabXPBadge } from "./LabXPBadge.jsx";
+export { default as LabCommandPalette, useCommandPalette } from "./LabCommandPalette.jsx";

@@ -11,9 +11,30 @@ async function getPyodide() {
 
   pyodideReady = (async () => {
     try {
-      // Import pyodide from the CDN or local node_modules
-      const pyodideModule = await import("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js");
-      pyodide = await pyodideModule.loadPyodide({
+      // Fetch the pyodide loader script text
+      const response = await fetch("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const text = await response.text();
+
+      // Compute and verify SHA-384 hash via Web Crypto API
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest("SHA-384", data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashBase64 = btoa(hashArray.map(b => String.fromCharCode(b)).join(""));
+      const expectedHash = "i3R37b3tF+HWudsUf1VSEOY2YxwSNMqY8DQa9Z0O3xh+NkJ9o+yjcGyIi5huj+nB";
+
+      if (hashBase64 !== expectedHash) {
+        throw new Error("Subresource integrity (SRI) validation failed for pyodide.js");
+      }
+
+      // Evaluate the verified loader code in the worker context
+      (0, eval)(text);
+
+      // loadPyodide is now defined globally on self
+      pyodide = await self.loadPyodide({
         indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/",
       });
       return pyodide;
@@ -47,6 +68,18 @@ function compareOutputs(actual, expected, mode) {
   }
   if (mode === "anyValid") {
     if (typeof expected === "string") {
+      // SECURITY WARNING: Running dynamic code from expected validator string.
+      // Guard: Ensure validator string doesn't contain malicious patterns to prevent code injection
+      // if test definitions are ever loaded from a remote/untrusted source.
+      const blockedPatterns = [
+        /postMessage/i, /onmessage/i, /self/i, /globalThis/i, /window/i,
+        /eval/i, /Function/i, /importScripts/i, /Worker/i, /fetch/i,
+        /XMLHttpRequest/i, /constructor/i, /prototype/i, /__proto__/i
+      ];
+      if (blockedPatterns.some(pattern => pattern.test(expected))) {
+        return false;
+      }
+
       try {
         // Create a function from the string and call it with the actual value
         // The expected string should be a function body that returns boolean

@@ -1,0 +1,37 @@
+---
+import AppNav from '../../components/AppNav.jsx';
+import CompanyDirectory from '../../components/companies/CompanyDirectory.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import '../../styles/companies.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Company-Specific Interview Tracks — DSA & Dev Notes</title>
+    <meta name="description" content="Prepare for tech interviews at Google, Amazon, Meta, TCS and other top product & services companies with custom interactive tracks, process timelines, and curated problems." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="companies" client:load />
+    
+    <div style="max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem;">
+      <header style="margin-bottom: 2.5rem; text-align: center;">
+        <h1 style="font-size: 2.5rem; font-weight: 900; color: var(--text); font-family: var(--font-display); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+          Company Interview Tracks
+        </h1>
+        <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.5;">
+          Targeted study pipelines mapped out round-by-round. Curated problem sets, behavioral LPs, and interactive prep plans.
+        </p>
+      </header>
+
+      <CompanyDirectory client:load />
+    </div>
+  </body>
+</html>

@@ -13,7 +13,14 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  celebrate,
+  awardXP,
+  LabXPBadge,
+  LabCommandPalette,
+  useCommandPalette,
 } from "./shared/index.js";
+
+const SQL_CONFETTI = ["#f59e0b", "#fbbf24", "#60a5fa", "#34d399"];
 
 
 
@@ -334,11 +341,17 @@ export default function SQLLabsPlatform() {
   }, []);
 
   const markLessonDone = useCallback((id) => {
-    if (!progress.lessons.includes(id)) saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+    if (!progress.lessons.includes(id)) {
+      saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+      if (awardXP(`sql:lesson:${id}`, 10, "Lesson complete")) celebrate(SQL_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const markChallengeDone = useCallback((id) => {
-    if (!progress.challenges.includes(id)) saveProgress({ ...progress, challenges: [...progress.challenges, id] });
+    if (!progress.challenges.includes(id)) {
+      saveProgress({ ...progress, challenges: [...progress.challenges, id] });
+      if (awardXP(`sql:challenge:${id}`, 20, "Challenge solved")) celebrate(SQL_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const markMilestoneDone = useCallback((projectId, milestoneIdx) => {
@@ -348,6 +361,7 @@ export default function SQLLabsPlatform() {
         ...progress,
         projects: { ...progress.projects, [projectId]: [...projectMilestones, milestoneIdx] },
       });
+      if (awardXP(`sql:milestone:${projectId}:${milestoneIdx}`, 15, "Milestone reached")) celebrate(SQL_CONFETTI);
     }
   }, [progress, saveProgress]);
 
@@ -623,6 +637,11 @@ export default function SQLLabsPlatform() {
 
   useKeyboardShortcut(runQuery);
 
+  // Ctrl+K command palette + Ctrl+B focus mode
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+  const [hideSidebar, setHideSidebar] = useState(false);
+  useKeyboardShortcut(() => setHideSidebar(v => !v), "b");
+
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   const currentContent = useMemo(() => {
@@ -673,27 +692,50 @@ export default function SQLLabsPlatform() {
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
         prefix="sql"
+      >
+        <LabXPBadge />
+      </LabTopbar>
+
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#f59e0b"
+        placeholder="Type a command or jump to a lesson, challenge, project…"
+        commands={[
+          { id: "run", section: "Actions", label: "Run query", hint: "Ctrl+Enter", action: runQuery },
+          { id: "schema", section: "Actions", label: showSchema ? "Hide schema diagram" : "Show schema diagram", action: () => setShowSchema(s => !s) },
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
+          { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
+          ...SQL_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
+          ...SQL_CHALLENGES.map(c => ({ id: `c-${c.id}`, section: "Challenges", label: c.title, done: progress.challenges.includes(c.id), action: () => selectChallenge(c.id) })),
+          ...SQL_PROJECTS.map(p => ({ id: `p-${p.id}`, section: "Projects", label: p.title, done: (progress.projects[p.id] || []).length >= p.milestones.length, action: () => selectProject(p.id) })),
+        ]}
       />
 
       {/* Main Layout */}
       <div className="sql-main">
         <div className="sql-body" ref={bodyRef}>
           {/* Sidebar */}
-          <SQLSidebar
-            activeSection={view}
-            activeLesson={activeLesson}
-            activeChallenge={activeChallenge}
-            activeProject={activeProject}
-            onSelectLesson={selectLesson}
-            onSelectChallenge={selectChallenge}
-            onSelectProject={selectProject}
-            progress={progressStats}
-            db={dbRef.current}
-            activeDatabase={activeDatabase}
-            onSelectDatabase={setActiveDatabase}
-            style={{ width: sidebarWidth }}
-          />
-          <LabResizableHandle onDrag={handleSidebarDrag} />
+          {!hideSidebar && (
+            <>
+              <SQLSidebar
+                activeSection={view}
+                activeLesson={activeLesson}
+                activeChallenge={activeChallenge}
+                activeProject={activeProject}
+                onSelectLesson={selectLesson}
+                onSelectChallenge={selectChallenge}
+                onSelectProject={selectProject}
+                progress={progressStats}
+                db={dbRef.current}
+                activeDatabase={activeDatabase}
+                onSelectDatabase={setActiveDatabase}
+                style={{ width: sidebarWidth }}
+              />
+              <LabResizableHandle onDrag={handleSidebarDrag} />
+            </>
+          )}
 
           {/* Content & Editor */}
           <div className="sql-workspace" ref={workspaceRef}>

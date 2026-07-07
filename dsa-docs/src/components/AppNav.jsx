@@ -2,7 +2,22 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import ThemeToggle from './ThemeToggle.jsx';
 import GlobalSearch from './GlobalSearch.jsx';
 import { FaGithub } from "react-icons/fa";
-import { Binary, Search } from "lucide-react";
+import {
+  Binary,
+  Search,
+  BookOpen,
+  Activity,
+  FlaskConical,
+  ListChecks,
+  Lightbulb,
+  Network,
+  Users,
+  Building2,
+  CalendarCheck,
+  RefreshCw,
+  Home,
+  ChevronDown,
+} from "lucide-react";
 import AuthProvider from './auth/AuthProvider.jsx';
 import AuthButton from './auth/AuthButton.jsx';
 import {
@@ -22,62 +37,69 @@ import jsCoreDeckData from '../data/srs/decks/js-core.json';
 import reactDeckData from '../data/srs/decks/react.json';
 import sqlDeckData from '../data/srs/decks/sql.json';
 
+// Ordered: learn → practice → interview prep → planning/review
 const NAV_SECTIONS = [
   {
-    id: 'home',
-    label: 'Home',
-    href: '/',
-    icon: 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z',
+    id: 'docs',
+    label: 'Docs',
+    href: '/overview',
+    icon: BookOpen,
   },
   {
     id: 'visualizer',
     label: 'Visualizer',
     href: '/visualizer',
-    icon: 'M4 19.5A2.5 2.5 0 016.5 17H20',
+    icon: Activity,
   },
   {
     id: 'labs',
     label: 'Labs',
     href: '/labs',
-    icon: 'M5 3l14 9-14 9V3z',
+    icon: FlaskConical,
     hasDropdown: true,
   },
   {
     id: 'mcq',
     label: 'MCQ Hub',
     href: '/mcq',
-    icon: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM8 12l3 3 5-5',
-  },
-  {
-    id: 'plans',
-    label: 'Study Plans',
-    href: '/plans',
-    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
+    icon: ListChecks,
   },
   {
     id: 'interview-questions',
     label: 'Interview Q',
     href: '/interview-questions',
-    icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
+    icon: Lightbulb,
     badge: '300',
-  },
-  {
-    id: 'docs',
-    label: 'Docs',
-    href: '/overview',
-    icon: 'M4 19.5A2.5 2.5 0 016.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z',
-  },
-  {
-    id: 'review',
-    label: 'Review',
-    href: '/review',
-    icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
   },
   {
     id: 'system-design',
     label: 'Sys Design',
     href: '/system-design',
-    icon: 'M5 12H3l9-9 9 9h-2M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6',
+    icon: Network,
+  },
+  {
+    id: 'behavioral',
+    label: 'Behavioral',
+    href: '/behavioral',
+    icon: Users,
+  },
+  {
+    id: 'companies',
+    label: 'Companies',
+    href: '/companies',
+    icon: Building2,
+  },
+  {
+    id: 'plans',
+    label: 'Study Plans',
+    href: '/plans',
+    icon: CalendarCheck,
+  },
+  {
+    id: 'review',
+    label: 'Review',
+    href: '/review',
+    icon: RefreshCw,
   },
 ];
 
@@ -250,6 +272,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
     const isActive = activeSection === section.id;
     const isHighlight = section.highlight;
     const href = `${base}${section.href.replace(/^\//, '')}`;
+    const SectionIcon = section.icon;
 
     if (section.hasDropdown) {
       return (
@@ -271,10 +294,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
             className={`app-nav-link ${isActive ? 'app-nav-link-active' : ''}`}
             aria-current={isActive ? 'page' : undefined}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d={section.icon} />
-            </svg>
+            <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
             <span className="app-nav-label">{section.label}</span>
           </a>
           <span
@@ -290,14 +310,12 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
             aria-expanded={labsDropdownOpen}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setLabsDropdownOpen(!labsDropdownOpen); } }}
           >
-            <svg
+            <ChevronDown
               className={`app-nav-dropdown-chevron ${labsDropdownOpen ? 'open' : ''}`}
-              width="12" height="12" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              size={12}
+              strokeWidth={2.5}
               aria-hidden="true"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
+            />
           </span>
           <div className={`app-nav-dropdown-menu ${labsDropdownOpen ? 'open' : ''}`}>
             {LABS_SUB_ITEMS.map((item) => {
@@ -329,10 +347,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
         className={`app-nav-link ${isActive ? 'app-nav-link-active' : ''} ${isHighlight ? 'app-nav-link-highlight' : ''}`}
         aria-current={isActive ? 'page' : undefined}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d={section.icon} />
-        </svg>
+        <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
         <span className="app-nav-label">{section.label}</span>
         {section.badge && (
           <span className="app-nav-badge">{section.badge}</span>
@@ -365,11 +380,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
               </a>
               <div className="app-nav-links">
                 <a href={base} className="app-nav-link app-nav-link-ghost">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                  </svg>
+                  <Home size={16} strokeWidth={2} aria-hidden="true" />
                   <span>Back to App</span>
                 </a>
                 <ThemeToggle />
@@ -384,187 +395,181 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   return (
     <AuthProvider>
       <div className={`app-nav-wrapper ${scrolled ? 'app-nav-scrolled' : ''} ${loaded ? 'app-nav-loaded' : ''}`} data-variant={variant}>
-      <nav className="app-nav" role="navigation" aria-label="Site navigation">
-        <div className="app-nav-inner">
-          {/* Brand */}
-          <a href={base} className="app-nav-brand" aria-label="Home">
-            {variant === 'landing' ? (
-              <>
-                <div className="app-nav-logo">
-                  <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center">
-                    <Binary className="w-4 h-4 text-black" />
-                  </div>
-                </div>
-                <span className="app-nav-brand-text sg">DSA & Dev Notes</span>
-              </>
-            ) : (
-              <>
-                <span className="app-nav-logo">
-                  <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                    <defs>
-                      <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#6366f1" />
-                        <stop offset="100%" stopColor="#8b5cf6" />
-                      </linearGradient>
-                    </defs>
-                    <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
-                    <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
-                  </svg>
-                </span>
-                <span className="app-nav-brand-text">DSA & Dev Notes</span>
-              </>
-            )}
-          </a>
-
-          {/* Desktop Links */}
-          <div className="app-nav-desktop-links">
-            {filteredSections.map(renderNavLink)}
-          </div>
-
-          {/* Desktop Actions */}
-          <div className="app-nav-actions">
-            <GlobalSearch />
-            {variant === 'landing' && activeSection === 'home' && (
-              <a href={`${baseHref}/overview`}
-                className="app-nav-cta"
-              >
-                Start Learning
-              </a>
-            )}
-            <AuthButton />
-            <a
-              href="https://github.com/prathameshp107/DSA-Notes-Problems"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="app-nav-link app-nav-link-icon"
-              title="GitHub"
-              aria-label="GitHub repository"
-            >
-              <FaGithub size={18} />
-            </a>
-            <ThemeToggle />
-          </div>
-
-          {/* Mobile Hamburger */}
-          <button
-            className="app-nav-hamburger"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-expanded={mobileOpen}
-          >
-            <span className={`app-nav-hamburger-line ${mobileOpen ? 'open' : ''}`} />
-            <span className={`app-nav-hamburger-line ${mobileOpen ? 'open' : ''}`} />
-            <span className={`app-nav-hamburger-line ${mobileOpen ? 'open' : ''}`} />
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileOpen && (
-          <div className="app-nav-mobile-menu" ref={menuRef}>
-            {filteredSections.map((section) => {
-              const isActive = activeSection === section.id;
-              const href = `${base}${section.href.replace(/^\//, '')}`;
-              const isLabs = section.hasDropdown;
-
-              if (isLabs) {
-                return (
-                  <div key={section.id} className="app-nav-mobile-section">
-                    <div
-                      className={`app-nav-mobile-link ${isActive ? 'app-nav-mobile-link-active' : ''}`}
-                      onClick={() => setLabsMobileExpanded(!labsMobileExpanded)}
-                      role="button"
-                      tabIndex={0}
-                      aria-expanded={labsMobileExpanded}
-                      onKeyDown={(e) => { if (e.key === 'Enter') setLabsMobileExpanded(!labsMobileExpanded); }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d={section.icon} />
-                      </svg>
-                      <span>{section.label}</span>
-                      <svg
-                        className={`app-nav-mobile-chevron ${labsMobileExpanded ? 'open' : ''}`}
-                        width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-                      >
-                        <polyline points="6 9 12 15 18 9" />
-                      </svg>
+        <nav className="app-nav" role="navigation" aria-label="Site navigation">
+          <div className="app-nav-inner">
+            {/* Brand */}
+            <a href={base} className="app-nav-brand" aria-label="Home">
+              {variant === 'landing' ? (
+                <>
+                  <div className="app-nav-logo">
+                    <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center">
+                      <Binary className="w-4 h-4 text-black" />
                     </div>
-                    {labsMobileExpanded && (
-                      <div className="app-nav-mobile-sublist">
-                        {LABS_SUB_ITEMS.map((item) => {
-                          const itemHref = `${base}${item.href.replace(/^\//, '')}`;
-                          const isItemActive = activeSection === item.id;
-                          return (
-                            <a
-                              key={item.id}
-                              href={itemHref}
-                              className={`app-nav-mobile-sub-link ${isItemActive ? 'app-nav-mobile-link-active' : ''}`}
-                              onClick={() => setMobileOpen(false)}
-                            >
-                              <span className="app-nav-mobile-sub-icon">{item.icon}</span>
-                              <span>{item.label}</span>
-                            </a>
-                          );
-                        })}
-                      </div>
-                    )}
                   </div>
-                );
-              }
+                  <span className="app-nav-brand-text sg">DSA & Dev Notes</span>
+                </>
+              ) : (
+                <>
+                  <span className="app-nav-logo">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                      <defs>
+                        <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#6366f1" />
+                          <stop offset="100%" stopColor="#8b5cf6" />
+                        </linearGradient>
+                      </defs>
+                      <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
+                      <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
+                    </svg>
+                  </span>
+                  <span className="app-nav-brand-text">DSA & Dev Notes</span>
+                </>
+              )}
+            </a>
 
-              return (
-                <a
-                  key={section.id}
-                  href={href}
-                  className={`app-nav-mobile-link ${isActive ? 'app-nav-mobile-link-active' : ''}`}
-                  onClick={() => setMobileOpen(false)}
+            {/* Desktop Links */}
+            <div className="app-nav-desktop-links">
+              {filteredSections.map(renderNavLink)}
+            </div>
+
+            {/* Desktop Actions */}
+            <div className="app-nav-actions">
+              <GlobalSearch />
+              {variant === 'landing' && activeSection === 'home' && (
+                <a href={`${baseHref}/overview`}
+                  className="app-nav-cta"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d={section.icon} />
-                  </svg>
-                  <span>{section.label}</span>
-                  {section.badge && (
-                    <span className="app-nav-badge">{section.badge}</span>
-                  )}
-                  {isActive && <span className="app-nav-mobile-active-indicator" />}
+                  Start Learning
                 </a>
-              );
-            })}
-            <div className="app-nav-mobile-divider" />
-            <div className="app-nav-mobile-actions">
-              <div className="px-4 py-2 flex justify-start">
-                <AuthButton />
-              </div>
-              <button
-                type="button"
-                className="app-nav-mobile-link"
-                onClick={() => {
-                  setMobileOpen(false);
-                  window.dispatchEvent(new CustomEvent('dsa-open-search'));
-                }}
-              >
-                <Search size={16} />
-                <span>Search</span>
-              </button>
+              )}
+              <AuthButton />
               <a
                 href="https://github.com/prathameshp107/DSA-Notes-Problems"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="app-nav-mobile-link"
+                className="app-nav-link app-nav-link-icon"
+                title="GitHub"
+                aria-label="GitHub repository"
               >
-                <FaGithub size={16} />
-                <span>GitHub</span>
+                <FaGithub size={18} />
               </a>
-              <div className="app-nav-mobile-theme">
-                <ThemeToggle showLabel size={16} />
+              <ThemeToggle />
+            </div>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="app-nav-hamburger"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileOpen}
+            >
+              <span className={`app-nav-hamburger-line ${mobileOpen ? 'open' : ''}`} />
+              <span className={`app-nav-hamburger-line ${mobileOpen ? 'open' : ''}`} />
+              <span className={`app-nav-hamburger-line ${mobileOpen ? 'open' : ''}`} />
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {mobileOpen && (
+            <div className="app-nav-mobile-menu" ref={menuRef}>
+              {filteredSections.map((section) => {
+                const isActive = activeSection === section.id;
+                const href = `${base}${section.href.replace(/^\//, '')}`;
+                const isLabs = section.hasDropdown;
+                const SectionIcon = section.icon;
+
+                if (isLabs) {
+                  return (
+                    <div key={section.id} className="app-nav-mobile-section">
+                      <div
+                        className={`app-nav-mobile-link ${isActive ? 'app-nav-mobile-link-active' : ''}`}
+                        onClick={() => setLabsMobileExpanded(!labsMobileExpanded)}
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={labsMobileExpanded}
+                        onKeyDown={(e) => { if (e.key === 'Enter') setLabsMobileExpanded(!labsMobileExpanded); }}
+                      >
+                        <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
+                        <span>{section.label}</span>
+                        <ChevronDown
+                          className={`app-nav-mobile-chevron ${labsMobileExpanded ? 'open' : ''}`}
+                          size={14}
+                          strokeWidth={2.5}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      {labsMobileExpanded && (
+                        <div className="app-nav-mobile-sublist">
+                          {LABS_SUB_ITEMS.map((item) => {
+                            const itemHref = `${base}${item.href.replace(/^\//, '')}`;
+                            const isItemActive = activeSection === item.id;
+                            return (
+                              <a
+                                key={item.id}
+                                href={itemHref}
+                                className={`app-nav-mobile-sub-link ${isItemActive ? 'app-nav-mobile-link-active' : ''}`}
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                <span className="app-nav-mobile-sub-icon">{item.icon}</span>
+                                <span>{item.label}</span>
+                              </a>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <a
+                    key={section.id}
+                    href={href}
+                    className={`app-nav-mobile-link ${isActive ? 'app-nav-mobile-link-active' : ''}`}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
+                    <span>{section.label}</span>
+                    {section.badge && (
+                      <span className="app-nav-badge">{section.badge}</span>
+                    )}
+                    {isActive && <span className="app-nav-mobile-active-indicator" />}
+                  </a>
+                );
+              })}
+              <div className="app-nav-mobile-divider" />
+              <div className="app-nav-mobile-actions">
+                <div className="px-4 py-2 flex justify-start">
+                  <AuthButton />
+                </div>
+                <button
+                  type="button"
+                  className="app-nav-mobile-link"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    window.dispatchEvent(new CustomEvent('dsa-open-search'));
+                  }}
+                >
+                  <Search size={16} />
+                  <span>Search</span>
+                </button>
+                <a
+                  href="https://github.com/prathameshp107/DSA-Notes-Problems"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="app-nav-mobile-link"
+                >
+                  <FaGithub size={16} />
+                  <span>GitHub</span>
+                </a>
+                <div className="app-nav-mobile-theme">
+                  <ThemeToggle showLabel size={16} />
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </nav>
-    </div>
+          )}
+        </nav>
+      </div>
     </AuthProvider>
   );
 }

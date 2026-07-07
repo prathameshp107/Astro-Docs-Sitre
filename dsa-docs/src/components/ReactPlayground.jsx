@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Skeleton from "./Skeleton.jsx";
 import { FiCode, FiTrash2, FiPlay } from "react-icons/fi";
+import { runCodeInSandbox } from "./labs/shared/index.js";
 
 
 const starterCode = `// Welcome to the DSA Playground! 🚀
@@ -64,6 +65,7 @@ export default function ReactPlayground() {
   const [loading, setLoading] = useState(true);
   const outputRef = useRef(null);
   const textareaRef = useRef(null);
+  const terminateRef = useRef(null);
 
   const base = import.meta.env.BASE_URL || "/";
 
@@ -79,61 +81,37 @@ export default function ReactPlayground() {
   }, [output]);
 
   const runCode = () => {
+    if (terminateRef.current) {
+      terminateRef.current();
+    }
     setIsRunning(true);
     setError(null);
     setOutput([]);
 
-    const logs = [];
-    const originalLog = console.log;
-    const originalError = console.error;
-    const originalWarn = console.warn;
-
-    console.log = (...args) => {
-      logs.push({
-        type: "log",
-        content: args
-          .map((a) =>
-            typeof a === "object" ? JSON.stringify(a, null, 2) : String(a)
-          )
-          .join(" "),
-      });
-      originalLog(...args);
-    };
-
-    console.error = (...args) => {
-      logs.push({
-        type: "error",
-        content: args.map((a) => String(a)).join(" "),
-      });
-      originalError(...args);
-    };
-
-    console.warn = (...args) => {
-      logs.push({
-        type: "warn",
-        content: args.map((a) => String(a)).join(" "),
-      });
-      originalWarn(...args);
-    };
-
-    try {
-      const cleanCode = stripScriptPrefix(code);
-      Function(cleanCode)();
-      setOutput(logs);
-
-      if (logs.length === 0) {
-        setOutput([{ type: "info", content: "✓ Code executed successfully (no output)" }]);
+    const cleanCode = stripScriptPrefix(code);
+    terminateRef.current = runCodeInSandbox(
+      cleanCode,
+      (type, content) => {
+        if (type === "error") {
+          setError(content.replace(/^✗\s*/, ""));
+        }
+        setOutput(prev => [...prev, { type, content }]);
+      },
+      () => {
+        setIsRunning(false);
+        terminateRef.current = null;
       }
-    } catch (e) {
-      setError(e.message);
-      setOutput([...logs, { type: "error", content: `✗ Error: ${e.message}` }]);
-    } finally {
-      console.log = originalLog;
-      console.error = originalError;
-      console.warn = originalWarn;
-      setIsRunning(false);
-    }
+    );
   };
+
+  // Clean up worker on unmount
+  useEffect(() => {
+    return () => {
+      if (terminateRef.current) {
+        terminateRef.current();
+      }
+    };
+  }, []);
 
   const loadSnippet = (snippet) => {
     setCode(snippet.code);

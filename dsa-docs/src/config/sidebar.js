@@ -25,6 +25,7 @@ import systemDesignItems from './sidebar-system-design.js';
 import hldItems from './sidebar-hld.js';
 import lldItems from './sidebar-lld.js';
 import interviewPrepItems from './sidebar-interview-prep.js';
+import behavioralItems from './sidebar-behavioral.js';
 
 const sidebar = [
   ...topItems,
@@ -54,6 +55,7 @@ const sidebar = [
   ...hldItems,
   ...lldItems,
   ...interviewPrepItems,
+  ...behavioralItems,
 ];
 
 export default sidebar;
