@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react';
 import ThemeToggle from './ThemeToggle.jsx';
 import GlobalSearch from './GlobalSearch.jsx';
 import { FaGithub } from "react-icons/fa";
@@ -53,10 +54,11 @@ const NAV_SECTIONS = [
   },
   {
     id: 'labs',
-    label: 'Labs',
+    label: 'Language Playgrounds',
     href: '/labs',
     icon: FlaskConical,
     hasDropdown: true,
+    subItems: 'LABS_SUB_ITEMS',
   },
   {
     id: 'mcq',
@@ -69,19 +71,14 @@ const NAV_SECTIONS = [
     label: 'Interview Q',
     href: '/interview-questions',
     icon: Lightbulb,
-    badge: '300',
+    hasDropdown: true,
+    subItems: 'INTERVIEW_SUB_ITEMS',
   },
   {
     id: 'system-design',
     label: 'Sys Design',
     href: '/system-design',
     icon: Network,
-  },
-  {
-    id: 'behavioral',
-    label: 'Behavioral',
-    href: '/behavioral',
-    icon: Users,
   },
   {
     id: 'companies',
@@ -100,6 +97,23 @@ const NAV_SECTIONS = [
     label: 'Review',
     href: '/review',
     icon: RefreshCw,
+  },
+];
+
+const INTERVIEW_SUB_ITEMS = [
+  {
+    id: 'interview-questions-lang',
+    label: 'Language wise Interview Questions',
+    href: '/interview-questions',
+    icon: <Lightbulb size={16} />,
+    color: '#eab308',
+  },
+  {
+    id: 'behavioral',
+    label: 'Behavioural Questions',
+    href: '/behavioral',
+    icon: <Users size={16} />,
+    color: '#3b82f6',
   },
 ];
 
@@ -188,11 +202,8 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [labsDropdownOpen, setLabsDropdownOpen] = useState(false);
-  const [labsMobileExpanded, setLabsMobileExpanded] = useState(false);
+  const [expandedMobile, setExpandedMobile] = useState(null);
   const menuRef = useRef(null);
-  const labsDropdownRef = useRef(null);
-  const hoverTimeoutRef = useRef(null);
 
   useEffect(() => {
     setLoaded(true);
@@ -216,26 +227,6 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
       return () => document.removeEventListener('click', handleClickOutside);
     }
   }, [mobileOpen]);
-
-  // Close labs dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (labsDropdownRef.current && !labsDropdownRef.current.contains(e.target)) {
-        setLabsDropdownOpen(false);
-      }
-    };
-    if (labsDropdownOpen) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [labsDropdownOpen]);
-
-  // Clean up hover timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    };
-  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -275,68 +266,47 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
     const SectionIcon = section.icon;
 
     if (section.hasDropdown) {
+      const subItemsList = section.subItems === 'INTERVIEW_SUB_ITEMS' ? INTERVIEW_SUB_ITEMS : LABS_SUB_ITEMS;
       return (
-        <div
-          key={section.id}
-          className={`app-nav-dropdown ${labsDropdownOpen ? 'app-nav-dropdown-open' : ''}`}
-          ref={labsDropdownRef}
-          onMouseEnter={() => {
-            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-            hoverTimeoutRef.current = setTimeout(() => setLabsDropdownOpen(true), 700);
-          }}
-          onMouseLeave={() => {
-            if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-            setLabsDropdownOpen(false);
-          }}
-        >
-          <a
-            href={href}
-            className={`app-nav-link ${isActive ? 'app-nav-link-active' : ''}`}
-            aria-current={isActive ? 'page' : undefined}
-          >
-            <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
-            <span className="app-nav-label">{section.label}</span>
-          </a>
-          <span
-            className="app-nav-dropdown-chevron-wrap"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setLabsDropdownOpen(!labsDropdownOpen);
-            }}
-            role="button"
-            tabIndex={0}
-            aria-label={labsDropdownOpen ? 'Close labs menu' : 'Open labs menu'}
-            aria-expanded={labsDropdownOpen}
-            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); setLabsDropdownOpen(!labsDropdownOpen); } }}
-          >
-            <ChevronDown
-              className={`app-nav-dropdown-chevron ${labsDropdownOpen ? 'open' : ''}`}
-              size={12}
-              strokeWidth={2.5}
-              aria-hidden="true"
-            />
-          </span>
-          <div className={`app-nav-dropdown-menu ${labsDropdownOpen ? 'open' : ''}`}>
-            {LABS_SUB_ITEMS.map((item) => {
-              const itemHref = `${base}${item.href.replace(/^\//, '')}`;
-              const isItemActive = activeSection === item.id;
-              return (
-                <a
-                  key={item.id}
-                  href={itemHref}
-                  className={`app-nav-dropdown-item ${isItemActive ? 'app-nav-dropdown-item-active' : ''}`}
-                  onClick={() => setLabsDropdownOpen(false)}
-                >
-                  <span className="app-nav-dropdown-item-icon" style={{ color: item.color }}>
-                    {item.icon}
-                  </span>
-                  <span className="app-nav-dropdown-item-label">{item.label}</span>
-                </a>
-              );
-            })}
-          </div>
-        </div>
+        <Menu as="div" key={section.id} className="app-nav-dropdown relative">
+          {({ open }) => (
+            <>
+              <MenuButton
+                as="a"
+                href={href}
+                className={`app-nav-link ${isActive ? 'app-nav-link-active' : ''}`}
+              >
+                <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
+                <span className="app-nav-label">{section.label}</span>
+                <ChevronDown
+                  className={`app-nav-dropdown-chevron ${open ? 'open' : ''}`}
+                  size={12}
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                />
+              </MenuButton>
+              <MenuItems static className={`app-nav-dropdown-menu ${open ? 'open' : ''} focus:outline-none`}>
+                {subItemsList.map((item) => {
+                  const itemHref = `${base}${item.href.replace(/^\//, '')}`;
+                  const isItemActive = activeSection === item.id;
+                  return (
+                    <MenuItem key={item.id} as="div">
+                      <a
+                        href={itemHref}
+                        className={`app-nav-dropdown-item ${isItemActive ? 'app-nav-dropdown-item-active' : ''}`}
+                      >
+                        <span className="app-nav-dropdown-item-icon" style={{ color: item.color }}>
+                          {item.icon}
+                        </span>
+                        <span className="app-nav-dropdown-item-label">{item.label}</span>
+                      </a>
+                    </MenuItem>
+                  );
+                })}
+              </MenuItems>
+            </>
+          )}
+        </Menu>
       );
     }
 
@@ -443,16 +413,6 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
                 </a>
               )}
               <AuthButton />
-              <a
-                href="https://github.com/prathameshp107/DSA-Notes-Problems"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="app-nav-link app-nav-link-icon"
-                title="GitHub"
-                aria-label="GitHub repository"
-              >
-                <FaGithub size={18} />
-              </a>
               <ThemeToggle />
             </div>
 
@@ -479,28 +439,30 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
                 const SectionIcon = section.icon;
 
                 if (isLabs) {
+                  const subItemsList = section.subItems === 'INTERVIEW_SUB_ITEMS' ? INTERVIEW_SUB_ITEMS : LABS_SUB_ITEMS;
+                  const isExpanded = expandedMobile === section.id;
                   return (
                     <div key={section.id} className="app-nav-mobile-section">
                       <div
                         className={`app-nav-mobile-link ${isActive ? 'app-nav-mobile-link-active' : ''}`}
-                        onClick={() => setLabsMobileExpanded(!labsMobileExpanded)}
+                        onClick={() => setExpandedMobile(isExpanded ? null : section.id)}
                         role="button"
                         tabIndex={0}
-                        aria-expanded={labsMobileExpanded}
-                        onKeyDown={(e) => { if (e.key === 'Enter') setLabsMobileExpanded(!labsMobileExpanded); }}
+                        aria-expanded={isExpanded}
+                        onKeyDown={(e) => { if (e.key === 'Enter') setExpandedMobile(isExpanded ? null : section.id); }}
                       >
                         <SectionIcon size={16} strokeWidth={2} aria-hidden="true" />
                         <span>{section.label}</span>
                         <ChevronDown
-                          className={`app-nav-mobile-chevron ${labsMobileExpanded ? 'open' : ''}`}
+                          className={`app-nav-mobile-chevron ${isExpanded ? 'open' : ''}`}
                           size={14}
                           strokeWidth={2.5}
                           aria-hidden="true"
                         />
                       </div>
-                      {labsMobileExpanded && (
+                      {isExpanded && (
                         <div className="app-nav-mobile-sublist">
-                          {LABS_SUB_ITEMS.map((item) => {
+                          {subItemsList.map((item) => {
                             const itemHref = `${base}${item.href.replace(/^\//, '')}`;
                             const isItemActive = activeSection === item.id;
                             return (
@@ -520,6 +482,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
                     </div>
                   );
                 }
+
 
                 return (
                   <a
@@ -553,15 +516,7 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
                   <Search size={16} />
                   <span>Search</span>
                 </button>
-                <a
-                  href="https://github.com/prathameshp107/DSA-Notes-Problems"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="app-nav-mobile-link"
-                >
-                  <FaGithub size={16} />
-                  <span>GitHub</span>
-                </a>
+
                 <div className="app-nav-mobile-theme">
                   <ThemeToggle showLabel size={16} />
                 </div>

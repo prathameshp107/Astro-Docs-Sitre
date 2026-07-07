@@ -1021,9 +1021,9 @@ html, body {
 }
 
 .app-nav {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   position: relative;
 }
 
@@ -1066,14 +1066,35 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0.15rem;
-  flex: 1;
-  justify-content: center;
-  overflow: visible;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 .app-nav-desktop-links::-webkit-scrollbar {
-  display: none;
+  height: 4px;
+}
+.app-nav-desktop-links::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 2px;
+}
+.app-nav-desktop-links::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+}
+.app-nav-desktop-links::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+[data-theme='light'] .app-nav-desktop-links::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+}
+[data-theme='light'] .app-nav-desktop-links::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+[data-theme='light'] .app-nav-desktop-links::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.22);
 }
 
 @media (max-width: 1024px) {
@@ -1526,6 +1547,14 @@ html, body {
   display: flex;
   align-items: center;
 }
+.app-nav-dropdown:hover .app-nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.app-nav-dropdown:hover .app-nav-dropdown-chevron {
+  transform: rotate(180deg);
+}
 
 .app-nav-dropdown-chevron-wrap {
   display: flex;
@@ -1583,6 +1612,15 @@ html, body {
   pointer-events: none;
   transform: translateX(-50%) translateY(-4px);
   transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.app-nav-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: transparent;
 }
 .app-nav-dropdown-menu.open {
   opacity: 1;
