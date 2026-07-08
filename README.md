@@ -258,6 +258,29 @@ npm run preview
 
 ---
 
+## 🛠️ Recent Feature Additions & Upgrades
+
+### 💼 Company-Specific Interview Tracks
+A comprehensive guide and track builder designed for targeting major tech employers:
+- **Interactive Roadmap Dashboard**: Live active tracks for **Amazon** and **Google** with structured processes, time allocations, level alignments, and dynamic target areas.
+* **Redesigned Process Maps**: Upgraded standard timelines to custom brand-colored pipeline grids showing step details and interviewer expectations.
+* **DSA Lab Integration**: Direct integration with solved problem state stores, showing live completion markers for tagged questions.
+* **Structured 5-Day Study Plans**: Curated tracks covering key company topics (Amazon SDE, Google SWE) with cache design, arrays, trees, dynamic programming, and Leadership Principles.
+* **Track Voting & Suggestions**: Locked cards for Meta, Microsoft, Netflix, and TCS allowing community upvoting and suggestions for future curriculums.
+* **SEO Validations**: Automatically generates structured JSON-LD FAQ schemas on company landing pages.
+
+### 🧭 Accessible Navigation Menu & UX Upgrades
+- **Radix Engine Integration**: Replaced raw custom navigation loops with `@headlessui/react`'s robust dropdown components (`<Menu>`, `<MenuItems>`, `<MenuButton>`), providing built-in screen reader focus traps and full keyboard arrow-key navigation.
+* **Hover & Click States**: Customized trigger buttons to work as standard links on click, while automatically revealing sub-menus on hover.
+* **Anti-Glitch Hover Bridge**: Created a CSS pseudo-element (`::before`) bridging the gap between headers and dropdowns to prevent dropdown close glitches when moving the mouse.
+* **Full Width Stretching**: Extended navbar limits to 100% and aligned desktop items to the right next to global search, allowing the crowded navbar menu items to breathe on smaller laptop displays.
+
+### 🔬 Online Judge Bug Fixes & Problem Additions
+- **Style Reset Fixes**: Imported global styling resets (`mcq-tailwind.css` and `landing.css`) into `/problems` and `/problems/[slug]` layouts, resolving broken fallback font structures and editor positioning.
+* **New Playgrounds Added**: Integrated full specifications and test cases for **LRU Cache** (`lru-cache`) and **Valid Sudoku** (`valid-sudoku`) directly into the active DSA Problem Lab collection.
+
+---
+
 ## 📖 How to Use & Contribute
 
 ### Navigating the Docs
