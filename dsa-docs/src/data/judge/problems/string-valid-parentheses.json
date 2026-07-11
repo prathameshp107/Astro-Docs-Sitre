@@ -1,0 +1,67 @@
+{
+  "id": "string-valid-parentheses",
+  "title": "Valid Parentheses",
+  "difficulty": "easy",
+  "topics": ["strings", "stack"],
+  "companies": ["google", "amazon", "meta", "microsoft"],
+  "statement": "Given a string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.",
+  "constraints": [
+    "1 <= s.length <= 10^4",
+    "s consists of parentheses only: '()[]{}'."
+  ],
+  "examples": [
+    {
+      "input": "s = \"()\"",
+      "output": "true",
+      "explanation": "Simple valid parenthesis matching."
+    },
+    {
+      "input": "s = \"()[]{}\"",
+      "output": "true",
+      "explanation": "Multiple valid types matching sequentially."
+    },
+    {
+      "input": "s = \"(]\"",
+      "output": "false",
+      "explanation": "Mismatch: closing square bracket does not match open round bracket."
+    }
+  ],
+  "functionName": "isValidParentheses",
+  "starterCode": {
+    "javascript": "function isValidParentheses(s) {\n  // Write your code here\n}",
+    "python": "def is_valid_parentheses(s):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nisValidParentheses = is_valid_parentheses"
+  },
+  "tests": [
+    { "args": ["()"], "expected": true, "hidden": false },
+    { "args": ["()[]{}"], "expected": true, "hidden": false },
+    { "args": ["(]"], "expected": false, "hidden": false },
+    { "args": ["([)]"], "expected": false, "hidden": true },
+    { "args": ["{[]}"], "expected": true, "hidden": true },
+    { "args": ["["], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a stack structure. When scanning an open bracket, push it to stack. When scanning a close bracket, pop from stack and check if it matches the closing type. Return false if mismatch. Finally, check if stack is empty.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["string-outermost-parentheses"],
+  "hints": [
+    "A Stack is the perfect data structure for this problem because nested brackets match in a Last-In-First-Out (LIFO) order.",
+    "Loop through the string: if you see `'('`, `'{'`, or `'['`, push it onto a stack.",
+    "If you see a closing bracket, check if the stack is empty (returns false) or if the popped element from the stack does not match. If the stack is empty after the loop, return true."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Repeatedly replace occurrences of adjacent matching pairs `\"()\"`, `\"[]\"`, and `\"{}\"` with an empty string until no more replacements can be made. If the string becomes empty, it is valid.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n)",
+    "code": "function isValidParentheses(s) {\n  let length = s.length;\n  while (true) {\n    s = s.replace('()', '').replace('[]', '').replace('{}', '');\n    if (s.length === length) break;\n    length = s.length;\n  }\n  return s.length === 0;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use a stack to match opening and closing brackets in O(n) time and O(n) space.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function isValidParentheses(s) {\n  const stack = [];\n  const pairs = {\n    ')': '(',\n    '}': '{',\n    ']': '['\n  };\n  for (let i = 0; i < s.length; i++) {\n    const char = s[i];\n    if (char === '(' || char === '{' || char === '[') {\n      stack.push(char);\n    } else {\n      const top = stack.pop();\n      if (top !== pairs[char]) {\n        return false;\n      }\n    }\n  }\n  return stack.length === 0;\n}"
+  },
+  "interviewExplanation": "Repeatedly calling replacement checks takes O(n^2) time. We optimize it to O(n) using a stack to track matching characters. Open brackets are pushed to the stack and pop-compared when closing characters are found."
+}

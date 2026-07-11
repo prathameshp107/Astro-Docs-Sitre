@@ -1,0 +1,61 @@
+{
+  "id": "string-count-vowels-consonants",
+  "title": "Count Vowels and Consonants",
+  "difficulty": "easy",
+  "topics": ["strings"],
+  "companies": ["tcs", "wipro"],
+  "statement": "Write a function that counts the number of vowels and consonants in a string `s`. Return a two-element array `[vowelsCount, consonantsCount]`.\n\nVowels are characters in 'a', 'e', 'i', 'o', 'u' (case-insensitive). Consonants are any alphabetical letters that are not vowels. Non-alphabetical characters (numbers, spaces, punctuation) should be ignored.",
+  "constraints": [
+    "1 <= s.length <= 10^4",
+    "s consists of printable ASCII characters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"hello\"",
+      "output": "[2, 3]",
+      "explanation": "Vowels are 'e', 'o' (2). Consonants are 'h', 'l', 'l' (3)."
+    },
+    {
+      "input": "s = \"Programming 101\"",
+      "output": "[3, 8]",
+      "explanation": "Vowels: 'o', 'a', 'i' (3). Consonants: 'P', 'r', 'g', 'r', 'm', 'm', 'n', 'g' (8). Non-letters like '1', '0' and space are ignored."
+    }
+  ],
+  "functionName": "countVowelsConsonants",
+  "starterCode": {
+    "javascript": "function countVowelsConsonants(s) {\n  // Write your code here\n}",
+    "python": "def count_vowels_consonants(s):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\ncountVowelsConsonants = count_vowels_consonants"
+  },
+  "tests": [
+    { "args": ["hello"], "expected": [2, 3], "hidden": false },
+    { "args": ["Programming 101"], "expected": [3, 8], "hidden": false },
+    { "args": ["Aeiou"], "expected": [5, 0], "hidden": false },
+    { "args": ["  !!!  "], "expected": [0, 0], "hidden": true },
+    { "args": ["A B C D E"], "expected": [2, 3], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Iterate through each character of the string. Convert to lowercase. Check if it is a letter using regex or character codes. If it is a vowel, increment vowel counter. If it is a letter but not a vowel, increment consonant counter.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["string-reverse"],
+  "hints": [
+    "First, convert the string to lowercase to simplify comparisons.",
+    "Check if a character is a letter by checking if it falls between 'a' and 'z'.",
+    "Define a set of vowels: 'a', 'e', 'i', 'o', 'u'. If a character is a letter and belongs to the set, increment the vowel count. Else, increment the consonant count."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Filter the string using regular expressions for vowels and consonants separately, returning their match counts.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n) (due to match array allocation)",
+    "code": "function countVowelsConsonants(s) {\n  const vowels = s.match(/[aeiouAEIOU]/g) || [];\n  const consonants = s.match(/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]/g) || [];\n  return [vowels.length, consonants.length];\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Iterate through the string character by character. Increment counters using constant-time check tables, avoiding extra memory allocation.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function countVowelsConsonants(s) {\n  let vowels = 0;\n  let consonants = 0;\n  const vowelSet = new Set(['a', 'e', 'i', 'o', 'u']);\n  \n  for (let i = 0; i < s.length; i++) {\n    const char = s[i].toLowerCase();\n    if (char >= 'a' && char <= 'z') {\n      if (vowelSet.has(char)) {\n        vowels++;\n      } else {\n        consonants++;\n      }\n    }\n  }\n  return [vowels, consonants];\n}"
+  },
+  "interviewExplanation": "Using regular expression matches allocates extra match arrays, consuming O(n) space. The optimized approach counts characters in-place using simple range comparisons, using O(1) extra space."
+}

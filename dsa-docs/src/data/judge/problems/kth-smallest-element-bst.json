@@ -1,0 +1,36 @@
+{
+  "id": "kth-smallest-element-bst",
+  "title": "Kth Smallest Element in a BST",
+  "difficulty": "medium",
+  "topics": ["tree", "binary-search"],
+  "companies": ["amazon", "meta", "microsoft", "bloomberg"],
+  "statement": "Given the `root` of a binary search tree, and an integer `k`, return the `k`th smallest value (1-indexed) among all the values of the nodes in the tree.\n\nBuild a real `TreeNode` BST from `values`, then use an in-order traversal — which visits BST nodes in ascending order — stopping as soon as you've visited the `k`th node.",
+  "constraints": [
+    "The number of nodes in the tree is in the range [1, 10^4]",
+    "0 <= Node.val <= 10^4",
+    "1 <= k <= number of nodes in the tree"
+  ],
+  "examples": [
+    { "input": "root = [3,1,4,null,2], k = 1", "output": "1" },
+    { "input": "root = [5,3,6,2,4,null,null,1], k = 3", "output": "3" }
+  ],
+  "functionName": "kthSmallest",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction kthSmallest(values, k) {\n  const root = buildTree(values);\n  // your code here\n}",
+    "python": "def kth_smallest(values, k):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,1,4,null,2], 1], "expected": 1, "hidden": false },
+    { "args": [[5,3,6,2,4,null,null,1], 3], "expected": 3, "hidden": false },
+    { "args": [[1], 1], "expected": 1, "hidden": true },
+    { "args": [[5,3,6,2,4,null,null,1], 1], "expected": 1, "hidden": true },
+    { "args": [[5,3,6,2,4,null,null,1], 6], "expected": 6, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Perform an iterative in-order traversal using an explicit stack: push all left descendants first, then pop, decrement `k`, and if `k` reaches 0 return the popped node's value — otherwise move to its right child and repeat. This visits BST nodes in strictly ascending order, so the kth pop is exactly the kth smallest value, without needing to visit the entire tree.",
+    "complexity": "O(h + k) time / O(h) space"
+  },
+  "relatedProblems": ["validate-binary-search-tree", "lowest-common-ancestor-bst"]
+}

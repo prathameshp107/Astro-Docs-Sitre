@@ -1283,9 +1283,9 @@ export default function GitLabsPlatform() {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
     try {
-      const stored = JSON.parse(sessionStorage.getItem("git-progress") || '{"lessons":[],"bosses":[],"conflicts":[],"teams":[],"interview":[]}');
+      const stored = JSON.parse(localStorage.getItem("git-progress") || '{"lessons":[],"bosses":[],"conflicts":[],"teams":[],"interview":[]}');
       setProgress(stored);
-      const storedAch = JSON.parse(sessionStorage.getItem("git-achievements") || '[]');
+      const storedAch = JSON.parse(localStorage.getItem("git-achievements") || '[]');
       setAchievements(storedAch);
     } catch {}
     return () => clearTimeout(timer);
@@ -1293,7 +1293,7 @@ export default function GitLabsPlatform() {
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("git-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("git-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {
@@ -1307,7 +1307,7 @@ export default function GitLabsPlatform() {
     if (!achievements.find(a => a.id === id)) {
       const newAch = [...achievements, { id, title, date: Date.now() }];
       setAchievements(newAch);
-      try { sessionStorage.setItem("git-achievements", JSON.stringify(newAch)); } catch {}
+      try { localStorage.setItem("git-achievements", JSON.stringify(newAch)); } catch {}
     }
   }, [achievements]);
 

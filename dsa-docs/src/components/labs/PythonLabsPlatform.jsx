@@ -212,10 +212,10 @@ export default function PythonLabsPlatform() {
     return () => { cancelled = true; };
   }, []);
 
-  // Load progress from sessionStorage
+  // Load progress from localStorage
   useEffect(() => {
     try {
-      const stored = JSON.parse(sessionStorage.getItem("pyl-progress") || '{"lessons":[],"challenges":[],"projects":[],"bugs":[]}');
+      const stored = JSON.parse(localStorage.getItem("pyl-progress") || '{"lessons":[],"challenges":[],"projects":[],"bugs":[]}');
       setProgress(stored);
     } catch { /* ignore */ }
   }, []);
@@ -224,7 +224,7 @@ export default function PythonLabsPlatform() {
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
     try {
-      sessionStorage.setItem("pyl-progress", JSON.stringify(newProgress));
+      localStorage.setItem("pyl-progress", JSON.stringify(newProgress));
     } catch { /* ignore */ }
   }, []);
 

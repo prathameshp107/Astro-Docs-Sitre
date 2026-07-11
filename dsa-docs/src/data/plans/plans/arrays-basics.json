@@ -1,0 +1,57 @@
+{
+  "id": "arrays-basics",
+  "title": "Array Basics",
+  "tagline": "Build your foundations in linear structures: master traversal, array shifting, two-pointers, and spatial search with 15 essential challenges.",
+  "difficulty": "beginner",
+  "durationDays": 5,
+  "hoursPerDay": 1.0,
+  "tags": ["arrays", "basics", "two-pointers", "math"],
+  "heroTopics": ["Essential Traversal", "Two-Pointer Logic", "Element Shifting", "Subarrays & Merges"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: Essential Traversal & Search",
+      "items": [
+        { "type": "problem", "ref": "array-min-max", "label": "Code: Find Min and Max", "minutes": 20 },
+        { "type": "problem", "ref": "array-find-element", "label": "Code: Linear Search in Array", "minutes": 15 },
+        { "type": "problem", "ref": "array-is-sorted", "label": "Code: Check if Array is Sorted", "minutes": 15 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: Two-Pointer Technique",
+      "items": [
+        { "type": "problem", "ref": "array-reverse", "label": "Code: Reverse an Array", "minutes": 20 },
+        { "type": "problem", "ref": "array-palindrome", "label": "Code: Check Array Palindrome", "minutes": 20 },
+        { "type": "problem", "ref": "array-remove-duplicates", "label": "Code: Remove Duplicates in Sorted Array", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Shifting & Rotating Elements",
+      "items": [
+        { "type": "problem", "ref": "array-rotate-one", "label": "Code: Left Rotate Array by One", "minutes": 20 },
+        { "type": "problem", "ref": "array-rotate-k", "label": "Code: Left Rotate Array by K Steps", "minutes": 30 },
+        { "type": "problem", "ref": "array-move-zeroes", "label": "Code: Move Zeroes to End", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Day 4: Hashing & Simple Arithmetic",
+      "items": [
+        { "type": "problem", "ref": "array-missing-number", "label": "Code: Find the Missing Number", "minutes": 20 },
+        { "type": "problem", "ref": "array-max-consecutive-ones", "label": "Code: Max Consecutive Ones", "minutes": 15 },
+        { "type": "problem", "ref": "array-single-number", "label": "Code: Single Number", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Day 5: Subarrays & Merges",
+      "items": [
+        { "type": "problem", "ref": "array-two-sum-sorted", "label": "Code: Two Sum II (Sorted Input)", "minutes": 25 },
+        { "type": "problem", "ref": "array-merge-sorted", "label": "Code: Merge Two Sorted Arrays", "minutes": 20 },
+        { "type": "problem", "ref": "array-majority-element", "label": "Code: Majority Element", "minutes": 25 }
+      ]
+    }
+  ]
+}

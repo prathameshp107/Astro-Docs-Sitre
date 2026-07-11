@@ -347,11 +347,11 @@ export default function ReactLabsPlatform() {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  // Load progress from sessionStorage
+  // Load progress from localStorage
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
     try {
-      const stored = JSON.parse(sessionStorage.getItem("rl-progress") || '{"lessons":[],"bugs":[],"projects":[]}');
+      const stored = JSON.parse(localStorage.getItem("rl-progress") || '{"lessons":[],"bugs":[],"projects":[]}');
       setProgress(stored);
     } catch { /* ignore */ }
     return () => clearTimeout(timer);
@@ -361,7 +361,7 @@ export default function ReactLabsPlatform() {
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
     try {
-      sessionStorage.setItem("rl-progress", JSON.stringify(newProgress));
+      localStorage.setItem("rl-progress", JSON.stringify(newProgress));
     } catch { /* ignore */ }
   }, []);
 

@@ -1,0 +1,99 @@
+{
+  "id": "pattern-increasing-number-pyramid",
+  "title": "Increasing Number Pyramid Pattern",
+  "difficulty": "medium",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "cognizant"
+  ],
+  "statement": "Write a function to generate an increasing number pyramid pattern of height `n`.\n\nThe pattern consists of `n` rows. Each row `i` (0-indexed, from `0` to `n - 1`) consists of:\n1. `n - 1 - i` leading spaces.\n2. Numbers starting from `i + 1` increasing up to `2 * i + 1` (without spaces).\n3. Numbers decreasing from `2 * i` down to `i + 1` (without spaces).\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n   1\n  232\n 34543\n4567654\n```",
+  "constraints": [
+    "1 <= n <= 9"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "  1\n 232\n34543",
+      "explanation": "Increasing number pyramid of height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "    1\n   232\n  34543\n 4567654\n567898765",
+      "explanation": "Increasing number pyramid of height 5."
+    }
+  ],
+  "functionName": "patternIncreasingNumberPyramid",
+  "starterCode": {
+    "javascript": "function patternIncreasingNumberPyramid(n) {\n  // Write your code here\n}",
+    "python": "def pattern_increasing_number_pyramid(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternIncreasingNumberPyramid = pattern_increasing_number_pyramid"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "1",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": " 1\n232",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "  1\n 232\n34543",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "   1\n  232\n 34543\n4567654",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "    1\n   232\n  34543\n 4567654\n567898765",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row, print `n - 1 - i` space characters. Then, run a loop from `i + 1` to `2 * i + 1` and print the values. Next, run a loop from `2 * i` down to `i + 1` and print the values. Join the rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-pyramid",
+    "pattern-alphabet-pyramid"
+  ],
+  "hints": [
+    "Row `i` (0-indexed) has `n - 1 - i` leading spaces.",
+    "The numbers start at `i + 1` and increase to `2 * i + 1`.",
+    "Then they decrease from `2 * i` down to `i + 1`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "For each row `i` from `0` to `n-1`, append `n-1-i` spaces, run a loop from `i+1` to `2*i+1` to append increasing values, and another loop from `2*i` down to `i+1` to append decreasing values.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternIncreasingNumberPyramid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < n - 1 - i; j++) row += ' ';\n    for (let j = i + 1; j <= 2 * i + 1; j++) row += j;\n    for (let j = 2 * i; j >= i + 1; j--) row += j;\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Preconstruct spatial offsets using `' '.repeat(n - 1 - i)`. Loop to build the numeric content and concatenate.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternIncreasingNumberPyramid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    const spaces = ' '.repeat(n - 1 - i);\n    let numStr = '';\n    for (let j = i + 1; j <= 2 * i + 1; j++) numStr += j;\n    for (let j = 2 * i; j >= i + 1; j--) numStr += j;\n    rows.push(spaces + numStr);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "The number pyramid aligns numbers symmetrically. For row `i`, we calculate the leading spaces (`n - 1 - i`) and then draw numbers that ascend from `i + 1` to the peak `2*i + 1` and then descend back to `i + 1`."
+}

@@ -1,0 +1,39 @@
+{
+  "id": "linked-list-cycle",
+  "title": "Linked List Cycle",
+  "difficulty": "easy",
+  "topics": ["linked-list", "two-pointers"],
+  "companies": ["amazon", "google", "meta", "microsoft", "bloomberg"],
+  "statement": "Given the `head` of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if some node in the list can be reached again by continuously following the `next` pointer. Internally, `pos` denotes the index of the node that the tail's `next` pointer connects to (`-1` means there is no cycle).\n\nReturn `true` if there is a cycle, or `false` otherwise. Build the list from `values`, wire the tail's `next` to node `pos` when `pos !== -1`, then detect the cycle with Floyd's slow/fast pointer technique (do not rely on visited-set techniques that would need to store node references beyond this call).",
+  "constraints": [
+    "The number of nodes in the list is in the range [0, 10^4]",
+    "-10^5 <= Node.val <= 10^5",
+    "pos is -1 or a valid index in the linked list"
+  ],
+  "examples": [
+    { "input": "values = [3,2,0,-4], pos = 1", "output": "true", "explanation": "The tail connects to the node at index 1 (value 2), forming a cycle." },
+    { "input": "values = [1,2], pos = 0", "output": "true" },
+    { "input": "values = [1], pos = -1", "output": "false" }
+  ],
+  "functionName": "hasCycle",
+  "starterCode": {
+    "javascript": "class ListNode {\n  constructor(val, next = null) { this.val = val; this.next = next; }\n}\nfunction buildList(values, pos) {\n  if (!values.length) return null;\n  const nodes = values.map(v => new ListNode(v));\n  for (let i = 0; i < nodes.length - 1; i++) nodes[i].next = nodes[i + 1];\n  if (pos !== -1) nodes[nodes.length - 1].next = nodes[pos];\n  return nodes[0];\n}\nfunction hasCycle(values, pos) {\n  const head = buildList(values, pos);\n  // your code here: use Floyd's slow/fast pointer technique starting from `head`\n}",
+    "python": "def has_cycle(values, pos):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,2,0,-4], 1], "expected": true, "hidden": false },
+    { "args": [[1,2], 0], "expected": true, "hidden": false },
+    { "args": [[1], -1], "expected": false, "hidden": true },
+    { "args": [[], -1], "expected": false, "hidden": true },
+    { "args": [[1,2,3,4,5], -1], "expected": false, "hidden": true },
+    { "args": [[1,2,3,4,5], 4], "expected": true, "hidden": true },
+    { "args": [[1,2,3,4,5], 0], "expected": true, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use two pointers, `slow` (moves one step at a time) and `fast` (moves two steps at a time), both starting at `head`. If there is no cycle, `fast` (or `fast.next`) will reach `null` and you can return false. If there is a cycle, `fast` will eventually lap `slow` and they will point to the same node — return true as soon as that happens.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["reverse-linked-list"]
+}

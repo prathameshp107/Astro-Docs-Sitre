@@ -118,7 +118,7 @@ export default function TailwindLabsPlatform() {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
     try {
-      const stored = JSON.parse(sessionStorage.getItem("tw-progress") || '{"lessons":[]}');
+      const stored = JSON.parse(localStorage.getItem("tw-progress") || '{"lessons":[]}');
       setProgress(stored);
     } catch {}
     return () => clearTimeout(timer);
@@ -126,7 +126,7 @@ export default function TailwindLabsPlatform() {
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("tw-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("tw-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {

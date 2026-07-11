@@ -1,0 +1,60 @@
+{
+  "id": "array-move-zeroes",
+  "title": "Move Zeroes to End",
+  "difficulty": "easy",
+  "topics": ["arrays", "two-pointers"],
+  "companies": ["google", "meta", "bloomberg"],
+  "statement": "Given an integer array `nums`, move all `0`'s to the end of it in-place while maintaining the relative order of the non-zero elements.\n\nNote that you must do this in-place without making a copy of the array.",
+  "constraints": [
+    "1 <= nums.length <= 10^4",
+    "-2^31 <= nums[i] <= 2^31 - 1"
+  ],
+  "examples": [
+    {
+      "input": "nums = [0, 1, 0, 3, 12]",
+      "output": "[1, 3, 12, 0, 0]",
+      "explanation": "Moving the two zeroes to the end yields [1, 3, 12, 0, 0]."
+    },
+    {
+      "input": "nums = [0]",
+      "output": "[0]",
+      "explanation": "No non-zero elements present."
+    }
+  ],
+  "functionName": "moveZeroes",
+  "starterCode": {
+    "javascript": "function moveZeroes(nums) {\n  // Write your code here\n}",
+    "python": "def move_zeroes(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nmoveZeroes = move_zeroes"
+  },
+  "tests": [
+    { "args": [[0, 1, 0, 3, 12]], "expected": [1, 3, 12, 0, 0], "hidden": false },
+    { "args": [[0]], "expected": [0], "hidden": false },
+    { "args": [[1, 2, 3]], "expected": [1, 2, 3], "hidden": false },
+    { "args": [[0, 0, 0, 1]], "expected": [1, 0, 0, 0], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a two-pointer approach. Keep track of the position of the last non-zero element using `lastNonZeroFoundAt`. Iterate through the array. When a non-zero element is found, swap it with the element at `lastNonZeroFoundAt` and increment `lastNonZeroFoundAt`.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-remove-duplicates"],
+  "hints": [
+    "You can use a two-pointer approach here.",
+    "Keep a pointer `lastNonZeroAt` at 0. Iterate `i` through the array.",
+    "If `nums[i] !== 0`, swap `nums[i]` with `nums[lastNonZeroAt]` and increment `lastNonZeroAt`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Create a temporary array, push all non-zero elements, fill the rest with zeroes, and copy them back into the original array.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function moveZeroes(nums) {\n  let temp = [];\n  for (let i = 0; i < nums.length; i++) {\n    if (nums[i] !== 0) temp.push(nums[i]);\n  }\n  while (temp.length < nums.length) {\n    temp.push(0);\n  }\n  for (let i = 0; i < nums.length; i++) {\n    nums[i] = temp[i];\n  }\n  return nums;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Maintain a slow pointer `lastNonZeroAt`. Scan the array with a fast pointer. Swap non-zero elements into the slow pointer position, bubble-shifting zeroes to the right.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function moveZeroes(nums) {\n  let lastNonZeroAt = 0;\n  for (let i = 0; i < nums.length; i++) {\n    if (nums[i] !== 0) {\n      let temp = nums[i];\n      nums[i] = nums[lastNonZeroAt];\n      nums[lastNonZeroAt] = temp;\n      lastNonZeroAt++;\n    }\n  }\n  return nums;\n}"
+  },
+  "interviewExplanation": "Instead of allocating O(n) memory to push non-zero elements, we use a two-pointer partitioning approach (similar to QuickSort's partition). One pointer tracks the boundary of non-zero elements and the other scans, swapping elements in-place in O(n) time and O(1) space."
+}

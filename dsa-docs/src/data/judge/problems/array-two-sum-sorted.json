@@ -1,0 +1,62 @@
+{
+  "id": "array-two-sum-sorted",
+  "title": "Two Sum II - Input Array Is Sorted",
+  "difficulty": "medium",
+  "topics": ["arrays", "two-pointers"],
+  "companies": ["google", "amazon", "meta"],
+  "statement": "Given an array of integers `nums` that is already sorted in non-decreasing order, find two numbers such that they add up to a specific `target` number.\n\nReturn the 0-based indices of the two numbers as a two-element array `[index1, index2]`. You may assume that each input has exactly one solution, and you cannot use the same element twice.",
+  "constraints": [
+    "2 <= nums.length <= 3 * 10^4",
+    "-1000 <= nums[i] <= 1000",
+    "nums is sorted in non-decreasing order.",
+    "-2000 <= target <= 2000"
+  ],
+  "examples": [
+    {
+      "input": "nums = [2, 7, 11, 15], target = 9",
+      "output": "[0, 1]",
+      "explanation": "The sum of 2 and 7 is 9. Therefore index1 = 0, index2 = 1."
+    },
+    {
+      "input": "nums = [2, 3, 4], target = 6",
+      "output": "[0, 2]",
+      "explanation": "The sum of 2 and 4 is 6. Therefore index1 = 0, index2 = 2."
+    }
+  ],
+  "functionName": "twoSumSorted",
+  "starterCode": {
+    "javascript": "function twoSumSorted(nums, target) {\n  // Write your code here\n}",
+    "python": "def two_sum_sorted(nums, target):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\ntwoSumSorted = two_sum_sorted"
+  },
+  "tests": [
+    { "args": [[2, 7, 11, 15], 9], "expected": [0, 1], "hidden": false },
+    { "args": [[2, 3, 4], 6], "expected": [0, 2], "hidden": false },
+    { "args": [[-1, 0], -1], "expected": [0, 1], "hidden": false },
+    { "args": [[1, 2, 3, 4, 6], 10], "expected": [3, 4], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use the two-pointer approach. Set left = 0 and right = n - 1. Calculate sum = nums[left] + nums[right]. If sum === target, return [left, right]. If sum < target, increment left. If sum > target, decrement right.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["two-sum"],
+  "hints": [
+    "Since the array is sorted, you can check values from both ends to narrow down the target.",
+    "Set `left = 0` and `right = nums.length - 1`.",
+    "If their sum matches target, return their indices. If the sum is too small, increment `left`. If the sum is too large, decrement `right`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Use nested loops to check every pair of elements in the array to see if they sum up to target.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(1)",
+    "code": "function twoSumSorted(nums, target) {\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      if (nums[i] + nums[j] === target) return [i, j];\n    }\n  }\n  return [];\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use the two-pointer technique to search from both ends inwards, shrinking the bounds in linear time and O(1) space.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function twoSumSorted(nums, target) {\n  let left = 0;\n  let right = nums.length - 1;\n  while (left < right) {\n    let sum = nums[left] + nums[right];\n    if (sum === target) {\n      return [left, right];\n    } else if (sum < target) {\n      left++;\n    } else {\n      right--;\n    }\n  }\n  return [];\n}"
+  },
+  "interviewExplanation": "A brute-force solution checks all pairs in O(n^2) time. While we can use a hash map for O(n) time and O(n) space, the fact that the array is sorted allows us to use a two-pointer approach, optimizing the space complexity to O(1)."
+}

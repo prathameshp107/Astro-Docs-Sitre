@@ -1,0 +1,41 @@
+{
+  "id": "longest-repeating-character-replacement",
+  "title": "Longest Repeating Character Replacement",
+  "difficulty": "medium",
+  "topics": ["strings", "sliding-window"],
+  "companies": ["amazon", "google", "meta", "microsoft"],
+  "statement": "You are given a string `s` and an integer `k`. You can choose any character of the string and change it to any other uppercase English character, at most `k` times.\n\nReturn the length of the longest substring containing the same letter you can get after performing the above operations.\n\nSlide a window and track the count of the most frequent character inside it. A window of length `windowLen` is achievable with at most `k` replacements when `windowLen - maxFreq <= k`; otherwise shrink from the left.",
+  "constraints": [
+    "1 <= s.length <= 10^5",
+    "s consists of only uppercase English letters",
+    "0 <= k <= s.length"
+  ],
+  "examples": [
+    { "input": "s = \"ABAB\", k = 2", "output": "4", "explanation": "Replace the two 'A's or two 'B's to form \"AAAA\" or \"BBBB\"." },
+    { "input": "s = \"AABABBA\", k = 1", "output": "4", "explanation": "Replace one 'A' in \"AABA\" to form \"AABBA\" -> \"ABBB\", giving a window of length 4." }
+  ],
+  "functionName": "characterReplacement",
+  "starterCode": {
+    "javascript": "function characterReplacement(s, k) {\n  // your code here\n}",
+    "python": "def character_replacement(s, k):\n    pass"
+  },
+  "tests": [
+    { "args": ["ABAB", 2], "expected": 4, "hidden": false },
+    { "args": ["AABABBA", 1], "expected": 4, "hidden": false },
+    { "args": ["A", 0], "expected": 1, "hidden": true },
+    { "args": ["AAAA", 2], "expected": 4, "hidden": true },
+    { "args": ["ABCDE", 1], "expected": 2, "hidden": true },
+    { "args": ["ABBB", 2], "expected": 4, "hidden": true },
+    { "args": ["AAAB", 0], "expected": 3, "hidden": true },
+    { "args": ["ABABBA", 2], "expected": 5, "hidden": true },
+    { "args": ["XYYX", 2], "expected": 4, "hidden": true },
+    { "args": ["QWERTYUIOP", 5], "expected": 6, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a sliding window with a frequency count of characters inside it. Track `maxFreq`, the count of the most frequent character seen in any window so far (it only needs to grow, never shrink, since a smaller window can't beat a previous best). At each step expand `right`, update counts and `maxFreq`. If the current window size minus `maxFreq` exceeds `k` (too many characters need replacing), shrink from `left`. The answer is the largest window size reached.",
+    "complexity": "O(n) time / O(1) space (26-letter alphabet)"
+  },
+  "relatedProblems": ["longest-substring-without-repeating"]
+}

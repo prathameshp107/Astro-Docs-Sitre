@@ -1,0 +1,106 @@
+{
+  "id": "pattern-right-triangle",
+  "title": "Right Triangle Star Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "cognizant"
+  ],
+  "statement": "Write a function to generate a right-angled triangle star pattern of height `n`.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n*\n**\n***\n****\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "*\n**\n***",
+      "explanation": "A right triangle of height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "*\n**\n***\n****\n*****",
+      "explanation": "A right triangle of height 5."
+    }
+  ],
+  "functionName": "patternRightTriangle",
+  "starterCode": {
+    "javascript": "function patternRightTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_right_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternRightTriangle = pattern_right_triangle"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "*",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "*\n**",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "*\n**\n***",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "*\n**\n***\n****",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "*\n**\n***\n****\n*****",
+      "hidden": true
+    },
+    {
+      "args": [
+        8
+      ],
+      "expected": "*\n**\n***\n****\n*****\n******\n*******\n********",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop from `1` to `n` representing rows. The inner loop runs `i` times (for row `i`) and appends stars. Join the rows using `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-square",
+    "pattern-inverted-right-triangle"
+  ],
+  "hints": [
+    "The outer loop runs `n` times for the rows.",
+    "For the `i`-th row (1-indexed), you need to print exactly `i` stars.",
+    "The inner loop limit should depend on the outer loop variable (e.g. `j <= i`)."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Run an outer loop `i` from `1` to `n`. In the inner loop, append a star `i` times to construct the triangle row.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRightTriangle(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    let row = '';\n    for (let j = 1; j <= i; j++) {\n      row += '*';\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Construct each row string by repeating `'*'` exactly `i` times using the `.repeat()` method, running in linear time per row.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRightTriangle(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    rows.push('*'.repeat(i));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "On row `i`, we need `i` stars. We run a loop from `1` to `n` and use `'*'.repeat(i)` to construct each row string, which reduces nested loop complexity and simplifies code structure."
+}

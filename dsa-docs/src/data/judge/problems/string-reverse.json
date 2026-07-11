@@ -1,0 +1,61 @@
+{
+  "id": "string-reverse",
+  "title": "Reverse a String",
+  "difficulty": "easy",
+  "topics": ["strings", "two-pointers"],
+  "companies": ["tcs", "infosys", "wipro"],
+  "statement": "Write a function that takes a string `s` and returns the reversed string.",
+  "constraints": [
+    "1 <= s.length <= 10^4",
+    "s consists of printable ASCII characters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"hello\"",
+      "output": "\"olleh\"",
+      "explanation": "The characters in \"hello\" read backwards are \"olleh\"."
+    },
+    {
+      "input": "s = \"Astro\"",
+      "output": "\"ortsA\"",
+      "explanation": "Reversing preserves upper/lower case."
+    }
+  ],
+  "functionName": "reverseString",
+  "starterCode": {
+    "javascript": "function reverseString(s) {\n  // Write your code here\n}",
+    "python": "def reverse_string(s):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nreverseString = reverse_string"
+  },
+  "tests": [
+    { "args": ["hello"], "expected": "olleh", "hidden": false },
+    { "args": ["Astro"], "expected": "ortsA", "hidden": false },
+    { "args": ["a"], "expected": "a", "hidden": false },
+    { "args": ["Racecar"], "expected": "racecaR", "hidden": true },
+    { "args": ["123456"], "expected": "654321", "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "You can reverse a string by converting it to an array of characters, swapping elements using two pointers, and joining it back into a string.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["string-palindrome"],
+  "hints": [
+    "JavaScript strings are immutable, so you'll need to build a new string or convert it to an array first.",
+    "Using built-in methods, you can split, reverse, and join.",
+    "To do it manually, iterate through the string backwards and concatenate characters to a new string."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Iterate backwards from the last index of the string to 0, concatenating each character to a new string.",
+    "timeComplexity": "O(n^2) (due to string concatenation copy operations in JavaScript)",
+    "spaceComplexity": "O(n)",
+    "code": "function reverseString(s) {\n  let reversed = '';\n  for (let i = s.length - 1; i >= 0; i--) {\n    reversed += s[i];\n  }\n  return reversed;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Convert the string to an array, reverse the array in-place using two pointers (swapping elements from outer ends inward), and then join it back to a string.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function reverseString(s) {\n  let arr = s.split('');\n  let left = 0;\n  let right = arr.length - 1;\n  while (left < right) {\n    let temp = arr[left];\n    arr[left] = arr[right];\n    arr[right] = temp;\n    left++;\n    right--;\n  }\n  return arr.join('');\n}"
+  },
+  "interviewExplanation": "In JavaScript, string concatenation `s += char` takes O(n) per step, leading to O(n^2) time. Converting to an array and using two pointers allows us to swap in-place, achieving O(n) time complexity."
+}

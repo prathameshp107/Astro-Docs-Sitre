@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getJudgeProblemById } from "../../data/judge/index.js";
+import { celebrate } from "../labs/shared/index.js";
 import { useJudgeStore } from "../../store/judgeStore.js";
+
+const JUDGE_CONFETTI = ["#22c55e", "#4ade80", "#a78bfa", "#f59e0b"];
 import JudgeEditor from "./JudgeEditor.jsx";
 import ProblemStatement from "./ProblemStatement.jsx";
 import ResultsPanel from "./ResultsPanel.jsx";
@@ -187,6 +190,9 @@ export default function JudgeView({ problemId }) {
             runtimeMs: runtime,
             failedCase: data.failedCase,
           });
+          if (data.verdict === "accepted") {
+            celebrate(JUDGE_CONFETTI);
+          }
         }
       }
     },
@@ -241,6 +247,8 @@ export default function JudgeView({ problemId }) {
           isRunning={status === "running"}
           isSubmitting={status === "submitting"}
           language={language}
+          functionName={problem.functionName}
+          starterCode={problem.starterCode?.[language] || problem.starterCode?.javascript || ""}
         />
         <ResultsPanel
           status={status}

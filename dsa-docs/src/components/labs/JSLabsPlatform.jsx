@@ -161,11 +161,11 @@ export default function JSLabsPlatform() {
   const workspaceRef = useRef(null);
   const terminateRef = useRef(null);
 
-  // Load progress from sessionStorage
+  // Load progress from localStorage
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
     try {
-      const stored = JSON.parse(sessionStorage.getItem("jsl-progress") || '{"lessons":[],"bugs":[],"projects":[]}');
+      const stored = JSON.parse(localStorage.getItem("jsl-progress") || '{"lessons":[],"bugs":[],"projects":[]}');
       setProgress(stored);
     } catch { /* ignore */ }
     return () => clearTimeout(timer);
@@ -173,7 +173,7 @@ export default function JSLabsPlatform() {
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("jsl-progress", JSON.stringify(newProgress)); } catch { /* ignore */ }
+    try { localStorage.setItem("jsl-progress", JSON.stringify(newProgress)); } catch { /* ignore */ }
   }, []);
 
   const markLessonDone = useCallback((id) => {

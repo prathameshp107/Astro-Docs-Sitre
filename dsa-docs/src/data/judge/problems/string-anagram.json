@@ -1,0 +1,61 @@
+{
+  "id": "string-anagram",
+  "title": "Valid Anagram",
+  "difficulty": "easy",
+  "topics": ["strings", "hash-table"],
+  "companies": ["google", "amazon", "uber"],
+  "statement": "Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.\n\nAn Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
+  "constraints": [
+    "1 <= s.length, t.length <= 5 * 10^4",
+    "s and t consist of lowercase English letters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"anagram\", t = \"nagaram\"",
+      "output": "true",
+      "explanation": "Both strings contain the same characters with identical frequencies."
+    },
+    {
+      "input": "s = \"rat\", t = \"car\"",
+      "output": "false",
+      "explanation": "t lacks 'r' and s lacks 'c'."
+    }
+  ],
+  "functionName": "isAnagram",
+  "starterCode": {
+    "javascript": "function isAnagram(s, t) {\n  // Write your code here\n}",
+    "python": "def is_anagram(s, t):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nisAnagram = is_anagram"
+  },
+  "tests": [
+    { "args": ["anagram", "nagaram"], "expected": true, "hidden": false },
+    { "args": ["rat", "car"], "expected": false, "hidden": false },
+    { "args": ["ab", "a"], "expected": false, "hidden": false },
+    { "args": ["a", "a"], "expected": true, "hidden": true },
+    { "args": ["awesome", "someawe"], "expected": true, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Check if lengths differ first. If they do, they cannot be anagrams. Sort characters of both strings and compare them, or build a frequency counting hash table.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["string-first-unique-char"],
+  "hints": [
+    "If lengths of strings `s` and `t` are different, return false immediately.",
+    "You can sort characters of both strings and compare them. If they match, they are anagrams.",
+    "To optimize, use a character frequency table (like an array of size 26). Increment counts for `s` and decrement counts for `t`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Sort both strings alphabetically and compare if they are equal.",
+    "timeComplexity": "O(n log n)",
+    "spaceComplexity": "O(n)",
+    "code": "function isAnagram(s, t) {\n  if (s.length !== t.length) return false;\n  const sortedS = s.split('').sort().join('');\n  const sortedT = t.split('').sort().join('');\n  return sortedS === sortedT;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use a character count array of size 26. Populate frequency counts for `s` and decrement for `t`. If all frequencies are zero, they are anagrams.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1) (size 26 array)",
+    "code": "function isAnagram(s, t) {\n  if (s.length !== t.length) return false;\n  const counts = new Array(26).fill(0);\n  for (let i = 0; i < s.length; i++) {\n    counts[s.charCodeAt(i) - 97]++;\n    counts[t.charCodeAt(i) - 97]--;\n  }\n  for (let i = 0; i < 26; i++) {\n    if (counts[i] !== 0) return false;\n  }\n  return true;\n}"
+  },
+  "interviewExplanation": "Sorting characters takes O(n log n) time. We optimize it to O(n) time using a frequency map/array. Since we only deal with lowercase letters, the auxiliary space is bounded at O(1) (26 characters)."
+}

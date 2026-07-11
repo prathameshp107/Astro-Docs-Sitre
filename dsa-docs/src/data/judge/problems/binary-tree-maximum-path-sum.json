@@ -1,0 +1,36 @@
+{
+  "id": "binary-tree-maximum-path-sum",
+  "title": "Binary Tree Maximum Path Sum",
+  "difficulty": "hard",
+  "topics": ["tree", "depth-first-search"],
+  "companies": ["amazon", "meta", "microsoft", "google", "bloomberg"],
+  "statement": "A **path** in a binary tree is a sequence of nodes where each pair of adjacent nodes has an edge connecting them, and no node appears more than once. A path does not need to pass through the root.\n\nThe **path sum** of a path is the sum of the node's values in the path.\n\nGiven the `root` of a binary tree, return the maximum path sum of any **non-empty** path.\n\nBuild a real `TreeNode` tree from `values`, then run a post-order DFS where each call returns the best *downward* extension it can offer its parent, while a global running maximum considers the best path that *bends* through the current node (using both children).",
+  "constraints": [
+    "The number of nodes in the tree is in the range [1, 3 * 10^4]",
+    "-1000 <= Node.val <= 1000"
+  ],
+  "examples": [
+    { "input": "root = [1,2,3]", "output": "6", "explanation": "The optimal path is 2 -> 1 -> 3, with a sum of 6." },
+    { "input": "root = [-10,9,20,null,null,15,7]", "output": "42", "explanation": "The optimal path is 15 -> 20 -> 7, with a sum of 42." }
+  ],
+  "functionName": "maxPathSum",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction maxPathSum(values) {\n  const root = buildTree(values);\n  // your code here\n}",
+    "python": "def max_path_sum(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3]], "expected": 6, "hidden": false },
+    { "args": [[-10,9,20,null,null,15,7]], "expected": 42, "hidden": false },
+    { "args": [[-3]], "expected": -3, "hidden": true },
+    { "args": [[2,-1]], "expected": 2, "hidden": true },
+    { "args": [[-1,-2,-3]], "expected": -1, "hidden": true },
+    { "args": [[5,4,8,11,null,13,4,7,2,null,null,null,1]], "expected": 48, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Post-order DFS. For each node, recursively compute the best downward path sum contributed by its left and right children, clamping negative contributions to 0 (a negative subtree is never worth including). At each node, check whether `node.val + leftGain + rightGain` (a path that bends through this node using both children) beats the global maximum found so far. Return to the caller only `node.val + max(leftGain, rightGain)`, since a path passed up to the parent can only extend through one side.",
+    "complexity": "O(n) time / O(h) space"
+  },
+  "relatedProblems": ["diameter-of-binary-tree"]
+}

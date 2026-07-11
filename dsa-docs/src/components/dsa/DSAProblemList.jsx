@@ -6,7 +6,17 @@ import { DSA_PROBLEMS, DSA_TOPICS, DIFFICULTY, getTopicsWithCounts } from "../..
 import { FiArrowLeft } from "react-icons/fi";
 
 
-function ProblemRow({ problem, index, base }) {
+const SOLVED_KEY = "dsa-solved-v1";
+
+function readSolved() {
+  try {
+    return JSON.parse(localStorage.getItem(SOLVED_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function ProblemRow({ problem, index, base, solved }) {
   const diff = DIFFICULTY[problem.difficulty] || DIFFICULTY.Easy;
 
   return (
@@ -15,8 +25,8 @@ function ProblemRow({ problem, index, base }) {
       className="dsa-problem-row"
       style={{ animationDelay: `${index * 0.03}s` }}
     >
-      <div className="dsa-problem-status">
-        <span className="dsa-problem-status-dot" />
+      <div className="dsa-problem-status" title={solved ? "Solved" : "Unsolved"}>
+        <span className={`dsa-problem-status-dot ${solved ? "solved" : ""}`} />
       </div>
       <span className="dsa-problem-num">{problem.number}.</span>
       <span className="dsa-problem-name">{problem.title}</span>
@@ -42,10 +52,12 @@ export default function DSAProblemList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [solvedIds, setSolvedIds] = useState([]);
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 350);
+    setSolvedIds(readSolved());
     return () => clearTimeout(timer);
   }, []);
 
@@ -73,7 +85,19 @@ export default function DSAProblemList() {
     return problems;
   }, [activeTopic, searchQuery, difficultyFilter]);
 
-  const solvedCount = 0; // Will be implemented with progress tracking
+  const solvedSet = useMemo(() => new Set(solvedIds), [solvedIds]);
+  const solvedCount = useMemo(
+    () => filteredProblems.filter(p => solvedSet.has(p.id)).length,
+    [filteredProblems, solvedSet]
+  );
+  const solvedByTopic = useMemo(() => {
+    const counts = {};
+    for (const p of DSA_PROBLEMS) {
+      if (!solvedSet.has(p.id)) continue;
+      for (const t of p.topics) counts[t] = (counts[t] || 0) + 1;
+    }
+    return counts;
+  }, [solvedSet]);
 
   if (loading) {
     return (
@@ -185,7 +209,7 @@ export default function DSAProblemList() {
                 <div className="dsa-ps-topic-bar">
                   <div
                     className="dsa-ps-topic-fill"
-                    style={{ width: `${Math.min(100, (solvedCount / Math.max(1, topic.count)) * 100)}%`, background: topic.color }}
+                    style={{ width: `${Math.min(100, ((solvedByTopic[topic.id] || 0) / Math.max(1, topic.count)) * 100)}%`, background: topic.color }}
                   />
                 </div>
               )}
@@ -234,7 +258,7 @@ export default function DSAProblemList() {
               </div>
             ) : (
               filteredProblems.map((problem, i) => (
-                <ProblemRow key={problem.id} problem={problem} index={i} base={base} />
+                <ProblemRow key={problem.id} problem={problem} index={i} base={base} solved={solvedSet.has(problem.id)} />
               ))
             )}
           </div>

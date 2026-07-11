@@ -1,0 +1,60 @@
+{
+  "id": "array-majority-element",
+  "title": "Majority Element",
+  "difficulty": "easy",
+  "topics": ["arrays"],
+  "companies": ["google", "amazon", "meta"],
+  "statement": "Given an array `nums` of size `n`, find the majority element. The majority element is the element that appears more than `⌊n / 2⌋` times.\n\nYou may assume that the majority element always exists in the array.",
+  "constraints": [
+    "1 <= nums.length <= 5 * 10^4",
+    "-2^31 <= nums[i] <= 2^31 - 1"
+  ],
+  "examples": [
+    {
+      "input": "nums = [3, 2, 3]",
+      "output": "3",
+      "explanation": "3 appears twice in a 3-element array, which is more than ⌊3 / 2⌋ = 1 time."
+    },
+    {
+      "input": "nums = [2, 2, 1, 1, 1, 2, 2]",
+      "output": "2",
+      "explanation": "2 appears 4 times in a 7-element array, which is more than ⌊7 / 2⌋ = 3 times."
+    }
+  ],
+  "functionName": "majorityElement",
+  "starterCode": {
+    "javascript": "function majorityElement(nums) {\n  // Write your code here\n}",
+    "python": "def majority_element(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nmajorityElement = majority_element"
+  },
+  "tests": [
+    { "args": [[3, 2, 3]], "expected": 3, "hidden": false },
+    { "args": [[2, 2, 1, 1, 1, 2, 2]], "expected": 2, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": false },
+    { "args": [[1, 1, 2, 2, 2]], "expected": 2, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use Boyer-Moore Voting Algorithm. Initialize `candidate` and `count = 0`. Iterate through the array: if `count === 0`, set `candidate = nums[i]`. Increment `count` if `nums[i] === candidate`, else decrement `count`. The candidate is the majority element.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-min-max"],
+  "hints": [
+    "You can sort the array. If a majority element exists, it will always be at index `n / 2`.",
+    "Alternatively, track counts in a hash map. But there is an O(n) time and O(1) space algorithm.",
+    "Look up Boyer-Moore Voting Algorithm. Keep a candidate and a balance counter."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Sort the array in non-decreasing order. The majority element must reside at index `Math.floor(nums.length / 2)`.",
+    "timeComplexity": "O(n log n)",
+    "spaceComplexity": "O(log n)",
+    "code": "function majorityElement(nums) {\n  nums.sort((a, b) => a - b);\n  return nums[Math.floor(nums.length / 2)];\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use Boyer-Moore Voting Algorithm. We maintain a candidate element and a count. We increment or decrement the count depending on whether we match the candidate. If the count hits 0, we select the current element as a new candidate.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function majorityElement(nums) {\n  let candidate = null;\n  let count = 0;\n  for (let i = 0; i < nums.length; i++) {\n    if (count === 0) {\n      candidate = nums[i];\n    }\n    count += (nums[i] === candidate) ? 1 : -1;\n  }\n  return candidate;\n}"
+  },
+  "interviewExplanation": "Sorting the array takes O(n log n) time. A Hash Map count takes O(n) space. By using Boyer-Moore Voting, we can identify the majority element in O(n) time and O(1) auxiliary space by canceling out non-matching elements."
+}

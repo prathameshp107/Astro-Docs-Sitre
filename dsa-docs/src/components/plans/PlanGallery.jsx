@@ -9,6 +9,9 @@ const PLAN_ICONS = {
   "js-mastery":         "✨",
   "last-minute":        "🔥",
   "sql-in-7-days":      "🗄️",
+  "patterns-mastery":   "⭐",
+  "arrays-basics":     "📦",
+  "strings-basics":    "📝",
 };
 const DIFF_ICONS = { beginner: "🌱", intermediate: "⚡", advanced: "🔥" };
 

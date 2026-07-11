@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect, useMemo } from "react";
 import Editor from "@monaco-editor/react";
 import { FiPlay, FiRefreshCw } from "react-icons/fi";
 
@@ -35,6 +35,57 @@ function defineJudgeThemes(monaco) {
   });
 }
 
+function extractFunctionName(starterCode) {
+  if (!starterCode) return "";
+  const matches = [...starterCode.matchAll(/function\s+([a-zA-Z0-9_$]+)\s*\(/g)];
+  if (matches.length > 0) {
+    for (let i = matches.length - 1; i >= 0; i--) {
+      const name = matches[i][1];
+      if (name !== "buildTree" && name !== "buildList" && name !== "toArray" && name !== "treeToArray") {
+        return name;
+      }
+    }
+  }
+  const classMatches = [...starterCode.matchAll(/class\s+([a-zA-Z0-9_$]+)/g)];
+  if (classMatches.length > 0) {
+    for (let i = classMatches.length - 1; i >= 0; i--) {
+      const name = classMatches[i][1];
+      if (name !== "TreeNode" && name !== "ListNode" && name !== "Node" && name !== "LinkedList") {
+        return name;
+      }
+    }
+  }
+  return "";
+}
+
+function splitBoilerplate(codeStr, functionName) {
+  if (!codeStr || !functionName) {
+    return { boilerplate: "", userCode: codeStr || "" };
+  }
+  const funcPattern = new RegExp(`(?:function|const|let|var|def)\\s+${functionName}\\b`);
+  const match = codeStr.match(funcPattern);
+  if (!match) {
+    return { boilerplate: "", userCode: codeStr };
+  }
+  let splitIndex = match.index;
+  const beforeFunc = codeStr.substring(0, splitIndex).trimEnd();
+  if (beforeFunc.endsWith("*/")) {
+    const jsdocStart = beforeFunc.lastIndexOf("/*");
+    if (jsdocStart !== -1) {
+      splitIndex = jsdocStart;
+    }
+  } else if (beforeFunc.endsWith('"""') || beforeFunc.endsWith("'''")) {
+    const quote = beforeFunc.endsWith('"""') ? '"""' : "'''";
+    const docstringStart = beforeFunc.substring(0, beforeFunc.length - 3).lastIndexOf(quote);
+    if (docstringStart !== -1) {
+      splitIndex = docstringStart;
+    }
+  }
+  const boilerplate = codeStr.substring(0, splitIndex);
+  const userCode = codeStr.substring(splitIndex);
+  return { boilerplate, userCode };
+}
+
 export default function JudgeEditor({
   code,
   onChange,
@@ -45,6 +96,8 @@ export default function JudgeEditor({
   isRunning,
   isSubmitting,
   language = "javascript",
+  functionName,
+  starterCode,
 }) {
   const [theme, setTheme] = useState("jdg-dark");
 
@@ -54,6 +107,36 @@ export default function JudgeEditor({
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => onRun());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const initialBoilerplate = useMemo(() => {
+    const finalFunctionName = functionName || extractFunctionName(starterCode);
+    const split = splitBoilerplate(starterCode, finalFunctionName);
+    return split.boilerplate;
+  }, [starterCode, functionName]);
+
+  const { boilerplate, userCode } = useMemo(() => {
+    if (initialBoilerplate && code && code.startsWith(initialBoilerplate)) {
+      return {
+        boilerplate: initialBoilerplate,
+        userCode: code.substring(initialBoilerplate.length),
+      };
+    }
+    return { boilerplate: "", userCode: code || "" };
+  }, [code, initialBoilerplate]);
+
+  const hasBoilerplate = boilerplate.trim().length > 0;
+  const displayCode = hasBoilerplate ? userCode : code;
+
+  const handleCodeChange = useCallback(
+    (value) => {
+      if (hasBoilerplate) {
+        onChange(boilerplate + (value || ""));
+      } else {
+        onChange(value || "");
+      }
+    },
+    [boilerplate, hasBoilerplate, onChange]
+  );
 
   const busy = isRunning || isSubmitting;
   const supportedLangs = [
@@ -105,8 +188,8 @@ export default function JudgeEditor({
           height="100%"
           language={monacoLang}
           theme={theme}
-          value={code}
-          onChange={(v) => onChange(v || "")}
+          value={displayCode}
+          onChange={handleCodeChange}
           onMount={handleMount}
           options={{
             fontSize: 13,

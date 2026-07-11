@@ -1,0 +1,62 @@
+{
+  "id": "string-isomorphic",
+  "title": "Isomorphic Strings",
+  "difficulty": "easy",
+  "topics": ["strings", "hash-table"],
+  "companies": ["google", "linkedin"],
+  "statement": "Given two strings `s` and `t`, determine if they are isomorphic.\n\nTwo strings `s` and `t` are isomorphic if the characters in `s` can be replaced to get `t`.\n\nAll occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.",
+  "constraints": [
+    "1 <= s.length <= 5 * 10^4",
+    "t.length === s.length",
+    "s and t consist of any valid ASCII characters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"egg\", t = \"add\"",
+      "output": "true",
+      "explanation": "e maps to a, g maps to d. Thus the mapping is valid."
+    },
+    {
+      "input": "s = \"foo\", t = \"bar\"",
+      "output": "false",
+      "explanation": "o cannot map to both a and r."
+    }
+  ],
+  "functionName": "isIsomorphic",
+  "starterCode": {
+    "javascript": "function isIsomorphic(s, t) {\n  // Write your code here\n}",
+    "python": "def is_isomorphic(s, t):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nisIsomorphic = is_isomorphic"
+  },
+  "tests": [
+    { "args": ["egg", "add"], "expected": true, "hidden": false },
+    { "args": ["foo", "bar"], "expected": false, "hidden": false },
+    { "args": ["paper", "title"], "expected": true, "hidden": false },
+    { "args": ["abba", "cddc"], "expected": true, "hidden": true },
+    { "args": ["badc", "baba"], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Create two map dictionaries. One maps s[i] to t[i] and the other maps t[i] to s[i]. Iterate character-by-character: if a mapping mismatch occurs, return false, else insert mappings. If loop completes, return true.",
+    "complexity": "O(n) time / O(1) space (since ASCII set is small, 256)"
+  },
+  "relatedProblems": ["string-anagram"],
+  "hints": [
+    "You need a one-to-one character mapping: `s[i] <-> t[i]`.",
+    "Use two hash maps (or arrays): one to track mapping from `s` to `t` and another from `t` to `s`.",
+    "Iterate through the indices. If `s[i]` is already mapped to a character other than `t[i]`, or `t[i]` is mapped to a character other than `s[i]`, return false."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Convert both strings to their first-occurrence index sequence representation, then check if they are identical.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n)",
+    "code": "function isIsomorphic(s, t) {\n  const getPattern = str => {\n    let result = '';\n    for (let i = 0; i < str.length; i++) {\n      result += str.indexOf(str[i]) + ',';\n    }\n    return result;\n  };\n  return getPattern(s) === getPattern(t);\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use two arrays or hash maps to record character mappings. Ensure bidirectional consistency in O(n) time.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1) (since ASCII dictionary size is constant, 256)",
+    "code": "function isIsomorphic(s, t) {\n  const mapST = {};\n  const mapTS = {};\n  \n  for (let i = 0; i < s.length; i++) {\n    const charS = s[i];\n    const charT = t[i];\n    \n    if (mapST[charS] && mapST[charS] !== charT) return false;\n    if (mapTS[charT] && mapTS[charT] !== charS) return false;\n    \n    mapST[charS] = charT;\n    mapTS[charT] = charS;\n  }\n  \n  return true;\n}"
+  },
+  "interviewExplanation": "A brute-force indexing sequence takes O(n^2) time due to `.indexOf`. We optimize to O(n) using bidirectional hash tables mapping `s[i] -> t[i]` and `t[i] -> s[i]`. Auxiliary space is O(1) as the printable ASCII character set size is small and fixed."
+}

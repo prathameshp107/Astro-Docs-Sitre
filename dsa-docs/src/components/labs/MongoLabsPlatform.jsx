@@ -536,14 +536,14 @@ export default function MongoLabsPlatform() {
   // Load progress
   useEffect(() => {
     try {
-      const stored = JSON.parse(sessionStorage.getItem("mongo-progress") || '{"lessons":[],"challenges":[],"agg":[],"projects":{},"interview":[]}');
+      const stored = JSON.parse(localStorage.getItem("mongo-progress") || '{"lessons":[],"challenges":[],"agg":[],"projects":{},"interview":[]}');
       setProgress(stored);
     } catch {}
   }, []);
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("mongo-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("mongo-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {

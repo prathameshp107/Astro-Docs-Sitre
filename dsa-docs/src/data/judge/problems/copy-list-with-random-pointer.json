@@ -1,0 +1,37 @@
+{
+  "id": "copy-list-with-random-pointer",
+  "title": "Copy List with Random Pointer",
+  "difficulty": "medium",
+  "topics": ["linked-list", "hash-map"],
+  "companies": ["amazon", "google", "meta", "microsoft", "bloomberg"],
+  "statement": "A linked list of length `n` is given such that each node contains an additional random pointer, which could point to any node in the list, or `null`.\n\nConstruct a **deep copy** of the list. Each node's value and random pointer relationships must be replicated in entirely new nodes.\n\nThe list is represented as an array of `[val, random_index]` pairs, where `random_index` is the index of the node the random pointer points to, or `null`. Build a real linked list of nodes with `val`, `next`, and `random` fields, deep-copy it (a hash map from original node to its copy works well), then return the copy encoded the same way: an array of `[val, random_index]` pairs.",
+  "constraints": [
+    "0 <= n <= 1000",
+    "-10^4 <= Node.val <= 10^4",
+    "Node.random is null or points to a node in the linked list"
+  ],
+  "examples": [
+    { "input": "pairs = [[7,null],[13,0],[11,4],[10,2],[1,0]]", "output": "[[7,null],[13,0],[11,4],[10,2],[1,0]]" },
+    { "input": "pairs = [[1,1],[2,1]]", "output": "[[1,1],[2,1]]" }
+  ],
+  "functionName": "copyRandomList",
+  "starterCode": {
+    "javascript": "class Node {\n  constructor(val, next = null, random = null) { this.val = val; this.next = next; this.random = random; }\n}\nfunction buildList(pairs) {\n  if (!pairs.length) return null;\n  const nodes = pairs.map(([v]) => new Node(v));\n  for (let i = 0; i < nodes.length - 1; i++) nodes[i].next = nodes[i + 1];\n  pairs.forEach(([, r], i) => { if (r !== null) nodes[i].random = nodes[r]; });\n  return nodes[0];\n}\nfunction toPairs(head) {\n  const nodes = [];\n  let curr = head;\n  while (curr) { nodes.push(curr); curr = curr.next; }\n  const indexOf = new Map(nodes.map((n, i) => [n, i]));\n  return nodes.map(n => [n.val, n.random ? indexOf.get(n.random) : null]);\n}\nfunction copyRandomList(pairs) {\n  const head = buildList(pairs);\n  // your code here: deep-copy the Node chain starting at `head` (val, next, AND random), then return toPairs(copiedHead)\n}",
+    "python": "def copy_random_list(pairs):\n    pass"
+  },
+  "tests": [
+    { "args": [[[7,null],[13,0],[11,4],[10,2],[1,0]]], "expected": [[7,null],[13,0],[11,4],[10,2],[1,0]], "hidden": false },
+    { "args": [[[1,1],[2,1]]], "expected": [[1,1],[2,1]], "hidden": false },
+    { "args": [[[3,null],[3,0],[3,null]]], "expected": [[3,null],[3,0],[3,null]], "hidden": true },
+    { "args": [[]], "expected": [], "hidden": true },
+    { "args": [[[1,null]]], "expected": [[1,null]], "hidden": true },
+    { "args": [[[5,0]]], "expected": [[5,0]], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Build the original list with real `random` pointers. Use a hash map from original node to its freshly created copy. First pass: walk the original list, creating a copy of each node (val only) and storing the mapping. Second pass: walk the original list again, and for each node set the copy's `.next` to `map.get(node.next)` and `.random` to `map.get(node.random)` (both `undefined`/`null`-safe). Return the copy of the original head via the map, converted back to `[val, randomIndex]` pairs.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["reverse-linked-list", "merge-two-sorted-lists"]
+}

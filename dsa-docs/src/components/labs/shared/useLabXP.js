@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 // Cross-lab XP, levels, and daily streak. Persisted in localStorage so it
-// survives across labs and sessions (unlike per-lab sessionStorage progress).
+// survives across labs and sessions.
 const KEY = "lab-xp-v1";
 const AWARD_EVENT = "lab-xp-award";
 

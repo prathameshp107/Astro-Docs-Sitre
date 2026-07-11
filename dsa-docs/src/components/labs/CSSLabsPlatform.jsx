@@ -212,7 +212,7 @@ export default function CSSLabsPlatform() {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
     try {
-      const stored = JSON.parse(sessionStorage.getItem("css-progress") || '{"lessons":[],"challenges":[],"components":[],"animations":[],"interview":[]}');
+      const stored = JSON.parse(localStorage.getItem("css-progress") || '{"lessons":[],"challenges":[],"components":[],"animations":[],"interview":[]}');
       setProgress(stored);
     } catch {}
     return () => clearTimeout(timer);
@@ -220,7 +220,7 @@ export default function CSSLabsPlatform() {
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("css-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("css-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {

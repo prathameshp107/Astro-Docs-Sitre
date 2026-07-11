@@ -330,14 +330,14 @@ export default function SQLLabsPlatform() {
   // Load progress
   useEffect(() => {
     try {
-      const stored = JSON.parse(sessionStorage.getItem("sql-progress") || '{"lessons":[],"challenges":[],"projects":{}}');
+      const stored = JSON.parse(localStorage.getItem("sql-progress") || '{"lessons":[],"challenges":[],"projects":{}}');
       setProgress(stored);
     } catch {}
   }, []);
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("sql-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("sql-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {

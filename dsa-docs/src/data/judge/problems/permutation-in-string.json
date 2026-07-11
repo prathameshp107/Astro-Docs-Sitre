@@ -1,0 +1,40 @@
+{
+  "id": "permutation-in-string",
+  "title": "Permutation in String",
+  "difficulty": "medium",
+  "topics": ["strings", "sliding-window", "hash-map"],
+  "companies": ["amazon", "microsoft", "meta"],
+  "statement": "Given two strings `s1` and `s2`, return `true` if `s2` contains a permutation of `s1`, or `false` otherwise.\n\nIn other words, return `true` if one of `s1`'s permutations is a substring of `s2`.\n\nSince a permutation just rearranges characters, this is equivalent to sliding a fixed-size window of length `s1.length` across `s2` and checking whether the window's character counts exactly match `s1`'s character counts.",
+  "constraints": [
+    "1 <= s1.length, s2.length <= 10^4",
+    "s1 and s2 consist of lowercase English letters"
+  ],
+  "examples": [
+    { "input": "s1 = \"ab\", s2 = \"eidbaooo\"", "output": "true", "explanation": "s2 contains one permutation of s1 (\"ba\")." },
+    { "input": "s1 = \"ab\", s2 = \"eidboaoo\"", "output": "false" }
+  ],
+  "functionName": "checkInclusion",
+  "starterCode": {
+    "javascript": "function checkInclusion(s1, s2) {\n  // your code here\n}",
+    "python": "def check_inclusion(s1, s2):\n    pass"
+  },
+  "tests": [
+    { "args": ["ab", "eidbaooo"], "expected": true, "hidden": false },
+    { "args": ["ab", "eidboaoo"], "expected": false, "hidden": false },
+    { "args": ["a", "a"], "expected": true, "hidden": true },
+    { "args": ["a", "b"], "expected": false, "hidden": true },
+    { "args": ["abc", "cba"], "expected": true, "hidden": true },
+    { "args": ["hello", "ooolleoooleh"], "expected": false, "hidden": true },
+    { "args": ["adc", "dcda"], "expected": true, "hidden": true },
+    { "args": ["abcdxabcde", "abcdeabcdx"], "expected": true, "hidden": true },
+    { "args": ["aa", "aaa"], "expected": true, "hidden": true },
+    { "args": ["xyz", "affirmxyz"], "expected": true, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "If `s1.length > s2.length`, return false immediately. Otherwise build a frequency count of `s1`, then slide a window of size `s1.length` across `s2`, maintaining a running frequency count for the current window. After each slide (add the new right character, remove the character leaving on the left), compare the window's frequency count to `s1`'s. If they ever match exactly, return true. Comparing counts can be done in O(26) using a fixed-size array instead of a full map-equality check, keeping the whole scan O(n).",
+    "complexity": "O(n) time / O(1) space (26-letter alphabet)"
+  },
+  "relatedProblems": ["valid-anagram", "longest-repeating-character-replacement"]
+}

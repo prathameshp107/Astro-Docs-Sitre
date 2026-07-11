@@ -1,0 +1,37 @@
+{
+  "id": "reorder-list",
+  "title": "Reorder List",
+  "difficulty": "medium",
+  "topics": ["linked-list", "two-pointers"],
+  "companies": ["amazon", "meta", "microsoft"],
+  "statement": "You are given the head of a singly linked list. Reorder the list to be on the following form: `L0 -> Ln -> L1 -> Ln-1 -> L2 -> Ln-2 -> ...`\n\nYou may not modify the values in the list's nodes; only nodes themselves may be changed.\n\nBuild the list from `values`, then: find the middle with slow/fast pointers, reverse the second half, and merge the two halves by alternating nodes. Convert the reordered chain back to an array.",
+  "constraints": [
+    "The number of nodes in the list is in the range [1, 5 * 10^4]",
+    "1 <= Node.val <= 1000"
+  ],
+  "examples": [
+    { "input": "values = [1,2,3,4]", "output": "[1,4,2,3]" },
+    { "input": "values = [1,2,3,4,5]", "output": "[1,5,2,4,3]" }
+  ],
+  "functionName": "reorderList",
+  "starterCode": {
+    "javascript": "class ListNode {\n  constructor(val, next = null) { this.val = val; this.next = next; }\n}\nfunction buildList(values) {\n  let head = null, tail = null;\n  for (const v of values) {\n    const node = new ListNode(v);\n    if (!head) head = node; else tail.next = node;\n    tail = node;\n  }\n  return head;\n}\nfunction toArray(head) {\n  const arr = [];\n  let curr = head;\n  while (curr) { arr.push(curr.val); curr = curr.next; }\n  return arr;\n}\nfunction reorderList(values) {\n  const head = buildList(values);\n  // your code here: reorder the ListNode chain in place, then return toArray(head)\n}",
+    "python": "def reorder_list(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,4]], "expected": [1,4,2,3], "hidden": false },
+    { "args": [[1,2,3,4,5]], "expected": [1,5,2,4,3], "hidden": false },
+    { "args": [[1]], "expected": [1], "hidden": true },
+    { "args": [[1,2]], "expected": [1,2], "hidden": true },
+    { "args": [[1,2,3]], "expected": [1,3,2], "hidden": true },
+    { "args": [[4,3,2,1]], "expected": [4,1,3,2], "hidden": true },
+    { "args": [[1,2,3,4,5,6]], "expected": [1,6,2,5,3,4], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "First find the middle of the list using slow/fast pointers. Split the list into two halves and reverse the second half (standard three-pointer reversal). Then merge the two halves by alternately taking one node from the first half and one from the reversed second half, relinking `.next` pointers as you go. This achieves the L0, Ln, L1, Ln-1, ... pattern without extra space beyond a few pointers.",
+    "complexity": "O(n) time / O(1) extra space"
+  },
+  "relatedProblems": ["reverse-linked-list", "linked-list-cycle"]
+}

@@ -1,0 +1,106 @@
+{
+  "id": "pattern-inverted-pyramid",
+  "title": "Inverted Pyramid Star Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "wipro"
+  ],
+  "statement": "Write a function to generate an inverted pyramid star pattern of height `n`.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nEach row `i` (0-indexed, from `0` to `n - 1`) should consist of:\n1. `i` leading spaces\n2. `2 * (n - 1 - i) + 1` stars\n\nFor example, if `n = 4`, the output should be:\n```\n*******\n *****\n  ***\n   *\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "*****\n ***\n  *",
+      "explanation": "An inverted pyramid of height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "*********\n *******\n  *****\n   ***\n    *",
+      "explanation": "An inverted pyramid of height 5."
+    }
+  ],
+  "functionName": "patternInvertedPyramid",
+  "starterCode": {
+    "javascript": "function patternInvertedPyramid(n) {\n  // Write your code here\n}",
+    "python": "def pattern_inverted_pyramid(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternInvertedPyramid = pattern_inverted_pyramid"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "*",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "***\n *",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "*****\n ***\n  *",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "*******\n *****\n  ***\n   *",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "*********\n *******\n  *****\n   ***\n    *",
+      "hidden": true
+    },
+    {
+      "args": [
+        7
+      ],
+      "expected": "*************\n ***********\n  *********\n   *******\n    *****\n     ***\n      *",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row `i`, build a string by appending `i` space characters followed by `2 * (n - 1 - i) + 1` star characters. Join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-pyramid",
+    "pattern-diamond"
+  ],
+  "hints": [
+    "The spatial structure is inverted: we start with 0 spaces and `2*n - 1` stars, and increase spaces while decreasing stars.",
+    "For row `i` (0-indexed), the number of spaces is `i`.",
+    "The number of stars in row `i` is `2 * (n - 1 - i) + 1`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Run an outer loop `i` from `0` to `n-1`. Inside, use nested loops to first add `i` spaces and then add `2 * (n - 1 - i) + 1` stars.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedPyramid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < i; j++) {\n      row += ' ';\n    }\n    for (let k = 0; k < 2 * (n - 1 - i) + 1; k++) {\n      row += '*';\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Directly concatenate `' '.repeat(i)` and `'*'.repeat(2 * (n - 1 - i) + 1)` for each row in O(n) per row.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedPyramid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    const spaces = ' '.repeat(i);\n    const stars = '*'.repeat(2 * (n - 1 - i) + 1);\n    rows.push(spaces + stars);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "To invert the pyramid, spaces must increase and stars must decrease. Row `i` (from `0` to `n-1`) gets `i` leading spaces and `2 * (n - 1 - i) + 1` stars. The total height is `n`. The optimized JS solution utilizes `.repeat()` for maximum efficiency."
+}

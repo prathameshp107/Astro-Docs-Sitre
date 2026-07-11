@@ -186,7 +186,7 @@ export default function HTMLLabsPlatform() {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
     try {
-      const stored = JSON.parse(sessionStorage.getItem("html-progress") || '{"lessons":[],"challenges":[],"projects":[],"interview":[]}');
+      const stored = JSON.parse(localStorage.getItem("html-progress") || '{"lessons":[],"challenges":[],"projects":[],"interview":[]}');
       setProgress(stored);
     } catch {}
     return () => clearTimeout(timer);
@@ -194,7 +194,7 @@ export default function HTMLLabsPlatform() {
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("html-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("html-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {

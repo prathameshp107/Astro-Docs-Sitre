@@ -1,0 +1,99 @@
+{
+  "id": "pattern-alphabet-pyramid",
+  "title": "Alphabet Pyramid Pattern",
+  "difficulty": "medium",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "accenture"
+  ],
+  "statement": "Write a function to generate an alphabet pyramid pattern of height `n`.\n\nThe pattern consists of `n` rows. Each row `i` (0-indexed, from `0` to `n - 1`) consists of:\n1. `n - 1 - i` leading spaces.\n2. Letters starting from `A` increasing up to the `i`-th alphabet letter.\n3. Letters decreasing from the `i-1`-th alphabet letter down to `A`.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n   A\n  ABA\n ABCBA\nABCDCBA\n```",
+  "constraints": [
+    "1 <= n <= 26"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "  A\n ABA\nABCBA",
+      "explanation": "Alphabet pyramid of height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "    A\n   ABA\n  ABCBA\n ABCDCBA\nABCDEDCBA",
+      "explanation": "Alphabet pyramid of height 5."
+    }
+  ],
+  "functionName": "patternAlphabetPyramid",
+  "starterCode": {
+    "javascript": "function patternAlphabetPyramid(n) {\n  // Write your code here\n}",
+    "python": "def pattern_alphabet_pyramid(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternAlphabetPyramid = pattern_alphabet_pyramid"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "A",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": " A\nABA",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "  A\n ABA\nABCBA",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "   A\n  ABA\n ABCBA\nABCDCBA",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "    A\n   ABA\n  ABCBA\n ABCDCBA\nABCDEDCBA",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row, print `n - 1 - i` space characters. Then, append letters from code 65 (`A`) to `65 + i`. Next, append letters from `65 + i - 1` down to 65. Join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-pyramid",
+    "pattern-increasing-number-pyramid"
+  ],
+  "hints": [
+    "Row `i` (0-indexed) has `n - 1 - i` spaces.",
+    "The characters start at 'A', increase to `65 + i`, then decrease back to 'A'.",
+    "Use helper strings to build the ascending and descending parts of the row."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Loop `i` from `0` to `n - 1`. Append `n - 1 - i` spaces, then use loop to add letters ascending from 0 to `i`, and another loop to add letters descending from `i - 1` to 0.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternAlphabetPyramid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < n - 1 - i; j++) row += ' ';\n    for (let j = 0; j <= i; j++) row += String.fromCharCode(65 + j);\n    for (let j = i - 1; j >= 0; j--) row += String.fromCharCode(65 + j);\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Generate a precomputed alphabet string. For row `i`, extract the ascending sequence using `.slice(0, i + 1)`, reverse it for the descending sequence, and concatenate with repeated spaces.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternAlphabetPyramid(n) {\n  let alphabet = '';\n  for (let i = 0; i < n; i++) alphabet += String.fromCharCode(65 + i);\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    const spaces = ' '.repeat(n - 1 - i);\n    const left = alphabet.slice(0, i + 1);\n    const right = left.split('').reverse().slice(1).join('');\n    rows.push(spaces + left + right);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "An alphabet pyramid contains centered palindromic sequences. On row `i`, we prepend `n - 1 - i` spaces, append letters from A to `65 + i`, and then letters descending back to A. Precomputing alphabet slices makes this logic highly optimized."
+}

@@ -1,0 +1,99 @@
+{
+  "id": "pattern-symmetric-void",
+  "title": "Symmetric Void Pattern",
+  "difficulty": "medium",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "amazon"
+  ],
+  "statement": "Write a function to generate a symmetric void star pattern of half-size `n`.\n\nThe pattern consists of `2 * n` rows. The top half and the bottom half are symmetric. \n\nFor the top half (row `i` 0-indexed, from `0` to `n - 1`):\n1. `n - i` stars on the left\n2. `2 * i` spaces in the middle\n3. `n - i` stars on the right\n\nFor the bottom half (row `i` 0-indexed, from `0` to `n - 1`):\n1. `i + 1` stars on the left\n2. `2 * (n - 1 - i)` spaces in the middle\n3. `i + 1` stars on the right\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n********\n***  ***\n**    **\n*      *\n*      *\n**    **\n***  ***\n********\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 2",
+      "output": "****\n*  *\n*  *\n****",
+      "explanation": "Symmetric void pattern of size 2."
+    },
+    {
+      "input": "n = 3",
+      "output": "******\n**  **\n*    *\n*    *\n**  **\n******",
+      "explanation": "Symmetric void pattern of size 3."
+    }
+  ],
+  "functionName": "patternSymmetricVoid",
+  "starterCode": {
+    "javascript": "function patternSymmetricVoid(n) {\n  // Write your code here\n}",
+    "python": "def pattern_symmetric_void(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternSymmetricVoid = pattern_symmetric_void"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "**\n**",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "****\n*  *\n*  *\n****",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "******\n**  **\n*    *\n*    *\n**  **\n******",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "********\n***  ***\n**    **\n*      *\n*      *\n**    **\n***  ***\n********",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "**********\n****  ****\n***    ***\n**      **\n*        *\n*        *\n**      **\n***    ***\n****  ****\n**********",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "The top half and bottom half are symmetric. The top half row `i` contains `n-i` stars, `2*i` spaces, `n-i` stars. The bottom half row `i` contains `i+1` stars, `2*(n-1-i)` spaces, `i+1` stars. Combine and join with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-butterfly",
+    "pattern-hollow-diamond"
+  ],
+  "hints": [
+    "A symmetric void pattern has stars on the outside and an empty space gap in the center.",
+    "The top half row `i` has `n - i` stars, `2 * i` spaces, and `n - i` stars.",
+    "The bottom half row `i` has `i + 1` stars, `2 * (n - 1 - i)` spaces, and `i + 1` stars."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Iterate top half `i` (0 to `n-1`) and append stars/spaces/stars. Repeat symmetrically for the bottom half.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternSymmetricVoid(n) {\n  let rows = [];\n  // Top half\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < n - i; j++) row += '*';\n    for (let j = 0; j < 2 * i; j++) row += ' ';\n    for (let j = 0; j < n - i; j++) row += '*';\n    rows.push(row);\n  }\n  // Bottom half\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < i + 1; j++) row += '*';\n    for (let j = 0; j < 2 * (n - 1 - i); j++) row += ' ';\n    for (let j = 0; j < i + 1; j++) row += '*';\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Build each row using `'*'.repeat(starsCount) + ' '.repeat(spacesCount) + '*'.repeat(starsCount)`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternSymmetricVoid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    const stars = '*'.repeat(n - i);\n    const spaces = ' '.repeat(2 * i);\n    rows.push(stars + spaces + stars);\n  }\n  for (let i = 0; i < n; i++) {\n    const stars = '*'.repeat(i + 1);\n    const spaces = ' '.repeat(2 * (n - 1 - i));\n    rows.push(stars + spaces + stars);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "A symmetric void creates a double triangle gap. The top half starts fully solid and carves out a wider gap. The bottom half starts hollow and fills back in. Using repeated stars and space padding makes the implementation highly performant."
+}
