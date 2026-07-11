@@ -1,0 +1,98 @@
+{
+  "id": "pattern-inverted-mirrored-right-triangle",
+  "title": "Inverted Mirrored Right Triangle Star Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys"
+  ],
+  "statement": "Write a function to generate an inverted mirrored right-angled triangle star pattern of height `n`.\n\nEach row `i` (0-indexed, from `0` to `n - 1`) should consist of:\n1. `i` leading spaces\n2. `n - i` stars\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n****\n ***\n  **\n   *\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "***\n **\n  *",
+      "explanation": "An inverted mirrored right triangle of height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "*****\n ****\n  ***\n   **\n    *",
+      "explanation": "An inverted mirrored right triangle of height 5."
+    }
+  ],
+  "functionName": "patternInvertedMirroredRightTriangle",
+  "starterCode": {
+    "javascript": "function patternInvertedMirroredRightTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_inverted_mirrored_right_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternInvertedMirroredRightTriangle = pattern_inverted_mirrored_right_triangle"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "*",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "**\n *",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "***\n **\n  *",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "****\n ***\n  **\n   *",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "*****\n ****\n  ***\n   **\n    *",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row `i`, print `i` space characters followed by `n - i` star characters. Join the rows using `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-inverted-right-triangle",
+    "pattern-mirrored-right-triangle"
+  ],
+  "hints": [
+    "This is an inverted right-aligned triangle.",
+    "For row `i` (0-indexed), print `i` leading spaces.",
+    "Following the spaces, print `n - i` stars."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Iterate `i` from `0` to `n - 1`. For each row, run nested loops to append `i` spaces and `n - i` stars.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedMirroredRightTriangle(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < i; j++) row += ' ';\n    for (let k = 0; k < n - i; k++) row += '*';\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Generate each row string via `' '.repeat(i) + '*'.repeat(n - i)` for clean, linear assembly.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedMirroredRightTriangle(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    rows.push(' '.repeat(i) + '*'.repeat(n - i));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "An inverted mirrored right-angled triangle starts wide and narrows down while remaining right-aligned. Row `i` receives `i` leading spaces and `n - i` stars. We utilize `.repeat()` to quickly build and join these segments."
+}

@@ -1,0 +1,62 @@
+{
+  "id": "array-remove-duplicates",
+  "title": "Remove Duplicates from Sorted Array",
+  "difficulty": "easy",
+  "topics": ["arrays", "two-pointers"],
+  "companies": ["google", "meta", "amazon"],
+  "statement": "Given a sorted array of integers `nums`, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same.\n\nReturn the number of unique elements `k` in `nums`.\n\nTo get accepted, you must do this by modifying the input array in-place with O(1) extra memory.",
+  "constraints": [
+    "1 <= nums.length <= 10^4",
+    "-100 <= nums[i] <= 100",
+    "nums is sorted in non-decreasing order."
+  ],
+  "examples": [
+    {
+      "input": "nums = [1, 1, 2]",
+      "output": "2",
+      "explanation": "Your function should return k = 2, with the first two elements of nums being 1 and 2 respectively."
+    },
+    {
+      "input": "nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]",
+      "output": "5",
+      "explanation": "Your function should return k = 5, with the first five elements of nums being 0, 1, 2, 3, and 4 respectively."
+    }
+  ],
+  "functionName": "removeDuplicates",
+  "starterCode": {
+    "javascript": "function removeDuplicates(nums) {\n  // Write your code here\n}",
+    "python": "def remove_duplicates(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nremoveDuplicates = remove_duplicates"
+  },
+  "tests": [
+    { "args": [[1, 1, 2]], "expected": 2, "hidden": false },
+    { "args": [[0, 0, 1, 1, 1, 2, 2, 3, 3, 4]], "expected": 5, "hidden": false },
+    { "args": [[1, 2, 3]], "expected": 3, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": true },
+    { "args": [[1, 1, 1, 1, 1]], "expected": 1, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a two-pointer approach. Keep a pointer `i` for the last unique element found. Iterate `j` through the array. When nums[j] !== nums[i], increment `i` and copy nums[j] to nums[i]. Return `i + 1`.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-is-sorted"],
+  "hints": [
+    "Since the array is sorted, all duplicate elements will be adjacent to each other.",
+    "Keep a pointer `i` at index 0. This will track the position of the last unique element.",
+    "Iterate another pointer `j` from 1 to `n-1`. Whenever `nums[j] !== nums[i]`, increment `i` and copy `nums[j]` to `nums[i]`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Store the unique elements in a temporary Set or array. Copy the unique elements back into the original array and return the count.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function removeDuplicates(nums) {\n  const unique = Array.from(new Set(nums));\n  for (let i = 0; i < unique.length; i++) {\n    nums[i] = unique[i];\n  }\n  return unique.length;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use a two-pointer approach to write unique elements forward in-place, achieving O(1) auxiliary space.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function removeDuplicates(nums) {\n  if (nums.length === 0) return 0;\n  let i = 0;\n  for (let j = 1; j < nums.length; j++) {\n    if (nums[j] !== nums[i]) {\n      i++;\n      nums[i] = nums[j];\n    }\n  }\n  return i + 1;\n}"
+  },
+  "interviewExplanation": "A Set approach takes O(n) space. In interviews, O(1) space is required. We maintain a slow pointer `i` for unique values, and a fast pointer `j` to scan. We copy unique elements forward, returning `i + 1` as the count."
+}

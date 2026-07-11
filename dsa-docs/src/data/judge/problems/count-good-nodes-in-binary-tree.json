@@ -1,0 +1,36 @@
+{
+  "id": "count-good-nodes-in-binary-tree",
+  "title": "Count Good Nodes in Binary Tree",
+  "difficulty": "medium",
+  "topics": ["tree", "depth-first-search"],
+  "companies": ["amazon", "microsoft"],
+  "statement": "Given a binary tree `root`, a node `X` in the tree is named **good** if in the path from the root to `X`, there is no node with a value greater than `X`'s value.\n\nReturn the number of good nodes in the binary tree.\n\nBuild a real `TreeNode` tree from `values`, then DFS while carrying down the maximum value seen so far on the path from the root; a node is good exactly when its value is greater than or equal to that running maximum.",
+  "constraints": [
+    "The number of nodes in the tree is in the range [1, 10^5]",
+    "-10^4 <= Node.val <= 10^4"
+  ],
+  "examples": [
+    { "input": "root = [3,1,4,3,null,1,5]", "output": "4", "explanation": "Nodes 3, 4, 3(right), and 5 are good." },
+    { "input": "root = [3,3,null,4,2]", "output": "3" },
+    { "input": "root = [1]", "output": "1" }
+  ],
+  "functionName": "goodNodes",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction goodNodes(values) {\n  const root = buildTree(values);\n  // your code here\n}",
+    "python": "def good_nodes(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,1,4,3,null,1,5]], "expected": 4, "hidden": false },
+    { "args": [[3,3,null,4,2]], "expected": 3, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": true },
+    { "args": [[5,4,3,2,1]], "expected": 1, "hidden": true },
+    { "args": [[1,2,3,4,5]], "expected": 5, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "DFS from the root, passing down the maximum value seen on the path so far (starting at -Infinity). At each node, if its value is greater than or equal to that running maximum, count it as good, then recurse into both children with the running maximum updated to include the current node's value.",
+    "complexity": "O(n) time / O(h) space"
+  },
+  "relatedProblems": ["diameter-of-binary-tree"]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "pattern-inverted-alphabet-pyramid",
+  "title": "Inverted Alphabet Pyramid Pattern",
+  "difficulty": "medium",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys"
+  ],
+  "statement": "Write a function to generate an inverted alphabet pyramid pattern of height `n`.\n\nThe pattern consists of `n` rows. Each row `i` (0-indexed, from `0` to `n - 1`) consists of:\n1. `i` leading spaces.\n2. Letters starting from `A` increasing up to the `n - 1 - i`-th alphabet letter.\n3. Letters decreasing from the `n - 2 - i`-th alphabet letter down to `A`.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\nABCDCBA\n ABCBA\n  ABA\n   A\n```",
+  "constraints": [
+    "1 <= n <= 26"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "ABCBA\n ABA\n  A",
+      "explanation": "Inverted alphabet pyramid of height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "ABCDEDCBA\n ABCDCBA\n  ABCBA\n   ABA\n    A",
+      "explanation": "Inverted alphabet pyramid of height 5."
+    }
+  ],
+  "functionName": "patternInvertedAlphabetPyramid",
+  "starterCode": {
+    "javascript": "function patternInvertedAlphabetPyramid(n) {\n  // Write your code here\n}",
+    "python": "def pattern_inverted_alphabet_pyramid(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternInvertedAlphabetPyramid = pattern_inverted_alphabet_pyramid"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "A",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "ABA\n A",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "ABCBA\n ABA\n  A",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "ABCDCBA\n ABCBA\n  ABA\n   A",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "ABCDEDCBA\n ABCDCBA\n  ABCBA\n   ABA\n    A",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row, print `i` spaces. Then, append letters from code 65 (`A`) to `65 + n - 1 - i`. Next, append letters from `65 + n - 2 - i` down to 65. Join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-alphabet-pyramid",
+    "pattern-inverted-pyramid"
+  ],
+  "hints": [
+    "This is an inverted alphabet pyramid.",
+    "Row `i` (0-indexed) has `i` leading spaces.",
+    "The characters start at 'A', increase to `65 + n - 1 - i`, then decrease back to 'A'."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Loop `i` from `0` to `n-1`. Append `i` spaces, run a loop from A to the `n - 1 - i`-th letter, and then a loop descending from the `n - 2 - i`-th letter down to A.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedAlphabetPyramid(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < i; j++) row += ' ';\n    for (let j = 0; j < n - i; j++) row += String.fromCharCode(65 + j);\n    for (let j = n - 2 - i; j >= 0; j--) row += String.fromCharCode(65 + j);\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Slice a precomputed alphabet string to form the ascending portion and its reverse for the descending portion, concatenated with spaces.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedAlphabetPyramid(n) {\n  let alphabet = '';\n  for (let i = 0; i < n; i++) alphabet += String.fromCharCode(65 + i);\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    const spaces = ' '.repeat(i);\n    const left = alphabet.slice(0, n - i);\n    const right = left.split('').reverse().slice(1).join('');\n    rows.push(spaces + left + right);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "An inverted alphabet pyramid decreases in width. Row `i` starts with `i` leading spaces. The letters climb from A up to `n - i` and descend back to A. We utilize precomputed slices of the alphabet to avoid inner loops."
+}

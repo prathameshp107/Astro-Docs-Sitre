@@ -1,0 +1,98 @@
+{
+  "id": "pattern-rhombus",
+  "title": "Rhombus Star Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "wipro"
+  ],
+  "statement": "Write a function to generate a rhombus star pattern of side `n`.\n\nThe pattern is a square shifted to the right by spaces. Row `i` (0-indexed, from `0` to `n - 1`) should consist of:\n1. `n - 1 - i` leading spaces\n2. `n` stars\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n   ****\n  ****\n ****\n****\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "  ***\n ***\n***",
+      "explanation": "A rhombus of side length 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "    *****\n   *****\n  *****\n *****\n*****",
+      "explanation": "A rhombus of side length 5."
+    }
+  ],
+  "functionName": "patternRhombus",
+  "starterCode": {
+    "javascript": "function patternRhombus(n) {\n  // Write your code here\n}",
+    "python": "def pattern_rhombus(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternRhombus = pattern_rhombus"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "*",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": " **\n**",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "  ***\n ***\n***",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "   ****\n  ****\n ****\n****",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "    *****\n   *****\n  *****\n *****\n*****",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row `i`, build a string with `n - 1 - i` spaces followed by `n` stars. Join the rows using `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-square"
+  ],
+  "hints": [
+    "A rhombus of side `n` is a square shifted to the right.",
+    "The shift for row `i` (0-indexed) consists of `n - 1 - i` leading spaces.",
+    "Following the spaces, print `n` stars for every row."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Loop `i` from `0` to `n-1`. In each row, use inner loops to append `n - 1 - i` spaces and then `n` stars.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRhombus(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 0; j < n - 1 - i; j++) row += ' ';\n    for (let k = 0; k < n; k++) row += '*';\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Construct each row directly using `' '.repeat(n - 1 - i) + '*'.repeat(n)`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRhombus(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    rows.push(' '.repeat(n - 1 - i) + '*'.repeat(n));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "A rhombus shifts rows to create a slanted structure. On row `i`, we prepend `n - 1 - i` spaces and then append `n` stars. Using `.repeat()` makes this alignment explicit and easy to implement."
+}

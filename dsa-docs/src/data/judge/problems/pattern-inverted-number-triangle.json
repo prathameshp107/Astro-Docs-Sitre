@@ -1,0 +1,98 @@
+{
+  "id": "pattern-inverted-number-triangle",
+  "title": "Inverted Number Triangle Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys"
+  ],
+  "statement": "Write a function to generate an inverted number triangle pattern of height `n`.\n\nRow `i` (0-indexed, from `0` to `n - 1`) should contain numbers from `1` to `n - i` concatenated without spaces.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n1234\n123\n12\n1\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "123\n12\n1",
+      "explanation": "Inverted triangle starting from 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "12345\n1234\n123\n12\n1",
+      "explanation": "Inverted triangle starting from 5."
+    }
+  ],
+  "functionName": "patternInvertedNumberTriangle",
+  "starterCode": {
+    "javascript": "function patternInvertedNumberTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_inverted_number_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternInvertedNumberTriangle = pattern_inverted_number_triangle"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "1",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "12\n1",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "123\n12\n1",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "1234\n123\n12\n1",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "12345\n1234\n123\n12\n1",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row, construct a string with values from `1` to `n - i`. Join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-increasing-number-triangle",
+    "pattern-inverted-right-triangle"
+  ],
+  "hints": [
+    "This is an inverted right-angled number triangle.",
+    "The first row lists numbers from `1` to `n`. The second lists `1` to `n-1`.",
+    "Row `i` (0-indexed) lists numbers from `1` up to `n - i`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Loop `i` from `0` to `n - 1`. For each row, run an inner loop `j` from `1` to `n - i` and append `j`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedNumberTriangle(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    for (let j = 1; j <= n - i; j++) {\n      row += j;\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "We can precompute the full string `'123...'` up to `n` and slice it for each row, or generate it dynamically. Slicing precomputed string is highly efficient.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternInvertedNumberTriangle(n) {\n  let full = '';\n  for (let i = 1; i <= n; i++) full += i;\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    rows.push(full.slice(0, n - i));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "The values on row `i` are the digits from `1` to `n - i`. We can optimize this by generating the full sequence `1` to `n` once, then taking prefixes of decreasing lengths to form our inverted rows."
+}

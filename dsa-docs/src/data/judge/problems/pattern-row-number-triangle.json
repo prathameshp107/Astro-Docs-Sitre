@@ -1,0 +1,97 @@
+{
+  "id": "pattern-row-number-triangle",
+  "title": "Row-Number Triangle Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys"
+  ],
+  "statement": "Write a function to generate a row-number triangle pattern of height `n`.\n\nRow `i` (1-indexed, from `1` to `n`) should contain the value of `i` repeated `i` times without spaces.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n1\n22\n333\n4444\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "1\n22\n333",
+      "explanation": "Row values repeated: row 1 is '1', row 2 is '22', row 3 is '333'."
+    },
+    {
+      "input": "n = 5",
+      "output": "1\n22\n333\n4444\n55555",
+      "explanation": "Row values repeated up to 5."
+    }
+  ],
+  "functionName": "patternRowNumberTriangle",
+  "starterCode": {
+    "javascript": "function patternRowNumberTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_row_number_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternRowNumberTriangle = pattern_row_number_triangle"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "1",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "1\n22",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "1\n22\n333",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "1\n22\n333\n4444",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "1\n22\n333\n4444\n55555",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `1` to `n`. In each row `i`, construct a string by repeating the character representation of `i` exactly `i` times. Join the rows using `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-increasing-number-triangle"
+  ],
+  "hints": [
+    "Row `i` (1-indexed) has the digit `i` repeated `i` times.",
+    "Convert number `i` to string, then repeat it `i` times.",
+    "Use nested loops to append the number `i`, `i` times."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Run outer loop `i` from `1` to `n` and inner loop `j` from `1` to `i` to append the value `i` to the row string.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRowNumberTriangle(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    let row = '';\n    for (let j = 1; j <= i; j++) {\n      row += i;\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Construct each row directly using `String(i).repeat(i)`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRowNumberTriangle(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    rows.push(String(i).repeat(i));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "In row `i`, the character displayed is the digit `i` itself, printed `i` times. String repetition provides a clean, single-loop solution."
+}

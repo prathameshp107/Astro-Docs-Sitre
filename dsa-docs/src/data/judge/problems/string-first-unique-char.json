@@ -1,0 +1,61 @@
+{
+  "id": "string-first-unique-char",
+  "title": "First Unique Character in a String",
+  "difficulty": "easy",
+  "topics": ["strings", "hash-table"],
+  "companies": ["google", "amazon", "microsoft"],
+  "statement": "Given a string `s`, find the first non-repeating character in it and return its index. If it does not exist, return `-1`.",
+  "constraints": [
+    "1 <= s.length <= 10^5",
+    "s consists of lowercase English letters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"leetcode\"",
+      "output": "0",
+      "explanation": "The character 'l' occurs once and is at index 0."
+    },
+    {
+      "input": "s = \"loveleetcode\"",
+      "output": "2",
+      "explanation": "The character 'v' is the first non-repeating character at index 2."
+    }
+  ],
+  "functionName": "firstUniqChar",
+  "starterCode": {
+    "javascript": "function firstUniqChar(s) {\n  // Write your code here\n}",
+    "python": "def first_uniq_char(s):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nfirstUniqChar = first_uniq_char"
+  },
+  "tests": [
+    { "args": ["leetcode"], "expected": 0, "hidden": false },
+    { "args": ["loveleetcode"], "expected": 2, "hidden": false },
+    { "args": ["aabb"], "expected": -1, "hidden": false },
+    { "args": ["a"], "expected": 0, "hidden": true },
+    { "args": ["abcdefg"], "expected": 0, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Build a frequency hash map of all characters. Then scan the string from left to right, checking the frequency of each character. Return index of the first character with frequency === 1.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["string-reverse"],
+  "hints": [
+    "You can keep track of character frequencies using a map or an array of size 26.",
+    "Iterate through the string once to count how many times each character appears.",
+    "Iterate through the string a second time and check the count of each character. Return the index of the first one with a count of 1."
+  ],
+  "bruteForceSolution": {
+    "explanation": "For each character at index `i`, check if it exists elsewhere in the string using `.indexOf` and `.lastIndexOf`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(1)",
+    "code": "function firstUniqChar(s) {\n  for (let i = 0; i < s.length; i++) {\n    if (s.indexOf(s[i]) === s.lastIndexOf(s[i])) {\n      return i;\n    }\n  }\n  return -1;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Store frequency counts in an array of size 26 (since string only contains lowercase letters). Scan string twice to find the first character with count === 1 in O(n) time.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1) (since the size of the alphabet is constant, 26)",
+    "code": "function firstUniqChar(s) {\n  const counts = new Array(26).fill(0);\n  for (let i = 0; i < s.length; i++) {\n    counts[s.charCodeAt(i) - 97]++;\n  }\n  for (let i = 0; i < s.length; i++) {\n    if (counts[s.charCodeAt(i) - 97] === 1) {\n      return i;\n    }\n  }\n  return -1;\n}"
+  },
+  "interviewExplanation": "A brute-force index lookup takes O(n^2) time. We optimize it by using an alphabet-sized array to store counts, running in O(n) time. The space complexity remains O(1) as the array size is fixed at 26 characters."
+}

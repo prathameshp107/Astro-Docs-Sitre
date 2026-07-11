@@ -1,0 +1,93 @@
+{
+  "id": "pattern-alphabet-floyds-triangle",
+  "title": "Alphabet Floyd's Triangle Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "wipro"
+  ],
+  "statement": "Write a function to generate an Alphabet Floyd's triangle pattern of height `n`.\n\nThe pattern is a right-angled triangle filled with consecutive uppercase letters starting from `A`. Values in each row should be separated by a single space.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\nA\nB C\nD E F\nG H I J\n```",
+  "constraints": [
+    "1 <= n <= 7"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "A\nB C\nD E F",
+      "explanation": "Alphabet Floyd's triangle of height 3."
+    }
+  ],
+  "functionName": "patternAlphabetFloydsTriangle",
+  "starterCode": {
+    "javascript": "function patternAlphabetFloydsTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_alphabet_floyds_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternAlphabetFloydsTriangle = pattern_alphabet_floyds_triangle"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "A",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "A\nB C",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "A\nB C\nD E F",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "A\nB C\nD E F\nG H I J",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "A\nB C\nD E F\nG H I J\nK L M N O",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Keep a running code value starting at 65 (`A`). Run an outer loop `i` from `1` to `n`. In the inner loop from `1` to `i`, convert the code to a character, append it, and increment the code. Separate values by space, and join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-floyds-triangle"
+  ],
+  "hints": [
+    "This is Floyd's triangle using characters instead of numbers.",
+    "Maintain a running character code starting at 65 ('A') and increment it on each letter printed.",
+    "Separate letters in each row with a single space."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Maintain a running code counter `code = 65`. Iterate row `i` from `1` to `n`. In the inner loop, append `String.fromCharCode(code++)` and a space.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternAlphabetFloydsTriangle(n) {\n  let rows = [];\n  let code = 65;\n  for (let i = 1; i <= n; i++) {\n    let row = '';\n    for (let j = 1; j <= i; j++) {\n      row += String.fromCharCode(code++) + (j === i ? '' : ' ');\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Assemble each row's characters in an array and join them with `' '` to manage spaces cleanly.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternAlphabetFloydsTriangle(n) {\n  let rows = [];\n  let code = 65;\n  for (let i = 1; i <= n; i++) {\n    let row = [];\n    for (let j = 1; j <= i; j++) {\n      row.push(String.fromCharCode(code++));\n    }\n    rows.push(row.join(' '));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "Like standard Floyd's triangle, we print consecutive uppercase alphabet letters. We track the current character code, push characters into a row list, and join them with spaces."
+}

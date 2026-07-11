@@ -1,0 +1,42 @@
+{
+  "id": "search-2d-matrix",
+  "title": "Search a 2D Matrix",
+  "difficulty": "medium",
+  "topics": ["binary-search", "arrays"],
+  "companies": ["amazon", "google", "meta", "microsoft"],
+  "statement": "You are given an `m x n` integer matrix `matrix` with the following two properties:\n- Each row is sorted in non-decreasing order.\n- The first integer of each row is greater than the last integer of the previous row.\n\nGiven an integer `target`, return `true` if `target` is in `matrix`, or `false` otherwise.\n\nYou must write a solution in `O(log(m * n))` time complexity. Treat the matrix as a single sorted 1D array and binary search over it, mapping the mid index back to a row/column with division and modulo.",
+  "constraints": [
+    "m == matrix.length",
+    "n == matrix[i].length",
+    "1 <= m, n <= 100",
+    "-10^4 <= matrix[i][j], target <= 10^4"
+  ],
+  "examples": [
+    { "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3", "output": "true" },
+    { "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13", "output": "false" }
+  ],
+  "functionName": "searchMatrix",
+  "starterCode": {
+    "javascript": "function searchMatrix(matrix, target) {\n  // your code here\n}",
+    "python": "def search_matrix(matrix, target):\n    pass"
+  },
+  "tests": [
+    { "args": [[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 3], "expected": true, "hidden": false },
+    { "args": [[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 13], "expected": false, "hidden": false },
+    { "args": [[[1]], 1], "expected": true, "hidden": true },
+    { "args": [[[1]], 2], "expected": false, "hidden": true },
+    { "args": [[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 60], "expected": true, "hidden": true },
+    { "args": [[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 1], "expected": true, "hidden": true },
+    { "args": [[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 0], "expected": false, "hidden": true },
+    { "args": [[[1,3,5,7],[10,11,16,20],[23,30,34,60]], 61], "expected": false, "hidden": true },
+    { "args": [[[1,2],[3,4]], 4], "expected": true, "hidden": true },
+    { "args": [[[1,2],[3,4]], 5], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Since consecutive rows form a continuous sorted sequence, treat the matrix as a virtual sorted 1D array of length `m * n`. Binary search over the range `[0, m*n - 1]`; for each mid index, convert it to `row = Math.floor(mid / n)` and `col = mid % n` to look up `matrix[row][col]`, and compare to target as in standard binary search.",
+    "complexity": "O(log(m * n)) time / O(1) space"
+  },
+  "relatedProblems": ["binary-search"]
+}

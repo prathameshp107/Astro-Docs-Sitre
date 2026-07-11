@@ -1,0 +1,36 @@
+{
+  "id": "balanced-binary-tree",
+  "title": "Balanced Binary Tree",
+  "difficulty": "easy",
+  "topics": ["tree", "depth-first-search"],
+  "companies": ["amazon", "google", "meta"],
+  "statement": "Given a binary tree, determine if it is **height-balanced**: a binary tree in which the depth of the two subtrees of every node never differs by more than one.\n\nBuild a real `TreeNode` tree from `values`, then run a single post-order DFS that computes each subtree's height while short-circuiting to a sentinel value as soon as an imbalance is found anywhere below.",
+  "constraints": [
+    "The number of nodes in the tree is in the range [0, 5000]",
+    "-10^4 <= Node.val <= 10^4"
+  ],
+  "examples": [
+    { "input": "root = [3,9,20,null,null,15,7]", "output": "true" },
+    { "input": "root = [1,2,2,3,3,null,null,4,4]", "output": "false" }
+  ],
+  "functionName": "isBalanced",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction isBalanced(values) {\n  const root = buildTree(values);\n  // your code here\n}",
+    "python": "def is_balanced(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,9,20,null,null,15,7]], "expected": true, "hidden": false },
+    { "args": [[1,2,2,3,3,null,null,4,4]], "expected": false, "hidden": false },
+    { "args": [[]], "expected": true, "hidden": true },
+    { "args": [[1]], "expected": true, "hidden": true },
+    { "args": [[1,2,null,3]], "expected": true, "hidden": true },
+    { "args": [[1,2,null,3,null,4]], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Compute height recursively (post-order). At each node, get the left and right subtree heights; if the absolute difference exceeds 1 anywhere in the tree, mark the whole tree as unbalanced (a boolean flag, or a sentinel like -1 propagated upward to short-circuit further recursion once found). Return the height as usual (1 + max of children) so the parent call can keep checking balance further up.",
+    "complexity": "O(n) time / O(h) space"
+  },
+  "relatedProblems": ["diameter-of-binary-tree", "maximum-depth-of-binary-tree"]
+}

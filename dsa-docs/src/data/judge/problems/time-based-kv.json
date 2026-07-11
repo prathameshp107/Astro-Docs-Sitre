@@ -1,0 +1,37 @@
+{
+  "id": "time-based-kv",
+  "title": "Time Based Key-Value Store",
+  "difficulty": "medium",
+  "topics": ["binary-search", "hash-map"],
+  "companies": ["netflix", "google", "amazon", "stripe"],
+  "statement": "Design a time-based key-value data structure that can store multiple values for the same key at different timestamps and retrieve the key's value at a certain timestamp.\n\nImplement the `TimeMap` class:\n- `TimeMap()` initializes the object.\n- `set(key, value, timestamp)` stores the key `key` with value `value` at the given `timestamp`.\n- `get(key, timestamp)` returns the value associated with the largest `timestamp_prev <= timestamp` for which `set` was previously called on `key`. If there is no such value, returns `\"\"`.\n\nBecause timestamps passed to `set` for a given key are strictly increasing, each key's stored values form a sorted-by-timestamp list, so `get` can binary search for the floor timestamp instead of scanning linearly.\n\nThis problem is graded as a sequence of operations: the input is `[actions, values]`, where `actions` names each method call in order and `values` holds its arguments. The result of each `get` call is collected into an array (constructor and `set` calls contribute `null`).",
+  "constraints": [
+    "1 <= key.length, value.length <= 100",
+    "key and value consist of lowercase English letters and digits",
+    "1 <= timestamp <= 10^7",
+    "All timestamps of set are strictly increasing for the same key",
+    "At most 2 * 10^5 calls will be made to set and get"
+  ],
+  "examples": [
+    { "input": "actions = [\"TimeMap\",\"set\",\"get\",\"get\",\"set\",\"get\",\"get\"], values = [[],[\"foo\",\"bar\",1],[\"foo\",1],[\"foo\",3],[\"foo\",\"bar2\",4],[\"foo\",4],[\"foo\",5]]", "output": "[null,null,\"bar\",\"bar\",null,\"bar2\",\"bar2\"]" }
+  ],
+  "functionName": "timeMapOperations",
+  "starterCode": {
+    "javascript": "function timeMapOperations(actions, values) {\n  const results = [];\n  let map = new Map();\n  function set(key, value, timestamp) {\n    // your code here\n  }\n  function get(key, timestamp) {\n    // your code here\n  }\n  for (let i = 0; i < actions.length; i++) {\n    if (actions[i] === 'TimeMap') { map = new Map(); results.push(null); }\n    else if (actions[i] === 'set') { set(...values[i]); results.push(null); }\n    else { results.push(get(...values[i])); }\n  }\n  return results;\n}",
+    "python": "def time_map_operations(actions, values):\n    pass"
+  },
+  "tests": [
+    { "args": [["TimeMap","set","get","get","set","get","get"], [[],["foo","bar",1],["foo",1],["foo",3],["foo","bar2",4],["foo",4],["foo",5]]], "expected": [null,null,"bar","bar",null,"bar2","bar2"], "hidden": false },
+    { "args": [["TimeMap","get"], [[],["missing",1]]], "expected": [null,""], "hidden": false },
+    { "args": [["TimeMap","set","get"], [[],["a","1",1],["a",0]]], "expected": [null,null,""], "hidden": true },
+    { "args": [["TimeMap","set","set","get"], [[],["k","v1",1],["k","v2",2],["k",100]]], "expected": [null,null,null,"v2"], "hidden": true },
+    { "args": [["TimeMap","set","get"], [[],["a","1",5],["a",5]]], "expected": [null,null,"1"], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Store a Map from key to an array of `[timestamp, value]` pairs, appended in `set()` calls (already sorted since timestamps are strictly increasing per key). In `get()`, binary search that key's array for the rightmost entry whose timestamp is `<= timestamp`; if found, return its value, otherwise return an empty string.",
+    "complexity": "O(1) for set, O(log n) for get / O(n) total space"
+  },
+  "relatedProblems": ["binary-search", "lru-cache"]
+}

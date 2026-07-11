@@ -1,0 +1,36 @@
+{
+  "id": "binary-tree-level-order-traversal",
+  "title": "Binary Tree Level Order Traversal",
+  "difficulty": "medium",
+  "topics": ["tree", "breadth-first-search"],
+  "companies": ["amazon", "meta", "microsoft", "linkedin"],
+  "statement": "Given the `root` of a binary tree, return the level order traversal of its nodes' values (i.e., from left to right, level by level), as an array of arrays — one inner array per level.\n\nBuild a real `TreeNode` tree from `values`, then perform a standard BFS, processing one full level (queue snapshot) at a time.",
+  "constraints": [
+    "The number of nodes in the tree is in the range [0, 2000]",
+    "-1000 <= Node.val <= 1000"
+  ],
+  "examples": [
+    { "input": "root = [3,9,20,null,null,15,7]", "output": "[[3],[9,20],[15,7]]" },
+    { "input": "root = [1]", "output": "[[1]]" },
+    { "input": "root = []", "output": "[]" }
+  ],
+  "functionName": "levelOrder",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction levelOrder(values) {\n  const root = buildTree(values);\n  // your code here\n}",
+    "python": "def level_order(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,9,20,null,null,15,7]], "expected": [[3],[9,20],[15,7]], "hidden": false },
+    { "args": [[1]], "expected": [[1]], "hidden": false },
+    { "args": [[]], "expected": [], "hidden": true },
+    { "args": [[1,2,3,4,null,null,5]], "expected": [[1],[2,3],[4,5]], "hidden": true },
+    { "args": [[1,null,2,null,3]], "expected": [[1],[2],[3]], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a queue starting with the root (if it exists). At each iteration, capture the current queue's size (the number of nodes at this level), pop exactly that many nodes, collect their values into a level array, and push their children for the next round. Repeat until the queue is empty.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["binary-tree-right-side-view"]
+}

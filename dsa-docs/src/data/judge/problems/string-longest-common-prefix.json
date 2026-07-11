@@ -1,0 +1,62 @@
+{
+  "id": "string-longest-common-prefix",
+  "title": "Longest Common Prefix",
+  "difficulty": "easy",
+  "topics": ["strings"],
+  "companies": ["google", "amazon", "apple"],
+  "statement": "Write a function to find the longest common prefix string amongst an array of strings `strs`.\n\nIf there is no common prefix, return an empty string `\"\"`.",
+  "constraints": [
+    "1 <= strs.length <= 200",
+    "0 <= strs[i].length <= 200",
+    "strs[i] consists of only lowercase English letters."
+  ],
+  "examples": [
+    {
+      "input": "strs = [\"flower\", \"flow\", \"flight\"]",
+      "output": "\"fl\"",
+      "explanation": "The prefix \"fl\" is common to all input strings."
+    },
+    {
+      "input": "strs = [\"dog\", \"racecar\", \"car\"]",
+      "output": "\"\"",
+      "explanation": "There is no common prefix among the input strings."
+    }
+  ],
+  "functionName": "longestCommonPrefix",
+  "starterCode": {
+    "javascript": "function longestCommonPrefix(strs) {\n  // Write your code here\n}",
+    "python": "def longest_common_prefix(strs):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nlongestCommonPrefix = longest_common_prefix"
+  },
+  "tests": [
+    { "args": [["flower", "flow", "flight"]], "expected": "fl", "hidden": false },
+    { "args": [["dog", "racecar", "car"]], "expected": "", "hidden": false },
+    { "args": [["interspecies", "interstellar", "interstate"]], "expected": "inters", "hidden": false },
+    { "args": [["a"]], "expected": "a", "hidden": true },
+    { "args": [["", "b"]], "expected": "", "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Horizontal scanning: set prefix = strs[0], then loop over subsequent strings, shrinking prefix length (prefix = prefix.substring(0, prefix.length - 1)) while strs[i].indexOf(prefix) !== 0.",
+    "complexity": "O(S) time, where S is sum of all characters in all strings / O(1) space"
+  },
+  "relatedProblems": ["string-palindrome"],
+  "hints": [
+    "Assume the first string `strs[0]` is the starting prefix.",
+    "Iterate through the rest of the strings. While the current string does not start with the prefix, shorten the prefix by one character from the end.",
+    "If the prefix becomes empty, return \"\" immediately."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Compare characters column by column across all strings. Stop when a mismatch is found or when the end of any string is reached.",
+    "timeComplexity": "O(m * n) where m is the shortest string length and n is number of strings",
+    "spaceComplexity": "O(1)",
+    "code": "function longestCommonPrefix(strs) {\n  if (strs.length === 0) return '';\n  let prefix = '';\n  for (let c = 0; c < strs[0].length; c++) {\n    const char = strs[0][c];\n    for (let i = 1; i < strs.length; i++) {\n      if (c >= strs[i].length || strs[i][c] !== char) {\n        return prefix;\n      }\n    }\n    prefix += char;\n  }\n  return prefix;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Sort the array alphabetically. The common prefix of the entire array must be the common prefix of the lexicographically first and last strings, reducing comparisons to just two strings.",
+    "timeComplexity": "O(n * m log n) where n is strings count and m is average length (due to sorting)",
+    "spaceComplexity": "O(m) (due to sorting copy)",
+    "code": "function longestCommonPrefix(strs) {\n  if (strs.length === 0) return '';\n  strs.sort();\n  const first = strs[0];\n  const last = strs[strs.length - 1];\n  let i = 0;\n  while (i < first.length && i < last.length && first[i] === last[i]) {\n    i++;\n  }\n  return first.substring(0, i);\n}"
+  },
+  "interviewExplanation": "A vertical match comparisons scan takes O(S) time where S is the sum of characters. Alternatively, sorting allows comparing only the lexicographically first and last strings, which is mathematically robust and clean."
+}

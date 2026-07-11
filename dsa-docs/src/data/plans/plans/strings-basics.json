@@ -1,0 +1,54 @@
+{
+  "id": "strings-basics",
+  "title": "String Basics",
+  "tagline": "Build your foundations in text processing: master string reversals, anagrams, isomorphic mappings, prefixes, word parsing, and parenthesis parsing with 12 essential challenges.",
+  "difficulty": "beginner",
+  "durationDays": 5,
+  "hoursPerDay": 1.0,
+  "tags": ["strings", "basics", "hash-table", "two-pointers"],
+  "heroTopics": ["Character & Traversal", "Symmetry & Equality", "Prefixes & Patterns", "Parsing & Parentheses"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: Character Operations & Traversal",
+      "items": [
+        { "type": "problem", "ref": "string-reverse", "label": "Code: Reverse a String", "minutes": 15 },
+        { "type": "problem", "ref": "string-count-vowels-consonants", "label": "Code: Count Vowels & Consonants", "minutes": 20 },
+        { "type": "problem", "ref": "string-first-unique-char", "label": "Code: First Unique Character", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: Equality & Symmetries",
+      "items": [
+        { "type": "problem", "ref": "string-palindrome", "label": "Code: Valid Palindrome", "minutes": 20 },
+        { "type": "problem", "ref": "string-anagram", "label": "Code: Valid Anagram", "minutes": 20 },
+        { "type": "problem", "ref": "string-isomorphic", "label": "Code: Isomorphic Strings", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Prefixes & Numbers",
+      "items": [
+        { "type": "problem", "ref": "string-longest-common-prefix", "label": "Code: Longest Common Prefix", "minutes": 25 },
+        { "type": "problem", "ref": "string-largest-odd-number", "label": "Code: Largest Odd Number in String", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Day 4: Words & Rotations",
+      "items": [
+        { "type": "problem", "ref": "string-reverse-words", "label": "Code: Reverse Words in a String", "minutes": 30 },
+        { "type": "problem", "ref": "string-rotate-match", "label": "Code: Rotate String", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Day 5: Parentheses & Parsing",
+      "items": [
+        { "type": "problem", "ref": "string-outermost-parentheses", "label": "Code: Remove Outermost Parentheses", "minutes": 25 },
+        { "type": "problem", "ref": "string-valid-parentheses", "label": "Code: Valid Parentheses", "minutes": 20 }
+      ]
+    }
+  ]
+}

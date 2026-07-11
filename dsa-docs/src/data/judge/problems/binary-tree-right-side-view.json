@@ -1,0 +1,37 @@
+{
+  "id": "binary-tree-right-side-view",
+  "title": "Binary Tree Right Side View",
+  "difficulty": "medium",
+  "topics": ["tree", "breadth-first-search"],
+  "companies": ["amazon", "meta", "microsoft", "google"],
+  "statement": "Given the `root` of a binary tree, imagine yourself standing on the right side of it. Return the values of the nodes you can see, ordered from top to bottom.\n\nBuild a real `TreeNode` tree from `values`, then BFS level by level, taking the last node visited at each level (the rightmost visible node).",
+  "constraints": [
+    "The number of nodes in the tree is in the range [0, 100]",
+    "-100 <= Node.val <= 100"
+  ],
+  "examples": [
+    { "input": "root = [1,2,3,null,5,null,4]", "output": "[1,3,4]" },
+    { "input": "root = [1,null,3]", "output": "[1,3]" },
+    { "input": "root = []", "output": "[]" }
+  ],
+  "functionName": "rightSideView",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction rightSideView(values) {\n  const root = buildTree(values);\n  // your code here\n}",
+    "python": "def right_side_view(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,null,5,null,4]], "expected": [1,3,4], "hidden": false },
+    { "args": [[1,null,3]], "expected": [1,3], "hidden": false },
+    { "args": [[]], "expected": [], "hidden": true },
+    { "args": [[1]], "expected": [1], "hidden": true },
+    { "args": [[1,2,3,4]], "expected": [1,3,4], "hidden": true },
+    { "args": [[1,2,3,null,4]], "expected": [1,3,4], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "BFS level by level (as in Level Order Traversal). At each level, after collecting the level's nodes in order, take the value of the last node in that level — that is the rightmost node visible from the side. Collect one such value per level.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["binary-tree-level-order-traversal"]
+}

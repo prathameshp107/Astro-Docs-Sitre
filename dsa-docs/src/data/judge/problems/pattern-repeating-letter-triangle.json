@@ -1,0 +1,60 @@
+{
+  "id": "pattern-repeating-letter-triangle",
+  "title": "Repeating Letter Triangle Pattern",
+  "difficulty": "easy",
+  "topics": ["patterns"],
+  "companies": ["tcs", "infosys"],
+  "statement": "Write a function to generate a repeating letter triangle pattern of height `n`.\n\nRow `i` (0-indexed, from `0` to `n - 1`) should contain the `i`-th letter of the alphabet (where A is index 0, B is 1, etc.) repeated `i + 1` times without spaces.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\nA\nBB\nCCC\nDDDD\n```",
+  "constraints": [
+    "1 <= n <= 26"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "A\nBB\nCCC",
+      "explanation": "Row 0 has 1 'A', row 1 has 2 'B's, row 2 has 3 'C's."
+    },
+    {
+      "input": "n = 5",
+      "output": "A\nBB\nCCC\nDDDD\nEEEEE",
+      "explanation": "Repeated letters up to E."
+    }
+  ],
+  "functionName": "patternRepeatingLetterTriangle",
+  "starterCode": {
+    "javascript": "function patternRepeatingLetterTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_repeating_letter_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternRepeatingLetterTriangle = pattern_repeating_letter_triangle"
+  },
+  "tests": [
+    { "args": [1], "expected": "A", "hidden": false },
+    { "args": [2], "expected": "A\nBB", "hidden": false },
+    { "args": [3], "expected": "A\nBB\nCCC", "hidden": false },
+    { "args": [4], "expected": "A\nBB\nCCC\nDDDD", "hidden": true },
+    { "args": [5], "expected": "A\nBB\nCCC\nDDDD\nEEEEE", "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "hints": [
+    "Use an outer loop `i` from `0` to `n - 1` to generate each of the `n` rows.",
+    "The character for the `i`-th row can be obtained from its ASCII value: `65 + i` represents character 'A' + i.",
+    "For row `i`, you need to repeat the character `i + 1` times. You can do this with string repetition or a nested loop."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Iterate row by row, and for each row, run a nested loop to append the current alphabet letter character-by-character.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRepeatingLetterTriangle(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    let row = '';\n    const char = String.fromCharCode(65 + i);\n    for (let j = 0; j <= i; j++) {\n      row += char;\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use native string repeating capabilities (`String.prototype.repeat` in JS or string multiplication in Python) to construct each row in linear time.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternRepeatingLetterTriangle(n) {\n  let rows = [];\n  for (let i = 0; i < n; i++) {\n    rows.push(String.fromCharCode(65 + i).repeat(i + 1));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "We iterate from `0` to `n - 1`. On each step `i`, we convert the index to its corresponding alphabet character using `String.fromCharCode(65 + i)`. We then repeat this character `i + 1` times to match the triangle shape and push it to our rows array. Finally, we join the rows with newlines to form the shape.",
+  "editorial": {
+    "approach": "Run an outer loop `i` from `0` to `n - 1`. For each row `i`, identify the character at code `65 + i` and repeat it `i + 1` times. Join the rows using `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": ["pattern-letter-triangle", "pattern-row-number-triangle"]
+}

@@ -107,6 +107,101 @@ function defineDSAThemes(monaco) {
   });
 }
 
+function CodeBlock({ code }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const functionName = useMemo(() => {
+    return extractFunctionName(code);
+  }, [code]);
+
+  const { boilerplate, userCode } = useMemo(() => {
+    return splitBoilerplate(code, functionName);
+  }, [code, functionName]);
+
+  const hasBoilerplate = boilerplate.trim().length > 0;
+  const displayCode = hasBoilerplate ? userCode : code;
+
+  return (
+    <div style={{ position: "relative" }}>
+      <pre className="dsa-code-block" style={{ paddingRight: "70px" }}>
+        <code>{displayCode}</code>
+      </pre>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="dsa-btn-secondary"
+        style={{
+          position: "absolute",
+          top: "8px",
+          right: "8px",
+          padding: "3px 8px",
+          fontSize: "11px",
+          zIndex: 10,
+        }}
+      >
+        {copied ? "✓ Copied" : "Copy"}
+      </button>
+    </div>
+  );
+}
+
+function extractFunctionName(starterCode) {
+  if (!starterCode) return "";
+  const matches = [...starterCode.matchAll(/function\s+([a-zA-Z0-9_$]+)\s*\(/g)];
+  if (matches.length > 0) {
+    for (let i = matches.length - 1; i >= 0; i--) {
+      const name = matches[i][1];
+      if (name !== "buildTree" && name !== "buildList" && name !== "toArray" && name !== "treeToArray") {
+        return name;
+      }
+    }
+  }
+  const classMatches = [...starterCode.matchAll(/class\s+([a-zA-Z0-9_$]+)/g)];
+  if (classMatches.length > 0) {
+    for (let i = classMatches.length - 1; i >= 0; i--) {
+      const name = classMatches[i][1];
+      if (name !== "TreeNode" && name !== "ListNode" && name !== "Node" && name !== "LinkedList") {
+        return name;
+      }
+    }
+  }
+  return "";
+}
+
+function splitBoilerplate(codeStr, functionName) {
+  if (!codeStr || !functionName) {
+    return { boilerplate: "", userCode: codeStr || "" };
+  }
+  const funcPattern = new RegExp(`(?:function|const|let|var|def)\\s+${functionName}\\b`);
+  const match = codeStr.match(funcPattern);
+  if (!match) {
+    return { boilerplate: "", userCode: codeStr };
+  }
+  let splitIndex = match.index;
+  const beforeFunc = codeStr.substring(0, splitIndex).trimEnd();
+  if (beforeFunc.endsWith("*/")) {
+    const jsdocStart = beforeFunc.lastIndexOf("/*");
+    if (jsdocStart !== -1) {
+      splitIndex = jsdocStart;
+    }
+  } else if (beforeFunc.endsWith('"""') || beforeFunc.endsWith("'''")) {
+    const quote = beforeFunc.endsWith('"""') ? '"""' : "'''";
+    const docstringStart = beforeFunc.substring(0, beforeFunc.length - 3).lastIndexOf(quote);
+    if (docstringStart !== -1) {
+      splitIndex = docstringStart;
+    }
+  }
+  const boilerplate = codeStr.substring(0, splitIndex);
+  const userCode = codeStr.substring(splitIndex);
+  return { boilerplate, userCode };
+}
+
 // ─── PROBLEM VIEW ───
 
 export default function DSAProblemView({ problemId }) {
@@ -162,9 +257,39 @@ export default function DSAProblemView({ problemId }) {
     }
   }, [monacoTheme]);
 
-  const handleCodeChange = useCallback((v) => {
-    setCode(v || "");
-  }, []);
+  const functionName = useMemo(() => {
+    return problem ? extractFunctionName(problem.starterCode) : "";
+  }, [problem]);
+
+  const initialBoilerplate = useMemo(() => {
+    if (!problem) return "";
+    const split = splitBoilerplate(problem.starterCode, functionName);
+    return split.boilerplate;
+  }, [problem, functionName]);
+
+  const { boilerplate, userCode } = useMemo(() => {
+    if (initialBoilerplate && code && code.startsWith(initialBoilerplate)) {
+      return {
+        boilerplate: initialBoilerplate,
+        userCode: code.substring(initialBoilerplate.length),
+      };
+    }
+    return { boilerplate: "", userCode: code || "" };
+  }, [code, initialBoilerplate]);
+
+  const hasBoilerplate = boilerplate.trim().length > 0;
+  const displayCode = hasBoilerplate ? userCode : code;
+
+  const handleCodeChange = useCallback(
+    (v) => {
+      if (hasBoilerplate) {
+        setCode(boilerplate + (v || ""));
+      } else {
+        setCode(v || "");
+      }
+    },
+    [boilerplate, hasBoilerplate]
+  );
 
   const handleConsoleDrag = useCallback(({ clientY }) => {
     if (!editorPanelRef.current) return;
@@ -564,7 +689,7 @@ export default function DSAProblemView({ problemId }) {
                         <span className="dsa-complexity-tag dsa-complexity-time">Time: {problem.bruteForceSolution.timeComplexity}</span>
                         <span className="dsa-complexity-tag dsa-complexity-space">Space: {problem.bruteForceSolution.spaceComplexity}</span>
                       </div>
-                      <pre className="dsa-code-block"><code>{problem.bruteForceSolution.code}</code></pre>
+                      <CodeBlock code={problem.bruteForceSolution.code} />
                     </div>
 
                     {/* Optimized */}
@@ -575,7 +700,7 @@ export default function DSAProblemView({ problemId }) {
                         <span className="dsa-complexity-tag dsa-complexity-time">Time: {problem.optimizedSolution.timeComplexity}</span>
                         <span className="dsa-complexity-tag dsa-complexity-space">Space: {problem.optimizedSolution.spaceComplexity}</span>
                       </div>
-                      <pre className="dsa-code-block"><code>{problem.optimizedSolution.code}</code></pre>
+                      <CodeBlock code={problem.optimizedSolution.code} />
                     </div>
 
                     {/* Interview Explanation */}
@@ -608,8 +733,10 @@ export default function DSAProblemView({ problemId }) {
               {isSubmitting ? "Submitting..." : "Submit"}
             </button>
             <button className="dsa-btn-secondary" onClick={() => {
+              const split = splitBoilerplate(problem.starterCode, functionName);
+              const defaultDisplayCode = hasBoilerplate ? split.userCode : problem.starterCode;
               if (editorRef.current) {
-                editorRef.current.setValue(problem.starterCode);
+                editorRef.current.setValue(defaultDisplayCode);
               }
               setCode(problem.starterCode);
               setOutput([]);
@@ -619,6 +746,7 @@ export default function DSAProblemView({ problemId }) {
               <FiRefreshCw size={14} />
               Reset
             </button>
+
             <span className="dsa-editor-lang">JavaScript</span>
             <span className="dsa-editor-shortcut">Ctrl+Enter to run</span>
           </div>
@@ -630,7 +758,7 @@ export default function DSAProblemView({ problemId }) {
               height="100%"
               language="javascript"
               theme={monacoTheme}
-              value={code}
+              value={displayCode}
               onChange={handleCodeChange}
               onMount={handleEditorMount}
               options={{

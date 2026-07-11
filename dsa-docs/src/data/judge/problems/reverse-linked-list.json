@@ -1,0 +1,37 @@
+{
+  "id": "reverse-linked-list",
+  "title": "Reverse Linked List",
+  "difficulty": "easy",
+  "topics": ["linked-list"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple", "adobe"],
+  "statement": "Given the `head` of a singly linked list, reverse the list, and return the reversed list.\n\nSince this judge represents lists as plain value arrays, build a real `ListNode` chain from `values` first, reverse it using the standard three-pointer technique (`prev`, `curr`, `next`), then convert the reversed chain back to an array to return.",
+  "constraints": [
+    "The number of nodes in the list is in the range [0, 5000]",
+    "-5000 <= Node.val <= 5000"
+  ],
+  "examples": [
+    { "input": "values = [1,2,3,4,5]", "output": "[5,4,3,2,1]" },
+    { "input": "values = [1,2]", "output": "[2,1]" }
+  ],
+  "functionName": "reverseList",
+  "starterCode": {
+    "javascript": "class ListNode {\n  constructor(val, next = null) { this.val = val; this.next = next; }\n}\nfunction buildList(values) {\n  let head = null, tail = null;\n  for (const v of values) {\n    const node = new ListNode(v);\n    if (!head) head = node; else tail.next = node;\n    tail = node;\n  }\n  return head;\n}\nfunction toArray(head) {\n  const arr = [];\n  let curr = head;\n  while (curr) { arr.push(curr.val); curr = curr.next; }\n  return arr;\n}\nfunction reverseList(values) {\n  const head = buildList(values);\n  // your code here: reverse the ListNode chain starting at `head`, then return toArray(newHead)\n}",
+    "python": "def reverse_list(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,4,5]], "expected": [5,4,3,2,1], "hidden": false },
+    { "args": [[1,2]], "expected": [2,1], "hidden": false },
+    { "args": [[]], "expected": [], "hidden": true },
+    { "args": [[1]], "expected": [1], "hidden": true },
+    { "args": [[1,2,3]], "expected": [3,2,1], "hidden": true },
+    { "args": [[-1,-2,-3,-4]], "expected": [-4,-3,-2,-1], "hidden": true },
+    { "args": [[5,5,5]], "expected": [5,5,5], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Build the list from the array, then walk it with three pointers: `prev` (starts null), `curr` (starts at head), and a temporary `next`. At each step, save `curr.next`, then point `curr.next` back to `prev`, then advance `prev` and `curr` forward. When `curr` becomes null, `prev` is the new head. Convert it back to an array to return.",
+    "complexity": "O(n) time / O(1) extra space"
+  },
+  "relatedProblems": ["merge-two-sorted-lists"]
+}

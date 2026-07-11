@@ -241,6 +241,8 @@ export default function JudgeView({ problemId }) {
           isRunning={status === "running"}
           isSubmitting={status === "submitting"}
           language={language}
+          functionName={problem.functionName}
+          starterCode={problem.starterCode?.[language] || problem.starterCode?.javascript || ""}
         />
         <ResultsPanel
           status={status}

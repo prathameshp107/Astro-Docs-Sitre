@@ -1,0 +1,38 @@
+{
+  "id": "lowest-common-ancestor-bst",
+  "title": "Lowest Common Ancestor of a Binary Search Tree",
+  "difficulty": "medium",
+  "topics": ["tree", "binary-search"],
+  "companies": ["amazon", "meta", "microsoft", "google"],
+  "statement": "Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes with values `p` and `q` in the BST.\n\nThe lowest common ancestor is defined as the lowest node in the tree that has both `p` and `q` as descendants (where a node can be a descendant of itself).\n\nBuild a real `TreeNode` BST from `values`, then use the BST ordering property to navigate directly toward the split point instead of a general tree search.",
+  "constraints": [
+    "The number of nodes in the tree is in the range [2, 10^5]",
+    "-10^9 <= Node.val <= 10^9",
+    "All Node.val are unique",
+    "p and q will exist in the BST"
+  ],
+  "examples": [
+    { "input": "root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8", "output": "6" },
+    { "input": "root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4", "output": "2" }
+  ],
+  "functionName": "lowestCommonAncestor",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction lowestCommonAncestor(values, p, q) {\n  let root = buildTree(values);\n  // your code here\n}",
+    "python": "def lowest_common_ancestor(values, p, q):\n    pass"
+  },
+  "tests": [
+    { "args": [[6,2,8,0,4,7,9,null,null,3,5], 2, 8], "expected": 6, "hidden": false },
+    { "args": [[6,2,8,0,4,7,9,null,null,3,5], 2, 4], "expected": 2, "hidden": false },
+    { "args": [[2,1], 2, 1], "expected": 2, "hidden": true },
+    { "args": [[6,2,8,0,4,7,9,null,null,3,5], 0, 5], "expected": 2, "hidden": true },
+    { "args": [[6,2,8,0,4,7,9,null,null,3,5], 7, 9], "expected": 8, "hidden": true },
+    { "args": [[6,2,8,0,4,7,9,null,null,3,5], 3, 5], "expected": 4, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Starting at the root, compare both `p` and `q` to the current node's value. If both are smaller, the LCA must be in the left subtree, so move left. If both are larger, move right. As soon as `p` and `q` fall on different sides (or one equals the current node's value), the current node is the split point and therefore the LCA.",
+    "complexity": "O(h) time / O(1) space (iterative), where h is the tree height"
+  },
+  "relatedProblems": ["validate-binary-search-tree", "kth-smallest-element-bst"]
+}

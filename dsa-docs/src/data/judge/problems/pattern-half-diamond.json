@@ -1,0 +1,98 @@
+{
+  "id": "pattern-half-diamond",
+  "title": "Half Diamond Star Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys"
+  ],
+  "statement": "Write a function to generate a half diamond star pattern of peak width `n`.\n\nThe pattern has `2 * n - 1` rows. The top `n` rows form a right triangle star pattern of height `n`, and the bottom `n - 1` rows form an inverted right triangle star pattern of height `n - 1` directly below it.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n*\n**\n***\n****\n***\n**\n*\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "*\n**\n***\n**\n*",
+      "explanation": "A half diamond of peak width 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "*\n**\n***\n****\n*****\n****\n***\n**\n*",
+      "explanation": "A half diamond of peak width 5."
+    }
+  ],
+  "functionName": "patternHalfDiamond",
+  "starterCode": {
+    "javascript": "function patternHalfDiamond(n) {\n  // Write your code here\n}",
+    "python": "def pattern_half_diamond(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternHalfDiamond = pattern_half_diamond"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "*",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "*\n**\n*",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "*\n**\n***\n**\n*",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "*\n**\n***\n****\n***\n**\n*",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "*\n**\n***\n****\n*****\n****\n***\n**\n*",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Print `2 * n - 1` rows. For row `i` (0 to `2*n-2`), if `i < n`, print `i + 1` stars. If `i >= n`, print `2 * n - 1 - i` stars. Join the rows using `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-right-triangle",
+    "pattern-diamond"
+  ],
+  "hints": [
+    "The pattern expands from 1 to `n` stars, then contracts back to 1.",
+    "The total number of rows is `2 * n - 1`.",
+    "For row `i` (0-indexed): if `i < n`, print `i + 1` stars. Else, print `2 * n - 1 - i` stars."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Run a single loop `i` from `0` to `2 * n - 2`. Within it, run an inner loop to append stars depending on whether we are in the top half (`i < n`) or the bottom half (`i >= n`).",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternHalfDiamond(n) {\n  let rows = [];\n  for (let i = 0; i < 2 * n - 1; i++) {\n    let row = '';\n    const limit = i < n ? i + 1 : 2 * n - 1 - i;\n    for (let j = 0; j < limit; j++) {\n      row += '*';\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Loop `i` from `0` to `2 * n - 2` and call `'*'.repeat(starsCount)` directly.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternHalfDiamond(n) {\n  let rows = [];\n  for (let i = 0; i < 2 * n - 1; i++) {\n    const stars = i < n ? i + 1 : 2 * n - 1 - i;\n    rows.push('*'.repeat(stars));\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "A half diamond grows then shrinks. The width peaks at `n` on row `n-1` and the total height is `2n-1`. We check if the current row index `i` is in the upper half or lower half to dynamically calculate the star count, then construct the row using `.repeat()`."
+}

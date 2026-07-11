@@ -1,0 +1,42 @@
+{
+  "id": "top-k-frequent-elements",
+  "title": "Top K Frequent Elements",
+  "difficulty": "medium",
+  "topics": ["arrays", "hash-map", "heap", "sorting"],
+  "companies": ["amazon", "google", "meta", "microsoft", "yahoo"],
+  "statement": "Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in **any order**.\n\nIt is guaranteed that the answer is unique. Try to solve it in a time complexity better than O(n log n), where n is the array's size — a frequency count paired with bucket sort can get you to O(n).",
+  "constraints": [
+    "1 <= nums.length <= 10^5",
+    "-10^4 <= nums[i] <= 10^4",
+    "k is in the range [1, the number of distinct elements in nums]",
+    "It is guaranteed that the answer is unique"
+  ],
+  "examples": [
+    { "input": "nums = [1,1,1,2,2,3], k = 2", "output": "[1,2]", "explanation": "1 appears 3 times, 2 appears 2 times, 3 appears once. The 2 most frequent are 1 and 2." },
+    { "input": "nums = [1], k = 1", "output": "[1]" }
+  ],
+  "functionName": "topKFrequent",
+  "starterCode": {
+    "javascript": "function topKFrequent(nums, k) {\n  // your code here\n}",
+    "python": "def top_k_frequent(nums, k):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,1,1,2,2,3], 2], "expected": [1,2], "hidden": false },
+    { "args": [[1], 1], "expected": [1], "hidden": false },
+    { "args": [[1,2], 2], "expected": [1,2], "hidden": true },
+    { "args": [[4,4,4,4,5,5,6], 1], "expected": [4], "hidden": true },
+    { "args": [[-1,-1,-2,-2,-2,3], 2], "expected": [-2,-1], "hidden": true },
+    { "args": [[1,2,3,4,5], 3], "expected": [1,2,3], "hidden": true },
+    { "args": [[5,5,5,3,3,1,1,1,1], 2], "expected": [1,5], "hidden": true },
+    { "args": [[7,7,7,7,7,7], 1], "expected": [7], "hidden": true },
+    { "args": [[1,1,2,2,3,3,4], 3], "expected": [1,2,3], "hidden": true },
+    { "args": [[0,0,0,1,1,2], 2], "expected": [0,1], "hidden": true }
+  ],
+  "compareMode": "unordered",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "First, build a frequency map of each number in `nums` using a hash map. Then use bucket sort: create an array of buckets indexed by frequency (from 0 to n), where bucket[f] holds every number that appears exactly f times. Walk the buckets from the highest frequency down to the lowest, collecting numbers until you have k of them. This avoids sorting the frequency map directly and runs in O(n) time. A heap-based approach (maintaining a min-heap of size k) also works in O(n log k) time.",
+    "complexity": "O(n) time / O(n) space (bucket sort approach)"
+  },
+  "relatedProblems": ["valid-anagram", "group-anagrams"]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "find-min-rotated",
+  "title": "Find Minimum in Rotated Sorted Array",
+  "difficulty": "medium",
+  "topics": ["binary-search", "arrays"],
+  "companies": ["google", "amazon", "meta", "microsoft"],
+  "statement": "Suppose an array of length `n` sorted in ascending order is rotated between `1` and `n` times. Given the rotated sorted array `nums` of unique elements, return the minimum element of the array.\n\nYou must write an algorithm that runs in `O(log n)` time.\n\nCompare `nums[mid]` with `nums[right]`: if `nums[mid] > nums[right]`, the minimum lies strictly to the right of `mid`; otherwise the minimum is at `mid` or to its left.",
+  "constraints": [
+    "n == nums.length",
+    "1 <= n <= 5000",
+    "-5000 <= nums[i] <= 5000",
+    "All the integers of nums are unique",
+    "nums is sorted and rotated between 1 and n times"
+  ],
+  "examples": [
+    { "input": "nums = [3,4,5,1,2]", "output": "1" },
+    { "input": "nums = [4,5,6,7,0,1,2]", "output": "0" }
+  ],
+  "functionName": "findMin",
+  "starterCode": {
+    "javascript": "function findMin(nums) {\n  // your code here\n}",
+    "python": "def find_min(nums):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,4,5,1,2]], "expected": 1, "hidden": false },
+    { "args": [[4,5,6,7,0,1,2]], "expected": 0, "hidden": false },
+    { "args": [[11,13,15,17]], "expected": 11, "hidden": true },
+    { "args": [[2,1]], "expected": 1, "hidden": true },
+    { "args": [[1]], "expected": 1, "hidden": true },
+    { "args": [[3,1,2]], "expected": 1, "hidden": true },
+    { "args": [[5,1,2,3,4]], "expected": 1, "hidden": true },
+    { "args": [[1,2,3,4,5]], "expected": 1, "hidden": true },
+    { "args": [[2,3,4,5,1]], "expected": 1, "hidden": true },
+    { "args": [[7,8,9,1,2,3,4,5,6]], "expected": 1, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Binary search with `left = 0` and `right = nums.length - 1`. At each step compute `mid`. If `nums[mid] > nums[right]`, the array's minimum must be to the right of `mid` (since a rotation boundary exists between them), so set `left = mid + 1`. Otherwise the minimum is at `mid` or somewhere to its left, so set `right = mid` (not `mid - 1`, since `mid` itself could be the answer). The loop ends when `left === right`, which points to the minimum.",
+    "complexity": "O(log n) time / O(1) space"
+  },
+  "relatedProblems": ["search-rotated-array", "binary-search"]
+}

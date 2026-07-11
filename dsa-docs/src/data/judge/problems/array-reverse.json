@@ -1,0 +1,61 @@
+{
+  "id": "array-reverse",
+  "title": "Reverse an Array",
+  "difficulty": "easy",
+  "topics": ["arrays", "two-pointers"],
+  "companies": ["tcs", "infosys", "cognizant"],
+  "statement": "Write a function that reverses an array of integers `nums` in-place and returns the reversed array.",
+  "constraints": [
+    "1 <= nums.length <= 10^4",
+    "-10^9 <= nums[i] <= 10^9"
+  ],
+  "examples": [
+    {
+      "input": "nums = [1, 2, 3, 4, 5]",
+      "output": "[5, 4, 3, 2, 1]",
+      "explanation": "Reversing the array elements."
+    },
+    {
+      "input": "nums = [10, 20]",
+      "output": "[20, 10]",
+      "explanation": "Reversing two elements."
+    }
+  ],
+  "functionName": "reverseArray",
+  "starterCode": {
+    "javascript": "function reverseArray(nums) {\n  // Write your code here\n}",
+    "python": "def reverse_array(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nreverseArray = reverse_array"
+  },
+  "tests": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": [5, 4, 3, 2, 1], "hidden": false },
+    { "args": [[10, 20]], "expected": [20, 10], "hidden": false },
+    { "args": [[1]], "expected": [1], "hidden": false },
+    { "args": [[1, 1, 1]], "expected": [1, 1, 1], "hidden": true },
+    { "args": [[5, 4, 3, 2, 1, 0]], "expected": [0, 1, 2, 3, 4, 5], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a two-pointer approach, starting `left` at 0 and `right` at n - 1. Swap elements at `left` and `right`, then increment `left` and decrement `right` until they meet.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-palindrome"],
+  "hints": [
+    "You can solve this by swapping elements from both ends of the array.",
+    "Use two pointers: `left` initialized at 0, and `right` initialized at `nums.length - 1`.",
+    "Loop while `left < right`. Swap `nums[left]` and `nums[right]`, then increment `left` and decrement `right`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Create a new array, traverse the original array backwards, copy elements into the new array, and then copy them back to the original array.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function reverseArray(nums) {\n  let temp = [];\n  for (let i = nums.length - 1; i >= 0; i--) {\n    temp.push(nums[i]);\n  }\n  for (let i = 0; i < nums.length; i++) {\n    nums[i] = temp[i];\n  }\n  return nums;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use the two-pointer approach to swap elements in-place from both ends inward, using O(1) auxiliary space.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function reverseArray(nums) {\n  let left = 0;\n  let right = nums.length - 1;\n  while (left < right) {\n    let temp = nums[left];\n    nums[left] = nums[right];\n    nums[right] = temp;\n    left++;\n    right--;\n  }\n  return nums;\n}"
+  },
+  "interviewExplanation": "Reversing an array can be done in O(n) space by allocating an extra array, but in interviews, an in-place swap using two pointers is expected. This achieves the same O(n) time complexity while reducing the space complexity to O(1)."
+}
