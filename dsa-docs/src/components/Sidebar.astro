@@ -10,6 +10,14 @@ const filterLabels = sidebar.map(entry => entry.label);
 ---
 
 <div class="sidebar-header">
+  <button id="sidebar-toggle" class="sidebar-toggle" type="button" title="Toggle Sidebar">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+      <line x1="9" y1="6" x2="15" y2="6"/>
+      <line x1="9" y1="12" x2="15" y2="12"/>
+      <line x1="9" y1="18" x2="15" y2="18"/>
+    </svg>
+  </button>
   <button id="expand-all" class="sidebar-toggle" type="button" title="Expand All">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="7 13 12 18 17 13"/>
@@ -64,15 +72,43 @@ const filterLabels = sidebar.map(entry => entry.label);
   </div>
 </div>
 
-<SidebarPersister>
-  <SidebarSublist sublist={sidebar} />
-</SidebarPersister>
+<div class="sidebar-content">
+  <SidebarPersister>
+    <SidebarSublist sublist={sidebar} />
+  </SidebarPersister>
+</div>
 
 <div class="md:sl-hidden">
   <MobileMenuFooter />
 </div>
 
 <script>
+  function setupSidebarToggle() {
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const sidebarContent = document.querySelector('.sidebar-content');
+    if (!toggleBtn || !sidebarContent) return;
+
+    const toggleSidebar = () => {
+      sidebarContent.classList.toggle('collapsed');
+    };
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+
+    // Optional: Close sidebar when clicking outside on mobile
+    // Handle escape key to collapse sidebar
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' &&
+          !sidebarContent.classList.contains('collapsed')) {
+        // If sidebar is not collapsed, collapse it on escape
+        sidebarContent.classList.add('collapsed');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup function could be added here if needed
+  }
+
   function setupSidebarFilter() {
     const toggleBtn = document.getElementById('filter-toggle');
     const dropdown = document.getElementById('filter-dropdown');
@@ -223,9 +259,11 @@ const filterLabels = sidebar.map(entry => entry.label);
   setupSidebarFilter();
   setupExpandCollapse();
   setupSidebarTheme();
+  setupSidebarToggle();
   document.addEventListener('astro:after-swap', () => {
     setupSidebarFilter();
     setupExpandCollapse();
     setupSidebarTheme();
+    setupSidebarToggle();
   });
 </script>
