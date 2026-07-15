@@ -12,6 +12,7 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  CodeBlock,
 } from "./shared/index.js";
 
 // ─── PYTHON RUNNER (Pyodide) ───
@@ -827,7 +828,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{lesson.solutionCode}</code></pre>
+          <CodeBlock code={lesson.solutionCode} />
         </div>
       )}
 
@@ -888,7 +889,7 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{challenge.solution}</code></pre>
+          <CodeBlock code={challenge.solution} />
         </div>
       )}
 
@@ -959,7 +960,7 @@ function ProjectView({ project, showSolution, onToggleSolution }) {
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{project.solution}</code></pre>
+          <CodeBlock code={project.solution} />
         </div>
       )}
 
@@ -1006,7 +1007,7 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution }
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{bug.solution}</code></pre>
+          <CodeBlock code={bug.solution} />
         </div>
       )}
 

@@ -10,6 +10,7 @@ export default function LabTopbar({
   onToggleTheme,
   progressBarClass,
   prefix = "jsl",
+  onOpenPalette,
 }) {
   const p = prefix;
   return (
@@ -41,6 +42,16 @@ export default function LabTopbar({
         <span className={`${p}-top-percent`}>{progressStats.pct}%</span>
       </div>
       <div className={`${p}-topbar-right`}>
+        {onOpenPalette && (
+          <button
+            className={`${p}-btn-command-palette`}
+            onClick={onOpenPalette}
+            title="Open Command Palette (Ctrl+K)"
+          >
+            <span>Search / Commands</span>
+            <kbd className="lcp-kbd">Ctrl+K</kbd>
+          </button>
+        )}
         {children}
         <button
           className={`${p}-btn-icon`}

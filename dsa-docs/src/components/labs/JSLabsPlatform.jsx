@@ -1,9 +1,10 @@
-import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
+import { FiCheckSquare, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { JS_LESSONS, JS_BUG_CHALLENGES, JS_MINI_PROJECTS } from "../../data/js-labs-curriculum.js";
 import { DiJavascript1 } from "react-icons/di";
+import { debounce } from "../../lib/utils/debounce";
 
 import {
   LabResizableHandle,
@@ -18,120 +19,25 @@ import {
   LabXPBadge,
   LabCommandPalette,
   useCommandPalette,
+  LabSidebar,
+  LabTour,
+  renderFormattedText,
+  CodeBlock,
 } from "./shared/index.js";
 
 const JS_CONFETTI = ["#f7df1e", "#60a5fa", "#34d399", "#a78bfa"];
 
-// ─── SIDEBAR ───
+// CSS Variables for consistent spacing (8px grid)
+const SPACING = {
+  xs: 4,   // 0.5rem
+  sm: 8,   // 1rem
+  md: 12,  // 1.5rem
+  lg: 16,  // 2rem
+  xl: 24,  // 3rem
+  xxl: 32  // 4rem
+};
 
-function JSSidebar({ activeSection, activeLesson, activeBug, activeProject, onSelectLesson, onSelectBug, onSelectProject, progress, ...rest }) {
-  const [expandedSections, setExpandedSections] = useState({ learn: true, bugs: false, projects: false });
 
-  const toggleSection = (key) => {
-    setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const isLessonActive = (id) => activeSection === "learn" && activeLesson === id;
-  const isBugActive = (id) => activeSection === "bugs" && activeBug === id;
-  const isProjectActive = (id) => activeSection === "projects" && activeProject === id;
-
-  return (
-    <div className="jsl-sidebar" {...rest}>
-      <div className="jsl-sidebar-header">
-        <h3>
-          <FiBook size={16} /> Curriculum
-        </h3>
-      </div>
-
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header ${expandedSections.learn ? "expanded" : ""}`}
-          onClick={() => toggleSection("learn")}
-        >
-          <div className="jsl-sg-title">
-            <FiBook size={16} /><span>LEARN JAVASCRIPT</span>
-          </div>
-          <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.learn && (
-          <div className="jsl-sg-items">
-            {JS_LESSONS.map((lesson) => (
-              <button
-                key={lesson.id}
-                className={`jsl-si ${isLessonActive(lesson.id) ? "active" : ""} ${progress.lessons.includes(lesson.id) ? "done" : ""}`}
-                onClick={() => onSelectLesson(lesson.id)}
-              >
-                <span className="jsl-si-num">{lesson.chapter}.</span>
-                <span className="jsl-si-title">{lesson.title}</span>
-                <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header ${expandedSections.bugs ? "expanded" : ""}`}
-          onClick={() => toggleSection("bugs")}
-        >
-          <div className="jsl-sg-title">
-            <FiBook size={16} />
-            <span>FIX THE BUG</span>
-          </div>
-          <span className="jsl-sg-count">{progress.bugsDone}/{progress.bugsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.bugs && (
-          <div className="jsl-sg-items">
-            {JS_BUG_CHALLENGES.map((bug) => (
-              <button
-                key={bug.id}
-                className={`jsl-si ${isBugActive(bug.id) ? "active" : ""} ${progress.bugs.includes(bug.id) ? "done" : ""}`}
-                onClick={() => onSelectBug(bug.id)}
-              >
-                <span className="jsl-si-num">{bug.title.split(".")[0]}.</span>
-                <span className="jsl-si-title">{bug.title.split(". ")[1] || bug.title}</span>
-                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header ${expandedSections.projects ? "expanded" : ""}`}
-          onClick={() => toggleSection("projects")}
-        >
-          <div className="jsl-sg-title">
-            <FiBook size={16} />
-            <span>MINI PROJECTS</span>
-          </div>
-          <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.projects && (
-          <div className="jsl-sg-items">
-            {JS_MINI_PROJECTS.map((proj) => (
-              <button
-                key={proj.id}
-                className={`jsl-si ${isProjectActive(proj.id) ? "active" : ""} ${progress.projects.includes(proj.id) ? "done" : ""}`}
-                onClick={() => onSelectProject(proj.id)}
-              >
-                <span className="jsl-si-num">{proj.title.split(".")[0]}.</span>
-                <span className="jsl-si-title">{proj.title.split(". ")[1] || proj.title}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ─── MAIN PLATFORM ───
 
@@ -254,6 +160,19 @@ export default function JSLabsPlatform() {
     setActiveBug(null);
     setActiveProject(id);
     setCode(proj.starterCode);
+    setShowHint(false);
+    setShowSolution(false);
+    setOutput([]);
+    setTestResults([]);
+    codeVersionRef.current++;
+  };
+
+  const selectPlayground = () => {
+    setView("playground");
+    setActiveLesson(null);
+    setActiveBug(null);
+    setActiveProject(null);
+    setCode("// Welcome to the JS Playground!\n// Write your JavaScript code here and run it.\n\nconsole.log(\"Hello from the Playground!\");\n");
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -513,15 +432,16 @@ export default function JSLabsPlatform() {
     if (idx > 0) selectBug(JS_BUG_CHALLENGES[idx - 1].id);
   };
 
-  const runCode = useCallback(() => {
+  // Debounced code execution to prevent excessive processing during typing
+  const debouncedRunCode = useCallback(debounce((codeToRun) => {
     if (terminateRef.current) {
       terminateRef.current();
     }
     setIsRunning(true);
     setOutput([]);
-    
+
     terminateRef.current = runCodeInSandbox(
-      code,
+      codeToRun,
       (type, content) => {
         setOutput(prev => [...prev, { type, content }]);
       },
@@ -530,7 +450,12 @@ export default function JSLabsPlatform() {
         terminateRef.current = null;
       }
     );
-  }, [code]);
+  }, 300), []);
+
+  // Wrapper to trigger debounced execution
+  const runCode = useCallback(() => {
+    debouncedRunCode(code);
+  }, [code, debouncedRunCode]);
 
   // Clean up worker on unmount
   useEffect(() => {
@@ -590,6 +515,7 @@ export default function JSLabsPlatform() {
     if (view === "learn") return currentLesson;
     if (view === "bugs") return currentBug;
     if (view === "projects") return currentProject;
+    if (view === "playground") return { id: "playground", title: "JS Playground" };
     return null;
   }, [view, currentLesson, currentBug, currentProject]);
 
@@ -599,6 +525,101 @@ export default function JSLabsPlatform() {
     if (view === "projects") return currentProject?.tests || [];
     return [];
   }, [view, currentLesson, currentBug, currentProject]);
+
+
+
+  const handleReset = () => {
+    let starter = "";
+    if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
+    else if (view === "bugs" && currentBug) starter = currentBug.brokenCode;
+    else if (view === "projects" && currentProject) starter = currentProject.starterCode;
+    else if (view === "playground") starter = "// Welcome to the JS Playground!\n// Write your JavaScript code here and run it.\n\nconsole.log(\"Hello from the Playground!\");\n";
+    if (editorRef.current) editorRef.current.setValue(starter);
+    setCode(starter);
+    setOutput([]);
+    setTestResults([]);
+    codeVersionRef.current++;
+  };
+
+  const sidebarSections = useMemo(() => [
+    {
+      key: "learn",
+      label: "LEARN JAVASCRIPT",
+      color: "#63b3ed",
+      items: JS_LESSONS,
+      progressText: `${progressStats.lessonsDone}/${progressStats.lessonsTotal}`,
+      isItemActive: (item) => view === "learn" && activeLesson === item.id,
+      isItemDone: (item) => progress.lessons.includes(item.id),
+      onSelectItem: (item) => selectLesson(item.id),
+    },
+    {
+      key: "bugs",
+      label: "FIX THE BUG",
+      color: "#f6ad55",
+      items: JS_BUG_CHALLENGES,
+      progressText: `${progressStats.bugsDone}/${progressStats.bugsTotal}`,
+      isItemActive: (item) => view === "bugs" && activeBug === item.id,
+      isItemDone: (item) => progress.bugs.includes(item.id),
+      onSelectItem: (item) => selectBug(item.id),
+      renderItemNumber: (item, idx) => (
+        <span className="jsl-si-num">{item.title.split(".")[0]}.</span>
+      ),
+      renderItemTitle: (item) => item.title.split(". ")[1] || item.title,
+    },
+    {
+      key: "projects",
+      label: "MINI PROJECTS",
+      color: "#fbbf24",
+      items: JS_MINI_PROJECTS,
+      progressText: `${progressStats.projectsDone}/${progressStats.projectsTotal}`,
+      isItemActive: (item) => view === "projects" && activeProject === item.id,
+      isItemDone: (item) => progress.projects.includes(item.id),
+      onSelectItem: (item) => selectProject(item.id),
+      renderItemNumber: (item, idx) => (
+        <span className="jsl-si-num">{item.title.split(".")[0]}.</span>
+      ),
+      renderItemTitle: (item) => item.title.split(". ")[1] || item.title,
+    }
+  ], [view, activeLesson, activeBug, activeProject, progress, progressStats]);
+
+  const sidebarPlayground = useMemo(() => ({
+    label: "JS PLAYGROUND",
+    color: "#63b3ed",
+    isActive: view === "playground",
+    onSelect: selectPlayground,
+  }), [view]);
+
+  const tourSteps = useMemo(() => [
+    {
+      title: "Welcome to JS Labs! 👋",
+      content: "Let's take a quick 1-minute tour of your interactive coding environment."
+    },
+    {
+      target: ".jsl-sidebar",
+      title: "Curriculum Navigation",
+      content: "Browse lessons, bug challenges, and mini projects here. Your progress is saved automatically."
+    },
+    {
+      target: ".jsl-content-panel",
+      title: "Lesson Content & Tasks",
+      content: "Read lesson explanations, rules, and tasks. You can also view hints or solutions if you get stuck."
+    },
+    {
+      target: ".jsl-editor-panel",
+      title: "Code Editor & Console",
+      content: "Write code in the editor, and see output or errors in the console below."
+    },
+    {
+      target: ".jsl-btn-command-palette",
+      title: "Command Palette",
+      content: "Click this button or press Ctrl+K to open the search bar to jump to lessons or execute commands."
+    },
+    {
+      target: ".jsl-editor-actions",
+      title: "Run Code",
+      content: "Click Run (or press Ctrl+Enter) to execute code, or run tests to verify correctness."
+    }
+  ], []);
 
   if (loading) {
     return (
@@ -619,18 +640,6 @@ export default function JSLabsPlatform() {
     );
   }
 
-  const handleReset = () => {
-    let starter = "";
-    if (view === "learn" && currentLesson) starter = currentLesson.starterCode;
-    else if (view === "bugs" && currentBug) starter = currentBug.brokenCode;
-    else if (view === "projects" && currentProject) starter = currentProject.starterCode;
-    if (editorRef.current) editorRef.current.setValue(starter);
-    setCode(starter);
-    setOutput([]);
-    setTestResults([]);
-    codeVersionRef.current++;
-  };
-
   return (
     <div className="jsl-platform">
       <LabTopbar
@@ -642,6 +651,7 @@ export default function JSLabsPlatform() {
         progressStats={progressStats}
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        onOpenPalette={() => setPaletteOpen(true)}
       >
         <LabXPBadge />
       </LabTopbar>
@@ -656,6 +666,7 @@ export default function JSLabsPlatform() {
           { id: "reset", section: "Actions", label: "Reset editor to starter code", action: handleReset },
           { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
           { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "playground", section: "Actions", label: "Go to playground", action: selectPlayground },
           { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
           ...JS_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
           ...JS_BUG_CHALLENGES.map(b => ({ id: `b-${b.id}`, section: "Bug Challenges", label: b.title, done: progress.bugs.includes(b.id), action: () => selectBug(b.id) })),
@@ -667,15 +678,9 @@ export default function JSLabsPlatform() {
         <div className="jsl-body" ref={bodyRef}>
           {!hideSidebar && (
             <>
-              <JSSidebar
-                activeSection={view}
-                activeLesson={activeLesson}
-                activeBug={activeBug}
-                activeProject={activeProject}
-                onSelectLesson={selectLesson}
-                onSelectBug={selectBug}
-                onSelectProject={selectProject}
-                progress={progressStats}
+              <LabSidebar
+                playground={sidebarPlayground}
+                sections={sidebarSections}
                 style={{ width: sidebarWidth }}
               />
               <LabResizableHandle onDrag={handleSidebarDrag} />
@@ -699,8 +704,8 @@ export default function JSLabsPlatform() {
                     hasNext={JS_LESSONS.findIndex(l => l.id === activeLesson) < JS_LESSONS.length - 1}
                     onMarkDone={() => markLessonDone(currentLesson.id)}
                     isDone={progress.lessons.includes(currentLesson.id)}
-                    testResults={[]}
-                    currentTests={[]}
+                    testResults={testResults}
+                    currentTests={currentTests}
                     onRunTests={runTests}
                   />
                 )}
@@ -717,8 +722,8 @@ export default function JSLabsPlatform() {
                     hasNext={JS_BUG_CHALLENGES.findIndex(b => b.id === activeBug) < JS_BUG_CHALLENGES.length - 1}
                     onMarkDone={() => markBugDone(currentBug.id)}
                     isDone={progress.bugs.includes(currentBug.id)}
-                    testResults={[]}
-                    currentTests={[]}
+                    testResults={testResults}
+                    currentTests={currentTests}
                     onRunTests={runTests}
                   />
                 )}
@@ -729,10 +734,22 @@ export default function JSLabsPlatform() {
                     onToggleSolution={() => setShowSolution(s => !s)}
                     onMarkDone={() => markProjectDone(currentProject.id)}
                     isDone={progress.projects.includes(currentProject.id)}
-                    testResults={[]}
-                    currentTests={[]}
+                    testResults={testResults}
+                    currentTests={currentTests}
                     onRunTests={runTests}
                   />
+                )}
+                {view === "playground" && (
+                  <div className="jsl-content-inner">
+                    <h2 className="jsl-content-title">JS Playground</h2>
+                    <p className="jsl-text" style={{ marginTop: "1rem" }}>
+                      This is a scratchpad where you can test any JavaScript snippets. 
+                      Type your code in the editor on the right and click <strong>Run</strong> (or press <strong>Ctrl+Enter</strong>) to execute it.
+                    </p>
+                    <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}>
+                      Use <code>console.log()</code> to see output in the console panel below the editor.
+                    </p>
+                  </div>
                 )}
               </div>
               <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
@@ -803,22 +820,15 @@ export default function JSLabsPlatform() {
                   onMount={handleEditorMount}
                   options={{
                     fontSize: 13,
-                    fontFamily: "Consolas, 'Courier New', monospace",
-                    fontLigatures: false,
-                    letterSpacing: 0,
+                    fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
-                    scrollBeyondLastLine: false,
                     lineNumbers: "on",
-                    tabSize: 2,
-                    insertSpaces: true,
-                    wordWrap: "on",
+                    roundedSelection: true,
+                    scrollBeyondLastLine: false,
+                    readOnly: false,
                     automaticLayout: true,
-                    bracketPairColorization: { enabled: true },
+                    tabSize: 2,
                     padding: { top: 12, bottom: 12 },
-                    cursorBlinking: "smooth",
-                    smoothScrolling: true,
-                    folding: true,
-                    lineNumbersMinChars: 3,
                   }}
                 />
               </div>
@@ -834,6 +844,7 @@ export default function JSLabsPlatform() {
       </div>
 
       <LabFooter />
+      <LabTour steps={tourSteps} tourKey="js-labs-onboarding-tour-completed" />
     </div>
   );
 }
@@ -859,12 +870,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section">
         <h3 className="jsl-section-title">Concept</h3>
         <div className="jsl-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
-            if (line.startsWith("```")) return null;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -878,12 +884,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">Your Task</h3>
         <div className="jsl-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="jsl-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -896,7 +897,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{lesson.solutionCode}</code></pre>
+          <CodeBlock code={lesson.solutionCode} />
         </div>
       )}
 
@@ -960,7 +961,7 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution, 
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{bug.solution}</code></pre>
+          <CodeBlock code={bug.solution} />
         </div>
       )}
 
@@ -1043,7 +1044,7 @@ function ProjectView({ project, showSolution, onToggleSolution, onMarkDone, isDo
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{project.solution}</code></pre>
+          <CodeBlock code={project.solution} />
         </div>
       )}
 

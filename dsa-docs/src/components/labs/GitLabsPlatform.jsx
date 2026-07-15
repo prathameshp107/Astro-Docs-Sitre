@@ -16,6 +16,7 @@ import {
   LabFooter,
   LabTopbar,
   useKeyboardShortcut,
+  CodeBlock,
 } from "./shared/index.js";
 
 // ═══════════════════════════════════════════════════
@@ -1673,7 +1674,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{lesson.solutionCode}</code></pre>
+          <CodeBlock code={lesson.solutionCode} />
         </div>
       )}
 
@@ -1847,7 +1848,7 @@ function BossView({ boss, showHint, showSolution, onToggleHint, onToggleSolution
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{boss.solution}</code></pre>
+          <CodeBlock code={boss.solution} />
         </div>
       )}
 

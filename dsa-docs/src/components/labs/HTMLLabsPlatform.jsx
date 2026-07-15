@@ -18,140 +18,17 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  LabSidebar,
+  LabTour,
+  LabCommandPalette,
+  useCommandPalette,
+  renderFormattedText,
+  CodeBlock,
 } from "./shared/index.js";
 
 // ─── SIDEBAR ───
 
-function HTMLSidebar({ activeSection, activeLesson, activeChallenge, activeProject, activeInterview, onSelectLesson, onSelectChallenge, onSelectProject, onSelectInterview, onSelectPlayground, progress, ...rest }) {
-  const [expandedSections, setExpandedSections] = useState({
-    learn: true, challenges: false, projects: false, interview: false
-  });
-  const toggleSection = (key) => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
 
-  const isLessonActive = (id) => activeSection === "learn" && activeLesson === id;
-  const isChallengeActive = (id) => activeSection === "challenge" && activeChallenge === id;
-  const isProjectActive = (id) => activeSection === "project" && activeProject === id;
-  const isInterviewActive = (id) => activeSection === "interview" && activeInterview === id;
-
-  return (
-    <div className="jsl-sidebar" {...rest}>
-      <div className="jsl-sidebar-header">
-        <h3><FiBook size={16} /> Curriculum</h3>
-      </div>
-
-      {/* Playground shortcut */}
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header ${activeSection === "playground" ? "expanded" : ""}`}
-          onClick={onSelectPlayground}
-          style={{ color: activeSection === "playground" ? "#f472b6" : undefined }}
-        >
-          <div className="jsl-sg-title" style={{ color: "#f472b6" }}>
-            <FiBook size={16} /> <span>HTML PLAYGROUND</span>
-          </div>
-        </button>
-      </div>
-
-      {/* LEARN HTML */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header learn ${expandedSections.learn ? "expanded" : ""}`} onClick={() => toggleSection("learn")}>
-          <div className="jsl-sg-title" style={{ color: "#fb923c" }}><FiBook size={16} /><span>LEARN HTML</span></div>
-          <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.learn && (
-          <div className="jsl-sg-items">
-            {HTML_LESSONS.map((lesson) => (
-              <button
-                key={lesson.id}
-                className={`jsl-si ${isLessonActive(lesson.id) ? "active" : ""} ${progress.lessons.includes(lesson.id) ? "done" : ""}`}
-                onClick={() => onSelectLesson(lesson.id)}
-              >
-                <span className="jsl-si-num">{lesson.chapter}.</span>
-                <span className="jsl-si-title">{lesson.title}</span>
-                <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* CODE CHALLENGES */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header ${expandedSections.challenges ? "expanded" : ""}`} onClick={() => toggleSection("challenges")}>
-          <div className="jsl-sg-title" style={{ color: "#34d399" }}><FiBook size={16} /><span>CODE CHALLENGES</span></div>
-          <span className="jsl-sg-count">{progress.challengesDone}/{progress.challengesTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.challenges && (
-          <div className="jsl-sg-items">
-            {HTML_CHALLENGES.map((c, i) => (
-              <button
-                key={c.id}
-                className={`jsl-si ${isChallengeActive(c.id) ? "active" : ""} ${progress.challenges.includes(c.id) ? "done" : ""}`}
-                onClick={() => onSelectChallenge(c.id)}
-              >
-                <span className="jsl-si-num">{i + 1}.</span>
-                <span className="jsl-si-title">{c.title.replace(/^\d+\.\s*/, "")}</span>
-                <span className={`jsl-si-level ${c.difficulty.toLowerCase()}`}>{c.difficulty[0]}</span>
-                {progress.challenges.includes(c.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* PROJECTS LAB */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header projects ${expandedSections.projects ? "expanded" : ""}`} onClick={() => toggleSection("projects")}>
-          <div className="jsl-sg-title" style={{ color: "#a78bfa" }}><FiBook size={16} /><span>PROJECTS LAB</span></div>
-          <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.projects && (
-          <div className="jsl-sg-items">
-            {HTML_PROJECTS.map((proj, i) => (
-              <button
-                key={proj.id}
-                className={`jsl-si ${isProjectActive(proj.id) ? "active" : ""} ${progress.projects.includes(proj.id) ? "done" : ""}`}
-                onClick={() => onSelectProject(proj.id)}
-              >
-                <span className="jsl-si-num">{i + 1}.</span>
-                <span className="jsl-si-title">{proj.title}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* INTERVIEW PREP */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header ${expandedSections.interview ? "expanded" : ""}`} onClick={() => toggleSection("interview")}>
-          <div className="jsl-sg-title" style={{ color: "#fcd34d" }}><FiBook size={16} /><span>INTERVIEW PREP</span></div>
-          <span className="jsl-sg-count">{progress.interviewDone}/{progress.interviewTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.interview && (
-          <div className="jsl-sg-items">
-            {HTML_INTERVIEW_TOPICS.map((topic) => (
-              <button
-                key={topic.id}
-                className={`jsl-si ${isInterviewActive(topic.id) ? "active" : ""} ${progress.interview.includes(topic.id) ? "done" : ""}`}
-                onClick={() => onSelectInterview(topic.id)}
-              >
-                <span className="jsl-si-title">{topic.title}</span>
-                <span className="jsl-si-num" style={{ minWidth: "auto", marginLeft: "auto" }}>{topic.questions.length}Q</span>
-                {progress.interview.includes(topic.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ─── MAIN PLATFORM ───
 
@@ -318,11 +195,12 @@ export default function HTMLLabsPlatform() {
     setPreviewCode(currentCode);
   }, [view]);
 
-  // Update preview whenever code changes (debounced via ref)
   useEffect(() => {
-    if (view !== "interview") {
+    if (view === "interview") return;
+    const timer = setTimeout(() => {
       updatePreview();
-    }
+    }, 400);
+    return () => clearTimeout(timer);
   }, [code, view, updatePreview]);
 
   const defineThemes = useCallback((monaco) => {
@@ -436,6 +314,10 @@ export default function HTMLLabsPlatform() {
 
   useKeyboardShortcut(updatePreview);
 
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+  const [hideSidebar, setHideSidebar] = useState(false);
+  useKeyboardShortcut(() => setHideSidebar(v => !v), "b");
+
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   const goNextLesson = () => {
@@ -465,11 +347,96 @@ export default function HTMLLabsPlatform() {
 
   const previewWidth = previewMode === "mobile" ? "375px" : previewMode === "tablet" ? "768px" : "100%";
 
+  const sidebarSections = useMemo(() => [
+    {
+      key: "learn",
+      label: "LEARN HTML",
+      color: "#fb923c",
+      items: HTML_LESSONS,
+      progressText: `${progressStats.lessonsDone}/${progressStats.lessonsTotal}`,
+      isItemActive: (item) => view === "learn" && activeLesson === item.id,
+      isItemDone: (item) => progress.lessons.includes(item.id),
+      onSelectItem: (item) => selectLesson(item.id),
+    },
+    {
+      key: "challenges",
+      label: "CODE CHALLENGES",
+      color: "#34d399",
+      items: HTML_CHALLENGES,
+      progressText: `${progressStats.challengesDone}/${progressStats.challengesTotal}`,
+      isItemActive: (item) => view === "challenge" && activeChallenge === item.id,
+      isItemDone: (item) => progress.challenges.includes(item.id),
+      onSelectItem: (item) => selectChallenge(item.id),
+      renderItemTitle: (item) => item.title.replace(/^\d+\.\s*/, ""),
+      renderItemBadge: (item) => (
+        <span className={`jsl-si-level ${item.difficulty.toLowerCase()}`}>{item.difficulty[0]}</span>
+      ),
+    },
+    {
+      key: "projects",
+      label: "PROJECTS LAB",
+      color: "#a78bfa",
+      items: HTML_PROJECTS,
+      progressText: `${progressStats.projectsDone}/${progressStats.projectsTotal}`,
+      isItemActive: (item) => view === "project" && activeProject === item.id,
+      isItemDone: (item) => progress.projects.includes(item.id),
+      onSelectItem: (item) => selectProject(item.id),
+    },
+    {
+      key: "interview",
+      label: "INTERVIEW PREP",
+      color: "#fcd34d",
+      items: HTML_INTERVIEW_TOPICS,
+      progressText: `${progressStats.interviewDone}/${progressStats.interviewTotal}`,
+      isItemActive: (item) => view === "interview" && activeInterview === item.id,
+      isItemDone: (item) => progress.interview.includes(item.id),
+      onSelectItem: (item) => selectInterview(item.id),
+      renderItemNumber: () => null,
+      renderItemBadge: (item) => (
+        <span className="jsl-si-num" style={{ minWidth: "auto", marginLeft: "auto" }}>{item.questions.length}Q</span>
+      ),
+    }
+  ], [view, activeLesson, activeChallenge, activeProject, activeInterview, progress, progressStats]);
+
+  const sidebarPlayground = useMemo(() => ({
+    label: "HTML PLAYGROUND",
+    color: "#f472b6",
+    isActive: view === "playground",
+    onSelect: selectPlayground,
+  }), [view]);
+
+  const tourSteps = useMemo(() => [
+    {
+      title: "Welcome to HTML Labs! 🌐",
+      content: "Let's take a quick tour of your HTML structure and coding environment."
+    },
+    {
+      target: ".jsl-sidebar",
+      title: "Curriculum & Projects",
+      content: "Browse core HTML structure tags, mini projects, code challenges, and interview prep topics here."
+    },
+    {
+      target: ".jsl-content-panel",
+      title: "Goals & Instructions",
+      content: "Read the concepts and instructions here. Run tests to verify your code."
+    },
+    {
+      target: ".jsl-editor-panel",
+      title: "Live Preview & Editor",
+      content: "Write HTML structure code in Monaco editor. The live preview updates automatically when you stop typing."
+    },
+    {
+      target: ".jsl-btn-command-palette",
+      title: "Command Palette",
+      content: "Use the Command Palette button or press Ctrl+K to jump to lessons or search tags instantly."
+    }
+  ], []);
+
   if (loading) {
     return <div className="jsl-platform"><SkeletonLabPlatform /></div>;
   }
 
-  if (!currentContent && view !== "playground") {
+  if (!currentContent) {
     return (
       <div className="jsl-platform">
         <div className="jsl-empty" style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", color: "#64748b", flexDirection: "column", gap: "0.5rem" }}>
@@ -492,6 +459,7 @@ export default function HTMLLabsPlatform() {
         progressStats={progressStats}
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        onOpenPalette={() => setPaletteOpen(true)}
       >
         {((view === "learn" && currentLesson) || (view === "challenge" && currentChallenge) || (view === "project" && currentProject)) && (
           <button className={`jsl-btn-mark jsl-btn-topbar done`} onClick={() => {
@@ -504,24 +472,47 @@ export default function HTMLLabsPlatform() {
         )}
       </LabTopbar>
 
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#fb923c"
+        commands={[
+          { id: "preview", section: "Actions", label: "Refresh preview", hint: "Ctrl+Enter", action: updatePreview },
+          { id: "tests", section: "Actions", label: "Run tests", action: runTests },
+          { id: "reset", section: "Actions", label: "Reset editor starter code", action: () => {
+            let starter = '';
+            if (view === 'learn' && currentLesson) starter = currentLesson.starterCode;
+            else if (view === 'challenge' && currentChallenge) starter = currentChallenge.starterCode;
+            else if (view === 'project' && currentProject) starter = currentProject.starterCode;
+            else if (view === 'playground') starter = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>HTML Playground</title>\n</head>\n<body>\n  <h1>Hello, HTML!</h1>\n</body>\n</html>';
+            if (editorRef.current) editorRef.current.setValue(starter);
+            setCode(starter);
+            setTestResults([]);
+            codeVersionRef.current++;
+          }},
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
+          { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "playground", section: "Actions", label: "Go to playground", action: selectPlayground },
+          { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
+          ...HTML_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
+          ...HTML_CHALLENGES.map(c => ({ id: `c-${c.id}`, section: "Challenges", label: c.title, done: progress.challenges.includes(c.id), action: () => selectChallenge(c.id) })),
+          ...HTML_PROJECTS.map(p => ({ id: `p-${p.id}`, section: "Projects", label: p.title, done: progress.projects.includes(p.id), action: () => selectProject(p.id) })),
+        ]}
+      />
+
       {/* Main Layout */}
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
-          <HTMLSidebar
-            activeSection={view}
-            activeLesson={activeLesson}
-            activeChallenge={activeChallenge}
-            activeProject={activeProject}
-            activeInterview={activeInterview}
-            onSelectLesson={selectLesson}
-            onSelectChallenge={selectChallenge}
-            onSelectProject={selectProject}
-            onSelectInterview={selectInterview}
-            onSelectPlayground={selectPlayground}
-            progress={progressStats}
-            style={{ width: sidebarWidth }}
-          />
-          <LabResizableHandle onDrag={handleSidebarDrag} />
+          {!hideSidebar && (
+            <>
+              <LabSidebar
+                playground={sidebarPlayground}
+                sections={sidebarSections}
+                style={{ width: sidebarWidth }}
+              />
+              <LabResizableHandle onDrag={handleSidebarDrag} />
+            </>
+          )}
 
           <div className="jsl-workspace" ref={workspaceRef}>
             {/* Content Panel */}
@@ -575,7 +566,15 @@ export default function HTMLLabsPlatform() {
                   />
                 )}
                 {view === "playground" && (
-                  <PlaygroundView />
+                  <div className="jsl-content-inner">
+                    <h2 className="jsl-content-title">HTML Playground</h2>
+                    <p className="jsl-text" style={{ marginTop: "1rem" }}>
+                      This is a scratchpad where you can write HTML and see live browser preview.
+                    </p>
+                    <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}>
+                      Type HTML structure in the editor on the right, and check results instantly.
+                    </p>
+                  </div>
                 )}
               </div>
 
@@ -639,19 +638,22 @@ export default function HTMLLabsPlatform() {
                 }}
                 runLabel="Preview"
                 lang="HTML"
-                runButtonStyle={{ background: "rgba(96,165,250,0.14)", color: "#60a5fa" }}
-                extraButtons={
-                  <div className="jsl-editor-mode-tabs" style={{ display: "flex", gap: "0.2rem", marginLeft: "0.25rem" }}>
-                    {["html", "htmlcss", "htmlcssjs"].map(mode => (
+                runButtonStyle={{ background: "rgba(251,146,60,0.14)", color: "#fb923c" }}
+                extraActions={
+                  <div style={{ display: "flex", gap: "0.2rem", background: "rgba(255,255,255,0.03)", padding: "2px", borderRadius: "4px", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    {["html", "htmlcss", "htmlcssjs"].map((mode) => (
                       <button
                         key={mode}
-                        className={`jsl-mode-tab ${editorMode === mode ? "active" : ""}`}
                         onClick={() => setEditorMode(mode)}
                         style={{
-                          padding: "0.2rem 0.5rem", borderRadius: "4px", fontSize: "0.68rem",
-                          fontWeight: 700, border: "1px solid transparent",
-                          background: editorMode === mode ? "rgba(96,165,250,0.12)" : "transparent",
-                          color: editorMode === mode ? "#60a5fa" : "#64748b",
+                          background: editorMode === mode ? "rgba(251,146,60,0.12)" : "transparent",
+                          border: "none",
+                          borderRadius: "3px",
+                          padding: "2px 6px",
+                          fontSize: "0.62rem",
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          color: editorMode === mode ? "#fb923c" : "#64748b",
                         }}
                       >
                         {mode === "html" ? "HTML" : mode === "htmlcss" ? "HTML+CSS" : "HTML+CSS+JS"}
@@ -672,20 +674,14 @@ export default function HTMLLabsPlatform() {
                   onMount={handleEditorMount}
                   options={{
                     fontSize: 13,
-                    fontFamily: "Consolas, 'Courier New', monospace",
+                    fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
+                    roundedSelection: true,
                     scrollBeyondLastLine: false,
                     lineNumbers: "on",
                     tabSize: 2,
-                    insertSpaces: true,
-                    wordWrap: "on",
                     automaticLayout: true,
-                    bracketPairColorization: { enabled: true },
                     padding: { top: 12, bottom: 12 },
-                    cursorBlinking: "smooth",
-                    smoothScrolling: true,
-                    folding: true,
-                    lineNumbersMinChars: 3,
                   }}
                 />
               </div>
@@ -708,39 +704,39 @@ export default function HTMLLabsPlatform() {
                       onClick={() => setPreviewMode("mobile")}
                       style={{
                         padding: "0.15rem 0.4rem", borderRadius: "3px", fontSize: "0.65rem",
-                        background: previewMode === "mobile" ? "rgba(96,165,250,0.12)" : "transparent",
-                        color: previewMode === "mobile" ? "#60a5fa" : "#64748b",
+                        background: previewMode === "mobile" ? "rgba(251,146,60,0.12)" : "transparent",
+                        color: previewMode === "mobile" ? "#fb923c" : "#64748b",
                         border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.2rem",
                       }}
                       title="Mobile preview"
                     >
-                      <FiBook size={16} /> Mobile
+                      Mobile
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "tablet" ? "active" : ""}`}
                       onClick={() => setPreviewMode("tablet")}
                       style={{
                         padding: "0.15rem 0.4rem", borderRadius: "3px", fontSize: "0.65rem",
-                        background: previewMode === "tablet" ? "rgba(96,165,250,0.12)" : "transparent",
-                        color: previewMode === "tablet" ? "#60a5fa" : "#64748b",
+                        background: previewMode === "tablet" ? "rgba(251,146,60,0.12)" : "transparent",
+                        color: previewMode === "tablet" ? "#fb923c" : "#64748b",
                         border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.2rem",
                       }}
                       title="Tablet preview"
                     >
-                      <FiBook size={16} /> Tablet
+                      Tablet
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "desktop" ? "active" : ""}`}
                       onClick={() => setPreviewMode("desktop")}
                       style={{
                         padding: "0.15rem 0.4rem", borderRadius: "3px", fontSize: "0.65rem",
-                        background: previewMode === "desktop" ? "rgba(96,165,250,0.12)" : "transparent",
-                        color: previewMode === "desktop" ? "#60a5fa" : "#64748b",
+                        background: previewMode === "desktop" ? "rgba(251,146,60,0.12)" : "transparent",
+                        color: previewMode === "desktop" ? "#fb923c" : "#64748b",
                         border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.2rem",
                       }}
                       title="Desktop preview"
                     >
-                      <FiBook size={16} /> Desktop
+                      Desktop
                     </button>
                   </div>
                 </div>
@@ -765,11 +761,10 @@ export default function HTMLLabsPlatform() {
       </div>
 
       <LabFooter />
+      <LabTour steps={tourSteps} tourKey="html-labs-onboarding-tour-completed" />
     </div>
   );
 }
-
-// ─── LESSON VIEW ───
 
 function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolution, onPrev, onNext, hasPrev, hasNext, onMarkDone, isDone, testResults, currentTests, onRunTests }) {
   const levelColor = lesson.level === "Beginner" ? "#22c55e" : lesson.level === "Intermediate" ? "#f59e0b" : "#ef4444";
@@ -791,12 +786,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section">
         <h3 className="jsl-section-title">Concept</h3>
         <div className="jsl-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
-            if (line.startsWith("```")) return null;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -814,12 +804,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">Your Task</h3>
         <div className="jsl-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="jsl-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -834,7 +819,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{lesson.solutionCode}</code></pre>
+          <CodeBlock code={lesson.solutionCode} />
         </div>
       )}
 
@@ -905,7 +890,7 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{challenge.solution}</code></pre>
+          <CodeBlock code={challenge.solution} />
         </div>
       )}
 
@@ -963,7 +948,7 @@ function ProjectView({ project, showSolution, onToggleSolution }) {
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Complete Solution</h4>
-          <pre className="jsl-code-block"><code>{project.solution}</code></pre>
+          <CodeBlock code={project.solution} />
         </div>
       )}
 
@@ -1050,38 +1035,4 @@ function InterviewView({ topic, onMarkDone, isDone }) {
   );
 }
 
-// ─── PLAYGROUND VIEW ───
 
-function PlaygroundView() {
-  return (
-    <div className="jsl-content-inner" style={{ textAlign: "center" }}>
-      <div className="jsl-chapter-header">
-        <span className="jsl-chapter-badge" style={{ background: "rgba(244,114,182,0.11)", borderColor: "rgba(244,114,182,0.18)", color: "#f472b6" }}>
-          <FiBook size={16} /> HTML Playground
-        </span>
-        <h2 className="jsl-content-title">HTML Playground</h2>
-        <p className="jsl-text" style={{ marginTop: "0.5rem" }}>
-          Write HTML, CSS, and JavaScript in the editor and see the live preview update in real time!
-        </p>
-      </div>
-
-      <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-        gap: "0.75rem", marginTop: "1rem"
-      }}>
-        {[
-          { icon: "⚡", title: "Live Preview", desc: "Changes update instantly" },
-          { icon: "📱", title: "Responsive", desc: "Test mobile, tablet, desktop" },
-          { icon: "💾", title: "Auto-Save", desc: "Your code is saved locally" },
-          { icon: "🎨", title: "HTML+CSS+JS", desc: "Full frontend support" },
-        ].map(item => (
-          <div key={item.title} className="jsl-section" style={{ padding: "1rem", margin: 0, border: "1px solid var(--jsl-border2)", borderRadius: "0.5rem", background: "rgba(255,255,255,0.02)" }}>
-            <div style={{ fontSize: "1.5rem", marginBottom: "0.3rem" }}>{item.icon}</div>
-            <h4 style={{ margin: "0 0 0.2rem", color: "#f8fafc", fontSize: "0.9rem" }}>{item.title}</h4>
-            <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.78rem" }}>{item.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}

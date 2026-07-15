@@ -12,6 +12,7 @@ import {
   LabTopbar,
   useKeyboardShortcut,
 } from "./shared/index.js";
+import { renderFormattedText } from "./shared/markdown.jsx";
 
 
 
@@ -1052,11 +1053,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="sql-section">
         <h3 className="sql-section-title">📖 Concept</h3>
         <div className="sql-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="sql-bullet">{line.slice(2)}</li>;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -1070,15 +1067,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="sql-section sql-task-section">
         <h3 className="sql-section-title">✏️ Your Task</h3>
         <div className="sql-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            const trimmed = line.trim();
-            if (trimmed.startsWith("1.") || trimmed.startsWith("2.") || trimmed.startsWith("3.") || trimmed.startsWith("4.") || trimmed.startsWith("5.")) {
-              return <li key={i} className="sql-task-item">{trimmed.replace(/^\d+\.\s*/, "")}</li>;
-            }
-            if (trimmed.startsWith("-")) return <li key={i} className="sql-task-item">{trimmed.slice(1).trim()}</li>;
-            if (trimmed === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 

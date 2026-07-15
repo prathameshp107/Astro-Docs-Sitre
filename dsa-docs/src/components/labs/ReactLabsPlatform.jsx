@@ -14,6 +14,10 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  LabSidebar,
+  LabTour,
+  renderFormattedText,
+  CodeBlock,
 } from "./shared/index.js";
 
 
@@ -194,117 +198,7 @@ function ReactPreview({ code, previewKey, style, onClearLogs }) {
 
 // ─── SIDEBAR ───
 
-function ReactSidebar({ activeSection, activeLesson, activeBug, activeProject, onSelectLesson, onSelectBug, onSelectProject, progress, ...rest }) {
-  const [expandedSections, setExpandedSections] = useState({ learn: true, bugs: false, projects: false });
 
-  const toggleSection = (key) => {
-    setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
-  const isLessonActive = (id) => activeSection === "learn" && activeLesson === id;
-  const isBugActive = (id) => activeSection === "bugs" && activeBug === id;
-  const isProjectActive = (id) => activeSection === "projects" && activeProject === id;
-
-  return (
-    <div className="jsl-sidebar" {...rest}>
-      <div className="jsl-sidebar-header">
-        <h3>
-          <FiBook size={16} /> Curriculum
-        </h3>
-      </div>
-
-      {/* ─── LEARN REACT ─── */}
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header learn ${expandedSections.learn ? "expanded" : ""}`}
-          onClick={() => toggleSection("learn")}
-        >
-          <div className="jsl-sg-title">
-            <FiBook size={16} /><span>LEARN REACT</span>
-          </div>
-          <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.learn && (
-          <div className="jsl-sg-items">
-            {REACT_LESSONS.map((lesson) => (
-              <button
-                key={lesson.id}
-                className={`jsl-si ${isLessonActive(lesson.id) ? "active" : ""} ${progress.lessons.includes(lesson.id) ? "done" : ""}`}
-                onClick={() => onSelectLesson(lesson.id)}
-              >
-                <span className="jsl-si-num">{lesson.chapter}.</span>
-                <span className="jsl-si-title">{lesson.title}</span>
-                <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ─── FIX THE BUG ─── */}
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header bugs ${expandedSections.bugs ? "expanded" : ""}`}
-          onClick={() => toggleSection("bugs")}
-        >
-          <div className="jsl-sg-title">
-            <FiBook size={16} />
-            <span>FIX THE BUG</span>
-          </div>
-          <span className="jsl-sg-count">{progress.bugsDone}/{progress.bugsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.bugs && (
-          <div className="jsl-sg-items">
-            {REACT_BUG_CHALLENGES.map((bug) => (
-              <button
-                key={bug.id}
-                className={`jsl-si ${isBugActive(bug.id) ? "active" : ""} ${progress.bugs.includes(bug.id) ? "done" : ""}`}
-                onClick={() => onSelectBug(bug.id)}
-              >
-                <span className="jsl-si-num">{bug.title.split(".")[0]}.</span>
-                <span className="jsl-si-title">{bug.title.split(". ")[1] || bug.title}</span>
-                {progress.bugs.includes(bug.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ─── MINI PROJECTS ─── */}
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header projects ${expandedSections.projects ? "expanded" : ""}`}
-          onClick={() => toggleSection("projects")}
-        >
-          <div className="jsl-sg-title">
-            <FiBook size={16} />
-            <span>MINI PROJECTS</span>
-          </div>
-          <span className="jsl-sg-count">{progress.projectsDone}/{progress.projectsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.projects && (
-          <div className="jsl-sg-items">
-            {REACT_MINI_PROJECTS.map((proj) => (
-              <button
-                key={proj.id}
-                className={`jsl-si ${isProjectActive(proj.id) ? "active" : ""} ${progress.projects.includes(proj.id) ? "done" : ""}`}
-                onClick={() => onSelectProject(proj.id)}
-              >
-                <span className="jsl-si-num">{proj.title.split(".")[0]}.</span>
-                <span className="jsl-si-title">{proj.title.split(". ")[1] || proj.title}</span>
-                {progress.projects.includes(proj.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ─── MAIN PLATFORM ───
 
@@ -798,6 +692,76 @@ export default function ReactLabsPlatform() {
     return [];
   }, [view, currentLesson, currentBug, currentProject]);
 
+  const handleClearLogs = useCallback(() => setOutput([]), []);
+
+  const sidebarSections = useMemo(() => [
+    {
+      key: "learn",
+      label: "LEARN REACT",
+      color: "#60a5fa",
+      items: REACT_LESSONS,
+      progressText: `${progressStats.lessonsDone}/${progressStats.lessonsTotal}`,
+      isItemActive: (item) => view === "learn" && activeLesson === item.id,
+      isItemDone: (item) => progress.lessons.includes(item.id),
+      onSelectItem: (item) => selectLesson(item.id),
+    },
+    {
+      key: "bugs",
+      label: "FIX THE BUG",
+      color: "#f87171",
+      items: REACT_BUG_CHALLENGES,
+      progressText: `${progressStats.bugsDone}/${progressStats.bugsTotal}`,
+      isItemActive: (item) => view === "bugs" && activeBug === item.id,
+      isItemDone: (item) => progress.bugs.includes(item.id),
+      onSelectItem: (item) => selectBug(item.id),
+      renderItemNumber: (item, idx) => (
+        <span className="jsl-si-num">{item.title.split(".")[0]}.</span>
+      ),
+      renderItemTitle: (item) => item.title.split(". ")[1] || item.title,
+    },
+    {
+      key: "projects",
+      label: "MINI PROJECTS",
+      color: "#fbbf24",
+      items: REACT_MINI_PROJECTS,
+      progressText: `${progressStats.projectsDone}/${progressStats.projectsTotal}`,
+      isItemActive: (item) => view === "projects" && activeProject === item.id,
+      isItemDone: (item) => progress.projects.includes(item.id),
+      onSelectItem: (item) => selectProject(item.id),
+      renderItemNumber: (item, idx) => (
+        <span className="jsl-si-num">{item.title.split(".")[0]}.</span>
+      ),
+      renderItemTitle: (item) => item.title.split(". ")[1] || item.title,
+    }
+  ], [view, activeLesson, activeBug, activeProject, progress, progressStats]);
+
+  const tourSteps = useMemo(() => [
+    {
+      title: "Welcome to React Labs! ⚛️",
+      content: "Let's take a quick tour of your React interactive coding space."
+    },
+    {
+      target: ".jsl-sidebar",
+      title: "Curriculum & Projects",
+      content: "Browse and select React topics, coding bugs, or mini-projects here."
+    },
+    {
+      target: ".jsl-content-panel",
+      title: "Concept & Tasks",
+      content: "Read core conceptual guides, and code tasks. Run automated tests to check your work."
+    },
+    {
+      target: ".jsl-editor-panel",
+      title: "Monaco Editor & Sandbox",
+      content: "Write React (JSX) code in the editor, and see a live-rendered page preview inside a sandboxed iframe."
+    },
+    {
+      target: ".jsl-btn-command-palette",
+      title: "Command Palette",
+      content: "Click this button or press Ctrl+K to search all topics or execute commands instantly."
+    }
+  ], []);
+
   if (loading) {
     return (
       <div className="jsl-platform">
@@ -871,16 +835,8 @@ export default function ReactLabsPlatform() {
       {/* ─── Main Layout ─── */}
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
-        {/* Sidebar */}
-        <ReactSidebar
-          activeSection={view}
-          activeLesson={activeLesson}
-          activeBug={activeBug}
-          activeProject={activeProject}
-          onSelectLesson={selectLesson}
-          onSelectBug={selectBug}
-          onSelectProject={selectProject}
-          progress={progressStats}
+        <LabSidebar
+          sections={sidebarSections}
           style={{ width: sidebarWidth }}
         />
         <LabResizableHandle onDrag={handleSidebarDrag} />
@@ -1025,7 +981,7 @@ export default function ReactLabsPlatform() {
               code={code}
               previewKey={previewKey}
               style={{ height: previewHeight }}
-              onClearLogs={useCallback(() => setOutput([]), [])}
+              onClearLogs={handleClearLogs}
             />
 
             {/* Resizable Console Output (in editor panel, below preview) */}
@@ -1038,6 +994,7 @@ export default function ReactLabsPlatform() {
         </div>
       </div>
 
+      <LabTour steps={tourSteps} tourKey="react-labs-onboarding-tour-completed" />
       <LabFooter />
     </div>
   );
@@ -1068,11 +1025,7 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
           Concept
         </h3>
         <div className="jsl-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -1094,12 +1047,7 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
           <FiBook size={16} /> Your Task
         </h3>
         <div className="jsl-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="jsl-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -1114,7 +1062,7 @@ function LessonView({ lesson, showHint, showSolution, onPrev, onNext, hasPrev, h
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{lesson.solutionCode}</code></pre>
+          <CodeBlock code={lesson.solutionCode} />
         </div>
       )}
 
@@ -1173,7 +1121,7 @@ function BugView({ bug, showHint, showSolution, onPrev, onNext, hasPrev, hasNext
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{bug.solution}</code></pre>
+          <CodeBlock code={bug.solution} />
         </div>
       )}
 
@@ -1248,7 +1196,7 @@ function ProjectView({ project, showSolution }) {
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{project.solution}</code></pre>
+          <CodeBlock code={project.solution} />
         </div>
       )}
 
