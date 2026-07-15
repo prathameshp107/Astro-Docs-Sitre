@@ -154,20 +154,76 @@ body {
   scrollbar-color: var(--sl-color-hairline) transparent;
 }
 
-/* Sidebar content that can be collapsed */
-.sidebar-content {
-  transition: transform 0.25s ease;
-  transform: translateX(0);
-}
-
-/* When sidebar content is collapsed, hide it */
-.sidebar-content.collapsed {
-  transform: translateX(-100%);
-}
-
-/* Hide overflow during transition to prevent scrollbars from appearing */
+/* Sidebar transition and collapse system */
 #starlight__sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow-x: hidden;
+}
+
+.sidebar-restore-toggle {
+  display: none;
+}
+
+@media (min-width: 50rem) {
+  .sidebar-collapsed {
+    --sl-content-inline-start: 0rem !important;
+  }
+
+  .sidebar-collapsed #starlight__sidebar {
+    width: 0rem !important;
+    padding: 0 !important;
+    border-right: none !important;
+  }
+
+  .sidebar-collapsed .sidebar-content,
+  .sidebar-collapsed .sidebar-filter-dropdown,
+  .sidebar-collapsed .sidebar-header {
+    display: none !important;
+  }
+
+  .sidebar-restore-toggle {
+    position: fixed;
+    left: 1.25rem;
+    top: calc(var(--sl-nav-height) + 0.75rem);
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: var(--sl-color-bg-sidebar);
+    border: 1px solid var(--sl-color-hairline);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--sl-color-text);
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sidebar-restore-toggle:hover {
+    background: var(--sl-color-accent);
+    color: var(--white);
+    transform: scale(1.05);
+  }
+
+  .sidebar-restore-toggle svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .sidebar-collapsed .sidebar-restore-toggle {
+    display: flex;
+  }
+
+  .sidebar-collapsed .main-frame {
+    padding-inline-start: 0 !important;
+  }
+
+  /* Adjust main content frame transition when sidebar toggles */
+  .main-frame {
+    transition: margin-inline-start 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-inline-start 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 /* Scrollbar styling */
