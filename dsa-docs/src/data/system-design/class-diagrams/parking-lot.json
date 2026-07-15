@@ -1,0 +1,101 @@
+{
+  "id": "parking-lot",
+  "title": "LLD Class Diagram — Parking Lot",
+  "nodes": [
+    {
+      "id": "vehicle",
+      "label": "Vehicle",
+      "isAbstract": true,
+      "position": { "x": 50, "y": 50 },
+      "fields": [
+        { "visibility": "-", "name": "licensePlate", "type": "string" },
+        { "visibility": "-", "name": "type", "type": "VehicleType" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "getType", "params": "", "returnType": "VehicleType" },
+        { "visibility": "+", "name": "getLicensePlate", "params": "", "returnType": "string" }
+      ]
+    },
+    {
+      "id": "car",
+      "label": "Car",
+      "position": { "x": 10, "y": 300 },
+      "fields": [],
+      "methods": []
+    },
+    {
+      "id": "motorcycle",
+      "label": "Motorcycle",
+      "position": { "x": 260, "y": 300 },
+      "fields": [],
+      "methods": []
+    },
+    {
+      "id": "parkingslot",
+      "label": "ParkingSlot",
+      "position": { "x": 480, "y": 50 },
+      "fields": [
+        { "visibility": "-", "name": "slotId", "type": "string" },
+        { "visibility": "-", "name": "type", "type": "VehicleType" },
+        { "visibility": "-", "name": "isFree", "type": "boolean" },
+        { "visibility": "-", "name": "vehicle", "type": "Vehicle" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "park", "params": "Vehicle v", "returnType": "boolean" },
+        { "visibility": "+", "name": "removeVehicle", "params": "", "returnType": "void" },
+        { "visibility": "+", "name": "isAvailable", "params": "", "returnType": "boolean" }
+      ]
+    },
+    {
+      "id": "level",
+      "label": "Level",
+      "position": { "x": 800, "y": 50 },
+      "fields": [
+        { "visibility": "-", "name": "floorNumber", "type": "int" },
+        { "visibility": "-", "name": "slots", "type": "List<ParkingSlot>" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "parkVehicle", "params": "Vehicle v", "returnType": "boolean" },
+        { "visibility": "+", "name": "getAvailableSlots", "params": "", "returnType": "int" }
+      ]
+    },
+    {
+      "id": "parkinglot",
+      "label": "ParkingLot",
+      "position": { "x": 800, "y": 300 },
+      "fields": [
+        { "visibility": "_static", "name": "instance", "type": "ParkingLot" },
+        { "visibility": "-", "name": "name", "type": "string" },
+        { "visibility": "-", "name": "levels", "type": "List<Level>" }
+      ],
+      "methods": [
+        { "visibility": "_static", "name": "getInstance", "params": "", "returnType": "ParkingLot" },
+        { "visibility": "+", "name": "parkVehicle", "params": "Vehicle v", "returnType": "Ticket" },
+        { "visibility": "+", "name": "releaseVehicle", "params": "Ticket t", "returnType": "boolean" }
+      ]
+    },
+    {
+      "id": "ticket",
+      "label": "Ticket",
+      "position": { "x": 480, "y": 300 },
+      "fields": [
+        { "visibility": "-", "name": "ticketId", "type": "string" },
+        { "visibility": "-", "name": "slot", "type": "ParkingSlot" },
+        { "visibility": "-", "name": "vehicle", "type": "Vehicle" },
+        { "visibility": "-", "name": "entryTime", "type": "Date" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "getDuration", "params": "", "returnType": "long" }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "car", "target": "vehicle", "type": "extends" },
+    { "id": "e2", "source": "motorcycle", "target": "vehicle", "type": "extends" },
+    { "id": "e3", "source": "parkingslot", "target": "vehicle", "type": "has-a", "label": "references" },
+    { "id": "e4", "source": "level", "target": "parkingslot", "type": "composition", "label": "contains" },
+    { "id": "e5", "source": "parkinglot", "target": "level", "type": "composition", "label": "contains" },
+    { "id": "e6", "source": "ticket", "target": "parkingslot", "type": "has-a" },
+    { "id": "e7", "source": "ticket", "target": "vehicle", "type": "has-a" }
+  ]
+}

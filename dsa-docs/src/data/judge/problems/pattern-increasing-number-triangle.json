@@ -1,0 +1,98 @@
+{
+  "id": "pattern-increasing-number-triangle",
+  "title": "Increasing Number Triangle Pattern",
+  "difficulty": "easy",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys"
+  ],
+  "statement": "Write a function to generate an increasing number triangle pattern of height `n`.\n\nRow `i` (1-indexed, from `1` to `n`) should contain numbers from `1` to `i` concatenated without spaces.\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n1\n12\n123\n1234\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 3",
+      "output": "1\n12\n123",
+      "explanation": "Increasing numbers up to height 3."
+    },
+    {
+      "input": "n = 5",
+      "output": "1\n12\n123\n1234\n12345",
+      "explanation": "Increasing numbers up to height 5."
+    }
+  ],
+  "functionName": "patternIncreasingNumberTriangle",
+  "starterCode": {
+    "javascript": "function patternIncreasingNumberTriangle(n) {\n  // Write your code here\n}",
+    "python": "def pattern_increasing_number_triangle(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternIncreasingNumberTriangle = pattern_increasing_number_triangle"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "1",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "1\n12",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "1\n12\n123",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "1\n12\n123\n1234",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "1\n12\n123\n1234\n12345",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `1` to `n`. In each row `i`, build a string containing numbers `1` to `i`. Join the rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-right-triangle",
+    "pattern-row-number-triangle"
+  ],
+  "hints": [
+    "Row `i` (1-indexed) contains digits from `1` up to `i`.",
+    "The digits are written right next to each other without spaces.",
+    "The inner loop should count `j` from `1` to `i` and append `j` to the row."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Use nested loops. The outer loop runs `i` from `1` to `n`. The inner loop runs `j` from `1` to `i`, appending `j` to the current row.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternIncreasingNumberTriangle(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    let row = '';\n    for (let j = 1; j <= i; j++) {\n      row += j;\n    }\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Keep track of a running row string and append the next digit `i` on each iteration to build the triangle in O(n) additions.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternIncreasingNumberTriangle(n) {\n  let rows = [];\n  let row = '';\n  for (let i = 1; i <= n; i++) {\n    row += i;\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "Each row simply appends the next number in sequence to the previous row. By caching the previous row's string and appending the current iteration number, we solve the problem in linear additions, which is extremely efficient."
+}

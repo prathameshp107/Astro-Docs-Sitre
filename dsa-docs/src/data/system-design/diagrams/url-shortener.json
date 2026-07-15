@@ -1,0 +1,121 @@
+{
+  "id": "url-shortener",
+  "title": "Design a URL Shortener",
+  "subtitle": "From single server to globally distributed — stage by stage",
+  "stages": [
+    {
+      "title": "Stage 1 — Just Ship It",
+      "bottleneck": "Single point of failure. The server handles everything — web, key generation, database. One crash = total outage.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "User", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "POST /shorten\nGET /:key" },
+        { "id": "e2", "source": "app", "target": "db", "label": "Read / Write URL" }
+      ],
+      "requestPath": ["client", "app", "db", "app", "client"],
+      "narrative": "**The simplest possible URL shortener.** A single Node.js server takes a long URL, generates a Base62-encoded short key from an auto-incrementing ID, stores the mapping in PostgreSQL, and 302-redirects on lookup.\n\n**Key generation:** `Base62(auto_increment_id)` → 7 characters = 3.5 trillion combinations.\n\n**This works for ~100 req/sec** — a weekend project or internal tool. But one server crash and the entire service goes down."
+    },
+    {
+      "title": "Stage 2 — Separate Read & Write Paths",
+      "bottleneck": "Database is the bottleneck. 100:1 read-to-write ratio means the single DB is overwhelmed by redirect lookups.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "User", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "keygen", "type": "service", "label": "Key Gen\nService", "position": { "x": 350, "y": 400 } },
+        { "id": "primary-db", "type": "database", "label": "Primary DB\n(Writes)", "position": { "x": 650, "y": 120 } },
+        { "id": "replica-db", "type": "replica", "label": "Read Replica", "position": { "x": 650, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "" },
+        { "id": "e2", "source": "app", "target": "keygen", "label": "Get next key" },
+        { "id": "e3", "source": "app", "target": "primary-db", "label": "Write" },
+        { "id": "e4", "source": "app", "target": "replica-db", "label": "Read" },
+        { "id": "e5", "source": "primary-db", "target": "replica-db", "label": "Replication", "animated": true }
+      ],
+      "requestPath": ["client", "app", "replica-db", "app", "client"],
+      "narrative": "**Split the database load.** Since reads outnumber writes 100:1, a read replica handles all redirect lookups while the primary only handles writes.\n\n**Key generation is extracted** to its own service — it pre-generates batches of unique keys so write latency stays flat.\n\n**Replication lag** (~50ms) is acceptable: a URL created 50ms ago failing to resolve is fine. Users retry naturally.\n\n**This handles ~1K req/sec.** But every redirect still hits the database."
+    },
+    {
+      "title": "Stage 3 — Add Caching Layer",
+      "bottleneck": "Even read replicas can't handle 10K+ redirects/sec. Hot URLs (top 20%) account for 80% of traffic — perfect for cache.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "User", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "cache", "type": "cache", "label": "Redis Cache\n(Hot URLs)", "position": { "x": 350, "y": 400 } },
+        { "id": "keygen", "type": "service", "label": "Key Gen\nService", "position": { "x": 150, "y": 400 } },
+        { "id": "primary-db", "type": "database", "label": "Primary DB", "position": { "x": 650, "y": 120 } },
+        { "id": "replica-db", "type": "replica", "label": "Read Replica", "position": { "x": 650, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "" },
+        { "id": "e2", "source": "app", "target": "cache", "label": "Check cache first" },
+        { "id": "e3", "source": "app", "target": "replica-db", "label": "Cache miss → DB" },
+        { "id": "e4", "source": "app", "target": "primary-db", "label": "Write" },
+        { "id": "e5", "source": "app", "target": "keygen", "label": "Get key" },
+        { "id": "e6", "source": "primary-db", "target": "replica-db", "label": "Replication", "animated": true }
+      ],
+      "requestPath": ["client", "app", "cache", "app", "client"],
+      "narrative": "**Redis changes the game.** The 80/20 rule: top 20% of URLs serve 80% of redirects. Redis stores these hot mappings in memory — sub-millisecond lookups.\n\n**Cache strategy: Write-around + Read-through.** On new URL creation, don't populate the cache (most URLs are never accessed again). On redirect, check cache → miss → DB → populate cache.\n\n**LRU eviction** with TTL keeps memory bounded. A 10GB Redis instance stores ~50M URL mappings.\n\n**This handles ~10K req/sec** with 95%+ cache hit rate. But what if the app server crashes?"
+    },
+    {
+      "title": "Stage 4 — Load Balancer + Horizontal Scale",
+      "bottleneck": "Single app server is a SPOF. No way to scale compute independently. Need horizontal scaling behind a load balancer.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Users", "position": { "x": 50, "y": 240 } },
+        { "id": "lb", "type": "lb", "label": "Load Balancer\n(Nginx/ALB)", "position": { "x": 250, "y": 240 } },
+        { "id": "app1", "type": "server", "label": "App Server 1", "position": { "x": 450, "y": 120 } },
+        { "id": "app2", "type": "server", "label": "App Server 2", "position": { "x": 450, "y": 360 } },
+        { "id": "cache", "type": "cache", "label": "Redis\nCluster", "position": { "x": 650, "y": 50 } },
+        { "id": "keygen", "type": "service", "label": "Key Gen\n(Zookeeper)", "position": { "x": 650, "y": 240 } },
+        { "id": "primary-db", "type": "database", "label": "Primary DB", "position": { "x": 850, "y": 160 } },
+        { "id": "replica-db", "type": "replica", "label": "Read Replica", "position": { "x": 850, "y": 350 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "lb", "label": "" },
+        { "id": "e2", "source": "lb", "target": "app1", "label": "Round robin" },
+        { "id": "e3", "source": "lb", "target": "app2", "label": "" },
+        { "id": "e4", "source": "app1", "target": "cache", "label": "" },
+        { "id": "e5", "source": "app2", "target": "cache", "label": "" },
+        { "id": "e6", "source": "app1", "target": "keygen", "label": "" },
+        { "id": "e7", "source": "app2", "target": "keygen", "label": "" },
+        { "id": "e8", "source": "app1", "target": "primary-db", "label": "Write" },
+        { "id": "e9", "source": "app2", "target": "replica-db", "label": "Read" },
+        { "id": "e10", "source": "primary-db", "target": "replica-db", "label": "Sync", "animated": true }
+      ],
+      "requestPath": ["client", "lb", "app1", "cache", "app1", "lb", "client"],
+      "narrative": "**Horizontal scaling unlocked.** Multiple stateless app servers behind a load balancer. Any server can handle any request — no session state.\n\n**Key generation uses Zookeeper** to assign ID ranges to each server. Server 1 gets [1–1M], Server 2 gets [1M–2M]. No coordination needed for key uniqueness.\n\n**Redis is now a cluster** — sharded by key hash. Data distributed across 3+ nodes with automatic failover.\n\n**Health checks:** the LB pings `/healthz` every 5s. Unhealthy servers are removed from the pool in seconds.\n\n**This handles ~100K req/sec.** But the database is still a single shard."
+    },
+    {
+      "title": "Stage 5 — Shard, CDN, Async Analytics",
+      "bottleneck": "At 100M+ URLs, a single DB can't hold all mappings. Analytics writes block redirects. Global users experience high latency.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Global Users", "position": { "x": 50, "y": 220 } },
+        { "id": "cdn", "type": "cdn", "label": "CDN Edge\n(Cloudflare)", "position": { "x": 220, "y": 220 } },
+        { "id": "lb", "type": "lb", "label": "Load\nBalancer", "position": { "x": 390, "y": 220 } },
+        { "id": "app1", "type": "server", "label": "App Server\nPool", "position": { "x": 550, "y": 140 } },
+        { "id": "cache", "type": "cache", "label": "Redis\nCluster", "position": { "x": 550, "y": 340 } },
+        { "id": "keygen", "type": "service", "label": "Key Gen", "position": { "x": 710, "y": 50 } },
+        { "id": "shard1", "type": "shard", "label": "DB Shard 1\n(a-m keys)", "position": { "x": 710, "y": 180 } },
+        { "id": "shard2", "type": "shard", "label": "DB Shard 2\n(n-z keys)", "position": { "x": 710, "y": 310 } },
+        { "id": "queue", "type": "queue", "label": "Kafka\n(Click Events)", "position": { "x": 550, "y": 480 } },
+        { "id": "analytics", "type": "storage", "label": "Analytics\nWarehouse", "position": { "x": 710, "y": 480 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "cdn", "label": "" },
+        { "id": "e2", "source": "cdn", "target": "lb", "label": "Cache miss" },
+        { "id": "e3", "source": "lb", "target": "app1", "label": "" },
+        { "id": "e4", "source": "app1", "target": "cache", "label": "Lookup" },
+        { "id": "e5", "source": "app1", "target": "keygen", "label": "" },
+        { "id": "e6", "source": "app1", "target": "shard1", "label": "hash(key)" },
+        { "id": "e7", "source": "app1", "target": "shard2", "label": "hash(key)" },
+        { "id": "e8", "source": "app1", "target": "queue", "label": "Click event", "animated": true },
+        { "id": "e9", "source": "queue", "target": "analytics", "label": "Batch process", "animated": true }
+      ],
+      "requestPath": ["client", "cdn", "lb", "app1", "cache", "app1", "lb", "cdn", "client"],
+      "narrative": "**The production architecture.** Every component is now redundant, sharded, and globally distributed.\n\n**CDN caching**: popular short URLs resolved at the edge (< 10ms globally). 301 redirects for permanent URLs, 302 for analytics-tracked ones.\n\n**Database sharding** by consistent hash of the short key. Each shard handles ~50M URLs. Add shards horizontally as data grows.\n\n**Async analytics**: click events pushed to Kafka, batch-processed to a warehouse. Redirect path is never blocked by analytics writes.\n\n**This handles 1M+ req/sec** at 99.99% availability. Cost: ~$5K/month for the core infrastructure."
+    }
+  ]
+}

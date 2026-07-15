@@ -1,0 +1,92 @@
+{
+  "id": "whatsapp",
+  "title": "Design Chat App (WhatsApp)",
+  "subtitle": "Real-time, persistent messaging with read receipts and presence",
+  "stages": [
+    {
+      "title": "Stage 1 — HTTP Polling & Relational DB",
+      "bottleneck": "HTTP polling wastes server CPU resources. Millions of users polling every 2s for new messages will crash the servers. Long database query times for message fetching.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B", "position": { "x": 50, "y": 280 } },
+        { "id": "server", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "server", "label": "POST /message" },
+        { "id": "e2", "source": "userB", "target": "server", "label": "GET /messages (polling)" },
+        { "id": "e3", "source": "server", "target": "db", "label": "Insert / Read messages" }
+      ],
+      "requestPath": ["userA", "server", "db", "server", "userB"],
+      "narrative": "**The basic HTTP-based messaging.** Messages are sent via POST requests and stored in PostgreSQL. Receivers poll the server every few seconds to check for new messages.\n\n**Bottleneck:** Extremely wasteful. 99% of poll requests return empty results. PostgreSQL locks rows under high concurrent writes."
+    },
+    {
+      "title": "Stage 2 — WebSockets & Session Store",
+      "bottleneck": "How to push messages instantly? Need persistent connections. Also need to track which server holds the active connection for each user.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B", "position": { "x": 50, "y": 280 } },
+        { "id": "ws1", "type": "server", "label": "WS Server 1", "position": { "x": 320, "y": 120 } },
+        { "id": "ws2", "type": "server", "label": "WS Server 2", "position": { "x": 320, "y": 280 } },
+        { "id": "sessions", "type": "cache", "label": "Session Service\n(Redis - User Routing)", "position": { "x": 580, "y": 200 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL", "position": { "x": 780, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "ws1", "label": "WS Connection" },
+        { "id": "e2", "source": "userB", "target": "ws2", "label": "WS Connection" },
+        { "id": "e3", "source": "ws1", "target": "sessions", "label": "Get User B's server" },
+        { "id": "e4", "source": "ws1", "target": "ws2", "label": "Route message to WS 2" },
+        { "id": "e5", "source": "ws2", "target": "userB", "label": "Push message" },
+        { "id": "e6", "source": "ws1", "target": "db", "label": "Persist mapping" }
+      ],
+      "requestPath": ["userA", "ws1", "sessions", "ws1", "ws2", "userB"],
+      "narrative": "**Instant message pushing.** We establish persistent WebSocket connections. When User A sends a message to User B:\n1. Server WS 1 checks the Session Store (Redis) to locate User B's active server (WS 2).\n2. WS 1 routes the message directly to WS 2.\n3. WS 2 pushes the message to User B instantly."
+    },
+    {
+      "title": "Stage 3 — Message Queue & Delivery Receipts",
+      "bottleneck": "If User B is offline, routing fails. We need a way to buffer messages and manage status indicators (Sent / Delivered / Read).",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B (Offline)", "position": { "x": 50, "y": 280 } },
+        { "id": "ws1", "type": "server", "label": "WS Server 1", "position": { "x": 280, "y": 120 } },
+        { "id": "queue", "type": "queue", "label": "RabbitMQ\n(Message Broker)", "position": { "x": 480, "y": 120 } },
+        { "id": "sessions", "type": "cache", "label": "Sessions", "position": { "x": 280, "y": 280 } },
+        { "id": "db", "type": "database", "label": "NoSQL DB\n(Cassandra)", "position": { "x": 700, "y": 120 } },
+        { "id": "receipts", "type": "service", "label": "Receipts Service", "position": { "x": 480, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "ws1", "label": "" },
+        { "id": "e2", "source": "ws1", "target": "queue", "label": "Enqueue message" },
+        { "id": "e3", "source": "queue", "target": "db", "label": "Persist offline" },
+        { "id": "e4", "source": "ws1", "target": "receipts", "label": "Status: Sent", "animated": true },
+        { "id": "e5", "source": "receipts", "target": "ws1", "label": "Send checkmark" },
+        { "id": "e6", "source": "ws1", "target": "userA", "label": "Display Sent (✓)" }
+      ],
+      "requestPath": ["userA", "ws1", "queue", "db"],
+      "narrative": "**Handling Offline Users.** If User B is offline (checked via Session store), the message is held in the NoSQL database as 'pending'.\n\n**Delivery Receipts:** On successfully enqueuing the message, User A is notified with a 'Sent' receipt (single checkmark). When User B goes online, they pull pending messages from the queue, returning a 'Delivered' receipt (double checkmark) back to User A."
+    },
+    {
+      "title": "Stage 4 — Scale Presence & Sharded Archives",
+      "bottleneck": "At 1B+ active chats, Cassandra needs sharding by chat_id. Millions of users changing presence status (online/offline) triggers high traffic. Dedicated presence servers needed.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B", "position": { "x": 50, "y": 300 } },
+        { "id": "ws", "type": "server", "label": "WS Servers Pool", "position": { "x": 260, "y": 210 } },
+        { "id": "presence", "type": "service", "label": "Presence Service\n(Redis KV)", "position": { "x": 480, "y": 320 } },
+        { "id": "msg-svc", "type": "service", "label": "Message Service", "position": { "x": 480, "y": 120 } },
+        { "id": "db1", "type": "shard", "label": "Cassandra Shard 1\n(chat_id 0-50M)", "position": { "x": 720, "y": 60 } },
+        { "id": "db2", "type": "shard", "label": "Cassandra Shard 2\n(chat_id 50M+)", "position": { "x": 720, "y": 180 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "ws", "label": "" },
+        { "id": "e2", "source": "userB", "target": "ws", "label": "" },
+        { "id": "e3", "source": "ws", "target": "presence", "label": "Heartbeat / Status" },
+        { "id": "e4", "source": "ws", "target": "msg-svc", "label": "" },
+        { "id": "e5", "source": "msg-svc", "target": "db1", "label": "Write" },
+        { "id": "e6", "source": "msg-svc", "target": "db2", "label": "Write" }
+      ],
+      "requestPath": ["userB", "ws", "presence"],
+      "narrative": "**Production scaling patterns.** Messages are archived in **sharded Cassandra databases** sharded by `chat_id` for quick chronological retrieval.\n\n**Presence system:** We offload user heartbeats to a dedicated Presence Service. Users send heartbeats every 30s. If a heartbeat is missed, they are marked offline. When User A opens User B's chat, they query the Presence Service to fetch the status ('Online' or 'Last seen at...')."
+    }
+  ]
+}

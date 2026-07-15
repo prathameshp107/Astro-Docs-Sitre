@@ -12,6 +12,8 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  CodeBlock,
+  renderFormattedText,
 } from "./shared/index.js";
 
 // ─── PYTHON RUNNER (Pyodide) ───
@@ -212,10 +214,10 @@ export default function PythonLabsPlatform() {
     return () => { cancelled = true; };
   }, []);
 
-  // Load progress from sessionStorage
+  // Load progress from localStorage
   useEffect(() => {
     try {
-      const stored = JSON.parse(sessionStorage.getItem("pyl-progress") || '{"lessons":[],"challenges":[],"projects":[],"bugs":[]}');
+      const stored = JSON.parse(localStorage.getItem("pyl-progress") || '{"lessons":[],"challenges":[],"projects":[],"bugs":[]}');
       setProgress(stored);
     } catch { /* ignore */ }
   }, []);
@@ -224,7 +226,7 @@ export default function PythonLabsPlatform() {
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
     try {
-      sessionStorage.setItem("pyl-progress", JSON.stringify(newProgress));
+      localStorage.setItem("pyl-progress", JSON.stringify(newProgress));
     } catch { /* ignore */ }
   }, []);
 
@@ -784,12 +786,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section">
         <h3 className="jsl-section-title">Concept</h3>
         <div className="jsl-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
-            if (line.startsWith("```")) return null;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -807,12 +804,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">Your Task</h3>
         <div className="jsl-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="jsl-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -827,7 +819,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{lesson.solutionCode}</code></pre>
+          <CodeBlock code={lesson.solutionCode} />
         </div>
       )}
 
@@ -876,7 +868,7 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
 
       <div className="jsl-section">
         <h3 className="jsl-section-title">Problem</h3>
-        <p className="jsl-text">{challenge.problem}</p>
+        <div className="jsl-text">{renderFormattedText(challenge.problem)}</div>
       </div>
 
       {showHint && (
@@ -888,7 +880,7 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{challenge.solution}</code></pre>
+          <CodeBlock code={challenge.solution} />
         </div>
       )}
 
@@ -916,8 +908,8 @@ function ProjectView({ project, showSolution, onToggleSolution }) {
 
       <div className="jsl-section">
         <h3 className="jsl-section-title">Overview</h3>
-        <p className="jsl-text">{project.overview}</p>
-        <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}><strong>Why?</strong> {project.why}</p>
+        <div className="jsl-text">{renderFormattedText(project.overview)}</div>
+        <div className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}><strong>Why?</strong> {renderFormattedText(project.why)}</div>
       </div>
 
       <div className="jsl-section">
@@ -959,7 +951,7 @@ function ProjectView({ project, showSolution, onToggleSolution }) {
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{project.solution}</code></pre>
+          <CodeBlock code={project.solution} />
         </div>
       )}
 
@@ -984,17 +976,17 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution }
 
       <div className="jsl-section">
         <h3 className="jsl-section-title">Problem</h3>
-        <p className="jsl-text">{bug.problem}</p>
+        <div className="jsl-text">{renderFormattedText(bug.problem)}</div>
       </div>
 
       <div className="jsl-section">
         <h3 className="jsl-section-title">Learning Goal</h3>
-        <p className="jsl-text">{bug.learningGoal}</p>
+        <div className="jsl-text">{renderFormattedText(bug.learningGoal)}</div>
       </div>
 
       <div className="jsl-section">
         <h3 className="jsl-section-title">Expected Result</h3>
-        <p className="jsl-text">{bug.expectedResult}</p>
+        <div className="jsl-text">{renderFormattedText(bug.expectedResult)}</div>
       </div>
 
       {showHint && (
@@ -1006,7 +998,7 @@ function BugView({ bug, showHint, showSolution, onToggleHint, onToggleSolution }
       {showSolution && (
         <div className="jsl-solution-box">
           <h4>Solution</h4>
-          <pre className="jsl-code-block"><code>{bug.solution}</code></pre>
+          <CodeBlock code={bug.solution} />
         </div>
       )}
 

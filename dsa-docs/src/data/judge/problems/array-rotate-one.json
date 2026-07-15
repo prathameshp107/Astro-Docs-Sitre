@@ -1,0 +1,60 @@
+{
+  "id": "array-rotate-one",
+  "title": "Left Rotate Array by One",
+  "difficulty": "easy",
+  "topics": ["arrays"],
+  "companies": ["tcs", "wipro"],
+  "statement": "Write a function that left-rotates an array `nums` by one position in-place and returns the modified array.\n\nFor example, if `nums = [1, 2, 3, 4, 5]`, left rotating by one position results in `[2, 3, 4, 5, 1]`.",
+  "constraints": [
+    "1 <= nums.length <= 10^4",
+    "-10^9 <= nums[i] <= 10^9"
+  ],
+  "examples": [
+    {
+      "input": "nums = [1, 2, 3, 4, 5]",
+      "output": "[2, 3, 4, 5, 1]",
+      "explanation": "All elements shift left by 1, and the first element goes to the end."
+    },
+    {
+      "input": "nums = [3]",
+      "output": "[3]",
+      "explanation": "A single element remains the same after rotation."
+    }
+  ],
+  "functionName": "rotateOne",
+  "starterCode": {
+    "javascript": "function rotateOne(nums) {\n  // Write your code here\n}",
+    "python": "def rotate_one(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nrotateOne = rotate_one"
+  },
+  "tests": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": [2, 3, 4, 5, 1], "hidden": false },
+    { "args": [[3]], "expected": [3], "hidden": false },
+    { "args": [[10, 20]], "expected": [20, 10], "hidden": false },
+    { "args": [[9, 8, 7, 6]], "expected": [8, 7, 6, 9], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Store the first element in a temporary variable. Shift all other elements one index to the left: nums[i] = nums[i + 1]. Place the temporary element at the last index nums[n - 1].",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-rotate-k"],
+  "hints": [
+    "Store the first element `nums[0]` in a temporary variable.",
+    "Shift every other element one index to the left: `nums[i] = nums[i + 1]`.",
+    "Place the stored first element at the last index `nums[nums.length - 1]`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Remove the first element using `.shift()` and push it to the end of the array using `.push()`.",
+    "timeComplexity": "O(n) (due to shifting elements in memory)",
+    "spaceComplexity": "O(1)",
+    "code": "function rotateOne(nums) {\n  if (nums.length <= 1) return nums;\n  const first = nums.shift();\n  nums.push(first);\n  return nums;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Store the first element. Shift all other elements one position to the left in a loop, then place the first element at the end.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function rotateOne(nums) {\n  if (nums.length <= 1) return nums;\n  const temp = nums[0];\n  for (let i = 0; i < nums.length - 1; i++) {\n    nums[i] = nums[i + 1];\n  }\n  nums[nums.length - 1] = temp;\n  return nums;\n}"
+  },
+  "interviewExplanation": "Left rotating an array by one involves shifting all elements leftwards. While `.shift()` and `.push()` work in JS, shifting elements manually in a loop makes the O(n) array shift operation clear, running in O(1) auxiliary space."
+}

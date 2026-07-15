@@ -1,0 +1,61 @@
+{
+  "id": "string-rotate-match",
+  "title": "Rotate String",
+  "difficulty": "easy",
+  "topics": ["strings"],
+  "companies": ["google", "amazon"],
+  "statement": "Given two strings `s` and `goal`, return `true` if and only if `s` can become `goal` after some number of shifts on `s`.\n\nA shift on `s` consists of moving the leftmost character of `s` to the rightmost position. For example, if `s = \"abcde\"`, then it will be \"bcdea\" after one shift.",
+  "constraints": [
+    "1 <= s.length, goal.length <= 100",
+    "s and goal consist of lowercase English letters."
+  ],
+  "examples": [
+    {
+      "input": "s = \"abcde\", goal = \"cdeab\"",
+      "output": "true",
+      "explanation": "Shifting s twice yields \"cdeab\"."
+    },
+    {
+      "input": "s = \"abcde\", goal = \"abced\"",
+      "output": "false",
+      "explanation": "\"abced\" cannot be obtained by shifting \"abcde\"."
+    }
+  ],
+  "functionName": "rotateString",
+  "starterCode": {
+    "javascript": "function rotateString(s, goal) {\n  // Write your code here\n}",
+    "python": "def rotate_string(s, goal):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nrotateString = rotate_string"
+  },
+  "tests": [
+    { "args": ["abcde", "cdeab"], "expected": true, "hidden": false },
+    { "args": ["abcde", "abced"], "expected": false, "hidden": false },
+    { "args": ["a", "a"], "expected": true, "hidden": false },
+    { "args": ["abc", "cab"], "expected": true, "hidden": true },
+    { "args": ["abc", "abcd"], "expected": false, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Verify that s and goal have identical lengths first. If so, check if goal is a substring of s + s. If it is, return true, otherwise false.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["string-reverse-words"],
+  "hints": [
+    "If the lengths of `s` and `goal` are different, they cannot be equal after any shifts.",
+    "If you concatenate `s` with itself (`s + s`), what substrings can you find in it?",
+    "Every possible shift of `s` is a substring of `s + s`. Check if `goal` is a substring of `s + s`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Simulate each of the `n` possible shifts of `s` and compare the shifted string to `goal`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n)",
+    "code": "function rotateString(s, goal) {\n  if (s.length !== goal.length) return false;\n  for (let i = 0; i < s.length; i++) {\n    const shifted = s.substring(i) + s.substring(0, i);\n    if (shifted === goal) return true;\n  }\n  return false;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Concatenate `s` with itself (`s + s`). All possible rotations of `s` are substrings of `s + s`. If `goal` matches in length and is a substring of `s + s`, return true.",
+    "timeComplexity": "O(n) (using substring search)",
+    "spaceComplexity": "O(n)",
+    "code": "function rotateString(s, goal) {\n  return s.length === goal.length && (s + s).includes(goal);\n}"
+  },
+  "interviewExplanation": "Simulating all shifts takes quadratic time. We optimize it to linear O(n) time by concatenating `s` with `s`. The string `s + s` contains all circular shift variants of `s` as contiguous substrings of length `n`."
+}

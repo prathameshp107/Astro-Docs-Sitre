@@ -1,0 +1,65 @@
+{
+  "id": "string-reverse-words",
+  "title": "Reverse Words in a String",
+  "difficulty": "medium",
+  "topics": ["strings", "two-pointers"],
+  "companies": ["google", "meta", "amazon", "microsoft"],
+  "statement": "Given an input string `s`, reverse the order of the words.\n\nA word is defined as a sequence of non-space characters. The words in `s` will be separated by at least one space.\n\nReturn a string of the words in reverse order concatenated by a single space. Note that `s` may contain leading or trailing spaces or multiple spaces between two words. The returned string should only have a single space separating the words, with no leading/trailing spaces.",
+  "constraints": [
+    "1 <= s.length <= 10^4",
+    "s contains English letters, digits, and spaces."
+  ],
+  "examples": [
+    {
+      "input": "s = \"the sky is blue\"",
+      "output": "\"blue is sky the\"",
+      "explanation": "The words are reversed, separated by a single space."
+    },
+    {
+      "input": "s = \"  hello world  \"",
+      "output": "\"world hello\"",
+      "explanation": "Your reversed string should not contain leading or trailing spaces."
+    },
+    {
+      "input": "s = \"a good   example\"",
+      "output": "\"example good a\"",
+      "explanation": "Multiple spaces between words are reduced to a single space."
+    }
+  ],
+  "functionName": "reverseWords",
+  "starterCode": {
+    "javascript": "function reverseWords(s) {\n  // Write your code here\n}",
+    "python": "def reverse_words(s):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nreverseWords = reverse_words"
+  },
+  "tests": [
+    { "args": ["the sky is blue"], "expected": "blue is sky the", "hidden": false },
+    { "args": ["  hello world  "], "expected": "world hello", "hidden": false },
+    { "args": ["a good   example"], "expected": "example good a", "hidden": false },
+    { "args": ["  Bob    Loves  Alice   "], "expected": "Alice Loves Bob", "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Clean and tokenize the string using split with regex /\\s+/ to handle spaces. Filter out any remaining empty tokens. Reverse the array of words and join them with a single space.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["string-rotate-match"],
+  "hints": [
+    "First, remove leading and trailing spaces.",
+    "Split the string by spaces. Be careful with multiple spaces between words; a regex like `\\s+` is helpful.",
+    "Reverse the array of tokens/words, filter out any empty entries, and join them using a single space."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Use JavaScript's built-in trim, split with whitespace regex, array reverse, and join.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function reverseWords(s) {\n  return s.trim().split(/\\s+/).reverse().join(' ');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Implement manual tokenization using two pointers from right to left. Find word boundaries dynamically, push words to an array, and join.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function reverseWords(s) {\n  let words = [];\n  let i = s.length - 1;\n  while (i >= 0) {\n    while (i >= 0 && s[i] === ' ') i--;\n    if (i < 0) break;\n    let j = i;\n    while (i >= 0 && s[i] !== ' ') i--;\n    words.push(s.substring(i + 1, j + 1));\n  }\n  return words.join(' ');\n}"
+  },
+  "interviewExplanation": "While `trim().split().reverse().join()` is clean, it allocates multiple helper arrays. A manual two-pointer scan from right to left finds and extracts words directly, constructing the reversed string cleanly in linear time."
+}

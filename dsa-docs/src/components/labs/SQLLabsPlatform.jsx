@@ -13,7 +13,18 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  celebrate,
+  awardXP,
+  LabXPBadge,
+  LabCommandPalette,
+  useCommandPalette,
+  renderFormattedText,
+  LabCopyButton,
+  LabTestsPanel,
+  LabTestsBody,
 } from "./shared/index.js";
+
+const SQL_CONFETTI = ["#f59e0b", "#fbbf24", "#60a5fa", "#34d399"];
 
 
 
@@ -287,6 +298,14 @@ export default function SQLLabsPlatform() {
   const workspaceRef = useRef(null);
   const [activeDatabase, setActiveDatabase] = useState("employees");
   const [dbKey, setDbKey] = useState(0);
+  const [testResults, setTestResults] = useState([]);
+  const [testsHeight, setTestsHeight] = useState(140);
+
+  const handleTestsDrag = useCallback(({ clientY }) => {
+    if (!contentPanelRef.current) return;
+    const rect = contentPanelRef.current.getBoundingClientRect();
+    setTestsHeight(Math.max(100, Math.min(rect.height * 0.5, rect.bottom - clientY)));
+  }, []);
 
   // Initialize sql.js engine
   useEffect(() => {
@@ -323,22 +342,28 @@ export default function SQLLabsPlatform() {
   // Load progress
   useEffect(() => {
     try {
-      const stored = JSON.parse(sessionStorage.getItem("sql-progress") || '{"lessons":[],"challenges":[],"projects":{}}');
+      const stored = JSON.parse(localStorage.getItem("sql-progress") || '{"lessons":[],"challenges":[],"projects":{}}');
       setProgress(stored);
     } catch {}
   }, []);
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("sql-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("sql-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {
-    if (!progress.lessons.includes(id)) saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+    if (!progress.lessons.includes(id)) {
+      saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+      if (awardXP(`sql:lesson:${id}`, 10, "Lesson complete")) celebrate(SQL_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const markChallengeDone = useCallback((id) => {
-    if (!progress.challenges.includes(id)) saveProgress({ ...progress, challenges: [...progress.challenges, id] });
+    if (!progress.challenges.includes(id)) {
+      saveProgress({ ...progress, challenges: [...progress.challenges, id] });
+      if (awardXP(`sql:challenge:${id}`, 20, "Challenge solved")) celebrate(SQL_CONFETTI);
+    }
   }, [progress, saveProgress]);
 
   const markMilestoneDone = useCallback((projectId, milestoneIdx) => {
@@ -348,6 +373,7 @@ export default function SQLLabsPlatform() {
         ...progress,
         projects: { ...progress.projects, [projectId]: [...projectMilestones, milestoneIdx] },
       });
+      if (awardXP(`sql:milestone:${projectId}:${milestoneIdx}`, 15, "Milestone reached")) celebrate(SQL_CONFETTI);
     }
   }, [progress, saveProgress]);
 
@@ -376,6 +402,110 @@ export default function SQLLabsPlatform() {
   const currentChallenge = useMemo(() => SQL_CHALLENGES.find(c => c.id === activeChallenge), [activeChallenge]);
   const currentProject = useMemo(() => SQL_PROJECTS.find(p => p.id === activeProject), [activeProject]);
 
+  const currentContent = useMemo(() => {
+    if (view === "learn") return currentLesson;
+    if (view === "challenge") return currentChallenge;
+    if (view === "project") return currentProject;
+    return null;
+  }, [view, currentLesson, currentChallenge, currentProject]);
+
+  const currentTests = useMemo(() => {
+    if (!currentContent) return [];
+    const sol = currentContent.solutionQuery || currentContent.solution || (currentContent.milestones && currentContent.milestones[activeMilestone]?.solutionQuery) || "";
+    if (!sol) return [];
+
+    const tests = [
+      {
+        name: "Query executes without syntax errors",
+        validate: (q, db) => {
+          if (!q.trim()) return false;
+          try {
+            db.exec(q);
+            return true;
+          } catch {
+            return false;
+          }
+        }
+      }
+    ];
+
+    const solUpper = sol.toUpperCase();
+    if (solUpper.includes("GROUP BY")) {
+      tests.push({
+        name: "Uses GROUP BY clause to group results",
+        validate: (q) => /\bgroup\s+by\b/i.test(q)
+      });
+    }
+    if (solUpper.includes("ORDER BY")) {
+      tests.push({
+        name: "Uses ORDER BY clause to sort results",
+        validate: (q) => /\border\s+by\b/i.test(q)
+      });
+    }
+    if (solUpper.includes("LIMIT")) {
+      tests.push({
+        name: "Uses LIMIT clause to restrict output rows",
+        validate: (q) => /\blimit\b/i.test(q)
+      });
+    }
+    if (solUpper.includes("JOIN")) {
+      tests.push({
+        name: "Uses JOIN clause to combine tables",
+        validate: (q) => /\bjoin\b/i.test(q)
+      });
+    }
+    if (solUpper.includes("WHERE")) {
+      tests.push({
+        name: "Uses WHERE clause to filter rows",
+        validate: (q) => /\bwhere\b/i.test(q)
+      });
+    }
+    if (solUpper.includes("HAVING")) {
+      tests.push({
+        name: "Uses HAVING clause to filter groups",
+        validate: (q) => /\bhaving\b/i.test(q)
+      });
+    }
+    if (/\b(SUM|COUNT|AVG|MIN|MAX)\b/i.test(sol)) {
+      tests.push({
+        name: "Uses aggregate functions (SUM, COUNT, AVG, etc.)",
+        validate: (q) => /\b(sum|count|avg|min|max)\b/i.test(q)
+      });
+    }
+
+    tests.push({
+      name: "Query output matches the expected solution database records",
+      validate: (q, db) => {
+        if (!q.trim()) return false;
+        try {
+          const userRes = db.exec(q);
+          const solRes = db.exec(sol);
+          if (userRes.length !== solRes.length) return false;
+          if (userRes.length === 0) return true;
+          
+          const uCols = userRes[0].columns;
+          const sCols = solRes[0].columns;
+          if (uCols.length !== sCols.length) return false;
+          
+          const uVals = userRes[0].values;
+          const sVals = solRes[0].values;
+          if (uVals.length !== sVals.length) return false;
+          
+          for (let i = 0; i < uVals.length; i++) {
+            for (let j = 0; j < uVals[i].length; j++) {
+              if (String(uVals[i][j]) !== String(sVals[i][j])) return false;
+            }
+          }
+          return true;
+        } catch {
+          return false;
+        }
+      }
+    });
+
+    return tests;
+  }, [currentContent, activeMilestone]);
+
   const selectLesson = (id) => {
     const lesson = SQL_LESSONS.find(l => l.id === id);
     if (!lesson) return;
@@ -389,6 +519,7 @@ export default function SQLLabsPlatform() {
     setShowSolution(false);
     setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
     if (lesson.database) setActiveDatabase(lesson.database);
   };
@@ -406,6 +537,7 @@ export default function SQLLabsPlatform() {
     setShowSolution(false);
     setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
     if (challenge.database) setActiveDatabase(challenge.database);
   };
@@ -424,6 +556,7 @@ export default function SQLLabsPlatform() {
     setShowSolution(false);
     setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
     setActiveDatabase("blank");
   };
@@ -545,6 +678,29 @@ export default function SQLLabsPlatform() {
     if (idx > 0) selectLesson(SQL_LESSONS[idx - 1].id);
   };
 
+  const runTests = useCallback((customQuery) => {
+    const q = typeof customQuery === "string" ? customQuery : query;
+    if (!dbRef.current || currentTests.length === 0) return;
+    const db = dbRef.current;
+    const results = currentTests.map((test, i) => {
+      try {
+        const passed = test.validate(q, db);
+        return { index: i, name: test.name, passed, error: passed ? null : "Verification failed" };
+      } catch (e) {
+        return { index: i, name: test.name, passed: false, error: e?.message || "Validation failed" };
+      }
+    });
+    setTestResults(results);
+
+    const allPassed = results.length > 0 && results.every(r => r.passed);
+    if (allPassed) {
+      celebrate(SQL_CONFETTI);
+      if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
+      else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
+      else if (view === "project" && currentProject) markMilestoneDone(currentProject.id, activeMilestone);
+    }
+  }, [query, currentTests, view, currentLesson, currentChallenge, currentProject, activeMilestone, markLessonDone, markChallengeDone, markMilestoneDone]);
+
   // Run query
   const runQuery = useCallback(() => {
     if (!dbRef.current) return;
@@ -555,7 +711,11 @@ export default function SQLLabsPlatform() {
 
     try {
       const trimmed = query.trim();
-      if (!trimmed || trimmed.startsWith("--")) {
+      const hasExecutableSQL = trimmed
+        .replace(/--[^\n]*/g, "") // removes comments
+        .trim().length > 0;
+
+      if (!trimmed || !hasExecutableSQL) {
         setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
         setQueryError("Enter a SQL query to execute");
         setIsRunning(false);
@@ -610,6 +770,10 @@ export default function SQLLabsPlatform() {
         totalAffected,
         executionTime,
       });
+
+      setTimeout(() => {
+        runTests(trimmed);
+      }, 0);
     } catch (e) {
       setQueryError(e.message);
       setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
@@ -619,18 +783,16 @@ export default function SQLLabsPlatform() {
         try { dbRef.current.run("PRAGMA foreign_keys = ON;"); } catch {}
       }
     }
-  }, [query]);
+  }, [query, runTests]);
 
   useKeyboardShortcut(runQuery);
 
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
+  // Ctrl+K command palette + Ctrl+B focus mode
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+  const [hideSidebar, setHideSidebar] = useState(false);
+  useKeyboardShortcut(() => setHideSidebar(v => !v), "b");
 
-  const currentContent = useMemo(() => {
-    if (view === "learn") return currentLesson;
-    if (view === "challenge") return currentChallenge;
-    if (view === "project") return currentProject;
-    return null;
-  }, [view, currentLesson, currentChallenge, currentProject]);
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   // Render landing if DB not ready
   if (loading) {
@@ -673,27 +835,50 @@ export default function SQLLabsPlatform() {
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
         prefix="sql"
+      >
+        <LabXPBadge />
+      </LabTopbar>
+
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#f59e0b"
+        placeholder="Type a command or jump to a lesson, challenge, project…"
+        commands={[
+          { id: "run", section: "Actions", label: "Run query", hint: "Ctrl+Enter", action: runQuery },
+          { id: "schema", section: "Actions", label: showSchema ? "Hide schema diagram" : "Show schema diagram", action: () => setShowSchema(s => !s) },
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
+          { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
+          ...SQL_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
+          ...SQL_CHALLENGES.map(c => ({ id: `c-${c.id}`, section: "Challenges", label: c.title, done: progress.challenges.includes(c.id), action: () => selectChallenge(c.id) })),
+          ...SQL_PROJECTS.map(p => ({ id: `p-${p.id}`, section: "Projects", label: p.title, done: (progress.projects[p.id] || []).length >= p.milestones.length, action: () => selectProject(p.id) })),
+        ]}
       />
 
       {/* Main Layout */}
       <div className="sql-main">
         <div className="sql-body" ref={bodyRef}>
           {/* Sidebar */}
-          <SQLSidebar
-            activeSection={view}
-            activeLesson={activeLesson}
-            activeChallenge={activeChallenge}
-            activeProject={activeProject}
-            onSelectLesson={selectLesson}
-            onSelectChallenge={selectChallenge}
-            onSelectProject={selectProject}
-            progress={progressStats}
-            db={dbRef.current}
-            activeDatabase={activeDatabase}
-            onSelectDatabase={setActiveDatabase}
-            style={{ width: sidebarWidth }}
-          />
-          <LabResizableHandle onDrag={handleSidebarDrag} />
+          {!hideSidebar && (
+            <>
+              <SQLSidebar
+                activeSection={view}
+                activeLesson={activeLesson}
+                activeChallenge={activeChallenge}
+                activeProject={activeProject}
+                onSelectLesson={selectLesson}
+                onSelectChallenge={selectChallenge}
+                onSelectProject={selectProject}
+                progress={progressStats}
+                db={dbRef.current}
+                activeDatabase={activeDatabase}
+                onSelectDatabase={setActiveDatabase}
+                style={{ width: sidebarWidth }}
+              />
+              <LabResizableHandle onDrag={handleSidebarDrag} />
+            </>
+          )}
 
           {/* Content & Editor */}
           <div className="sql-workspace" ref={workspaceRef}>
@@ -757,6 +942,26 @@ export default function SQLLabsPlatform() {
                   </>
                 )}
               </div>
+
+              {/* Resizable Automated Tests */}
+              {currentTests.length > 0 && (
+                <>
+                  <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+                  <div className="jsl-tests-panel" style={{ height: testsHeight, maxHeight: testsHeight, minHeight: testsHeight }}>
+                    <LabTestsPanel
+                      currentTests={currentTests}
+                      testResults={testResults}
+                      onRunTests={runTests}
+                    />
+                    <div className="jsl-tests-body">
+                      <LabTestsBody
+                        currentTests={currentTests}
+                        testResults={testResults}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Editor + Results Panel (right side) */}
@@ -887,12 +1092,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="sql-section">
         <h3 className="sql-section-title">📖 Concept</h3>
         <div className="sql-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="sql-bullet">{line.slice(2)}</li>;
-            if (line.startsWith("```")) return null;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -906,12 +1106,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="sql-section sql-task-section">
         <h3 className="sql-section-title">✏️ Your Task</h3>
         <div className="sql-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="sql-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -923,7 +1118,10 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
 
       {showSolution && (
         <div className="sql-solution-box">
-          <h4>Solution</h4>
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution</h4>
+            <LabCopyButton text={lesson.solutionQuery} />
+          </div>
           <pre className="sql-code-block"><code>{lesson.solutionQuery}</code></pre>
         </div>
       )}
@@ -1000,17 +1198,7 @@ function ProjectView({ project, activeMilestone, showHint, showSolution, onToggl
           🎯 Milestone {activeMilestone + 1}: {milestone.title}
         </h3>
         <div className="sql-task-text">
-          {milestone.task.split("\n").map((line, i) => {
-            const trimmed = line.trim();
-            if (trimmed.startsWith("1.") || trimmed.startsWith("2.") || trimmed.startsWith("3.") || trimmed.startsWith("4.") || trimmed.startsWith("5.") || trimmed.startsWith("6.") || trimmed.startsWith("7.") || trimmed.startsWith("8.")) {
-              return <li key={i} className="sql-task-item">{trimmed.replace(/^\d+\.\s*/, "")}</li>;
-            }
-            if (trimmed.startsWith("-")) {
-              return <li key={i} className="sql-task-item">{trimmed.slice(1).trim()}</li>;
-            }
-            if (trimmed === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(milestone.task)}
         </div>
       </div>
 
@@ -1027,7 +1215,10 @@ function ProjectView({ project, activeMilestone, showHint, showSolution, onToggl
 
       {showSolution && (
         <div className="sql-solution-box">
-          <h4>Solution for {milestone.title}</h4>
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution for {milestone.title}</h4>
+            <LabCopyButton text={milestone.solutionQuery} />
+          </div>
           <pre className="sql-code-block"><code>{milestone.solutionQuery}</code></pre>
         </div>
       )}
@@ -1078,7 +1269,7 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
 
       <div className="sql-section">
         <h3 className="sql-section-title">📝 Problem</h3>
-        <p className="sql-text">{challenge.problem}</p>
+        <div className="sql-text">{renderFormattedText(challenge.problem)}</div>
       </div>
 
       <div className="sql-section">
@@ -1101,7 +1292,10 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
 
       {showSolution && (
         <div className="sql-solution-box">
-          <h4>Solution</h4>
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution</h4>
+            <LabCopyButton text={challenge.solution} />
+          </div>
           <pre className="sql-code-block"><code>{challenge.solution}</code></pre>
         </div>
       )}

@@ -1,0 +1,61 @@
+{
+  "id": "array-min-max",
+  "title": "Find Minimum and Maximum in Array",
+  "difficulty": "easy",
+  "topics": ["arrays"],
+  "companies": ["tcs", "infosys", "wipro"],
+  "statement": "Write a function that takes an array of integers `nums` and returns a two-element array containing the minimum element and the maximum element in `nums` respectively, i.e., `[min, max]`.\n\nThe array is guaranteed to contain at least one element.",
+  "constraints": [
+    "1 <= nums.length <= 10^4",
+    "-10^9 <= nums[i] <= 10^9"
+  ],
+  "examples": [
+    {
+      "input": "nums = [3, 2, 1, 56, 10000, 167]",
+      "output": "[1, 10000]",
+      "explanation": "The minimum element is 1 and the maximum is 10000."
+    },
+    {
+      "input": "nums = [1]",
+      "output": "[1, 1]",
+      "explanation": "A single element is both the min and the max."
+    }
+  ],
+  "functionName": "findMinMax",
+  "starterCode": {
+    "javascript": "function findMinMax(nums) {\n  // Write your code here\n}",
+    "python": "def find_min_max(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nfindMinMax = find_min_max"
+  },
+  "tests": [
+    { "args": [[3, 2, 1, 56, 10000, 167]], "expected": [1, 10000], "hidden": false },
+    { "args": [[1]], "expected": [1, 1], "hidden": false },
+    { "args": [[-1, -2, -3, -4, -5]], "expected": [-5, -1], "hidden": false },
+    { "args": [[10, 20, 30, 40, 50, 60, 70, 80, 90]], "expected": [10, 90], "hidden": true },
+    { "args": [[100, 5, 200, -50, 300, 0]], "expected": [-50, 300], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "hints": [
+    "You can keep track of the minimum and maximum values using two variables.",
+    "Initialize `min` and `max` to the first element of the array, then iterate through the rest of the array.",
+    "For each element, check if it is smaller than `min` (and update `min` if so) or larger than `max` (and update `max` if so)."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Sort the array in non-decreasing order. The first element will be the minimum and the last element will be the maximum.",
+    "timeComplexity": "O(n log n)",
+    "spaceComplexity": "O(log n) (depending on sorting space)",
+    "code": "function findMinMax(nums) {\n  nums.sort((a, b) => a - b);\n  return [nums[0], nums[nums.length - 1]];\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Iterate through the array once. Maintain two variables `min` and `max` initialized to the first element. Update them if any smaller or larger element is encountered.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function findMinMax(nums) {\n  let min = nums[0];\n  let max = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    if (nums[i] < min) min = nums[i];\n    if (nums[i] > max) max = nums[i];\n  }\n  return [min, max];\n}"
+  },
+  "interviewExplanation": "The brute-force method sorts the array, which takes O(n log n) time. We optimize it to O(n) by performing a single scan of the array, updating our min and max values on-the-fly, requiring only O(1) auxiliary space.",
+  "editorial": {
+    "approach": "A single linear scan through the array of size `n` initialized with `min = nums[0]` and `max = nums[0]` gives the optimal time complexity of O(n) with O(1) space.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-find-element"]
+}

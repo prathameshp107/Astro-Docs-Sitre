@@ -1,0 +1,103 @@
+{
+  "id": "patterns-mastery",
+  "title": "Pattern Mastery",
+  "tagline": "Master programming loops, nested conditions, and spatial logic by printing 31 classic star, number, and alphabet patterns.",
+  "difficulty": "beginner",
+  "durationDays": 10,
+  "hoursPerDay": 1.0,
+  "tags": ["loops", "basics", "stars", "logic"],
+  "heroTopics": ["Square & Triangle", "Pyramid & Diamond", "Void & Hourglass", "Number & Letter Grids"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Basic Star Patterns",
+      "items": [
+        { "type": "problem", "ref": "pattern-square", "label": "Code: Square Star Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-right-triangle", "label": "Code: Right Triangle Star Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-inverted-right-triangle", "label": "Code: Inverted Right Triangle Pattern", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Pyramids & Diamonds",
+      "items": [
+        { "type": "problem", "ref": "pattern-pyramid", "label": "Code: Pyramid Star Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-inverted-pyramid", "label": "Code: Inverted Pyramid Star Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-diamond", "label": "Code: Diamond Star Pattern", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Advanced Shapes",
+      "items": [
+        { "type": "problem", "ref": "pattern-hollow-square", "label": "Code: Hollow Square Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-rhombus", "label": "Code: Rhombus Star Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-mirrored-right-triangle", "label": "Code: Mirrored Right Triangle Pattern", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Rotations & Symmetries",
+      "items": [
+        { "type": "problem", "ref": "pattern-inverted-mirrored-right-triangle", "label": "Code: Inverted Mirrored Right Triangle", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-half-diamond", "label": "Code: Half Diamond Star Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-hourglass", "label": "Code: Hourglass Star Pattern", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Hollow Pyramids & Voids",
+      "items": [
+        { "type": "problem", "ref": "pattern-hollow-pyramid", "label": "Code: Hollow Pyramid Star Pattern", "minutes": 25 },
+        { "type": "problem", "ref": "pattern-hollow-diamond", "label": "Code: Hollow Diamond Star Pattern", "minutes": 25 },
+        { "type": "problem", "ref": "pattern-symmetric-void", "label": "Code: Symmetric Void Pattern", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "Basic Number Patterns",
+      "items": [
+        { "type": "problem", "ref": "pattern-increasing-number-triangle", "label": "Code: Increasing Number Triangle", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-row-number-triangle", "label": "Code: Row-Number Triangle Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-inverted-number-triangle", "label": "Code: Inverted Number Triangle Pattern", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "Advanced Number Patterns",
+      "items": [
+        { "type": "problem", "ref": "pattern-floyds-triangle", "label": "Code: Floyd's Triangle Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-binary-triangle", "label": "Code: Binary Triangle Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-number-crown", "label": "Code: Number Crown Pattern", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Spatial Math & Grids",
+      "items": [
+        { "type": "problem", "ref": "pattern-increasing-number-pyramid", "label": "Code: Increasing Number Pyramid", "minutes": 25 },
+        { "type": "problem", "ref": "pattern-number-grid", "label": "Code: Number Grid Pattern", "minutes": 35 },
+        { "type": "problem", "ref": "pattern-butterfly", "label": "Code: Butterfly Star Pattern", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Basic Alphabet Patterns",
+      "items": [
+        { "type": "problem", "ref": "pattern-letter-triangle", "label": "Code: Letter Triangle Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-repeating-letter-triangle", "label": "Code: Repeating Letter Triangle", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-alphabet-inverted-triangle", "label": "Code: Alphabet Inverted Triangle", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 10,
+      "title": "Alphabet Pyramids & Floyd's",
+      "items": [
+        { "type": "problem", "ref": "pattern-alphabet-pyramid", "label": "Code: Alphabet Pyramid Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-inverted-alphabet-pyramid", "label": "Code: Inverted Alphabet Pyramid", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-letter-crown", "label": "Code: Letter Crown Pattern", "minutes": 20 },
+        { "type": "problem", "ref": "pattern-alphabet-floyds-triangle", "label": "Code: Alphabet Floyd's Triangle", "minutes": 20 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "id": "string-outermost-parentheses",
+  "title": "Remove Outermost Parentheses",
+  "difficulty": "easy",
+  "topics": ["strings", "stack"],
+  "companies": ["google", "amazon"],
+  "statement": "A valid parentheses string is either empty `\"\"`, `\"(\" + A + \")\"`, or `A + B`, where `A` and `B` are valid parentheses strings.\n\nWe can split any valid parentheses string into its primitive components (non-empty valid parentheses strings that cannot be split further). For example, `\"(()())(())\"` can be decomposed into `\"(()())\"` and `\"(())\"`.\n\nGiven a valid parentheses string `s`, remove the outermost parentheses of every primitive component in its decomposition, and return the final string.",
+  "constraints": [
+    "1 <= s.length <= 10^5",
+    "s[i] is either '(' or ')'.",
+    "s is a valid parentheses string."
+  ],
+  "examples": [
+    {
+      "input": "s = \"(()())(())\"",
+      "output": "\"()()()\"",
+      "explanation": "Decomposition is \"(()())\" + \"(())\". Removing outermost tags leaves \"()()\" + \"()\" = \"()()()\"."
+    },
+    {
+      "input": "s = \"(()())(())(()(()))\"",
+      "output": "\"()()()()(())\"",
+      "explanation": "Decomposition: \"(()())\" + \"(())\" + \"(()(()))\". Removing outer tags: \"()()\" + \"()\" + \"()(())\" = \"()()()()(())\"."
+    },
+    {
+      "input": "s = \"()()\"",
+      "output": "\"\"",
+      "explanation": "Decomposition is \"()\" + \"()\". Removing outer tags leaves \"\" + \"\" = \"\"."
+    }
+  ],
+  "functionName": "removeOuterParentheses",
+  "starterCode": {
+    "javascript": "function removeOuterParentheses(s) {\n  // Write your code here\n}",
+    "python": "def remove_outer_parentheses(s):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nremoveOuterParentheses = remove_outer_parentheses"
+  },
+  "tests": [
+    { "args": ["(()())(())"], "expected": "()()()", "hidden": false },
+    { "args": ["(()())(())(()(()))"], "expected": "()()()()(())", "hidden": false },
+    { "args": ["()()"], "expected": "", "hidden": false },
+    { "args": ["((()))"], "expected": "(())", "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Keep a balance/depth counter `opened = 0`. Iterate through s. If char is '(' and opened > 0, append it to result. If char is ')' and opened > 1, append it to result. Increment/decrement opened as you process '(' and ')'.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["string-valid-parentheses"],
+  "hints": [
+    "Use a counter `opened` to keep track of the depth of nesting.",
+    "When you see a `'('`, if `opened > 0`, it means this is not the outermost parenthesis, so we should keep it. Then increment `opened`.",
+    "When you see a `')'`, decrement `opened`. If `opened > 0`, it means this is not the outermost parenthesis, so we should keep it."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Decompose the string into primitive strings using a balance stack, slice off the first and last character of each primitive string, and join them.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function removeOuterParentheses(s) {\n  let result = '';\n  let start = 0;\n  let balance = 0;\n  for (let i = 0; i < s.length; i++) {\n    if (s[i] === '(') balance++;\n    else balance--;\n    if (balance === 0) {\n      result += s.substring(start + 1, i);\n      start = i + 1;\n    }\n  }\n  return result;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Use a single depth counter `opened` to append valid inner parentheses directly without slicing, saving time and string copies.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function removeOuterParentheses(s) {\n  let result = '';\n  let opened = 0;\n  for (let i = 0; i < s.length; i++) {\n    const char = s[i];\n    if (char === '(') {\n      if (opened > 0) result += char;\n      opened++;\n    } else {\n      opened--;\n      if (opened > 0) result += char;\n    }\n  }\n  return result;\n}"
+  },
+  "interviewExplanation": "A primitive slicing strategy performs multiple substring allocations. The depth-counter strategy appends characters on-the-fly when the counter `opened` is greater than 0 for `'('` and greater than 0 (post-decrement) for `')'`, running in a single pass."
+}

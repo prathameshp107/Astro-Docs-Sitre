@@ -1,0 +1,73 @@
+{
+  "id": "rate-limiter",
+  "title": "LLD Class Diagram — Rate Limiter Algorithms",
+  "nodes": [
+    {
+      "id": "ratelimiter",
+      "label": "RateLimiter",
+      "isInterface": true,
+      "position": { "x": 400, "y": 50 },
+      "fields": [],
+      "methods": [
+        { "visibility": "+", "name": "allowRequest", "params": "string client", "returnType": "boolean" }
+      ]
+    },
+    {
+      "id": "tokenbucket",
+      "label": "TokenBucketLimiter",
+      "position": { "x": 100, "y": 250 },
+      "fields": [
+        { "visibility": "-", "name": "capacity", "type": "long" },
+        { "visibility": "-", "name": "refillRate", "type": "double" },
+        { "visibility": "-", "name": "tokens", "type": "double" },
+        { "visibility": "-", "name": "lastRefill", "type": "long" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "allowRequest", "params": "string client", "returnType": "boolean" },
+        { "visibility": "-", "name": "refill", "params": "", "returnType": "void" }
+      ]
+    },
+    {
+      "id": "slidingwindow",
+      "label": "SlidingWindowLimiter",
+      "position": { "x": 680, "y": 250 },
+      "fields": [
+        { "visibility": "-", "name": "windowMs", "type": "long" },
+        { "visibility": "-", "name": "maxRequests", "type": "int" },
+        { "visibility": "-", "name": "timestamps", "type": "Map<string, List>" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "allowRequest", "params": "string client", "returnType": "boolean" }
+      ]
+    },
+    {
+      "id": "factory",
+      "label": "RateLimiterFactory",
+      "position": { "x": 400, "y": 450 },
+      "fields": [],
+      "methods": [
+        { "visibility": "+", "name": "getLimiter", "params": "string type, Rules r", "returnType": "RateLimiter" }
+      ]
+    },
+    {
+      "id": "rules",
+      "label": "RateLimitRules",
+      "position": { "x": 100, "y": 450 },
+      "fields": [
+        { "visibility": "-", "name": "maxRequests", "type": "int" },
+        { "visibility": "-", "name": "timeWindowMs", "type": "long" }
+      ],
+      "methods": [
+        { "visibility": "+", "name": "getMaxRequests", "params": "", "returnType": "int" },
+        { "visibility": "+", "name": "getTimeWindow", "params": "", "returnType": "long" }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "source": "tokenbucket", "target": "ratelimiter", "type": "implements" },
+    { "id": "e2", "source": "slidingwindow", "target": "ratelimiter", "type": "implements" },
+    { "id": "e3", "source": "factory", "target": "ratelimiter", "type": "has-a", "label": "creates" },
+    { "id": "e4", "source": "tokenbucket", "target": "rules", "type": "has-a" },
+    { "id": "e5", "source": "slidingwindow", "target": "rules", "type": "has-a" }
+  ]
+}

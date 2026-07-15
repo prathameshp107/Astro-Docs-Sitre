@@ -1,0 +1,287 @@
+{
+  "id": "js-core",
+  "title": "JavaScript Core",
+  "description": "Master closures, execution context, prototypes, scopes, the event loop, type coercion, and async JS.",
+  "cards": [
+    {
+      "id": "js-core-001",
+      "type": "basic",
+      "front": "What is a **closure** in JavaScript?",
+      "back": "A closure is the combination of a function bundled together with references to its surrounding state (the **lexical environment**). It allows an inner function to access variables from its outer scope even after the outer function has finished executing.\n\n```javascript\nfunction outer() {\n  let counter = 0;\n  return () => ++counter;\n}\nconst increment = outer();\nconsole.log(increment()); // 1\n```",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-002",
+      "type": "basic",
+      "front": "What is **Hoisting** in JavaScript?",
+      "back": "Hoisting is the default behavior where variable and function declarations are moved to the top of their containing scope during the compilation phase, before code execution.\n\n- `var` variables are hoisted and initialized to `undefined`.\n- `let` and `const` variables are hoisted but **not initialized** (residing in the Temporal Dead Zone).\n- Function declarations are fully hoisted (both declaration and value are available).",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-003",
+      "type": "basic",
+      "front": "What is the **Temporal Dead Zone (TDZ)**?",
+      "back": "The Temporal Dead Zone is the period of time between the start of execution of a block scope and when a variable declared with `let` or `const` is declared and initialized.\n\nAttempting to access the variable within this zone results in a `ReferenceError`.\n\n```javascript\n{\n  // Start of TDZ for x\n  console.log(x); // ReferenceError\n  let x = 10; // TDZ ends here\n}\n```",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-004",
+      "type": "basic",
+      "front": "Explain the difference between `var`, `let`, and `const`.",
+      "back": "| Feature | `var` | `let` | `const` |\n|---|---|---|---|\n| **Scope** | Function scope | Block scope | Block scope |\n| **Hoisting** | Yes (`undefined`) | Yes (TDZ) | Yes (TDZ) |\n| **Re-assign** | Yes | Yes | No |\n| **Redeclare** | Yes | No | No |",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-005",
+      "type": "basic",
+      "front": "What is the **Event Loop**?",
+      "back": "The Event Loop is a mechanism that allows JavaScript to perform non-blocking, asynchronous operations despite being single-threaded.\n\nIt continuously monitors the **Call Stack** and the **Callback Queues** (Task and Microtask). When the Call Stack is completely empty, it pushes the first task from the callback queue onto the stack for execution.",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    },
+    {
+      "id": "js-core-006",
+      "type": "basic",
+      "front": "What is the difference between the **Microtask Queue** and the **Task Queue**?",
+      "back": "- **Microtask Queue**: Has higher priority. Includes `Promise` callbacks (`.then`/`.catch`/`.finally`), `queueMicrotask`, and `MutationObserver` callbacks.\n- **Task Queue (Macrotask)**: Lower priority. Includes `setTimeout`, `setInterval`, `setImmediate`, and I/O tasks.\n\n*The Event Loop executes all microtasks in the queue before picking up any new tasks from the macrotask queue.*",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    },
+    {
+      "id": "js-core-007",
+      "type": "basic",
+      "front": "What is a **Prototype** in JavaScript?",
+      "back": "A prototype is a delegation mechanism where objects inherit properties and methods from other objects.\n\nEvery object in JavaScript has an internal link (`[[Prototype]]`, accessible via `Object.getPrototypeOf()` or `__proto__`) referencing another object called its prototype, ending at `null` (the top of the chain).",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-008",
+      "type": "basic",
+      "front": "How is the value of the `this` keyword determined in normal functions?",
+      "back": "In normal functions, `this` is evaluated dynamically based on **how the function is called** (its invocation context):\n\n1. **Method call**: Reference to the owner object (`obj.method()`).\n2. **Simple call**: Global object (`window` or `global`), or `undefined` in strict mode.\n3. **New invocation**: Points to the newly created instance (`new Creator()`).\n4. **Explicit binding**: Forced via `.call()`, `.apply()`, or `.bind()`.",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-009",
+      "type": "basic",
+      "front": "How is the value of `this` determined in **arrow functions**?",
+      "back": "Arrow functions do not bind their own `this`. Instead, they inherit `this` **lexically** from their enclosing execution context at the time of creation.\n\nTheir `this` value cannot be changed, even if called explicitly using `.call()`, `.apply()`, or `.bind()`.",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-010",
+      "type": "basic",
+      "front": "Explain prototypal inheritance.",
+      "back": "Prototypal inheritance is the process by which an object can access properties or methods defined on its prototype object.\n\nWhen a property is accessed on an object, JavaScript first looks at the object itself. If not found, it traverses up the prototype chain (`[[Prototype]]`) until the property is found or `null` is reached.",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-011",
+      "type": "basic",
+      "front": "What is **Event Delegation**?",
+      "back": "Event delegation is a design pattern where a single event listener is attached to a parent element to handle events triggered on its children.\n\nIt leverages **event bubbling** to listen for events at a higher scope level, which is memory-efficient and automatically handles dynamically added child elements.\n\n```javascript\ndocument.getElementById('parent').addEventListener('click', (e) => {\n  if (e.target.tagName === 'BUTTON') {\n    console.log('Button clicked!');\n  }\n});\n```",
+      "sourceNote": "/javascript/phase-04-browser-apis"
+    },
+    {
+      "id": "js-core-012",
+      "type": "basic",
+      "front": "What is the difference between **Event Bubbling** and **Event Capturing**?",
+      "back": "- **Event Capturing (Trickling)**: The event moves downwards from the topmost parent element (`window`) to the target element.\n- **Event Bubbling**: The event bubbles upwards from the target element back to the topmost parent.\n\n*By default, event listeners trigger during the bubbling phase. You can listen in capturing mode by setting `capture: true` in `addEventListener`.*",
+      "sourceNote": "/javascript/phase-04-browser-apis"
+    },
+    {
+      "id": "js-core-013",
+      "type": "basic",
+      "front": "What are the states of a **Promise**?",
+      "back": "A Promise has three mutually exclusive states:\n\n1. **Pending**: Initial state, neither fulfilled nor rejected.\n2. **Fulfilled (Resolved)**: The operation completed successfully, yielding a result.\n3. **Rejected**: The operation failed, yielding an error.\n\n*A Promise is 'settled' once it changes from Pending to either Fulfilled or Rejected, after which its state becomes immutable.*",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    },
+    {
+      "id": "js-core-014",
+      "type": "basic",
+      "front": "Explain `async` and `await`.",
+      "back": "`async` and `await` are syntactic sugar built on top of Promises to write asynchronous code that reads like synchronous code.\n\n- Declaring a function `async` forces it to return a Promise.\n- `await` pauses execution of the async function until the awaited Promise settles, allowing straight-line error handling via standard `try...catch` blocks.",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    },
+    {
+      "id": "js-core-015",
+      "type": "basic",
+      "front": "What is the difference between `Promise.all` and `Promise.allSettled`?",
+      "back": "- **`Promise.all`**: Rejects immediately if **any** input promise rejects (all-or-nothing).\n- **`Promise.allSettled`**: Waits for **all** input promises to settle (fulfill or reject) and returns an array of status descriptors containing details of each promise's resolution.",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    },
+    {
+      "id": "js-core-016",
+      "type": "basic",
+      "front": "Compare `Promise.any` and `Promise.race`.",
+      "back": "- **`Promise.any`**: Resolves as soon as the **first promise fulfills** (successful). If all reject, it throws an `AggregateError`.\n- **`Promise.race`**: Settles as soon as the **first promise settles** (either resolves or rejects). First to cross the finish line wins, regardless of success.",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    },
+    {
+      "id": "js-core-017",
+      "type": "basic",
+      "front": "What is the difference between `call`, `apply`, and `bind`?",
+      "back": "All three explicitly bind `this` to a function:\n\n- **`call`**: Invokes the function immediately, passing arguments individually: `fn.call(ctx, arg1, arg2)`.\n- **`apply`**: Invokes the function immediately, passing arguments as an array: `fn.apply(ctx, [arg1, arg2])`.\n- **`bind`**: Returns a **new copy** of the function bound to the context without calling it, which can be invoked later.",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-018",
+      "type": "basic",
+      "front": "What is **Debouncing**?",
+      "back": "Debouncing is a performance optimization pattern that delays function execution until a specific amount of time has elapsed since the **last time** the event was triggered.\n\nExcellent for search bars, preventing database requests on every keystroke.",
+      "sourceNote": "/javascript/phase-06-performance"
+    },
+    {
+      "id": "js-core-019",
+      "type": "basic",
+      "front": "What is **Throttling**?",
+      "back": "Throttling is a performance optimization pattern that limits function execution to at most **once every X milliseconds**, ignoring any intermediate triggers.\n\nExcellent for scroll listeners, window resizing, or gaming inputs.",
+      "sourceNote": "/javascript/phase-06-performance"
+    },
+    {
+      "id": "js-core-020",
+      "type": "basic",
+      "front": "Compare `==` and `===` equality operators.",
+      "back": "- **`==` (Abstract/Loose Equality)**: Compares two values for equality after performing implicit type coercion if types differ.\n- **`===` (Strict Equality)**: Compares values without type coercion. Returns `true` only if both value and type are identical.\n\n*Note: `NaN === NaN` is false. Use `Number.isNaN()` to check for NaN.*",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-021",
+      "type": "basic",
+      "front": "What is implicit type coercion?",
+      "back": "Implicit type coercion is the automatic conversion of values from one data type to another by JavaScript (usually during operations or comparison evaluations).\n\n```javascript\nconsole.log(1 + '2'); // '12' (number coerced to string)\nconsole.log('5' - 1); // 4 (string coerced to number)\nconsole.log(!!'hello'); // true (string coerced to boolean)\n```",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-022",
+      "type": "basic",
+      "front": "What is **Currying**?",
+      "back": "Currying is a functional programming pattern where a function that takes multiple arguments is transformed into a sequence of nested unary functions (each taking a single argument).\n\n```javascript\nconst add = x => y => x + y;\nconst addFive = add(5);\nconsole.log(addFive(3)); // 8\n```",
+      "sourceNote": "/javascript/phase-07-design-patterns"
+    },
+    {
+      "id": "js-core-023",
+      "type": "basic",
+      "front": "What is a **Pure Function**?",
+      "back": "A pure function is a function that satisfies two requirements:\n\n1. **Deterministic**: Always returns the same output for the same input parameters.\n2. **No Side Effects**: Does not modify outer scope state or variables, perform I/O operations, or modify input parameters.",
+      "sourceNote": "/javascript/phase-07-design-patterns"
+    },
+    {
+      "id": "js-core-024",
+      "type": "basic",
+      "front": "What is a **Higher-Order Function (HOF)**?",
+      "back": "A Higher-Order Function is a function that does at least one of the following:\n\n- Takes one or more functions as arguments (e.g. callback functions).\n- Returns a function as its output result.\n\n*Examples: `Array.prototype.map`, `Array.prototype.filter`, `setTimeout`.*",
+      "sourceNote": "/javascript/phase-07-design-patterns"
+    },
+    {
+      "id": "js-core-025",
+      "type": "basic",
+      "front": "Explain the JavaScript **Execution Context**.",
+      "back": "An Execution Context is the conceptual environment where JavaScript code is evaluated and executed.\n\nIt consists of two phases:\n1. **Creation Phase**: Memory is allocated for variables and functions (hoisting), and the scope chain and `this` value are initialized.\n2. **Execution Phase**: Code is executed line-by-line, resolving variables and assigning variable values.",
+      "sourceNote": "/javascript/phase-08-javascript-internals"
+    },
+    {
+      "id": "js-core-026",
+      "type": "basic",
+      "front": "What is **Illegal Shadowing** in JavaScript?",
+      "back": "Shadowing occurs when a variable declared inside an inner block scope has the same name as a variable in the outer scope.\n\n**Illegal Shadowing** occurs when you attempt to shadow a `let` variable with a `var` declaration, which throws a syntax error because `var` respects function scopes and clashes with the outer block binding.\n\n```javascript\nlet x = 10;\n{\n  var x = 20; // SyntaxError: Identifier 'x' has already been declared\n}\n```",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-027",
+      "type": "basic",
+      "front": "What does \"use strict\" do?",
+      "back": "`\"use strict\"` enables JavaScript's strict mode, which catches common coding mistakes and throws exceptions for silent errors.\n\nStrict mode:\n- Throws error for global variable leaks (e.g. `x = 10` without declare).\n- Disallows duplicate parameter names (`function x(a, a) {}`).\n- Forces `this` inside simple calls to be `undefined` instead of the global window object.",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-028",
+      "type": "basic",
+      "front": "What is the difference between REST and SPREAD operators?",
+      "back": "They share the same syntax (`...`) but serve opposite roles:\n\n- **REST**: Gathers multiple individual arguments into an array. Used in function parameters or destructuring: `function (...args)`.\n- **SPREAD**: Spreads out array/object elements into individual locations: `[...arr1, ...arr2]` or `{...obj}`.",
+      "sourceNote": "/javascript/phase-05-modern-javascript"
+    },
+    {
+      "id": "js-core-029",
+      "type": "basic",
+      "front": "Explain JavaScript destructuring.",
+      "back": "Destructuring is a clean syntax that allows unpacking values from arrays or properties from objects into distinct variables.\n\n```javascript\nconst [a, b] = [10, 20];\nconst { name, age } = { name: 'Alice', age: 25 };\n```",
+      "sourceNote": "/javascript/phase-05-modern-javascript"
+    },
+    {
+      "id": "js-core-030",
+      "type": "basic",
+      "front": "What is an **IIFE**?",
+      "back": "An IIFE (Immediately Invoked Function Expression) is a function that runs immediately upon declaration.\n\nHistorically used to create local scope and prevent variable leaks into the global namespace.\n\n```javascript\n(function() {\n  var secret = 'hidden';\n})();\n```",
+      "sourceNote": "/javascript/phase-01-fundamentals"
+    },
+    {
+      "id": "js-core-031",
+      "type": "basic",
+      "front": "What is the difference between `Object.freeze` and `Object.seal`?",
+      "back": "- **`Object.freeze()`**: Makes an object completely immutable. Prevents adding, deleting, or editing any properties.\n- **`Object.seal()`**: Prevents adding or deleting properties, but existing properties can still be modified.",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-032",
+      "type": "basic",
+      "front": "What is a **WeakMap** and how does it differ from a standard **Map**?",
+      "back": "- **Keys**: `WeakMap` keys must be objects or non-registered symbols (no primitives), whereas `Map` keys can be anything.\n- **Garbage Collection**: `WeakMap` holds keys by weak reference. If there are no other references to a key object, it is garbage collected, preventing memory leaks.\n- **Iteration**: `WeakMap` is not iterable and has no `.size` property.",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-033",
+      "type": "basic",
+      "front": "Explain Shallow Copy vs Deep Copy.",
+      "back": "- **Shallow Copy**: Copies the top-level references. Nested objects or arrays share reference pointers between original and copy (`{...obj}`).\n- **Deep Copy**: Recursively copies all properties, creating completely independent copies at all nesting levels (`structuredClone(obj)`).",
+      "sourceNote": "/javascript/phase-02-core-concepts"
+    },
+    {
+      "id": "js-core-034",
+      "type": "basic",
+      "front": "What is a **Generator** function?",
+      "back": "A generator function can stop and resume its execution state, yielding values over time rather than returning all at once. Denoted by `function*` and using `yield`.\n\n```javascript\nfunction* count() {\n  yield 1;\n  yield 2;\n}\nconst gen = count();\nconsole.log(gen.next().value); // 1\n```",
+      "sourceNote": "/javascript/phase-05-modern-javascript"
+    },
+    {
+      "id": "js-core-035",
+      "type": "basic",
+      "front": "Compare Nullish Coalescing (`??`) and OR (`||`) operators.",
+      "back": "- **`??`**: Returns the right-hand operand only if the left-hand is `null` or `undefined`.\n- **`||`**: Returns the right-hand operand if the left-hand is **falsy** (including `0`, `false`, `\"\"`, `NaN`).\n\n```javascript\nconst count = 0;\nconsole.log(count ?? 10); // 0\nconsole.log(count || 10); // 10\n```",
+      "sourceNote": "/javascript/phase-05-modern-javascript"
+    },
+    {
+      "id": "js-core-036",
+      "type": "basic",
+      "front": "List common causes of memory leaks in JavaScript.",
+      "back": "1. **Accidental Global Variables**: Declaring variables without `let`/`const` binds them permanently to the global object.\n2. **Forgotten Timers/Callbacks**: Active `setInterval` references keeping memory active.\n3. **Out-of-DOM references**: Keeping reference pointers to deleted DOM elements in object maps.\n4. **Closures**: Retaining reference scopes that are no longer needed.",
+      "sourceNote": "/javascript/phase-06-performance"
+    },
+    {
+      "id": "js-core-037",
+      "type": "basic",
+      "front": "How does garbage collection work in V8?",
+      "back": "V8 uses a **generational** approach with the **Mark-and-Sweep** algorithm. Memory is split into Young and Old generations.\n\n1. **Mark**: GC traverses the object reference graphs starting from root scopes, marking reachable objects.\n2. **Sweep**: Unmarked objects are considered garbage and swept from memory, freeing space.",
+      "sourceNote": "/javascript/phase-08-javascript-internals"
+    },
+    {
+      "id": "js-core-038",
+      "type": "basic",
+      "front": "What is a Polyfill?",
+      "back": "A polyfill is a piece of fallback code (typically JavaScript in web development) used to provide modern features/APIs to older browser engines that do not natively support them.\n\nExample: Writing a polyfill for `Array.prototype.flat` on IE11.",
+      "sourceNote": "/javascript/phase-06-performance"
+    },
+    {
+      "id": "js-core-039",
+      "type": "basic",
+      "front": "What is the difference between a Transpiler and a Bundler?",
+      "back": "- **Transpiler (Compiler)**: Converts source code syntax to a different target version (e.g. Babel compiles modern ES6+ down to older ES5 compatibility, or TS to JS).\n- **Bundler**: Merges multiple individual module files into a single unified output package (e.g. Webpack, Vite, Rollup).",
+      "sourceNote": "/javascript/phase-06-performance"
+    },
+    {
+      "id": "js-core-040",
+      "type": "basic",
+      "front": "What are Web Workers and how do they enable concurrency?",
+      "back": "Web Workers allow executing heavy scripts in a separate background thread parallel to the main UI thread.\n\nBecause they run in their own context thread, Web Workers do not block the DOM/main loop thread, resolving heavy processing operations concurrently. Communication happens via Message passing APIs.",
+      "sourceNote": "/javascript/phase-03-asynchronous-javascript"
+    }
+  ]
+}

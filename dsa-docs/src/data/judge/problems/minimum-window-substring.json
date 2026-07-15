@@ -1,0 +1,43 @@
+{
+  "id": "minimum-window-substring",
+  "title": "Minimum Window Substring",
+  "difficulty": "hard",
+  "topics": ["strings", "sliding-window", "hash-map"],
+  "companies": ["amazon", "google", "meta", "microsoft", "bloomberg"],
+  "statement": "Given two strings `s` and `t` of lengths `m` and `n` respectively, return the **minimum window substring** of `s` such that every character in `t` (including duplicates) is included in the window. If there is no such substring, return the empty string `\"\"`.\n\nThe testcases are generated such that the answer is **unique**.\n\nUse a variable-size sliding window: expand `right` until the window contains every character of `t` with sufficient count, then greedily shrink `left` while the window remains valid, recording the smallest valid window seen.",
+  "constraints": [
+    "m == s.length",
+    "n == t.length",
+    "1 <= m, n <= 10^5",
+    "s and t consist of uppercase and lowercase English letters"
+  ],
+  "examples": [
+    { "input": "s = \"ADOBECODEBANC\", t = \"ABC\"", "output": "\"BANC\"", "explanation": "The minimum window substring \"BANC\" includes 'A', 'B', and 'C' from t." },
+    { "input": "s = \"a\", t = \"a\"", "output": "\"a\"" },
+    { "input": "s = \"a\", t = \"aa\"", "output": "\"\"", "explanation": "Both 'a's from t must be included, but s only has one 'a'." }
+  ],
+  "functionName": "minWindow",
+  "starterCode": {
+    "javascript": "function minWindow(s, t) {\n  // your code here\n}",
+    "python": "def min_window(s, t):\n    pass"
+  },
+  "tests": [
+    { "args": ["ADOBECODEBANC", "ABC"], "expected": "BANC", "hidden": false },
+    { "args": ["a", "a"], "expected": "a", "hidden": false },
+    { "args": ["a", "aa"], "expected": "", "hidden": true },
+    { "args": ["ab", "b"], "expected": "b", "hidden": true },
+    { "args": ["ab", "a"], "expected": "a", "hidden": true },
+    { "args": ["aaflslflsldkalskaaa", "aaa"], "expected": "aaa", "hidden": true },
+    { "args": ["cabwefgewcwaefgcf", "cae"], "expected": "cwae", "hidden": true },
+    { "args": ["abc", "cba"], "expected": "abc", "hidden": true },
+    { "args": ["aa", "aa"], "expected": "aa", "hidden": true },
+    { "args": ["ADOBECODEBANC", "AABC"], "expected": "ADOBECODEBA", "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Build a frequency count of characters needed from `t`, and track `required` (number of distinct characters in `t` that must be fully satisfied). Expand `right` across `s`, updating a running window count; whenever a character's window count reaches its needed count, increment `formed`. Once `formed === required`, the window is valid — try to shrink `left` as much as possible while it stays valid, updating the best (smallest) window found each time it's valid. Continue expanding `right` until the end of `s`.",
+    "complexity": "O(m + n) time / O(m + n) space"
+  },
+  "relatedProblems": ["permutation-in-string", "valid-anagram"]
+}

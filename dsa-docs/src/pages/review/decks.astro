@@ -1,0 +1,41 @@
+---
+import DeckGallery from '../../components/srs/DeckGallery.jsx';
+import AppNav from '../../components/AppNav.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Decks — Spaced Repetition</title>
+    <meta name="description" content="Subscribe or unsubscribe from prebuilt spaced-repetition study flashcard decks." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="mcq-body">
+    {/* Orbs background styling */}
+    <div class="mcq-orb-container" aria-hidden>
+      <div class="mcq-orb mcq-orb-1" />
+      <div class="mcq-orb mcq-orb-2" />
+    </div>
+
+    <AppNav activeSection="review" client:load />
+
+    <main style={{ position: 'relative', zIndex: 10, maxWidth: '1200px', margin: '0 auto', padding: '80px 24px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--mcq-text-primary)', fontFamily: 'var(--font-display)', marginBottom: '8px' }}>
+          📦 Flashcard Decks
+        </h1>
+        <p style={{ fontSize: '0.85rem', color: 'var(--mcq-text-secondary)', maxW: '480px', margin: '0 auto' }}>
+          Add study content to your rotation. Your cards are auto-scheduled.
+        </p>
+      </div>
+      <DeckGallery client:load />
+    </main>
+  </body>
+</html>

@@ -1,0 +1,212 @@
+---
+import AppNav from '../../components/AppNav.jsx';
+import ProcessMap from '../../components/companies/ProcessMap.jsx';
+import CompanyProblemList from '../../components/companies/CompanyProblemList.jsx';
+import PlanDetail from '../../components/plans/PlanDetail.jsx';
+import { getPlans } from '../../data/plans/index.js';
+import { getJudgeManifest } from '../../data/judge/index.js';
+
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import '../../styles/judge.css';
+import '../../styles/plans.css';
+import '../../styles/companies.css';
+
+export async function getStaticPaths() {
+  const companies = import.meta.glob("../../data/companies/*.json", { eager: true });
+  return Object.values(companies).map((module) => {
+    const company = module.default ?? module;
+    return {
+      params: { slug: company.id },
+      props: { company },
+    };
+  });
+}
+
+const { company } = Astro.props;
+
+// Load interactive components dependencies
+const plans = getPlans();
+const plan = plans.find((p) => p.id === company.planRef);
+const problems = getJudgeManifest();
+
+const lastVerifiedDate = new Date().toLocaleDateString("en-US", {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const companyColor = company.id === 'amazon' ? '#ff9900' : company.id === 'google' ? '#4285f4' : 'var(--accent)';
+
+// JSON-LD FAQ Page Schema
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": `How many rounds are in the ${company.name} interview?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": company.id === "amazon" 
+          ? "Amazon usually has 1 online assessment, 1 phone screen, and a final onsite loop of 4-5 rounds covering coding, system design, and behavioral Leadership Principles." 
+          : "Google typically has 1 technical phone screen followed by an onsite loop of 4-5 rounds focusing on complex coding, system design, and Googlyness behavioral fit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": `How hard is the ${company.name} interview?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": `The ${company.name} interview is rated as a ${company.difficulty}/5 in difficulty. It requires deep algorithmic expertise, scalability design capacity, and strong behavioral alignment.`
+      }
+    },
+    {
+      "@type": "Question",
+      "name": `What coding topics are most frequent at ${company.name}?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": company.id === "amazon" 
+          ? "Focus heavily on Trees, Graphs, Heaps, Priority Queues, and Dynamic Programming." 
+          : "Focus on sliding window string search, graph traversal paths, binary search boundaries, and mathematical complexities."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": `How do I prepare for ${company.name} behavioral rounds?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": company.id === "amazon" 
+          ? "Prepare 8-10 stories in the STAR format mapped to Amazon's 16 Leadership Principles." 
+          : "Focus on General Cognitive Ability (GCA) scenarios, handling team conflicts, navigating ambiguity, and showing humble leadership."
+      }
+    }
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{company.name} SDE Interview Process & Questions — Free Prep Track</title>
+    <meta name="description" content={`Prepare for the ${company.name} SDE interview. Detailed process map, distinctives, curated frequency coding questions, and a free SDE study plan.`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="companies" client:load />
+
+    <div class="company-track-layout" style={`--company-accent: ${companyColor}; --company-accent-tint: ${companyColor}15;`}>
+      {/* Hero Section */}
+      <section class="company-track-hero">
+        <div class="hero-left">
+          <div class="company-badge-row">
+            <span class="company-tag">{company.type.toUpperCase()}</span>
+            <span class="verified-tag">✓ Verified: {lastVerifiedDate}</span>
+          </div>
+          <h1>{company.name} Interview Track</h1>
+          <p class="hero-subtitle">
+            A targeted preparation track for {company.name} SWE/SDE positions. Follow the interactive plan, review process rounds, and practice active problem-sets.
+          </p>
+        </div>
+
+        <div class="hero-stats-card">
+          <div class="stat-box">
+            <span class="stat-value difficulty-dots">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <span class={`difficulty-dot ${idx < company.difficulty ? "filled" : ""}`} />
+              ))}
+            </span>
+            <span class="stat-label">Difficulty</span>
+          </div>
+          <div class="stat-divider" />
+          <div class="stat-box">
+            <span class="stat-value">{company.region.map(r => r.toUpperCase()).join(", ")}</span>
+            <span class="stat-label">Target Regions</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Grid Content */}
+      <div class="company-track-grid">
+        {/* Left Column: Process & Problems */}
+        <div class="track-main-col">
+          {/* Section: Process Map */}
+          <div class="track-section">
+            <h2 class="section-title">Interview Process Map</h2>
+            <p class="section-subtitle">Click on each round to check duration, focus items, and pro interview tips.</p>
+            <ProcessMap rounds={company.rounds} companyId={company.id} client:load />
+          </div>
+
+          {/* Section: Distinctives */}
+          <div class="track-section">
+            <h2 class="section-title">What's Different Here</h2>
+            <div class="distinctives-list">
+              {company.distinctives.map((d, idx) => (
+                <div key={idx} class="distinctive-item">
+                  <span class="distinctive-bullet">✦</span>
+                  <p>{d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section: Coding Problems */}
+          <div class="track-section">
+            <h2 class="section-title">Curated Problem Set</h2>
+            <p class="section-subtitle">DSA questions reported in {company.name} interviews, ordered by frequency.</p>
+            <CompanyProblemList 
+              problems={problems} 
+              companyId={company.id} 
+              problemFrequency={company.problemFrequency} 
+              client:only="react" 
+            />
+          </div>
+        </div>
+
+        {/* Right Column: Study Plan & Behavioral */}
+        <div class="track-sidebar-col">
+          {/* Embedded Study Plan */}
+          {plan && (
+            <div class="sidebar-section">
+              <h2 class="section-title">Curated Study Plan</h2>
+              <p class="section-subtitle">Step-by-step prep track on our planning engine.</p>
+              <div style="margin-top: 1rem;">
+                <PlanDetail plan={plan} allPlans={plans} client:only="react" />
+              </div>
+            </div>
+          )}
+
+          {/* Behavioral Fit */}
+          <div class="sidebar-section behavioral-card">
+            <h3>Behavioral Alignment</h3>
+            <p>
+              {company.id === 'amazon' 
+                ? "Amazon places exceptional weight on leadership principles. Prepare your STAR stories beforehand." 
+                : "Google evaluates structural general cognitive ability. Practice handling complexity and ambiguities."}
+            </p>
+            <a href="/DSA-Notes-Problems/behavioral" class="behavioral-link">
+              Go to Behavioral Prep →
+            </a>
+          </div>
+
+          {/* Levels & Career Grid */}
+          <div class="sidebar-section levels-card">
+            <h3>Level Mapping Context</h3>
+            <div class="levels-display">
+              <span class="levels-note">{company.levelsNote}</span>
+            </div>
+            <p class="levels-disclaimer">
+              We recommend cross-referencing salary benchmarks directly at <a href="https://www.levels.fyi" target="_blank" rel="noopener noreferrer">levels.fyi</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

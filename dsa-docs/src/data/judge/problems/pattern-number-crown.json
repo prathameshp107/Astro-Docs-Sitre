@@ -1,0 +1,98 @@
+{
+  "id": "pattern-number-crown",
+  "title": "Number Crown Pattern",
+  "difficulty": "medium",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "wipro"
+  ],
+  "statement": "Write a function to generate a number crown pattern of size `n`.\n\nThe pattern is composed of `n` rows. Each row `i` (1-indexed, from `1` to `n`) consists of:\n1. Numbers from `1` up to `i` (without spaces).\n2. `2 * (n - i)` empty spaces in the center.\n3. Numbers from `i` down to `1` (without spaces).\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\n1      1\n12    21\n123  321\n12344321\n```",
+  "constraints": [
+    "1 <= n <= 20"
+  ],
+  "examples": [
+    {
+      "input": "n = 2",
+      "output": "1  1\n1221",
+      "explanation": "Crown pattern of size 2."
+    },
+    {
+      "input": "n = 3",
+      "output": "1    1\n12  21\n123321",
+      "explanation": "Crown pattern of size 3."
+    }
+  ],
+  "functionName": "patternNumberCrown",
+  "starterCode": {
+    "javascript": "function patternNumberCrown(n) {\n  // Write your code here\n}",
+    "python": "def pattern_number_crown(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternNumberCrown = pattern_number_crown"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "11",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "1  1\n1221",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "1    1\n12  21\n123321",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "1      1\n12    21\n123  321\n12344321",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "1        1\n12      21\n123    321\n1234  4321\n1234554321",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `1` to `n`. In each iteration, build the left side string (numbers from 1 to `i`), the middle spaces string (`2 * (n - i)` spaces), and the right side string (numbers from `i` down to 1). Join these components and join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-letter-crown"
+  ],
+  "hints": [
+    "Each row contains left-aligned increasing numbers, center spaces, and right-aligned decreasing numbers.",
+    "Row `i` (1-indexed) lists numbers from `1` up to `i` on the left.",
+    "The middle has `2 * (n - i)` spaces. The right side lists numbers from `i` down to `1`."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Iterate `i` from `1` to `n`. In each row, use loops to append increasing digits from 1 to `i`, then spaces, then decreasing digits from `i` to 1.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternNumberCrown(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    let row = '';\n    for (let j = 1; j <= i; j++) row += j;\n    for (let j = 0; j < 2 * (n - i); j++) row += ' ';\n    for (let j = i; j >= 1; j--) row += j;\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Build the left-side and right-side number strings incrementally, then concatenate them with `' '.repeat(2 * (n - i))`.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternNumberCrown(n) {\n  let rows = [];\n  let left = '';\n  let right = '';\n  for (let i = 1; i <= n; i++) {\n    left += i;\n    right = i + right;\n    const spaces = ' '.repeat(2 * (n - i));\n    rows.push(left + spaces + right);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "A number crown displays increasing numbers on the left and decreasing numbers on the right with a space gap in the middle. We build the left segment (`1` to `i`) and pre-pend the current digit to the right segment (`i` down to `1`) to avoid nested loops."
+}

@@ -1,0 +1,39 @@
+{
+  "id": "remove-nth-node-from-end",
+  "title": "Remove Nth Node From End of List",
+  "difficulty": "medium",
+  "topics": ["linked-list", "two-pointers"],
+  "companies": ["amazon", "google", "meta", "microsoft", "apple"],
+  "statement": "Given the `head` of a linked list, remove the `n`th node from the end of the list and return its head.\n\nBuild the list from `values`, use a dummy node before the head plus two pointers separated by `n` steps so that when the faster pointer reaches the end, the slower pointer sits right before the node to remove, then splice it out. Return the resulting list as an array.",
+  "constraints": [
+    "The number of nodes in the list is in the range [1, 30]",
+    "0 <= Node.val <= 100",
+    "1 <= n <= size of the list"
+  ],
+  "examples": [
+    { "input": "values = [1,2,3,4,5], n = 2", "output": "[1,2,3,5]" },
+    { "input": "values = [1], n = 1", "output": "[]" },
+    { "input": "values = [1,2], n = 1", "output": "[1]" }
+  ],
+  "functionName": "removeNthFromEnd",
+  "starterCode": {
+    "javascript": "class ListNode {\n  constructor(val, next = null) { this.val = val; this.next = next; }\n}\nfunction buildList(values) {\n  let head = null, tail = null;\n  for (const v of values) {\n    const node = new ListNode(v);\n    if (!head) head = node; else tail.next = node;\n    tail = node;\n  }\n  return head;\n}\nfunction toArray(head) {\n  const arr = [];\n  let curr = head;\n  while (curr) { arr.push(curr.val); curr = curr.next; }\n  return arr;\n}\nfunction removeNthFromEnd(values, n) {\n  const head = buildList(values);\n  // your code here: remove the nth node from the end using a dummy node and two pointers, then return toArray(newHead)\n}",
+    "python": "def remove_nth_from_end(values, n):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,4,5], 2], "expected": [1,2,3,5], "hidden": false },
+    { "args": [[1], 1], "expected": [], "hidden": false },
+    { "args": [[1,2], 1], "expected": [1], "hidden": true },
+    { "args": [[1,2], 2], "expected": [2], "hidden": true },
+    { "args": [[1,2,3], 3], "expected": [2,3], "hidden": true },
+    { "args": [[1,2,3,4,5], 5], "expected": [2,3,4,5], "hidden": true },
+    { "args": [[1,2,3,4,5,6,7], 3], "expected": [1,2,3,4,6,7], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Create a dummy node pointing to `head` (handles removing the true head cleanly). Advance a `fast` pointer `n` steps ahead of a `slow` pointer that starts at the dummy. Then move both forward together until `fast` reaches the last node — at that point `slow` is positioned right before the node to remove. Splice it out with `slow.next = slow.next.next` and return `dummy.next`.",
+    "complexity": "O(n) time / O(1) extra space (single pass)"
+  },
+  "relatedProblems": ["reverse-linked-list", "linked-list-cycle"]
+}

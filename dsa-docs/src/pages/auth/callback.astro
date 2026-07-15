@@ -1,0 +1,40 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Authenticating...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="background: #0f172a; color: #94a3b8; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;">
+  <div style="text-align: center;">
+    <div style="border: 3px solid #1e293b; border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <div style="font-size: 14px; font-weight: 500;">Completing sign-in, please wait...</div>
+  </div>
+  
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    import { supabase } from '../../lib/supabase';
+
+    async function handleAuth() {
+      const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+      try {
+        await supabase.auth.getSession();
+      } catch (err) {
+        console.error('Error exchanging session:', err);
+      }
+      // Redirect back to home
+      window.location.href = base;
+    }
+    
+    handleAuth();
+  </script>
+</body>
+</html>

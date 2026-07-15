@@ -1,6 +1,7 @@
 import { FiCopy, FiRefreshCw, FiPlay, FiSun, FiMoon } from "react-icons/fi";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Editor from "@monaco-editor/react";
+import { runCodeInSandbox } from "../labs/shared/index.js";
 
 
 const DEFAULT_CODE = `// JavaScript Playground 🚀
@@ -26,6 +27,7 @@ export default function MonacoPlayground({ initialCode = "" }) {
   const [monacoTheme, setMonacoTheme] = useState("vs-dark");
   const outputRef = useRef(null);
   const editorRef = useRef(null);
+  const terminateRef = useRef(null);
 
   const handleEditorMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
@@ -83,41 +85,37 @@ export default function MonacoPlayground({ initialCode = "" }) {
   }, []);
 
   const runCode = useCallback(() => {
+    if (terminateRef.current) {
+      terminateRef.current();
+    }
     setIsRunning(true);
     setOutput([]);
-    const logs = [];
-    const origLog = console.log, origErr = console.error, origWarn = console.warn;
 
-    console.log = (...args) => {
-      const text = args.map(a => typeof a === "object" ? JSON.stringify(a, null, 2) : String(a)).join(" ");
-      logs.push({ type: "log", content: text });
-      origLog(...args);
-    };
-    console.error = (...args) => {
-      const text = args.map(a => String(a)).join(" ");
-      logs.push({ type: "error", content: text });
-      origErr(...args);
-    };
-    console.warn = (...args) => {
-      const text = args.map(a => String(a)).join(" ");
-      logs.push({ type: "warn", content: text });
-      origWarn(...args);
-    };
-
-    try {
-      const result = Function(code)();
-      if (result !== undefined && logs.length === 0) logs.push({ type: "result", content: String(result) });
-      if (logs.length === 0) logs.push({ type: "info", content: "✓ Code executed (no output)" });
-      setOutput(logs);
-    } catch (e) {
-      logs.push({ type: "error", content: `✗ ${e.message}` });
-      setOutput(logs);
-    } finally {
-      console.log = origLog; console.error = origErr; console.warn = origWarn;
-      setIsRunning(false);
-      setTimeout(() => outputRef.current?.scrollTo(0, outputRef.current.scrollHeight), 50);
-    }
+    terminateRef.current = runCodeInSandbox(
+      code,
+      (type, content) => {
+        setOutput(prev => [...prev, { type, content }]);
+        setTimeout(() => {
+          if (outputRef.current) {
+            outputRef.current.scrollTop = outputRef.current.scrollHeight;
+          }
+        }, 50);
+      },
+      () => {
+        setIsRunning(false);
+        terminateRef.current = null;
+      }
+    );
   }, [code]);
+
+  // Clean up worker on unmount
+  useEffect(() => {
+    return () => {
+      if (terminateRef.current) {
+        terminateRef.current();
+      }
+    };
+  }, []);
 
   const copyCode = useCallback(() => {
     navigator.clipboard.writeText(code);

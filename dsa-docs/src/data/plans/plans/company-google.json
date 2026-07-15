@@ -1,0 +1,52 @@
+{
+  "id": "company-google",
+  "title": "Google SWE Prep Track",
+  "tagline": "A comprehensive, structured prep track targeting Google SWE coding and cognitive ability.",
+  "difficulty": "hard",
+  "durationDays": 5,
+  "hoursPerDay": 2.5,
+  "tags": ["google", "algorithms", "gca"],
+  "heroTopics": ["Googleliness", "Search Rotated Array", "Advanced HLD", "UML Class Diagrams"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: String manipulation & Googleliness",
+      "items": [
+        { "type": "problem", "ref": "longest-substring-without-repeating", "label": "Code: Longest Substring Without Repeating Characters", "minutes": 40 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/behavioral", "label": "Review: Googleliness & General Cognitive Ability", "minutes": 25 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: Searching & Complexity Optimization",
+      "items": [
+        { "type": "problem", "ref": "search-rotated-array", "label": "Code: Search in Rotated Sorted Array", "minutes": 45 },
+        { "type": "problem", "ref": "binary-search", "label": "Code: Binary Search", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Matrix Algorithms & Sudoku Validation",
+      "items": [
+        { "type": "problem", "ref": "valid-sudoku", "label": "Code: Valid Sudoku", "minutes": 35 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/lld/projects/design-parking-lot", "label": "LLD Design: Parking Lot Class Schema", "minutes": 30 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Day 4: Large Scale Video Platform Design",
+      "items": [
+        { "type": "note", "ref": "/DSA-Notes-Problems/hld/case-studies/design-youtube", "label": "Case Study: Design Video Platform (YouTube)", "minutes": 40 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/hld/11-cdn-design", "label": "Read: CDN Architectures & Delivery Networks", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Day 5: High-Scale Ride Sharing & Mock Run",
+      "items": [
+        { "type": "note", "ref": "/DSA-Notes-Problems/hld/case-studies/design-uber", "label": "Case Study: Design Ride-Sharing (Uber)", "minutes": 45 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/behavioral", "label": "Final: Mock Google interview GCA review", "minutes": 30 }
+      ]
+    }
+  ]
+}

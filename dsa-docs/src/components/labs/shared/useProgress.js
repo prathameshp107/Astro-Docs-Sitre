@@ -6,7 +6,7 @@ export default function useProgress(storageKey, initialData = {}) {
   useEffect(() => {
     try {
       const stored = JSON.parse(
-        sessionStorage.getItem(storageKey) || JSON.stringify(initialData)
+        localStorage.getItem(storageKey) || JSON.stringify(initialData)
       );
       setProgress(stored);
     } catch {
@@ -20,7 +20,7 @@ export default function useProgress(storageKey, initialData = {}) {
     (newProgress) => {
       setProgress(newProgress);
       try {
-        sessionStorage.setItem(storageKey, JSON.stringify(newProgress));
+        localStorage.setItem(storageKey, JSON.stringify(newProgress));
       } catch {
         // ignore
       }

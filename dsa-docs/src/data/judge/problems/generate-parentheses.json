@@ -1,0 +1,33 @@
+{
+  "id": "generate-parentheses",
+  "title": "Generate Parentheses",
+  "difficulty": "medium",
+  "topics": ["stack", "backtracking"],
+  "companies": ["amazon", "google", "meta", "microsoft"],
+  "statement": "Given `n` pairs of parentheses, write a function to generate all combinations of well-formed parentheses.\n\nA well-formed combination never has a closing parenthesis without a matching earlier opening one, and uses exactly `n` opening and `n` closing parentheses.\n\nBacktrack while tracking counts of open and close parentheses used so far: you may add an open paren if you haven't used all `n`, and you may add a close paren only if it wouldn't exceed the number of opens already placed.",
+  "constraints": [
+    "1 <= n <= 8"
+  ],
+  "examples": [
+    { "input": "n = 3", "output": "[\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]" },
+    { "input": "n = 1", "output": "[\"()\"]" }
+  ],
+  "functionName": "generateParenthesis",
+  "starterCode": {
+    "javascript": "function generateParenthesis(n) {\n  // your code here\n}",
+    "python": "def generate_parenthesis(n):\n    pass"
+  },
+  "tests": [
+    { "args": [3], "expected": ["((()))","(()())","(())()","()(())","()()()"], "hidden": false },
+    { "args": [1], "expected": ["()"], "hidden": false },
+    { "args": [2], "expected": ["(())","()()"], "hidden": true },
+    { "args": [4], "expected": ["(((())))","((()()))","((())())","((()))()","(()(()))","(()()())","(()())()","(())(())","(())()()","()((()))","()(()())","()(())()","()()(())","()()()()"], "hidden": true }
+  ],
+  "compareMode": "unordered",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use backtracking with a running string and two counters: `open` (opens used) and `close` (closes used). At each step, if `open < n`, recurse by adding `(` and incrementing `open`. If `close < open`, recurse by adding `)` and incrementing `close`. When the string reaches length `2n`, it's a complete valid combination — add it to the results. Because we only ever add a close when it's guaranteed valid (close count stays below open count), every generated string is automatically well-formed, so no separate validation step is needed.",
+    "complexity": "O(4^n / sqrt(n)) time (Catalan number of valid combinations) / O(n) space for recursion depth"
+  },
+  "relatedProblems": ["valid-parentheses"]
+}

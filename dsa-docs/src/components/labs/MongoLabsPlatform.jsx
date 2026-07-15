@@ -1,9 +1,9 @@
-import { FiBook, FiCheck, FiChevronDown, FiRefreshCw } from "react-icons/fi";
+import { FiBook, FiCheck, FiChevronDown, FiRefreshCw, FiChevronLeft, FiChevronRight, FiPlay } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import Skeleton, { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { DiMongodb } from "react-icons/di";
-import { createMongoEngine, MONGO_LESSONS, MONGO_CHALLENGES, MONGO_DATABASES, MONGO_PROJECTS, MONGO_INTERVIEW_CATEGORIES, MONGO_INTERVIEW_QUESTIONS } from "../../data/mongodb-curriculum.js";
+import { createMongoEngine, MONGO_LESSONS, MONGO_CHALLENGES, MONGO_DATABASES, MONGO_PROJECTS, MONGO_INTERVIEW_CATEGORIES, MONGO_INTERVIEW_QUESTIONS, MONGO_AGGREGATION_LABS } from "../../data/mongodb-curriculum.js";
 
 import {
   LabResizableHandle,
@@ -11,7 +11,13 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  LabCopyButton,
+  celebrate,
+  awardXP,
+  LabTestsPanel,
+  LabTestsBody,
 } from "./shared/index.js";
+import { renderFormattedText } from "./shared/markdown.jsx";
 
 
 
@@ -250,7 +256,7 @@ function CollectionsExplorer({ activeDatabase, onSelectDatabase }) {
 
 // ─── SIDEBAR ───
 
-function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProject, activeInterviewCategory, onSelectLesson, onSelectChallenge, onSelectProject, onSelectInterview, progress, activeDatabase, onSelectDatabase, ...rest }) {
+function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProject, activeAgg, activeInterviewCategory, onSelectLesson, onSelectChallenge, onSelectProject, onSelectAgg, onSelectInterview, progress, activeDatabase, onSelectDatabase, ...rest }) {
   const [expandedSections, setExpandedSections] = useState({ learn: true, challenges: false, aggregation: false, projects: false, interview: false });
 
   const toggleSection = (key) => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
@@ -326,10 +332,8 @@ function MongoSidebar({ activeSection, activeLesson, activeChallenge, activeProj
             {[1,2,3,4,5,6,7,8,9,10].map(i => (
               <button
                 key={`agg-${i}`}
-                className={`sql-si ${activeSection === "aggregation" && activeLesson === `agg-${i}` ? "active" : ""} ${progress.agg?.includes(i) ? "done" : ""}`}
-                onClick={() => {
-                  onSelectLesson(`agg-${i}`);
-                }}
+                className={`sql-si ${activeSection === "aggregation" && activeAgg === `agg-${i}` ? "active" : ""} ${progress.agg?.includes(i) ? "done" : ""}`}
+                onClick={() => onSelectAgg(`agg-${i}`)}
               >
                 <span className="sql-si-num">{i}.</span>
                 <span className="sql-si-title">{["$match","$project","$group","$sort","$lookup","$unwind","$facet","$bucket","$setWindowFields","Complex Pipelines"][i-1]}</span>
@@ -497,6 +501,7 @@ export default function MongoLabsPlatform() {
   const [activeLesson, setActiveLesson] = useState(MONGO_LESSONS[0]?.id || null);
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
+  const [activeAgg, setActiveAgg] = useState(null);
   const [activeInterviewCategory, setActiveInterviewCategory] = useState(null);
   const [activeInterviewQuestion, setActiveInterviewQuestion] = useState(null);
   const [activeMilestone, setActiveMilestone] = useState(0);
@@ -519,6 +524,14 @@ export default function MongoLabsPlatform() {
   const workspaceRef = useRef(null);
   const [activeDatabase, setActiveDatabase] = useState("ecommerce");
   const engineRef = useRef(null);
+  const [testResults, setTestResults] = useState([]);
+  const [testsHeight, setTestsHeight] = useState(140);
+
+  const handleTestsDrag = useCallback(({ clientY }) => {
+    if (!contentPanelRef.current) return;
+    const rect = contentPanelRef.current.getBoundingClientRect();
+    setTestsHeight(Math.max(100, Math.min(rect.height * 0.5, rect.bottom - clientY)));
+  }, []);
 
   // Initialize engine
   useEffect(() => {
@@ -536,14 +549,14 @@ export default function MongoLabsPlatform() {
   // Load progress
   useEffect(() => {
     try {
-      const stored = JSON.parse(sessionStorage.getItem("mongo-progress") || '{"lessons":[],"challenges":[],"agg":[],"projects":{},"interview":[]}');
+      const stored = JSON.parse(localStorage.getItem("mongo-progress") || '{"lessons":[],"challenges":[],"agg":[],"projects":{},"interview":[]}');
       setProgress(stored);
     } catch {}
   }, []);
 
   const saveProgress = useCallback((newProgress) => {
     setProgress(newProgress);
-    try { sessionStorage.setItem("mongo-progress", JSON.stringify(newProgress)); } catch {}
+    try { localStorage.setItem("mongo-progress", JSON.stringify(newProgress)); } catch {}
   }, []);
 
   const markLessonDone = useCallback((id) => {
@@ -555,8 +568,8 @@ export default function MongoLabsPlatform() {
   }, [progress, saveProgress]);
 
   const progressStats = useMemo(() => {
-    const projectMilestonesTotal = Object.keys(progress.projects).length;
-    const projectMilestonesDone = Object.values(progress.projects).filter(p => p.complete).length;
+    const projectMilestonesTotal = MONGO_PROJECTS.length;
+    const projectMilestonesDone = Object.values(progress.projects || {}).filter(p => p && p.complete).length;
     const totalItems = MONGO_LESSONS.length + MONGO_CHALLENGES.length + 10 + projectMilestonesTotal;
     const totalDone = progress.lessons.length + progress.challenges.length + (progress.agg?.length || 0) + projectMilestonesDone;
     return {
@@ -577,12 +590,124 @@ export default function MongoLabsPlatform() {
       lessons: progress.lessons,
       challenges: progress.challenges,
       agg: progress.agg,
-      projects: progress.projects,
+      projects: progress.projects || {},
     };
   }, [progress]);
 
   const currentLesson = useMemo(() => MONGO_LESSONS.find(l => l.id === activeLesson), [activeLesson]);
   const currentChallenge = useMemo(() => MONGO_CHALLENGES.find(c => c.id === activeChallenge), [activeChallenge]);
+  const currentProject = useMemo(() => MONGO_PROJECTS?.find(p => p.id === activeProject) || null, [activeProject]);
+  const currentAgg = useMemo(() => MONGO_AGGREGATION_LABS.find(a => a.id === activeAgg) || null, [activeAgg]);
+
+  const currentContent = useMemo(() => {
+    if (view === "learn") return currentLesson;
+    if (view === "challenge") return currentChallenge;
+    if (view === "project") return currentProject || { id: "projects", title: "Projects" };
+    if (view === "aggregation") return currentAgg || { id: "aggregation", title: "Aggregation Lab" };
+    if (view === "interview") return activeInterviewCategory ? { id: activeInterviewCategory } : { id: "interview", title: "Interview Prep" };
+    return null;
+  }, [view, currentLesson, currentChallenge, currentProject, currentAgg, activeInterviewCategory]);
+
+  const currentTests = useMemo(() => {
+    if (!currentContent) return [];
+    const sol = currentContent.solutionQuery || currentContent.solution || (currentContent.milestones && currentContent.milestones[activeMilestone]?.solutionQuery) || "";
+    if (!sol) return [];
+
+    const tests = [
+      {
+        name: "Query executes without syntax errors",
+        validate: (q, engine) => {
+          if (!q.trim()) return false;
+          try {
+            const res = executeMongoQuery(q, engine);
+            return !res.error;
+          } catch {
+            return false;
+          }
+        }
+      }
+    ];
+
+    if (sol.includes("$match")) {
+      tests.push({
+        name: "Uses $match stage to filter documents",
+        validate: (q) => q.includes("$match")
+      });
+    }
+    if (sol.includes("$group")) {
+      tests.push({
+        name: "Uses $group stage to aggregate documents",
+        validate: (q) => q.includes("$group")
+      });
+    }
+    if (sol.includes("$project")) {
+      tests.push({
+        name: "Uses $project stage to shape output fields",
+        validate: (q) => q.includes("$project")
+      });
+    }
+    if (sol.includes("$sort")) {
+      tests.push({
+        name: "Uses $sort stage to order results",
+        validate: (q) => q.includes("$sort")
+      });
+    }
+    if (sol.includes("$lookup")) {
+      tests.push({
+        name: "Uses $lookup stage to perform joins",
+        validate: (q) => q.includes("$lookup")
+      });
+    }
+    if (sol.includes("$unwind")) {
+      tests.push({
+        name: "Uses $unwind stage to flatten array fields",
+        validate: (q) => q.includes("$unwind")
+      });
+    }
+    if (sol.includes("$facet")) {
+      tests.push({
+        name: "Uses $facet stage for multi-pipeline processing",
+        validate: (q) => q.includes("$facet")
+      });
+    }
+    if (sol.includes("$bucket")) {
+      tests.push({
+        name: "Uses $bucket stage to group into ranges",
+        validate: (q) => q.includes("$bucket")
+      });
+    }
+    if (sol.includes("$setWindowFields")) {
+      tests.push({
+        name: "Uses $setWindowFields for window functions",
+        validate: (q) => q.includes("$setWindowFields")
+      });
+    }
+
+    tests.push({
+      name: "Query output matches the expected solution database records",
+      validate: (q, engine) => {
+        if (!q.trim()) return false;
+        try {
+          const userRes = executeMongoQuery(q, engine);
+          const solRes = executeMongoQuery(sol, engine);
+          if (userRes.error || solRes.error) return false;
+          
+          const uResults = userRes.results || [];
+          const sResults = solRes.results || [];
+          if (uResults.length !== sResults.length) return false;
+          
+          for (let i = 0; i < uResults.length; i++) {
+            if (JSON.stringify(uResults[i]) !== JSON.stringify(sResults[i])) return false;
+          }
+          return true;
+        } catch {
+          return false;
+        }
+      }
+    });
+
+    return tests;
+  }, [currentContent, activeMilestone]);
 
   const selectLesson = (id) => {
     const lesson = MONGO_LESSONS.find(l => l.id === id);
@@ -597,6 +722,7 @@ export default function MongoLabsPlatform() {
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
     if (lesson.database) setActiveDatabase(lesson.database);
   };
@@ -614,6 +740,7 @@ export default function MongoLabsPlatform() {
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
     if (challenge.database) setActiveDatabase(challenge.database);
   };
@@ -629,6 +756,7 @@ export default function MongoLabsPlatform() {
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
   };
 
@@ -643,14 +771,35 @@ export default function MongoLabsPlatform() {
     setActiveLesson(null);
     setActiveChallenge(null);
     setActiveProject(id);
+    setActiveAgg(null);
     setActiveMilestone(0);
     setQuery(`// Project: ${project.title}\n// Complete the tasks below\n`);
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
     setQueryError(null);
+    setTestResults([]);
     codeVersionRef.current++;
     setActiveDatabase(project.database || "ecommerce");
+  };
+
+  const selectAgg = (id) => {
+    const lab = MONGO_AGGREGATION_LABS.find(a => a.id === id);
+    if (!lab) return;
+    setView("aggregation");
+    setActiveLesson(null);
+    setActiveChallenge(null);
+    setActiveProject(null);
+    setActiveAgg(id);
+    setActiveMilestone(0);
+    setQuery(lab.starterQuery);
+    setShowHint(false);
+    setShowSolution(false);
+    setResults({ batches: [], totalCount: 0, executionTime: 0 });
+    setQueryError(null);
+    setTestResults([]);
+    codeVersionRef.current++;
+    if (lab.database) setActiveDatabase(lab.database);
   };
 
   const defineThemes = useCallback((monaco) => {
@@ -752,6 +901,67 @@ export default function MongoLabsPlatform() {
     setResultsHeight(Math.max(100, Math.min(rect.height * 0.7, rect.bottom - clientY)));
   }, []);
 
+  const completeCurrentMongoLab = useCallback(() => {
+    if (view === "learn" && currentLesson) {
+      if (!progress.lessons.includes(currentLesson.id)) {
+        saveProgress({ ...progress, lessons: [...progress.lessons, currentLesson.id] });
+        if (awardXP(`mongo:lesson:${currentLesson.id}`, 10, "Lesson complete")) celebrate();
+      }
+    } else if (view === "challenge" && currentChallenge) {
+      if (!progress.challenges.includes(currentChallenge.id)) {
+        saveProgress({ ...progress, challenges: [...progress.challenges, currentChallenge.id] });
+        if (awardXP(`mongo:challenge:${currentChallenge.id}`, 20, "Challenge solved")) celebrate();
+      }
+    } else if (view === "aggregation" && currentAgg) {
+      const num = currentAgg.num;
+      if (!progress.agg?.includes(num)) {
+        saveProgress({ ...progress, agg: [...(progress.agg || []), num] });
+        if (awardXP(`mongo:agg:${num}`, 15, "Aggregation lab complete")) celebrate();
+      }
+    } else if (view === "project" && currentProject) {
+      const projProgress = (progress.projects && progress.projects[currentProject.id]) || { complete: false, milestones: [] };
+      const milestoneId = currentProject.milestones[activeMilestone]?.id;
+      let updatedMilestones = [...(projProgress.milestones || [])];
+      if (milestoneId && !updatedMilestones.includes(milestoneId)) {
+        updatedMilestones.push(milestoneId);
+        const allDone = currentProject.milestones.every(m => updatedMilestones.includes(m.id));
+        const newProjectsProgress = {
+          ...(progress.projects || {}),
+          [currentProject.id]: {
+            complete: allDone,
+            milestones: updatedMilestones
+          }
+        };
+        saveProgress({
+          ...progress,
+          projects: newProjectsProgress
+        });
+        if (awardXP(`mongo:milestone:${currentProject.id}:${milestoneId}`, 15, "Milestone complete")) celebrate();
+      }
+    }
+  }, [view, currentLesson, currentChallenge, currentAgg, currentProject, activeMilestone, progress, saveProgress]);
+
+  const runTests = useCallback((customQuery) => {
+    const q = typeof customQuery === "string" ? customQuery : query;
+    if (!engineRef.current || currentTests.length === 0) return;
+    const engine = engineRef.current;
+    
+    const results = currentTests.map((test, i) => {
+      try {
+        const passed = test.validate(q, engine);
+        return { index: i, name: test.name, passed, error: passed ? null : "Verification failed" };
+      } catch (e) {
+        return { index: i, name: test.name, passed: false, error: e?.message || "Validation failed" };
+      }
+    });
+    setTestResults(results);
+
+    const allPassed = results.length > 0 && results.every(r => r.passed);
+    if (allPassed) {
+      completeCurrentMongoLab();
+    }
+  }, [query, currentTests, completeCurrentMongoLab]);
+
   // Run query
   const runQuery = useCallback(() => {
     if (!engineRef.current) return;
@@ -762,7 +972,12 @@ export default function MongoLabsPlatform() {
 
     try {
       const trimmed = query.trim();
-      if (!trimmed || trimmed.startsWith("//")) {
+      const hasExecutableMongo = trimmed
+        .split("\n")
+        .filter(l => l.trim() && !l.trim().startsWith("//"))
+        .length > 0;
+
+      if (!trimmed || !hasExecutableMongo) {
         setResults({ batches: [], totalCount: 0, executionTime: 0 });
         setQueryError("Enter a MongoDB query to execute");
         setIsRunning(false);
@@ -800,23 +1015,21 @@ export default function MongoLabsPlatform() {
         totalCount,
         executionTime: elapsed,
       });
+
+      setTimeout(() => {
+        runTests(trimmed);
+      }, 0);
     } catch (e) {
       setQueryError(e.message);
       setResults({ batches: [], totalCount: 0, executionTime: 0 });
     } finally {
       setIsRunning(false);
     }
-  }, [query]);
+  }, [query, runTests]);
 
   useKeyboardShortcut(runQuery);
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
-
-  const currentContent = useMemo(() => {
-    if (view === "learn") return currentLesson;
-    if (view === "challenge") return currentChallenge;
-    return null;
-  }, [view, currentLesson, currentChallenge]);
 
   if (loading) {
     return (
@@ -861,10 +1074,12 @@ export default function MongoLabsPlatform() {
             activeLesson={activeLesson}
             activeChallenge={activeChallenge}
             activeProject={activeProject}
+            activeAgg={activeAgg}
             activeInterviewCategory={activeInterviewCategory}
             onSelectLesson={selectLesson}
             onSelectChallenge={selectChallenge}
             onSelectProject={selectProject}
+            onSelectAgg={selectAgg}
             onSelectInterview={selectInterview}
             progress={progressStats}
             activeDatabase={activeDatabase}
@@ -900,31 +1115,98 @@ export default function MongoLabsPlatform() {
                     isDone={progress.challenges.includes(currentChallenge.id)}
                   />
                 )}
+                {view === "aggregation" && currentAgg && (
+                  <AggLabView
+                    lab={currentAgg}
+                    allLabs={MONGO_AGGREGATION_LABS}
+                    showHint={showHint}
+                    showSolution={showSolution}
+                    onToggleHint={() => setShowHint(h => !h)}
+                    onToggleSolution={() => setShowSolution(s => !s)}
+                    onMarkDone={() => {
+                      const num = currentAgg.num;
+                      if (!progress.agg?.includes(num)) {
+                        saveProgress({ ...progress, agg: [...(progress.agg || []), num] });
+                      }
+                    }}
+                    isDone={progress.agg?.includes(currentAgg.num)}
+                    onSelectLab={(id) => selectAgg(id)}
+                  />
+                )}
                 {view === "project" && (
-                  <div className="sql-content-inner">
-                    <div className="sql-chapter-header">
-                      <span className="sql-chapter-badge project">🚀 MongoDB Project</span>
-                      <h2 className="sql-content-title">MongoDB Projects</h2>
-                      <p style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.5rem" }}>
-                        Build real-world applications using MongoDB. Each project teaches you practical database design, CRUD operations, aggregation pipelines, and performance optimization.
-                      </p>
-                    </div>
-                    <div className="mongo-project-list">
-                      {MONGO_PROJECTS && MONGO_PROJECTS.map((proj, i) => (
-                        <div key={proj.id} className="mongo-project-card" onClick={() => selectProject(proj.id)}>
-                          <div className="mongo-project-card-icon">{proj.icon || "📁"}</div>
-                          <div>
-                            <h4>{proj.title}</h4>
-                            <p>{proj.description}</p>
-                            <div className="mongo-project-meta">
-                              <span className={`sql-si-level ${proj.difficulty.toLowerCase()}`}>{proj.difficulty}</span>
-                              <span style={{ color: "#64748b", fontSize: "0.72rem" }}>{proj.milestones?.length || 3} milestones</span>
+                  !currentProject ? (
+                    <div className="sql-content-inner">
+                      <div className="sql-chapter-header">
+                        <span className="sql-chapter-badge project">🚀 MongoDB Project</span>
+                        <h2 className="sql-content-title">MongoDB Projects</h2>
+                        <p style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.5rem" }}>
+                          Build real-world applications using MongoDB. Each project teaches you practical database design, CRUD operations, aggregation pipelines, and performance optimization.
+                        </p>
+                      </div>
+                      <div className="mongo-project-list">
+                        {MONGO_PROJECTS && MONGO_PROJECTS.map((proj, i) => (
+                          <div key={proj.id} className="mongo-project-card" onClick={() => selectProject(proj.id)}>
+                            <div className="mongo-project-card-icon">{proj.icon || "📁"}</div>
+                            <div>
+                              <h4>{proj.title}</h4>
+                              <p>{proj.description}</p>
+                              <div className="mongo-project-meta">
+                                <span className={`sql-si-level ${proj.difficulty.toLowerCase()}`}>{proj.difficulty}</span>
+                                <span style={{ color: "#64748b", fontSize: "0.72rem" }}>{proj.milestones?.length || 3} milestones</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <ProjectView
+                      project={currentProject}
+                      activeMilestone={activeMilestone}
+                      showHint={showHint}
+                      showSolution={showSolution}
+                      onToggleHint={() => setShowHint(h => !h)}
+                      onToggleSolution={() => setShowSolution(s => !s)}
+                      onMilestoneChange={(idx) => {
+                        setActiveMilestone(idx);
+                        const milestone = currentProject.milestones[idx];
+                        if (milestone) {
+                          setQuery(`// Project: ${currentProject.title}\n// Milestone ${idx + 1}: ${milestone.title}\n// Write your MongoDB query here\n`);
+                          setShowHint(false);
+                          setShowSolution(false);
+                          setResults({ batches: [], totalCount: 0, executionTime: 0 });
+                          setQueryError(null);
+                          codeVersionRef.current++;
+                        }
+                      }}
+                      onMarkDone={() => {
+                        const projProgress = (progress.projects && progress.projects[currentProject.id]) || { complete: false, milestones: [] };
+                        const milestoneId = currentProject.milestones[activeMilestone]?.id;
+                        let updatedMilestones = [...(projProgress.milestones || [])];
+                        if (milestoneId && !updatedMilestones.includes(milestoneId)) {
+                          updatedMilestones.push(milestoneId);
+                        }
+                        const allDone = currentProject.milestones.every(m => updatedMilestones.includes(m.id));
+                        const newProjectsProgress = {
+                          ...(progress.projects || {}),
+                          [currentProject.id]: {
+                            complete: allDone,
+                            milestones: updatedMilestones
+                          }
+                        };
+                        saveProgress({
+                          ...progress,
+                          projects: newProjectsProgress
+                        });
+                      }}
+                      isDone={progress.projects?.[currentProject.id]?.milestones?.includes(currentProject.milestones[activeMilestone]?.id)}
+                      onBackToProjects={() => {
+                        setActiveProject(null);
+                        setResults({ batches: [], totalCount: 0, executionTime: 0 });
+                        setQueryError(null);
+                      }}
+                    />
+                  )
                 )}
                 {view === "interview" && (
                   <InterviewView
@@ -936,6 +1218,26 @@ export default function MongoLabsPlatform() {
                   />
                 )}
               </div>
+
+              {/* Resizable Automated Tests */}
+              {currentTests.length > 0 && (
+                <>
+                  <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+                  <div className="jsl-tests-panel" style={{ height: testsHeight, maxHeight: testsHeight, minHeight: testsHeight }}>
+                    <LabTestsPanel
+                      currentTests={currentTests}
+                      testResults={testResults}
+                      onRunTests={runTests}
+                    />
+                    <div className="jsl-tests-body">
+                      <LabTestsBody
+                        currentTests={currentTests}
+                        testResults={testResults}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Editor + Results Panel (right side) */}
@@ -1052,11 +1354,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="sql-section">
         <h3 className="sql-section-title">📖 Concept</h3>
         <div className="sql-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="sql-bullet">{line.slice(2)}</li>;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -1070,15 +1368,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="sql-section sql-task-section">
         <h3 className="sql-section-title">✏️ Your Task</h3>
         <div className="sql-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            const trimmed = line.trim();
-            if (trimmed.startsWith("1.") || trimmed.startsWith("2.") || trimmed.startsWith("3.") || trimmed.startsWith("4.") || trimmed.startsWith("5.")) {
-              return <li key={i} className="sql-task-item">{trimmed.replace(/^\d+\.\s*/, "")}</li>;
-            }
-            if (trimmed.startsWith("-")) return <li key={i} className="sql-task-item">{trimmed.slice(1).trim()}</li>;
-            if (trimmed === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -1090,7 +1380,10 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
 
       {showSolution && (
         <div className="sql-solution-box">
-          <h4>Solution</h4>
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution</h4>
+            <LabCopyButton text={lesson.solutionQuery} />
+          </div>
           <pre className="sql-code-block"><code>{lesson.solutionQuery}</code></pre>
         </div>
       )}
@@ -1331,7 +1624,10 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
 
       {showSolution && (
         <div className="sql-solution-box">
-          <h4>Solution</h4>
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution</h4>
+            <LabCopyButton text={challenge.solution} />
+          </div>
           <pre className="sql-code-block"><code>{challenge.solution}</code></pre>
         </div>
       )}
@@ -1345,6 +1641,211 @@ function ChallengeView({ challenge, showHint, showSolution, onToggleHint, onTogg
         </button>
         <button className={`sql-btn-mark ${isDone ? "done" : ""}`} onClick={onMarkDone}>
           {isDone ? "✓ Solved" : "Mark as Solved"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ProjectView({ project, activeMilestone, showHint, showSolution, onToggleHint, onToggleSolution, onMilestoneChange, onMarkDone, isDone, onBackToProjects }) {
+  const milestone = project.milestones[activeMilestone];
+  const isFirst = activeMilestone === 0;
+  const isLast = activeMilestone === project.milestones.length - 1;
+  const diffColor = project.difficulty === "Beginner" ? "#22c55e" : project.difficulty === "Intermediate" ? "#f59e0b" : "#ef4444";
+
+  if (!milestone) return null;
+
+  return (
+    <div className="sql-content-inner">
+      <div className="sql-chapter-header">
+        <span className="sql-chapter-badge project">{project.icon} Database Project</span>
+        <h2 className="sql-content-title">{project.title}</h2>
+        <div className="sql-chapter-meta">
+          <span className="sql-diff-badge" style={{ color: diffColor, borderColor: `${diffColor}33`, background: `${diffColor}15` }}>{project.difficulty}</span>
+          <button className="sql-btn-ghost" onClick={onBackToProjects} style={{ marginLeft: "auto", fontSize: "0.8rem", height: "28px" }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: "4px" }}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Back to Projects
+          </button>
+        </div>
+        <p style={{ color: "#94a3b8", fontSize: "0.85rem", marginTop: "0.5rem" }}>{project.description}</p>
+      </div>
+
+      {/* Progress bar for milestones */}
+      <div className="sql-project-progress">
+        <div className="sql-project-steps">
+          {project.milestones.map((m, i) => (
+            <button
+              key={m.id}
+              className={`sql-project-step ${i === activeMilestone ? "active" : ""} ${i < activeMilestone ? "past" : ""}`}
+              onClick={() => onMilestoneChange(i)}
+              title={m.title}
+            >
+              <span className="sql-step-circle">{i < activeMilestone ? "✓" : i + 1}</span>
+              <span className="sql-step-label">{m.title}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="sql-section">
+        <h3 className="sql-section-title">
+          🎯 Milestone {activeMilestone + 1}: {milestone.title}
+        </h3>
+        <div className="sql-task-text">
+          {milestone.task.split("\n").map((line, i) => {
+            const trimmed = line.trim();
+            if (trimmed.startsWith("1.") || trimmed.startsWith("2.") || trimmed.startsWith("3.") || trimmed.startsWith("4.") || trimmed.startsWith("5.") || trimmed.startsWith("6.") || trimmed.startsWith("7.") || trimmed.startsWith("8.")) {
+              return <li key={i} className="sql-task-item" style={{ listStyleType: "decimal", marginLeft: "1.2rem", color: "#e2e8f0", fontSize: "0.875rem", marginBottom: "0.25rem" }}>{trimmed.replace(/^\d+\.\s*/, "")}</li>;
+            }
+            if (trimmed.startsWith("-")) {
+              return <li key={i} className="sql-task-item" style={{ listStyleType: "disc", marginLeft: "1.2rem", color: "#e2e8f0", fontSize: "0.875rem", marginBottom: "0.25rem" }}>{trimmed.slice(1).trim()}</li>;
+            }
+            if (trimmed === "") return <br key={i} />;
+            return <p key={i} style={{ color: "#cbd5e1", fontSize: "0.875rem", lineHeight: "1.5", marginBottom: "0.5rem" }}>{line}</p>;
+          })}
+        </div>
+      </div>
+
+      {showHint && milestone.hints && (
+        <div className="sql-hint-box">
+          <strong>💡 Hints:</strong>
+          <ul style={{ margin: "0.35rem 0 0", paddingLeft: "1.2rem" }}>
+            {milestone.hints.map((h, i) => (
+              <li key={i} style={{ color: "#fef3c7", fontSize: "0.85rem", marginBottom: "0.15rem" }}>{h}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {showSolution && (
+        <div className="sql-solution-box">
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution for {milestone.title}</h4>
+            <LabCopyButton text={milestone.solutionQuery} />
+          </div>
+          <pre className="sql-code-block"><code>{milestone.solutionQuery}</code></pre>
+        </div>
+      )}
+
+      <div className="sql-content-actions">
+        <button className="sql-btn-ghost" onClick={onToggleHint}>
+          {showHint ? "Hide Hints" : "💡 Show Hints"}
+        </button>
+        <button className="sql-btn-ghost" onClick={onToggleSolution}>
+          {showSolution ? "Hide Solution" : "🔍 Show Solution"}
+        </button>
+        <button className={`sql-btn-mark ${isDone ? "done" : ""}`} onClick={onMarkDone}>
+          {isDone ? "✓ Milestone Complete" : "Mark Milestone Complete"}
+        </button>
+      </div>
+
+      <div className="sql-content-nav">
+        <button className={`sql-nav-btn ${isFirst ? "disabled" : ""}`} onClick={() => onMilestoneChange(activeMilestone - 1)} disabled={isFirst}>
+          <FiChevronLeft size={14} />
+          Previous Milestone
+        </button>
+        <button className={`sql-nav-btn ${isLast ? "disabled" : ""}`} onClick={() => onMilestoneChange(activeMilestone + 1)} disabled={isLast}>
+          Next Milestone
+          <FiChevronRight size={14} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AggLabView({ lab, allLabs, showHint, showSolution, onToggleHint, onToggleSolution, onMarkDone, isDone, onSelectLab }) {
+  const currentIdx = allLabs.findIndex(l => l.id === lab.id);
+  const isFirst = currentIdx === 0;
+  const isLast = currentIdx === allLabs.length - 1;
+  const diffColor = lab.difficulty === "Intermediate" ? "#f59e0b" : "#ef4444";
+
+  return (
+    <div className="sql-content-inner">
+      <div className="sql-chapter-header">
+        <span className="sql-chapter-badge challenge">🔬 Aggregation Lab {lab.num}</span>
+        <h2 className="sql-content-title">{lab.title}</h2>
+        <div className="sql-chapter-meta">
+          <span className="sql-diff-badge" style={{ color: diffColor, borderColor: `${diffColor}33`, background: `${diffColor}15` }}>{lab.difficulty}</span>
+          <code style={{ fontSize: "0.8rem", color: "#a78bfa", background: "rgba(167,139,250,0.1)", padding: "2px 8px", borderRadius: "4px" }}>{lab.stage}</code>
+        </div>
+      </div>
+
+      {/* Concept explanation */}
+      <div className="sql-section">
+        <h3 className="sql-section-title">📖 Concept</h3>
+        <div className="sql-text" style={{ lineHeight: "1.7" }}>
+          {lab.concept.split("\n").map((line, i) => {
+            if (line.startsWith("**") && line.endsWith("**")) {
+              return <strong key={i} style={{ display: "block", color: "#e2e8f0", marginTop: "0.75rem" }}>{line.replace(/\*\*/g, "")}</strong>;
+            }
+            if (line.startsWith("•")) {
+              return <p key={i} style={{ color: "#94a3b8", fontSize: "0.85rem", margin: "0.15rem 0 0 0.5rem" }}>{line}</p>;
+            }
+            if (line.trim() === "") return null;
+            return <p key={i} style={{ color: "#cbd5e1", fontSize: "0.875rem", marginBottom: "0.25rem" }}>{line}</p>;
+          })}
+        </div>
+      </div>
+
+      {/* Task */}
+      <div className="sql-section">
+        <h3 className="sql-section-title">🎯 Task</h3>
+        <div className="sql-task-text">
+          {lab.task.split("\n").map((line, i) => {
+            const trimmed = line.trim();
+            if (/^\d+\./.test(trimmed)) {
+              return <li key={i} style={{ listStyleType: "decimal", marginLeft: "1.2rem", color: "#e2e8f0", fontSize: "0.875rem", marginBottom: "0.3rem" }}>{trimmed.replace(/^\d+\.\s*/, "")}</li>;
+            }
+            if (trimmed.startsWith("-")) {
+              return <li key={i} style={{ listStyleType: "disc", marginLeft: "1.2rem", color: "#e2e8f0", fontSize: "0.875rem", marginBottom: "0.15rem" }}>{trimmed.slice(1).trim()}</li>;
+            }
+            if (trimmed === "") return <br key={i} />;
+            return <p key={i} style={{ color: "#cbd5e1", fontSize: "0.875rem", lineHeight: "1.5", marginBottom: "0.4rem" }}>{line}</p>;
+          })}
+        </div>
+      </div>
+
+      {showHint && lab.hints && (
+        <div className="sql-hint-box">
+          <strong>💡 Hints:</strong>
+          <ul style={{ margin: "0.35rem 0 0", paddingLeft: "1.2rem" }}>
+            {lab.hints.map((h, i) => (
+              <li key={i} style={{ color: "#fef3c7", fontSize: "0.85rem", marginBottom: "0.15rem" }}>{h}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {showSolution && (
+        <div className="sql-solution-box">
+          <div className="sql-solution-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h4 style={{ margin: 0 }}>Solution</h4>
+            <LabCopyButton text={lab.solutionQuery} />
+          </div>
+          <pre className="sql-code-block"><code>{lab.solutionQuery}</code></pre>
+        </div>
+      )}
+
+      <div className="sql-content-actions">
+        <button className="sql-btn-ghost" onClick={onToggleHint}>
+          {showHint ? "Hide Hints" : "💡 Show Hints"}
+        </button>
+        <button className="sql-btn-ghost" onClick={onToggleSolution}>
+          {showSolution ? "Hide Solution" : "🔍 Show Solution"}
+        </button>
+        <button className={`sql-btn-mark ${isDone ? "done" : ""}`} onClick={onMarkDone}>
+          {isDone ? "✓ Completed" : "Mark Complete"}
+        </button>
+      </div>
+
+      <div className="sql-content-nav">
+        <button className={`sql-nav-btn ${isFirst ? "disabled" : ""}`} onClick={() => onSelectLab(allLabs[currentIdx - 1]?.id)} disabled={isFirst}>
+          <FiChevronLeft size={14} />
+          Previous Lab
+        </button>
+        <button className={`sql-nav-btn ${isLast ? "disabled" : ""}`} onClick={() => onSelectLab(allLabs[currentIdx + 1]?.id)} disabled={isLast}>
+          Next Lab
+          <FiChevronRight size={14} />
         </button>
       </div>
     </div>

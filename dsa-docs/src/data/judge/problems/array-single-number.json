@@ -1,0 +1,62 @@
+{
+  "id": "array-single-number",
+  "title": "Single Number",
+  "difficulty": "easy",
+  "topics": ["arrays", "bit-manipulation"],
+  "companies": ["google", "amazon"],
+  "statement": "Given a non-empty array of integers `nums`, every element appears twice except for one. Find that single one.\n\nYou must implement a solution with a linear runtime complexity and use only constant extra space.",
+  "constraints": [
+    "1 <= nums.length <= 3 * 10^4",
+    "-3 * 10^4 <= nums[i] <= 3 * 10^4",
+    "Each element in the array appears twice except for one element which appears only once."
+  ],
+  "examples": [
+    {
+      "input": "nums = [2, 2, 1]",
+      "output": "1",
+      "explanation": "Element 1 is the only unique value."
+    },
+    {
+      "input": "nums = [4, 1, 2, 1, 2]",
+      "output": "4",
+      "explanation": "Element 4 appears once, others appear twice."
+    }
+  ],
+  "functionName": "singleNumber",
+  "starterCode": {
+    "javascript": "function singleNumber(nums) {\n  // Write your code here\n}",
+    "python": "def single_number(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nsingleNumber = single_number"
+  },
+  "tests": [
+    { "args": [[2, 2, 1]], "expected": 1, "hidden": false },
+    { "args": [[4, 1, 2, 1, 2]], "expected": 4, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": false },
+    { "args": [[-1, -1, -2]], "expected": -2, "hidden": true },
+    { "args": [[10, 20, 30, 20, 10]], "expected": 30, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use the XOR bitwise operator. XORing a number with itself yields 0: a ^ a = 0. XORing a number with 0 yields the number: a ^ 0 = a. By XORing all elements together, duplicates cancel out, leaving the single unique number.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-missing-number"],
+  "hints": [
+    "If you sum numbers or use maps, you might require extra space or hit overflow.",
+    "Think about the bitwise XOR operator (`^`). What is `x ^ x`? What is `x ^ 0`?",
+    "XORing all elements together will cancel out the duplicates (`a ^ a = 0`), leaving only the single number."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Use a hash map or frequencies tracker to count the occurrences of each element. Return the element with count === 1.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function singleNumber(nums) {\n  const map = {};\n  for (let x of nums) {\n    map[x] = (map[x] || 0) + 1;\n  }\n  for (let x in map) {\n    if (map[x] === 1) return parseInt(x);\n  }\n  return -1;\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "XOR all numbers in the array. Since XOR is commutative and associative, duplicate pairs cancel out to 0, leaving the unique number.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function singleNumber(nums) {\n  let xor = 0;\n  for (let i = 0; i < nums.length; i++) {\n    xor ^= nums[i];\n  }\n  return xor;\n}"
+  },
+  "interviewExplanation": "A hash map requires O(n) auxiliary space. In interviews, we optimize to O(1) space using the properties of bitwise XOR. XORing all elements cancels duplicates out, resolving the single number in linear time and constant space."
+}

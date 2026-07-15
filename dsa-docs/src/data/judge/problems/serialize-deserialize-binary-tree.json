@@ -1,0 +1,36 @@
+{
+  "id": "serialize-deserialize-binary-tree",
+  "title": "Serialize and Deserialize Binary Tree",
+  "difficulty": "hard",
+  "topics": ["tree", "depth-first-search", "breadth-first-search"],
+  "companies": ["amazon", "meta", "microsoft", "google"],
+  "statement": "Design an algorithm to serialize and deserialize a binary tree into a string, such that a binary tree can be serialized to a string and this string can be deserialized to reconstruct the original tree structure.\n\nBuild a real `TreeNode` tree from `values`, serialize it to a string of your own design (preorder with `null` markers is a common choice), then deserialize that string back into a tree, and return the reconstructed tree's level-order array — it should exactly match the original, proving the round trip is lossless.",
+  "constraints": [
+    "The number of nodes in the tree is in the range [0, 10^4]",
+    "-1000 <= Node.val <= 1000"
+  ],
+  "examples": [
+    { "input": "root = [1,2,3,null,null,4,5]", "output": "[1,2,3,null,null,4,5]", "explanation": "Serializing then deserializing reproduces the original tree." },
+    { "input": "root = []", "output": "[]" }
+  ],
+  "functionName": "serializeDeserialize",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction treeToArray(root) {\n  if (!root) return [];\n  const result = [];\n  const queue = [root];\n  while (queue.length) {\n    const node = queue.shift();\n    if (node === null) { result.push(null); continue; }\n    result.push(node.val);\n    queue.push(node.left);\n    queue.push(node.right);\n  }\n  while (result.length && result[result.length - 1] === null) result.pop();\n  return result;\n}\nfunction serialize(root) {\n  // your code here: return a string encoding of the tree\n}\nfunction deserialize(data) {\n  // your code here: reconstruct and return the TreeNode tree from the string produced by serialize()\n}\nfunction serializeDeserialize(values) {\n  const root = buildTree(values);\n  const data = serialize(root);\n  const restored = deserialize(data);\n  return treeToArray(restored);\n}",
+    "python": "def serialize_deserialize(values):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,null,null,4,5]], "expected": [1,2,3,null,null,4,5], "hidden": false },
+    { "args": [[]], "expected": [], "hidden": false },
+    { "args": [[1]], "expected": [1], "hidden": true },
+    { "args": [[1,2,3,4,5,6,7]], "expected": [1,2,3,4,5,6,7], "hidden": true },
+    { "args": [[5,null,7,null,9]], "expected": [5,null,7,null,9], "hidden": true },
+    { "args": [[-5,-3,-1]], "expected": [-5,-3,-1], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Serialize with a preorder traversal, writing each node's value followed by a comma, and writing the literal token 'null' for missing children — this fully captures the tree's shape, not just its values. To deserialize, split the string on commas and consume tokens left to right in the same preorder order: read a value, if it's 'null' return null, otherwise create a node and recursively fill its left then right children from the remaining tokens (a shared index or a queue-like consumption of the token list handles this cleanly).",
+    "complexity": "O(n) time / O(n) space for both serialize and deserialize"
+  },
+  "relatedProblems": ["binary-tree-level-order-traversal", "construct-binary-tree-preorder-inorder"]
+}

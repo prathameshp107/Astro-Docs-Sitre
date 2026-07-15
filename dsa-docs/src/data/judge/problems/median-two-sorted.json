@@ -1,0 +1,43 @@
+{
+  "id": "median-two-sorted",
+  "title": "Median of Two Sorted Arrays",
+  "difficulty": "hard",
+  "topics": ["binary-search", "arrays"],
+  "companies": ["google", "amazon", "meta", "microsoft"],
+  "statement": "Given two sorted arrays `nums1` and `nums2` of size `m` and `n` respectively, return the median of the two sorted arrays.\n\nThe overall run time complexity should be `O(log(m+n))`.\n\nBinary search on the smaller array to find a partition index `i` such that the left partitions of both arrays (sizes `i` and `j = floor((m+n+1)/2) - i`) together hold exactly the lower half of the combined values, with every left element `<=` every right element.",
+  "constraints": [
+    "nums1.length == m",
+    "nums2.length == n",
+    "0 <= m, n <= 1000",
+    "1 <= m + n <= 2000",
+    "-10^6 <= nums1[i], nums2[i] <= 10^6"
+  ],
+  "examples": [
+    { "input": "nums1 = [1,3], nums2 = [2]", "output": "2.0" },
+    { "input": "nums1 = [1,2], nums2 = [3,4]", "output": "2.5" }
+  ],
+  "functionName": "findMedianSortedArrays",
+  "starterCode": {
+    "javascript": "function findMedianSortedArrays(nums1, nums2) {\n  // your code here\n}",
+    "python": "def find_median_sorted_arrays(nums1, nums2):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,3], [2]], "expected": 2, "hidden": false },
+    { "args": [[1,2], [3,4]], "expected": 2.5, "hidden": false },
+    { "args": [[], [1]], "expected": 1, "hidden": true },
+    { "args": [[2], []], "expected": 2, "hidden": true },
+    { "args": [[0,0], [0,0]], "expected": 0, "hidden": true },
+    { "args": [[1], [2,3,4,5]], "expected": 3, "hidden": true },
+    { "args": [[1,3,5], [2,4,6]], "expected": 3.5, "hidden": true },
+    { "args": [[100000], [100000]], "expected": 100000, "hidden": true },
+    { "args": [[-5,-3,-1], [-4,-2]], "expected": -3, "hidden": true },
+    { "args": [[1,2,3,4,5,6], [7,8,9,10]], "expected": 5.5, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Ensure `nums1` is the smaller array (swap if needed). Binary search over a partition index `i` in `[0, m]`. The matching partition in `nums2` is `j = floor((m + n + 1) / 2) - i`, so the combined left half has the correct size. Compute the boundary values `maxLeft1/minRight1` and `maxLeft2/minRight2` (using -Infinity/Infinity for out-of-range partitions). If `maxLeft1 <= minRight2` and `maxLeft2 <= minRight1`, the partition is correct: for odd total length return `max(maxLeft1, maxLeft2)`, for even return the average of that max and `min(minRight1, minRight2)`. Otherwise, adjust the search range based on which side is too large.",
+    "complexity": "O(log(min(m, n))) time / O(1) space"
+  },
+  "relatedProblems": ["binary-search", "find-min-rotated"]
+}

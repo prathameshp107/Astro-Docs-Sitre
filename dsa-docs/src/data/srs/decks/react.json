@@ -1,0 +1,77 @@
+{
+  "id": "react-core",
+  "title": "React Core",
+  "description": "Master hooks, state lifecycle, virtual DOM, context, performance, and key rules.",
+  "cards": [
+    {
+      "id": "react-core-001",
+      "type": "basic",
+      "front": "What is the **Virtual DOM** in React?",
+      "back": "The Virtual DOM is a lightweight, in-memory representation of the real DOM. When component state changes:\n\n1. React renders a new virtual DOM tree.\n2. Compares it with the previous tree (**Diffing**).\n3. Computes the minimal set of changes needed.\n4. Updates only the changed elements in the real DOM (**Reconciliation**).",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-002",
+      "type": "basic",
+      "front": "What are the two golden **Rules of Hooks**?",
+      "back": "1. **Only call hooks at the top level**: Do not call hooks inside loops, conditions, or nested functions to ensure hook state is preserved in the correct call order.\n2. **Only call hooks from React functions**: Call them from React function components or custom hooks, not regular JS functions.",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-003",
+      "type": "basic",
+      "front": "Why is the **cleanup function** in `useEffect` important?",
+      "back": "The cleanup function runs before the component unmounts and before running the effect again. It prevents **memory leaks** by cleaning up active subscriptions, event listeners, timeouts, and sockets.\n\n```javascript\nuseEffect(() => {\n  const handle = subscribe();\n  return () => unsubscribe(handle); // Cleanup\n}, []);\n```",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-004",
+      "type": "basic",
+      "front": "Compare `useMemo` and `useCallback`.",
+      "back": "- **`useMemo`**: Memoizes the **result value** of a calculated function: `useMemo(() => computeValue(a), [a])`.\n- **`useCallback`**: Memoizes the **function definition itself** to prevent child re-renders on prop reference changes: `useCallback(() => doWork(), [])`.",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-005",
+      "type": "basic",
+      "front": "What is **Prop Drilling** and how do you solve it?",
+      "back": "Prop drilling is the process of passing props down through multiple layers of nested components to reach a deeply nested child that needs it.\n\n**Solutions**:\n- **React Context API** (global provider scope).\n- State managers (Zustand, Redux).\n- Component composition (passing elements directly).",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-006",
+      "type": "basic",
+      "front": "What is the difference between controlled and uncontrolled components?",
+      "back": "- **Controlled**: Form data is handled by React component state (`value={state} onChange={set}`). Single source of truth.\n- **Uncontrolled**: Form data is handled by the DOM directly. References are used to pull values when needed (`ref={inputRef}`).",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-007",
+      "type": "basic",
+      "front": "Why is the `key` prop required in lists?",
+      "back": "The `key` prop gives React elements a stable identity, allowing the diffing algorithm to identify which items have changed, been added, or removed in lists. Using indices as keys can cause rendering bugs and performance issues on reorders.",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-008",
+      "type": "basic",
+      "front": "What does `React.memo` do?",
+      "back": "`React.memo` is a higher-order component that memoizes a functional component. It prevents re-rendering if the incoming props are shallowly equal to the previous props, optimizing performance.",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-009",
+      "type": "basic",
+      "front": "Why do effects run twice in React 18 Strict Mode?",
+      "back": "In Development mode, React 18 mounts, unmounts, and remounts components to verify that effects correctly clean up after themselves. This catches missing cleanup functions (e.g. active event listeners) early in development.",
+      "sourceNote": "/react"
+    },
+    {
+      "id": "react-core-010",
+      "type": "basic",
+      "front": "What is a custom Hook?",
+      "back": "A custom hook is a Javascript function whose name starts with `use` and that can call other hooks.\n\nIt allows you to abstract and share stateful logic between components without adding unnecessary wrappers to the DOM tree.",
+      "sourceNote": "/react"
+    }
+  ]
+}

@@ -2,6 +2,16 @@
 
 const STORAGE_KEY = 'mcq-progress';
 
+const mcqListeners = [];
+
+export function subscribeMCQ(cb) {
+  mcqListeners.push(cb);
+  return () => {
+    const idx = mcqListeners.indexOf(cb);
+    if (idx !== -1) mcqListeners.splice(idx, 1);
+  };
+}
+
 function loadProgress() {
   if (typeof window === 'undefined') return null;
   try {
@@ -12,10 +22,11 @@ function loadProgress() {
   }
 }
 
-function saveProgress(data) {
+export function saveProgress(data) {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    mcqListeners.forEach(cb => cb(data));
   } catch { /* ignore quota errors */ }
 }
 

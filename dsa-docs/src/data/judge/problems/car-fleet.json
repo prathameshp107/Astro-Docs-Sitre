@@ -1,0 +1,44 @@
+{
+  "id": "car-fleet",
+  "title": "Car Fleet",
+  "difficulty": "medium",
+  "topics": ["stack", "sorting", "arrays"],
+  "companies": ["google", "amazon"],
+  "statement": "There are `n` cars going to the same destination along a one-lane road. The destination is `target` miles away.\n\nYou are given two integer arrays `position` and `speed`, both of length `n`, where `position[i]` is the position of the `i`th car and `speed[i]` is the speed of the `i`th car (in miles per hour).\n\nA car can never pass another car ahead of it, but it can catch up and drive bumper to bumper **at the same speed**. The faster car will slow down to match the slower car's speed. A **car fleet** is a car or cars driving next to each other. The speed of the car fleet is the minimum speed of any car in the fleet.\n\nIf a car catches up to a car fleet right at the destination point, it is considered to be part of the fleet.\n\nReturn the number of car fleets that will arrive at the destination.\n\nSort cars by starting position (closest to target first). For each car, compute the time it would take to reach the target alone. Walking from the car closest to the target backward, a car merges into the fleet ahead if its arrival time would be less than or equal to that fleet's time — otherwise it forms a new fleet, which behaves like pushing a new time onto a monotonic stack of fleet arrival times.",
+  "constraints": [
+    "n == position.length == speed.length",
+    "1 <= n <= 10^5",
+    "0 < target <= 10^6",
+    "0 <= position[i] < target",
+    "All the values of position are unique",
+    "0 < speed[i] <= 10^6"
+  ],
+  "examples": [
+    { "input": "target = 12, position = [10,8,0,5,3], speed = [2,4,1,1,3]", "output": "3", "explanation": "Cars starting at 10 and 8 form one fleet arriving at 12 (time 1 for both). Car starting at 0 forms its own fleet. Cars starting at 5 and 3 form a fleet." },
+    { "input": "target = 10, position = [3], speed = [3]", "output": "1" }
+  ],
+  "functionName": "carFleet",
+  "starterCode": {
+    "javascript": "function carFleet(target, position, speed) {\n  // your code here\n}",
+    "python": "def car_fleet(target, position, speed):\n    pass"
+  },
+  "tests": [
+    { "args": [12, [10,8,0,5,3], [2,4,1,1,3]], "expected": 3, "hidden": false },
+    { "args": [10, [3], [3]], "expected": 1, "hidden": false },
+    { "args": [100, [0,2,4], [4,2,1]], "expected": 1, "hidden": true },
+    { "args": [10, [0,4,2], [2,1,3]], "expected": 1, "hidden": true },
+    { "args": [20, [10,0], [10,1]], "expected": 2, "hidden": true },
+    { "args": [10, [1,2,3,4,5], [1,1,1,1,1]], "expected": 5, "hidden": true },
+    { "args": [12, [0,4,8], [1,2,4]], "expected": 3, "hidden": true },
+    { "args": [6, [3,1], [3,2]], "expected": 2, "hidden": true },
+    { "args": [100, [10,20,30,40,50,60,70,80,90], [10,9,8,7,6,5,4,3,2]], "expected": 1, "hidden": true },
+    { "args": [100, [90,80,70,60,50,40,30,20,10], [1,2,3,4,5,6,7,8,9]], "expected": 9, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Pair up each car's position and speed, then sort by position in descending order (closest to target first). Compute each car's time-to-target as `(target - position) / speed`. Walk the sorted cars from closest to farthest, maintaining a stack of the current fleet arrival times (conceptually). If the current car's time is less than or equal to the time at the top of the stack, it catches up and merges into that fleet — do not push a new time. Otherwise, it forms a new, slower fleet — push its time. The final stack size is the number of fleets.",
+    "complexity": "O(n log n) time / O(n) space"
+  },
+  "relatedProblems": ["daily-temperatures"]
+}

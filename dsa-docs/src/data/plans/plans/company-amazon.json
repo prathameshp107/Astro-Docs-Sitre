@@ -1,0 +1,53 @@
+{
+  "id": "company-amazon",
+  "title": "Amazon SDE prep Track",
+  "tagline": "A comprehensive, structured prep track targeting Amazon SDE coding and Leadership Principles.",
+  "difficulty": "intermediate",
+  "durationDays": 5,
+  "hoursPerDay": 2.0,
+  "tags": ["amazon", "coding", "behavioral"],
+  "heroTopics": ["Leadership Principles", "LRU Cache", "Graphs", "System Design"],
+  "days": [
+    {
+      "day": 1,
+      "title": "Day 1: Arrays, Hash Maps & LP Introduction",
+      "items": [
+        { "type": "note", "ref": "/DSA-Notes-Problems/hld/01-introduction-to-hld", "label": "Read: Introduction to Scaling & LPs", "minutes": 20 },
+        { "type": "problem", "ref": "two-sum", "label": "Code: Two Sum", "minutes": 30 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/behavioral", "label": "Review: Amazon Leadership Principles Rubrics", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Day 2: LinkedLists & Cache Systems",
+      "items": [
+        { "type": "note", "ref": "/DSA-Notes-Problems/lld/projects/design-cache-system", "label": "LLD Design: In-Memory Cache (LRU/LFU)", "minutes": 30 },
+        { "type": "problem", "ref": "lru-cache", "label": "Code: LRU Cache Implementation", "minutes": 45 }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "Day 3: Graph Traversal & Online Assessment",
+      "items": [
+        { "type": "problem", "ref": "number-of-islands", "label": "Code: Number of Islands", "minutes": 40 },
+        { "type": "problem", "ref": "valid-parentheses", "label": "Code: Valid Parentheses", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Day 4: System Design Core",
+      "items": [
+        { "type": "note", "ref": "/DSA-Notes-Problems/system-design/url-shortener", "label": "Design: Interactive URL Shortener (TinyURL)", "minutes": 45 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/hld/03-capacity-estimation", "label": "Read: Back-of-the-Envelope Capacity Calculations", "minutes": 20 }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Day 5: Mock Walkthrough & Final Prep",
+      "items": [
+        { "type": "problem", "ref": "coin-change", "label": "Code: Coin Change", "minutes": 45 },
+        { "type": "note", "ref": "/DSA-Notes-Problems/behavioral", "label": "Final: Mock behavioral self-review", "minutes": 30 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "id": "pattern-letter-crown",
+  "title": "Letter Crown Pattern",
+  "difficulty": "medium",
+  "topics": [
+    "patterns"
+  ],
+  "companies": [
+    "tcs",
+    "infosys",
+    "wipro"
+  ],
+  "statement": "Write a function to generate a letter crown pattern of size `n`.\n\nThe pattern is composed of `n` rows. Each row `i` (1-indexed, from `1` to `n`) consists of:\n1. Letters from `A` up to the `i`-th alphabet letter (without spaces).\n2. `2 * (n - i)` empty spaces in the center.\n3. Letters from the `i`-th alphabet letter down to `A` (without spaces).\n\nThe rows should be separated by newline characters (`\\n`). There should be no trailing spaces in any row, and no trailing newline at the end of the final row.\n\nFor example, if `n = 4`, the output should be:\n```\nA      A\nAB    BA\nABC  CBA\nABCDDCBA\n```",
+  "constraints": [
+    "1 <= n <= 26"
+  ],
+  "examples": [
+    {
+      "input": "n = 2",
+      "output": "A  A\nABBA",
+      "explanation": "Letter crown pattern of size 2."
+    },
+    {
+      "input": "n = 3",
+      "output": "A    A\nAB  BA\nABCCBA",
+      "explanation": "Letter crown pattern of size 3."
+    }
+  ],
+  "functionName": "patternLetterCrown",
+  "starterCode": {
+    "javascript": "function patternLetterCrown(n) {\n  // Write your code here\n}",
+    "python": "def pattern_letter_crown(n):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\npatternLetterCrown = pattern_letter_crown"
+  },
+  "tests": [
+    {
+      "args": [
+        1
+      ],
+      "expected": "AA",
+      "hidden": false
+    },
+    {
+      "args": [
+        2
+      ],
+      "expected": "A  A\nABBA",
+      "hidden": false
+    },
+    {
+      "args": [
+        3
+      ],
+      "expected": "A    A\nAB  BA\nABCCBA",
+      "hidden": false
+    },
+    {
+      "args": [
+        4
+      ],
+      "expected": "A      A\nAB    BA\nABC  CBA\nABCDDCBA",
+      "hidden": true
+    },
+    {
+      "args": [
+        5
+      ],
+      "expected": "A        A\nAB      BA\nABC    CBA\nABCD  DCBA\nABCDEEDCBA",
+      "hidden": true
+    }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Run an outer loop `i` from `1` to `n`. In each iteration, build the left side string (letters from 0 to `i - 1` mapped to A-Z), the middle spaces (`2 * (n - i)` spaces), and the right side string (letters from `i - 1` down to 0). Join these and join rows with `\\n`.",
+    "complexity": "O(n^2) time / O(n^2) space"
+  },
+  "relatedProblems": [
+    "pattern-number-crown"
+  ],
+  "hints": [
+    "The pattern is similar to the number crown, but uses letters.",
+    "Row `i` (1-indexed) has letters A to `65 + i - 1` on the left.",
+    "The middle has `2 * (n - i)` spaces, and the right lists letters descending back to A."
+  ],
+  "bruteForceSolution": {
+    "explanation": "For each row `i` from `1` to `n`, append letters ascending from A to the `i`-th letter, then `2 * (n - i)` spaces, then letters descending back to A.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternLetterCrown(n) {\n  let rows = [];\n  for (let i = 1; i <= n; i++) {\n    let row = '';\n    for (let j = 0; j < i; j++) row += String.fromCharCode(65 + j);\n    for (let j = 0; j < 2 * (n - i); j++) row += ' ';\n    for (let j = i - 1; j >= 0; j--) row += String.fromCharCode(65 + j);\n    rows.push(row);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Precompute the alphabet sequence and build the left and right halves incrementally to avoid nested loops.",
+    "timeComplexity": "O(n^2)",
+    "spaceComplexity": "O(n^2)",
+    "code": "function patternLetterCrown(n) {\n  let rows = [];\n  let left = '';\n  let right = '';\n  for (let i = 1; i <= n; i++) {\n    const char = String.fromCharCode(65 + i - 1);\n    left += char;\n    right = char + right;\n    const spaces = ' '.repeat(2 * (n - i));\n    rows.push(left + spaces + right);\n  }\n  return rows.join('\\n');\n}"
+  },
+  "interviewExplanation": "A letter crown places ascending letters on the left, empty spaces in the center, and descending letters on the right. We maintain and increment the left and right strings row-by-row and concatenate them with repeated space padding."
+}

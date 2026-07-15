@@ -1,0 +1,37 @@
+{
+  "id": "subtree-of-another-tree",
+  "title": "Subtree of Another Tree",
+  "difficulty": "easy",
+  "topics": ["tree", "depth-first-search"],
+  "companies": ["amazon", "meta", "microsoft", "google"],
+  "statement": "Given the roots of two binary trees `root` and `subRoot`, return `true` if there is a subtree of `root` with the same structure and node values as `subRoot`, and `false` otherwise.\n\nA subtree of a binary tree `tree` is a tree that consists of a node in `tree` and all of this node's descendants.\n\nBuild real `TreeNode` trees from both arrays, then for every node in `root`, check whether the subtree rooted there is structurally identical to `subRoot` (reusing the same-tree comparison).",
+  "constraints": [
+    "The number of nodes in root is in the range [1, 2000]",
+    "The number of nodes in subRoot is in the range [1, 1000]",
+    "-10^4 <= root.val, subRoot.val <= 10^4"
+  ],
+  "examples": [
+    { "input": "root = [3,4,5,1,2], subRoot = [4,1,2]", "output": "true" },
+    { "input": "root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]", "output": "false" }
+  ],
+  "functionName": "isSubtree",
+  "starterCode": {
+    "javascript": "class TreeNode {\n  constructor(val, left = null, right = null) { this.val = val; this.left = left; this.right = right; }\n}\nfunction buildTree(values) {\n  if (!values.length || values[0] === null) return null;\n  const root = new TreeNode(values[0]);\n  const queue = [root];\n  let i = 1;\n  while (queue.length && i < values.length) {\n    const node = queue.shift();\n    if (i < values.length) { const lv = values[i++]; if (lv !== null) { node.left = new TreeNode(lv); queue.push(node.left); } }\n    if (i < values.length) { const rv = values[i++]; if (rv !== null) { node.right = new TreeNode(rv); queue.push(node.right); } }\n  }\n  return root;\n}\nfunction isSubtree(rootValues, subRootValues) {\n  const root = buildTree(rootValues);\n  const subRoot = buildTree(subRootValues);\n  // your code here\n}",
+    "python": "def is_subtree(root_values, sub_root_values):\n    pass"
+  },
+  "tests": [
+    { "args": [[3,4,5,1,2], [4,1,2]], "expected": true, "hidden": false },
+    { "args": [[3,4,5,1,2,null,null,null,null,0], [4,1,2]], "expected": false, "hidden": false },
+    { "args": [[1], [1]], "expected": true, "hidden": true },
+    { "args": [[1,2], [2]], "expected": true, "hidden": true },
+    { "args": [[1,2,3], [4]], "expected": false, "hidden": true },
+    { "args": [[3,4,5,1,2], [3,4,5,1,2]], "expected": true, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Write a helper `same(a, b)` that checks whether two trees are structurally identical (like Same Tree). Then do a DFS over `root`: at each node, if `same(node, subRoot)` is true, return true immediately. Otherwise recurse into the node's left and right children. Return false if no matching subtree is found anywhere.",
+    "complexity": "O(m * n) time in the worst case / O(m + n) space"
+  },
+  "relatedProblems": ["same-tree"]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "reverse-nodes-in-k-group",
+  "title": "Reverse Nodes in k-Group",
+  "difficulty": "hard",
+  "topics": ["linked-list"],
+  "companies": ["amazon", "microsoft", "meta", "google"],
+  "statement": "Given the `head` of a linked list, reverse the nodes of the list `k` at a time, and return the modified list.\n\n`k` is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of `k`, the nodes left over at the end should remain as they are.\n\nYou may not alter the values in the list's nodes, only the nodes themselves may be changed.\n\nBuild the list from `values`, reverse each group of `k` nodes in place (checking first that a full group of `k` nodes exists before reversing it), and return the resulting list as an array.",
+  "constraints": [
+    "The number of nodes in the list is n",
+    "1 <= k <= n <= 5000",
+    "0 <= Node.val <= 1000"
+  ],
+  "examples": [
+    { "input": "values = [1,2,3,4,5], k = 2", "output": "[2,1,4,3,5]" },
+    { "input": "values = [1,2,3,4,5], k = 3", "output": "[3,2,1,4,5]" }
+  ],
+  "functionName": "reverseKGroup",
+  "starterCode": {
+    "javascript": "class ListNode {\n  constructor(val, next = null) { this.val = val; this.next = next; }\n}\nfunction buildList(values) {\n  let head = null, tail = null;\n  for (const v of values) {\n    const node = new ListNode(v);\n    if (!head) head = node; else tail.next = node;\n    tail = node;\n  }\n  return head;\n}\nfunction toArray(head) {\n  const arr = [];\n  let curr = head;\n  while (curr) { arr.push(curr.val); curr = curr.next; }\n  return arr;\n}\nfunction reverseKGroup(values, k) {\n  const head = buildList(values);\n  // your code here: reverse every group of k nodes in the ListNode chain, then return toArray(newHead)\n}",
+    "python": "def reverse_k_group(values, k):\n    pass"
+  },
+  "tests": [
+    { "args": [[1,2,3,4,5], 2], "expected": [2,1,4,3,5], "hidden": false },
+    { "args": [[1,2,3,4,5], 3], "expected": [3,2,1,4,5], "hidden": false },
+    { "args": [[1,2,3,4,5], 1], "expected": [1,2,3,4,5], "hidden": true },
+    { "args": [[1,2,3,4,5], 5], "expected": [5,4,3,2,1], "hidden": true },
+    { "args": [[1], 1], "expected": [1], "hidden": true },
+    { "args": [[1,2,3,4,5,6], 2], "expected": [2,1,4,3,6,5], "hidden": true },
+    { "args": [[1,2,3,4,5,6,7,8], 3], "expected": [3,2,1,6,5,4,7,8], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Use a dummy node before the head, with `groupPrev` tracking the node just before the current group. First, walk `k` nodes ahead from `groupPrev` to confirm a full group of `k` nodes exists (if not, stop — the remainder stays untouched). Reverse the group in place using the standard three-pointer technique, but link the reversed group's tail (the former first node) back to `groupPrev`, and set `groupPrev` to that tail. Advance to the next group and repeat until fewer than `k` nodes remain.",
+    "complexity": "O(n) time / O(1) extra space"
+  },
+  "relatedProblems": ["reverse-linked-list", "merge-k-sorted-lists"]
+}

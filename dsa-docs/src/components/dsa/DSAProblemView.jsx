@@ -3,13 +3,56 @@ import Editor from "@monaco-editor/react";
 import ThemeToggle from "../ThemeToggle.jsx";
 import Skeleton from "../Skeleton.jsx";
 import { DiDatabase } from "react-icons/di";
-import { getProblemById, DIFFICULTY, DSA_TOPICS } from "../../data/dsa-problems.js";
-import { FiArrowLeft, FiSun, FiMoon, FiPlay, FiRefreshCw } from "react-icons/fi";
+import { getProblemById, DIFFICULTY, DSA_TOPICS, DSA_PROBLEMS } from "../../data/dsa-problems.js";
+import {
+  FiArrowLeft, FiSun, FiMoon, FiPlay, FiRefreshCw,
+  FiMaximize2, FiMinimize2, FiClock, FiZoomIn, FiZoomOut, FiCode,
+} from "react-icons/fi";
+import {
+  runCodeInSandbox,
+  celebrate,
+  awardXP,
+  LabXPBadge,
+  LabCommandPalette,
+  useCommandPalette,
+} from "../labs/shared/index.js";
 
+const DSA_CONFETTI = ["#6366f1", "#a78bfa", "#34d399", "#f59e0b"];
+const SOLVED_KEY = "dsa-solved-v1";
+const DRAFTS_KEY = "dsa-drafts-v1";
+const SUBS_KEY = "dsa-submissions-v1";
+const NOTES_KEY = "dsa-notes-v1";
+const SETTINGS_KEY = "dsa-editor-settings-v1";
+const MAX_SUBMISSIONS = 20;
+const TIME_LIMIT_MS = 4000;
+
+function readJSON(key, fallback) {
+  try {
+    const v = JSON.parse(localStorage.getItem(key));
+    return v === null || v === undefined ? fallback : v;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeJSON(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
+function readSolved() {
+  return readJSON(SOLVED_KEY, []);
+}
+
+const VERDICT_META = {
+  accepted: { label: "Accepted", cls: "accepted", icon: "✓" },
+  wrong_answer: { label: "Wrong Answer", cls: "wrong", icon: "✗" },
+  runtime_error: { label: "Runtime Error", cls: "error", icon: "⚠" },
+  time_limit_exceeded: { label: "Time Limit Exceeded", cls: "tle", icon: "⏱" },
+};
 
 // ─── RESIZABLE HANDLE ───
 
-function ResizableHandle({ onDrag, orientation = "vertical" }) {
+function ResizableHandle({ onDrag, orientation = "vertical", className = "" }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -37,7 +80,13 @@ function ResizableHandle({ onDrag, orientation = "vertical" }) {
     return () => el.removeEventListener("mousedown", onMouseDown);
   }, [onDrag, orientation]);
 
-  return <div ref={ref} className="jsl-resize-handle" style={{ cursor: orientation === "vertical" ? "col-resize" : "row-resize" }} />;
+  return (
+    <div
+      ref={ref}
+      className={`dsa-resize-handle ${orientation} ${className}`}
+      style={{ cursor: orientation === "vertical" ? "col-resize" : "row-resize" }}
+    />
+  );
 }
 
 // ─── THEMES ───
@@ -88,6 +137,102 @@ function defineDSAThemes(monaco) {
   });
 }
 
+function CodeBlock({ code }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const { boilerplate, userCode } = useMemo(() => {
+    return splitBoilerplate(code);
+  }, [code]);
+
+  const hasBoilerplate = boilerplate.trim().length > 0;
+  const displayCode = hasBoilerplate ? userCode : code;
+
+  return (
+    <div style={{ position: "relative" }}>
+      <pre className="dsa-code-block" style={{ paddingRight: "70px" }}>
+        <code>{displayCode}</code>
+      </pre>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="dsa-btn-secondary"
+        style={{
+          position: "absolute",
+          top: "8px",
+          right: "8px",
+          padding: "3px 8px",
+          fontSize: "11px",
+          zIndex: 10,
+        }}
+      >
+        {copied ? "✓ Copied" : "Copy"}
+      </button>
+    </div>
+  );
+}
+
+// Helper (harness) identifiers that are boilerplate, not the user's task.
+const HELPER_FUNCS = new Set(["buildTree", "buildList", "toArray", "treeToArray", "toPairs"]);
+const HELPER_CLASSES = new Set(["TreeNode", "ListNode", "Node", "LinkedList"]);
+
+function extractFunctionName(starterCode) {
+  if (!starterCode) return "";
+  const matches = [...starterCode.matchAll(/function\s+([a-zA-Z0-9_$]+)\s*\(/g)];
+  if (matches.length > 0) {
+    for (let i = matches.length - 1; i >= 0; i--) {
+      const name = matches[i][1];
+      if (!HELPER_FUNCS.has(name)) return name;
+    }
+  }
+  const classMatches = [...starterCode.matchAll(/class\s+([a-zA-Z0-9_$]+)/g)];
+  if (classMatches.length > 0) {
+    for (let i = classMatches.length - 1; i >= 0; i--) {
+      const name = classMatches[i][1];
+      if (!HELPER_CLASSES.has(name)) return name;
+    }
+  }
+  return "";
+}
+
+// Split starter code into hidden harness boilerplate (node classes + builders)
+// and the part the user actually works on. The split point is the FIRST
+// function that is not a known helper — so problems where the user writes
+// several functions (e.g. serialize + deserialize) keep all of them editable.
+function splitBoilerplate(codeStr) {
+  if (!codeStr) return { boilerplate: "", userCode: codeStr || "" };
+  const decls = [...codeStr.matchAll(/(?:function|def)\s+([a-zA-Z0-9_$]+)\s*\(/g)];
+  const first = decls.find((m) => !HELPER_FUNCS.has(m[1]));
+  if (!first) return { boilerplate: "", userCode: codeStr };
+
+  let splitIndex = first.index;
+  const beforeFunc = codeStr.substring(0, splitIndex).trimEnd();
+  if (beforeFunc.endsWith("*/")) {
+    const jsdocStart = beforeFunc.lastIndexOf("/*");
+    if (jsdocStart !== -1) splitIndex = jsdocStart;
+  } else if (beforeFunc.endsWith('"""') || beforeFunc.endsWith("'''")) {
+    const quote = beforeFunc.endsWith('"""') ? '"""' : "'''";
+    const docstringStart = beforeFunc.substring(0, beforeFunc.length - 3).lastIndexOf(quote);
+    if (docstringStart !== -1) splitIndex = docstringStart;
+  }
+  const boilerplate = codeStr.substring(0, splitIndex);
+  const userCode = codeStr.substring(splitIndex);
+  return { boilerplate, userCode };
+}
+
+function formatArg(v) {
+  try { return JSON.stringify(v); } catch { return String(v); }
+}
+
+function formatConsoleArg(v) {
+  try { return typeof v === "object" && v !== null ? JSON.stringify(v, null, 2) : String(v); } catch { return String(v); }
+}
+
 // ─── PROBLEM VIEW ───
 
 export default function DSAProblemView({ problemId }) {
@@ -97,23 +242,59 @@ export default function DSAProblemView({ problemId }) {
   const [code, setCode] = useState("");
   const [output, setOutput] = useState([]);
   const [testResults, setTestResults] = useState([]);
+  const [verdict, setVerdict] = useState(null);
+  const [failedCase, setFailedCase] = useState(null);
+  const [runtimeMs, setRuntimeMs] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [monacoTheme, setMonacoTheme] = useState("dsa-dark");
   const [showSolution, setShowSolution] = useState(false);
   const [revealedHints, setRevealedHints] = useState([]);
   const [consoleHeight, setConsoleHeight] = useState(160);
+  const [solved, setSolved] = useState(false);
+  const [showBoiler, setShowBoiler] = useState(false);
+  const [showSubs, setShowSubs] = useState(false);
+  const [submissions, setSubmissions] = useState([]);
+  const [notes, setNotes] = useState("");
+  const [fullscreen, setFullscreen] = useState(false);
+  const [settings, setSettings] = useState(() =>
+    typeof window === "undefined"
+      ? { fontSize: 13, splitPct: 46 }
+      : { fontSize: 13, splitPct: 46, ...readJSON(SETTINGS_KEY, {}) }
+  );
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
   const editorRef = useRef(null);
   const editorPanelRef = useRef(null);
+  const detailPageRef = useRef(null);
   const codeVersionRef = useRef(0);
+  const terminateRef = useRef(null);
+  const workerRef = useRef(null);
+  const workerTimeoutRef = useRef(null);
+  const runIdRef = useRef(0);
+  const draftTimerRef = useRef(null);
+  const notesTimerRef = useRef(null);
+  const runActionRef = useRef(null);
+  const submitActionRef = useRef(null);
+
+  const sampleTests = problem?.sampleTests || [];
 
   useEffect(() => {
     if (problem) {
-      setCode(problem.starterCode);
+      const drafts = readJSON(DRAFTS_KEY, {});
+      const draft = drafts[problem.id];
+      setCode(draft?.code || problem.starterCode);
       setOutput([]);
       setTestResults([]);
+      setVerdict(null);
+      setFailedCase(null);
+      setRuntimeMs(null);
       setShowSolution(false);
+      setShowBoiler(false);
+      setShowSubs(false);
       setRevealedHints([]);
+      setSolved(readSolved().includes(problem.id));
+      setSubmissions(readJSON(SUBS_KEY, {})[problem.id] || []);
+      setNotes(readJSON(NOTES_KEY, {})[problem.id] || "");
       codeVersionRef.current++;
     }
   }, [problemId, problem]);
@@ -125,10 +306,37 @@ export default function DSAProblemView({ problemId }) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Persist editor settings
+  useEffect(() => {
+    writeJSON(SETTINGS_KEY, settings);
+  }, [settings]);
+
+  // Apply font size live
+  useEffect(() => {
+    if (editorRef.current) {
+      try { editorRef.current.updateOptions({ fontSize: settings.fontSize }); } catch {}
+    }
+  }, [settings.fontSize]);
+
+  // Esc exits fullscreen
+  useEffect(() => {
+    if (!fullscreen) return;
+    const onKey = (e) => { if (e.key === "Escape") setFullscreen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [fullscreen]);
+
   const handleEditorMount = useCallback((editor, monaco) => {
     editorRef.current = editor;
     defineDSAThemes(monaco);
     monaco.editor.setTheme(monacoTheme);
+
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+      if (runActionRef.current) runActionRef.current();
+    });
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+      if (submitActionRef.current) submitActionRef.current();
+    });
 
     const remeasure = () => { try { editor.remeasureFonts(); } catch {} };
     setTimeout(remeasure, 50);
@@ -139,9 +347,75 @@ export default function DSAProblemView({ problemId }) {
     }
   }, [monacoTheme]);
 
-  const handleCodeChange = useCallback((v) => {
-    setCode(v || "");
+  const functionName = useMemo(() => {
+    return problem ? extractFunctionName(problem.starterCode) : "";
+  }, [problem]);
+
+  const initialBoilerplate = useMemo(() => {
+    if (!problem) return "";
+    return splitBoilerplate(problem.starterCode).boilerplate;
+  }, [problem]);
+
+  const { boilerplate, userCode } = useMemo(() => {
+    if (initialBoilerplate && code && code.startsWith(initialBoilerplate)) {
+      return {
+        boilerplate: initialBoilerplate,
+        userCode: code.substring(initialBoilerplate.length),
+      };
+    }
+    return { boilerplate: "", userCode: code || "" };
+  }, [code, initialBoilerplate]);
+
+  const hasBoilerplate = boilerplate.trim().length > 0;
+  const displayCode = hasBoilerplate ? userCode : code;
+  const boilerLineCount = hasBoilerplate ? boilerplate.trimEnd().split("\n").length : 0;
+
+  const similarProblems = useMemo(() => {
+    if (!problem) return [];
+    return DSA_PROBLEMS
+      .filter(p => p.id !== problem.id)
+      .map(p => ({ p, overlap: p.topics.filter(t => problem.topics.includes(t)).length }))
+      .filter(x => x.overlap > 0)
+      .sort((a, b) => b.overlap - a.overlap || a.p.number - b.p.number)
+      .slice(0, 4)
+      .map(x => x.p);
+  }, [problem]);
+
+  const saveDraft = useCallback((problemIdToSave, nextCode) => {
+    if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    draftTimerRef.current = setTimeout(() => {
+      const drafts = readJSON(DRAFTS_KEY, {});
+      drafts[problemIdToSave] = { code: nextCode, ts: Date.now() };
+      writeJSON(DRAFTS_KEY, drafts);
+    }, 400);
   }, []);
+
+  const clearDraft = useCallback((problemIdToClear) => {
+    if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    const drafts = readJSON(DRAFTS_KEY, {});
+    delete drafts[problemIdToClear];
+    writeJSON(DRAFTS_KEY, drafts);
+  }, []);
+
+  const handleCodeChange = useCallback(
+    (v) => {
+      const next = hasBoilerplate ? boilerplate + (v || "") : (v || "");
+      setCode(next);
+      if (problem) saveDraft(problem.id, next);
+    },
+    [boilerplate, hasBoilerplate, problem, saveDraft]
+  );
+
+  const handleNotesChange = useCallback((e) => {
+    const text = e.target.value;
+    setNotes(text);
+    if (notesTimerRef.current) clearTimeout(notesTimerRef.current);
+    notesTimerRef.current = setTimeout(() => {
+      const all = readJSON(NOTES_KEY, {});
+      if (text.trim()) all[problemId] = text; else delete all[problemId];
+      writeJSON(NOTES_KEY, all);
+    }, 500);
+  }, [problemId]);
 
   const handleConsoleDrag = useCallback(({ clientY }) => {
     if (!editorPanelRef.current) return;
@@ -151,51 +425,123 @@ export default function DSAProblemView({ problemId }) {
     setConsoleHeight(newHeight);
   }, []);
 
-  const runCode = useCallback(() => {
+  const handleSplitDrag = useCallback(({ clientX }) => {
+    if (!detailPageRef.current) return;
+    const rect = detailPageRef.current.getBoundingClientRect();
+    const pct = Math.max(25, Math.min(70, ((clientX - rect.left) / rect.width) * 100));
+    setSettings(s => ({ ...s, splitPct: Math.round(pct * 10) / 10 }));
+  }, []);
+
+  // Console-only run (printf debugging)
+  const runInConsole = useCallback(() => {
+    if (terminateRef.current) terminateRef.current();
     setIsRunning(true);
     setOutput([]);
-    const logs = [];
-    const origLog = console.log, origErr = console.error, origWarn = console.warn;
 
-    console.log = (...args) => {
-      logs.push({ type: "log", content: args.map(a => typeof a === "object" ? JSON.stringify(a, null, 2) : String(a)).join(" ") });
-      origLog(...args);
-    };
-    console.error = (...args) => {
-      logs.push({ type: "error", content: args.join(" ") });
-      origErr(...args);
-    };
-    console.warn = (...args) => {
-      logs.push({ type: "warn", content: args.join(" ") });
-      origWarn(...args);
-    };
-
-    try {
-      const result = new Function(code)();
-      if (result !== undefined && logs.length === 0) logs.push({ type: "info", content: `→ ${JSON.stringify(result)}` });
-      if (logs.length === 0) logs.push({ type: "info", content: "✓ Code executed (no output)" });
-      setOutput(logs);
-    } catch (e) {
-      logs.push({ type: "error", content: `✗ ${e.message}` });
-      setOutput(logs);
-    } finally {
-      console.log = origLog; console.error = origErr; console.warn = origWarn;
-      setIsRunning(false);
-    }
+    terminateRef.current = runCodeInSandbox(
+      code,
+      (type, content) => {
+        const displayType = type === "result" ? "info" : type;
+        const displayContent = type === "result" ? `→ ${content}` : content;
+        setOutput(prev => [...prev, { type: displayType, content: displayContent }]);
+      },
+      () => {
+        setIsRunning(false);
+        terminateRef.current = null;
+      }
+    );
   }, [code]);
 
-  const runTests = useCallback(() => {
-    if (!problem) return;
+  const cleanupWorker = useCallback(() => {
+    if (workerRef.current) {
+      workerRef.current.terminate();
+      workerRef.current = null;
+    }
+    if (workerTimeoutRef.current) {
+      clearTimeout(workerTimeoutRef.current);
+      workerTimeoutRef.current = null;
+    }
+  }, []);
 
-    // First check syntax
+  // Clean up workers on unmount
+  useEffect(() => {
+    return () => {
+      if (terminateRef.current) terminateRef.current();
+      cleanupWorker();
+      if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+      if (notesTimerRef.current) clearTimeout(notesTimerRef.current);
+    };
+  }, [cleanupWorker]);
+
+  // Execute the sample tests in the sandboxed judge worker. Resolves with
+  // { verdict, results, failedCase, error } — never rejects. `onLog`, if
+  // given, is called live with every console.log/warn/error the user's code
+  // emits while the tests run — this is what makes print-debugging visible.
+  const execWorker = useCallback((workerTests, onLog) => {
+    return new Promise((resolve) => {
+      cleanupWorker();
+      const runId = ++runIdRef.current;
+
+      let worker;
+      try {
+        worker = new Worker(new URL("../../workers/js-judge.worker.js", import.meta.url), { type: "module" });
+      } catch {
+        resolve(null); // worker unavailable — caller falls back to legacy checks
+        return;
+      }
+      workerRef.current = worker;
+
+      worker.onmessage = (event) => {
+        if (event.data.runId !== runId) return;
+        if (event.data.type === "log") {
+          if (onLog) onLog(event.data.logType, event.data.content);
+          return;
+        }
+        if (event.data.type === "done") {
+          clearTimeout(workerTimeoutRef.current);
+          workerRef.current = null;
+          worker.terminate();
+          resolve(event.data);
+        }
+      };
+
+      worker.onerror = () => {
+        clearTimeout(workerTimeoutRef.current);
+        workerRef.current = null;
+        worker.terminate();
+        resolve({ verdict: "runtime_error", results: [], failedCase: null, error: { message: "Worker error", stack: "" } });
+      };
+
+      workerTimeoutRef.current = setTimeout(() => {
+        if (runIdRef.current !== runId) return;
+        worker.terminate();
+        workerRef.current = null;
+        resolve({ verdict: "time_limit_exceeded", results: [], failedCase: null, error: null });
+      }, problem?.timeLimitMs || TIME_LIMIT_MS);
+
+      worker.postMessage({
+        runId,
+        code,
+        functionName,
+        tests: workerTests,
+        compareMode: problem?.compareMode || "exact",
+      });
+    });
+  }, [cleanupWorker, code, functionName, problem]);
+
+  // Legacy validate() suite — the source of truth for Accepted/solved.
+  const runLegacySuite = useCallback(() => {
     try {
       new Function(code);
     } catch (e) {
-      setTestResults(problem.tests.map((test, i) => ({
-        index: i, name: test.name, passed: false,
-        error: `Syntax error: ${e.message}`,
-      })));
-      return;
+      return {
+        results: problem.tests.map((test, i) => ({
+          index: i, name: test.name, passed: false,
+          error: `Syntax error: ${e.message}`,
+        })),
+        allPassed: false,
+        syntaxError: e.message,
+      };
     }
 
     const results = problem.tests.map((test, i) => {
@@ -204,47 +550,178 @@ export default function DSAProblemView({ problemId }) {
         const passed = test.validate(code);
         const endTime = performance.now();
         return {
-          index: i,
-          name: test.name,
-          passed,
+          index: i, name: test.name, passed,
           error: passed ? null : "Test failed",
           time: (endTime - startTime).toFixed(2),
         };
       } catch (e) {
-        return {
-          index: i,
-          name: test.name,
-          passed: false,
-          error: e?.message || "Test failed",
-        };
+        return { index: i, name: test.name, passed: false, error: e?.message || "Test failed" };
       }
     });
-
-    setTestResults(results);
-
-    // Log results
-    const passedCount = results.filter(r => r.passed).length;
-    const outputLines = [
-      { type: "info", content: `═══ Test Results: ${passedCount}/${results.length} passed ═══` },
-    ];
-    results.forEach(r => {
-      if (r.passed) {
-        outputLines.push({ type: "log", content: `  ✓ ${r.name}${r.time ? ` (${r.time}ms)` : ""}` });
-      } else {
-        outputLines.push({ type: "error", content: `  ✗ ${r.name} — ${r.error || "Failed"}` });
-      }
-    });
-    setOutput(outputLines);
+    return { results, allPassed: results.length > 0 && results.every(r => r.passed), syntaxError: null };
   }, [code, problem]);
 
-  const submitSolution = useCallback(() => {
+  // Run — executes visible sample tests in the judge worker (real execution).
+  // Console Output shows whatever the user's own console.log/warn/error calls
+  // print, live, as the code runs. Test Results (separate panel below) shows
+  // the pass/fail checklist — the two panels are intentionally not duplicated.
+  const handleRun = useCallback(async () => {
+    if (!problem || isRunning || isSubmitting) return;
+
+    if (sampleTests.length === 0) {
+      runInConsole();
+      return;
+    }
+
+    setIsRunning(true);
+    setVerdict(null);
+    setFailedCase(null);
+    setRuntimeMs(null);
+    setTestResults([]);
+    setOutput([]);
+
+    const workerTests = sampleTests.map(st => ({ args: st.input, expected: st.expected, hidden: false }));
+    const data = await execWorker(workerTests, (logType, content) => {
+      setOutput(prev => [...prev, { type: logType, content }]);
+    });
+
+    if (!data) {
+      setIsRunning(false);
+      runInConsole();
+      return;
+    }
+
+    const rows = sampleTests.map((st, i) => {
+      const r = (data.results || []).find(res => res.index === i);
+      return {
+        index: i,
+        name: st.name || `Sample ${i + 1}`,
+        passed: r?.status === "pass",
+        error: r ? (r.status === "pass" ? null : r.status === "error" ? (data.error?.message || "Runtime error") : "Wrong answer") : "Not run",
+        time: r ? r.runtimeMs.toFixed(1) : null,
+      };
+    });
+    const runtime = (data.results || []).reduce((s, r) => s + (r.runtimeMs || 0), 0);
+
+    setTestResults(rows);
+    setVerdict(data.verdict === "accepted" ? null : data.verdict); // Run: only surface failures as verdict
+    setFailedCase(data.failedCase);
+    setRuntimeMs(runtime);
+
+    if (data.error?.message) {
+      setOutput(prev => [...prev, { type: "error", content: data.error.message }]);
+    } else {
+      setOutput(prev => prev.length === 0
+        ? [{ type: "info", content: "No console output — add console.log(...) in your code to print values." }]
+        : prev);
+    }
+    setIsRunning(false);
+  }, [problem, isRunning, isSubmitting, sampleTests, execWorker, runInConsole]);
+
+  // Submit — real-executes samples, then runs the full validation suite.
+  const handleSubmit = useCallback(async () => {
+    if (!problem || isRunning || isSubmitting) return;
     setIsSubmitting(true);
-    // Same as run tests for now, but could include hidden test cases
-    setTimeout(() => {
-      runTests();
-      setIsSubmitting(false);
-    }, 200);
-  }, [runTests]);
+    setVerdict(null);
+    setFailedCase(null);
+    setRuntimeMs(null);
+    setOutput([]);
+
+    let workerData = null;
+    if (sampleTests.length > 0) {
+      const workerTests = sampleTests.map(st => ({ args: st.input, expected: st.expected, hidden: false }));
+      workerData = await execWorker(workerTests, (logType, content) => {
+        setOutput(prev => [...prev, { type: logType, content }]);
+      });
+    }
+    const runtime = workerData ? (workerData.results || []).reduce((s, r) => s + (r.runtimeMs || 0), 0) : null;
+
+    let finalVerdict;
+    let legacy = null;
+
+    if (workerData && workerData.verdict === "runtime_error") {
+      finalVerdict = "runtime_error";
+    } else if (workerData && workerData.verdict === "time_limit_exceeded") {
+      finalVerdict = "time_limit_exceeded";
+    } else {
+      // Capture console.log from the (main-thread, synchronous) hidden-test
+      // suite too, so print-debugging still works when Submit is what runs it.
+      const origLog = console.log, origWarn = console.warn, origErr = console.error;
+      console.log = (...a) => setOutput(prev => [...prev, { type: "log", content: a.map(formatConsoleArg).join(" ") }]);
+      console.warn = (...a) => setOutput(prev => [...prev, { type: "warn", content: a.map(formatConsoleArg).join(" ") }]);
+      console.error = (...a) => setOutput(prev => [...prev, { type: "error", content: a.map(formatConsoleArg).join(" ") }]);
+      try {
+        legacy = runLegacySuite();
+      } finally {
+        console.log = origLog; console.warn = origWarn; console.error = origErr;
+      }
+      finalVerdict = legacy.allPassed ? "accepted" : "wrong_answer";
+    }
+
+    const rows = legacy ? legacy.results : [];
+    setTestResults(rows);
+    setVerdict(finalVerdict);
+    setFailedCase(workerData?.failedCase || null);
+    setRuntimeMs(runtime);
+
+    // Verdict banner + Test Results panel already show the outcome —
+    // console only needs genuinely new info: errors and the win message.
+    const lines = [];
+    if (workerData?.error?.message) lines.push({ type: "error", content: workerData.error.message });
+
+    if (finalVerdict === "accepted") {
+      const solvedIds = readSolved();
+      if (!solvedIds.includes(problem.id)) {
+        writeJSON(SOLVED_KEY, [...solvedIds, problem.id]);
+      }
+      setSolved(true);
+      if (awardXP(`dsa:${problem.id}`, problem.xp || 20, `Solved ${problem.title}`)) {
+        celebrate(DSA_CONFETTI);
+      }
+      lines.push({ type: "info", content: `🎉 Accepted — ${problem.title} solved!` });
+    }
+    setOutput(prev => [...prev, ...lines]);
+
+    // Record submission
+    const subs = readJSON(SUBS_KEY, {});
+    const list = subs[problem.id] || [];
+    list.unshift({ ts: Date.now(), verdict: finalVerdict, runtimeMs: runtime, code });
+    subs[problem.id] = list.slice(0, MAX_SUBMISSIONS);
+    writeJSON(SUBS_KEY, subs);
+    setSubmissions(subs[problem.id]);
+
+    setIsSubmitting(false);
+  }, [problem, isRunning, isSubmitting, sampleTests, execWorker, runLegacySuite, code]);
+
+  runActionRef.current = handleRun;
+  submitActionRef.current = handleSubmit;
+
+  const handleReset = useCallback(() => {
+    if (!problem) return;
+    const split = splitBoilerplate(problem.starterCode);
+    const hasB = split.boilerplate.trim().length > 0;
+    const defaultDisplayCode = hasB ? split.userCode : problem.starterCode;
+    if (editorRef.current) editorRef.current.setValue(defaultDisplayCode);
+    setCode(problem.starterCode);
+    clearDraft(problem.id);
+    setOutput([]);
+    setTestResults([]);
+    setVerdict(null);
+    setFailedCase(null);
+    setRuntimeMs(null);
+    codeVersionRef.current++;
+  }, [problem, clearDraft]);
+
+  const restoreSubmission = useCallback((sub) => {
+    setCode(sub.code);
+    const split = splitBoilerplate(problem.starterCode);
+    const hasB = split.boilerplate.trim().length > 0 && sub.code.startsWith(split.boilerplate);
+    if (editorRef.current) {
+      editorRef.current.setValue(hasB ? sub.code.substring(split.boilerplate.length) : sub.code);
+    }
+    saveDraft(problem.id, sub.code);
+    setShowSubs(false);
+  }, [problem, saveDraft]);
 
   const toggleHint = (index) => {
     setRevealedHints(prev =>
@@ -310,6 +787,7 @@ export default function DSAProblemView({ problemId }) {
   const diff = DIFFICULTY[problem.difficulty] || DIFFICULTY.Easy;
   const passedCount = testResults.filter(r => r.passed).length;
   const allPassed = testResults.length > 0 && passedCount === testResults.length;
+  const verdictMeta = verdict ? VERDICT_META[verdict] : null;
 
   return (
     <div className="dsa-platform">
@@ -323,24 +801,63 @@ export default function DSAProblemView({ problemId }) {
           <div className="dsa-top-brand">
             <DiDatabase size={20} color="#6366f1" />
             <span className="dsa-top-title">{problem.number}. {problem.title}</span>
+            {solved && (
+              <span style={{
+                fontFamily: '"JetBrains Mono", monospace', fontSize: "0.68rem", fontWeight: 700,
+                color: "#4ade80", border: "1px solid rgba(74,222,128,0.4)", borderRadius: 999,
+                padding: "2px 9px", background: "rgba(74,222,128,0.1)", marginLeft: 8,
+              }}>
+                ✓ Solved
+              </span>
+            )}
           </div>
         </div>
         <div className="dsa-topbar-right">
-          <button className="dsa-btn-icon" onClick={() => setMonacoTheme(t => t === "dsa-dark" ? "dsa-light" : "dsa-dark")} title="Toggle theme">
-            {monacoTheme === "dsa-dark" ? (
-              <FiSun size={16} />
-            ) : (
-              <FiMoon size={16} />
-            )}
+          <LabXPBadge />
+          <button className="dsa-btn-icon" onClick={() => setMonacoTheme(t => t === "dsa-dark" ? "dsa-light" : "dsa-dark")} title="Toggle editor theme">
+            {monacoTheme === "dsa-dark" ? <FiSun size={16} /> : <FiMoon size={16} />}
           </button>
           <ThemeToggle />
         </div>
       </div>
 
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#6366f1"
+        placeholder="Type a command or jump to another problem…"
+        commands={[
+          { id: "run", section: "Actions", label: "Run sample tests", hint: "Ctrl+Enter", action: handleRun },
+          { id: "submit", section: "Actions", label: "Submit solution", hint: "Ctrl+Shift+Enter", action: handleSubmit },
+          { id: "console", section: "Actions", label: "Run in console (printf debugging)", action: runInConsole },
+          { id: "reset", section: "Actions", label: "Reset to starter code", action: handleReset },
+          { id: "solution", section: "Actions", label: showSolution ? "Hide solutions" : "View solutions", action: () => setShowSolution(s => !s) },
+          { id: "fullscreen", section: "Actions", label: fullscreen ? "Exit fullscreen editor" : "Fullscreen editor", action: () => setFullscreen(f => !f) },
+          { id: "random", section: "Actions", label: "Random problem", action: () => {
+            const others = DSA_PROBLEMS.filter(p => p.id !== problem.id);
+            const pick = others[Math.floor(Math.random() * others.length)];
+            if (pick) window.location.href = `${base}dsa/problems/${pick.id}`;
+          } },
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "dsa-dark" ? "dsa-light" : "dsa-dark") },
+          { id: "back", section: "Actions", label: "Back to all problems", action: () => { window.location.href = `${base}dsa/problems`; } },
+          ...DSA_PROBLEMS.map(p => ({
+            id: `prob-${p.id}`,
+            section: "Problems",
+            label: `${p.number}. ${p.title}`,
+            hint: p.difficulty,
+            done: readSolved().includes(p.id),
+            action: () => { window.location.href = `${base}dsa/problems/${p.id}`; },
+          })),
+        ]}
+      />
+
       {/* Main Layout */}
-      <div className="dsa-detail-page">
+      <div className={`dsa-detail-page ${fullscreen ? "dsa-fullscreen" : ""}`} ref={detailPageRef}>
         {/* Content Panel */}
-        <div className="dsa-detail-content">
+        <div
+          className="dsa-detail-content"
+          style={fullscreen ? undefined : { flex: "none", width: `${settings.splitPct}%` }}
+        >
           <div className="dsa-detail-scroll">
             <div className="dsa-detail-inner">
               {/* Header */}
@@ -492,7 +1009,7 @@ export default function DSAProblemView({ problemId }) {
                         <span className="dsa-complexity-tag dsa-complexity-time">Time: {problem.bruteForceSolution.timeComplexity}</span>
                         <span className="dsa-complexity-tag dsa-complexity-space">Space: {problem.bruteForceSolution.spaceComplexity}</span>
                       </div>
-                      <pre className="dsa-code-block"><code>{problem.bruteForceSolution.code}</code></pre>
+                      <CodeBlock code={problem.bruteForceSolution.code} />
                     </div>
 
                     {/* Optimized */}
@@ -503,7 +1020,7 @@ export default function DSAProblemView({ problemId }) {
                         <span className="dsa-complexity-tag dsa-complexity-time">Time: {problem.optimizedSolution.timeComplexity}</span>
                         <span className="dsa-complexity-tag dsa-complexity-space">Space: {problem.optimizedSolution.spaceComplexity}</span>
                       </div>
-                      <pre className="dsa-code-block"><code>{problem.optimizedSolution.code}</code></pre>
+                      <CodeBlock code={problem.optimizedSolution.code} />
                     </div>
 
                     {/* Interview Explanation */}
@@ -517,39 +1034,128 @@ export default function DSAProblemView({ problemId }) {
                   </div>
                 )}
               </div>
+
+              {/* Similar Problems */}
+              {similarProblems.length > 0 && (
+                <div className="dsa-section">
+                  <h3 className="dsa-section-title">Similar Problems</h3>
+                  <div className="dsa-similar-list">
+                    {similarProblems.map(p => (
+                      <a key={p.id} href={`${base}dsa/problems/${p.id}`} className="dsa-similar-card">
+                        <span className="dsa-similar-num">{p.number}.</span>
+                        <span className="dsa-similar-title">{p.title}</span>
+                        <span className={`dsa-problem-diff ${p.difficulty.toLowerCase()}`}>{p.difficulty}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Notes */}
+              <div className="dsa-section">
+                <h3 className="dsa-section-title">📝 My Notes</h3>
+                <textarea
+                  className="dsa-notes-textarea"
+                  placeholder="Jot down your approach, mistakes, or things to remember. Saved automatically."
+                  value={notes}
+                  onChange={handleNotesChange}
+                  rows={5}
+                />
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Split handle */}
+        {!fullscreen && <ResizableHandle onDrag={handleSplitDrag} orientation="vertical" />}
 
         {/* Editor Panel */}
         <div className="dsa-editor-panel" ref={editorPanelRef}>
           {/* Editor Toolbar */}
           <div className="dsa-editor-toolbar">
-            <button className="dsa-btn-run" onClick={runCode} disabled={isRunning} title="Ctrl+Enter to run">
+            <button className="dsa-btn-run" onClick={handleRun} disabled={isRunning || isSubmitting} title="Run sample tests (Ctrl+Enter)">
               {isRunning ? (
                 <><span className="dsa-spinner" /> Running</>
               ) : (
                 <><FiPlay size={14} fill="currentColor" /> Run</>
               )}
             </button>
-            <button className="dsa-btn-submit" onClick={submitSolution} disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit"}
+            <button className="dsa-btn-submit" onClick={handleSubmit} disabled={isRunning || isSubmitting} title="Submit (Ctrl+Shift+Enter)">
+              {isSubmitting ? "Judging…" : "Submit"}
             </button>
-            <button className="dsa-btn-secondary" onClick={() => {
-              if (editorRef.current) {
-                editorRef.current.setValue(problem.starterCode);
-              }
-              setCode(problem.starterCode);
-              setOutput([]);
-              setTestResults([]);
-              codeVersionRef.current++;
-            }}>
+            <button className="dsa-btn-secondary" onClick={handleReset} title="Reset to starter code">
               <FiRefreshCw size={14} />
               Reset
             </button>
+            <button
+              className={`dsa-btn-secondary ${showSubs ? "active" : ""}`}
+              onClick={() => setShowSubs(s => !s)}
+              title="Submission history"
+            >
+              <FiClock size={14} />
+              {submissions.length > 0 ? ` ${submissions.length}` : ""}
+            </button>
+
             <span className="dsa-editor-lang">JavaScript</span>
-            <span className="dsa-editor-shortcut">Ctrl+Enter to run</span>
+
+            <div className="dsa-toolbar-spacer" />
+
+            <button className="dsa-btn-icon" onClick={() => setSettings(s => ({ ...s, fontSize: Math.max(11, s.fontSize - 1) }))} title="Decrease font size">
+              <FiZoomOut size={14} />
+            </button>
+            <span className="dsa-font-size-label">{settings.fontSize}px</span>
+            <button className="dsa-btn-icon" onClick={() => setSettings(s => ({ ...s, fontSize: Math.min(22, s.fontSize + 1) }))} title="Increase font size">
+              <FiZoomIn size={14} />
+            </button>
+            <button className="dsa-btn-icon" onClick={() => setFullscreen(f => !f)} title={fullscreen ? "Exit fullscreen (Esc)" : "Fullscreen editor"}>
+              {fullscreen ? <FiMinimize2 size={14} /> : <FiMaximize2 size={14} />}
+            </button>
           </div>
+
+          {/* Hidden boilerplate banner */}
+          {hasBoilerplate && (
+            <div className="dsa-boiler-banner">
+              <button className="dsa-boiler-toggle" onClick={() => setShowBoiler(s => !s)}>
+                <FiCode size={12} />
+                {boilerLineCount} helper lines hidden (node classes &amp; builders — included automatically)
+                <span>{showBoiler ? "▲ hide" : "▼ view"}</span>
+              </button>
+              {showBoiler && (
+                <pre className="dsa-boiler-code"><code>{boilerplate.trimEnd()}</code></pre>
+              )}
+            </div>
+          )}
+
+          {/* Submission history */}
+          {showSubs && (
+            <div className="dsa-subs-panel">
+              <div className="dsa-tests-header">
+                <span>Submissions</span>
+                <span style={{ textTransform: "none", fontWeight: 400 }}>{submissions.length ? `last ${submissions.length}` : ""}</span>
+              </div>
+              <div className="dsa-subs-body">
+                {submissions.length === 0 ? (
+                  <div className="dsa-subs-empty">No submissions yet — hit Submit to record one.</div>
+                ) : (
+                  submissions.map((sub, i) => {
+                    const m = VERDICT_META[sub.verdict] || VERDICT_META.wrong_answer;
+                    return (
+                      <div key={i} className="dsa-sub-row">
+                        <span className={`dsa-sub-verdict ${m.cls}`}>{m.icon} {m.label}</span>
+                        <span className="dsa-sub-meta">
+                          {new Date(sub.ts).toLocaleString()}
+                          {sub.runtimeMs !== null && sub.runtimeMs !== undefined ? ` · ${sub.runtimeMs.toFixed(1)}ms` : ""}
+                        </span>
+                        <button className="dsa-btn-secondary" style={{ padding: "2px 8px", fontSize: "0.68rem" }} onClick={() => restoreSubmission(sub)}>
+                          Restore
+                        </button>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Editor */}
           <div className="dsa-editor-wrapper">
@@ -558,11 +1164,11 @@ export default function DSAProblemView({ problemId }) {
               height="100%"
               language="javascript"
               theme={monacoTheme}
-              value={code}
+              value={displayCode}
               onChange={handleCodeChange}
               onMount={handleEditorMount}
               options={{
-                fontSize: 13,
+                fontSize: settings.fontSize,
                 fontFamily: "Consolas, 'Courier New', monospace",
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
@@ -581,11 +1187,28 @@ export default function DSAProblemView({ problemId }) {
             />
           </div>
 
+          {/* Verdict banner */}
+          {verdictMeta && (
+            <div className={`dsa-verdict-banner ${verdictMeta.cls}`}>
+              <span className="dsa-verdict-label">{verdictMeta.icon} {verdictMeta.label}</span>
+              {runtimeMs !== null && <span className="dsa-verdict-runtime">{runtimeMs.toFixed(1)} ms</span>}
+              {failedCase && (
+                <div className="dsa-failed-case">
+                  <div><strong>Input:</strong> <code>{(failedCase.input || []).map(formatArg).join(", ")}</code></div>
+                  <div><strong>Expected:</strong> <code>{formatArg(failedCase.expected)}</code></div>
+                  {failedCase.actual !== null && failedCase.actual !== undefined && (
+                    <div><strong>Got:</strong> <code>{formatArg(failedCase.actual)}</code></div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Test Results */}
           {testResults.length > 0 && (
             <div className="dsa-tests-panel" style={{ flexShrink: 0, maxHeight: 100, overflow: "auto" }}>
               <div className="dsa-tests-header">
-                <span>Test Results</span>
+                <span title="Pass/fail checklist — one row per sample test">Test Results</span>
                 <div className="dsa-tests-header-actions">
                   <span className={`dsa-tests-score ${allPassed ? "all-pass" : ""}`}>
                     {passedCount}/{testResults.length} Passed
@@ -607,10 +1230,10 @@ export default function DSAProblemView({ problemId }) {
           )}
 
           {/* Console */}
-          <ResizableHandle onDrag={handleConsoleDrag} />
+          <ResizableHandle onDrag={handleConsoleDrag} orientation="horizontal" />
           <div className="dsa-console-panel" style={{ height: consoleHeight, maxHeight: consoleHeight, minHeight: consoleHeight, flexShrink: 0 }}>
             <div className="dsa-console-header">
-              <span>Console Output</span>
+              <span title="Your console.log / console.warn / console.error output, printed live as your code runs">Console Output</span>
               <span style={{ color: "var(--dsa-text-muted)", fontSize: "0.68rem", textTransform: "none" }}>{output.length} lines</span>
             </div>
             <div className="dsa-console-body">

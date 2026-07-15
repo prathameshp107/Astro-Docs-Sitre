@@ -1,0 +1,25 @@
+---
+import BehavioralHub from '../../components/behavioral/BehavioralHub.jsx';
+import AppNav from '../../components/AppNav.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import '../../styles/behavioral.css';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Behavioral Interview Prep — DSA & Dev Notes</title>
+    <meta name="description" content="150+ behavioral interview questions tagged by category and company style (Amazon LPs, Google, Meta), plus a guided STAR story builder with live coaching hints and a coverage matrix so you always know which question types you can answer." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="behavioral" client:load />
+    <BehavioralHub client:load />
+  </body>
+</html>

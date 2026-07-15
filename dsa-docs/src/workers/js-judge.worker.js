@@ -23,6 +23,18 @@ function compareOutputs(actual, expected, mode) {
   }
   if (mode === "anyValid") {
     if (typeof expected === "string") {
+      // SECURITY WARNING: Running dynamic code from expected validator string.
+      // Guard: Ensure validator string doesn't contain malicious patterns to prevent code injection
+      // if test definitions are ever loaded from a remote/untrusted source.
+      const blockedPatterns = [
+        /postMessage/i, /onmessage/i, /self/i, /globalThis/i, /window/i,
+        /eval/i, /Function/i, /importScripts/i, /Worker/i, /fetch/i,
+        /XMLHttpRequest/i, /constructor/i, /prototype/i, /__proto__/i
+      ];
+      if (blockedPatterns.some(pattern => pattern.test(expected))) {
+        return false;
+      }
+
       try {
         // Create a function from the string and call it with the actual value
         // The expected string should be a function body that returns boolean
@@ -41,8 +53,26 @@ function compareOutputs(actual, expected, mode) {
   return JSON.stringify(actual) === JSON.stringify(expected);
 }
 
+function formatLogArg(a) {
+  try {
+    return typeof a === "object" && a !== null ? JSON.stringify(a, null, 2) : String(a);
+  } catch {
+    return String(a);
+  }
+}
+
 self.onmessage = (event) => {
   const { runId, code, functionName, tests, compareMode } = event.data;
+
+  // Forward the user's console.log/warn/error calls back to the main thread
+  // in real time, so print-debugging inside their solution is visible while
+  // the sample tests run — not just the pass/fail verdict.
+  const sendLog = (logType, args) => {
+    self.postMessage({ type: "log", runId, logType, content: args.map(formatLogArg).join(" ") });
+  };
+  console.log = (...args) => sendLog("log", args);
+  console.warn = (...args) => sendLog("warn", args);
+  console.error = (...args) => sendLog("error", args);
 
   let fn;
   try {

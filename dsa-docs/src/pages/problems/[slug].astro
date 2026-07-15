@@ -1,6 +1,8 @@
 ---
 import AppNav from '../../components/AppNav.jsx';
 import JudgeView from '../../components/judge/JudgeView.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
 import '../../styles/judge.css';
 
 export async function getStaticPaths() {
@@ -25,7 +27,7 @@ const { slug } = Astro.params;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
-  <body style="display:flex; flex-direction:column; height:100vh; margin:0; overflow:hidden;">
+  <body class="mcq-body" style="display:flex; flex-direction:column; height:100vh; margin:0; overflow:hidden;">
     <AppNav activeSection="problems" client:load />
     <div class="jdg-topbar">
       <a href="../" class="jdg-topbar-back">← Problems</a>

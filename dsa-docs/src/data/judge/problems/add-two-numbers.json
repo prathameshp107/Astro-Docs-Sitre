@@ -1,0 +1,38 @@
+{
+  "id": "add-two-numbers",
+  "title": "Add Two Numbers",
+  "difficulty": "medium",
+  "topics": ["linked-list", "recursion"],
+  "companies": ["amazon", "microsoft", "meta", "adobe"],
+  "statement": "You are given two non-empty linked lists representing two non-negative integers. The digits are stored in **reverse order**, and each node contains a single digit. Add the two numbers and return the sum as a linked list, also in reverse-digit order.\n\nYou may assume the two numbers do not contain any leading zero, except the number 0 itself.\n\nBuild both lists from their digit arrays, walk them together adding corresponding digits plus a running carry (treating a missing node as digit 0), and build the result list one digit at a time. Return the result as a reverse-order digit array.",
+  "constraints": [
+    "The number of nodes in each linked list is in the range [1, 100]",
+    "0 <= Node.val <= 9",
+    "It is guaranteed that the list represents a number that does not have leading zeros, unless the number itself is 0"
+  ],
+  "examples": [
+    { "input": "l1 = [2,4,3], l2 = [5,6,4]", "output": "[7,0,8]", "explanation": "342 + 465 = 807." },
+    { "input": "l1 = [0], l2 = [0]", "output": "[0]" }
+  ],
+  "functionName": "addTwoNumbers",
+  "starterCode": {
+    "javascript": "class ListNode {\n  constructor(val, next = null) { this.val = val; this.next = next; }\n}\nfunction buildList(values) {\n  let head = null, tail = null;\n  for (const v of values) {\n    const node = new ListNode(v);\n    if (!head) head = node; else tail.next = node;\n    tail = node;\n  }\n  return head;\n}\nfunction toArray(head) {\n  const arr = [];\n  let curr = head;\n  while (curr) { arr.push(curr.val); curr = curr.next; }\n  return arr;\n}\nfunction addTwoNumbers(l1Values, l2Values) {\n  let l1 = buildList(l1Values);\n  let l2 = buildList(l2Values);\n  // your code here: add the two ListNode chains digit by digit with carry, then return toArray(resultHead)\n}",
+    "python": "def add_two_numbers(l1_values, l2_values):\n    pass"
+  },
+  "tests": [
+    { "args": [[2,4,3], [5,6,4]], "expected": [7,0,8], "hidden": false },
+    { "args": [[0], [0]], "expected": [0], "hidden": false },
+    { "args": [[9,9,9,9,9,9,9], [9,9,9,9]], "expected": [8,9,9,9,0,0,0,1], "hidden": true },
+    { "args": [[1,8], [0]], "expected": [1,8], "hidden": true },
+    { "args": [[5], [5]], "expected": [0,1], "hidden": true },
+    { "args": [[2,4], [5,6,4]], "expected": [7,0,5], "hidden": true },
+    { "args": [[1], [9,9]], "expected": [0,0,1], "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Walk both lists simultaneously (treating an exhausted list as contributing digit 0), maintaining a running `carry`. At each step compute `sum = val1 + val2 + carry`, set `carry = Math.floor(sum / 10)`, and append `sum % 10` as the next digit of the result. Continue until both lists are exhausted and `carry` is 0 (an extra carry digit may need to be appended at the very end, e.g. 5 + 5 = 10 -> [0, 1]).",
+    "complexity": "O(max(m, n)) time / O(max(m, n)) space for the result"
+  },
+  "relatedProblems": ["reverse-linked-list", "merge-two-sorted-lists"]
+}

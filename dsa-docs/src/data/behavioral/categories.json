@@ -1,0 +1,104 @@
+{
+  "categories": [
+    {
+      "id": "conflict",
+      "label": "Conflict",
+      "description": "Interpersonal friction — with peers, managers, or across teams — and how you worked through it.",
+      "joggerPrompts": [
+        "Think of a time two people on your team wanted different things and you had to referee it.",
+        "A disagreement that got tense before it got resolved.",
+        "A time you had to keep working closely with someone whose style clashed with yours."
+      ]
+    },
+    {
+      "id": "failure",
+      "label": "Failure",
+      "description": "Mistakes, missed calls, and things that went wrong — and what you did after.",
+      "joggerPrompts": [
+        "A project that shipped late, broke in production, or got cancelled.",
+        "A decision you made that you would take back if you could.",
+        "A time you had to tell your manager something went wrong."
+      ]
+    },
+    {
+      "id": "leadership",
+      "label": "Leadership",
+      "description": "Driving outcomes, developing people, or setting direction — with or without formal authority.",
+      "joggerPrompts": [
+        "A time you influenced people without having authority over them.",
+        "Onboarding, mentoring, or unblocking a teammate.",
+        "A time you made the call when no one else would step up."
+      ]
+    },
+    {
+      "id": "ambiguity",
+      "label": "Ambiguity",
+      "description": "Operating without a clear spec, changing requirements, or no existing playbook.",
+      "joggerPrompts": [
+        "A project that started with a vague, one-line ask.",
+        "A time requirements changed mid-project and you had to adapt.",
+        "Something you had to build with no precedent to copy from."
+      ]
+    },
+    {
+      "id": "delivery-deadlines",
+      "label": "Delivery & Deadlines",
+      "description": "Shipping under time pressure, cutting scope, and recovering when behind schedule.",
+      "joggerPrompts": [
+        "A deadline you almost missed and how you saved it.",
+        "A time you had to cut scope to ship on time.",
+        "Working late nights or weekends to hit a launch."
+      ]
+    },
+    {
+      "id": "disagreement",
+      "label": "Disagreement",
+      "description": "Pushing back on a plan, a manager, or a peer — and what happened after.",
+      "joggerPrompts": [
+        "A time you disagreed with your manager's decision.",
+        "Pushing back on a plan you thought was wrong.",
+        "A time you lost the argument but executed anyway."
+      ]
+    },
+    {
+      "id": "growth-feedback",
+      "label": "Growth & Feedback",
+      "description": "Receiving and giving feedback, and closing skill gaps.",
+      "joggerPrompts": [
+        "Tough feedback you received and what you did with it.",
+        "A skill gap you identified in yourself and closed.",
+        "A time a mentor changed how you work."
+      ]
+    },
+    {
+      "id": "cross-team",
+      "label": "Cross-Team Collaboration",
+      "description": "Working with, depending on, or influencing teams outside your own.",
+      "joggerPrompts": [
+        "A project that needed two or more teams to agree before it could move.",
+        "Getting buy-in from a team that didn't report to you.",
+        "A dependency on another team that put your deadline at risk."
+      ]
+    },
+    {
+      "id": "customer-focus",
+      "label": "Customer Focus",
+      "description": "Advocating for the user, even against internal pressure or convenience.",
+      "joggerPrompts": [
+        "A time you advocated for the user against internal pressure.",
+        "A customer complaint that changed your roadmap.",
+        "A time 'good enough for the business' wasn't good enough for the user."
+      ]
+    },
+    {
+      "id": "innovation",
+      "label": "Innovation",
+      "description": "Simplifying, automating, or proposing an approach nobody asked for.",
+      "joggerPrompts": [
+        "A process you automated or simplified.",
+        "An unconventional solution you proposed that others were skeptical of.",
+        "A time you challenged 'that's how we've always done it.'"
+      ]
+    }
+  ]
+}

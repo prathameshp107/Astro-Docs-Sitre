@@ -1,0 +1,61 @@
+{
+  "id": "array-max-consecutive-ones",
+  "title": "Max Consecutive Ones",
+  "difficulty": "easy",
+  "topics": ["arrays"],
+  "companies": ["google", "meta"],
+  "statement": "Given a binary array `nums` (containing only `0`s and `1`s), return the maximum number of consecutive `1`s in the array.",
+  "constraints": [
+    "1 <= nums.length <= 10^4",
+    "nums[i] is either 0 or 1."
+  ],
+  "examples": [
+    {
+      "input": "nums = [1, 1, 0, 1, 1, 1]",
+      "output": "3",
+      "explanation": "The first two digits or the last three digits are consecutive 1s. The maximum number of consecutive 1s is 3."
+    },
+    {
+      "input": "nums = [1, 0, 1, 1, 0, 1]",
+      "output": "2",
+      "explanation": "The maximum count of consecutive 1s is 2."
+    }
+  ],
+  "functionName": "findMaxConsecutiveOnes",
+  "starterCode": {
+    "javascript": "function findMaxConsecutiveOnes(nums) {\n  // Write your code here\n}",
+    "python": "def find_max_consecutive_ones(nums):\n    # Write your code here\n    pass\n\n# Keep this line for compatibility\nfindMaxConsecutiveOnes = find_max_consecutive_ones"
+  },
+  "tests": [
+    { "args": [[1, 1, 0, 1, 1, 1]], "expected": 3, "hidden": false },
+    { "args": [[1, 0, 1, 1, 0, 1]], "expected": 2, "hidden": false },
+    { "args": [[0, 0, 0]], "expected": 0, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": true },
+    { "args": [[1, 1, 1, 1, 1]], "expected": 5, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Maintain a running count of 1s. Traverse the array. If nums[i] is 1, increment count and update maxCount. If nums[i] is 0, reset count to 0.",
+    "complexity": "O(n) time / O(1) space"
+  },
+  "relatedProblems": ["array-missing-number"],
+  "hints": [
+    "Keep a running tracker variable `count` initialized to 0.",
+    "Also keep a variable `maxCount` to record the highest consecutive count seen.",
+    "Scan through the array: if the element is 1, increment `count` and update `maxCount`. If the element is 0, reset `count` to 0."
+  ],
+  "bruteForceSolution": {
+    "explanation": "Split the array into a string of numbers by '0', then find the length of the longest substring of 1s.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(n)",
+    "code": "function findMaxConsecutiveOnes(nums) {\n  return Math.max(...nums.join('').split('0').map(s => s.length));\n}"
+  },
+  "optimizedSolution": {
+    "explanation": "Scan the array in a single pass. Increment a counter whenever a 1 is seen, updating the maximum. Reset the counter to 0 upon encountering a 0.",
+    "timeComplexity": "O(n)",
+    "spaceComplexity": "O(1)",
+    "code": "function findMaxConsecutiveOnes(nums) {\n  let max = 0;\n  let current = 0;\n  for (let i = 0; i < nums.length; i++) {\n    if (nums[i] === 1) {\n      current++;\n      if (current > max) max = current;\n    } else {\n      current = 0;\n    }\n  }\n  return max;\n}"
+  },
+  "interviewExplanation": "Splitting strings takes O(n) space. In interviews, we optimize it to O(1) space using a sliding counter. We iterate through the array once and reset our counter whenever a zero is encountered, preserving the maximum count."
+}

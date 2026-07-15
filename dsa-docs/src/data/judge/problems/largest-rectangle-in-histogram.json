@@ -1,0 +1,40 @@
+{
+  "id": "largest-rectangle-in-histogram",
+  "title": "Largest Rectangle in Histogram",
+  "difficulty": "hard",
+  "topics": ["stack", "arrays"],
+  "companies": ["amazon", "google", "meta", "microsoft"],
+  "statement": "Given an array of integers `heights` representing the histogram's bar height where the width of each bar is `1`, return the area of the largest rectangle in the histogram.\n\nUse a monotonic increasing stack of indices. When a bar shorter than the one at the top of the stack is encountered, that top bar can no longer extend rightward, so pop it and compute the maximal rectangle it could form — its height times a width bounded by the new stack top (exclusive) and the current index (exclusive).",
+  "constraints": [
+    "1 <= heights.length <= 10^5",
+    "0 <= heights[i] <= 10^4"
+  ],
+  "examples": [
+    { "input": "heights = [2,1,5,6,2,3]", "output": "10", "explanation": "The largest rectangle has area 10, formed by heights 5 and 6 with width 2." },
+    { "input": "heights = [2,4]", "output": "4" }
+  ],
+  "functionName": "largestRectangleArea",
+  "starterCode": {
+    "javascript": "function largestRectangleArea(heights) {\n  // your code here\n}",
+    "python": "def largest_rectangle_area(heights):\n    pass"
+  },
+  "tests": [
+    { "args": [[2,1,5,6,2,3]], "expected": 10, "hidden": false },
+    { "args": [[2,4]], "expected": 4, "hidden": false },
+    { "args": [[1]], "expected": 1, "hidden": true },
+    { "args": [[0]], "expected": 0, "hidden": true },
+    { "args": [[1,1,1,1]], "expected": 4, "hidden": true },
+    { "args": [[6,7,5,2,4,5,9,3]], "expected": 16, "hidden": true },
+    { "args": [[2,1,2]], "expected": 3, "hidden": true },
+    { "args": [[5,4,1,2]], "expected": 8, "hidden": true },
+    { "args": [[0,9]], "expected": 9, "hidden": true },
+    { "args": [[4,2,0,3,2,5]], "expected": 6, "hidden": true }
+  ],
+  "compareMode": "exact",
+  "timeLimitMs": 4000,
+  "editorial": {
+    "approach": "Maintain a stack of indices whose bar heights are in increasing order. Iterate through `heights` (with a conceptual extra bar of height 0 appended at the end to flush the stack). For each bar, while the stack is non-empty and the current bar's height is less than the height at the top of the stack, pop the top index and compute the rectangle it forms: its height times a width equal to the current index minus (the new stack top's index + 1), or the current index if the stack is now empty. Track the maximum area seen. Push the current index onto the stack. Each index is pushed and popped at most once, giving linear time.",
+    "complexity": "O(n) time / O(n) space"
+  },
+  "relatedProblems": ["daily-temperatures", "car-fleet"]
+}

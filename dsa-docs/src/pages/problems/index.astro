@@ -1,6 +1,8 @@
 ---
 import AppNav from '../../components/AppNav.jsx';
 import ProblemList from '../../components/judge/ProblemList.jsx';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
 import '../../styles/judge.css';
 
 const { getJudgeManifest } = await import('../../data/judge/index.js');
@@ -19,7 +21,7 @@ const problems = getJudgeManifest();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="mcq-body">
     <AppNav activeSection="problems" client:load />
     <h1 style="text-align:center; margin: 24px 0 4px; font-family: var(--font-display);">Problems</h1>
     <p style="text-align:center; color: var(--text-secondary); margin-bottom: 20px;">Instant in-browser verdicts. No server, no queue.</p>
