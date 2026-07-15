@@ -1,9 +1,8 @@
-import { FiBook, FiCheck, FiCheckSquare, FiChevronDown, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
+import { FiCheckSquare, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
 import { DiCss3 } from "react-icons/di";
-
 
 import {
   CSS_LESSONS,
@@ -19,165 +18,26 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  LabSidebar,
+  LabTour,
+  LabCommandPalette,
+  useCommandPalette,
+  renderFormattedText,
 } from "./shared/index.js";
 
 // ─── SIDEBAR ───
 
-function CSSSidebar({ activeSection, activeLesson, activeChallenge, activeComponent, activeAnimation, activeInterview, onSelectLesson, onSelectChallenge, onSelectComponent, onSelectAnimation, onSelectInterview, onSelectPlayground, progress, ...rest }) {
-  const [expandedSections, setExpandedSections] = useState({
-    learn: true, challenges: false, components: false, animations: false, interview: false
-  });
-  const toggleSection = (key) => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
+// CSS Variables for consistent spacing (8px grid)
+const SPACING = {
+  xs: 4,   // 0.5rem
+  sm: 8,   // 1rem
+  md: 12,  // 1.5rem
+  lg: 16,  // 2rem
+  xl: 24,  // 3rem
+  xxl: 32  // 4rem
+};
 
-  const isLessonActive = (id) => activeSection === "learn" && activeLesson === id;
-  const isChallengeActive = (id) => activeSection === "challenge" && activeChallenge === id;
-  const isComponentActive = (id) => activeSection === "component" && activeComponent === id;
-  const isAnimationActive = (id) => activeSection === "animation" && activeAnimation === id;
-  const isInterviewActive = (id) => activeSection === "interview" && activeInterview === id;
 
-  return (
-    <div className="jsl-sidebar" {...rest}>
-      <div className="jsl-sidebar-header">
-        <h3><FiBook size={16} /> Curriculum</h3>
-      </div>
-
-      {/* Playground shortcut */}
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header ${activeSection === "playground" ? "expanded" : ""}`}
-          onClick={onSelectPlayground}
-          style={{ color: activeSection === "playground" ? "#60a5fa" : undefined }}
-        >
-          <div className="jsl-sg-title" style={{ color: "#60a5fa" }}>
-            <FiBook size={16} /> <span>CSS PLAYGROUND</span>
-          </div>
-        </button>
-      </div>
-
-      {/* LEARN CSS */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header learn ${expandedSections.learn ? "expanded" : ""}`} onClick={() => toggleSection("learn")}>
-          <div className="jsl-sg-title" style={{ color: "#60a5fa" }}><FiBook size={16} /><span>LEARN CSS</span></div>
-          <span className="jsl-sg-count">{progress.lessonsDone}/{progress.lessonsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.learn && (
-          <div className="jsl-sg-items">
-            {CSS_LESSONS.map((lesson) => (
-              <button
-                key={lesson.id}
-                className={`jsl-si ${isLessonActive(lesson.id) ? "active" : ""} ${progress.lessons.includes(lesson.id) ? "done" : ""}`}
-                onClick={() => onSelectLesson(lesson.id)}
-              >
-                <span className="jsl-si-num">{lesson.chapter}.</span>
-                <span className="jsl-si-title">{lesson.title}</span>
-                <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* CSS CHALLENGES */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header ${expandedSections.challenges ? "expanded" : ""}`} onClick={() => toggleSection("challenges")}>
-          <div className="jsl-sg-title" style={{ color: "#34d399" }}><FiBook size={16} /><span>CSS CHALLENGES</span></div>
-          <span className="jsl-sg-count">{progress.challengesDone}/{progress.challengesTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.challenges && (
-          <div className="jsl-sg-items">
-            {CSS_CHALLENGES.map((c, i) => (
-              <button
-                key={c.id}
-                className={`jsl-si ${isChallengeActive(c.id) ? "active" : ""} ${progress.challenges.includes(c.id) ? "done" : ""}`}
-                onClick={() => onSelectChallenge(c.id)}
-              >
-                <span className="jsl-si-num">{i + 1}.</span>
-                <span className="jsl-si-title">{c.title}</span>
-                <span className={`jsl-si-level ${c.difficulty.toLowerCase()}`}>{c.difficulty[0]}</span>
-                {progress.challenges.includes(c.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* COMPONENT LAB */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header ${expandedSections.components ? "expanded" : ""}`} onClick={() => toggleSection("components")}>
-          <div className="jsl-sg-title" style={{ color: "#f59e0b" }}><FiBook size={16} /><span>COMPONENT LAB</span></div>
-          <span className="jsl-sg-count">{progress.componentsDone}/{progress.componentsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.components && (
-          <div className="jsl-sg-items">
-            {CSS_COMPONENTS.map((comp, i) => (
-              <button
-                key={comp.id}
-                className={`jsl-si ${isComponentActive(comp.id) ? "active" : ""} ${progress.components.includes(comp.id) ? "done" : ""}`}
-                onClick={() => onSelectComponent(comp.id)}
-              >
-                <span className="jsl-si-num">{i + 1}.</span>
-                <span className="jsl-si-title">{comp.title}</span>
-                {progress.components.includes(comp.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ANIMATION LAB */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header ${expandedSections.animations ? "expanded" : ""}`} onClick={() => toggleSection("animations")}>
-          <div className="jsl-sg-title" style={{ color: "#ec4899" }}><FiBook size={16} /><span>ANIMATION LAB</span></div>
-          <span className="jsl-sg-count">{progress.animationsDone}/{progress.animationsTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.animations && (
-          <div className="jsl-sg-items">
-            {CSS_ANIMATIONS.map((anim, i) => (
-              <button
-                key={anim.id}
-                className={`jsl-si ${isAnimationActive(anim.id) ? "active" : ""} ${progress.animations.includes(anim.id) ? "done" : ""}`}
-                onClick={() => onSelectAnimation(anim.id)}
-              >
-                <span className="jsl-si-num">{i + 1}.</span>
-                <span className="jsl-si-title">{anim.title}</span>
-                {progress.animations.includes(anim.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* INTERVIEW PREP */}
-      <div className="jsl-sidebar-group">
-        <button className={`jsl-sg-header ${expandedSections.interview ? "expanded" : ""}`} onClick={() => toggleSection("interview")}>
-          <div className="jsl-sg-title" style={{ color: "#fcd34d" }}><FiBook size={16} /><span>INTERVIEW PREP</span></div>
-          <span className="jsl-sg-count">{progress.interviewDone}/{progress.interviewTotal}</span>
-          <FiChevronDown size={14} />
-        </button>
-        {expandedSections.interview && (
-          <div className="jsl-sg-items">
-            {CSS_INTERVIEW_TOPICS.map((topic) => (
-              <button
-                key={topic.id}
-                className={`jsl-si ${isInterviewActive(topic.id) ? "active" : ""} ${progress.interview.includes(topic.id) ? "done" : ""}`}
-                onClick={() => onSelectInterview(topic.id)}
-              >
-                <span className="jsl-si-title">{topic.title}</span>
-                <span className="jsl-si-num" style={{ minWidth: "auto", marginLeft: "auto" }}>{topic.questions.length}Q</span>
-                {progress.interview.includes(topic.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 // ─── MAIN PLATFORM ───
 
@@ -374,9 +234,11 @@ export default function CSSLabsPlatform() {
   }, [view]);
 
   useEffect(() => {
-    if (view !== "interview") {
+    if (view === "interview") return;
+    const timer = setTimeout(() => {
       updatePreview();
-    }
+    }, 400);
+    return () => clearTimeout(timer);
   }, [code, view, updatePreview]);
 
   const defineThemes = useCallback((monaco) => {
@@ -487,6 +349,10 @@ export default function CSSLabsPlatform() {
 
   useKeyboardShortcut(updatePreview);
 
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+  const [hideSidebar, setHideSidebar] = useState(false);
+  useKeyboardShortcut(() => setHideSidebar(v => !v), "b");
+
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   const goNextLesson = () => {
@@ -518,6 +384,100 @@ export default function CSSLabsPlatform() {
 
   const previewWidth = previewMode === "mobile" ? "375px" : previewMode === "tablet" ? "768px" : "100%";
 
+  const sidebarSections = useMemo(() => [
+    {
+      key: "learn",
+      label: "LEARN CSS",
+      color: "#60a5fa",
+      items: CSS_LESSONS,
+      progressText: `${progressStats.lessonsDone}/${progressStats.lessonsTotal}`,
+      isItemActive: (item) => view === "learn" && activeLesson === item.id,
+      isItemDone: (item) => progress.lessons.includes(item.id),
+      onSelectItem: (item) => selectLesson(item.id),
+    },
+    {
+      key: "challenges",
+      label: "CSS CHALLENGES",
+      color: "#34d399",
+      items: CSS_CHALLENGES,
+      progressText: `${progressStats.challengesDone}/${progressStats.challengesTotal}`,
+      isItemActive: (item) => view === "challenge" && activeChallenge === item.id,
+      isItemDone: (item) => progress.challenges.includes(item.id),
+      onSelectItem: (item) => selectChallenge(item.id),
+      renderItemBadge: (item) => (
+        <span className={`jsl-si-level ${item.difficulty.toLowerCase()}`}>{item.difficulty[0]}</span>
+      ),
+    },
+    {
+      key: "components",
+      label: "COMPONENT LAB",
+      color: "#f59e0b",
+      items: CSS_COMPONENTS,
+      progressText: `${progressStats.componentsDone}/${progressStats.componentsTotal}`,
+      isItemActive: (item) => view === "component" && activeComponent === item.id,
+      isItemDone: (item) => progress.components.includes(item.id),
+      onSelectItem: (item) => selectComponent(item.id),
+    },
+    {
+      key: "animations",
+      label: "ANIMATION LAB",
+      color: "#ec4899",
+      items: CSS_ANIMATIONS,
+      progressText: `${progressStats.animationsDone}/${progressStats.animationsTotal}`,
+      isItemActive: (item) => view === "animation" && activeAnimation === item.id,
+      isItemDone: (item) => progress.animations.includes(item.id),
+      onSelectItem: (item) => selectAnimation(item.id),
+    },
+    {
+      key: "interview",
+      label: "INTERVIEW PREP",
+      color: "#fcd34d",
+      items: CSS_INTERVIEW_TOPICS,
+      progressText: `${progressStats.interviewDone}/${progressStats.interviewTotal}`,
+      isItemActive: (item) => view === "interview" && activeInterview === item.id,
+      isItemDone: (item) => progress.interview.includes(item.id),
+      onSelectItem: (item) => selectInterview(item.id),
+      renderItemNumber: () => null,
+      renderItemBadge: (item) => (
+        <span className="jsl-si-num" style={{ minWidth: "auto", marginLeft: "auto" }}>{item.questions.length}Q</span>
+      ),
+    }
+  ], [view, activeLesson, activeChallenge, activeComponent, activeAnimation, activeInterview, progress, progressStats]);
+
+  const sidebarPlayground = useMemo(() => ({
+    label: "CSS PLAYGROUND",
+    color: "#60a5fa",
+    isActive: view === "playground",
+    onSelect: selectPlayground,
+  }), [view]);
+
+  const tourSteps = useMemo(() => [
+    {
+      title: "Welcome to CSS Labs! 🎨",
+      content: "Let's take a quick tour of your CSS layout and coding environment."
+    },
+    {
+      target: ".jsl-sidebar",
+      title: "Curriculum & Labs",
+      content: "Browse core CSS concepts, layout challenges, component labs, and animations here."
+    },
+    {
+      target: ".jsl-content-panel",
+      title: "Instructions & Tasks",
+      content: "Read the goals and tasks for the active lesson here. Run tests to verify your solution."
+    },
+    {
+      target: ".jsl-editor-panel",
+      title: "Live Preview & Editor",
+      content: "Type your HTML/CSS code in the editor. The preview panel below updates automatically when you stop typing."
+    },
+    {
+      target: ".jsl-btn-command-palette",
+      title: "Search Commands",
+      content: "Use the Command Palette button or press Ctrl+K to jump anywhere instantly."
+    }
+  ], []);
+
   if (loading) {
     return <div className="jsl-platform"><SkeletonLabPlatform /></div>;
   }
@@ -545,6 +505,7 @@ export default function CSSLabsPlatform() {
         progressStats={progressStats}
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        onOpenPalette={() => setPaletteOpen(true)}
       >
         {((view === "learn" && currentLesson) || (view === "challenge" && currentChallenge) || (view === "component" && currentComponent) || (view === "animation" && currentAnimation)) && (
           <button className={`jsl-btn-mark jsl-btn-topbar done`} onClick={() => {
@@ -558,26 +519,49 @@ export default function CSSLabsPlatform() {
         )}
       </LabTopbar>
 
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#60a5fa"
+        commands={[
+          { id: "preview", section: "Actions", label: "Refresh preview", hint: "Ctrl+Enter", action: updatePreview },
+          { id: "tests", section: "Actions", label: "Run tests", action: runTests },
+          { id: "reset", section: "Actions", label: "Reset editor starter code", action: () => {
+            let starter = '';
+            if (view === 'learn' && currentLesson) starter = currentLesson.starterCode;
+            else if (view === 'challenge' && currentChallenge) starter = currentChallenge.starterCode;
+            else if (view === 'component' && currentComponent) starter = currentComponent.starterCode;
+            else if (view === 'animation' && currentAnimation) starter = currentAnimation.starterCode;
+            else if (view === 'playground') starter = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  <title>CSS Playground</title>\n</head>\n<body>\n  <h1>CSS Playground</h1>\n</body>\n</html>';
+            if (editorRef.current) editorRef.current.setValue(starter);
+            setCode(starter);
+            setTestResults([]);
+            codeVersionRef.current++;
+          }},
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
+          { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "playground", section: "Actions", label: "Go to playground", action: selectPlayground },
+          { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
+          ...CSS_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
+          ...CSS_CHALLENGES.map(c => ({ id: `c-${c.id}`, section: "Challenges", label: c.title, done: progress.challenges.includes(c.id), action: () => selectChallenge(c.id) })),
+          ...CSS_COMPONENTS.map(co => ({ id: `co-${co.id}`, section: "Components", label: co.title, done: progress.components.includes(co.id), action: () => selectComponent(co.id) })),
+          ...CSS_ANIMATIONS.map(a => ({ id: `a-${a.id}`, section: "Animations", label: a.title, done: progress.animations.includes(a.id), action: () => selectAnimation(a.id) })),
+        ]}
+      />
+
       {/* Main Layout */}
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
-          <CSSSidebar
-            activeSection={view}
-            activeLesson={activeLesson}
-            activeChallenge={activeChallenge}
-            activeComponent={activeComponent}
-            activeAnimation={activeAnimation}
-            activeInterview={activeInterview}
-            onSelectLesson={selectLesson}
-            onSelectChallenge={selectChallenge}
-            onSelectComponent={selectComponent}
-            onSelectAnimation={selectAnimation}
-            onSelectInterview={selectInterview}
-            onSelectPlayground={selectPlayground}
-            progress={progressStats}
-            style={{ width: sidebarWidth }}
-          />
-          <LabResizableHandle onDrag={handleSidebarDrag} />
+          {!hideSidebar && (
+            <>
+              <LabSidebar
+                playground={sidebarPlayground}
+                sections={sidebarSections}
+                style={{ width: sidebarWidth }}
+              />
+              <LabResizableHandle onDrag={handleSidebarDrag} />
+            </>
+          )}
 
           <div className="jsl-workspace" ref={workspaceRef}>
             {/* Content Panel */}
@@ -632,7 +616,15 @@ export default function CSSLabsPlatform() {
                   />
                 )}
                 {view === "playground" && (
-                  <PlaygroundView />
+                  <div className="jsl-content-inner">
+                    <h2 className="jsl-content-title">CSS Playground</h2>
+                    <p className="jsl-text" style={{ marginTop: "1rem" }}>
+                      This is a playground where you can write CSS and HTML to experiment with styles.
+                    </p>
+                    <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}>
+                      Write HTML/CSS inside the editor on the right, and see preview updates instantly.
+                    </p>
+                  </div>
                 )}
               </div>
 
@@ -711,20 +703,14 @@ export default function CSSLabsPlatform() {
                   onMount={handleEditorMount}
                   options={{
                     fontSize: 13,
-                    fontFamily: "Consolas, 'Courier New', monospace",
+                    fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
+                    roundedSelection: true,
                     scrollBeyondLastLine: false,
                     lineNumbers: "on",
                     tabSize: 2,
-                    insertSpaces: true,
-                    wordWrap: "on",
                     automaticLayout: true,
-                    bracketPairColorization: { enabled: true },
                     padding: { top: 12, bottom: 12 },
-                    cursorBlinking: "smooth",
-                    smoothScrolling: true,
-                    folding: true,
-                    lineNumbersMinChars: 3,
                   }}
                 />
               </div>
@@ -753,7 +739,7 @@ export default function CSSLabsPlatform() {
                       }}
                       title="Mobile preview"
                     >
-                      <FiBook size={16} /> Mobile
+                      Mobile
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "tablet" ? "active" : ""}`}
@@ -766,7 +752,7 @@ export default function CSSLabsPlatform() {
                       }}
                       title="Tablet preview"
                     >
-                      <FiBook size={16} /> Tablet
+                      Tablet
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "desktop" ? "active" : ""}`}
@@ -779,7 +765,7 @@ export default function CSSLabsPlatform() {
                       }}
                       title="Desktop preview"
                     >
-                      <FiBook size={16} /> Desktop
+                      Desktop
                     </button>
                   </div>
                 </div>
@@ -804,6 +790,7 @@ export default function CSSLabsPlatform() {
       </div>
 
       <LabFooter />
+      <LabTour steps={tourSteps} tourKey="css-labs-onboarding-tour-completed" />
     </div>
   );
 }
@@ -830,12 +817,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section">
         <h3 className="jsl-section-title">Concept</h3>
         <div className="jsl-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
-            if (line.startsWith("```")) return null;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -853,12 +835,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">Your Task</h3>
         <div className="jsl-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="jsl-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 

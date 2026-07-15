@@ -11,85 +11,16 @@ import {
   LabEditorToolbar,
   LabTopbar,
   useKeyboardShortcut,
+  LabSidebar,
+  LabTour,
+  LabCommandPalette,
+  useCommandPalette,
+  renderFormattedText,
 } from "./shared/index.js";
 
 // ─── SIDEBAR ───
 
-function TailwindSidebar({ activeLesson, onSelectLesson, progress, ...rest }) {
-  // Group lessons by chapter
-  const chapters = useMemo(() => {
-    const map = {};
-    TW_LESSONS.forEach(l => {
-      if (!map[l.chapter]) map[l.chapter] = { number: l.chapter, lessons: [] };
-      map[l.chapter].lessons.push(l);
-    });
-    return Object.values(map).sort((a, b) => a.number - b.number);
-  }, []);
 
-  const [expandedChapters, setExpandedChapters] = useState(() => {
-    const obj = {};
-    chapters.forEach(ch => { obj[ch.number] = ch.number <= 2; }); // first 2 expanded
-    return obj;
-  });
-
-  const toggleChapter = (num) => setExpandedChapters(prev => ({ ...prev, [num]: !prev[num] }));
-
-  return (
-    <div className="jsl-sidebar" {...rest}>
-      <div className="jsl-sidebar-header">
-        <h3><FiBook size={16} /> Curriculum</h3>
-      </div>
-
-      {/* Playground shortcut */}
-      <div className="jsl-sidebar-group">
-        <button
-          className={`jsl-sg-header ${activeLesson === "playground" ? "expanded" : ""}`}
-          onClick={() => onSelectLesson("playground")}
-          style={{ color: activeLesson === "playground" ? "#38bdf8" : undefined }}
-        >
-          <div className="jsl-sg-title" style={{ color: "#38bdf8" }}>
-            <FiBook size={16} /> <span>TAILWIND PLAYGROUND</span>
-          </div>
-        </button>
-      </div>
-
-      {/* Chapters */}
-      {chapters.map(ch => (
-        <div key={ch.number} className="jsl-sidebar-group">
-          <button
-            className={`jsl-sg-header learn ${expandedChapters[ch.number] ? "expanded" : ""}`}
-            onClick={() => toggleChapter(ch.number)}
-          >
-            <div className="jsl-sg-title" style={{ color: "#38bdf8" }}>
-              <FiBook size={16} />
-              <span>Chapter {ch.number}</span>
-            </div>
-            <span className="jsl-sg-count">
-              {ch.lessons.filter(l => progress.lessons.includes(l.id)).length}/{ch.lessons.length}
-            </span>
-            <FiChevronDown size={14} />
-          </button>
-          {expandedChapters[ch.number] && (
-            <div className="jsl-sg-items">
-              {ch.lessons.map((lesson) => (
-                <button
-                  key={lesson.id}
-                  className={`jsl-si ${activeLesson === lesson.id ? "active" : ""} ${progress.lessons.includes(lesson.id) ? "done" : ""}`}
-                  onClick={() => onSelectLesson(lesson.id)}
-                >
-                  <span className="jsl-si-num">{ch.number}.{ch.lessons.indexOf(lesson) + 1}</span>
-                  <span className="jsl-si-title">{lesson.title}</span>
-                  <span className={`jsl-si-level ${lesson.level.toLowerCase()}`}>{lesson.level[0]}</span>
-                  {progress.lessons.includes(lesson.id) && <span className="jsl-si-check"><FiCheck size={16} /></span>}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
 
 // ─── MAIN PLATFORM ───
 
@@ -173,7 +104,10 @@ export default function TailwindLabsPlatform() {
   }, []);
 
   useEffect(() => {
-    updatePreview();
+    const timer = setTimeout(() => {
+      updatePreview();
+    }, 400);
+    return () => clearTimeout(timer);
   }, [code, updatePreview]);
 
   const defineThemes = useCallback((monaco) => {
@@ -272,6 +206,10 @@ export default function TailwindLabsPlatform() {
 
   useKeyboardShortcut(updatePreview);
 
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+  const [hideSidebar, setHideSidebar] = useState(false);
+  useKeyboardShortcut(() => setHideSidebar(v => !v), "b");
+
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
   const goNextLesson = () => {
@@ -290,6 +228,65 @@ export default function TailwindLabsPlatform() {
   const currentTests = isPlayground ? [] : (currentLesson?.tests || []);
   const previewWidth = previewMode === "mobile" ? "375px" : previewMode === "tablet" ? "768px" : "100%";
 
+  const chapters = useMemo(() => {
+    const map = {};
+    TW_LESSONS.forEach(l => {
+      if (!map[l.chapter]) map[l.chapter] = { number: l.chapter, lessons: [] };
+      map[l.chapter].lessons.push(l);
+    });
+    return Object.values(map).sort((a, b) => a.number - b.number);
+  }, []);
+
+  const sidebarSections = useMemo(() => {
+    return chapters.map((ch) => ({
+      key: `chapter-${ch.number}`,
+      label: `CHAPTER ${ch.number}`,
+      color: "#38bdf8",
+      items: ch.lessons,
+      progressText: `${ch.lessons.filter(l => progress.lessons.includes(l.id)).length}/${ch.lessons.length}`,
+      isItemActive: (item) => activeLesson === item.id,
+      isItemDone: (item) => progress.lessons.includes(item.id),
+      onSelectItem: (item) => selectLesson(item.id),
+      renderItemNumber: (item, idx) => (
+        <span className="jsl-si-num">{ch.number}.{idx + 1}</span>
+      )
+    }));
+  }, [chapters, activeLesson, progress]);
+
+  const sidebarPlayground = useMemo(() => ({
+    label: "TAILWIND PLAYGROUND",
+    color: "#38bdf8",
+    isActive: activeLesson === "playground",
+    onSelect: () => selectLesson("playground"),
+  }), [activeLesson]);
+
+  const tourSteps = useMemo(() => [
+    {
+      title: "Welcome to Tailwind CSS Labs! ⚡",
+      content: "Let's take a quick tour of your Tailwind styling environment."
+    },
+    {
+      target: ".jsl-sidebar",
+      title: "Lessons & Playground",
+      content: "Navigate through the structured chapters or hop into the playground to experiment."
+    },
+    {
+      target: ".jsl-content-panel",
+      title: "Instructions & Tasks",
+      content: "Read the design tasks, check hints/solutions, and run tests to verify."
+    },
+    {
+      target: ".jsl-editor-panel",
+      title: "Editor & Preview",
+      content: "Type HTML with Tailwind utility classes in Monaco editor. The live preview updates automatically."
+    },
+    {
+      target: ".jsl-btn-command-palette",
+      title: "Command Palette",
+      content: "Click this button or press Ctrl+K to open search & actions instantly."
+    }
+  ], []);
+
   if (loading) {
     return <div className="jsl-platform"><SkeletonLabPlatform /></div>;
   }
@@ -306,6 +303,7 @@ export default function TailwindLabsPlatform() {
         progressStats={progressStats}
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
+        onOpenPalette={() => setPaletteOpen(true)}
       >
         {currentLesson && (
           <button className="jsl-btn-mark jsl-btn-topbar done" onClick={() => markLessonDone(currentLesson.id)}>
@@ -314,15 +312,41 @@ export default function TailwindLabsPlatform() {
         )}
       </LabTopbar>
 
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#38bdf8"
+        commands={[
+          { id: "preview", section: "Actions", label: "Refresh preview", hint: "Ctrl+Enter", action: updatePreview },
+          { id: "tests", section: "Actions", label: "Run tests", action: runTests },
+          { id: "reset", section: "Actions", label: "Reset editor starter code", action: () => {
+            let starter = TW_PLAYGROUND_DEFAULT;
+            if (!isPlayground && currentLesson) starter = currentLesson.starterCode;
+            if (editorRef.current) editorRef.current.setValue(starter);
+            setCode(starter);
+            setTestResults([]);
+            codeVersionRef.current++;
+          }},
+          { id: "theme", section: "Actions", label: "Toggle editor theme", action: () => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark") },
+          { id: "focus", section: "Actions", label: hideSidebar ? "Show sidebar" : "Focus mode (hide sidebar)", hint: "Ctrl+B", action: () => setHideSidebar(v => !v) },
+          { id: "playground", section: "Actions", label: "Go to playground", action: () => selectLesson("playground") },
+          { id: "back", section: "Actions", label: "Back to all labs", action: () => { window.location.href = `${base}labs`; } },
+          ...TW_LESSONS.map(l => ({ id: `l-${l.id}`, section: "Lessons", label: l.title, done: progress.lessons.includes(l.id), action: () => selectLesson(l.id) })),
+        ]}
+      />
+
       <div className="jsl-main">
         <div className="jsl-body" ref={bodyRef}>
-          <TailwindSidebar
-            activeLesson={activeLesson}
-            onSelectLesson={selectLesson}
-            progress={progressStats}
-            style={{ width: sidebarWidth }}
-          />
-          <LabResizableHandle onDrag={handleSidebarDrag} />
+          {!hideSidebar && (
+            <>
+              <LabSidebar
+                playground={sidebarPlayground}
+                sections={sidebarSections}
+                style={{ width: sidebarWidth }}
+              />
+              <LabResizableHandle onDrag={handleSidebarDrag} />
+            </>
+          )}
 
           <div className="jsl-workspace" ref={workspaceRef}>
             {/* Content Panel */}
@@ -346,7 +370,17 @@ export default function TailwindLabsPlatform() {
                     onRunTests={runTests}
                   />
                 )}
-                {isPlayground && <PlaygroundView />}
+                {isPlayground && (
+                  <div className="jsl-content-inner">
+                    <h2 className="jsl-content-title">Tailwind CSS Playground</h2>
+                    <p className="jsl-text" style={{ marginTop: "1rem" }}>
+                      This is a scratchpad where you can write HTML and test Tailwind utility classes.
+                    </p>
+                    <p className="jsl-text" style={{ marginTop: "0.5rem", color: "#94a3b8" }}>
+                      Type markup in the editor on the right, and check visual styles in live preview instantly.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Tests Panel */}
@@ -420,20 +454,14 @@ export default function TailwindLabsPlatform() {
                   onMount={handleEditorMount}
                   options={{
                     fontSize: 13,
-                    fontFamily: "Consolas, 'Courier New', monospace",
+                    fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
+                    roundedSelection: true,
                     scrollBeyondLastLine: false,
                     lineNumbers: "on",
                     tabSize: 2,
-                    insertSpaces: true,
-                    wordWrap: "on",
                     automaticLayout: true,
-                    bracketPairColorization: { enabled: true },
                     padding: { top: 12, bottom: 12 },
-                    cursorBlinking: "smooth",
-                    smoothScrolling: true,
-                    folding: true,
-                    lineNumbersMinChars: 3,
                   }}
                 />
               </div>
@@ -461,7 +489,7 @@ export default function TailwindLabsPlatform() {
                         border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.2rem",
                       }}
                     >
-                      <FiBook size={16} /> Mobile
+                      Mobile
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "tablet" ? "active" : ""}`}
@@ -473,7 +501,7 @@ export default function TailwindLabsPlatform() {
                         border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.2rem",
                       }}
                     >
-                      <FiBook size={16} /> Tablet
+                      Tablet
                     </button>
                     <button
                       className={`jsl-mode-tab ${previewMode === "desktop" ? "active" : ""}`}
@@ -485,7 +513,7 @@ export default function TailwindLabsPlatform() {
                         border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: "0.2rem",
                       }}
                     >
-                      <FiBook size={16} /> Desktop
+                      Desktop
                     </button>
                   </div>
                 </div>
@@ -510,6 +538,7 @@ export default function TailwindLabsPlatform() {
       </div>
 
       <LabFooter />
+      <LabTour steps={tourSteps} tourKey="tw-labs-onboarding-tour-completed" />
     </div>
   );
 }
@@ -536,12 +565,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section">
         <h3 className="jsl-section-title">Concept</h3>
         <div className="jsl-concept-text">
-          {lesson.conceptExplanation.split("\n").map((line, i) => {
-            if (line.startsWith("•")) return <li key={i} className="jsl-bullet">{line.slice(2)}</li>;
-            if (line.startsWith("```")) return null;
-            if (line.trim() === "") return <br key={i} />;
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.conceptExplanation)}
         </div>
       </div>
 
@@ -559,12 +583,7 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
       <div className="jsl-section jsl-task-section">
         <h3 className="jsl-section-title">Your Task</h3>
         <div className="jsl-task-text">
-          {lesson.task.split("\n").map((line, i) => {
-            if (line.trim().startsWith("-") || line.trim().match(/^\d+\./)) {
-              return <li key={i} className="jsl-task-item">{line.replace(/^[\d.]*\s*/, "").replace(/^-/, "").trim()}</li>;
-            }
-            return <p key={i}>{line}</p>;
-          })}
+          {renderFormattedText(lesson.task)}
         </div>
       </div>
 
@@ -611,50 +630,4 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
   );
 }
 
-// ─── PLAYGROUND VIEW ───
 
-function PlaygroundView() {
-  return (
-    <div className="jsl-content-inner" style={{ textAlign: "center" }}>
-      <div className="jsl-chapter-header">
-        <span className="jsl-chapter-badge" style={{ background: "rgba(56,189,248,0.11)", borderColor: "rgba(56,189,248,0.18)", color: "#38bdf8" }}>
-          <FiBook size={16} /> Tailwind Playground
-        </span>
-        <h2 className="jsl-content-title">Tailwind CSS Playground</h2>
-        <p className="jsl-text" style={{ marginTop: "0.5rem" }}>
-          Write HTML with Tailwind classes in the editor and see the live preview update in real time!
-        </p>
-      </div>
-
-      <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-        gap: "0.75rem", marginTop: "1rem"
-      }}>
-        {[
-          { icon: "⚡", title: "Live Preview", desc: "Changes update instantly" },
-          { icon: "📱", title: "Responsive", desc: "Test mobile, tablet, desktop" },
-          { icon: "🎨", title: "Tailwind CDN", desc: "Full utility class support" },
-          { icon: "💾", title: "Auto-Save", desc: "Your code is saved locally" },
-        ].map(item => (
-          <div key={item.title} className="jsl-section" style={{ padding: "1rem", margin: 0, border: "1px solid var(--jsl-border2)", borderRadius: "0.5rem", background: "rgba(255,255,255,0.02)" }}>
-            <div style={{ fontSize: "1.5rem", marginBottom: "0.3rem" }}>{item.icon}</div>
-            <h4 style={{ margin: "0 0 0.2rem", color: "#f8fafc", fontSize: "0.9rem" }}>{item.title}</h4>
-            <p style={{ margin: 0, color: "#94a3b8", fontSize: "0.78rem" }}>{item.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="jsl-section" style={{ marginTop: "1.5rem", textAlign: "left" }}>
-        <h3 className="jsl-section-title">Quick Reference</h3>
-        <div style={{ fontSize: "0.84rem", color: "#94a3b8", lineHeight: "1.8" }}>
-          <code className="jsl-code-block" style={{ display: "inline-block", padding: "0.2rem 0.5rem" }}>flex</code> Flexbox container<br />
-          <code className="jsl-code-block" style={{ display: "inline-block", padding: "0.2rem 0.5rem" }}>grid grid-cols-3</code> 3-column grid<br />
-          <code className="jsl-code-block" style={{ display: "inline-block", padding: "0.2rem 0.5rem" }}>p-4 m-2</code> Spacing (padding/margin)<br />
-          <code className="jsl-code-block" style={{ display: "inline-block", padding: "0.2rem 0.5rem" }}>bg-blue-500 text-white</code> Colors<br />
-          <code className="jsl-code-block" style={{ display: "inline-block", padding: "0.2rem 0.5rem" }}>rounded-lg shadow-md</code> Borders & shadows<br />
-          <code className="jsl-code-block" style={{ display: "inline-block", padding: "0.2rem 0.5rem" }}>md:flex lg:grid-cols-4</code> Responsive prefixes
-        </div>
-      </div>
-    </div>
-  );
-}

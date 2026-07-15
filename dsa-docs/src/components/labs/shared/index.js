@@ -11,4 +11,7 @@ export { runCodeInSandbox } from "./workerSandbox.js";
 export { default as celebrate } from "./labCelebration.js";
 export { default as useLabXP, awardXP, onXPAward, levelFromXP, getStreak } from "./useLabXP.js";
 export { default as LabXPBadge } from "./LabXPBadge.jsx";
+export { default as LabSidebar } from "./LabSidebar.jsx";
+export { default as LabTour } from "./LabTour.jsx";
 export { default as LabCommandPalette, useCommandPalette } from "./LabCommandPalette.jsx";
+export { renderFormattedText } from "./markdown.jsx";
