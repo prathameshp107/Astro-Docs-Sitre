@@ -1807,14 +1807,14 @@ db.orders.aggregate([
 ];
 
 export const MONGO_CHALLENGES = [
-  { id: "ch-find-users", title: "1. Find Active Users", difficulty: "Easy", tags: ["find", "filter"], database: "ecommerce", problem: "Find all active users (isActive: true) and return only their name, email, and city.", starterQuery: "db.users.find({ isActive: true }, { name: 1, email: 1, city: 1 })", solution: "db.users.find({ isActive: true }, { name: 1, email: 1, city: 1 })", hint: "Use find() with a filter object" },
-  { id: "ch-product-search", title: "2. Product Price Search", difficulty: "Easy", tags: ["find", "$gt", "$lt"], database: "ecommerce", problem: "Find products with price between $20 and $100.", starterQuery: "db.products.find({ price: { $gte: 20, $lte: 100 } }, { name: 1, price: 1, category: 1 })", solution: "db.products.find({ price: { $gte: 20, $lte: 100 } }, { name: 1, price: 1, category: 1 })", hint: "Use $gte and $lte" },
-  { id: "ch-order-analytics", title: "3. Order Analytics", difficulty: "Medium", tags: ["aggregate", "$group"], database: "ecommerce", problem: "Calculate total revenue by order status.", starterQuery: "db.orders.aggregate([{ $group: { _id: \"$status\", totalRevenue: { $sum: \"$total\" } } }, { $sort: { totalRevenue: -1 } }])", solution: "db.orders.aggregate([{ $group: { _id: \"$status\", totalRevenue: { $sum: \"$total\" } } }, { $sort: { totalRevenue: -1 } }])", hint: "Use $group with $sum" },
-  { id: "ch-user-activity", title: "4. User Activity", difficulty: "Medium", tags: ["aggregate", "$group"], database: "ecommerce", problem: "Find top 3 users by order count.", starterQuery: "db.orders.aggregate([{ $group: { _id: \"$userId\", orderCount: { $sum: 1 } } }, { $sort: { orderCount: -1 } }, { $limit: 3 }])", solution: "db.orders.aggregate([{ $group: { _id: \"$userId\", orderCount: { $sum: 1 } } }, { $sort: { orderCount: -1 } }, { $limit: 3 }])", hint: "Group by userId" },
-  { id: "ch-inventory", title: "5. Inventory Management", difficulty: "Medium", tags: ["find", "$or", "$lt"], database: "ecommerce", problem: "Find low stock (< 30) OR Electronics products.", starterQuery: "db.products.find({ $or: [{ stock: { $lt: 30 } }, { category: \"Electronics\" }] }, { name: 1, category: 1, stock: 1 })", solution: "db.products.find({ $or: [{ stock: { $lt: 30 } }, { category: \"Electronics\" }] }, { name: 1, category: 1, stock: 1 })", hint: "Use $or" },
-  { id: "ch-sales-report", title: "6. Sales Report", difficulty: "Hard", tags: ["aggregate", "$match", "$group"], database: "ecommerce", problem: "Calculate avg order value by payment for delivered orders.", starterQuery: "db.orders.aggregate([{ $match: { status: \"delivered\" } }, { $group: { _id: \"$payment\", avgValue: { $avg: \"$total\" }, count: { $sum: 1 } } }])", solution: "db.orders.aggregate([{ $match: { status: \"delivered\" } }, { $group: { _id: \"$payment\", avgValue: { $avg: \"$total\" }, count: { $sum: 1 } } }])", hint: "$match before $group" },
-  { id: "ch-social-feed", title: "7. Social Feed", difficulty: "Medium", tags: ["find", "sort"], database: "social", problem: "Top 5 posts by most likes.", starterQuery: "db.posts.find({}).sort({ likes: -1 }).limit(5)", solution: "db.posts.find({}).sort({ likes: -1 }).limit(5)", hint: "Sort by likes descending" },
-  { id: "ch-segmentation", title: "8. Customer Segmentation", difficulty: "Hard", tags: ["aggregate", "$bucket"], database: "ecommerce", problem: "Segment users by age groups: 20-29, 30-39, 40-49, 50+.", starterQuery: "db.users.aggregate([{ $bucket: { groupBy: \"$age\", boundaries: [20, 30, 40, 50, 100], default: \"Other\", output: { count: { $sum: 1 } } } }])", solution: "db.users.aggregate([{ $bucket: { groupBy: \"$age\", boundaries: [20, 30, 40, 50, 100], default: \"Other\", output: { count: { $sum: 1 } } } }])", hint: "Use $bucket" },
+  { id: "ch-find-users", title: "1. Find Active Users", difficulty: "Easy", tags: ["find", "filter"], database: "ecommerce", problem: "Find all active users (isActive: true) and return only their name, email, and city.", starterQuery: "// Write a query to find active users (isActive: true)\n// Project only name, email, and city. Exclude _id.\ndb.users.find({ /* filter */ }, { /* projection */ })", solution: "db.users.find({ isActive: true }, { name: 1, email: 1, city: 1, _id: 0 })", hint: "Use find() with a filter object and projection object" },
+  { id: "ch-product-search", title: "2. Product Price Search", difficulty: "Easy", tags: ["find", "$gt", "$lt"], database: "ecommerce", problem: "Find products with price between $20 and $100.", starterQuery: "// Find products with price between $20 and $100\ndb.products.find({ /* price filter using $gte and $lte */ })", solution: "db.products.find({ price: { $gte: 20, $lte: 100 } }, { name: 1, price: 1, category: 1 })", hint: "Use $gte and $lte" },
+  { id: "ch-order-analytics", title: "3. Order Analytics", difficulty: "Medium", tags: ["aggregate", "$group"], database: "ecommerce", problem: "Calculate total revenue by order status.", starterQuery: "// Calculate total revenue by status using aggregation\ndb.orders.aggregate([\n  { $group: { _id: \"/* field */\", totalRevenue: { /* accumulator */ } } }\n])", solution: "db.orders.aggregate([{ $group: { _id: \"$status\", totalRevenue: { $sum: \"$total\" } } }, { $sort: { totalRevenue: -1 } }])", hint: "Use $group with $sum" },
+  { id: "ch-user-activity", title: "4. User Activity", difficulty: "Medium", tags: ["aggregate", "$group"], database: "ecommerce", problem: "Find top 3 users by order count.", starterQuery: "// Find top 3 users by order count\ndb.orders.aggregate([\n  // Group by userId, count orders, sort descending, limit to 3\n])", solution: "db.orders.aggregate([{ $group: { _id: \"$userId\", orderCount: { $sum: 1 } } }, { $sort: { orderCount: -1 } }, { $limit: 3 }])", hint: "Group by userId and sort by orderCount descending" },
+  { id: "ch-inventory", title: "5. Inventory Management", difficulty: "Medium", tags: ["find", "$or", "$lt"], database: "ecommerce", problem: "Find low stock (< 30) OR Electronics products.", starterQuery: "// Find low stock (< 30) OR Electronics products using $or\ndb.products.find({ $or: [ /* conditions */ ] })", solution: "db.products.find({ $or: [{ stock: { $lt: 30 } }, { category: \"Electronics\" }] }, { name: 1, category: 1, stock: 1 })", hint: "Use $or with conditions on stock and category" },
+  { id: "ch-sales-report", title: "6. Sales Report", difficulty: "Hard", tags: ["aggregate", "$match", "$group"], database: "ecommerce", problem: "Calculate avg order value by payment for delivered orders.", starterQuery: "// Calculate avg order value by payment for delivered orders\ndb.orders.aggregate([\n  { $match: { /* filter */ } },\n  { $group: { /* grouping */ } }\n])", solution: "db.orders.aggregate([{ $match: { status: \"delivered\" } }, { $group: { _id: \"$payment\", avgValue: { $avg: \"$total\" }, count: { $sum: 1 } } }])", hint: "$match before $group" },
+  { id: "ch-social-feed", title: "7. Social Feed", difficulty: "Medium", tags: ["find", "sort"], database: "social", problem: "Top 5 posts by most likes.", starterQuery: "// Find top 5 posts sorted by most likes descending\ndb.posts.find({}).sort({ /* sort spec */ }).limit(/* limit */)", solution: "db.posts.find({}).sort({ likes: -1 }).limit(5)", hint: "Sort by likes descending" },
+  { id: "ch-segmentation", title: "8. Customer Segmentation", difficulty: "Hard", tags: ["aggregate", "$bucket"], database: "ecommerce", problem: "Segment users by age groups: 20-29, 30-39, 40-49, 50+.", starterQuery: "// Segment users by age groups using $bucket\ndb.users.aggregate([\n  { $bucket: { groupBy: \"$age\", boundaries: [20, 30, 40, 50, 100], default: \"Other\", output: { count: { $sum: 1 } } } }\n])", solution: "db.users.aggregate([{ $bucket: { groupBy: \"$age\", boundaries: [20, 30, 40, 50, 100], default: \"Other\", output: { count: { $sum: 1 } } } }])", hint: "Use $bucket" },
 ];
 
 export const MONGO_PROJECTS = [
@@ -1825,7 +1825,22 @@ export const MONGO_PROJECTS = [
     difficulty: "Intermediate",
     icon: "🛒",
     database: "ecommerce",
-    milestones: [{ id: "m1", title: "Explore Collections" }, { id: "m2", title: "Query Active Users" }],
+    milestones: [
+      {
+        id: "m1",
+        title: "Explore Collections",
+        task: "Explore the collections in the e-commerce database:\n\n1. Find all users in the `users` collection.\n2. Find all products in the `products` collection.\n3. Find all orders in the `orders` collection.",
+        hints: ["Use `db.users.find({})` for the first query.", "Use `db.products.find({})` for the second query.", "Use `db.orders.find({})` for the third query."],
+        solutionQuery: "// Query 1: Find all users\ndb.users.find({})\n\n// Query 2: Find all products\ndb.products.find({})\n\n// Query 3: Find all orders\ndb.orders.find({})"
+      },
+      {
+        id: "m2",
+        title: "Query Active Users",
+        task: "Query active users from the database:\n\n1. Find all active users (`isActive: true`) who are over 30 years old.\n2. Project only their `name`, `email`, and `age` fields (exclude `_id`).",
+        hints: ["Use filter `{ isActive: true, age: { $gt: 30 } }`.", "For projection, pass `{ name: 1, email: 1, age: 1, _id: 0 }` as the second argument."],
+        solutionQuery: "db.users.find({ isActive: true, age: { $gt: 30 } }, { name: 1, email: 1, age: 1, _id: 0 })"
+      }
+    ],
   },
   {
     id: "project-social",
@@ -1834,7 +1849,22 @@ export const MONGO_PROJECTS = [
     difficulty: "Intermediate",
     icon: "📱",
     database: "social",
-    milestones: [{ id: "sm1", title: "Explore Social Data" }, { id: "sm2", title: "Popular Content" }],
+    milestones: [
+      {
+        id: "sm1",
+        title: "Explore Social Data",
+        task: "Explore the social media database:\n\n1. Find all users in the `users` collection.\n2. Find all posts in the `posts` collection.",
+        hints: ["Use `db.users.find({})` to get all user documents.", "Use `db.posts.find({})` to get all post documents."],
+        solutionQuery: "// Query 1: Find all users\ndb.users.find({})\n\n// Query 2: Find all posts\ndb.posts.find({})"
+      },
+      {
+        id: "sm2",
+        title: "Popular Content",
+        task: "Identify popular posts on the platform:\n\n1. Find posts that have more than 100 likes.\n2. Sort them by likes in descending order.",
+        hints: ["Use `{ likes: { $gt: 100 } }` as the query filter.", "Chain `.sort({ likes: -1 })` to the find query to sort in descending order."],
+        solutionQuery: "db.posts.find({ likes: { $gt: 100 } }).sort({ likes: -1 })"
+      }
+    ],
   },
   {
     id: "project-analytics",
@@ -1843,7 +1873,22 @@ export const MONGO_PROJECTS = [
     difficulty: "Advanced",
     icon: "📊",
     database: "ecommerce",
-    milestones: [{ id: "a1", title: "Revenue by Category" }, { id: "a2", title: "Customer Segmentation" }],
+    milestones: [
+      {
+        id: "a1",
+        title: "Revenue by Category",
+        task: "Calculate metrics by product category using aggregation:\n\n1. Group products by `category`.\n2. Calculate the total stock in each category.\n3. Calculate the average price in each category.",
+        hints: ["Use the `$group` stage.", "Group by `\"$category\"`.", "Use `$sum` for total stock and `$avg` for average price."],
+        solutionQuery: "db.products.aggregate([\n  { $group: { _id: \"$category\", totalStock: { $sum: \"$stock\" }, avgPrice: { $avg: \"$price\" } } }\n])"
+      },
+      {
+        id: "a2",
+        title: "Customer Segmentation",
+        task: "Segment customers by total spend:\n\n1. Aggregate orders to find the total amount spent by each `userId`.\n2. Sort the results by total spend in descending order.",
+        hints: ["Use `$group` stage grouping by `\"$userId\"` and computing the sum of `\"$total\"`.", "Use a subsequent `$sort` stage with `totalSpent: -1`."],
+        solutionQuery: "db.orders.aggregate([\n  { $group: { _id: \"$userId\", totalSpent: { $sum: \"$total\" } } },\n  { $sort: { totalSpent: -1 } }\n])"
+      }
+    ],
   },
   {
     id: "project-blogging",
@@ -1852,7 +1897,22 @@ export const MONGO_PROJECTS = [
     difficulty: "Advanced",
     icon: "📝",
     database: "ecommerce",
-    milestones: [{ id: "b1", title: "Data Exploration" }, { id: "b2", title: "Analytics" }],
+    milestones: [
+      {
+        id: "b1",
+        title: "Data Exploration",
+        task: "Explore product tags:\n\n1. Find all products containing the tag `\"premium\"`.",
+        hints: ["To check array elements, simply query `{ tags: \"premium\" }`."],
+        solutionQuery: "db.products.find({ tags: \"premium\" })"
+      },
+      {
+        id: "b2",
+        title: "Analytics",
+        task: "Perform analytics on orders:\n\n1. Group orders by `payment` method.\n2. Count the number of orders for each payment method.",
+        hints: ["Use `$group` stage with `_id: \"$payment\"`.", "Compute count using `{ $sum: 1 }`."],
+        solutionQuery: "db.orders.aggregate([\n  { $group: { _id: \"$payment\", orderCount: { $sum: 1 } } }\n])"
+      }
+    ],
   },
   {
     id: "project-crm",
@@ -1861,7 +1921,22 @@ export const MONGO_PROJECTS = [
     difficulty: "Intermediate",
     icon: "🤝",
     database: "ecommerce",
-    milestones: [{ id: "c1", title: "Customer Overview" }, { id: "c2", title: "Order Analysis" }],
+    milestones: [
+      {
+        id: "c1",
+        title: "Customer Overview",
+        task: "Generate an overview of users by city:\n\n1. Filter for active users only (`isActive: true`).\n2. Group active users by `city` and count them.",
+        hints: ["Use a `$match` stage followed by a `$group` stage.", "Group by `\"$city\"` and count using `{ $sum: 1 }`."],
+        solutionQuery: "db.users.aggregate([\n  { $match: { isActive: true } },\n  { $group: { _id: \"$city\", userCount: { $sum: 1 } } }\n])"
+      },
+      {
+        id: "c2",
+        title: "Order Analysis",
+        task: "Analyze order status metrics:\n\n1. Group orders by `status`.\n2. Count the number of orders and find the average total for each status.",
+        hints: ["Use `$group` stage grouping by `\"$status\"`.", "Use `$sum: 1` to get count and `$avg: \"$total\"` to get average total."],
+        solutionQuery: "db.orders.aggregate([\n  { $group: { _id: \"$status\", orderCount: { $sum: 1 }, averageTotal: { $avg: \"$total\" } } }\n])"
+      }
+    ],
   },
   {
     id: "project-chat",
@@ -1870,7 +1945,159 @@ export const MONGO_PROJECTS = [
     difficulty: "Advanced",
     icon: "💬",
     database: "social",
-    milestones: [{ id: "ch1", title: "User Directory" }, { id: "ch2", title: "Content Analysis" }],
+    milestones: [
+      {
+        id: "ch1",
+        title: "User Directory",
+        task: "Search the user directory for popular accounts:\n\n1. Find users with more than 1000 followers.\n2. Sort them by `followersCount` in descending order.",
+        hints: ["Use filter `{ followersCount: { $gt: 1000 } }`.", "Sort with `.sort({ followersCount: -1 })`."],
+        solutionQuery: "db.users.find({ followersCount: { $gt: 1000 } }).sort({ followersCount: -1 })"
+      },
+      {
+        id: "ch2",
+        title: "Content Analysis",
+        task: "Analyze posts by topics:\n\n1. Find all posts that contain either the tag `\"travel\"` or `\"photography\"`.",
+        hints: ["Use the `$in` operator inside the filter: `{ tags: { $in: [\"travel\", \"photography\"] } }`."],
+        solutionQuery: "db.posts.find({ tags: { $in: [\"travel\", \"photography\"] } })"
+      }
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════
+//  MONGODB AGGREGATION LABS (10 Labs)
+// ═══════════════════════════════════════════════════
+
+export const MONGO_AGGREGATION_LABS = [
+  {
+    id: "agg-1",
+    num: 1,
+    stage: "$match",
+    title: "$match — Filter Documents",
+    difficulty: "Intermediate",
+    database: "ecommerce",
+    concept: `**$match** is the aggregation equivalent of find(). It filters documents before passing them to the next stage.\n\n**Key Points:**\n• Place $match early in a pipeline to reduce document volume\n• Supports all query operators: $gt, $lt, $in, $and, $or, etc.\n• Can use indexes when placed as the first stage`,
+    task: "Use $match in an aggregation pipeline:\n\n1. Match all orders with status \"delivered\".\n2. Count how many delivered orders exist (add a $count stage).",
+    starterQuery: "// $match: Filter documents in a pipeline\n// Task: Match delivered orders and count them\ndb.orders.aggregate([\n  { $match: { /* add filter here */ } },\n  { $count: \"/* field name */\" }\n])",
+    solutionQuery: "db.orders.aggregate([\n  { $match: { status: \"delivered\" } },\n  { $count: \"deliveredOrders\" }\n])",
+    hints: ["Use { status: \"delivered\" } as your filter.", "Add { $count: \"deliveredOrders\" } as the second stage."],
+  },
+  {
+    id: "agg-2",
+    num: 2,
+    stage: "$project",
+    title: "$project — Shape Output",
+    difficulty: "Intermediate",
+    database: "ecommerce",
+    concept: `**$project** reshapes documents — include/exclude fields, rename fields, or add computed fields.\n\n**Syntax:**\n• \`{ field: 1 }\` — include field\n• \`{ field: 0 }\` — exclude field\n• \`{ newField: \"$existingField\" }\` — rename\n• \`{ total: { $multiply: [\"$price\", \"$qty\"] } }\` — compute`,
+    task: "Shape the output with $project:\n\n1. From the products collection, include only `name`, `category`, and `price`.\n2. Add a computed field `priceWithTax` = price * 1.1.",
+    starterQuery: "// $project: Include/exclude/compute fields\n// Task: Include name, category, price AND compute priceWithTax\ndb.products.aggregate([\n  { $project: { /* add fields here */ } }\n])",
+    solutionQuery: "db.products.aggregate([\n  { $project: {\n    _id: 0,\n    name: 1,\n    category: 1,\n    price: 1,\n    priceWithTax: { $multiply: [\"$price\", 1.1] }\n  }}\n])",
+    hints: ["Use 1 to include fields, 0 to exclude.", "Compute priceWithTax with { $multiply: [\"$price\", 1.1] }."],
+  },
+  {
+    id: "agg-3",
+    num: 3,
+    stage: "$group",
+    title: "$group — Group & Accumulate",
+    difficulty: "Intermediate",
+    database: "ecommerce",
+    concept: `**$group** groups documents by an expression and applies accumulators.\n\n**Common accumulators:**\n• \`$sum\` — sum values\n• \`$avg\` — average\n• \`$min\` / \`$max\` — minimum / maximum\n• \`$push\` — collect into array\n• \`$addToSet\` — collect unique values`,
+    task: "Group and accumulate with $group:\n\n1. Group products by `category`.\n2. Count the number of products in each category.\n3. Calculate the average price per category.",
+    starterQuery: "// $group: Aggregate data by a field\n// Task: Group products by category, count them, get avg price\ndb.products.aggregate([\n  { $group: {\n    _id: /* group field */,\n    count: { /* accumulator */ },\n    avgPrice: { /* accumulator */ }\n  }}\n])",
+    solutionQuery: "db.products.aggregate([\n  { $group: {\n    _id: \"$category\",\n    count: { $sum: 1 },\n    avgPrice: { $avg: \"$price\" }\n  }}\n])",
+    hints: ["_id is the group key. Use \"$category\".", "{ $sum: 1 } counts each document. Use $avg: \"$price\" for average."],
+  },
+  {
+    id: "agg-4",
+    num: 4,
+    stage: "$sort",
+    title: "$sort — Order Results",
+    difficulty: "Intermediate",
+    database: "ecommerce",
+    concept: `**$sort** orders documents in the pipeline.\n\n**Syntax:**\n• \`{ field: 1 }\` — ascending\n• \`{ field: -1 }\` — descending\n\n**Tip:** Place $sort after $group when sorting aggregated results. Use early $sort + $limit for top-N optimizations.`,
+    task: "Sort aggregated results with $sort:\n\n1. Group orders by status and sum the total revenue for each.\n2. Sort the results by totalRevenue descending.",
+    starterQuery: "// $sort: Order the pipeline output\n// Task: Group orders by status, sum revenue, sort desc\ndb.orders.aggregate([\n  { $group: { _id: \"$status\", totalRevenue: { $sum: \"$total\" } } },\n  { $sort: { /* field: direction */ } }\n])",
+    solutionQuery: "db.orders.aggregate([\n  { $group: { _id: \"$status\", totalRevenue: { $sum: \"$total\" } } },\n  { $sort: { totalRevenue: -1 } }\n])",
+    hints: ["Add { $sort: { totalRevenue: -1 } } after the $group stage.", "Use -1 for descending order."],
+  },
+  {
+    id: "agg-5",
+    num: 5,
+    stage: "$lookup",
+    title: "$lookup — Join Collections",
+    difficulty: "Advanced",
+    database: "ecommerce",
+    concept: `**$lookup** performs a left outer join between two collections.\n\n**Syntax:**\n\`\`\`\n{ $lookup: {\n  from: "otherCollection",\n  localField: "localKey",\n  foreignField: "foreignKey",\n  as: "outputArray"\n}}\n\`\`\`\n\nThe joined documents are added as an array field.`,
+    task: "Join collections with $lookup:\n\n1. From the orders collection, join to the users collection matching orders.userId to users._id.\n2. Project the order total and the joined user's name.",
+    starterQuery: "// $lookup: Join two collections\n// Task: Join orders → users by userId\ndb.orders.aggregate([\n  { $lookup: {\n    from: /* target collection */,\n    localField: /* local join key */,\n    foreignField: /* foreign join key */,\n    as: \"user\"\n  }},\n  { $project: { total: 1, \"user.name\": 1 } }\n])",
+    solutionQuery: "db.orders.aggregate([\n  { $lookup: {\n    from: \"users\",\n    localField: \"userId\",\n    foreignField: \"_id\",\n    as: \"user\"\n  }},\n  { $project: { total: 1, \"user.name\": 1, _id: 0 } }\n])",
+    hints: ["from: \"users\" targets the users collection.", "localField: \"userId\" joins to foreignField: \"_id\" in users."],
+  },
+  {
+    id: "agg-6",
+    num: 6,
+    stage: "$unwind",
+    title: "$unwind — Flatten Arrays",
+    difficulty: "Advanced",
+    database: "ecommerce",
+    concept: `**$unwind** deconstructs an array field, creating one document per array element.\n\n**Example:** An order with 3 items becomes 3 separate documents.\n\n**Use cases:**\n• Aggregate on array elements\n• Join array subdocuments with $lookup\n• Count or sum values inside arrays`,
+    task: "Flatten arrays with $unwind:\n\n1. Unwind the `items` array inside orders.\n2. Group by item productId and sum the quantity across all orders.",
+    starterQuery: "// $unwind: Flatten array fields\n// Task: Unwind order items and sum quantity per product\ndb.orders.aggregate([\n  { $unwind: /* array field path */ },\n  { $group: {\n    _id: /* group by product */,\n    totalQty: { $sum: /* quantity field */ }\n  }}\n])",
+    solutionQuery: "db.orders.aggregate([\n  { $unwind: \"$items\" },\n  { $group: {\n    _id: \"$items.productId\",\n    totalQty: { $sum: \"$items.quantity\" }\n  }}\n])",
+    hints: ["Use \"$items\" (with dollar sign) to reference the array field.", "After unwind, each item is accessible with \"$items.productId\" and \"$items.quantity\"."],
+  },
+  {
+    id: "agg-7",
+    num: 7,
+    stage: "$facet",
+    title: "$facet — Multiple Pipelines",
+    difficulty: "Advanced",
+    database: "ecommerce",
+    concept: `**$facet** runs multiple sub-pipelines on the same input, producing results in a single document.\n\n**Use cases:**\n• Pagination with total count\n• Multiple aggregation views in one query\n• Dashboard metrics in a single round-trip`,
+    task: "Run multiple pipelines with $facet:\n\n1. In one $facet, compute totalProducts (count of all products).\n2. In another $facet, compute categoryStats (group by category, count each).",
+    starterQuery: "// $facet: Run multiple sub-pipelines\n// Task: Get total product count AND category breakdown in one query\ndb.products.aggregate([\n  { $facet: {\n    totalProducts: [ /* pipeline to count all */ ],\n    categoryStats: [ /* pipeline to group by category */ ]\n  }}\n])",
+    solutionQuery: "db.products.aggregate([\n  { $facet: {\n    totalProducts: [ { $count: \"total\" } ],\n    categoryStats: [ { $group: { _id: \"$category\", count: { $sum: 1 } } } ]\n  }}\n])",
+    hints: ["Each value inside $facet is an array (a sub-pipeline).", "Use { $count: \"total\" } for count, { $group: ... } for category breakdown."],
+  },
+  {
+    id: "agg-8",
+    num: 8,
+    stage: "$bucket",
+    title: "$bucket — Range Grouping",
+    difficulty: "Advanced",
+    database: "ecommerce",
+    concept: `**$bucket** groups documents into ranges (buckets) based on a field.\n\n**Syntax:**\n\`\`\`\n{ $bucket: {\n  groupBy: "$field",\n  boundaries: [lower, mid, upper],\n  default: "Other",\n  output: { count: { $sum: 1 } }\n}}\n\`\`\`\n\nBoundaries define the start of each bucket. The last boundary is exclusive.`,
+    task: "Group into ranges with $bucket:\n\n1. Bucket users by age into ranges: 20–29, 30–39, 40–49, 50+.\n2. Count the users in each bucket.",
+    starterQuery: "// $bucket: Group documents into ranges\n// Task: Bucket users by age: 20-29, 30-39, 40-49, 50+\ndb.users.aggregate([\n  { $bucket: {\n    groupBy: /* field */,\n    boundaries: [ /* range boundaries */ ],\n    default: \"50+\",\n    output: { count: { $sum: 1 } }\n  }}\n])",
+    solutionQuery: "db.users.aggregate([\n  { $bucket: {\n    groupBy: \"$age\",\n    boundaries: [20, 30, 40, 50],\n    default: \"50+\",\n    output: { count: { $sum: 1 } }\n  }}\n])",
+    hints: ["Use \"$age\" as the groupBy field.", "Boundaries [20, 30, 40, 50] create ranges 20-29, 30-39, 40-49. Users ≥50 go to default."],
+  },
+  {
+    id: "agg-9",
+    num: 9,
+    stage: "$setWindowFields",
+    title: "$setWindowFields — Window Functions",
+    difficulty: "Advanced",
+    database: "ecommerce",
+    concept: `**$setWindowFields** (MongoDB 5.0+) applies window functions similar to SQL's OVER PARTITION BY.\n\n**Common window functions:**\n• \`$rank\` / \`$denseRank\` — ranking within partition\n• \`$sum\` / \`$avg\` — running totals\n• \`$first\` / \`$last\` — first/last value in window`,
+    task: "Use window functions with $setWindowFields:\n\n1. Rank users by age within the entire collection.\n2. Add a `rank` field to each document.",
+    starterQuery: "// $setWindowFields: SQL-style window functions\n// Task: Rank users by age descending\ndb.users.aggregate([\n  { $setWindowFields: {\n    sortBy: { age: /* sort order */ },\n    output: {\n      rank: { $rank: {} }\n    }\n  }},\n  { $project: { name: 1, age: 1, rank: 1, _id: 0 } }\n])",
+    solutionQuery: "db.users.aggregate([\n  { $setWindowFields: {\n    sortBy: { age: -1 },\n    output: {\n      rank: { $rank: {} }\n    }\n  }},\n  { $project: { name: 1, age: 1, rank: 1, _id: 0 } }\n])",
+    hints: ["sortBy: { age: -1 } ranks oldest users first.", "$rank: {} computes rank based on the sortBy order."],
+  },
+  {
+    id: "agg-10",
+    num: 10,
+    stage: "Complex",
+    title: "Complex Pipelines",
+    difficulty: "Advanced",
+    database: "ecommerce",
+    concept: `Real-world aggregation pipelines combine multiple stages to answer complex questions.\n\n**Pipeline Design Tips:**\n• Filter early with $match to reduce data\n• Use $project to drop unnecessary fields\n• Combine $group + $sort + $limit for top-N queries\n• Use $lookup sparingly — embedding is often better\n• Use $facet for dashboard-style multi-metric queries`,
+    task: "Write a complex multi-stage pipeline:\n\n1. Match orders with status \"delivered\".\n2. Lookup the users collection to get user details.\n3. Group by city (from user data) and sum revenue.\n4. Sort by total revenue descending.\n5. Limit to top 3 cities.",
+    starterQuery: "// Complex Pipeline: Top 3 revenue cities from delivered orders\ndb.orders.aggregate([\n  // Stage 1: Filter delivered orders\n  // Stage 2: Lookup users\n  // Stage 3: Unwind users array\n  // Stage 4: Group by city, sum revenue\n  // Stage 5: Sort descending\n  // Stage 6: Limit to 3\n])",
+    solutionQuery: "db.orders.aggregate([\n  { $match: { status: \"delivered\" } },\n  { $lookup: { from: \"users\", localField: \"userId\", foreignField: \"_id\", as: \"user\" } },\n  { $unwind: \"$user\" },\n  { $group: { _id: \"$user.city\", totalRevenue: { $sum: \"$total\" } } },\n  { $sort: { totalRevenue: -1 } },\n  { $limit: 3 }\n])",
+    hints: ["Start with $match: { status: \"delivered\" }.", "After $lookup, use $unwind: \"$user\" to flatten the array.", "Group by \"$user.city\" and sum \"$total\"."],
   },
 ];
 

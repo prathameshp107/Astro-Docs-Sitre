@@ -50,19 +50,19 @@ export const PYTHON_LESSONS = [
 • Python follows PEP 8 style guidelines
 
 **Your First Python Program:**
-\\\`\\\`\\\`python
+\`\`\`python
 print("Hello, World!")
-\\\`\\\`\\\`
+\`\`\`
 
 **Comments:**
-\\\`\\\`\\\`python
+\`\`\`python
 # This is a single-line comment
 
 """
 This is a
 multi-line comment
 """
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Use 4 spaces for indentation (never tabs)",
       "Python is case-sensitive — Name and name are different",
@@ -107,12 +107,12 @@ print(25)`,
     conceptExplanation: `Variables store data in memory. Python has several built-in data types.
 
 **Creating Variables:**
-\\\`\\\`\\\`python
+\`\`\`python
 name = "Alice"        # str — string
 age = 25              # int — integer
 height = 5.6          # float — decimal
 is_student = True     # bool — boolean
-\\\`\\\`\\\`
+\`\`\`
 
 **Common Data Types:**
 • str — Text: "Hello", 'World'
@@ -122,9 +122,9 @@ is_student = True     # bool — boolean
 • NoneType — None (absence of value)
 
 **Type Checking:**
-\\\`\\\`\\\`python
+\`\`\`python
 type(variable)  # Returns the type
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Use snake_case for variable names: my_variable",
       "Variable names must start with a letter or underscore",
@@ -189,7 +189,7 @@ print("Type of is_student:", type(is_student))`,
     conceptExplanation: `Operators perform operations on variables and values.
 
 **Arithmetic Operators:**
-\\\`\\\`\\\`python
+\`\`\`python
 +  # Addition: 5 + 3 = 8
 -  # Subtraction: 10 - 4 = 6
 *  # Multiplication: 3 * 4 = 12
@@ -197,26 +197,26 @@ print("Type of is_student:", type(is_student))`,
 // # Floor division: 17 // 5 = 3
 %  # Modulus: 17 % 5 = 2
 ** # Exponentiation: 2 ** 3 = 8
-\\\`\\\`\\\`
+\`\`\`
 
 **Comparison Operators:**
-\\\`\\\`\\\`python
+\`\`\`python
 ==  # Equal to
 !=  # Not equal to
 >   # Greater than
 <   # Less than
 >=  # Greater than or equal to
 <=  # Less than or equal to
-\\\`\\\`\\\`
+\`\`\`
 
 **Assignment Operators:**
-\\\`\\\`\\\`python
+\`\`\`python
 =   # Assign
 +=  # Add and assign: x += 5 is x = x + 5
 -=  # Subtract and assign
 *=  # Multiply and assign
 /=  # Divide and assign
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Division (/) always returns a float",
       "Use // for integer (floor) division",
@@ -278,7 +278,7 @@ print("After a += b:", a)`,
     conceptExplanation: `Conditionals let your code make decisions based on conditions.
 
 **if/elif/else:**
-\\\`\\\`\\\`python
+\`\`\`python
 score = 85
 
 if score >= 90:
@@ -289,19 +289,19 @@ elif score >= 70:
     print("C")
 else:
     print("F")
-\\\`\\\`\\\`
+\`\`\`
 
 **Logical Operators:**
-\\\`\\\`\\\`python
+\`\`\`python
 and  # Both conditions must be True
 or   # At least one condition must be True
 not  # Inverts the condition
-\\\`\\\`\\\`
+\`\`\`
 
 **Ternary Operator:**
-\\\`\\\`\\\`python
+\`\`\`python
 status = "Adult" if age >= 18 else "Minor"
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Use : after if, elif, and else",
       "Indent the code inside each block by 4 spaces",
@@ -371,7 +371,7 @@ print("Is perfect:", is_perfect)`,
     conceptExplanation: `Loops let you repeat code multiple times.
 
 **For Loop:**
-\\\`\\\`\\\`python
+\`\`\`python
 # With range
 for i in range(5):
     print(i)  # 0, 1, 2, 3, 4
@@ -388,21 +388,21 @@ for i in range(0, 10, 2):
 fruits = ["apple", "banana", "cherry"]
 for fruit in fruits:
     print(fruit)
-\\\`\\\`\\\`
+\`\`\`
 
 **While Loop:**
-\\\`\\\`\\\`python
+\`\`\`python
 count = 0
 while count < 5:
     print(count)
     count += 1
-\\\`\\\`\\\`
+\`\`\`
 
 **Loop Control:**
-\\\`\\\`\\\`python
+\`\`\`python
 break    # Exit the loop
 continue # Skip to next iteration
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "range(n) generates 0 to n-1",
       "range(start, stop) generates start to stop-1",
@@ -468,34 +468,34 @@ print("Sum of 1 to 10:", total)`,
     conceptExplanation: `Functions are reusable blocks of code that perform a specific task.
 
 **Defining Functions:**
-\\\`\\\`\\\`python
+\`\`\`python
 def greet(name):
     return f"Hello, {name}!"
 
 def add(a, b):
     result = a + b
     return result
-\\\`\\\`\\\`
+\`\`\`
 
 **Default Parameters:**
-\\\`\\\`\\\`python
+\`\`\`python
 def greet(name="Guest"):
     return f"Hello, {name}!"
-\\\`\\\`\\\`
+\`\`\`
 
 **Multiple Returns:**
-\\\`\\\`\\\`python
+\`\`\`python
 def get_min_max(numbers):
     return min(numbers), max(numbers)
 
 low, high = get_min_max([3, 1, 4, 1, 5])
-\\\`\\\`\\\`
+\`\`\`
 
 **Lambda Functions:**
-\\\`\\\`\\\`python
+\`\`\`python
 square = lambda x: x ** 2
 add = lambda a, b: a + b
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Use def to define a function",
       "Functions without return return None",
@@ -565,28 +565,28 @@ print("greet():", greet())`,
     conceptExplanation: `Lists store ordered collections of items. They are mutable (can be changed after creation).
 
 **Creating Lists:**
-\\\`\\\`\\\`python
+\`\`\`python
 fruits = ["apple", "banana", "cherry"]
 mixed = [1, "hello", 3.14, True]
 empty = []
-\\\`\\\`\\\`
+\`\`\`
 
 **Accessing Items:**
-\\\`\\\`\\\`python
+\`\`\`python
 fruits[0]    # "apple" (first item)
 fruits[-1]   # "cherry" (last item)
 fruits[1:3]  # ["banana", "cherry"] (slicing)
-\\\`\\\`\\\`
+\`\`\`
 
 **Common Methods:**
-\\\`\\\`\\\`python
+\`\`\`python
 fruits.append("orange")   # Add to end
 fruits.insert(1, "mango") # Add at index
 fruits.remove("banana")   # Remove by value
 popped = fruits.pop()     # Remove and return last
 fruits.sort()             # Sort in place
 len(fruits)               # Get length
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Lists are indexed starting from 0",
       "Negative indexing starts from the end (-1 is last)",
@@ -655,7 +655,7 @@ print("Sorted:", sorted(colors))`,
     conceptExplanation: `Tuples and sets are additional collection types in Python.
 
 **Tuples** — Ordered, immutable collections:
-\\\`\\\`\\\`python
+\`\`\`python
 point = (3, 4)
 colors = ("red", "green", "blue")
 single = (1,)  # Note the trailing comma!
@@ -663,10 +663,10 @@ single = (1,)  # Note the trailing comma!
 # Tuple unpacking
 x, y = point
 print(x)  # 3
-\\\`\\\`\\\`
+\`\`\`
 
 **Sets** — Unordered collections of unique items:
-\\\`\\\`\\\`python
+\`\`\`python
 unique = {1, 2, 3, 3, 2}
 print(unique)  # {1, 2, 3}
 
@@ -676,7 +676,7 @@ b = {3, 4, 5}
 print(a | b)  # Union: {1, 2, 3, 4, 5}
 print(a & b)  # Intersection: {3}
 print(a - b)  # Difference: {1, 2}
-\\\`\\\`\\\`
+\`\`\`
 
 **When to use:**
 • Tuple for coordinates, records, function returns (immutable)
@@ -752,32 +752,32 @@ print("Difference:", set_a - set_b)`,
     conceptExplanation: `Dictionaries store key-value pairs for fast data lookup.
 
 **Creating Dictionaries:**
-\\\`\\\`\\\`python
+\`\`\`python
 student = {
     "name": "Alice",
     "age": 25,
     "grades": [90, 85, 88]
 }
-\\\`\\\`\\\`
+\`\`\`
 
 **Accessing and Modifying:**
-\\\`\\\`\\\`python
+\`\`\`python
 student["name"]        # "Alice"
 student.get("age")     # 25 (safe access)
 student["city"] = "NYC"  # Add new key
 student["age"] = 26      # Update value
 del student["grades"]    # Delete key
-\\\`\\\`\\\`
+\`\`\`
 
 **Dictionary Methods:**
-\\\`\\\`\\\`python
+\`\`\`python
 student.keys()    # All keys
 student.values()  # All values
 student.items()   # All (key, value) pairs
 
 for key, value in student.items():
     print(f"{key}: {value}")
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Keys must be immutable (strings, numbers, tuples)",
       "Values can be any type (lists, dicts, objects)",
@@ -850,7 +850,7 @@ for key, value in person.items():
     conceptExplanation: `Python has powerful string manipulation capabilities.
 
 **String Methods:**
-\\\`\\\`\\\`python
+\`\`\`python
 text = "  Hello, Python World!  "
 
 text.lower()          # "  hello, python world!  "
@@ -862,15 +862,15 @@ text.split(",")       # ["  Hello", " Python World!  "]
 text.startswith("Hello")  # True
 text.count("o")       # 3
 text.find("Python")   # 10
-\\\`\\\`\\\`
+\`\`\`
 
 **f-strings (Formatted Strings):**
-\\\`\\\`\\\`python
+\`\`\`python
 name = "Alice"
 age = 25
 print(f"My name is {name} and I'm {age} years old.")
 print(f"Next year I'll be {age + 1}.")
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Strings are immutable — methods return new strings",
       "Use f-strings for string formatting (Python 3.6+)",
@@ -951,7 +951,7 @@ print(f"I'm learning {name} {version}.x!")`,
     conceptExplanation: `Comprehensions provide a concise way to create collections.
 
 **List Comprehension:**
-\\\`\\\`\\\`python
+\`\`\`python
 # Traditional
 squares = []
 for i in range(10):
@@ -959,28 +959,28 @@ for i in range(10):
 
 # Comprehension (one line!)
 squares = [i ** 2 for i in range(10)]
-\\\`\\\`\\\`
+\`\`\`
 
 **With Condition:**
-\\\`\\\`\\\`python
+\`\`\`python
 evens = [x for x in range(20) if x % 2 == 0]
-\\\`\\\`\\\`
+\`\`\`
 
 **Dictionary Comprehension:**
-\\\`\\\`\\\`python
+\`\`\`python
 square_dict = {x: x**2 for x in range(5)}
 # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
-\\\`\\\`\\\`
+\`\`\`
 
 **Set Comprehension:**
-\\\`\\\`\\\`python
+\`\`\`python
 unique_lengths = {len(word) for word in words}
-\\\`\\\`\\\`
+\`\`\`
 
 **Nested Comprehension:**
-\\\`\\\`\\\`python
+\`\`\`python
 matrix = [[i * j for j in range(3)] for i in range(3)]
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "List comprehension: [expr for item in iterable]",
       "Add condition: [expr for item in iterable if condition]",
@@ -1044,40 +1044,40 @@ print("Word lengths:", lengths)`,
     conceptExplanation: `File handling allows reading from and writing to files.
 
 **Opening Files:**
-\\\`\\\`\\\`python
+\`\`\`python
 file = open("data.txt", "r")  # Read mode
 content = file.read()
 file.close()
-\\\`\\\`\\\`
+\`\`\`
 
 **Using 'with' (recommended — auto-closes):**
-\\\`\\\`\\\`python
+\`\`\`python
 with open("data.txt", "r") as file:
     content = file.read()
     # File auto-closes after the block
-\\\`\\\`\\\`
+\`\`\`
 
 **File Modes:**
-\\\`\\\`\\\`python
+\`\`\`python
 "r"  # Read (default)
 "w"  # Write (overwrites)
 "a"  # Append
 "r+" # Read and write
 "b"  # Binary mode (rb, wb)
-\\\`\\\`\\\`
+\`\`\`
 
 **Reading Methods:**
-\\\`\\\`\\\`python
+\`\`\`python
 file.read()        # Entire file as string
 file.readline()    # One line
 file.readlines()   # List of lines
-\\\`\\\`\\\`
+\`\`\`
 
 **Writing:**
-\\\`\\\`\\\`python
+\`\`\`python
 file.write("Hello\\n")
 file.writelines(["line1\\n", "line2\\n"])
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Always use 'with' to auto-close files",
       "Use 'w' mode carefully — it overwrites existing files",
@@ -1159,7 +1159,7 @@ print("After overwrite:", read_file("notes.txt"))`,
     conceptExplanation: `Exception handling makes your code robust by gracefully handling errors.
 
 **Basic try/except:**
-\\\`\\\`\\\`python
+\`\`\`python
 try:
     number = int(input("Enter a number: "))
     result = 10 / number
@@ -1172,7 +1172,7 @@ else:
     print("No errors occurred!")
 finally:
     print("This always runs.")
-\\\`\\\`\\\`
+\`\`\`
 
 **Common Exception Types:**
 • ValueError — Wrong value type
@@ -1183,12 +1183,12 @@ finally:
 • IndexError — List index out of range
 
 **Raising Exceptions:**
-\\\`\\\`\\\`python
+\`\`\`python
 def divide(a, b):
     if b == 0:
         raise ValueError("Cannot divide by zero")
     return a / b
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Always catch specific exceptions, not bare except:",
       "Use else for code that runs when no exception occurs",
@@ -1290,7 +1290,7 @@ print("convert_int('hello'):", convert_int("hello"))`,
     conceptExplanation: `Modules let you organize code into separate files for reusability.
 
 **Importing Modules:**
-\\\`\\\`\\\`python
+\`\`\`python
 import math
 print(math.sqrt(16))  # 4.0
 
@@ -1301,7 +1301,7 @@ from math import *   # Import everything (not recommended)
 
 import math as m     # Alias
 print(m.cos(0))      # 1.0
-\\\`\\\`\\\`
+\`\`\`
 
 **Common Standard Library Modules:**
 • math — Mathematical functions
@@ -1314,7 +1314,7 @@ print(m.cos(0))      # 1.0
 • itertools — Iterator tools
 
 **Creating a Module:**
-\\\`\\\`\\\`python
+\`\`\`python
 # my_module.py
 def greet(name):
     return f"Hello, {name}!"
@@ -1322,7 +1322,7 @@ def greet(name):
 # main.py
 import my_module
 print(my_module.greet("Alice"))
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Import specific functions with 'from module import func'",
       "Use aliases for modules with long names: import numpy as np",
@@ -1409,7 +1409,7 @@ print(f"count_chars('Hello') = {count_chars('Hello')}")`,
     conceptExplanation: `Object-Oriented Programming organizes code around objects and classes.
 
 **Defining a Class:**
-\\\`\\\`\\\`python
+\`\`\`python
 class Dog:
     # Class attribute (shared by all instances)
     species = "Canis familiaris"
@@ -1426,17 +1426,17 @@ class Dog:
     # Method with __str__ for string representation
     def __str__(self):
         return f"{self.name} ({self.age} years old)"
-\\\`\\\`\\\`
+\`\`\`
 
 **Creating Objects:**
-\\\`\\\`\\\`python
+\`\`\`python
 dog1 = Dog("Buddy", 3)
 dog2 = Dog("Lucy", 5)
 
 print(dog1.bark())     # "Buddy says Woof!"
 print(dog2)            # "Lucy (5 years old)"
 print(dog1.species)    # "Canis familiaris"
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "self refers to the current instance (like 'this' in other languages)",
       "__init__ is the constructor — called when creating new objects",
@@ -1516,7 +1516,7 @@ print(f"Is '{book3.title}' old? {book3.is_old()}")`,
     conceptExplanation: `Inheritance allows a class to reuse code from a parent class.
 
 **Basic Inheritance:**
-\\\`\\\`\\\`python
+\`\`\`python
 class Animal:
     def __init__(self, name):
         self.name = name
@@ -1531,10 +1531,10 @@ class Dog(Animal):
 class Cat(Animal):
     def speak(self):
         return f"{self.name} says Meow!"
-\\\`\\\`\\\`
+\`\`\`
 
 **Using super():**
-\\\`\\\`\\\`python
+\`\`\`python
 class Vehicle:
     def __init__(self, brand, year):
         self.brand = brand
@@ -1544,14 +1544,14 @@ class Car(Vehicle):
     def __init__(self, brand, year, doors):
         super().__init__(brand, year)
         self.doors = doors
-\\\`\\\`\\\`
+\`\`\`
 
 **Polymorphism** — Different classes can use the same interface:
-\\\`\\\`\\\`python
+\`\`\`python
 animals = [Dog("Buddy"), Cat("Whiskers")]
 for animal in animals:
     print(animal.speak())  # Same method, different behavior
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Use super().__init__() to call parent constructor",
       "Child classes inherit all methods and attributes from parent",
@@ -1659,7 +1659,7 @@ for emp in employees:
     conceptExplanation: `Generators produce values on-the-fly, making them memory-efficient for large datasets.
 
 **Generators with yield:**
-\\\`\\\`\\\`python
+\`\`\`python
 def count_up_to(n):
     i = 1
     while i <= n:
@@ -1668,17 +1668,17 @@ def count_up_to(n):
 
 for num in count_up_to(5):
     print(num)  # 1, 2, 3, 4, 5
-\\\`\\\`\\\`
+\`\`\`
 
 **Generator Expressions:**
-\\\`\\\`\\\`python
+\`\`\`python
 squares = (x**2 for x in range(10))
 print(next(squares))  # 0
 print(next(squares))  # 1
-\\\`\\\`\\\`
+\`\`\`
 
 **Custom Iterator:**
-\\\`\\\`\\\`python
+\`\`\`python
 class CountDown:
     def __init__(self, start):
         self.current = start
@@ -1691,7 +1691,7 @@ class CountDown:
             raise StopIteration
         self.current -= 1
         return self.current + 1
-\\\`\\\`\\\`
+\`\`\`
 
 **Why Generators?**
 • Memory-efficient — don't store all values in memory
@@ -1787,7 +1787,7 @@ print()`,
     conceptExplanation: `Decorators modify functions or methods without changing their code.
 
 **Basic Decorator:**
-\\\`\\\`\\\`python
+\`\`\`python
 def timer(func):
     import time
     def wrapper(*args, **kwargs):
@@ -1805,10 +1805,10 @@ def slow_function():
     return "Done!"
 
 print(slow_function())
-\\\`\\\`\\\`
+\`\`\`
 
 **Decorator with Arguments:**
-\\\`\\\`\\\`python
+\`\`\`python
 def repeat(n):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -1821,7 +1821,7 @@ def repeat(n):
 @repeat(3)
 def say_hello(name):
     print(f"Hello, {name}!")
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Decorators are functions that take a function and return a function",
       "Use *args and **kwargs to handle any function signature",
@@ -1908,7 +1908,7 @@ print(f"add(3, 5) = {add(3, 5)}")`,
     conceptExplanation: `Context managers simplify resource management by ensuring proper setup/cleanup.
 
 **Class-based Context Manager:**
-\\\`\\\`\\\`python
+\`\`\`python
 class ManagedFile:
     def __init__(self, filename):
         self.filename = filename
@@ -1926,10 +1926,10 @@ class ManagedFile:
 
 with ManagedFile("test.txt") as f:
     f.write("Hello, Context Manager!")
-\\\`\\\`\\\`
+\`\`\`
 
 **Using contextlib:**
-\\\`\\\`\\\`python
+\`\`\`python
 from contextlib import contextmanager
 
 @contextmanager
@@ -1941,7 +1941,7 @@ def managed_file(filename):
     finally:
         f.close()
         print(f"Closed {filename}")
-\\\`\\\`\\\`
+\`\`\`
 
 **Common Uses:**
 • File operations (open/close)
@@ -2050,7 +2050,7 @@ with managed_list() as my_list:
     conceptExplanation: `Asynchronous programming allows concurrent execution of I/O-bound tasks.
 
 **Async Functions (Coroutines):**
-\\\`\\\`\\\`python
+\`\`\`python
 import asyncio
 
 async def fetch_data(name):
@@ -2058,10 +2058,10 @@ async def fetch_data(name):
     await asyncio.sleep(1)  # Simulate I/O
     print(f"Got {name}!")
     return f"Data from {name}"
-\\\`\\\`\\\`
+\`\`\`
 
 **Running Multiple Tasks:**
-\\\`\\\`\\\`python
+\`\`\`python
 async def main():
     # Run concurrently
     results = await asyncio.gather(
@@ -2072,10 +2072,10 @@ async def main():
     print(results)
 
 asyncio.run(main())
-\\\`\\\`\\\`
+\`\`\`
 
 **Async Context Managers:**
-\\\`\\\`\\\`python
+\`\`\`python
 class AsyncResource:
     async def __aenter__(self):
         print("Acquiring resource...")
@@ -2085,7 +2085,7 @@ class AsyncResource:
     async def __aexit__(self, *args):
         print("Releasing resource...")
         await asyncio.sleep(0.3)
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Async functions are defined with async def",
       "Use await to call other async functions (non-blocking)",
@@ -2188,15 +2188,15 @@ asyncio.run(main())`,
 **Everything is an Object:**
 In Python, classes themselves are objects. The type of a class is its metaclass.
 
-\\\`\\\`\\\`python
+\`\`\`python
 # The default metaclass is 'type'
 print(type(42))         # <class 'int'>
 print(type(int))        # <class 'type'>
 print(type(type))       # <class 'type'>
-\\\`\\\`\\\`
+\`\`\`
 
 **Creating Classes Dynamically with type():**
-\\\`\\\`\\\`python
+\`\`\`python
 # Instead of class syntax, you can create a class using type()
 # type(name, bases, dict)
 
@@ -2204,10 +2204,10 @@ Dog = type("Dog", (), {"speak": lambda self: "Woof!"})
 
 d = Dog()
 print(d.speak())  # "Woof!"
-\\\`\\\`\\\`
+\`\`\`
 
 **Custom Metaclass:**
-\\\`\\\`\\\`python
+\`\`\`python
 class AutoReprMeta(type):
     """Metaclass that auto-generates __repr__ for all instances."""
     def __new__(mcs, name, bases, namespace):
@@ -2225,7 +2225,7 @@ class Point(metaclass=AutoReprMeta):
 
 p = Point(3, 4)
 print(p)  # Point(x=3, y=4)
-\\\`\\\`\\\`
+\`\`\`
 
 **When to Use Metaclasses:**
 • ORMs (SQLAlchemy, Django) — define models declaratively
@@ -2237,7 +2237,7 @@ print(p)  # Point(x=3, y=4)
 **__init_subclass__ (Simpler Alternative):**
 In Python 3.6+, you can use __init_subclass__ instead of a metaclass for many use cases.
 
-\\\`\\\`\\\`python
+\`\`\`python
 class PluginBase:
     plugins = {}
 
@@ -2249,7 +2249,7 @@ class AudioPlugin(PluginBase): pass
 class VideoPlugin(PluginBase): pass
 
 print(PluginBase.plugins)  # {'AudioPlugin': ..., 'VideoPlugin': ...}
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "type is the default metaclass — it creates class objects",
       "type(name, bases, dict) creates a class dynamically",
@@ -2340,7 +2340,7 @@ print(obj.do_something())`,
 **Descriptor Protocol:**
 Any object that defines __get__, __set__, or __delete__ is a descriptor.
 
-\\\`\\\`\\\`python
+\`\`\`python
 class Descriptor:
     def __get__(self, obj, objtype=None):
         return f"Getting from {type(obj).__name__}"
@@ -2350,14 +2350,14 @@ class Descriptor:
 
     def __delete__(self, obj):
         print(f"Deleting from {type(obj).__name__}")
-\\\`\\\`\\\`
+\`\`\`
 
 **Data vs Non-Data Descriptors:**
 • Data descriptor: defines both __get__ and __set__ (overrides instance dict)
 • Non-data descriptor: defines only __get__ (instance dict takes priority)
 
 **Property — A Built-in Descriptor:**
-\\\`\\\`\\\`python
+\`\`\`python
 class Temperature:
     def __init__(self, celsius):
         self._celsius = celsius
@@ -2369,10 +2369,10 @@ class Temperature:
     @fahrenheit.setter
     def fahrenheit(self, value):
         self._celsius = (value - 32) * 5/9
-\\\`\\\`\\\`
+\`\`\`
 
 **Validated Attribute with Descriptor:**
-\\\`\\\`\\\`python
+\`\`\`python
 class PositiveNumber:
     def __set_name__(self, owner, name):
         self.name = f"_{name}"
@@ -2396,12 +2396,12 @@ class Order:
 order = Order(10, 25.0)
 print(order.quantity)  # 10
 order.quantity = -5     # ValueError: quantity must be positive
-\\\`\\\`\\\`
+\`\`\`
 
 **Method Resolution with Descriptors:**
 Python functions are descriptors! That's how methods receive self.
 
-\\\`\\\`\\\`python
+\`\`\`python
 class MyClass:
     def method(self):
         return "Hello"
@@ -2409,7 +2409,7 @@ class MyClass:
 # function.__get__ binds self automatically when accessed on an instance
 print(MyClass.method)       # <function MyClass.method at ...>
 print(MyClass().method)     # <bound method ...>
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Descriptors are objects that define __get__, __set__, or __delete__",
       "Data descriptors (__set__) override instance dictionaries",
@@ -2543,7 +2543,7 @@ print(f"After setting 100°F: {t.celsius}°C")`,
 • Processes have separate memory — good for CPU-bound tasks, each has its own GIL
 
 **Basic Process:**
-\\\`\\\`\\\`python
+\`\`\`python
 from multiprocessing import Process
 
 def worker(name):
@@ -2558,10 +2558,10 @@ if __name__ == "__main__":
 
     for p in processes:
         p.join()  # Wait for all processes to finish
-\\\`\\\`\\\`
+\`\`\`
 
 **Process Pool:**
-\\\`\\\`\\\`python
+\`\`\`python
 from multiprocessing import Pool
 
 def square(n):
@@ -2571,10 +2571,10 @@ if __name__ == "__main__":
     with Pool(processes=4) as pool:
         results = pool.map(square, range(10))
     print(results)  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
-\\\`\\\`\\\`
+\`\`\`
 
 **Inter-Process Communication (Queue):**
-\\\`\\\`\\\`python
+\`\`\`python
 from multiprocessing import Process, Queue
 
 def producer(q):
@@ -2597,10 +2597,10 @@ if __name__ == "__main__":
     prod.join()
     q.put(None)  # Signal consumer to stop
     cons.join()
-\\\`\\\`\\\`
+\`\`\`
 
 **Shared Memory (Value, Array):**
-\\\`\\\`\\\`python
+\`\`\`python
 from multiprocessing import Process, Value, Array
 
 def increment(counter, arr):
@@ -2616,7 +2616,7 @@ if __name__ == "__main__":
     p.join()
     print(counter.value)  # 1
     print(list(arr))       # [2, 3, 4, 5, 6]
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Always guard process creation with if __name__ == '__main__'",
       "Use Pool for map/reduce style parallelism",
@@ -2723,15 +2723,15 @@ Run this code locally with: python your_file.py
     conceptExplanation: `Type hints add static type information to Python code, improving readability and enabling static analysis with tools like mypy.
 
 **Basic Type Hints:**
-\\\`\\\`\\\`python
+\`\`\`python
 name: str = "Alice"
 age: int = 25
 height: float = 5.6
 is_active: bool = True
-\\\`\\\`\\\`
+\`\`\`
 
 **Function Annotations:**
-\\\`\\\`\\\`python
+\`\`\`python
 def greet(name: str) -> str:
     return f"Hello, {name}!"
 
@@ -2740,10 +2740,10 @@ def add(a: int, b: int) -> int:
 
 def process(items: list[int]) -> dict[str, int]:
     return {str(i): i for i in items}
-\\\`\\\`\\\`
+\`\`\`
 
 **Optional and Union:**
-\\\`\\\`\\\`python
+\`\`\`python
 from typing import Optional, Union, Any
 
 def find_user(user_id: int) -> Optional[str]:
@@ -2757,10 +2757,10 @@ def process_value(value: Union[int, str]) -> str:
 # Python 3.10+ shorthand: X | Y instead of Union[X, Y]
 def process(value: int | str) -> str:
     return f"Got: {value}"
-\\\`\\\`\\\`
+\`\`\`
 
 **Generic Types:**
-\\\`\\\`\\\`python
+\`\`\`python
 from typing import TypeVar, Generic
 
 T = TypeVar("T")
@@ -2780,10 +2780,10 @@ int_stack = Stack[int]()
 int_stack.push(1)
 int_stack.push(2)
 print(int_stack.pop())  # 2
-\\\`\\\`\\\`
+\`\`\`
 
 **Protocol (Structural Typing):**
-\\\`\\\`\\\`python
+\`\`\`python
 from typing import Protocol
 
 class Drawable(Protocol):
@@ -2797,10 +2797,10 @@ class Circle:
         print("Drawing circle")
 
 render(Circle())  # Works because Circle has draw()
-\\\`\\\`\\\`
+\`\`\`
 
 **Literal and Final:**
-\\\`\\\`\\\`python
+\`\`\`python
 from typing import Literal, Final
 
 MODE: Final = "production"  # Cannot be reassigned
@@ -2810,7 +2810,7 @@ def set_status(status: Literal["active", "inactive"]) -> None:
 
 set_status("active")    # OK
 set_status("unknown")   # Type checker error!
-\\\`\\\`\\\``,
+\`\`\``,
     keyRules: [
       "Type hints are not enforced at runtime — they're for static analysis and documentation",
       "Use Optional[X] for values that could be None (or X | None in Python 3.10+)",

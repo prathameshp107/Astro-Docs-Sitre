@@ -50,6 +50,10 @@ function isCodeLine(rawLine) {
     /^\.\w/.test(line) ||
     /^\/\//.test(line) ||
     /^<!--/.test(line) ||
+    // SQL comments
+    /^--/.test(line) ||
+    // SQL keywords (case-insensitive)
+    /^(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|WITH|FROM|WHERE|JOIN|GROUP BY|ORDER BY|LIMIT|db)\b/i.test(line) ||
     // CSS-ish: "selector {" or "prop: value;"
     /^[.#@]?[\w-]+\s*\{$/.test(line) ||
     /^[\w-]+\s*:\s*[^;]+;$/.test(line) ||

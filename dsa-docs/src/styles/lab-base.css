@@ -840,6 +840,7 @@ body:has(.mongo-platform) {
 .jsl-content-tests-header,
 .jsl-content-tests-actions,
 .jsl-editor-actions,
+.sql-editor-actions,
 .jsl-console-header,
 .jsl-tests-header,
 .jsl-tests-actions,
@@ -1282,6 +1283,7 @@ sql-concept-text p {
 .jsl-nav-btn,
 .jsl-btn-secondary,
 .jsl-btn-run,
+.sql-btn-run,
 .sql-btn-ghost,
 .sql-btn-mark,
 .sql-nav-btn {
