@@ -159,6 +159,51 @@ function executeMongoQuery(query, engine) {
   }
 }
 
+/**
+ * Split a multi-line MongoDB script into individual complete statements.
+ * A statement is complete when all opened parentheses and brackets are balanced.
+ * Comment-only lines are skipped.
+ */
+function splitIntoStatements(code) {
+  const lines = code.split("\n");
+  const statements = [];
+  let current = [];
+  let depth = 0;
+
+  for (const line of lines) {
+    const stripped = line.trim();
+    // Skip pure comment lines or empty lines only when not inside a statement
+    if (!stripped || stripped.startsWith("//")) {
+      if (depth === 0) continue; // not inside a statement — skip
+      // inside a multi-line statement, keep but don't count toward depth
+      continue;
+    }
+
+    current.push(line);
+    // Count bracket depth changes on this line
+    for (const ch of stripped) {
+      if (ch === '(' || ch === '[' || ch === '{') depth++;
+      else if (ch === ')' || ch === ']' || ch === '}') depth--;
+    }
+
+    // When depth returns to 0, we have a complete statement
+    if (depth <= 0) {
+      const stmt = current.join("\n").trim().replace(/;\s*$/, "");
+      if (stmt) statements.push(stmt);
+      current = [];
+      depth = 0;
+    }
+  }
+
+  // Flush any remaining partial content
+  if (current.length > 0) {
+    const stmt = current.join("\n").trim().replace(/;\s*$/, "");
+    if (stmt) statements.push(stmt);
+  }
+
+  return statements;
+}
+
 function applySort(data, sortSpec) {
   return [...data].sort((a, b) => {
     for (const [field, dir] of Object.entries(sortSpec)) {
@@ -619,8 +664,12 @@ export default function MongoLabsPlatform() {
         validate: (q, engine) => {
           if (!q.trim()) return false;
           try {
-            const res = executeMongoQuery(q, engine);
-            return !res.error;
+            const stmts = splitIntoStatements(q);
+            if (stmts.length === 0) return false;
+            return stmts.every(stmt => {
+              const res = executeMongoQuery(stmt, engine);
+              return !res.error;
+            });
           } catch {
             return false;
           }
@@ -688,16 +737,30 @@ export default function MongoLabsPlatform() {
       validate: (q, engine) => {
         if (!q.trim()) return false;
         try {
-          const userRes = executeMongoQuery(q, engine);
-          const solRes = executeMongoQuery(sol, engine);
-          if (userRes.error || solRes.error) return false;
-          
-          const uResults = userRes.results || [];
-          const sResults = solRes.results || [];
-          if (uResults.length !== sResults.length) return false;
-          
-          for (let i = 0; i < uResults.length; i++) {
-            if (JSON.stringify(uResults[i]) !== JSON.stringify(sResults[i])) return false;
+          // Execute all statements; use the last result to compare with solution
+          const userStmts = splitIntoStatements(q);
+          const solStmts = splitIntoStatements(sol);
+          if (userStmts.length === 0 || solStmts.length === 0) return false;
+
+          // Collect all user results flat
+          const uAllResults = [];
+          for (const stmt of userStmts) {
+            const res = executeMongoQuery(stmt, engine);
+            if (res.error) return false;
+            uAllResults.push(...(res.results || []));
+          }
+          // Collect all solution results flat
+          const sAllResults = [];
+          for (const stmt of solStmts) {
+            const res = executeMongoQuery(stmt, engine);
+            if (res.error) return false;
+            sAllResults.push(...(res.results || []));
+          }
+
+          if (uAllResults.length === 0 && sAllResults.length === 0) return true;
+          if (uAllResults.length !== sAllResults.length) return false;
+          for (let i = 0; i < uAllResults.length; i++) {
+            if (JSON.stringify(uAllResults[i]) !== JSON.stringify(sAllResults[i])) return false;
           }
           return true;
         } catch {
@@ -984,14 +1047,13 @@ export default function MongoLabsPlatform() {
         return;
       }
 
-      // Split by newlines and process each line independently
-      const lines = trimmed.split("\n").filter(l => l.trim() && !l.trim().startsWith("//"));
+      // Split into complete statements (bracket-aware) and execute each
+      const statements = splitIntoStatements(trimmed);
       const batches = [];
 
-      for (const line of lines) {
-        const lineTrimmed = line.trim();
-        if (lineTrimmed) {
-          const result = executeMongoQuery(lineTrimmed, engineRef.current);
+      for (const stmt of statements) {
+        if (stmt) {
+          const result = executeMongoQuery(stmt, engineRef.current);
           if (result.error) {
             setQueryError(result.error);
             setIsRunning(false);
@@ -999,7 +1061,7 @@ export default function MongoLabsPlatform() {
           }
           // Accumulate each result as a separate batch
           batches.push({
-            query: lineTrimmed,
+            query: stmt.split("\n")[0].slice(0, 80),
             results: result.results || [],
             count: result.count || 0,
             isList: result.isList,

@@ -27,11 +27,31 @@ export function transpileReactCode(code) {
 }
 
 /**
+ * Scan transpiled code for top-level React component names (uppercase functions).
+ * Done server-side so we can inject the list into the iframe as JSON.
+ * @param {string} transpiled
+ * @returns {string[]}
+ */
+function detectComponentNames(transpiled) {
+  const names = [];
+  const re = /function\s+([A-Z][A-Za-z0-9_]*)\s*\(/g;
+  let m;
+  while ((m = re.exec(transpiled)) !== null) {
+    if (!names.includes(m[1])) names.push(m[1]);
+  }
+  return names;
+}
+
+/**
  * Build the iframe srcdoc HTML for rendering the transpiled React code.
  * @param {string} transpiled - Transpiled JavaScript code
  * @returns {string} Full HTML document for the iframe
  */
 export function buildPreviewHtml(transpiled) {
+  // Detect component names server-side and inject as JSON so the iframe can use them
+  const componentNames = detectComponentNames(transpiled);
+  const componentNamesJson = JSON.stringify(componentNames);
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -59,14 +79,31 @@ export function buildPreviewHtml(transpiled) {
   <script>
     try {
       ${transpiled}
+
+      // Component names detected at build time (server-side scan)
+      const _componentNames = ${componentNamesJson};
+
+      // Prefer App; fall back to last uppercase component found
+      let RootComponent = null;
       if (typeof App === 'function') {
+        RootComponent = App;
+      } else {
+        for (let i = _componentNames.length - 1; i >= 0; i--) {
+          try {
+            const ref = eval(_componentNames[i]);
+            if (typeof ref === 'function') { RootComponent = ref; break; }
+          } catch (_) {}
+        }
+      }
+
+      if (RootComponent) {
         const root = ReactDOM.createRoot(document.getElementById('react-preview-root'));
-        root.render(React.createElement(App));
+        root.render(React.createElement(RootComponent));
       } else {
         document.getElementById('react-preview-root').innerHTML = \`
           <div style="color:#94a3b8;font-family:monospace;font-size:0.85rem;padding:1rem;text-align:center;border:1px dashed rgba(255,255,255,0.1);border-radius:8px;">
-            <p>No <code>App</code> component found.</p>
-            <p style="font-size:0.78rem;">Make sure to declare <code>function App() { ... }</code> to render your UI.</p>
+            <p>No component found to render.</p>
+            <p style="font-size:0.78rem;">Declare a <code>function App() { ... }</code> (or any React component with an uppercase name) to see a preview.</p>
           </div>\`;
       }
     } catch (err) {
