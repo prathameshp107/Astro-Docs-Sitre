@@ -1,20 +1,31 @@
-// ─── HTML Validator — Test Validation Logic ───
+import { verifyDomAndStyles } from "../../shared/domValidator.js";
 
 /**
  * Runs a set of tests against the user's HTML code.
  * @param {string} code - The user's HTML code
  * @param {Array} tests - Array of test objects { name, validate }
+ * @param {Document|null} iframeDoc - Rendered iframe document
  * @returns {Array} Test results
  */
-export function runHtmlTests(code, tests) {
+export function runHtmlTests(code, tests, iframeDoc) {
   return tests.map((test, i) => {
     try {
-      const passed = test.validate(code);
+      let passed = test.validate(code);
+      let errorDetail = null;
+
+      if (passed && iframeDoc) {
+        const domPassed = verifyDomAndStyles(code, test.name, iframeDoc);
+        if (!domPassed) {
+          passed = false;
+          errorDetail = `DOM validation failed. Please check the structure and content of your rendered page.`;
+        }
+      }
+
       return {
         index: i,
         name: test.name,
         passed,
-        error: passed ? null : `Expected: ${test.name}`,
+        error: passed ? null : (errorDetail || `Expected: ${test.name}`),
       };
     } catch (e) {
       return {

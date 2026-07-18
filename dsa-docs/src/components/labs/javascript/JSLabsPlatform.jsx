@@ -35,10 +35,22 @@ import { runJsTests, handleTestResults } from "./runner/jsValidator.js";
 import {
   JS_CONFETTI,
   STORAGE_KEY,
+  DRAFT_KEY,
   XP_VALUES,
   XP_LABELS,
   PLAYGROUND_CODE,
 } from "./config.js";
+
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
 
 // ─── MAIN PLATFORM ───
 
@@ -48,7 +60,16 @@ export default function JSLabsPlatform() {
   const [activeLesson, setActiveLesson] = useState(JS_LESSONS[0]?.id || null);
   const [activeBug, setActiveBug] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
-  const [code, setCode] = useState(JS_LESSONS[0]?.starterCode || "");
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = JS_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode(DRAFT_KEY, "learn", firstId, JS_LESSONS[0]?.starterCode) : "";
+  });
   const [output, setOutput] = useState([]);
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
@@ -71,6 +92,27 @@ export default function JSLabsPlatform() {
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
   const runnerRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("jsl-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId = view === "learn" ? activeLesson : view === "bugs" ? activeBug : view === "projects" ? activeProject : "playground";
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = code;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [code, view, activeLesson, activeBug, activeProject, loading]);
 
   // Load progress from localStorage
   useEffect(() => {
@@ -181,7 +223,7 @@ export default function JSLabsPlatform() {
     setActiveLesson(id);
     setActiveBug(null);
     setActiveProject(null);
-    setCode(lesson.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -196,7 +238,7 @@ export default function JSLabsPlatform() {
     setActiveLesson(null);
     setActiveBug(id);
     setActiveProject(null);
-    setCode(bug.brokenCode);
+    setCode(getDraftCode(DRAFT_KEY, "bugs", id, bug.brokenCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -211,7 +253,7 @@ export default function JSLabsPlatform() {
     setActiveLesson(null);
     setActiveBug(null);
     setActiveProject(id);
-    setCode(proj.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "projects", id, proj.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -224,7 +266,7 @@ export default function JSLabsPlatform() {
     setActiveLesson(null);
     setActiveBug(null);
     setActiveProject(null);
-    setCode(PLAYGROUND_CODE);
+    setCode(getDraftCode(DRAFT_KEY, "playground", "playground", PLAYGROUND_CODE));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -552,9 +594,7 @@ export default function JSLabsPlatform() {
     debouncedRunCode(code);
   }, [code, debouncedRunCode]);
 
-
-
-  const runTests = useCallback(() => {
+  const runTests = useCallback(async () => {
     const tests =
       view === "learn"
         ? currentLesson?.tests || []
@@ -562,7 +602,9 @@ export default function JSLabsPlatform() {
           ? currentBug?.tests || []
           : currentProject?.tests || [];
 
-    const results = runJsTests(code, tests);
+    setTestResults(tests.map((t, i) => ({ index: i, name: t.name, passed: false, error: "Running test..." })));
+
+    const results = await runJsTests(code, tests, currentLesson || currentBug || currentProject);
     setTestResults(results);
 
     handleTestResults(
@@ -1078,9 +1120,9 @@ export default function JSLabsPlatform() {
             {/* Editor & Output Panel */}
             <LabResizableHandle onDrag={handleContentDrag} />
             <div
-              className="jsl-editor-panel"
+              className={`jsl-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`}
               ref={editorPanelRef}
-              style={{ flex: `${1 - contentRatio} 1 0` }}
+              style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}
             >
               <LabEditorToolbar
                 isRunning={isRunning}
@@ -1089,6 +1131,12 @@ export default function JSLabsPlatform() {
                 runLabel="Run"
                 lang="JavaScript"
                 langIcon={<DiJavascript1 size={14} />}
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('jsl-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('jsl-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
+                code={code}
               />
 
               {/* Editor */}
@@ -1102,7 +1150,7 @@ export default function JSLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
                     lineNumbers: "on",

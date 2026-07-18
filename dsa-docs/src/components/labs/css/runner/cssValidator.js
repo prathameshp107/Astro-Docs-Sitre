@@ -1,20 +1,31 @@
-// ─── CSS Validator — Test Validation Logic ───
+import { verifyDomAndStyles } from "../../shared/domValidator.js";
 
 /**
  * Runs a set of tests against the user's CSS/HTML code.
  * @param {string} code - The user's code
  * @param {Array} tests - Array of test objects { name, validate }
+ * @param {Document|null} iframeDoc - Rendered iframe document
  * @returns {Array} Test results
  */
-export function runCssTests(code, tests) {
+export function runCssTests(code, tests, iframeDoc) {
   return tests.map((test, i) => {
     try {
-      const passed = test.validate(code);
+      let passed = test.validate(code);
+      let errorDetail = null;
+
+      if (passed && iframeDoc) {
+        const domPassed = verifyDomAndStyles(code, test.name, iframeDoc);
+        if (!domPassed) {
+          passed = false;
+          errorDetail = `Style verification failed. Please make sure the styles are correctly applied to the elements.`;
+        }
+      }
+
       return {
         index: i,
         name: test.name,
         passed,
-        error: passed ? null : `Expected: ${test.name}`,
+        error: passed ? null : (errorDetail || `Expected: ${test.name}`),
       };
     } catch (e) {
       return {

@@ -3,6 +3,7 @@
 export const JS_CONFETTI = ["#f7df1e", "#60a5fa", "#34d399", "#a78bfa"];
 
 export const STORAGE_KEY = "jsl-progress";
+export const DRAFT_KEY = "jsl-draft";
 
 export const XP_VALUES = {
   lesson: 10,

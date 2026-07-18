@@ -1,6 +1,23 @@
 // ─── CSS Labs — Configuration ───
 
 export const STORAGE_KEY = "css-progress";
+export const DRAFT_KEY = "css-draft";
+
+export const CSS_CONFETTI = ["#60a5fa", "#34d399", "#a78bfa", "#f472b6"];
+
+export const XP_VALUES = {
+  lesson: 10,
+  challenge: 20,
+  component: 15,
+  animation: 15,
+};
+
+export const XP_LABELS = {
+  lesson: "Lesson complete",
+  challenge: "Challenge solved",
+  component: "Component built",
+  animation: "Animation created",
+};
 
 export const PLAYGROUND_CODE = `<!DOCTYPE html>
 <html lang="en">

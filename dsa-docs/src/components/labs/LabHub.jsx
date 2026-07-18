@@ -7,7 +7,7 @@ const labs = [
     shortIcon: "HT",
     description:
       "Master HTML through interactive learning. 16 guided lessons, 10 coding challenges, 6 real-world projects, HTML playground with live preview, and interview preparation.",
-    path: "/labs/html",
+    path: "/labs/html-lab",
     color: "#fb923c",
     track: "frontend",
     features: [
@@ -18,7 +18,7 @@ const labs = [
       "50+ Interview Questions",
       "HTML Playground",
     ],
-    challengeCount: 32,
+    challengeCount: 38,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -27,7 +27,7 @@ const labs = [
     shortIcon: "CS",
     description:
       "Master CSS through interactive learning. 20 guided lessons, 10 coding challenges, 10 reusable components, 6 animations, and an interactive playground.",
-    path: "/labs/css",
+    path: "/labs/css-lab",
     color: "#60a5fa",
     track: "frontend",
     features: [
@@ -57,7 +57,7 @@ const labs = [
       "Timed Interview Mode",
       "Mini App Projects",
     ],
-    challengeCount: 150,
+    challengeCount: 44,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -76,7 +76,7 @@ const labs = [
       "Forms & Validation",
       "Performance Tuning",
     ],
-    challengeCount: 80,
+    challengeCount: 42,
     difficulty: "Intermediate",
   },
   {
@@ -104,7 +104,7 @@ const labs = [
     shortIcon: "SQ",
     description:
       "Write and execute SQL queries against sample databases. Practice joins, aggregations, subqueries, and query optimization.",
-    path: "/labs/mysql",
+    path: "/labs/sql-lab",
     color: "#f59e0b",
     track: "data",
     features: [
@@ -114,7 +114,7 @@ const labs = [
       "Indexing Challenges",
       "Query Optimization",
     ],
-    challengeCount: 100,
+    challengeCount: 25,
     difficulty: "Intermediate",
   },
   {
@@ -122,8 +122,8 @@ const labs = [
     title: "Python Labs",
     shortIcon: "PY",
     description:
-      "Master Python from beginner to advanced. 20 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
-    path: "/labs/python",
+      "Master Python from beginner to advanced. 24 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
+    path: "/labs/python-lab",
     color: "#3776AB",
     track: "data",
     features: [
@@ -133,7 +133,7 @@ const labs = [
       "10 Debug Challenges",
       "Monaco Editor + Pyodide",
     ],
-    challengeCount: 48,
+    challengeCount: 52,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -142,7 +142,7 @@ const labs = [
     shortIcon: "MO",
     description:
       "Learn MongoDB with guided lessons, interactive queries, aggregation pipeline builder, and real-time document exploration. Master NoSQL the right way.",
-    path: "/labs/mongodb",
+    path: "/labs/mongodb-lab",
     color: "#13aa52",
     track: "data",
     features: [
@@ -152,7 +152,7 @@ const labs = [
       "Collections Explorer",
       "8+ Query Challenges",
     ],
-    challengeCount: 30,
+    challengeCount: 40,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -161,7 +161,7 @@ const labs = [
     shortIcon: "GI",
     description:
       "Master Git and GitHub through interactive visual simulations. Learn branching, merging, rebasing, merge conflicts, and team collaboration workflows.",
-    path: "/labs/git",
+    path: "/labs/git-lab",
     color: "#f97316",
     track: "core",
     features: [
@@ -172,7 +172,7 @@ const labs = [
       "Team Collaboration Simulator",
       "Boss Battles & Achievements",
     ],
-    challengeCount: 50,
+    challengeCount: 30,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -192,7 +192,7 @@ const labs = [
       "Responsive Preview Modes",
       "Automated Tests",
     ],
-    challengeCount: 50,
+    challengeCount: 23,
     difficulty: "Beginner to Advanced",
   },
 ];

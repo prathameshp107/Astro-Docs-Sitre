@@ -14,6 +14,13 @@ import {
   useKeyboardShortcut,
   CodeBlock,
   renderFormattedText,
+  LabCopyButton,
+  celebrate,
+  awardXP,
+  LabTestsPanel,
+  LabTestsBody,
+  LabXPBadge,
+  runPythonInSandbox,
 } from "./shared/index.js";
 
 // ─── PYTHON RUNNER (Pyodide) ───
@@ -21,7 +28,14 @@ import {
 let pyodideLoadingPromise = null;
 let pyodideError = null;
 
-function getPyodide() {
+function getPyodide(force = false) {
+  if (force) {
+    pyodideLoadingPromise = null;
+    pyodideError = null;
+    if (typeof window !== "undefined") {
+      delete window.pyodide;
+    }
+  }
   if (typeof window !== "undefined" && window.pyodide) {
     return Promise.resolve(window.pyodide);
   }
@@ -161,16 +175,43 @@ function PythonSidebar({ activeSection, activeLesson, activeChallenge, activePro
   );
 }
 
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
+
+function getPythonFunctionName(code) {
+  const match = code.match(/def\s+(\w+)\s*\(/);
+  if (match) return match[1];
+  return null;
+}
+
 // ─── MAIN PLATFORM ───
 
 export default function PythonLabsPlatform() {
+  const DRAFT_KEY = "pyl-draft";
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(PYTHON_LESSONS[0]?.id || null);
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
   const [activeBug, setActiveBug] = useState(null);
-  const [code, setCode] = useState(PYTHON_LESSONS[0]?.starterCode || "");
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = PYTHON_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode("pyl-draft", "learn", firstId, PYTHON_LESSONS[0]?.starterCode) : "";
+  });
   const [output, setOutput] = useState([]);
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
@@ -190,6 +231,32 @@ export default function PythonLabsPlatform() {
   const [consoleHeight, setConsoleHeight] = useState(180);
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("pyl-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId =
+      view === "learn" ? activeLesson
+      : view === "challenge" ? activeChallenge
+      : view === "project" ? activeProject
+      : view === "bugs" ? activeBug
+      : null;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = code;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [code, view, activeLesson, activeChallenge, activeProject, activeBug, loading]);
 
   // Initialize Pyodide
   useEffect(() => {
@@ -211,6 +278,44 @@ export default function PythonLabsPlatform() {
     };
     // Give the CDN script a moment to load, then try
     setTimeout(tryLoad, 1000);
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleRetryLoad = useCallback(() => {
+    setPyodideLoadError(null);
+    setLoading(true);
+    let cancelled = false;
+
+    // Dynamically insert/re-insert script tag if it failed to load earlier
+    if (typeof globalThis.loadPyodide !== "function") {
+      const existing = document.querySelector('script[src*="pyodide.js"]');
+      if (existing) {
+        existing.remove(); // Remove failed script tag
+      }
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js";
+      script.integrity = "sha384-i3R37b3tF+HWudsUf1VSEOY2YxwSNMqY8DQa9Z0O3xh+NkJ9o+yjcGyIi5huj+nB";
+      script.crossOrigin = "anonymous";
+      document.body.appendChild(script);
+    }
+
+    const tryLoad = () => {
+      if (typeof globalThis.loadPyodide === "function") {
+        getPyodide(true).then((py) => {
+          if (!cancelled) {
+            setLoading(false);
+            if (py) {
+              setPyodideReady(true);
+            } else {
+              setPyodideLoadError(pyodideError || "Failed to load Python runtime");
+            }
+          }
+        });
+      } else {
+        setTimeout(tryLoad, 500);
+      }
+    };
+    tryLoad();
     return () => { cancelled = true; };
   }, []);
 
@@ -278,7 +383,7 @@ export default function PythonLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(null);
     setActiveBug(null);
-    setCode(lesson.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -294,7 +399,7 @@ export default function PythonLabsPlatform() {
     setActiveChallenge(id);
     setActiveProject(null);
     setActiveBug(null);
-    setCode(challenge.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "challenge", id, challenge.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -310,7 +415,7 @@ export default function PythonLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(id);
     setActiveBug(null);
-    setCode(proj.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "project", id, proj.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -326,7 +431,7 @@ export default function PythonLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(null);
     setActiveBug(id);
-    setCode(bug.brokenCode);
+    setCode(getDraftCode(DRAFT_KEY, "bugs", id, bug.brokenCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -423,7 +528,7 @@ export default function PythonLabsPlatform() {
     setConsoleHeight(Math.max(100, Math.min(maxH, rect.bottom - clientY)));
   }, []);
 
-  // Run Python code using Pyodide
+  // Run Python code using pyWorkerSandbox
   const runCode = useCallback(async () => {
     if (!pyodideReady) {
       setOutput([{ type: "error", content: "Python runtime is still loading. Please wait..." }]);
@@ -433,30 +538,28 @@ export default function PythonLabsPlatform() {
     setOutput([]);
 
     try {
-      const py = window.pyodide;
-      // Redirect stdout
-      py.setStdout({
-        batched: (text) => {
-          setOutput(prev => [...prev, { type: "log", content: text }]);
-        },
-      });
-      py.setStderr({
-        batched: (text) => {
-          setOutput(prev => [...prev, { type: "error", content: text }]);
-        },
-      });
-
-      // Clear previous output
-      setOutput([]);
-
-      await py.runPythonAsync(code);
-
-      // Check if there was no output
-      setOutput(prev => {
-        if (prev.length === 0) {
-          return [{ type: "info", content: "✓ Code executed (no output)" }];
-        }
-        return prev;
+      await new Promise((resolve) => {
+        runPythonInSandbox(
+          code,
+          (type, content) => {
+            setOutput(prev => [...prev, { type: type === "error" ? "error" : "log", content }]);
+          },
+          (res) => {
+            if (res.error) {
+              const type = res.isTimeout ? "error" : "error";
+              setOutput(prev => [...prev, { type, content: `✗ ${res.error}` }]);
+            } else {
+              setOutput(prev => {
+                if (prev.length === 0) {
+                  return [{ type: "info", content: "✓ Code executed (no output)" }];
+                }
+                return prev;
+              });
+            }
+            resolve();
+          },
+          8000
+        );
       });
     } catch (e) {
       setOutput([{ type: "error", content: `✗ ${e.message}` }]);
@@ -466,31 +569,237 @@ export default function PythonLabsPlatform() {
   }, [code, pyodideReady]);
 
   // Run tests
-  const runTests = useCallback(() => {
+  const runTests = useCallback(async () => {
+    if (!pyodideReady) {
+      setTestResults([{ index: 0, name: "Python runtime loading...", passed: false, error: "Please wait for Pyodide to finish loading." }]);
+      return;
+    }
+
     const tests = view === "learn" ? currentLesson?.tests || []
       : view === "challenge" ? currentChallenge?.tests || []
       : view === "project" ? currentProject?.tests || []
       : currentBug?.tests || [];
 
-    const results = tests.map((test, i) => {
-      try {
-        const passed = test.validate(code);
-        return { index: i, name: test.name, passed, error: passed ? null : `Expected: ${test.name}` };
-      } catch (e) {
-        return { index: i, name: test.name, passed: false, error: e?.message || `Expected: ${test.name}` };
+    setTestResults(tests.map((t, i) => ({ index: i, name: t.name, passed: false, status: "Running", error: "Running test..." })));
+
+    try {
+      const hasExplicitTests = tests.length > 0 && tests.every(t => t.input !== undefined && t.expected !== undefined);
+
+      if (hasExplicitTests) {
+        const funcName = getPythonFunctionName(code);
+        if (!funcName) {
+          setTestResults(tests.map((t, i) => ({
+            index: i,
+            name: t.name,
+            passed: false,
+            status: "Syntax Error",
+            error: "No function definition found in your code. Please use def to declare a function.",
+          })));
+          return;
+        }
+
+        const serializedTests = JSON.stringify(tests.map(t => ({ name: t.name, input: t.input, expected: t.expected })));
+        const pythonHarness = `
+import json
+__t_cases = json.loads('''${serializedTests}''')
+__results = []
+for __t in __t_cases:
+    try:
+        __func = globals().get("${funcName}")
+        if not __func:
+            raise NameError("Function ${funcName} is not defined")
+        __out = __func(*__t["input"])
+        __passed = json.dumps(__out) == json.dumps(__t["expected"])
+        __results.append({
+            "name": __t["name"],
+            "passed": __passed,
+            "expected": __t["expected"],
+            "output": __out
+        })
+    except Exception as __e:
+        __results.append({
+            "name": __t["name"],
+            "passed": False,
+            "error": str(__e)
+        })
+print("__TEST_GRADES__:" + json.dumps(__results))
+`;
+        
+        let testGradesResult = null;
+        let userError = null;
+        let isTimeout = false;
+
+        await new Promise((resolve) => {
+          runPythonInSandbox(code + "\n" + pythonHarness, (type, content) => {
+            if (type !== "error" && content.startsWith("__TEST_GRADES__:")) {
+              try {
+                testGradesResult = JSON.parse(content.substring("__TEST_GRADES__:".length));
+              } catch {}
+            } else {
+              setOutput(prev => [...prev, { type: type === "error" ? "error" : "log", content }]);
+            }
+          }, (res) => {
+            if (res.error) {
+              userError = res.error;
+              isTimeout = !!res.isTimeout;
+            }
+            resolve();
+          }, 8000);
+        });
+
+        if (userError) {
+          setTestResults(tests.map((t, i) => ({
+            index: i,
+            name: t.name,
+            passed: false,
+            status: isTimeout ? "Time Limit" : "Runtime Error",
+            error: isTimeout ? userError : `Runtime error: ${userError}`
+          })));
+          return;
+        }
+        if (!testGradesResult) {
+          setTestResults(tests.map((t, i) => ({
+            index: i,
+            name: t.name,
+            passed: false,
+            status: "Runtime Error",
+            error: "Execution failed to report test results."
+          })));
+          return;
+        }
+
+        const results = tests.map((test, i) => {
+          const match = testGradesResult.find(r => r.name === test.name) || { passed: false, error: "Test case not run" };
+          let error = null;
+          if (!match.passed) {
+            error = match.error || `Expected: ${JSON.stringify(match.expected)}, Got: ${JSON.stringify(match.output)}`;
+          }
+          return {
+            index: i,
+            name: test.name,
+            passed: match.passed,
+            status: match.passed ? "Accepted" : (match.error ? "Runtime Error" : "Wrong Answer"),
+            error,
+          };
+        });
+
+        setTestResults(results);
+
+        const allPassed = results.length > 0 && results.every(r => r.passed);
+        if (allPassed) {
+          if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
+          else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
+          else if (view === "project" && currentProject) markProjectDone(currentProject.id);
+          else if (view === "bugs" && currentBug) markBugDone(currentBug.id);
+        }
+        return;
       }
-    });
 
-    setTestResults(results);
+      // Legacy fallback logic for regex / static validate
+      let expectedStdout = "";
+      let expectedGlobals = {};
+      const sol = (view === "learn" ? currentLesson?.solutionCode : view === "challenge" ? currentChallenge?.solutionCode : view === "project" ? currentProject?.solutionCode : currentBug?.solutionCode) || "";
+      if (sol) {
+        await new Promise((resolve) => {
+          runPythonInSandbox(sol, () => {}, (res) => {
+            if (res.stdout) expectedStdout = res.stdout;
+            if (res.globals) expectedGlobals = res.globals;
+            resolve();
+          }, 8000);
+        });
+      }
 
-    const allPassed = results.length > 0 && results.every(r => r.passed);
-    if (allPassed) {
-      if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
-      else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
-      else if (view === "project" && currentProject) markProjectDone(currentProject.id);
-      else if (view === "bugs" && currentBug) markBugDone(currentBug.id);
+      let userStdout = "";
+      let userGlobals = {};
+      let userError = null;
+      let isTimeout = false;
+      await new Promise((resolve) => {
+        runPythonInSandbox(code, () => {}, (res) => {
+          if (res.error) {
+            userError = res.error;
+            isTimeout = !!res.isTimeout;
+          }
+          if (res.stdout) userStdout = res.stdout;
+          if (res.globals) userGlobals = res.globals;
+          resolve();
+        }, 8000);
+      });
+
+      const results = tests.map((test, i) => {
+        if (userError) {
+          return {
+            index: i,
+            name: test.name,
+            passed: false,
+            status: isTimeout ? "Time Limit" : "Runtime Error",
+            error: isTimeout ? userError : `Runtime error: ${userError}`
+          };
+        }
+
+        let passed = false;
+        let testError = null;
+        try {
+          passed = test.validate(code);
+        } catch (e) {
+          testError = e.message;
+        }
+
+        if (passed) {
+          if (expectedStdout.trim()) {
+            const normUser = userStdout.trim().replace(/\r\n/g, "\n");
+            const normExpected = expectedStdout.trim().replace(/\r\n/g, "\n");
+            if (!normUser) {
+              passed = false;
+              testError = "No stdout output was printed. Your code must print output.";
+            } else if (normUser.indexOf(normExpected.slice(0, Math.min(20, normExpected.length))) === -1) {
+              passed = false;
+              testError = `Output mismatch. Expected similar output to:\n${normExpected}`;
+            }
+          }
+          
+          for (const [k, expectedVal] of Object.entries(expectedGlobals)) {
+            const userVal = userGlobals[k];
+            if (userVal === undefined) {
+              passed = false;
+              testError = `Variable \`${k}\` is not defined.`;
+              break;
+            }
+            if (JSON.stringify(userVal) !== JSON.stringify(expectedVal)) {
+              passed = false;
+              testError = `Variable \`${k}\` value mismatch.`;
+              break;
+            }
+          }
+        }
+
+        return {
+          index: i,
+          name: test.name,
+          passed,
+          status: passed ? "Accepted" : "Wrong Answer",
+          error: passed ? null : (testError || `Expected: ${test.name}`)
+        };
+      });
+
+      setTestResults(results);
+
+      const allPassed = results.length > 0 && results.every(r => r.passed);
+      if (allPassed) {
+        if (view === "learn" && currentLesson) markLessonDone(currentLesson.id);
+        else if (view === "challenge" && currentChallenge) markChallengeDone(currentChallenge.id);
+        else if (view === "project" && currentProject) markProjectDone(currentProject.id);
+        else if (view === "bugs" && currentBug) markBugDone(currentBug.id);
+      }
+    } catch (e) {
+      setTestResults(tests.map((t, i) => ({
+        index: i,
+        name: t.name,
+        passed: false,
+        status: "Runtime Error",
+        error: `Test run error: ${e.message}`
+      })));
     }
-  }, [code, view, currentLesson, currentChallenge, currentProject, currentBug, markLessonDone, markChallengeDone, markProjectDone, markBugDone]);
+  }, [code, view, currentLesson, currentChallenge, currentProject, currentBug, pyodideReady, markLessonDone, markChallengeDone, markProjectDone, markBugDone]);
 
   useKeyboardShortcut(runCode);
 
@@ -520,6 +829,90 @@ export default function PythonLabsPlatform() {
     const idx = PYTHON_LESSONS.findIndex(l => l.id === activeLesson);
     if (idx > 0) selectLesson(PYTHON_LESSONS[idx - 1].id);
   };
+
+  if (pyodideLoadError) {
+    return (
+      <div className="jsl-platform">
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          background: "radial-gradient(circle at center, #0f172a, #020617)",
+          color: "#f8fafc",
+          fontFamily: "var(--font-sans)",
+          padding: "2rem",
+          textAlign: "center",
+          width: "100%"
+        }}>
+          <div style={{
+            background: "rgba(30, 41, 59, 0.4)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(239, 68, 68, 0.25)",
+            borderRadius: "16px",
+            padding: "2.5rem",
+            maxWidth: "500px",
+            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 50px rgba(239, 68, 68, 0.05)"
+          }}>
+            <div style={{
+              width: "64px",
+              height: "64px",
+              background: "rgba(239, 68, 68, 0.1)",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 1.5rem",
+              color: "#ef4444",
+              border: "1px solid rgba(239, 68, 68, 0.2)"
+            }}>
+              <DiPython size={32} />
+            </div>
+            <h2 style={{ fontSize: "1.5rem", fontWeight: "600", marginBottom: "0.75rem", letterSpacing: "-0.025em" }}>
+              Python Runtime Unavailable
+            </h2>
+            <p style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: "1.6", marginBottom: "1.5rem" }}>
+              We couldn't initialize Pyodide from the CDN. Please check your network connection and try again.
+            </p>
+            <div style={{
+              background: "rgba(15, 23, 42, 0.6)",
+              border: "1px solid rgba(255, 255, 255, 0.05)",
+              borderRadius: "8px",
+              padding: "1rem",
+              fontSize: "0.85rem",
+              fontFamily: "var(--font-mono)",
+              color: "#ef4444",
+              textAlign: "left",
+              overflowX: "auto",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-all",
+              marginBottom: "1.5rem"
+            }}>
+              {pyodideLoadError}
+            </div>
+            <button
+              onClick={handleRetryLoad}
+              style={{
+                background: "linear-gradient(to right, #3b82f6, #2563eb)",
+                border: "none",
+                borderRadius: "8px",
+                color: "#ffffff",
+                padding: "0.75rem 1.5rem",
+                fontWeight: "600",
+                fontSize: "0.95rem",
+                cursor: "pointer",
+                transition: "all 0.2s",
+                boxShadow: "0 4px 12px rgba(37, 99, 235, 0.2)"
+              }}
+            >
+              Retry Connection
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -553,34 +946,7 @@ export default function PythonLabsPlatform() {
         monacoTheme={monacoTheme}
         onToggleTheme={() => setMonacoTheme(t => t === "jsl-dark" ? "jsl-light" : "jsl-dark")}
       >
-        {currentContent && (
-          <>
-            {view === "learn" && currentLesson && (
-              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.lessons.includes(currentLesson.id) ? "done" : ""}`}
-                onClick={() => markLessonDone(currentLesson.id)}>
-                {progress.lessons.includes(currentLesson.id) ? "✓ Completed" : "Mark Complete"}
-              </button>
-            )}
-            {view === "challenge" && currentChallenge && (
-              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.challenges.includes(currentChallenge.id) ? "done" : ""}`}
-                onClick={() => markChallengeDone(currentChallenge.id)}>
-                {progress.challenges.includes(currentChallenge.id) ? "✓ Solved" : "Mark Solved"}
-              </button>
-            )}
-            {view === "project" && currentProject && (
-              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.projects.includes(currentProject.id) ? "done" : ""}`}
-                onClick={() => markProjectDone(currentProject.id)}>
-                {progress.projects.includes(currentProject.id) ? "✓ Completed" : "Mark Complete"}
-              </button>
-            )}
-            {view === "bugs" && currentBug && (
-              <button className={`jsl-btn-mark jsl-btn-topbar ${progress.bugs.includes(currentBug.id) ? "done" : ""}`}
-                onClick={() => markBugDone(currentBug.id)}>
-                {progress.bugs.includes(currentBug.id) ? "✓ Fixed" : "Mark Fixed"}
-              </button>
-            )}
-          </>
-        )}
+        <LabXPBadge />
       </LabTopbar>
 
       {/* ─── Main Layout ─── */}
@@ -693,7 +1059,7 @@ export default function PythonLabsPlatform() {
 
           {/* Editor & Output Panel */}
           <LabResizableHandle onDrag={handleContentDrag} />
-          <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
+          <div className={`jsl-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`} ref={editorPanelRef} style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}>
             <LabEditorToolbar
               isRunning={isRunning}
               onRun={runCode}
@@ -717,6 +1083,12 @@ export default function PythonLabsPlatform() {
                 pyodideLoadError ? "Python runtime unavailable" :
                 "Ctrl+Enter to run"
               }
+              fontSize={fontSize}
+              onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('pyl-font-size', n); } catch {} return n; })}
+              onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('pyl-font-size', n); } catch {} return n; })}
+              onFullscreen={() => setIsFullscreen(f => !f)}
+              isFullscreen={isFullscreen}
+              code={code}
             />
 
             {/* Editor */}
@@ -730,7 +1102,7 @@ export default function PythonLabsPlatform() {
                 onChange={handleCodeChange}
                 onMount={handleEditorMount}
                 options={{
-                  fontSize: 13,
+                  fontSize: fontSize,
                   fontFamily: "Consolas, 'Courier New', monospace",
                   minimap: { enabled: false },
                   scrollBeyondLastLine: false,

@@ -55,9 +55,14 @@ function executeMongoQuery(query, engine) {
     const [, collectionName, method, argsStr] = match;
     let args;
     try {
-      args = argsStr.trim() ? Function(`"use strict"; return (${argsStr})`)() : [];
+      // Wrap the raw args in an OUTER array so each top-level comma-separated
+      // value becomes a distinct argument, while inner array literals (e.g. an
+      // aggregate pipeline `[ {...}, {...} ]`) are preserved as a single arg.
+      // Without this, `aggregate([s1, s2])` parsed to `[s1, s2]` and args[0]
+      // was just `s1` — a plain object — causing "pipeline is not iterable".
+      args = argsStr.trim() ? Function(`"use strict"; return ([${argsStr}])`)() : [];
     } catch {
-      // Try parsing as single argument if bracket fails
+      // Fallback: try parsing the whole thing as a single JSON argument
       try {
         args = [JSON.parse(argsStr)];
       } catch {
@@ -538,9 +543,21 @@ function formatCellValue(val) {
   return String(val);
 }
 
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
+
 // ─── MAIN PLATFORM ───
 
 export default function MongoLabsPlatform() {
+  const DRAFT_KEY = "mongo-draft";
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(MONGO_LESSONS[0]?.id || null);
@@ -550,7 +567,16 @@ export default function MongoLabsPlatform() {
   const [activeInterviewCategory, setActiveInterviewCategory] = useState(null);
   const [activeInterviewQuestion, setActiveInterviewQuestion] = useState(null);
   const [activeMilestone, setActiveMilestone] = useState(0);
-  const [query, setQuery] = useState(MONGO_LESSONS[0]?.starterQuery || "");
+  const [query, setQuery] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = MONGO_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode("mongo-draft", "learn", firstId, MONGO_LESSONS[0]?.starterQuery) : "";
+  });
   const [results, setResults] = useState({ batches: [], totalCount: 0, executionTime: 0 });
   const [queryError, setQueryError] = useState(null);
   const [showHint, setShowHint] = useState(false);
@@ -571,6 +597,32 @@ export default function MongoLabsPlatform() {
   const engineRef = useRef(null);
   const [testResults, setTestResults] = useState([]);
   const [testsHeight, setTestsHeight] = useState(140);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("mongo-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId =
+      view === "learn" ? activeLesson
+      : view === "challenge" ? activeChallenge
+      : view === "project" ? `${activeProject}:${activeMilestone}`
+      : view === "aggregation" ? activeAgg
+      : null;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = query;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [query, view, activeLesson, activeChallenge, activeProject, activeMilestone, activeAgg, loading]);
 
   const handleTestsDrag = useCallback(({ clientY }) => {
     if (!contentPanelRef.current) return;
@@ -780,7 +832,7 @@ export default function MongoLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(null);
     setActiveMilestone(0);
-    setQuery(lesson.starterQuery);
+    setQuery(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterQuery));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
@@ -798,7 +850,7 @@ export default function MongoLabsPlatform() {
     setActiveChallenge(id);
     setActiveProject(null);
     setActiveMilestone(0);
-    setQuery(challenge.starterQuery);
+    setQuery(getDraftCode(DRAFT_KEY, "challenge", id, challenge.starterQuery));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
@@ -836,7 +888,7 @@ export default function MongoLabsPlatform() {
     setActiveProject(id);
     setActiveAgg(null);
     setActiveMilestone(0);
-    setQuery(`// Project: ${project.title}\n// Complete the tasks below\n`);
+    setQuery(getDraftCode(DRAFT_KEY, "project", `${id}:0`, `// Project: ${project.title}\n// Complete the tasks below\n`));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
@@ -855,7 +907,7 @@ export default function MongoLabsPlatform() {
     setActiveProject(null);
     setActiveAgg(id);
     setActiveMilestone(0);
-    setQuery(lab.starterQuery);
+    setQuery(getDraftCode(DRAFT_KEY, "aggregation", id, lab.starterQuery));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalCount: 0, executionTime: 0 });
@@ -1304,7 +1356,7 @@ export default function MongoLabsPlatform() {
 
             {/* Editor + Results Panel (right side) */}
             <LabResizableHandle onDrag={handleContentDrag} />
-            <div className="sql-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
+            <div className={`sql-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`} ref={editorPanelRef} style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}>
               <LabEditorToolbar
                 isRunning={isRunning}
                 onRun={runQuery}
@@ -1321,6 +1373,12 @@ export default function MongoLabsPlatform() {
                 runLabel="Run Query"
                 lang="MongoDB"
                 prefix="sql"
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('mongo-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('mongo-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
+                code={query}
               />
 
               {/* Monaco Editor */}
@@ -1334,7 +1392,7 @@ export default function MongoLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "Consolas, 'Courier New', monospace",
                     minimap: { enabled: false },
                     scrollBeyondLastLine: false,

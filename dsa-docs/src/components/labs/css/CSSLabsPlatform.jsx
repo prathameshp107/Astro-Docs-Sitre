@@ -32,7 +32,18 @@ import CSSComponentView from "./components/CSSComponentView.jsx";
 import CSSAnimationView from "./components/CSSAnimationView.jsx";
 import CSSInterviewView from "./components/CSSInterviewView.jsx";
 import { runCssTests, handleTestResults } from "./runner/cssValidator.js";
-import { STORAGE_KEY, PLAYGROUND_CODE } from "./config.js";
+import { STORAGE_KEY, PLAYGROUND_CODE, DRAFT_KEY } from "./config.js";
+
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
 
 // ─── MAIN PLATFORM ───
 
@@ -46,7 +57,16 @@ export default function CSSLabsPlatform() {
   const [activeComponent, setActiveComponent] = useState(null);
   const [activeAnimation, setActiveAnimation] = useState(null);
   const [activeInterview, setActiveInterview] = useState(null);
-  const [code, setCode] = useState(CSS_LESSONS[0]?.starterCode || "");
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = CSS_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode(DRAFT_KEY, "learn", firstId, CSS_LESSONS[0]?.starterCode) : "";
+  });
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
@@ -68,8 +88,40 @@ export default function CSSLabsPlatform() {
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [contentRatio, setContentRatio] = useState(0.5);
   const [previewHeight, setPreviewHeight] = useState(250);
+  const [testsHeight, setTestsHeight] = useState(140);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try {
+      return Number(localStorage.getItem('css-font-size')) || 13;
+    } catch {
+      return 13;
+    }
+  });
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId =
+      view === "learn" ? activeLesson
+      : view === "challenge" ? activeChallenge
+      : view === "component" ? activeComponent
+      : view === "animation" ? activeAnimation
+      : view === "playground" ? "playground"
+      : null;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = code;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [code, view, activeLesson, activeChallenge, activeComponent, activeAnimation, loading]);
 
   // Load progress from localStorage
   useEffect(() => {
@@ -223,7 +275,7 @@ export default function CSSLabsPlatform() {
     setActiveComponent(null);
     setActiveAnimation(null);
     setActiveInterview(null);
-    setCode(lesson.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -239,7 +291,7 @@ export default function CSSLabsPlatform() {
     setActiveComponent(null);
     setActiveAnimation(null);
     setActiveInterview(null);
-    setCode(challenge.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "challenge", id, challenge.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -255,7 +307,7 @@ export default function CSSLabsPlatform() {
     setActiveComponent(id);
     setActiveAnimation(null);
     setActiveInterview(null);
-    setCode(comp.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "component", id, comp.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -271,7 +323,7 @@ export default function CSSLabsPlatform() {
     setActiveComponent(null);
     setActiveAnimation(id);
     setActiveInterview(null);
-    setCode(anim.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "animation", id, anim.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -300,7 +352,7 @@ export default function CSSLabsPlatform() {
     setActiveComponent(null);
     setActiveAnimation(null);
     setActiveInterview(null);
-    setCode(PLAYGROUND_CODE);
+    setCode(getDraftCode(DRAFT_KEY, "playground", "playground", PLAYGROUND_CODE));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -431,6 +483,18 @@ export default function CSSLabsPlatform() {
       const maxH = rect.height * 0.7;
       setPreviewHeight(
         Math.max(120, Math.min(maxH, rect.bottom - clientY))
+      );
+    },
+    []
+  );
+
+  const handleTestsDrag = useCallback(
+    ({ clientY }) => {
+      if (!contentPanelRef.current) return;
+      const rect = contentPanelRef.current.getBoundingClientRect();
+      const maxH = rect.height * 0.6;
+      setTestsHeight(
+        Math.max(100, Math.min(maxH, rect.bottom - clientY))
       );
     },
     []
@@ -982,15 +1046,15 @@ export default function CSSLabsPlatform() {
                 currentTests.length > 0 && (
                   <>
                     <LabResizableHandle
-                      onDrag={handlePreviewDrag}
+                      onDrag={handleTestsDrag}
                       orientation="horizontal"
                     />
                     <div
                       className="jsl-tests-panel"
                       style={{
-                        height: 120,
-                        maxHeight: 120,
-                        minHeight: 120,
+                        height: testsHeight,
+                        maxHeight: testsHeight,
+                        minHeight: testsHeight,
                       }}
                     >
                       <div className="jsl-tests-header">
@@ -1062,9 +1126,9 @@ export default function CSSLabsPlatform() {
             {/* Editor & Preview */}
             <LabResizableHandle onDrag={handleContentDrag} />
             <div
-              className="jsl-editor-panel"
+              className={`jsl-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`}
               ref={editorPanelRef}
-              style={{ flex: `${1 - contentRatio} 1 0` }}
+              style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}
             >
               <LabEditorToolbar
                 isRunning={false}
@@ -1076,6 +1140,12 @@ export default function CSSLabsPlatform() {
                   background: "rgba(96,165,250,0.14)",
                   color: "#60a5fa",
                 }}
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('css-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('css-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
+                code={code}
               />
 
               <div className="jsl-editor-wrapper">
@@ -1088,7 +1158,7 @@ export default function CSSLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
                     roundedSelection: true,

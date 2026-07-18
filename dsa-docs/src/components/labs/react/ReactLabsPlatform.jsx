@@ -21,6 +21,11 @@ import {
   useKeyboardShortcut,
   LabSidebar,
   LabTour,
+  LabCommandPalette,
+  useCommandPalette,
+  celebrate,
+  awardXP,
+  LabXPBadge,
 } from "../shared/index.js";
 
 import ReactLessonView from "./components/ReactLessonView.jsx";
@@ -28,7 +33,18 @@ import ReactBugView from "./components/ReactBugView.jsx";
 import ReactProjectView from "./components/ReactProjectView.jsx";
 import ReactPreview from "./components/ReactPreview.jsx";
 import { runReactTests, handleTestResults } from "./runner/reactValidator.js";
-import { STORAGE_KEY } from "./config.js";
+import { STORAGE_KEY, REACT_CONFETTI, XP_VALUES, XP_LABELS, DRAFT_KEY } from "./config.js";
+
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
 
 // ─── MAIN PLATFORM ───
 
@@ -40,7 +56,16 @@ export default function ReactLabsPlatform() {
   );
   const [activeBug, setActiveBug] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
-  const [code, setCode] = useState(REACT_LESSONS[0]?.starterCode || "");
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = REACT_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode(DRAFT_KEY, "learn", firstId, REACT_LESSONS[0]?.starterCode) : "";
+  });
   const [output, setOutput] = useState([]);
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
@@ -64,6 +89,31 @@ export default function ReactLabsPlatform() {
   const [testHeight, setTestHeight] = useState(100);
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("rl-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId =
+      view === "learn" ? activeLesson
+      : view === "bugs" ? activeBug
+      : view === "projects" ? activeProject
+      : null;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = code;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [code, view, activeLesson, activeBug, activeProject, loading]);
 
   // Add log listener for React sandboxed iframe
   useEffect(() => {
@@ -103,24 +153,33 @@ export default function ReactLabsPlatform() {
 
   const markLessonDone = useCallback(
     (id) => {
-      if (!progress.lessons.includes(id))
+      if (!progress.lessons.includes(id)) {
         saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+        if (awardXP(`react:lesson:${id}`, XP_VALUES.lesson, XP_LABELS.lesson))
+          celebrate(REACT_CONFETTI);
+      }
     },
     [progress, saveProgress]
   );
 
   const markBugDone = useCallback(
     (id) => {
-      if (!progress.bugs.includes(id))
+      if (!progress.bugs.includes(id)) {
         saveProgress({ ...progress, bugs: [...progress.bugs, id] });
+        if (awardXP(`react:bug:${id}`, XP_VALUES.bug, XP_LABELS.bug))
+          celebrate(REACT_CONFETTI);
+      }
     },
     [progress, saveProgress]
   );
 
   const markProjectDone = useCallback(
     (id) => {
-      if (!progress.projects.includes(id))
+      if (!progress.projects.includes(id)) {
         saveProgress({ ...progress, projects: [...progress.projects, id] });
+        if (awardXP(`react:project:${id}`, XP_VALUES.project, XP_LABELS.project))
+          celebrate(REACT_CONFETTI);
+      }
     },
     [progress, saveProgress]
   );
@@ -175,7 +234,7 @@ export default function ReactLabsPlatform() {
     setActiveLesson(id);
     setActiveBug(null);
     setActiveProject(null);
-    setCode(lesson.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -191,7 +250,7 @@ export default function ReactLabsPlatform() {
     setActiveLesson(null);
     setActiveBug(id);
     setActiveProject(null);
-    setCode(bug.brokenCode);
+    setCode(getDraftCode(DRAFT_KEY, "bugs", id, bug.brokenCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -207,7 +266,7 @@ export default function ReactLabsPlatform() {
     setActiveLesson(null);
     setActiveBug(null);
     setActiveProject(id);
-    setCode(proj.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "projects", id, proj.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setOutput([]);
@@ -557,8 +616,6 @@ export default function ReactLabsPlatform() {
     return [];
   }, [view, currentLesson, currentBug, currentProject]);
 
-  const handleClearLogs = useCallback(() => setOutput([]), []);
-
   const handleReset = () => {
     let starter = "";
     if (view === "learn" && currentLesson)
@@ -661,6 +718,8 @@ export default function ReactLabsPlatform() {
     []
   );
 
+  const [paletteOpen, setPaletteOpen] = useCommandPalette();
+
   if (loading) {
     return (
       <div className="jsl-platform">
@@ -698,6 +757,7 @@ export default function ReactLabsPlatform() {
             t === "jsl-dark" ? "jsl-light" : "jsl-dark"
           )
         }
+        onOpenPalette={() => setPaletteOpen(true)}
       >
         <div className="jsl-cat-chips">
           <span className="jsl-cat-chip learn">
@@ -720,7 +780,31 @@ export default function ReactLabsPlatform() {
           />
         </div>
         <span className="jsl-top-percent">{progressStats.pct}%</span>
+        <LabXPBadge />
       </LabTopbar>
+
+      <LabCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        accent="#61dafb"
+        commands={[
+          {
+            id: "reset",
+            section: "Actions",
+            label: "Reset editor to starter code",
+            action: handleReset,
+          },
+          {
+            id: "theme",
+            section: "Actions",
+            label: "Toggle editor theme",
+            action: () =>
+              setMonacoTheme((t) =>
+                t === "jsl-dark" ? "jsl-light" : "jsl-dark"
+              ),
+          },
+        ]}
+      />
 
       {/* Main Layout */}
       <div className="jsl-main">
@@ -881,9 +965,9 @@ export default function ReactLabsPlatform() {
             {/* Editor & Preview Panel */}
             <LabResizableHandle onDrag={handleContentDrag} />
             <div
-              className="jsl-editor-panel"
+              className={`jsl-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`}
               ref={editorPanelRef}
-              style={{ flex: `${1 - contentRatio} 1 0` }}
+              style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}
             >
               <LabEditorToolbar
                 isRunning={isRunning}
@@ -892,6 +976,12 @@ export default function ReactLabsPlatform() {
                 runLabel="Run"
                 lang="JSX"
                 langIcon={<DiReact size={10} />}
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('rl-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('rl-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
+                code={code}
               />
 
               <div className="jsl-editor-wrapper">
@@ -904,7 +994,7 @@ export default function ReactLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "Consolas, 'Courier New', monospace",
                     fontLigatures: false,
                     letterSpacing: 0,
@@ -934,7 +1024,6 @@ export default function ReactLabsPlatform() {
                 code={code}
                 previewKey={previewKey}
                 style={{ height: previewHeight }}
-                onClearLogs={handleClearLogs}
               />
 
               {/* Resizable Console */}

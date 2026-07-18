@@ -27,6 +27,9 @@ import {
   LabTour,
   LabCommandPalette,
   useCommandPalette,
+  celebrate,
+  awardXP,
+  LabXPBadge,
 } from "../shared/index.js";
 
 import HTMLLessonView from "./components/HTMLLessonView.jsx";
@@ -35,7 +38,18 @@ import HTMLProjectView from "./components/HTMLProjectView.jsx";
 import HTMLInterviewView from "./components/HTMLInterviewView.jsx";
 
 import { runHtmlTests, handleTestResults } from "./runner/htmlValidator.js";
-import { STORAGE_KEY, PLAYGROUND_CODE } from "./config.js";
+import { STORAGE_KEY, PLAYGROUND_CODE, HTML_CONFETTI, XP_VALUES, XP_LABELS, DRAFT_KEY } from "./config.js";
+
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
 
 // ─── MAIN PLATFORM ───
 
@@ -48,7 +62,16 @@ export default function HTMLLabsPlatform() {
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
   const [activeInterview, setActiveInterview] = useState(null);
-  const [code, setCode] = useState(HTML_LESSONS[0]?.starterCode || "");
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = HTML_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode(DRAFT_KEY, "learn", firstId, HTML_LESSONS[0]?.starterCode) : "";
+  });
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
@@ -70,8 +93,35 @@ export default function HTMLLabsPlatform() {
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [contentRatio, setContentRatio] = useState(0.5);
   const [previewHeight, setPreviewHeight] = useState(250);
+  const [testsHeight, setTestsHeight] = useState(140);
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("html-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId =
+      view === "learn" ? activeLesson
+      : view === "challenge" ? activeChallenge
+      : view === "project" ? activeProject
+      : view === "playground" ? "playground"
+      : null;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = code;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [code, view, activeLesson, activeChallenge, activeProject, loading]);
 
   // Load progress from localStorage
   useEffect(() => {
@@ -99,30 +149,39 @@ export default function HTMLLabsPlatform() {
 
   const markLessonDone = useCallback(
     (id) => {
-      if (!progress.lessons.includes(id))
+      if (!progress.lessons.includes(id)) {
         saveProgress({ ...progress, lessons: [...progress.lessons, id] });
+        if (awardXP(`html:lesson:${id}`, XP_VALUES.lesson, XP_LABELS.lesson))
+          celebrate(HTML_CONFETTI);
+      }
     },
     [progress, saveProgress]
   );
 
   const markChallengeDone = useCallback(
     (id) => {
-      if (!progress.challenges.includes(id))
+      if (!progress.challenges.includes(id)) {
         saveProgress({
           ...progress,
           challenges: [...progress.challenges, id],
         });
+        if (awardXP(`html:challenge:${id}`, XP_VALUES.challenge, XP_LABELS.challenge))
+          celebrate(HTML_CONFETTI);
+      }
     },
     [progress, saveProgress]
   );
 
   const markProjectDone = useCallback(
     (id) => {
-      if (!progress.projects.includes(id))
+      if (!progress.projects.includes(id)) {
         saveProgress({
           ...progress,
           projects: [...progress.projects, id],
         });
+        if (awardXP(`html:project:${id}`, XP_VALUES.project, XP_LABELS.project))
+          celebrate(HTML_CONFETTI);
+      }
     },
     [progress, saveProgress]
   );
@@ -202,7 +261,7 @@ export default function HTMLLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(null);
     setActiveInterview(null);
-    setCode(lesson.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -217,7 +276,7 @@ export default function HTMLLabsPlatform() {
     setActiveChallenge(id);
     setActiveProject(null);
     setActiveInterview(null);
-    setCode(challenge.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "challenge", id, challenge.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -232,7 +291,7 @@ export default function HTMLLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(id);
     setActiveInterview(null);
-    setCode(proj.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "project", id, proj.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -259,7 +318,7 @@ export default function HTMLLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(null);
     setActiveInterview(null);
-    setCode(PLAYGROUND_CODE);
+    setCode(getDraftCode(DRAFT_KEY, "playground", "playground", PLAYGROUND_CODE));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -400,6 +459,18 @@ export default function HTMLLabsPlatform() {
     []
   );
 
+  const handleTestsDrag = useCallback(
+    ({ clientY }) => {
+      if (!contentPanelRef.current) return;
+      const rect = contentPanelRef.current.getBoundingClientRect();
+      const maxH = rect.height * 0.6;
+      setTestsHeight(
+        Math.max(100, Math.min(maxH, rect.bottom - clientY))
+      );
+    },
+    []
+  );
+
   // Run tests
   const runTests = useCallback(() => {
     const tests =
@@ -411,7 +482,8 @@ export default function HTMLLabsPlatform() {
             ? currentProject?.tests || []
             : [];
 
-    const results = runHtmlTests(code, tests);
+    const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document || null;
+    const results = runHtmlTests(code, tests, doc);
     setTestResults(results);
 
     handleTestResults(
@@ -680,6 +752,7 @@ export default function HTMLLabsPlatform() {
             <FiBook size={16} /> Mark Complete
           </button>
         )}
+        <LabXPBadge />
       </LabTopbar>
 
       <LabCommandPalette
@@ -861,15 +934,15 @@ export default function HTMLLabsPlatform() {
                 currentTests.length > 0 && (
                   <>
                     <LabResizableHandle
-                      onDrag={handlePreviewDrag}
+                      onDrag={handleTestsDrag}
                       orientation="horizontal"
                     />
                     <div
                       className="jsl-tests-panel"
                       style={{
-                        height: 120,
-                        maxHeight: 120,
-                        minHeight: 120,
+                        height: testsHeight,
+                        maxHeight: testsHeight,
+                        minHeight: testsHeight,
                       }}
                     >
                       <div className="jsl-tests-header">
@@ -941,9 +1014,9 @@ export default function HTMLLabsPlatform() {
             {/* Editor & Preview */}
             <LabResizableHandle onDrag={handleContentDrag} />
             <div
-              className="jsl-editor-panel"
+              className={`jsl-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`}
               ref={editorPanelRef}
-              style={{ flex: `${1 - contentRatio} 1 0` }}
+              style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}
             >
               <LabEditorToolbar
                 isRunning={false}
@@ -955,6 +1028,7 @@ export default function HTMLLabsPlatform() {
                   background: "rgba(251,146,60,0.14)",
                   color: "#fb923c",
                 }}
+                code={code}
                 extraActions={
                   <div
                     style={{
@@ -994,6 +1068,11 @@ export default function HTMLLabsPlatform() {
                     ))}
                   </div>
                 }
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('html-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('html-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
               />
 
               <div className="jsl-editor-wrapper">
@@ -1006,7 +1085,7 @@ export default function HTMLLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
                     roundedSelection: true,
@@ -1142,7 +1221,7 @@ export default function HTMLLabsPlatform() {
                         background: "#ffffff",
                         borderRadius: "0 0 8px 8px",
                       }}
-                      sandbox="allow-scripts"
+                      sandbox="allow-scripts allow-same-origin"
                       srcDoc={previewCode}
                     />
                   </div>

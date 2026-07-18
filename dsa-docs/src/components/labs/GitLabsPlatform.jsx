@@ -43,7 +43,7 @@ function getBranchColor(index) {
 
 const NODE_RADIUS = 8;
 
-const initialState = {
+export const initialState = {
   commits: {},
   commitOrder: [],
   branches: { main: null },
@@ -59,7 +59,7 @@ const initialState = {
   gitInitDone: false,
 };
 
-function gitReducer(state, action) {
+export function gitReducer(state, action) {
   switch (action.type) {
     case "INIT": {
       const firstSHA = randomSHA();
