@@ -292,14 +292,49 @@ const filterLabels = sidebar.map(entry => entry.label);
     });
   }
 
+  function focusActiveSidebarItem() {
+    const sidebarContainer = document.getElementById('starlight__sidebar') || document.querySelector('.sidebar-content');
+    if (!sidebarContainer) return;
+
+    const activeLink = sidebarContainer.querySelector('a[aria-current="page"]');
+    if (!activeLink) return;
+
+    // 1. Expand all parent <details> elements enclosing the active link
+    let parent = activeLink.closest('details');
+    while (parent) {
+      parent.setAttribute('open', '');
+      const summary = parent.querySelector(':scope > summary');
+      if (summary) summary.setAttribute('aria-expanded', 'true');
+      parent = parent.parentElement ? parent.parentElement.closest('details') : null;
+    }
+
+    // 2. Scroll the active link into the center of the scrollable sidebar container
+    const scrollTarget = () => {
+      activeLink.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+    };
+
+    scrollTarget();
+    requestAnimationFrame(() => {
+      setTimeout(scrollTarget, 80);
+      setTimeout(scrollTarget, 250);
+    });
+  }
+
   setupSidebarFilter();
   setupExpandCollapse();
   setupSidebarTheme();
   setupSidebarToggle();
+  focusActiveSidebarItem();
+
   document.addEventListener('astro:after-swap', () => {
     setupSidebarFilter();
     setupExpandCollapse();
     setupSidebarTheme();
     setupSidebarToggle();
+    focusActiveSidebarItem();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    focusActiveSidebarItem();
   });
 </script>

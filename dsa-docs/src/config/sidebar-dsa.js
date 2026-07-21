@@ -122,5 +122,21 @@ const sidebar = [
           },
         ],
       },
+      {
+        label: 'Striver Blind 75 Solutions',
+        items: [
+          { label: 'All 75 Problems Overview', link: '/striver-blind-75' },
+          { label: '01. Arrays', items: [{ autogenerate: { directory: 'striver-blind-75/01-arrays' } }] },
+          { label: '02. Bit Manipulation', items: [{ autogenerate: { directory: 'striver-blind-75/02-bit-manipulation' } }] },
+          { label: '03. Dynamic Programming', items: [{ autogenerate: { directory: 'striver-blind-75/03-dynamic-programming' } }] },
+          { label: '04. Graphs', items: [{ autogenerate: { directory: 'striver-blind-75/04-graphs' } }] },
+          { label: '05. Intervals', items: [{ autogenerate: { directory: 'striver-blind-75/05-intervals' } }] },
+          { label: '06. Linked List', items: [{ autogenerate: { directory: 'striver-blind-75/06-linked-list' } }] },
+          { label: '07. Matrix', items: [{ autogenerate: { directory: 'striver-blind-75/07-matrix' } }] },
+          { label: '08. Strings', items: [{ autogenerate: { directory: 'striver-blind-75/08-strings' } }] },
+          { label: '09. Trees & BST', items: [{ autogenerate: { directory: 'striver-blind-75/09-trees' } }] },
+          { label: '10. Tries & Heaps', items: [{ autogenerate: { directory: 'striver-blind-75/10-tries-heaps' } }] },
+        ],
+      },
 ];
 export default sidebar;
