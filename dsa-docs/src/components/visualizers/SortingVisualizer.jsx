@@ -1,366 +1,483 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSortingStore } from '../../store/visualizers/sortingStore';
+import SwapArcConnector from './SwapArcConnector';
 
-const ALGORITHMS = [
-  { id: 'bubble', label: 'Bubble Sort' },
-  { id: 'selection', label: 'Selection Sort' },
-  { id: 'insertion', label: 'Insertion Sort' },
-  { id: 'merge', label: 'Merge Sort' },
-  { id: 'quick', label: 'Quick Sort' },
+const BUBBLE_SORT_CODE = [
+  { line: 1, text: 'for i from 0 to n - 1:' },
+  { line: 2, text: '    for j from 0 to n - i - 2:' },
+  { line: 3, text: '        if arr[j] > arr[j + 1]:' },
+  { line: 4, text: '            swap(arr[j], arr[j + 1])' },
 ];
 
-const ALGO_EXPLANATIONS = {
-  bubble: 'Repeatedly compare adjacent elements and swap them if they are in the wrong order. Larger elements "bubble up" to the end with each pass.',
-  selection: 'Find the smallest element in the unsorted portion and swap it to the front. Builds the sorted portion one element at a time.',
-  insertion: 'Pick each element and insert it into its correct position among the already-sorted elements to the left. Like sorting a hand of playing cards.',
-  merge: 'Split the array into halves, recursively sort each half, then merge the sorted halves back together. Uses divide-and-conquer.',
-  quick: 'Pick a pivot element, partition the array so smaller elements go left and larger go right, then recursively sort both partitions.',
+const SELECTION_SORT_CODE = [
+  { line: 1, text: 'for i from 0 to n - 1:' },
+  { line: 2, text: '    minIdx ← i' },
+  { line: 3, text: '    for j from i + 1 to n - 1:' },
+  { line: 4, text: '        if arr[j] < arr[minIdx]:' },
+  { line: 5, text: '            minIdx ← j' },
+  { line: 6, text: '    swap(arr[i], arr[minIdx])' },
+];
+
+const INSERTION_SORT_CODE = [
+  { line: 1, text: 'for i from 1 to n - 1:' },
+  { line: 2, text: '    key ← arr[i]' },
+  { line: 3, text: '    j ← i - 1' },
+  { line: 4, text: '    while j >= 0 and arr[j] > key:' },
+  { line: 5, text: '        arr[j + 1] ← arr[j]' },
+  { line: 6, text: '        j ← j - 1' },
+  { line: 7, text: '    arr[j + 1] ← key' },
+];
+
+const QUICK_SORT_CODE = [
+  { line: 1, text: 'pivot ← arr[high]' },
+  { line: 2, text: 'i ← low - 1' },
+  { line: 3, text: 'for j from low to high - 1:' },
+  { line: 4, text: '    if arr[j] <= pivot:' },
+  { line: 5, text: '        i++' },
+  { line: 6, text: '        swap(arr[i], arr[j])' },
+  { line: 7, text: 'swap(arr[i + 1], arr[high])' },
+  { line: 8, text: 'return i + 1' },
+];
+
+const MERGE_SORT_CODE = [
+  { line: 1, text: 'if low < high:' },
+  { line: 2, text: '    mid ← (low + high) / 2' },
+  { line: 3, text: '    mergeSort(arr, low, mid)' },
+  { line: 4, text: '    mergeSort(arr, mid + 1, high)' },
+  { line: 5, text: '    merge(arr, low, mid, high)' },
+];
+
+const TRACK_TITLES = {
+  'bubble-sort': '1. Bubble Sort',
+  'selection-sort': '2. Selection Sort',
+  'insertion-sort': '3. Insertion Sort',
+  'quick-sort': '4. Quick Sort',
+  'merge-sort': '5. Merge Sort',
 };
 
-const getDelayFromPos = (pos) => Math.max(5, Math.round(2000 * Math.pow(0.945, pos - 1)));
+const EXPECTED_OUTPUTS = {
+  'bubble-sort': '[10, 14, 14, 29, 37] (Sorted array)',
+  'selection-sort': '[11, 12, 22, 25, 64] (Sorted array)',
+  'insertion-sort': '[5, 6, 11, 12, 13] (Sorted array)',
+  'quick-sort': '[10, 30, 40, 50, 70, 80, 90] (Sorted array)',
+  'merge-sort': '[3, 9, 10, 27, 38, 43, 82] (Sorted array)',
+};
 
 export default function SortingVisualizer() {
-  const { array, arraySize, algorithm, isSorting, comparing, swapping, sorted, setAlgorithm, setArraySize, randomize, setState } = useSortingStore();
-  const [speed, setSpeed] = useState(() => getDelayFromPos(65));
-  const [sliderPos, setSliderPos] = useState(65);
-  const [isRunning, setIsRunning] = useState(false);
-  const [stepDesc, setStepDesc] = useState('');
-  const abortRef = useRef(false);
-  const timerRef = useRef(null);
+  const containerRef = useRef(null);
+  const {
+    track,
+    array,
+    steps,
+    currentStep,
+    isPlaying,
+    speed,
+    practiceMode,
+    userCode,
+    setCurrentStep,
+    nextStep,
+    prevStep,
+    restart,
+    togglePlay,
+    setSpeed,
+    togglePracticeMode,
+    setUserCode,
+  } = useSortingStore();
 
+  const step = steps[currentStep] || steps[0];
+
+  // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
-    return () => { abortRef.current = true; clearTimeout(timerRef.current); };
-  }, []);
-
-  const sleep = useCallback((ms) => new Promise(r => { timerRef.current = setTimeout(r, ms); }), []);
-
-  const updateDesc = (text) => {
-    if (!abortRef.current) setStepDesc(text);
-  };
-
-  const runSort = useCallback(async () => {
-    if (isRunning) return;
-    abortRef.current = false;
-    setIsRunning(true);
-    setStepDesc('');
-    setState({ isSorting: true, comparing: [], swapping: [], sorted: [] });
-
-    const arr = [...array];
-
-    if (algorithm === 'bubble') {
-      updateDesc(`Starting Bubble Sort on array of ${arr.length} elements`);
-      await sleep(speed * 1.5);
-      for (let i = 0; i < arr.length - 1 && !abortRef.current; i++) {
-        updateDesc(`Pass ${i + 1}: Bubbling the largest unsorted element to position ${arr.length - 1 - i}`);
-        await sleep(speed);
-        for (let j = 0; j < arr.length - i - 1 && !abortRef.current; j++) {
-          setState({ comparing: [j, j + 1] });
-          updateDesc(`Comparing adjacent elements: arr[${j}]=${arr[j]} vs arr[${j+1}]=${arr[j+1]} — ${arr[j] > arr[j+1] ? `${arr[j]} > ${arr[j+1]} → need to swap` : `${arr[j]} ≤ ${arr[j+1]} → already in correct order`}`);
-          await sleep(speed);
-          if (arr[j] > arr[j + 1]) {
-            [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
-            setState({ swapping: [j, j + 1], array: [...arr] });
-            updateDesc(`Swapped: ${arr[j+1]} and ${arr[j]} — ${arr[j+1]} bubbles up, ${arr[j]} sinks down`);
-            await sleep(speed);
-          }
-          setState({ comparing: [], swapping: [] });
-        }
-        setState({ sorted: [...Array(arr.length - i - 1).keys()] });
-        updateDesc(`Pass ${i + 1} complete — element ${arr[arr.length - 1 - i]} is now in its final sorted position ✅`);
-        await sleep(speed);
-      }
-      updateDesc(`✅ Bubble Sort complete! Array is now sorted in ascending order.`);
-    } else if (algorithm === 'selection') {
-      updateDesc(`Starting Selection Sort on array of ${arr.length} elements`);
-      await sleep(speed * 1.5);
-      for (let i = 0; i < arr.length - 1 && !abortRef.current; i++) {
-        let minIdx = i;
-        updateDesc(`Pass ${i + 1}: Scanning unsorted portion from index ${i} to ${arr.length - 1} to find the minimum element`);
-        await sleep(speed);
-        for (let j = i + 1; j < arr.length && !abortRef.current; j++) {
-          setState({ comparing: [j, minIdx] });
-          updateDesc(`Comparing: arr[${j}]=${arr[j]} vs current minimum arr[${minIdx}]=${arr[minIdx]} — ${arr[j] < arr[minIdx] ? `${arr[j]} < ${arr[minIdx]} → new minimum found at index ${j}` : `${arr[j]} ≥ ${arr[minIdx]} → not smaller`}`);
-          await sleep(speed);
-          if (arr[j] < arr[minIdx]) minIdx = j;
-        }
-        if (minIdx !== i) {
-          [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
-          setState({ swapping: [i, minIdx], array: [...arr] });
-          updateDesc(`Swapped minimum arr[${minIdx}]=${arr[i]} with arr[${i}]=${arr[minIdx]} — minimum placed at position ${i}`);
-          await sleep(speed);
-        } else {
-          updateDesc(`Element at index ${i} (${arr[i]}) is already the minimum — no swap needed`);
-          await sleep(speed);
-        }
-        setState({ comparing: [], swapping: [], sorted: [...Array(i + 1).keys()] });
-      }
-      setState({ sorted: Array.from({ length: arr.length }, (_, i) => i) });
-      updateDesc(`✅ Selection Sort complete! Array is now sorted in ascending order.`);
-    } else if (algorithm === 'insertion') {
-      updateDesc(`Starting Insertion Sort — first element (${arr[0]}) is trivially sorted. Picking up cards one by one...`);
-      await sleep(speed * 1.5);
-      for (let i = 1; i < arr.length && !abortRef.current; i++) {
-        const key = arr[i];
-        updateDesc(`Picked element arr[${i}]=${key} — inserting it into the sorted portion [${arr.slice(0, i).join(', ')}]`);
-        await sleep(speed);
-        let j = i;
-        while (j > 0 && arr[j - 1] > key && !abortRef.current) {
-          setState({ comparing: [j, j - 1] });
-          updateDesc(`${arr[j - 1]} > ${key} → shifting ${arr[j - 1]} right to make room`);
-          await sleep(speed);
-          arr[j] = arr[j - 1];
-          j--;
-          setState({ array: [...arr] });
-        }
-        arr[j] = key;
-        setState({ array: [...arr] });
-        if (j === i) {
-          updateDesc(`${key} is already in the correct position — no shifting needed`);
-        } else {
-          updateDesc(`Inserted ${key} at index ${j} — elements [${arr.slice(0, i + 1).join(', ')}] are now sorted`);
-        }
-        await sleep(speed);
-        setState({ comparing: [], swapping: [] });
-      }
-      setState({ sorted: Array.from({ length: arr.length }, (_, i) => i) });
-      updateDesc(`✅ Insertion Sort complete! Array is now sorted in ascending order.`);
-    } else if (algorithm === 'merge') {
-      updateDesc(`Starting Merge Sort — using divide-and-conquer to sort ${arr.length} elements`);
-      await sleep(speed * 1.5);
-      const merge = async (l, m, r) => {
-        const left = arr.slice(l, m + 1);
-        const right = arr.slice(m + 1, r + 1);
-        let i = 0, j = 0, k = l;
-        updateDesc(`Merging sorted halves: left=[${left.join(', ')}] (indices ${l}..${m}) and right=[${right.join(', ')}] (indices ${m+1}..${r})`);
-        await sleep(speed);
-        while (i < left.length && j < right.length && !abortRef.current) {
-          setState({ comparing: [l + i, m + 1 + j] });
-          updateDesc(`Comparing: ${left[i]} vs ${right[j]} — taking the smaller element (${left[i] <= right[j] ? left[i] : right[j]})`);
-          await sleep(speed / 2);
-          if (left[i] <= right[j]) { arr[k] = left[i]; i++; }
-          else { arr[k] = right[j]; j++; }
-          k++;
-          setState({ array: [...arr] });
-        }
-        while (i < left.length) { arr[k] = left[i]; i++; k++; }
-        while (j < right.length) { arr[k] = right[j]; j++; k++; }
-        setState({ array: [...arr], comparing: [] });
-        updateDesc(`Merged into sorted segment: [${arr.slice(l, r + 1).join(', ')}]`);
-        await sleep(speed);
-      };
-      const mergeSort = async (l, r, depth = 0) => {
-        if (l >= r || abortRef.current) return;
-        const m = Math.floor((l + r) / 2);
-        updateDesc(`Splitting range [${l}..${r}] into left [${l}..${m}] and right [${m+1}..${r}]`);
-        await sleep(speed);
-        await mergeSort(l, m, depth + 1);
-        await mergeSort(m + 1, r, depth + 1);
-        await merge(l, m, r);
-      };
-      await mergeSort(0, arr.length - 1);
-      if (!abortRef.current) {
-        setState({ sorted: Array.from({ length: arr.length }, (_, i) => i) });
-        updateDesc(`✅ Merge Sort complete! Array is now sorted in ascending order.`);
-      }
-    } else if (algorithm === 'quick') {
-      updateDesc(`Starting Quick Sort — picking a pivot and partitioning the array`);
-      await sleep(speed * 1.5);
-      const partition = async (low, high) => {
-        const pivot = arr[high];
-        setState({ comparing: [high] });
-        updateDesc(`Choose pivot = arr[${high}]=${pivot} (last element). Elements smaller than ${pivot} go left, larger go right.`);
-        await sleep(speed);
-        let i = low - 1;
-        for (let j = low; j < high && !abortRef.current; j++) {
-          setState({ comparing: [j, high] });
-          updateDesc(`Comparing arr[${j}]=${arr[j]} with pivot=${pivot}: ${arr[j] < pivot ? `${arr[j]} < ${pivot} → belongs on LEFT side, swapping into position ${i + 1}` : `${arr[j]} ≥ ${pivot} → belongs on RIGHT side, leaving in place`}`);
-          await sleep(speed);
-          if (arr[j] < pivot) {
-            i++;
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-            setState({ swapping: [i, j], array: [...arr] });
-            await sleep(speed);
-          }
-        }
-        [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
-        setState({ swapping: [i + 1, high], array: [...arr] });
-        updateDesc(`Placed pivot ${pivot} at its correct position ${i + 1} — elements left of it are smaller, right are larger ✅`);
-        await sleep(speed);
-        setState({ comparing: [], swapping: [] });
-        return i + 1;
-      };
-      const quickSort = async (low, high) => {
-        if (low < high && !abortRef.current) {
-          const pi = await partition(low, high);
-          await quickSort(low, pi - 1);
-          await quickSort(pi + 1, high);
-        }
-      };
-      await quickSort(0, arr.length - 1);
-      if (!abortRef.current) {
-        setState({ sorted: Array.from({ length: arr.length }, (_, i) => i) });
-        updateDesc(`✅ Quick Sort complete! Array is now sorted in ascending order.`);
-      }
+    if (!isPlaying) return;
+    if (currentStep >= steps.length - 1) {
+      useSortingStore.setState({ isPlaying: false });
+      return;
     }
+    const delay = 2200 / speed;
+    const timeout = setTimeout(() => {
+      nextStep();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
-    if (!abortRef.current) {
-      setState({ isSorting: false, comparing: [], swapping: [] });
-    }
-    setIsRunning(false);
-  }, [algorithm, array, speed, isRunning, setState, sleep]);
+  const activeCode =
+    track === 'bubble-sort'
+      ? BUBBLE_SORT_CODE
+      : track === 'selection-sort'
+      ? SELECTION_SORT_CODE
+      : track === 'insertion-sort'
+      ? INSERTION_SORT_CODE
+      : track === 'quick-sort'
+      ? QUICK_SORT_CODE
+      : MERGE_SORT_CODE;
 
-  const stopSort = () => {
-    abortRef.current = true;
-    setIsRunning(false);
-    setStepDesc('');
-    setState({ isSorting: false, comparing: [], swapping: [] });
-  };
+  const trackLabel = TRACK_TITLES[track] || 'Sorting Algorithm';
+  const expectedOutput = EXPECTED_OUTPUTS[track] || 'Sorted Array';
 
-  const maxVal = Math.max(...array, 1);
+  // Calculate swap pair for connector arc
+  let swapFrom = null;
+  let swapTo = null;
+
+  if (track === 'bubble-sort' && step.activeLine === 4 && step.j !== null && step.j !== undefined) {
+    swapFrom = step.j;
+    swapTo = step.j + 1;
+  } else if (track === 'selection-sort' && step.activeLine === 6 && step.i !== null && step.minIdx !== null) {
+    swapFrom = step.i;
+    swapTo = step.minIdx;
+  } else if (track === 'quick-sort' && step.activeLine === 6 && step.i !== null && step.j !== null) {
+    swapFrom = step.i;
+    swapTo = step.j;
+  } else if (track === 'quick-sort' && step.activeLine === 7 && step.i !== null && step.pivot !== null) {
+    swapFrom = step.i + 1;
+    swapTo = step.pivot;
+  }
+
+  const hasSwapArc = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
 
   return (
-    <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 p-4 rounded-xl bg-[var(--mcq-surface-30)] border border-[var(--mcq-border)]">
-        <select
-          value={algorithm}
-          onChange={(e) => setAlgorithm(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] focus:outline-none focus:border-blue-400"
-        >
-          {ALGORITHMS.map((a) => (
-            <option key={a.id} value={a.id}>{a.label}</option>
-          ))}
-        </select>
-
-        <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
-          <span>Size:</span>
-          <input
-            type="range"
-            min="5"
-            max="50"
-            value={arraySize}
-            onChange={(e) => setArraySize(Number(e.target.value))}
-            disabled={isRunning}
-            className="w-20 accent-blue-500"
-          />
-          <span className="font-mono">{arraySize}</span>
+    <div className="sketch-container font-sketch">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
+            ALGORITHM PATTERN
+          </div>
+          <h2 className="text-3xl font-bold font-header flex items-center gap-3">
+            Sorting Algorithms
+            <span className="text-sm px-3 py-0.5 rounded-full sketch-border-soft text-[var(--sketch-accent-orange)] font-sketch">
+              {trackLabel}
+            </span>
+          </h2>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
-          <span className="w-6 text-center" title="Slow">🐢</span>
-          <input
-            type="range"
-            min="1"
-            max="100"
-            value={sliderPos}
-            onChange={(e) => {
-              const pos = Number(e.target.value);
-              setSliderPos(pos);
-              setSpeed(getDelayFromPos(pos));
-            }}
-            disabled={isRunning}
-            className="w-24 accent-blue-500"
-          />
-          <span className="w-6 text-center" title="Fast">🐇</span>
-          <span className="font-mono text-[10px] text-white/40 min-w-[3rem] text-center tabular-nums">
-            {speed >= 1000 ? `${(speed / 1000).toFixed(1)}s` : `${speed}ms`}
-          </span>
+        {/* Expected Output Card */}
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs text-amber-300 shadow-sm">
+          <span className="text-amber-400 font-bold font-header text-sm">🎯 Expected:</span>
+          <span>{expectedOutput}</span>
         </div>
-
-        <button
-          onClick={isRunning ? stopSort : runSort}
-          className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all ${
-            isRunning
-              ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-              : 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg shadow-blue-500/20 hover:shadow-xl'
-          }`}
-        >
-          {isRunning ? 'Stop' : 'Start Sorting'}
-        </button>
-
-        <button
-          onClick={randomize}
-          disabled={isRunning}
-          className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all disabled:opacity-50"
-        >
-          Randomize
-        </button>
       </div>
 
-      {/* Algorithm Explanation */}
-      <motion.div
-        initial={{ opacity: 0, y: -5 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="px-4 py-2.5 rounded-xl bg-blue-500/5 border border-blue-500/10 text-xs text-[var(--mcq-text-secondary)] leading-relaxed"
-      >
-        <span className="font-semibold text-blue-400">How it works: </span>
-        {ALGO_EXPLANATIONS[algorithm]}
-      </motion.div>
-
-      {/* Step Description */}
-      {stepDesc && (
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-4 py-3 rounded-xl border text-sm font-medium leading-relaxed"
-          style={{
-            backgroundColor: stepDesc.startsWith('✅') ? 'rgba(34, 197, 94, 0.08)' : 'rgba(96, 165, 250, 0.08)',
-            borderColor: stepDesc.startsWith('✅') ? 'rgba(34, 197, 94, 0.15)' : 'rgba(96, 165, 250, 0.15)',
-            color: stepDesc.startsWith('✅') ? '#22c55e' : 'var(--mcq-text-body)',
-          }}
-        >
-          {stepDesc.startsWith('✅') && <span className="mr-1.5">🎉</span>}
-          {stepDesc}
-        </motion.div>
-      )}
-
-      {/* Visualization */}
-      <div className="flex items-end gap-[2px] min-h-[300px] p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)]">
-        {array.map((val, i) => {
-          const isComparing = comparing.includes(i);
-          const isSwapping = swapping.includes(i);
-          const isSorted = sorted.includes(i);
-          const height = (val / maxVal) * 260;
-
-          return (
-            <motion.div
+      {/* Progress Milestone Dots */}
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+        <span>Milestones:</span>
+        <div className="sketch-milestones">
+          {steps.map((_, i) => (
+            <div
               key={i}
-              className="flex-1 rounded-t-sm relative group"
-              style={{
-                height: Math.max(height, 4),
-                backgroundColor: isSorted
-                  ? '#22c55e'
-                  : isSwapping
-                  ? '#f59e0b'
-                  : isComparing
-                  ? '#60a5fa'
-                  : 'rgba(99, 102, 241, 0.4)',
-                transition: 'height 0.1s ease, background-color 0.15s ease',
-              }}
-            >
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-mono text-white/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                {val}
-              </div>
-            </motion.div>
-          );
-        })}
+              onClick={() => setCurrentStep(i)}
+              className={`sketch-milestone-dot cursor-pointer ${i <= currentStep ? 'active' : ''}`}
+              title={`Step ${i + 1}`}
+            />
+          ))}
+        </div>
+        <span className="font-mono ml-2">step {currentStep + 1} / {steps.length}</span>
       </div>
 
-      {/* Legend */}
-      <div className="flex gap-4 text-xs text-[var(--mcq-text-muted)]">
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-sm bg-indigo-400/40" /> Unsorted
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-sm bg-blue-400" /> Comparing
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-sm bg-amber-400" /> Swapping
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-sm bg-emerald-400" /> Sorted
-        </span>
+      {/* Main Canvas + Debugger Row */}
+      <div className="sketch-canvas-row">
+        {/* Visualization Canvas */}
+        <div className="sketch-canvas-box sketch-border">
+          <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+            Sorting Step Execution Canvas
+          </div>
+
+          {/* Array Cards Container with Swap Arc Connector */}
+          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-8 relative pt-6 pb-24 px-4 overflow-x-auto w-full justify-center">
+            {hasSwapArc && (
+              <SwapArcConnector containerRef={containerRef} fromIndex={swapFrom} toIndex={swapTo} label="swapping" />
+            )}
+
+            {array.map((val, idx) => {
+              const isI = step.i === idx;
+              const isJ = step.j === idx;
+              const isJPlus1 = track === 'bubble-sort' && step.j !== null && step.j + 1 === idx;
+              const isMinIdx = step.minIdx === idx;
+              const isPivot = step.pivot === idx;
+              const isBothIJ = isI && isJ;
+              const isBothIMin = isI && isMinIdx;
+
+              const isSwapping = (idx === swapFrom || idx === swapTo);
+
+              const isShifting = track === 'insertion-sort' && step.activeLine === 5 && isJ;
+
+              const isComparing =
+                (track === 'bubble-sort' && step.activeLine === 3 && (isJ || isJPlus1)) ||
+                (track === 'selection-sort' && step.activeLine === 4 && (isJ || isMinIdx)) ||
+                (track === 'insertion-sort' && step.activeLine === 4 && isJ);
+
+              const isHighlighted = isI || isJ || isJPlus1 || isMinIdx || isPivot;
+
+              return (
+                <div key={idx} className="relative flex flex-col items-center">
+                  <motion.div
+                    animate={{
+                      scale: isSwapping ? 1.12 : isHighlighted ? 1.08 : 1,
+                      y: isSwapping ? -8 : isHighlighted ? -6 : 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                    className={`sketch-card ${
+                      isSwapping
+                        ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400'
+                        : isShifting || isComparing
+                        ? '!border-amber-400 !bg-amber-500/15 shadow-md shadow-amber-500/30'
+                        : isPivot
+                        ? 'border-rose-500 shadow-rose-500/20'
+                        : isBothIMin
+                        ? 'border-purple-400 bg-purple-500/20 ring-1 ring-purple-400'
+                        : isMinIdx
+                        ? 'border-emerald-400 shadow-emerald-400/20'
+                        : isBothIJ
+                        ? 'border-purple-400 bg-purple-500/15 ring-1 ring-purple-400'
+                        : isJ
+                        ? 'active-blue'
+                        : isJPlus1
+                        ? 'border-cyan-400 bg-cyan-500/10'
+                        : isI
+                        ? 'active-orange'
+                        : ''
+                    }`}
+                  >
+                    {val}
+                    <div className="sketch-card-index">[{idx}]</div>
+                  </motion.div>
+
+                  {/* Pivot Pointer */}
+                  <AnimatePresence>
+                    {isPivot && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-rose-400 font-bold"
+                      >
+                        <div>pivot</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Combined i, minIdx Pointer badge when i === minIdx */}
+                  <AnimatePresence>
+                    {isBothIMin && !isPivot && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">i, min</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Single minIdx Pointer */}
+                  <AnimatePresence>
+                    {isMinIdx && !isBothIMin && !isPivot && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-emerald-400 font-bold"
+                      >
+                        <div>min</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Combined i, j Pointer badge when i === j */}
+                  <AnimatePresence>
+                    {isBothIJ && !isBothIMin && !isPivot && !isMinIdx && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">i, j</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* i Pointer when i !== j */}
+                  <AnimatePresence>
+                    {isI && !isBothIJ && !isBothIMin && !isPivot && !isMinIdx && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange"
+                      >
+                        <div>i</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* j Pointer when i !== j */}
+                  <AnimatePresence>
+                    {isJ && !isBothIJ && !isBothIMin && !isPivot && !isMinIdx && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-blue"
+                      >
+                        <div>j</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* j+1 Pointer for Bubble Sort comparison pair */}
+                  <AnimatePresence>
+                    {isJPlus1 && !isI && !isPivot && !isMinIdx && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-cyan-300 font-bold text-xs"
+                      >
+                        <div>j+1</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Debug Panel (Code & State) */}
+        <div className="sketch-debug-panel">
+          {/* Pseudocode Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
+              <span className="font-header font-bold text-lg">Concept Code</span>
+              <button
+                onClick={togglePracticeMode}
+                className="px-2.5 py-1 text-xs sketch-button"
+              >
+                {practiceMode ? '👁️ View' : '✏️ Practice'}
+              </button>
+            </div>
+
+            {practiceMode ? (
+              <textarea
+                value={userCode}
+                onChange={(e) => setUserCode(e.target.value)}
+                rows={8}
+                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
+              />
+            ) : (
+              <div className="space-y-0.5">
+                {activeCode.map((c) => {
+                  const isActive = step.activeLine === c.line;
+                  return (
+                    <div
+                      key={c.line}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
+                      <span className="whitespace-pre font-mono flex-1">{c.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* State Variable Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)]">
+              State
+            </div>
+            <div className="space-y-1">
+              {Object.entries(step.state || {}).map(([key, value]) => (
+                <div key={key} className="sketch-state-var">
+                  <span className="text-[var(--sketch-text-muted)]">{key}</span>
+                  <span className="font-bold text-[var(--sketch-accent-orange)]">{String(value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Explanation Banner */}
+      <div className="sketch-explanation-bar sketch-border">
+        <span className="text-xl select-none">✏️</span>
+        <div className="flex-1 text-sm md:text-base leading-relaxed">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+            line {step.activeLine}
+          </span>
+          {step.desc}
+        </div>
+      </div>
+
+      {/* Bottom Playback Controls Bar */}
+      <div className="sketch-playback-bar sketch-border">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={restart}
+            className="sketch-button px-3 py-1.5"
+            title="Restart"
+          >
+            ↺
+          </button>
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="sketch-button px-3 py-1.5"
+            title="Previous step"
+          >
+            |◀
+          </button>
+          <button
+            onClick={togglePlay}
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+          <button
+            onClick={nextStep}
+            disabled={currentStep >= steps.length - 1}
+            className="sketch-button px-3 py-1.5"
+            title="Next step"
+          >
+            ▶|
+          </button>
+        </div>
+
+        {/* Scrubber Timeline */}
+        <div className="flex-1 flex items-center gap-3">
+          <input
+            type="range"
+            min="0"
+            max={steps.length - 1}
+            value={currentStep}
+            onChange={(e) => setCurrentStep(Number(e.target.value))}
+            className="sketch-scrubber"
+          />
+        </div>
+
+        {/* Speed Multiplier Pills */}
+        <div className="flex items-center gap-1">
+          {[0.5, 1, 1.5, 2].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+            >
+              {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

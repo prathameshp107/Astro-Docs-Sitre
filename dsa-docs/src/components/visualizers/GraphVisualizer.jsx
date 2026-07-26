@@ -1,287 +1,528 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useGraphStore } from '../../store/visualizers/graphStore';
 
-const EDGE_TYPES = [
-  { id: 'undirected', label: 'Undirected' },
-  { id: 'directed', label: 'Directed' },
-  { id: 'weighted', label: 'Weighted' },
+const BFS_CODE = [
+  { line: 1, text: 'queue.enqueue(start), visited.add(start)' },
+  { line: 2, text: 'while queue is not empty:' },
+  { line: 3, text: '    node ← queue.dequeue()' },
+  { line: 4, text: '    process(node)' },
+  { line: 5, text: '    for neighbor in adj[node]:' },
+  { line: 6, text: '        if neighbor not in visited:' },
+  { line: 7, text: '            visited.add(neighbor), queue.enqueue(neighbor)' },
 ];
 
+const DFS_CODE = [
+  { line: 1, text: 'if node in visited: return' },
+  { line: 2, text: 'visited.add(node)' },
+  { line: 3, text: 'process(node)' },
+  { line: 4, text: 'for neighbor in adj[node]:' },
+  { line: 5, text: '    dfs(neighbor)' },
+];
+
+const CYCLE_CODE = [
+  { line: 1, text: 'visited.add(node)' },
+  { line: 2, text: 'for neighbor in adj[node]:' },
+  { line: 3, text: '    if neighbor in visited and neighbor != parent:' },
+  { line: 4, text: '        return true // Cycle detected! ⚠️' },
+  { line: 5, text: 'return false' },
+];
+
+const DIJKSTRA_CODE = [
+  { line: 1, text: 'dist[start] ← 0, dist[others] ← ∞' },
+  { line: 2, text: 'while unvisited nodes exist:' },
+  { line: 3, text: '    u ← min_dist_unvisited_node()' },
+  { line: 4, text: '    for (v, weight) in adj[u]:' },
+  { line: 5, text: '        if dist[u] + weight < dist[v]:' },
+  { line: 6, text: '            dist[v] ← dist[u] + weight' },
+];
+
+const TRACK_TITLES = {
+  bfs: '1. Breadth-First Search (BFS)',
+  dfs: '2. Depth-First Search (DFS)',
+  'cycle-detection': '3. Cycle Detection in Undirected Graph',
+  dijkstra: '4. Dijkstra Shortest Path Algorithm',
+};
+
+const EXPECTED_OUTPUTS = {
+  bfs: '[0, 1, 2, 3, 4, 5] (Level-by-level Queue Order)',
+  dfs: '[0, 1, 3, 5, 4, 2] (Deep-first Stack Order)',
+  'cycle-detection': 'Cycle Found: 1 - 3 - 4 - 1 ⚠️',
+  dijkstra: 'Shortest Distances from 0: [0, 4, 2, 7, 5, 8]',
+};
+
+// 6 Graph Node Coordinates for SVG Canvas
+const GRAPH_NODES = [
+  { id: 0, label: '0', x: 250, y: 40 },
+  { id: 1, label: '1', x: 120, y: 120 },
+  { id: 2, label: '2', x: 380, y: 120 },
+  { id: 3, label: '3', x: 120, y: 220 },
+  { id: 4, label: '4', x: 380, y: 220 },
+  { id: 5, label: '5', x: 250, y: 280 },
+];
+
+// Undirected Graph Edges
+const GRAPH_EDGES = [
+  { from: 0, to: 1, weight: 4 },
+  { from: 0, to: 2, weight: 2 },
+  { from: 1, to: 3, weight: 3 },
+  { from: 1, to: 4, weight: 1 },
+  { from: 2, to: 4, weight: 3 },
+  { from: 3, to: 5, weight: 2 },
+  { from: 4, to: 5, weight: 3 },
+];
+
+// Adjacency List for Display
+const ADJACENCY_LIST = {
+  0: [1, 2],
+  1: [0, 3, 4],
+  2: [0, 4],
+  3: [1, 5],
+  4: [1, 2, 5],
+  5: [3, 4],
+};
+
 export default function GraphVisualizer() {
-  const { nodes, edges, graphType, visited, queue, current, isTraversing, setGraphType, resetTraversal, bfs, dfs } = useGraphStore();
-  const [algorithm, setAlgorithm] = useState('bfs');
-  const [animationPath, setAnimationPath] = useState([]);
-  const [currentIdx, setCurrentIdx] = useState(-1);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const timerRef = useRef(null);
+  const {
+    track,
+    steps,
+    currentStep,
+    isPlaying,
+    speed,
+    practiceMode,
+    userCode,
+    setCurrentStep,
+    nextStep,
+    prevStep,
+    restart,
+    togglePlay,
+    setSpeed,
+    togglePracticeMode,
+    setUserCode,
+  } = useGraphStore();
 
+  const step = steps[currentStep] || steps[0];
+
+  // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
-    return () => clearTimeout(timerRef.current);
-  }, []);
-
-  useEffect(() => {
-    if (isAnimating && currentIdx >= 0 && currentIdx < animationPath.length) {
-      timerRef.current = setTimeout(() => setCurrentIdx(prev => prev + 1), 700);
+    if (!isPlaying) return;
+    if (currentStep >= steps.length - 1) {
+      useGraphStore.setState({ isPlaying: false });
+      return;
     }
-    if (currentIdx >= animationPath.length && animationPath.length > 0) {
-      setIsAnimating(false);
-    }
-    return () => clearTimeout(timerRef.current);
-  }, [isAnimating, currentIdx, animationPath]);
+    const delay = 2200 / speed;
+    const timeout = setTimeout(() => {
+      nextStep();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
-  const handleTraverse = useCallback(() => {
-    resetTraversal();
-    setCurrentIdx(-1);
-    setIsAnimating(false);
-    setAnimationPath([]);
+  const activeCode =
+    track === 'bfs'
+      ? BFS_CODE
+      : track === 'dfs'
+      ? DFS_CODE
+      : track === 'cycle-detection'
+      ? CYCLE_CODE
+      : DIJKSTRA_CODE;
 
-    const path = algorithm === 'bfs' ? bfs() : dfs();
-    if (path && path.length > 0) {
-      setAnimationPath(path);
-      setCurrentIdx(0);
-      setIsAnimating(true);
-    }
-  }, [algorithm, bfs, dfs, resetTraversal]);
+  const trackLabel = TRACK_TITLES[track] || 'Graph Algorithm';
+  const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Output';
 
-  const visitedNodes = animationPath.slice(0, currentIdx + 1);
-  const currentNode = currentIdx >= 0 && currentIdx < animationPath.length ? animationPath[currentIdx] : null;
-
-  const getNodePosition = (index, total) => {
-    const angle = (2 * Math.PI * index) / total - Math.PI / 2;
-    const radius = 180;
-    return {
-      x: 350 + radius * Math.cos(angle),
-      y: 180 + radius * Math.sin(angle),
-    };
-  };
+  const visitedSet = new Set(step.visited || []);
+  const activeNodeId = step.currNode;
+  const activeEdge = step.activeEdge;
 
   return (
-    <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 p-4 rounded-xl bg-[var(--mcq-surface-30)] border border-[var(--mcq-border)]">
-        <select
-          value={graphType}
-          onChange={(e) => setGraphType(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] focus:outline-none focus:border-blue-400"
-        >
-          {EDGE_TYPES.map((t) => (
-            <option key={t.id} value={t.id}>{t.label}</option>
-          ))}
-        </select>
-
-        <div className="flex gap-1">
-          <button
-            onClick={() => setAlgorithm('bfs')}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-              algorithm === 'bfs'
-                ? 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg'
-                : 'border border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5'
-            }`}
-          >
-            BFS
-          </button>
-          <button
-            onClick={() => setAlgorithm('dfs')}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-              algorithm === 'dfs'
-                ? 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg'
-                : 'border border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5'
-            }`}
-          >
-            DFS
-          </button>
+    <div className="sketch-container font-sketch">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
+            ALGORITHM PATTERN
+          </div>
+          <h2 className="text-3xl font-bold font-header flex items-center gap-3">
+            Graphs
+            <span className="text-sm px-3 py-0.5 rounded-full sketch-border-soft text-[var(--sketch-accent-orange)] font-sketch">
+              {trackLabel}
+            </span>
+          </h2>
         </div>
 
-        <button
-          onClick={handleTraverse}
-          disabled={isAnimating}
-          className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-400 text-white text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all disabled:opacity-50"
-        >
-          {isAnimating ? 'Animating...' : `Run ${algorithm.toUpperCase()}`}
-        </button>
-
-        <button
-          onClick={() => { resetTraversal(); setAnimationPath([]); setCurrentIdx(-1); setIsAnimating(false); }}
-          className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-        >
-          Reset
-        </button>
+        {/* Expected Output Card */}
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs text-amber-300 shadow-sm">
+          <span className="text-amber-400 font-bold font-header text-sm">🎯 Expected:</span>
+          <span>{expectedOutput}</span>
+        </div>
       </div>
 
-      {/* Info */}
-      {currentNode && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium"
-        >
-          {algorithm.toUpperCase()}: Visiting node {nodes.find(n => n.id === currentNode)?.label || currentNode}
-          {currentIdx < animationPath.length - 1 ? ` — Queue: ${animationPath.slice(currentIdx + 1, currentIdx + 4).map(id => nodes.find(n => n.id === id)?.label || id).join(', ')}${animationPath.length - currentIdx - 1 > 3 ? '...' : ''}` : ' — Complete!'}
-        </motion.div>
-      )}
-
-      {/* Graph Visualization */}
-      <div className="relative w-full min-h-[420px] p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] overflow-hidden">
-        {/* SVG Edges */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-          {edges.map((edge, i) => {
-            const source = nodes.find(n => n.id === edge.source);
-            const target = nodes.find(n => n.id === edge.target);
-            if (!source || !target) return null;
-            const total = nodes.length;
-            const sIdx = nodes.indexOf(source);
-            const tIdx = nodes.indexOf(target);
-            const sPos = getNodePosition(sIdx, total);
-            const tPos = getNodePosition(tIdx, total);
-
-            const isActiveEdge =
-              currentNode &&
-              ((visitedNodes.includes(edge.source) && visitedNodes.includes(edge.target)) ||
-                (edge.source === currentNode || edge.target === currentNode));
-
-            const angle = Math.atan2(tPos.y - sPos.y, tPos.x - sPos.x);
-            const nodeRadius = 28;
-            const arrowSize = 10;
-            const tipX = tPos.x - nodeRadius * Math.cos(angle);
-            const tipY = tPos.y - nodeRadius * Math.sin(angle);
-            const leftX = tipX - arrowSize * Math.cos(angle - Math.PI / 6);
-            const leftY = tipY - arrowSize * Math.sin(angle - Math.PI / 6);
-            const rightX = tipX - arrowSize * Math.cos(angle + Math.PI / 6);
-            const rightY = tipY - arrowSize * Math.sin(angle + Math.PI / 6);
-
-            return (
-              <g key={i}>
-                <line
-                  x1={sPos.x}
-                  y1={sPos.y}
-                  x2={tipX}
-                  y2={tipY}
-                  stroke={isActiveEdge ? 'rgba(96, 165, 250, 0.5)' : 'rgba(255,255,255,0.08)'}
-                  strokeWidth={isActiveEdge ? '3' : '1.5'}
-                  className="transition-all duration-500"
-                />
-                {graphType === 'directed' && (
-                  <polygon
-                    points={`${tipX},${tipY} ${leftX},${leftY} ${rightX},${rightY}`}
-                    fill={isActiveEdge ? 'rgba(96, 165, 250, 0.6)' : 'rgba(255,255,255,0.25)'}
-                  />
-                )}
-                {graphType === 'weighted' && (
-                  <text
-                    x={(sPos.x + tPos.x) / 2}
-                    y={(sPos.y + tPos.y) / 2 - 10}
-                    fill="rgba(255,255,255,0.4)"
-                    fontSize="11"
-                    textAnchor="middle"
-                    className="font-mono"
-                  >
-                    {edge.weight || 1}
-                  </text>
-                )}
-              </g>
-            );
-          })}
-        </svg>
-
-        {/* Nodes */}
-        {nodes.map((node, i) => {
-          const total = nodes.length;
-          const pos = getNodePosition(i, total);
-          const isCurrent = node.id === currentNode;
-          const isVisited = visitedNodes.includes(node.id);
-          const isInQueue = animationPath.slice(currentIdx + 1).includes(node.id) && currentIdx >= 0;
-
-          return (
-            <motion.div
-              key={node.id}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                x: pos.x - 28,
-                y: pos.y - 28,
-                backgroundColor: isCurrent
-                  ? '#60a5fa'
-                  : isVisited
-                  ? '#22c55e'
-                  : isInQueue
-                  ? 'rgba(245, 158, 11, 0.3)'
-                  : 'rgba(99, 102, 241, 0.15)',
-                borderColor: isCurrent
-                  ? '#60a5fa'
-                  : isVisited
-                  ? '#22c55e'
-                  : isInQueue
-                  ? 'rgba(245, 158, 11, 0.5)'
-                  : 'rgba(99, 102, 241, 0.3)',
-                boxShadow: isCurrent
-                  ? '0 0 25px rgba(96, 165, 250, 0.6)'
-                  : isVisited
-                  ? '0 0 15px rgba(34, 197, 94, 0.3)'
-                  : 'none',
-              }}
-              transition={{ type: 'spring', stiffness: 200, damping: 20, delay: i * 0.05 }}
-              className="absolute w-[56px] h-[56px] flex items-center justify-center rounded-full border-2 text-sm font-bold z-10"
-              style={{ color: isCurrent || isVisited ? '#fff' : 'rgba(255,255,255,0.7)' }}
-            >
-              {node.label}
-            </motion.div>
-          );
-        })}
+      {/* Progress Milestone Dots */}
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+        <span>Milestones:</span>
+        <div className="sketch-milestones">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setCurrentStep(i)}
+              className={`sketch-milestone-dot cursor-pointer ${i <= currentStep ? 'active' : ''}`}
+              title={`Step ${i + 1}`}
+            />
+          ))}
+        </div>
+        <span className="font-mono ml-2">step {currentStep + 1} / {steps.length}</span>
       </div>
 
-      {/* Visited Order */}
-      {animationPath.length > 0 && (
-        <div className="p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)]">
-          <div className="text-xs font-semibold text-[var(--mcq-text-muted)] mb-2 uppercase tracking-wider">
-            Traversal Order ({algorithm.toUpperCase()})
+      {/* Main Canvas + Debugger Row */}
+      <div className="sketch-canvas-row">
+        {/* Visualization Canvas */}
+        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+          <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
+            <span>Undirected Graph Memory Topology Canvas</span>
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active Node</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Visited</span>
+            </div>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {animationPath.map((id, i) => {
-              const node = nodes.find(n => n.id === id);
-              if (!node) return null;
-              const isActive = i < currentIdx;
+
+          {/* SVG Graph Canvas */}
+          <div className="relative w-full max-w-[500px] h-[310px] my-auto">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {GRAPH_EDGES.map((edge) => {
+                const nodeA = GRAPH_NODES.find((n) => n.id === edge.from);
+                const nodeB = GRAPH_NODES.find((n) => n.id === edge.to);
+                if (!nodeA || !nodeB) return null;
+
+                const isEdgeHighlighted =
+                  activeEdge &&
+                  ((activeEdge.from === edge.from && activeEdge.to === edge.to) ||
+                    (activeEdge.from === edge.to && activeEdge.to === edge.from));
+
+                const isVisitedEdge = visitedSet.has(edge.from) && visitedSet.has(edge.to);
+
+                return (
+                  <g key={`${edge.from}-${edge.to}`}>
+                    <line
+                      x1={nodeA.x}
+                      y1={nodeA.y}
+                      x2={nodeB.x}
+                      y2={nodeB.y}
+                      stroke={isEdgeHighlighted ? '#f43f5e' : isVisitedEdge ? '#f59e0b' : 'var(--sketch-border)'}
+                      strokeWidth={isEdgeHighlighted ? '3.5' : isVisitedEdge ? '2.5' : '1.5'}
+                      strokeDasharray={isEdgeHighlighted ? 'none' : isVisitedEdge ? 'none' : '4 2'}
+                    />
+                    {/* Edge Weight label for Dijkstra */}
+                    {track === 'dijkstra' && (
+                      <text
+                        x={(nodeA.x + nodeB.x) / 2}
+                        y={(nodeA.y + nodeB.y) / 2 - 4}
+                        fill="#f59e0b"
+                        fontSize="11"
+                        fontFamily="monospace"
+                        fontWeight="bold"
+                        textAnchor="middle"
+                      >
+                        w={edge.weight}
+                      </text>
+                    )}
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Graph Node Circles */}
+            {GRAPH_NODES.map((node) => {
+              const isActive = activeNodeId === node.id;
+              const isVisited = visitedSet.has(node.id);
+              const isCycleFound = track === 'cycle-detection' && step.state?.status?.includes('CYCLE');
+              const isEnqueued = track === 'bfs' && step.activeLine === 7 && activeEdge && activeEdge.to === node.id;
+
               return (
-                <motion.span
-                  key={id}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                    backgroundColor: isActive || i === currentIdx
-                      ? 'rgba(34, 197, 94, 0.1)'
-                      : 'rgba(255,255,255,0.04)',
-                    borderColor: isActive || i === currentIdx
-                      ? 'rgba(34, 197, 94, 0.2)'
-                      : 'rgba(255,255,255,0.08)',
-                    color: isActive || i === currentIdx ? '#22c55e' : 'var(--mcq-text-muted)',
-                  }}
-                  transition={{ delay: i * 0.1 }}
-                  className="px-2.5 py-1 rounded text-xs font-mono font-medium border"
+                <div
+                  key={node.id}
+                  style={{ left: `${node.x - 22}px`, top: `${node.y - 22}px` }}
+                  className="absolute flex flex-col items-center"
                 >
-                  {node.label}
-                </motion.span>
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isCycleFound && isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap animate-bounce"
+                      >
+                        ⚠️ Cycle Found!
+                      </motion.div>
+                    )}
+                    {isEnqueued && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-cyan-500 text-white font-mono text-[10px] font-bold shadow-md shadow-cyan-500/30 whitespace-nowrap animate-pulse"
+                      >
+                        📥 Enqueue
+                      </motion.div>
+                    )}
+                    {isActive && !isCycleFound && !isEnqueued && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md shadow-amber-500/30 whitespace-nowrap"
+                      >
+                        🔍 Inspecting
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    animate={{
+                      scale: isActive ? 1.25 : 1,
+                      y: isActive ? -4 : 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                    className={`w-11 h-11 rounded-full flex items-center justify-center font-header font-bold text-xl border-2 shadow-md transition-all relative ${
+                      isCycleFound && isActive
+                        ? '!border-rose-400 !bg-rose-500/30 text-rose-500 ring-4 ring-rose-400/50 shadow-rose-500/50'
+                        : isActive
+                        ? '!border-amber-400 !bg-amber-500/30 text-amber-500 ring-4 ring-amber-400/40 shadow-amber-500/50'
+                        : isVisited
+                        ? '!border-emerald-400 !bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-emerald-500/30'
+                        : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                    }`}
+                  >
+                    {node.label}
+                  </motion.div>
+
+                  {/* Active Pointer Arrow */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        className="sketch-pointer sketch-pointer-orange absolute -bottom-7"
+                      >
+                        <div className="text-[10px]">curr</div>
+                        <div className="text-[10px] leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               );
             })}
           </div>
-        </div>
-      )}
 
-      {/* Legend */}
-      <div className="flex gap-4 text-xs text-[var(--mcq-text-muted)]">
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-indigo-400/30 border border-indigo-400/30" /> Unvisited
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-amber-400" /> In Queue
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-blue-400" /> Current
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-emerald-400" /> Visited
-        </span>
+          {/* Visited Sequence Bar */}
+          <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)]">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-500 font-bold">Traversal Order:</span>
+              <div className="flex items-center gap-1.5">
+                {step.visited?.map((v, i) => (
+                  <span key={i} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 font-bold">
+                    #{i + 1}: Node {v}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <span className="text-[10px] text-[var(--sketch-text-muted)]">Visited: {step.visited?.length || 0} / 6</span>
+          </div>
+        </div>
+
+        {/* Debug Panel (Code & State) */}
+        <div className="sketch-debug-panel">
+          {/* Pseudocode Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
+              <span className="font-header font-bold text-lg">Concept Code</span>
+              <button
+                onClick={togglePracticeMode}
+                className="px-2.5 py-1 text-xs sketch-button"
+              >
+                {practiceMode ? '👁️ View' : '✏️ Practice'}
+              </button>
+            </div>
+
+            {practiceMode ? (
+              <textarea
+                value={userCode}
+                onChange={(e) => setUserCode(e.target.value)}
+                rows={8}
+                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
+              />
+            ) : (
+              <div className="space-y-0.5">
+                {activeCode.map((c) => {
+                  const isActive = step.activeLine === c.line;
+                  return (
+                    <div
+                      key={c.line}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
+                      <span className="whitespace-pre font-mono flex-1">{c.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Adjacency List & Queue/Stack Inspector */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)] flex items-center justify-between">
+              <span>{track === 'bfs' ? 'BFS Queue (FIFO)' : track === 'dijkstra' ? 'Distance Table' : 'DFS Stack (LIFO)'}</span>
+            </div>
+
+            {/* Queue Data Structure Pill List for BFS */}
+            {track === 'bfs' && (
+              <div className="flex items-center gap-1.5 mb-3 bg-black/20 p-2 rounded-lg border border-white/10">
+                <span className="text-[10px] font-mono text-amber-400 font-bold">FRONT →</span>
+                {step.queue?.length > 0 ? (
+                  step.queue.map((node, i) => (
+                    <span key={i} className="px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-mono text-xs border border-amber-500/40 font-bold">
+                      [{node}]
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs font-mono text-[var(--sketch-text-muted)] italic">Queue Empty</span>
+                )}
+                <span className="text-[10px] font-mono text-amber-400 font-bold ml-auto">← REAR</span>
+              </div>
+            )}
+
+            {/* DFS Stack Frame List */}
+            {track === 'dfs' && (
+              <div className="flex flex-wrap gap-1 mb-3">
+                {step.stack?.map((fn, idx) => (
+                  <span key={idx} className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+                    {fn}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Dijkstra Distance Table */}
+            {track === 'dijkstra' && (
+              <div className="grid grid-cols-3 gap-1 mb-3">
+                {Object.entries(step.distances || {}).map(([node, dist]) => (
+                  <div key={node} className="bg-white/5 p-1.5 rounded text-center border border-white/10 font-mono text-xs">
+                    <div className="text-[10px] text-[var(--sketch-text-muted)]">Node {node}</div>
+                    <div className="font-bold text-amber-300">{dist}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Adjacency List Inspector */}
+            <div className="font-header font-bold text-sm mb-1 pb-1 border-b border-[var(--sketch-border)] flex items-center justify-between">
+              <span>Adjacency List</span>
+              <span className="text-[10px] font-mono text-white/40">adj[node]</span>
+            </div>
+            <div className="grid grid-cols-2 gap-1 mb-2">
+              {Object.entries(ADJACENCY_LIST).map(([node, neighbors]) => {
+                const isCurrentRow = Number(node) === activeNodeId;
+                return (
+                  <div
+                    key={node}
+                    className={`font-mono text-[10px] px-2 py-0.5 rounded border transition-all ${
+                      isCurrentRow
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+                        : 'bg-white/5 text-[var(--sketch-text-muted)] border-white/10'
+                    }`}
+                  >
+                    <span className="text-white font-bold">{node}:</span> [{neighbors.join(', ')}]
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="font-header font-bold text-sm mb-1 pb-1 border-b border-[var(--sketch-border)]">
+              State Variables
+            </div>
+            <div className="space-y-1">
+              {Object.entries(step.state || {}).map(([key, value]) => (
+                <div key={key} className="sketch-state-var">
+                  <span className="text-[var(--sketch-text-muted)]">{key}</span>
+                  <span className="font-bold text-[var(--sketch-accent-orange)]">{String(value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Explanation Banner */}
+      <div className="sketch-explanation-bar sketch-border">
+        <span className="text-xl select-none">✏️</span>
+        <div className="flex-1 text-sm md:text-base leading-relaxed">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+            line {step.activeLine}
+          </span>
+          {step.desc}
+        </div>
+      </div>
+
+      {/* Bottom Playback Controls Bar */}
+      <div className="sketch-playback-bar sketch-border">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={restart}
+            className="sketch-button px-3 py-1.5"
+            title="Restart"
+          >
+            ↺
+          </button>
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="sketch-button px-3 py-1.5"
+            title="Previous step"
+          >
+            |◀
+          </button>
+          <button
+            onClick={togglePlay}
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+          <button
+            onClick={nextStep}
+            disabled={currentStep >= steps.length - 1}
+            className="sketch-button px-3 py-1.5"
+            title="Next step"
+          >
+            ▶|
+          </button>
+        </div>
+
+        {/* Scrubber Timeline */}
+        <div className="flex-1 flex items-center gap-3">
+          <input
+            type="range"
+            min="0"
+            max={steps.length - 1}
+            value={currentStep}
+            onChange={(e) => setCurrentStep(Number(e.target.value))}
+            className="sketch-scrubber"
+          />
+        </div>
+
+        {/* Speed Multiplier Pills */}
+        <div className="flex items-center gap-1">
+          {[0.5, 1, 1.5, 2].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+            >
+              {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,231 +1,422 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchingStore } from '../../store/visualizers/searchingStore';
 
-const getDelayFromPos = (pos) => Math.max(5, Math.round(2000 * Math.pow(0.945, pos - 1)));
+const LINEAR_SEARCH_CODE = [
+  { line: 1, text: 'for i from 0 to n - 1:' },
+  { line: 2, text: '    if arr[i] == target:' },
+  { line: 3, text: '        return i' },
+  { line: 4, text: 'return -1' },
+];
+
+const BINARY_SEARCH_CODE = [
+  { line: 1, text: 'low ← 0, high ← n - 1' },
+  { line: 2, text: 'while low <= high:' },
+  { line: 3, text: '    mid ← low + (high - low) / 2' },
+  { line: 4, text: '    if arr[mid] == target:' },
+  { line: 5, text: '        return mid' },
+  { line: 6, text: '    else if arr[mid] < target:' },
+  { line: 7, text: '        low ← mid + 1' },
+  { line: 8, text: '    else:' },
+  { line: 9, text: '        high ← mid - 1' },
+  { line: 10, text: 'return -1' },
+];
+
+const TRACK_TITLES = {
+  'linear-search': '1. Linear Search',
+  'binary-search': '2. Binary Search',
+};
+
+const EXPECTED_OUTPUTS = {
+  'linear-search': 'Index 3 (Value 23 found)',
+  'binary-search': 'Index 5 (Value 23 found in O(log n))',
+};
 
 export default function SearchingVisualizer() {
-  const { array, steps, currentStep, result, isAnimating, searchType, setSearchType, runSearch, nextStep, resetSearch, randomArray } = useSearchingStore();
-  const [target, setTarget] = useState('29');
-  const [speed, setSpeed] = useState(() => getDelayFromPos(65));
-  const [sliderPos, setSliderPos] = useState(65);
-  const timerRef = useRef(null);
+  const {
+    track,
+    array,
+    steps,
+    currentStep,
+    isPlaying,
+    speed,
+    practiceMode,
+    userCode,
+    setCurrentStep,
+    nextStep,
+    prevStep,
+    restart,
+    togglePlay,
+    setSpeed,
+    togglePracticeMode,
+    setUserCode,
+  } = useSearchingStore();
 
-  useEffect(() => {
-    return () => clearInterval(timerRef.current);
-  }, []);
+  const step = steps[currentStep] || steps[0];
 
+  // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
-    if (isAnimating && currentStep >= 0 && currentStep < steps.length - 1) {
-      timerRef.current = setTimeout(() => nextStep(), speed);
+    if (!isPlaying) return;
+    if (currentStep >= steps.length - 1) {
+      useSearchingStore.setState({ isPlaying: false });
+      return;
     }
-    return () => clearTimeout(timerRef.current);
-  }, [isAnimating, currentStep, steps]);
+    const delay = 2200 / speed;
+    const timeout = setTimeout(() => {
+      nextStep();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
-  const handleSearch = () => {
-    const val = parseInt(target);
-    if (isNaN(val)) return;
-    runSearch(val);
-    // Show first step immediately, rest auto-animate
-    nextStep();
-  };
-
-  const step = currentStep >= 0 && currentStep < steps.length ? steps[currentStep] : null;
-  const maxVal = Math.max(...array, 1);
+  const activeCode = track === 'linear-search' ? LINEAR_SEARCH_CODE : BINARY_SEARCH_CODE;
+  const trackLabel = TRACK_TITLES[track] || 'Searching Algorithm';
+  const expectedOutput = EXPECTED_OUTPUTS[track] || 'Target Index';
 
   return (
-    <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 p-4 rounded-xl bg-[var(--mcq-surface-30)] border border-[var(--mcq-border)]">
-        <div className="flex gap-1">
-          <button
-            onClick={() => { if (!isAnimating) setSearchType('linear'); }}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-              searchType === 'linear'
-                ? 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg'
-                : 'border border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5'
-            }`}
-          >
-            Linear Search
-          </button>
-          <button
-            onClick={() => { if (!isAnimating) setSearchType('binary'); }}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-              searchType === 'binary'
-                ? 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg'
-                : 'border border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5'
-            }`}
-          >
-            Binary Search
-          </button>
+    <div className="sketch-container font-sketch">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
+            ALGORITHM PATTERN
+          </div>
+          <h2 className="text-3xl font-bold font-header flex items-center gap-3">
+            Searching Algorithms
+            <span className="text-sm px-3 py-0.5 rounded-full sketch-border-soft text-[var(--sketch-accent-orange)] font-sketch">
+              {trackLabel}
+            </span>
+          </h2>
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="number"
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            placeholder="Search for..."
-            className="w-24 px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] placeholder:text-[var(--mcq-text-muted)] focus:outline-none focus:border-blue-400"
-          />
-          <button
-            onClick={handleSearch}
-            disabled={isAnimating}
-            className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-400 text-white text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all disabled:opacity-50"
-          >
-            {isAnimating ? 'Searching...' : 'Search'}
-          </button>
-        </div>
-
-        <div className="w-px h-8 bg-white/10" />          <button onClick={nextStep} disabled={steps.length === 0} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all disabled:opacity-50">
-            {isAnimating ? 'Step →' : 'Next Step'}
-          </button>
-        <button onClick={resetSearch} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
-          Reset
-        </button>
-        <button onClick={randomArray} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
-          New Array
-        </button>
-
-        <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
-          <span className="w-6 text-center" title="Slow">🐢</span>
-          <input
-            type="range"
-            min="1"
-            max="100"
-            value={sliderPos}
-            onChange={(e) => {
-              const pos = Number(e.target.value);
-              setSliderPos(pos);
-              setSpeed(getDelayFromPos(pos));
-            }}
-            className="w-20 accent-blue-500"
-          />
-          <span className="w-6 text-center" title="Fast">🐇</span>
-          <span className="font-mono text-[10px] text-white/40 min-w-[3rem] text-center tabular-nums">
-            {speed >= 1000 ? `${(speed / 1000).toFixed(1)}s` : `${speed}ms`}
-          </span>
+        {/* Expected Output Card */}
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs text-amber-300 shadow-sm">
+          <span className="text-amber-400 font-bold font-header text-sm">🎯 Expected:</span>
+          <span>{expectedOutput}</span>
         </div>
       </div>
 
-      {/* Status */}
-      {step && (
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`px-4 py-2 rounded-lg text-sm font-medium ${
-            step.found
-              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-              : step.index === -1
-              ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-              : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-          }`}
-        >
-          {step.desc}
-        </motion.div>
-      )}
+      {/* Progress Milestone Dots */}
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+        <span>Milestones:</span>
+        <div className="sketch-milestones">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setCurrentStep(i)}
+              className={`sketch-milestone-dot cursor-pointer ${i <= currentStep ? 'active' : ''}`}
+              title={`Step ${i + 1}`}
+            />
+          ))}
+        </div>
+        <span className="font-mono ml-2">step {currentStep + 1} / {steps.length}</span>
+      </div>
 
-      <div className="flex gap-6">
-        {/* Array Visualization */}
-        <div className="flex-1">
-          <div className="p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)]">
-            {searchType === 'binary' && step && (
-              <div className="flex gap-2 mb-3 text-xs text-[var(--mcq-text-muted)] font-mono">
-                <span>left: <strong className="text-blue-400">{step.left}</strong></span>
-                <span>| mid: <strong className="text-amber-400">{step.mid}</strong></span>
-                <span>| right: <strong className="text-blue-400">{step.right}</strong></span>
-              </div>
-            )}
-
-            <div className="flex items-end gap-1 min-h-[200px]">
-              <AnimatePresence mode="popLayout">
-                {array.map((val, i) => {
-                  const isCurrent = step && step.index === i;
-                  const isFound = step && step.found && isCurrent;
-                  const inSearchRange = searchType === 'binary' && step && i >= step.left && i <= step.right;
-                  const isLeftBound = searchType === 'binary' && step && i === step.left;
-                  const isRightBound = searchType === 'binary' && step && i === step.right;
-                  const isMid = searchType === 'binary' && step && i === step.mid;
-
-                  let bgColor = 'rgba(59, 130, 246, 0.12)';
-                  let borderColor = 'rgba(59, 130, 246, 0.15)';
-                  if (isFound) { bgColor = '#22c55e'; borderColor = '#22c55e'; }
-                  else if (isCurrent) { bgColor = '#60a5fa'; borderColor = '#60a5fa'; }
-                  else if (isMid) { bgColor = 'rgba(245, 158, 11, 0.25)'; borderColor = 'rgba(245, 158, 11, 0.3)'; }
-                  else if (isLeftBound || isRightBound) { bgColor = 'rgba(96, 165, 250, 0.15)'; borderColor = 'rgba(96, 165, 250, 0.3)'; }
-                  else if (!inSearchRange && searchType === 'binary' && step) { bgColor = 'rgba(255,255,255,0.03)'; borderColor = 'rgba(255,255,255,0.05)'; }
-
-                  const height = (val / maxVal) * 170;
-
-                  return (
-                    <motion.div
-                      key={i}
-                      layout
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{
-                        opacity: i !== undefined ? (inSearchRange || searchType === 'linear') ? 1 : 0.3 : 0,
-                        y: 0,
-                        height: Math.max(height, 16),
-                        backgroundColor: bgColor,
-                        borderColor: borderColor,
-                      }}
-                      transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                      className="flex-1 max-w-[50px] rounded-t-lg border relative group cursor-pointer"
-                      style={{ minHeight: '16px' }}
-                    >
-                      <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] font-mono font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                        {val}
-                      </div>
-                      <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 text-[9px] font-mono" style={{ color: isFound ? '#fff' : isCurrent ? '#fff' : 'rgba(255,255,255,0.4)' }}>
-                        {i}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
+      {/* Main Canvas + Debugger Row */}
+      <div className="sketch-canvas-row">
+        {/* Visualization Canvas */}
+        <div className="sketch-canvas-box sketch-border">
+          <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+            Searching Step Execution Canvas
           </div>
 
-          {/* Index labels */}
-          <div className="flex gap-1 mt-2">
-            {array.map((val, i) => (
-              <div key={i} className="flex-1 max-w-[50px] text-center">
-                <span className={`text-[10px] font-mono ${step && i === step.index ? 'text-blue-400 font-bold' : 'text-[var(--mcq-text-muted)]'}`}>
-                  {val}
-                </span>
-              </div>
-            ))}
+          {/* Array Cards Container */}
+          <div className="flex items-center gap-3 md:gap-4 my-8 relative pt-6 pb-20 px-4 overflow-x-auto w-full justify-center">
+            {array.map((val, idx) => {
+              const isI = step.i === idx;
+              const isLow = step.low === idx;
+              const isMid = step.mid === idx;
+              const isHigh = step.high === idx;
+
+              const isBothLowMid = isLow && isMid;
+              const isBothMidHigh = isMid && isHigh;
+
+              const isHighlighted = isI || isLow || isMid || isHigh;
+
+              const isFound =
+                (track === 'linear-search' && step.activeLine === 3 && isI) ||
+                (track === 'binary-search' && step.activeLine === 5 && isMid);
+
+              const isInspecting =
+                (track === 'linear-search' && step.activeLine === 2 && isI) ||
+                (track === 'binary-search' && step.activeLine === 4 && isMid);
+
+              const isInSearchRange =
+                track === 'binary-search' && step.low !== null && step.high !== null && idx >= step.low && idx <= step.high;
+
+              return (
+                <div key={idx} className="relative flex flex-col items-center">
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isFound && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-emerald-500/50 whitespace-nowrap animate-bounce"
+                      >
+                        🎯 Target Found!
+                      </motion.div>
+                    )}
+                    {isInspecting && !isFound && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md shadow-amber-500/30 whitespace-nowrap"
+                      >
+                        🔍 Inspecting
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    animate={{
+                      scale: isFound ? 1.15 : isHighlighted ? 1.08 : 1,
+                      y: isFound ? -10 : isHighlighted ? -6 : 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                    className={`sketch-card ${
+                      isFound
+                        ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg ring-2 ring-emerald-400'
+                        : isMid
+                        ? 'border-amber-400 bg-amber-500/15 shadow-md shadow-amber-500/30'
+                        : isBothLowMid || isBothMidHigh
+                        ? 'border-purple-400 bg-purple-500/20'
+                        : isLow
+                        ? 'border-emerald-400 shadow-emerald-400/20'
+                        : isHigh
+                        ? 'border-rose-500 shadow-rose-500/20'
+                        : isI
+                        ? 'active-orange'
+                        : isInSearchRange
+                        ? 'border-white/30 bg-white/5'
+                        : 'opacity-40'
+                    }`}
+                  >
+                    {val}
+                    <div className="sketch-card-index">[{idx}]</div>
+                  </motion.div>
+
+                  {/* Combined low, mid Pointer */}
+                  <AnimatePresence>
+                    {isBothLowMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">low, mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Combined mid, high Pointer */}
+                  <AnimatePresence>
+                    {isBothMidHigh && !isBothLowMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">mid, high</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Single low Pointer */}
+                  <AnimatePresence>
+                    {isLow && !isBothLowMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-emerald-400 font-bold"
+                      >
+                        <div>low</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Single mid Pointer */}
+                  <AnimatePresence>
+                    {isMid && !isBothLowMid && !isBothMidHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-amber-400 font-bold"
+                      >
+                        <div>mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Single high Pointer */}
+                  <AnimatePresence>
+                    {isHigh && !isBothMidHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-rose-400 font-bold"
+                      >
+                        <div>high</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Single i Pointer for Linear Search */}
+                  <AnimatePresence>
+                    {isI && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange"
+                      >
+                        <div>i</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Steps Log */}
-        <div className="w-64">
-          <div className="p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] h-full">
-            <div className="text-xs font-semibold text-[var(--mcq-text-muted)] mb-3 uppercase tracking-wider">Search Steps</div>
-            <div className="space-y-1 max-h-[300px] overflow-y-auto">
-              {steps.map((s, i) => (
-                <div
-                  key={i}
-                  className={`px-2 py-1.5 rounded text-[11px] font-mono transition-all ${
-                    i === currentStep
-                      ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                      : i < currentStep
-                      ? 'text-[var(--mcq-text-muted)]'
-                      : 'text-[var(--mcq-text-muted)] opacity-50'
-                  }`}
-                >
-                  <div className="flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-full ${
-                      s.found ? 'bg-emerald-400' : s.index === -1 ? 'bg-red-400' : 'bg-blue-400'
-                    }`} />
-                    {s.desc}
-                  </div>
+        {/* Debug Panel (Code & State) */}
+        <div className="sketch-debug-panel">
+          {/* Pseudocode Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
+              <span className="font-header font-bold text-lg">Concept Code</span>
+              <button
+                onClick={togglePracticeMode}
+                className="px-2.5 py-1 text-xs sketch-button"
+              >
+                {practiceMode ? '👁️ View' : '✏️ Practice'}
+              </button>
+            </div>
+
+            {practiceMode ? (
+              <textarea
+                value={userCode}
+                onChange={(e) => setUserCode(e.target.value)}
+                rows={8}
+                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
+              />
+            ) : (
+              <div className="space-y-0.5">
+                {activeCode.map((c) => {
+                  const isActive = step.activeLine === c.line;
+                  return (
+                    <div
+                      key={c.line}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
+                      <span className="whitespace-pre font-mono flex-1">{c.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* State Variable Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)]">
+              State
+            </div>
+            <div className="space-y-1">
+              {Object.entries(step.state || {}).map(([key, value]) => (
+                <div key={key} className="sketch-state-var">
+                  <span className="text-[var(--sketch-text-muted)]">{key}</span>
+                  <span className="font-bold text-[var(--sketch-accent-orange)]">{String(value)}</span>
                 </div>
               ))}
-              {steps.length === 0 && <span className="text-[var(--mcq-text-muted)] text-xs">Enter a value and click Search</span>}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Explanation Banner */}
+      <div className="sketch-explanation-bar sketch-border">
+        <span className="text-xl select-none">✏️</span>
+        <div className="flex-1 text-sm md:text-base leading-relaxed">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+            line {step.activeLine}
+          </span>
+          {step.desc}
+        </div>
+      </div>
+
+      {/* Bottom Playback Controls Bar */}
+      <div className="sketch-playback-bar sketch-border">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={restart}
+            className="sketch-button px-3 py-1.5"
+            title="Restart"
+          >
+            ↺
+          </button>
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="sketch-button px-3 py-1.5"
+            title="Previous step"
+          >
+            |◀
+          </button>
+          <button
+            onClick={togglePlay}
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+          <button
+            onClick={nextStep}
+            disabled={currentStep >= steps.length - 1}
+            className="sketch-button px-3 py-1.5"
+            title="Next step"
+          >
+            ▶|
+          </button>
+        </div>
+
+        {/* Scrubber Timeline */}
+        <div className="flex-1 flex items-center gap-3">
+          <input
+            type="range"
+            min="0"
+            max={steps.length - 1}
+            value={currentStep}
+            onChange={(e) => setCurrentStep(Number(e.target.value))}
+            className="sketch-scrubber"
+          />
+        </div>
+
+        {/* Speed Multiplier Pills */}
+        <div className="flex items-center gap-1">
+          {[0.5, 1, 1.5, 2].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+            >
+              {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
+            </button>
+          ))}
         </div>
       </div>
     </div>

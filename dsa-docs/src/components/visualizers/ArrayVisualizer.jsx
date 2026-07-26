@@ -1,405 +1,432 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useArrayStore } from '../../store/visualizers/arrayStore';
+import SwapArcConnector from './SwapArcConnector';
+
+const ACCESS_CODE = [
+  { line: 1, text: 'index ← targetIndex' },
+  { line: 2, text: 'return arr[index]' },
+];
+
+const INSERT_CODE = [
+  { line: 1, text: 'for i from n - 1 down to index:' },
+  { line: 2, text: '    arr[i + 1] ← arr[i]' },
+  { line: 3, text: 'arr[index] ← newValue' },
+  { line: 4, text: 'n ← n + 1' },
+];
+
+const DELETE_CODE = [
+  { line: 1, text: 'target ← arr[index]' },
+  { line: 2, text: 'for i from index to n - 2:' },
+  { line: 3, text: '    arr[i] ← arr[i + 1]' },
+  { line: 4, text: 'n ← n - 1' },
+];
+
+const SEARCH_CODE = [
+  { line: 1, text: 'for i from 0 to n - 1:' },
+  { line: 2, text: '    if arr[i] == target:' },
+  { line: 3, text: '        return i' },
+  { line: 4, text: 'return -1' },
+];
+
+const REVERSE_CODE = [
+  { line: 1, text: 'left ← 0, right ← n - 1' },
+  { line: 2, text: 'while left < right:' },
+  { line: 3, text: '    swap(arr[left], arr[right])' },
+  { line: 4, text: '    left++, right--' },
+];
+
+const PREFIX_SUM_CODE = [
+  { line: 1, text: 'prefix[0] ← arr[0]' },
+  { line: 2, text: 'for i from 1 to n - 1:' },
+  { line: 3, text: '    prefix[i] ← prefix[i - 1] + arr[i]' },
+];
+
+const TRACK_TITLES = {
+  access: '1. Access by Index',
+  insert: '2. Insertion at Index',
+  delete: '3. Deletion by Index',
+  search: '4. Linear Search',
+  reverse: '5. Reverse Array',
+  'prefix-sum': '6. Prefix Sum Array',
+};
+
+const EXPECTED_OUTPUTS = {
+  access: '58 (Direct O(1) Memory Lookup)',
+  insert: '[10, 20, 99, 30, 40] (99 inserted at index 2)',
+  delete: '[10, 99, 30, 40] (Index 1 deleted)',
+  search: 'Index 3 (Value 23 found)',
+  reverse: '[6, 5, 4, 3, 2, 1]',
+  'prefix-sum': '[2, 6, 7, 10, 15]',
+};
 
 export default function ArrayVisualizer() {
-  const { array, highlighted, selected, insert, deleteAt, update, search, randomize, generateSorted, setArray } = useArrayStore();
-  const [value, setValue] = useState('');
-  const [index, setIndex] = useState('');
-  const [searchValue, setSearchValue] = useState('');
-  const [searchResult, setSearchResult] = useState(null);
-  const [opType, setOpType] = useState('insert');
-  const [animating, setAnimating] = useState(false);
-  const [stepDesc, setStepDesc] = useState('');
-  const [speed, setSpeed] = useState(500); // milliseconds
-  const [arraySize, setArraySize] = useState(10);
-  const [showLegend, setShowLegend] = useState(false);
-  const timerRef = useRef(null);
-  const descTimerRef = useRef(null);
+  const containerRef = useRef(null);
+  const {
+    track,
+    array,
+    steps,
+    currentStep,
+    isPlaying,
+    speed,
+    practiceMode,
+    userCode,
+    setCurrentStep,
+    nextStep,
+    prevStep,
+    restart,
+    togglePlay,
+    setSpeed,
+    togglePracticeMode,
+    setUserCode,
+  } = useArrayStore();
 
+  const step = steps[currentStep] || steps[0];
+
+  // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
-    return () => { clearTimeout(timerRef.current); clearTimeout(descTimerRef.current); };
-  }, []);
-
-  // Regenerate array when size changes
-  useEffect(() => {
-    setArray(Array.from({ length: arraySize }, () => Math.floor(Math.random() * 90) + 1));
-  }, [arraySize]);
-
-  const showStep = (text) => {
-    setStepDesc(text);
-    clearTimeout(descTimerRef.current);
-    descTimerRef.current = setTimeout(() => setStepDesc(''), 2500);
-  };
-
-  const handleOperation = () => {
-    if (animating) return;
-    const val = parseInt(value);
-    const idx = parseInt(index);
-    if (isNaN(val)) return;
-    setAnimating(true);
-    setSearchResult(null);
-
-    switch (opType) {
-      case 'insert': {
-        const pos = isNaN(idx) ? array.length : Math.min(idx, array.length);
-        const clampedPos = Math.max(0, pos);
-        if (clampedPos === array.length) {
-          showStep(`Appending ${val} to the end of the array â€” O(1) amortized operation`);
-        } else {
-          showStep(`Inserting ${val} at index ${clampedPos} â€” shifting elements [${clampedPos}..${array.length - 1}] right by 1 position â€” O(n) operation`);
-        }
-        insert(val, clampedPos);
-        break;
-      }
-      case 'delete': {
-        const delIdx = isNaN(idx) ? array.indexOf(val) : idx;
-        if (delIdx >= 0 && delIdx < array.length) {
-          showStep(`Deleting element ${array[delIdx]} at index ${delIdx} â€” shifting elements [${delIdx + 1}..${array.length - 1}] left by 1 position â€” O(n) operation`);
-          deleteAt(delIdx);
-        } else {
-          showStep(`Value ${val} not found in array â€” nothing to delete`);
-        }
-        break;
-      }
-      case 'update': {
-        if (!isNaN(idx) && idx >= 0 && idx < array.length) {
-          showStep(`Updating array[${idx}] from ${array[idx]} to ${val} â€” O(1) random access operation`);
-          update(idx, val);
-        } else {
-          showStep(`Invalid index: ${idx} â€” valid range is [0..${array.length - 1}]`);
-        }
-        break;
-      }
+    if (!isPlaying) return;
+    if (currentStep >= steps.length - 1) {
+      useArrayStore.setState({ isPlaying: false });
+      return;
     }
+    const delay = 2200 / speed;
+    const timeout = setTimeout(() => {
+      nextStep();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
-    timerRef.current = setTimeout(() => setAnimating(false), speed);
-  };
+  const activeCode =
+    track === 'access'
+      ? ACCESS_CODE
+      : track === 'insert'
+      ? INSERT_CODE
+      : track === 'delete'
+      ? DELETE_CODE
+      : track === 'search'
+      ? SEARCH_CODE
+      : track === 'reverse'
+      ? REVERSE_CODE
+      : PREFIX_SUM_CODE;
 
-  const handleSearch = () => {
-    const val = parseInt(searchValue);
-    if (isNaN(val)) return;
-    const idx = search(val);
-    setSearchResult(idx);
-    if (idx >= 0) {
-      showStep(`Linear search: scanning array element by element â€” found ${val} at index ${idx} âœ…`);
-    } else {
-      showStep(`Linear search: scanned all ${array.length} elements â€” value ${val} is not in the array âŒ`);
-    }
-  };
+  const trackLabel = TRACK_TITLES[track] || 'Array Operations';
+  const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Output';
 
-  const handleSpeedChange = (e) => {
-    setSpeed(parseInt(e.target.value));
-  };
+  // Calculate swap pair for connector arc
+  let swapFrom = null;
+  let swapTo = null;
 
-  const handleSizeChange = (e) => {
-    setArraySize(parseInt(e.target.value));
-  };
+  if (track === 'reverse' && step.activeLine === 3 && step.left !== null && step.right !== null) {
+    swapFrom = step.left;
+    swapTo = step.right;
+  }
 
-  const handleReset = () => {
-    setArray(Array.from({ length: arraySize }, () => Math.floor(Math.random() * 90) + 1));
-    setValue('');
-    setIndex('');
-    setSearchValue('');
-    setSearchResult(null);
-    setStepDesc('');
-  };
-
-  const maxVal = Math.max(...array, 1);
+  const hasSwapArc = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
 
   return (
-    <div className="space-y-6">
-      {/* Header with Info */} 
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between lg:justify-start gap-4">
-        <div className="flex-1 lg:flex-none">
-          <h2 className="text-xl font-bold text-[var(--mcq-text)] mb-1">Array Visualizer</h2>
-          <p className="text-[var(--mcq-text-muted)] text-sm">
-            Visualize array operations: insertion, deletion, updates, and linear search
-          </p>
+    <div className="sketch-container font-sketch">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
+            DATA STRUCTURE PATTERN
+          </div>
+          <h2 className="text-3xl font-bold font-header flex items-center gap-3">
+            Array Operations
+            <span className="text-sm px-3 py-0.5 rounded-full sketch-border-soft text-[var(--sketch-accent-orange)] font-sketch">
+              {trackLabel}
+            </span>
+          </h2>
         </div>
-        
-        <div className="flex items-center gap-4 text-xs text-[var(--mcq-text-muted)]">
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded bg-blue-500" /> Selected
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded bg-green-500" /> Found
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded bg-red-500" /> Error
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded bg-blue-500/20 border border-blue-500/30" /> Normal
-          </span>
+
+        {/* Expected Output Card */}
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs text-amber-300 shadow-sm">
+          <span className="text-amber-400 font-bold font-header text-sm">🎯 Expected:</span>
+          <span>{expectedOutput}</span>
         </div>
       </div>
 
-      {/* Controls Sidebar */}
-      <aside className="w-full lg:w-72 bg-[var(--mcq-surface-20)] rounded-xl border border-[var(--mcq-border)] p-4">
-        <div className="space-y-4">
-          {/* Operation Controls */}
-          <div className="space-y-3">
-            <label className="text-[var(--mcq-text-muted)] text-sm font-medium block">Operation</label>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <select
-                  value={opType}
-                  onChange={(e) => setOpType(e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] focus:outline-none focus:border-blue-400"
-                >
-                  <option value="insert">Insert</option>
-                  <option value="delete">Delete</option>
-                  <option value="update">Update</option>
-                </select>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="number"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  placeholder="Value"
-                  className="px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] placeholder:text-[var(--mcq-text-muted)] focus:outline-none focus:border-blue-400"
-                />
-                <input
-                  type="number"
-                  value={index}
-                  onChange={(e) => setIndex(e.target.value)}
-                  placeholder="Index"
-                  className="px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] placeholder:text-[var(--mcq-text-muted)] focus:outline-none focus:border-blue-400"
-                />
-              </div>
-              
-              <button
-                onClick={handleOperation}
-                disabled={animating}
-                className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-400 text-white text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all disabled:opacity-50"
-              >
-                {opType === 'delete' ? 'Delete' : opType === 'update' ? 'Update' : 'Insert'}
-              </button>
-            </div>
+      {/* Progress Milestone Dots */}
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+        <span>Milestones:</span>
+        <div className="sketch-milestones">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setCurrentStep(i)}
+              className={`sketch-milestone-dot cursor-pointer ${i <= currentStep ? 'active' : ''}`}
+              title={`Step ${i + 1}`}
+            />
+          ))}
+        </div>
+        <span className="font-mono ml-2">step {currentStep + 1} / {steps.length}</span>
+      </div>
+
+      {/* Main Canvas + Debugger Row */}
+      <div className="sketch-canvas-row">
+        {/* Visualization Canvas */}
+        <div className="sketch-canvas-box sketch-border">
+          <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+            Contiguous Memory Array Visualization Canvas
           </div>
 
-          {/* Search Controls */}
-          <div className="space-y-3">
-            <label className="text-[var(--mcq-text-muted)] text-sm font-medium block">Search</label>
-            <div className="space-y-2">
-              <input
-                type="number"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search..."
-                className="px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] placeholder:text-[var(--mcq-text-muted)] focus:outline-none focus:border-blue-400"
+          {/* Array Cards Container */}
+          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-8 relative pt-6 pb-24 px-4 overflow-x-auto w-full justify-center">
+            {hasSwapArc && (
+              <SwapArcConnector containerRef={containerRef} fromIndex={swapFrom} toIndex={swapTo} label="swapping" />
+            )}
+
+            {array.map((val, i) => {
+              const isIndex = step.index === i;
+              const isLeft = step.left === i;
+              const isRight = step.right === i;
+              const isBothLeftRight = isLeft && isRight;
+
+              const isHighlighted = isIndex || isLeft || isRight;
+
+              // Action badge triggers
+              const isInserting = track === 'insert' && step.activeLine === 3 && isIndex;
+              const isDeleting = track === 'delete' && step.activeLine === 1 && isIndex;
+              const isFound = track === 'search' && step.activeLine === 3 && isIndex;
+              const isSwapping = i === swapFrom || i === swapTo;
+
+              return (
+                <div key={i} className="relative flex flex-col items-center">
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isInserting && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
+                        + Inserting
+                      </motion.div>
+                    )}
+                    {isDeleting && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
+                        - Deleting
+                      </motion.div>
+                    )}
+                    {isFound && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
+                        🔍 Found!
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    animate={{
+                      scale: (isInserting || isDeleting || isFound || isSwapping) ? 1.15 : isHighlighted ? 1.08 : 1,
+                      y: (isInserting || isDeleting || isFound || isSwapping) ? -10 : isHighlighted ? -6 : 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                    className={`sketch-card ${
+                      isInserting || isFound
+                        ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg ring-2 ring-emerald-400'
+                        : isDeleting || isSwapping
+                        ? '!border-rose-400 !bg-rose-500/20 shadow-lg ring-2 ring-rose-400'
+                        : val === null
+                        ? 'border-dashed border-white/20 text-white/30'
+                        : isBothLeftRight
+                        ? 'border-purple-400 bg-purple-500/20 ring-1 ring-purple-400'
+                        : isIndex || isLeft
+                        ? 'active-orange'
+                        : isRight
+                        ? 'active-blue'
+                        : ''
+                    }`}
+                  >
+                    {val !== null ? val : '∅'}
+                    <div className="sketch-card-index">[{i}]</div>
+                  </motion.div>
+
+                  {/* Combined Left + Right Pointer */}
+                  <AnimatePresence>
+                    {isBothLeftRight && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">left, right</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Index Pointer Arrow */}
+                  <AnimatePresence>
+                    {isIndex && !isLeft && !isRight && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange"
+                      >
+                        <div>index</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Left Pointer Arrow */}
+                  <AnimatePresence>
+                    {isLeft && !isBothLeftRight && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange"
+                      >
+                        <div>left</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Right Pointer Arrow */}
+                  <AnimatePresence>
+                    {isRight && !isBothLeftRight && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-blue"
+                      >
+                        <div>right</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Debug Panel (Code & State) */}
+        <div className="sketch-debug-panel">
+          {/* Pseudocode Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
+              <span className="font-header font-bold text-lg">Concept Code</span>
+              <button
+                onClick={togglePracticeMode}
+                className="px-2.5 py-1 text-xs sketch-button"
+              >
+                {practiceMode ? '👁️ View' : '✏️ Practice'}
+              </button>
+            </div>
+
+            {practiceMode ? (
+              <textarea
+                value={userCode}
+                onChange={(e) => setUserCode(e.target.value)}
+                rows={8}
+                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
               />
-              <button
-                onClick={handleSearch}
-                className="w-full px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-              >
-                Search
-              </button>
-            </div>
-          </div>
-
-          {/* Array Controls */}
-          <div className="space-y-3">
-            <label className="text-[var(--mcq-text-muted)] text-sm font-medium block">Array</label>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-[var(--mcq-text-muted)]">Size:</span>
-                <input
-                  type="range"
-                  min="5"
-                  max="30"
-                  value={arraySize}
-                  onChange={handleSizeChange}
-                  className="flex-1 h-1 bg-[var(--mcq-surface-30)] rounded"
-                />
-                <span className="text-xs font-mono text-[var(--mcq-text)]">{arraySize}</span>
+            ) : (
+              <div className="space-y-0.5">
+                {activeCode.map((c) => {
+                  const isActive = step.activeLine === c.line;
+                  return (
+                    <div
+                      key={c.line}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
+                      <span className="whitespace-pre font-mono flex-1">{c.text}</span>
+                    </div>
+                  );
+                })}
               </div>
-              
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={randomize}
-                  className="w-full px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-                >
-                  Randomize
-                </button>
-                <button
-                  onClick={generateSorted}
-                  className="w-full px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-                >
-                  Sorted
-                </button>
-                <button
-                  onClick={handleReset}
-                  className="w-full px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-                >
-                  Reset
-                </button>
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* Speed Control */}
-          <div className="space-y-3 mt-4">
-            <label className="text-[var(--mcq-text-muted)] text-sm font-medium block">Speed (ms)</label>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs text-[var(--mcq-text-muted)]">
-                <span title="Slow">ðŸ¢</span>
-                <input
-                  type="range"
-                  min="100"
-                  max="2000"
-                  value={speed}
-                  onChange={handleSpeedChange}
-                  className="flex-1 h-1 bg-[var(--mcq-surface-30)] rounded"
-                />
-                <span title="Fast">ðŸ‡</span>
-              </div>
-              <div className="flex justify-between text-xs text-[var(--mcq-text-muted)]">
-                <span>Slow</span>
-                <span className="font-mono">{speed >= 1000 ? `${(speed / 1000).toFixed(1)}s` : `${speed}ms`}</span>
-                <span>Fast</span>
-              </div>
+          {/* State Variable Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)]">
+              State
             </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Visualization Area */}
-      <div className="flex-1 flex flex-col gap-6">
-        {/* Algorithm Info */}
-        <div className="bg-[var(--mcq-surface-30)] rounded-xl border border-[var(--mcq-border)] p-4">
-          <h3 className="text-lg font-semibold text-[var(--mcq-text)] mb-2">About Arrays</h3>
-          <div className="space-y-2 text-[var(--mcq-text-secondary)] text-sm">
-            <div className="flex items-start">
-              <span className="flex-shrink-0 mr-2">â–¶</span>
-              <span>Contiguous memory storage for elements of the same data type</span>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 mr-2">â–¶</span>
-              <span>Direct index-based access: O(1) time complexity</span>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 mr-2">â–¶</span>
-              <span>Insertion/deletion at beginning/middle: O(n) due to element shifting</span>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 mr-2">â–¶</span>
-              <span>Insertion/deletion at end: O(1) amortized (with dynamic arrays)</span>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 mr-2">â–¶</span>
-              <span>Memory efficient: no pointer overhead, excellent cache locality</span>
-            </div>
-          </div>
-          <div className="mt-3 pt-2 border-t border-[var(--mcq-border)/20]">
-            <span className="text-xs text-[var(--mcq-text-muted)] font-mono">
-              Current: [{array.map((v, i) => `${i}:${v}`).join(', ')}]
-            </span>
-          </div>
-        </div>
-
-        {/* Step Description */}
-        {stepDesc && (
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 5 }}
-            className="px-4 py-2.5 rounded-xl border text-sm leading-relaxed"
-            style={{
-              backgroundColor: stepDesc.includes('âœ…') || stepDesc.includes('Found')
-                ? 'rgba(34, 197, 94, 0.08)'
-                : stepDesc.includes('âŒ')
-                ? 'rgba(239, 68, 68, 0.08)'
-                : 'rgba(96, 165, 250, 0.08)',
-              borderColor: stepDesc.includes('âœ…') || stepDesc.includes('Found')
-                ? 'rgba(34, 197, 94, 0.15)'
-                : stepDesc.includes('âŒ')
-                ? 'rgba(239, 68, 68, 0.15)'
-                : 'rgba(96, 165, 250, 0.15)',
-              color: stepDesc.includes('âœ…') || stepDesc.includes('Found')
-                ? '#22c55e'
-                : stepDesc.includes('âŒ')
-                ? '#f87171'
-                : 'var(--mcq-text-body)',
-            }}
-          >
-            ðŸ“– {stepDesc}
-          </motion.div>
-        )}
-
-        {/* Search Result */}
-        {searchResult !== null && (
-          <div className={`px-4 py-2 rounded-lg text-sm font-medium ${searchResult >= 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-            {searchResult >= 0 ? `Found at index ${searchResult}` : 'Value not found'}
-          </div>
-        )}
-
-        {/* Array Visualization */}
-        <div className="flex-1 flex items-end gap-2 px-4 py-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] overflow-x-auto relative">
-          <div className="flex-1 flex flex-col items-end pb-4">
-            {/* Index labels (below the bars) */}
-            <div className="flex space-x-2 mb-2">
-              {array.map((_, i) => (
-                <div key={`index-${i}`} className="text-xs text-[var(--mcq-text-muted)] w-[40px] text-center">
-                  [{i}]
+            <div className="space-y-1">
+              {Object.entries(step.state || {}).map(([key, value]) => (
+                <div key={key} className="sketch-state-var">
+                  <span className="text-[var(--sketch-text-muted)]">{key}</span>
+                  <span className="font-bold text-[var(--sketch-accent-orange)]">{String(value)}</span>
                 </div>
               ))}
             </div>
-            {/* Bars with values */}
-            <AnimatePresence>
-              {array.map((val, i) => {
-                const isHighlighted = highlighted.includes(i);
-                const isSelected = selected === i;
-                const height = Math.max((val / maxVal) * 180, 20); // Max height 180px, min 20px
-
-                return (
-                  <motion.div
-                    key={`bar-${i}`}
-                    initial={{ opacity: 0, x: i > Math.min(...(highlighted.length ? highlighted : [-1])) ? 30 : -30 }}
-                    animate={{
-                      opacity: 1,
-                      x: 0,
-                      height,
-                      backgroundColor: isSelected
-                        ? '#22c55e'
-                        : isHighlighted
-                        ? '#60a5fa'
-                        : 'rgba(59, 130, 246, 0.3)',
-                    }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30, duration: speed / 1000 }}
-                    className="relative flex-1 flex items-end bg-white/5 rounded-t-lg group cursor-pointer"
-                  >
-                    {/* Value inside the bar */}
-                    <div className="absolute bottom-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-mono font-bold text-white/90">
-                      {val}
-                    </div>
-                    {/* Optional: show index on hover */}
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-xs text-white/60 mb-2">@{i}</div>
-                  </motion.div>
-                );
-              })}  
-            </AnimatePresence>
           </div>
         </div>
+      </div>
 
-        {/* Array Values (as chips) */}
-        <div className="flex flex-wrap gap-2 px-4">
-          {array.map((val, i) => (
-            <span
-              key={i}
-              className={`${
-                selected === i
-                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                  : highlighted.includes(i)
-                  ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                  : 'bg-white/5 text-[var(--mcq-text-muted)] border-white/10'
-              }`}
+      {/* Explanation Banner */}
+      <div className="sketch-explanation-bar sketch-border">
+        <span className="text-xl select-none">✏️</span>
+        <div className="flex-1 text-sm md:text-base leading-relaxed">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+            line {step.activeLine}
+          </span>
+          {step.desc}
+        </div>
+      </div>
+
+      {/* Bottom Playback Controls Bar */}
+      <div className="sketch-playback-bar sketch-border">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={restart}
+            className="sketch-button px-3 py-1.5"
+            title="Restart"
+          >
+            ↺
+          </button>
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="sketch-button px-3 py-1.5"
+            title="Previous step"
+          >
+            |◀
+          </button>
+          <button
+            onClick={togglePlay}
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+          <button
+            onClick={nextStep}
+            disabled={currentStep >= steps.length - 1}
+            className="sketch-button px-3 py-1.5"
+            title="Next step"
+          >
+            ▶|
+          </button>
+        </div>
+
+        {/* Scrubber Timeline */}
+        <div className="flex-1 flex items-center gap-3">
+          <input
+            type="range"
+            min="0"
+            max={steps.length - 1}
+            value={currentStep}
+            onChange={(e) => setCurrentStep(Number(e.target.value))}
+            className="sketch-scrubber"
+          />
+        </div>
+
+        {/* Speed Multiplier Pills */}
+        <div className="flex items-center gap-1">
+          {[0.5, 1, 1.5, 2].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
             >
-              [{i}]: {val}
-            </span>
+              {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
+            </button>
           ))}
         </div>
       </div>
