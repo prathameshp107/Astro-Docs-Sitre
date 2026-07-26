@@ -369,32 +369,19 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
           <div className="app-nav-inner">
             {/* Brand */}
             <a href={base} className="app-nav-brand" aria-label="Home">
-              {variant === 'landing' ? (
-                <>
-                  <div className="app-nav-logo">
-                    <div className="w-7 h-7 rounded-lg bg-amber-400 flex items-center justify-center">
-                      <Binary className="w-4 h-4 text-black" />
-                    </div>
-                  </div>
-                  <span className="app-nav-brand-text sg">DSA & Dev Notes</span>
-                </>
-              ) : (
-                <>
-                  <span className="app-nav-logo">
-                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                      <defs>
-                        <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#6366f1" />
-                          <stop offset="100%" stopColor="#8b5cf6" />
-                        </linearGradient>
-                      </defs>
-                      <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
-                      <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
-                    </svg>
-                  </span>
-                  <span className="app-nav-brand-text">DSA & Dev Notes</span>
-                </>
-              )}
+              <span className="app-nav-logo">
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                  <defs>
+                    <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#6366f1" />
+                      <stop offset="100%" stopColor="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
+                  <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
+                </svg>
+              </span>
+              <span className="app-nav-brand-text">DSA & Dev Notes</span>
             </a>
 
             {/* Desktop Links */}
@@ -407,9 +394,9 @@ export default function AppNav({ activeSection, hideSections = [], showOnStarlig
               <GlobalSearch />
               {variant === 'landing' && activeSection === 'home' && (
                 <a href={`${baseHref}/overview`}
-                  className="app-nav-cta"
+                  className="px-4 py-2 text-xs font-bold text-white rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 shadow-md shadow-indigo-500/20 transition-all hover:scale-[1.02]"
                 >
-                  Start Learning
+                  Start Learning →
                 </a>
               )}
               <AuthButton />

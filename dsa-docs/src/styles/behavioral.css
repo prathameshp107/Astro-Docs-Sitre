@@ -1,11 +1,11 @@
 /* ══════════════════════════════════════════════════
-   BEHAVIORAL INTERVIEW PREP — Feature 08
+   BEHAVIORAL INTERVIEW PREP — HANDWRITING CHALKBOARD THEME
    ══════════════════════════════════════════════════ */
 
 @import "./tokens.css";
 
 body:has(.bhv-platform) {
-  background: var(--bg) !important;
+  background: var(--sketch-bg, #161512) !important;
 }
 
 .bhv-platform {
@@ -13,9 +13,10 @@ body:has(.bhv-platform) {
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
+  background: var(--sketch-bg, #161512);
+  color: var(--sketch-text, #eae9e6);
+  font-family: 'Patrick Hand', cursive, sans-serif !important;
+  font-size: 1.05rem;
 }
 
 .bhv-platform *,
@@ -27,9 +28,21 @@ body:has(.bhv-platform) {
 .bhv-platform button {
   border: 0;
   color: inherit;
-  font: inherit;
+  font-family: 'Patrick Hand', cursive, sans-serif !important;
   cursor: pointer;
   background: none;
+}
+
+.bhv-platform h1,
+.bhv-platform h2,
+.bhv-platform h3,
+.bhv-platform h4,
+.bhv-top-title,
+.bhv-tab,
+.bhv-q-text,
+.bhv-category-item span:first-child {
+  font-family: 'Architects Daughter', cursive, sans-serif !important;
+  letter-spacing: 0.01em;
 }
 
 /* ── Topbar ─────────────────────────────────────────── */
@@ -41,8 +54,8 @@ body:has(.bhv-platform) {
   gap: 0.75rem;
   min-height: 54px;
   padding: 0.6rem 1.25rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
+  border-bottom: 2px dashed var(--sketch-border, rgba(234, 233, 230, 0.3));
+  background: var(--sketch-bg-dim, #1e1d1a);
 }
 
 .bhv-topbar-left,
@@ -59,25 +72,25 @@ body:has(.bhv-platform) {
   gap: 0.3rem;
   padding: 0.35rem 0.6rem;
   border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  font-size: 0.8rem;
+  color: var(--sketch-text-muted, #a6a5a2);
+  font-size: 0.95rem;
   text-decoration: none;
   transition: var(--transition-fast);
 }
 
 .bhv-top-back:hover {
-  background: var(--accent-tint);
-  color: var(--text);
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--sketch-accent-orange, #f97316);
 }
 
 .bhv-top-title {
   font-weight: var(--fw-bold);
-  font-size: var(--fs-lg);
+  font-size: 1.3rem;
 }
 
 .bhv-top-stat {
-  font-size: var(--fs-sm);
-  color: var(--text-secondary);
+  font-size: 0.95rem;
+  color: var(--sketch-text-muted, #a6a5a2);
 }
 
 /* ── Tabs ───────────────────────────────────────────── */
@@ -86,29 +99,29 @@ body:has(.bhv-platform) {
   display: flex;
   gap: 0.4rem;
   padding: 0.75rem 1.25rem 0;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
+  border-bottom: 2px dashed var(--sketch-border, rgba(234, 233, 230, 0.3));
+  background: var(--sketch-bg, #161512);
 }
 
 .bhv-tab {
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-  color: var(--text-secondary);
-  border-bottom: 2px solid transparent;
+  padding: 0.6rem 1.1rem;
+  border-radius: 12px 12px 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--sketch-text-muted, #a6a5a2);
+  border-bottom: 3px solid transparent;
   transition: var(--transition-fast);
 }
 
 .bhv-tab:hover {
-  color: var(--text);
-  background: var(--accent-tint);
+  color: var(--sketch-text, #eae9e6);
+  background: rgba(249, 115, 22, 0.1);
 }
 
 .bhv-tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  background: var(--accent-tint);
+  color: var(--sketch-accent-orange, #f97316);
+  border-bottom-color: var(--sketch-accent-orange, #f97316);
+  background: rgba(249, 115, 22, 0.15);
 }
 
 .bhv-tab-content {
@@ -146,11 +159,11 @@ body:has(.bhv-platform) {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  color: var(--text-secondary);
+  padding: 0.5rem 0.8rem;
+  border: 2px dashed var(--sketch-border, rgba(234, 233, 230, 0.3));
+  border-radius: 12px;
+  background: var(--sketch-bg-dim, #1e1d1a);
+  color: var(--sketch-text, #eae9e6);
   flex: 1;
   min-width: 220px;
 }
@@ -159,8 +172,9 @@ body:has(.bhv-platform) {
   border: 0;
   outline: none;
   background: none;
-  color: var(--text);
-  font-size: var(--fs-sm);
+  color: var(--sketch-text, #eae9e6);
+  font-family: 'Patrick Hand', cursive, sans-serif !important;
+  font-size: 1.05rem;
   width: 100%;
 }
 
@@ -172,34 +186,37 @@ body:has(.bhv-platform) {
 }
 
 .bhv-filter-group-label {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
+  font-size: 0.9rem;
+  color: var(--sketch-text-muted, #a6a5a2);
   margin-right: 0.2rem;
+  font-family: 'Patrick Hand', cursive, sans-serif;
 }
 
 .bhv-filter-btn {
-  padding: 0.35rem 0.65rem;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-xs);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  border: 1.5px dashed var(--sketch-border, rgba(234, 233, 230, 0.3));
+  color: var(--sketch-text-muted, #a6a5a2);
+  background: var(--sketch-bg-dim, #1e1d1a);
+  font-family: 'Patrick Hand', cursive, sans-serif !important;
   transition: var(--transition-fast);
 }
 
 .bhv-filter-btn:hover {
-  border-color: var(--accent);
-  color: var(--text);
+  border-color: #f97316;
+  color: var(--sketch-text, #eae9e6);
 }
 
 .bhv-filter-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-contrast);
+  background: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
 }
 
 .bhv-bank-layout {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: 1.25rem;
 }
 
@@ -212,8 +229,8 @@ body:has(.bhv-platform) {
 .bhv-category-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  border-right: 1px solid var(--border);
+  gap: 0.3rem;
+  border-right: 2px dashed var(--sketch-border, rgba(234, 233, 230, 0.3));
   padding-right: 0.75rem;
 }
 
@@ -221,48 +238,53 @@ body:has(.bhv-platform) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.6rem;
-  border-radius: var(--radius-md);
-  font-size: var(--fs-sm);
-  color: var(--text-secondary);
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  color: var(--sketch-text-muted, #a6a5a2);
   text-align: left;
+  font-family: 'Architects Daughter', cursive, sans-serif !important;
+  transition: all 0.2s ease;
 }
 
 .bhv-category-item:hover {
-  background: var(--accent-tint);
-  color: var(--text);
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--sketch-text, #eae9e6);
 }
 
 .bhv-category-item.active {
-  background: var(--accent-tint-strong);
-  color: var(--accent);
-  font-weight: var(--fw-semibold);
+  background: rgba(249, 115, 22, 0.16) !important;
+  color: #f97316 !important;
+  border-left: 3px solid #f97316 !important;
 }
 
 .bhv-category-count {
-  font-size: var(--fs-xs);
-  color: var(--text-muted);
-  background: var(--surface-2);
-  padding: 0.05rem 0.4rem;
-  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  color: var(--sketch-text-muted, #a6a5a2);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-family: 'Patrick Hand', cursive, sans-serif;
 }
 
 .bhv-question-list {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.75rem;
   min-width: 0;
 }
 
 .bhv-q-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+  border: 2px dashed var(--sketch-border, rgba(234, 233, 230, 0.3));
+  border-radius: 16px;
+  background: var(--sketch-bg-dim, #1e1d1a);
   overflow: hidden;
+  transition: all 0.25s ease;
 }
 
 .bhv-q-card.expanded {
-  border-color: var(--accent);
+  border-color: #f97316;
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.15);
 }
 
 .bhv-q-header {
@@ -271,7 +293,7 @@ body:has(.bhv-platform) {
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  padding: 0.95rem 1.15rem;
   text-align: left;
 }
 
@@ -282,9 +304,10 @@ body:has(.bhv-platform) {
 }
 
 .bhv-q-text {
-  font-weight: var(--fw-medium);
-  color: var(--text);
-  font-size: var(--fs-base);
+  font-family: 'Architects Daughter', cursive, sans-serif !important;
+  font-weight: 700;
+  color: var(--sketch-text, #eae9e6);
+  font-size: 1.15rem;
 }
 
 .bhv-q-badges {

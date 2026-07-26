@@ -9,8 +9,27 @@ const { sidebar } = Astro.locals.starlightRoute;
 const filterLabels = sidebar.map(entry => entry.label);
 ---
 
+<div class="sidebar-brand">
+  <div class="brand-title">
+    <span class="brand-logo">
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+        <defs>
+          <linearGradient id="sbLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6366f1" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="10" fill="url(#sbLogoGrad)" />
+        <text x="16" y="21" text-anchor="middle" fill="white" font-size="16" font-weight="bold" font-family="Inter">D</text>
+      </svg>
+    </span>
+    <span class="brand-text">DSA & Dev Docs</span>
+  </div>
+  <p class="brand-sub">1,000+ topic documentation pages</p>
+</div>
+
 <div class="sidebar-header">
-  <button id="sidebar-toggle" class="sidebar-toggle" type="button" title="Toggle Sidebar">
+  <button id="sidebar-toggle" class="sidebar-toggle" type="button" title="Toggle Sidebar (Ctrl+B)">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
       <line x1="9" y1="6" x2="15" y2="6"/>
@@ -97,21 +116,48 @@ const filterLabels = sidebar.map(entry => entry.label);
       restoreBtn.setAttribute('aria-label', 'Open sidebar');
       restoreBtn.setAttribute('aria-controls', 'starlight__sidebar');
       restoreBtn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
-          <line x1="9" y1="4" x2="9" y2="20"></line>
-          <polyline points="14 9 17 12 14 15"></polyline>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="9" y1="3" x2="9" y2="21"></line>
         </svg>
+        <span>▶ Show Sidebar</span>
+        <span class="sidebar-kbd-hint">Ctrl+B</span>
       `;
       document.body.appendChild(restoreBtn);
     }
+
+    const updateRestoreBtn = (collapsed) => {
+      if (!restoreBtn) return;
+      if (collapsed) {
+        restoreBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+          <span>▶ Show Sidebar</span>
+          <span class="sidebar-kbd-hint">Ctrl+B</span>
+        `;
+        restoreBtn.title = 'Open sidebar (Ctrl+B)';
+      } else {
+        restoreBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+          <span>◀ Hide Sidebar</span>
+          <span class="sidebar-kbd-hint">Ctrl+B</span>
+        `;
+        restoreBtn.title = 'Close sidebar (Ctrl+B)';
+      }
+    };
 
     const setSidebarCollapsed = (collapsed) => {
       document.body.classList.toggle('sidebar-collapsed', collapsed);
       document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
       toggleBtn.setAttribute('aria-expanded', String(!collapsed));
       toggleBtn.setAttribute('aria-label', collapsed ? 'Open sidebar' : 'Close sidebar');
-      toggleBtn.title = collapsed ? 'Open sidebar' : 'Close sidebar';
+      toggleBtn.title = collapsed ? 'Open sidebar (Ctrl+B)' : 'Close sidebar (Ctrl+B)';
+      updateRestoreBtn(collapsed);
       localStorage.setItem('sidebar-collapsed', String(collapsed));
     };
 
@@ -129,12 +175,18 @@ const filterLabels = sidebar.map(entry => entry.label);
     }
 
     if (!restoreBtn.dataset.sidebarToggleReady) {
-      restoreBtn.addEventListener('click', () => setSidebarCollapsed(false));
+      restoreBtn.addEventListener('click', toggleSidebar);
       restoreBtn.dataset.sidebarToggleReady = 'true';
     }
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && document.body.classList.contains('sidebar-collapsed')) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebar();
+      } else if (e.key === '\\' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+        e.preventDefault();
+        toggleSidebar();
+      } else if (e.key === 'Escape' && document.body.classList.contains('sidebar-collapsed')) {
         setSidebarCollapsed(false);
       }
     };
@@ -292,14 +344,96 @@ const filterLabels = sidebar.map(entry => entry.label);
     });
   }
 
-  function focusActiveSidebarItem() {
+  const TECH_SVG_MAP = [
+    { match: 'javascript', svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#f7df1e"/><text x="14" y="17" fill="#000" font-size="11" font-weight="900" font-family="sans-serif">JS</text></svg>` },
+    { match: 'js',         svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#f7df1e"/><text x="14" y="17" fill="#000" font-size="11" font-weight="900" font-family="sans-serif">JS</text></svg>` },
+    { match: 'html',       svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#e34f26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3l1.8 16.5L12 21.5l6.2-2L20 3H4z"/><path d="M16.5 7.5H7.5l.4 4h8.2l-.5 5-3.6 1.2-3.6-1.2-.2-2.5"/></svg>` },
+    { match: 'css',        svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1572b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3l1.8 16.5L12 21.5l6.2-2L20 3H4z"/><path d="M7 7.5h10l-.4 4.5H7.5l.3 3.5 4.2 1.3 4.2-1.3.4-4"/></svg>` },
+    { match: 'react',      svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#61dafb" stroke-width="1.5"><ellipse cx="12" cy="12" rx="10" ry="4.5"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="2.2" fill="#61dafb"/></svg>` },
+    { match: 'next',       svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 8v8l7-8v8"/></svg>` },
+    { match: 'angular',    svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dd0031" stroke-width="2"><path d="M12 2L3 6l1.5 12L12 22l7.5-4L21 6L12 2z"/><path d="M12 6L7.5 16h2l1-2.5h3l1 2.5h2L12 6z"/></svg>` },
+    { match: 'node',       svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#339933"><path d="M12 2L3.5 7v10l8.5 5 8.5-5V7L12 2zm-1 14.5v-5l4 2.5v5l-4-2.5z"/></svg>` },
+    { match: 'python',     svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3776ab" stroke-width="2"><path d="M12 2c-3.3 0-3 1.5-3 3v2h6V5c0-1.5.3-3-3-3z"/><path d="M12 22c3.3 0 3-1.5 3-3v-2H9v2c0 1.5-.3 3 3 3z"/><path d="M5 9c-1.5 0-3 .3-3 3s1.5 3 3 3h2V9H5z"/><path d="M19 9c1.5 0 3 .3 3 3s-1.5 3-3 3h-2V9h2z"/></svg>` },
+    { match: 'mongo',      svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#47a248"><path d="M12 2s-6 6.5-6 12a6 6 0 0012 0c0-5.5-6-12-6-12z"/></svg>` },
+    { match: 'sql',        svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00758f" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>` },
+    { match: 'database',   svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.66 3.58 3 8 3s8-1.34 8-3V6"/><path d="M4 12v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>` },
+    { match: 'docker',     svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="#2496ed"><rect x="3" y="10" width="3" height="3"/><rect x="7" y="10" width="3" height="3"/><rect x="11" y="10" width="3" height="3"/><path d="M2 15c1 3 5 4 10 4s9-1 10-4c-1 0-3 1-5 1H7c-2 0-4-1-5-1z"/></svg>` },
+    { match: 'git',        svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f05032" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 12h7m-7 0a6 6 0 016-6m-6 6a6 6 0 006 6"/></svg>` },
+    { match: 'branching',  svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M18 8.5a8.5 8.5 0 01-8.5 8.5"/></svg>` },
+    { match: 'remote',     svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a14.5 14.5 0 010 18M12 3a14.5 14.5 0 000 18"/></svg>` },
+    { match: 'advanced',   svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>` },
+    { match: 'interview',  svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>` },
+    { match: 'dsa',        svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="3" width="6" height="6" rx="1.5"/><rect x="9" y="15" width="6" height="6" rx="1.5"/><path d="M6 9v3a2 2 0 002 2h4m6-5v3a2 2 0 01-2 2h-4"/></svg>` },
+    { match: 'system',     svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="16" y="2" width="6" height="6" rx="1"/><rect x="9" y="16" width="6" height="6" rx="1"/><path d="M5 8v4a2 2 0 002 2h5m7-6v4a2 2 0 01-2 2h-5"/></svg>` },
+    { match: 'overview',   svg: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>` },
+  ];
+
+  function setupCategoryIcons() {
+    const summaries = document.querySelectorAll('nav.sidebar details > summary');
+    summaries.forEach((summary) => {
+      if (summary.dataset.iconAdded === 'true') return;
+
+      const labelEl = summary.querySelector('.group-label .large') || summary.querySelector('.large') || summary;
+      const text = labelEl.textContent.trim().toLowerCase();
+
+      let chosenSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`;
+      for (const item of TECH_SVG_MAP) {
+        if (text.includes(item.match)) {
+          chosenSvg = item.svg;
+          break;
+        }
+      }
+
+      const iconSpan = document.createElement('span');
+      iconSpan.className = 'category-heading-icon';
+      iconSpan.innerHTML = chosenSvg;
+      iconSpan.style.marginRight = '0.45rem';
+      iconSpan.style.display = 'inline-flex';
+      iconSpan.style.alignItems = 'center';
+      iconSpan.style.verticalAlign = 'middle';
+      iconSpan.style.flexShrink = '0';
+
+      labelEl.insertBefore(iconSpan, labelEl.firstChild);
+      summary.dataset.iconAdded = 'true';
+    });
+  }
+
+  function collapseNonActiveDetails() {
     const sidebarContainer = document.getElementById('starlight__sidebar') || document.querySelector('.sidebar-content');
     if (!sidebarContainer) return;
 
     const activeLink = sidebarContainer.querySelector('a[aria-current="page"]');
+    const allDetails = sidebarContainer.querySelectorAll('details');
+
+    allDetails.forEach((detail) => {
+      // Keep detail open ONLY if it contains the active page link
+      if (activeLink && detail.contains(activeLink)) {
+        detail.setAttribute('open', '');
+        const summary = detail.querySelector(':scope > summary');
+        if (summary) summary.setAttribute('aria-expanded', 'true');
+      } else {
+        // Collapse all other sections by default
+        detail.removeAttribute('open');
+        const summary = detail.querySelector(':scope > summary');
+        if (summary) summary.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  function focusActiveSidebarItem() {
+    const sidebarContainer = document.getElementById('starlight__sidebar') || document.querySelector('.sidebar-content');
+    if (!sidebarContainer) return;
+
+    // 1. Collapse non-active category accordions by default
+    collapseNonActiveDetails();
+
+    // 2. Inject topic icons into all category headings
+    setupCategoryIcons();
+
+    const activeLink = sidebarContainer.querySelector('a[aria-current="page"]');
     if (!activeLink) return;
 
-    // 1. Expand all parent <details> elements enclosing the active link
+    // 3. Expand parent <details> elements enclosing the active link
     let parent = activeLink.closest('details');
     while (parent) {
       parent.setAttribute('open', '');
@@ -308,7 +442,7 @@ const filterLabels = sidebar.map(entry => entry.label);
       parent = parent.parentElement ? parent.parentElement.closest('details') : null;
     }
 
-    // 2. Scroll the active link into the center of the scrollable sidebar container
+    // 4. Scroll active link into center of the scrollable sidebar container
     const scrollTarget = () => {
       activeLink.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
     };
