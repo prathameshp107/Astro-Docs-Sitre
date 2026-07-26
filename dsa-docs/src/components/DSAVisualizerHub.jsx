@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SkeletonHero, SkeletonGrid, SkeletonStats } from './Skeleton.jsx';
+import DSATopicIcon from './visualizer-common/DSATopicIcon.jsx';
 
 const DSA_TOPICS = [
   { id: 'two-pointers', icon: '👉👈', label: 'Two Pointers', desc: 'Opposite-ends & fast-slow pointer walks (Two Sum II, 3Sum, Container Water)', color: '#f59e0b', trackCount: 8 },
@@ -105,9 +106,9 @@ export default function DSAVisualizerHub() {
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-3xl p-2 rounded-xl bg-[var(--sketch-text)]/5 border border-[var(--sketch-border)] group-hover:scale-110 transition-transform">
-                    {topic.icon}
-                  </span>
+                  <div className="p-2.5 rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)] group-hover:scale-110 transition-transform shadow-inner flex items-center justify-center">
+                    <DSATopicIcon id={topic.id} size={28} />
+                  </div>
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold border border-emerald-500/30 bg-emerald-500/10 text-emerald-500">
                     100% READY ({topic.trackCount} Tracks)
                   </span>

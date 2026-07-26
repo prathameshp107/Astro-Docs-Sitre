@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import DSATopicIcon from '../visualizer-common/DSATopicIcon.jsx';
 import { useTwoPointersStore } from '../../store/visualizers/twoPointersStore';
 import { useArrayStore } from '../../store/visualizers/arrayStore';
 import { useSortingStore } from '../../store/visualizers/sortingStore';
@@ -228,7 +229,7 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                 className="w-full flex items-center justify-between text-left font-header text-lg text-[var(--sketch-text)] hover:text-amber-500 py-1 transition-colors"
               >
                 <span className="flex items-center gap-2">
-                  <span>{topicData.icon}</span>
+                  <DSATopicIcon id={topicId} size={18} />
                   <span className={isCurrentTopic ? 'text-amber-500 font-bold' : ''}>{topicData.title}</span>
                 </span>
                 <span className="text-xs text-[var(--sketch-text-muted)]">{isExpanded ? '▼' : '▶'}</span>

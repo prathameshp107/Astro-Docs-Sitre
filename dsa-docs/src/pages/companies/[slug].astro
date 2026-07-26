@@ -11,6 +11,7 @@ import '../../styles/landing.css';
 import '../../styles/judge.css';
 import '../../styles/plans.css';
 import '../../styles/companies.css';
+import '../../styles/sketch-visualizer.css';
 
 export async function getStaticPaths() {
   const companies = import.meta.glob("../../data/companies/*.json", { eager: true });
@@ -37,6 +38,7 @@ const lastVerifiedDate = new Date().toLocaleDateString("en-US", {
 });
 
 const companyColor = company.id === 'amazon' ? '#ff9900' : company.id === 'google' ? '#4285f4' : 'var(--accent)';
+const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
 // JSON-LD FAQ Page Schema
 const faqSchema = {
@@ -98,36 +100,52 @@ const faqSchema = {
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </head>
-  <body class="mcq-body">
+  <body class="mcq-body font-sketch">
     <AppNav activeSection="companies" client:load />
 
-    <div class="company-track-layout" style={`--company-accent: ${companyColor}; --company-accent-tint: ${companyColor}15;`}>
-      {/* Hero Section */}
-      <section class="company-track-hero">
-        <div class="hero-left">
-          <div class="company-badge-row">
-            <span class="company-tag">{company.type.toUpperCase()}</span>
-            <span class="verified-tag">✓ Verified: {lastVerifiedDate}</span>
-          </div>
-          <h1>{company.name} Interview Track</h1>
-          <p class="hero-subtitle">
-            A targeted preparation track for {company.name} SWE/SDE positions. Follow the interactive plan, review process rounds, and practice active problem-sets.
-          </p>
-        </div>
+    <div class="company-track-layout max-w-6xl mx-auto px-4 py-8" style={`--company-accent: ${companyColor}; --company-accent-tint: ${companyColor}15;`}>
+      {/* Chalkboard Hero Section */}
+      <section class="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
+        <a
+          href={`${base}companies`}
+          class="inline-flex items-center gap-2 sketch-button text-xs font-bold text-[var(--sketch-text-muted)] hover:text-amber-500 mb-6"
+        >
+          ← Back to All Companies
+        </a>
 
-        <div class="hero-stats-card">
-          <div class="stat-box">
-            <span class="stat-value difficulty-dots">
-              {Array.from({ length: 5 }).map((_, idx) => (
-                <span class={`difficulty-dot ${idx < company.difficulty ? "filled" : ""}`} />
-              ))}
-            </span>
-            <span class="stat-label">Difficulty</span>
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="sketch-border-soft px-3 py-1 text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full uppercase">
+                {company.type}
+              </span>
+              <span class="text-xs font-mono text-emerald-400 font-bold">
+                ✓ Verified: {lastVerifiedDate}
+              </span>
+            </div>
+            <h1 class="font-header font-bold text-4xl md:text-5xl text-[var(--sketch-text)] mb-3">
+              {company.name} Interview Track
+            </h1>
+            <p class="text-[var(--sketch-text-muted)] text-base max-w-2xl leading-relaxed font-sketch">
+              A targeted preparation track for {company.name} SWE/SDE positions. Follow the interactive plan, review process rounds, and practice active problem-sets.
+            </p>
           </div>
-          <div class="stat-divider" />
-          <div class="stat-box">
-            <span class="stat-value">{company.region.map(r => r.toUpperCase()).join(", ")}</span>
-            <span class="stat-label">Target Regions</span>
+
+          <div class="sketch-panel-box sketch-border p-6 text-center min-w-[200px] bg-[var(--sketch-bg)]">
+            <span class="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider block mb-2">Difficulty</span>
+            <div className="flex items-center justify-center gap-1.5 mb-4">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <span 
+                  key={idx} 
+                  className="w-4 h-4 rounded-full border border-[var(--sketch-border)]"
+                  style={{ 
+                    backgroundColor: idx < company.difficulty ? companyColor : 'transparent'
+                  }}
+                />
+              ))}
+            </div>
+            <span class="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider block mb-1">Target Regions</span>
+            <span class="font-header text-lg font-bold text-amber-500">{company.region.map(r => r.toUpperCase()).join(", ")}</span>
           </div>
         </div>
       </section>
@@ -135,31 +153,31 @@ const faqSchema = {
       {/* Main Grid Content */}
       <div class="company-track-grid">
         {/* Left Column: Process & Problems */}
-        <div class="track-main-col">
+        <div class="track-main-col space-y-8">
           {/* Section: Process Map */}
-          <div class="track-section">
-            <h2 class="section-title">Interview Process Map</h2>
-            <p class="section-subtitle">Click on each round to check duration, focus items, and pro interview tips.</p>
+          <div class="track-section sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+            <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Interview Process Map</h2>
+            <p class="text-[var(--sketch-text-muted)] text-sm mb-6 font-sketch">Click on each round to check duration, focus items, and pro interview tips.</p>
             <ProcessMap rounds={company.rounds} companyId={company.id} client:load />
           </div>
 
           {/* Section: Distinctives */}
-          <div class="track-section">
-            <h2 class="section-title">What's Different Here</h2>
-            <div class="distinctives-list">
+          <div class="track-section sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+            <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-4">What's Different Here</h2>
+            <div class="distinctives-list space-y-3">
               {company.distinctives.map((d, idx) => (
-                <div key={idx} class="distinctive-item">
-                  <span class="distinctive-bullet">✦</span>
-                  <p>{d}</p>
+                <div key={idx} class="distinctive-item flex items-start gap-3">
+                  <span class="text-amber-500 font-bold text-lg">✦</span>
+                  <p class="text-[var(--sketch-text)] text-base font-sketch leading-relaxed">{d}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Section: Coding Problems */}
-          <div class="track-section">
-            <h2 class="section-title">Curated Problem Set</h2>
-            <p class="section-subtitle">DSA questions reported in {company.name} interviews, ordered by frequency.</p>
+          <div class="track-section sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+            <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Curated Problem Set</h2>
+            <p class="text-[var(--sketch-text-muted)] text-sm mb-6 font-sketch">DSA questions reported in {company.name} interviews, ordered by frequency.</p>
             <CompanyProblemList 
               problems={problems} 
               companyId={company.id} 
@@ -170,12 +188,12 @@ const faqSchema = {
         </div>
 
         {/* Right Column: Study Plan & Behavioral */}
-        <div class="track-sidebar-col">
+        <div class="track-sidebar-col space-y-8">
           {/* Embedded Study Plan */}
           {plan && (
-            <div class="sidebar-section">
-              <h2 class="section-title">Curated Study Plan</h2>
-              <p class="section-subtitle">Step-by-step prep track on our planning engine.</p>
+            <div class="sidebar-section sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+              <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Curated Study Plan</h2>
+              <p class="text-[var(--sketch-text-muted)] text-sm mb-4 font-sketch">Step-by-step prep track on our planning engine.</p>
               <div style="margin-top: 1rem;">
                 <PlanDetail plan={plan} allPlans={plans} client:only="react" />
               </div>
@@ -183,30 +201,163 @@ const faqSchema = {
           )}
 
           {/* Behavioral Fit */}
-          <div class="sidebar-section behavioral-card">
-            <h3>Behavioral Alignment</h3>
-            <p>
+          <div class="sidebar-section behavioral-card sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+            <h3 class="font-header font-bold text-xl text-amber-500 mb-2">Behavioral Alignment</h3>
+            <p class="text-[var(--sketch-text-muted)] text-sm leading-relaxed mb-4 font-sketch">
               {company.id === 'amazon' 
                 ? "Amazon places exceptional weight on leadership principles. Prepare your STAR stories beforehand." 
                 : "Google evaluates structural general cognitive ability. Practice handling complexity and ambiguities."}
             </p>
-            <a href="/DSA-Notes-Problems/behavioral" class="behavioral-link">
+            <a href="/DSA-Notes-Problems/behavioral" class="sketch-button inline-flex items-center gap-2 text-xs font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20">
               Go to Behavioral Prep →
             </a>
           </div>
 
           {/* Levels & Career Grid */}
-          <div class="sidebar-section levels-card">
-            <h3>Level Mapping Context</h3>
-            <div class="levels-display">
-              <span class="levels-note">{company.levelsNote}</span>
+          <div class="sidebar-section levels-card sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+            <h3 class="font-header font-bold text-xl text-[var(--sketch-text)] mb-2">Level Mapping Context</h3>
+            <div class="levels-display mb-3">
+              <span class="text-xs font-mono text-amber-400 font-bold">{company.levelsNote}</span>
             </div>
-            <p class="levels-disclaimer">
-              We recommend cross-referencing salary benchmarks directly at <a href="https://www.levels.fyi" target="_blank" rel="noopener noreferrer">levels.fyi</a>.
+            <p class="text-xs text-[var(--sketch-text-muted)] font-sketch">
+              We recommend cross-referencing salary benchmarks directly at <a href="https://www.levels.fyi" target="_blank" rel="noopener noreferrer" class="text-amber-500 underline">levels.fyi</a>.
             </p>
           </div>
         </div>
       </div>
+
+      {/* Sketch Blackboard Footer */}
+      <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16 max-w-6xl mx-auto mb-10">
+        {/* Top Branding & Description */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-3xl">🏢</span>
+              <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)]">
+                {company.name} Interview Studio
+              </h3>
+            </div>
+            <p className="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
+              Round-by-round process map, curated problem sets, and study tracks for {company.name}.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/prathameshp107/DSA-Notes-Problems"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
+            >
+              <span>⭐ Star on GitHub</span>
+            </a>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="sketch-button flex items-center gap-1.5 text-sm font-bold"
+              title="Back to top"
+            >
+              <span>↑ Top</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Column Quick Links Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+          {/* Column 1: Featured Tracks */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>🎯</span> Company Tracks
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}companies/google`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Google SDE Track
+                </a>
+              </li>
+              <li>
+                <a href={`${base}companies/amazon`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Amazon SDE Track
+                </a>
+              </li>
+              <li>
+                <a href={`${base}companies`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> All Company Directories
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: Interview Prep */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>💡</span> Interview Tools
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}interview-questions`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Interview Questions Hub
+                </a>
+              </li>
+              <li>
+                <a href={`${base}labs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Practice Labs Hub
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Design & DSA */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>📐</span> Design & DSA
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}system-design`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> System Design Hub
+                </a>
+              </li>
+              <li>
+                <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Visualizer Studio
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Quizzes & Practice */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>❓</span> MCQ Quizzes
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}mcq`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> All MCQ Categories
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/javascript`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> JavaScript MCQ
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Copyright & Design Bar */}
+        <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+          <div>
+            © {new Date().getFullYear()} {company.name} Track · Hand-crafted Blackboard UI.
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-emerald-500 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              {company.rounds?.length || 0} Interview Rounds Verified
+            </span>
+          </div>
+        </div>
+      </footer>
     </div>
   </body>
 </html>

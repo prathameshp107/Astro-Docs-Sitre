@@ -4,6 +4,7 @@ import CompanyDirectory from '../../components/companies/CompanyDirectory.jsx';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/companies.css';
+import '../../styles/sketch-visualizer.css';
 ---
 
 <!DOCTYPE html>
@@ -18,15 +19,19 @@ import '../../styles/companies.css';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
-  <body class="mcq-body">
+  <body class="mcq-body font-sketch">
     <AppNav activeSection="companies" client:load />
     
-    <div style="max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem;">
-      <header style="margin-bottom: 2.5rem; text-align: center;">
-        <h1 style="font-size: 2.5rem; font-weight: 900; color: var(--text); font-family: var(--font-display); margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+    <div class="max-w-6xl mx-auto px-4 py-8">
+      <!-- Chalkboard Hero Section -->
+      <header class="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl text-center mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
+        <div class="inline-block sketch-border-soft px-4 py-1.5 text-xs font-mono font-bold bg-amber-500/20 text-amber-500 border-amber-500/40 rounded-full mb-4">
+          🏢 TARGETED RECRUITER TRACKS
+        </div>
+        <h1 class="font-header font-bold text-4xl md:text-5xl text-[var(--sketch-text)] mb-4">
           Company Interview Tracks
         </h1>
-        <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.5;">
+        <p class="text-[var(--sketch-text-muted)] text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-sketch">
           Targeted study pipelines mapped out round-by-round. Curated problem sets, behavioral LPs, and interactive prep plans.
         </p>
       </header>

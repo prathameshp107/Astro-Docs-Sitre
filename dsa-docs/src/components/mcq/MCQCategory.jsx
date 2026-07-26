@@ -4,6 +4,7 @@ import Skeleton, { SkeletonGrid } from '../Skeleton.jsx';
 import { MCQ_CATEGORIES, getTopicsForCategory, getQuestionsForCategory } from './MCQData.js';
 import { getInitialProgress, getCategoryAccuracy, getTopicAccuracy } from './MCQStore.js';
 import { CategoryIcon } from './CategoryIcons.jsx';
+import '../../styles/sketch-visualizer.css';
 
 function ProgressRing({ value, size = 40, color }) {
   const r = (size - 5) / 2;
@@ -261,13 +262,165 @@ export default function MCQCategory({ categoryId }) {
         )}
       </section>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t py-6" style={{ borderColor: 'var(--mcq-border)' }}>
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between text-xs" style={{ color: 'var(--mcq-text-muted)' }}>
-          <p>Built by <strong>Prathamesh Pawar</strong></p>
-          <div className="flex gap-4">
-            <a href={`${base}mcq`} className="hover:text-blue-400 transition-colors">All Categories</a>
-            <a href={`${base}mcq/dashboard`} className="hover:text-blue-400 transition-colors">Dashboard</a>
+      {/* Sketch Blackboard Footer */}
+      <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16 max-w-6xl mx-auto mb-10">
+        {/* Top Branding & Description */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-3xl">❓</span>
+              <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)]">
+                {cat.name} Quiz & Practice Module
+              </h3>
+            </div>
+            <p className="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
+              Master {cat.name} through interactive multiple-choice quizzes, topic drills, assessment modes, and detailed explanations.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/prathameshp107/DSA-Notes-Problems"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
+            >
+              <span>⭐ Star on GitHub</span>
+            </a>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="sketch-button flex items-center gap-1.5 text-sm font-bold"
+              title="Back to top"
+            >
+              <span>↑ Top</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Column Quick Links Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+          {/* Column 1: Frontend MCQ */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <CategoryIcon categoryId="react" size={18} /> Frontend Quizzes
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}mcq/javascript`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="javascript" size={15} /> JavaScript Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/react`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="react" size={15} /> React Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/typescript`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="typescript" size={15} /> TypeScript Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/css`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="css" size={15} /> CSS Quizzes
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: Backend & Languages */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <CategoryIcon categoryId="python" size={18} /> Backend & Core
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}mcq/nodejs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="nodejs" size={15} /> Node.js Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/python`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="python" size={15} /> Python Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/system-design`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="system-design" size={15} /> System Design
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/git`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="git" size={15} /> Git Quizzes
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Databases & Tools */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <CategoryIcon categoryId="mongodb" size={18} /> DB & DevOps
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}mcq/mongodb`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="mongodb" size={15} /> MongoDB Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/sql`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="sql" size={15} /> SQL Quizzes
+                </a>
+              </li>
+              <li>
+                <a href={`${base}mcq/docker`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <CategoryIcon categoryId="docker" size={15} /> Docker Quizzes
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Navigation */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>🚀</span> Visualizers & Hubs
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}mcq`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> All MCQ Categories
+                </a>
+              </li>
+              <li>
+                <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Visualizer Studio
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Interview Questions Hub
+                </a>
+              </li>
+              <li>
+                <a href={`${base}labs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Practice Labs Hub
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Copyright & Design Bar */}
+        <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+          <div>
+            © {new Date().getFullYear()} MCQ Quiz Studio · Hand-crafted Blackboard UI.
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-emerald-500 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              {questionCount} Questions Available in {cat.name}
+            </span>
           </div>
         </div>
       </footer>

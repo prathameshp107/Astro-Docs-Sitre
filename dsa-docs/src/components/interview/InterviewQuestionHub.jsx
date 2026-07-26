@@ -1,6 +1,23 @@
 import { useState, useEffect, useMemo, useRef, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  SiJavascript,
+  SiReact,
+  SiNextdotjs,
+  SiAngular,
+  SiNodedotjs,
+  SiPython,
+  SiCss,
+  SiHtml5,
+  SiMongodb,
+  SiMysql,
+  SiRedis,
+  SiDocker,
+  SiOpenai,
+} from 'react-icons/si';
+import { LuBinary, LuBoxes } from 'react-icons/lu';
 import { TABS, STORAGE_KEY, TOTAL_QUESTIONS } from '../../data/interview-questions-data.js';
+import '../../styles/sketch-visualizer.css';
 
 /* ─── Accent colors per tab ─── */
 const ACCENT = {
@@ -10,13 +27,31 @@ const ACCENT = {
   docker: '#2496ed', oops: '#ec4899',
 };
 
-/* ─── Icons per tab ─── */
-const ICON = {
-  js: '🟨', react: '⚛️', next: '▲', angular: '🅰️',
-  nodejs: '🟢', python: '🐍', ai: '🤖', css: '🎨', html: '🌐',
-  dsa: '📊', mongodb: '🍃', mysql: '🐬', redis: '🔴',
-  docker: '🐳', oops: '🧩',
+/* ─── Real Official Brand Icons per tab ─── */
+const TECH_ICON_MAP = {
+  js: { Icon: SiJavascript, color: '#F7DF1E' },
+  react: { Icon: SiReact, color: '#61DAFB' },
+  next: { Icon: SiNextdotjs, color: 'var(--sketch-text)' },
+  angular: { Icon: SiAngular, color: '#DD0031' },
+  nodejs: { Icon: SiNodedotjs, color: '#68A063' },
+  python: { Icon: SiPython, color: '#3776AB' },
+  ai: { Icon: SiOpenai, color: '#10A37F' },
+  css: { Icon: SiCss, color: '#1572B6' },
+  html: { Icon: SiHtml5, color: '#E34F26' },
+  dsa: { Icon: LuBinary, color: '#A78BFA' },
+  mongodb: { Icon: SiMongodb, color: '#47A248' },
+  mysql: { Icon: SiMysql, color: '#4479A1' },
+  redis: { Icon: SiRedis, color: '#DC382D' },
+  docker: { Icon: SiDocker, color: '#2496ED' },
+  oops: { Icon: LuBoxes, color: '#EC4899' },
 };
+
+function TechIcon({ id, size = 20, className = "" }) {
+  const item = TECH_ICON_MAP[id];
+  if (!item) return <span>📁</span>;
+  const { Icon, color } = item;
+  return <Icon size={size} className={`inline-block flex-shrink-0 ${className}`} style={{ color }} />;
+}
 
 function getInitialTab() {
   if (typeof window === 'undefined') return 'js';
@@ -38,6 +73,7 @@ export default function InterviewQuestionHub() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
   const searchRef = useRef(null);
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
   useEffect(() => {
     try {
@@ -215,21 +251,21 @@ export default function InterviewQuestionHub() {
       <style>{`
         /* ═══ Base ═══ */
         .iq-root {
-          --iq-bg: #0a0c12;
-          --iq-surface: #11141e;
-          --iq-surface2: #181c2a;
-          --iq-surface3: #1f2435;
-          --iq-border: #232838;
-          --iq-border-light: #2a3042;
-          --iq-text: #e4e7ef;
-          --iq-muted: #6b7290;
-          --iq-radius: 12px;
-          color: var(--iq-text);
-          font-family: var(--font-sans);
+          --iq-bg: var(--sketch-bg);
+          --iq-surface: var(--sketch-bg-dim);
+          --iq-surface2: var(--sketch-bg);
+          --iq-surface3: var(--sketch-bg-dim);
+          --iq-border: var(--sketch-border);
+          --iq-border-light: var(--sketch-border);
+          --iq-text: var(--sketch-text);
+          --iq-muted: var(--sketch-text-muted);
+          --iq-radius: 16px;
+          color: var(--sketch-text);
+          font-family: 'Patrick Hand', cursive, sans-serif;
           min-height: 100vh;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 28px 100px;
+          padding: 0 28px 60px;
           position: relative;
         }
         .iq-root * { box-sizing: border-box; }
@@ -286,68 +322,30 @@ export default function InterviewQuestionHub() {
           50% { opacity: 0.3; }
         }
         .iq-title {
+          font-family: 'Architects Daughter', cursive, sans-serif;
           font-size: clamp(2.2rem, 5vw, 3.5rem);
           font-weight: 800;
-          letter-spacing: -1.5px;
           line-height: 1.1;
           margin-bottom: 14px;
-          background: linear-gradient(135deg, #f7df1e 0%, #61dafb 50%, #a78bfa 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: var(--sketch-text);
         }
         .iq-subtitle {
-          color: var(--iq-muted);
-          font-size: 1rem;
-          max-width: 520px;
+          font-family: 'Patrick Hand', cursive, sans-serif;
+          color: var(--sketch-text-muted);
+          font-size: 1.2rem;
+          max-width: 540px;
           margin: 0 auto 32px;
           line-height: 1.6;
         }
 
-        /* ═══ Stats Row ═══ */
-        .iq-stats {
-          display: flex;
-          justify-content: center;
-          gap: 40px;
-          flex-wrap: wrap;
-        }
-        .iq-stat {
-          text-align: center;
-          position: relative;
-        }
-        .iq-stat + .iq-stat::before {
-          content: '';
-          position: absolute;
-          left: -20px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 1px;
-          height: 32px;
-          background: var(--iq-border);
-        }
-        .iq-stat-num {
-          font-family: var(--font-mono);
-          font-size: 2rem;
-          font-weight: 700;
-          line-height: 1;
-          background: linear-gradient(135deg, #f7df1e, #f59e0b);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .iq-stat-label {
-          font-size: 0.72rem;
-          color: var(--iq-muted);
-          margin-top: 4px;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
-        }
 
-        /* ═══ Category Overview ═══ */
+
+        /* ═══ Category Overview Grid ═══ */
         .iq-overview {
           position: relative;
           z-index: 1;
           margin-bottom: 28px;
+          font-family: 'Patrick Hand', cursive, sans-serif;
         }
         .iq-overview-toggle {
           display: flex;
@@ -355,55 +353,62 @@ export default function InterviewQuestionHub() {
           gap: 8px;
           background: none;
           border: none;
-          color: var(--iq-muted);
-          font-size: 0.78rem;
-          font-family: 'Inter', sans-serif;
+          color: var(--sketch-text-muted);
+          font-size: 1.1rem;
+          font-family: 'Patrick Hand', cursive, sans-serif;
+          font-weight: 700;
           cursor: pointer;
           padding: 8px 0;
           margin-bottom: 12px;
           transition: color 0.2s;
         }
-        .iq-overview-toggle:hover { color: var(--iq-text); }
+        .iq-overview-toggle:hover { color: var(--sketch-text); }
         .iq-overview-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-          gap: 8px;
+          grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+          gap: 12px;
         }
         .iq-ov-item {
           display: flex;
           align-items: center;
-          gap: 10px;
-          padding: 10px 12px;
-          border-radius: 10px;
-          background: var(--iq-surface);
-          border: 1px solid var(--iq-border);
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          background: var(--sketch-bg-dim);
+          border: 2px solid var(--sketch-border);
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.2s ease;
         }
         .iq-ov-item:hover {
-          border-color: var(--iq-border-light);
-          background: var(--iq-surface2);
-          transform: translateY(-1px);
+          border-color: var(--sketch-accent-orange);
+          background: var(--sketch-bg-dim);
+          transform: rotate(-1deg) scale(1.03);
+          box-shadow: 0 4px 14px rgba(249, 115, 22, 0.2);
         }
         .iq-ov-item.active {
-          border-color: var(--iq-tab-accent, var(--iq-border-light));
-          box-shadow: 0 0 20px color-mix(in srgb, var(--iq-tab-accent, transparent) 8%, transparent);
+          border-color: var(--sketch-accent-orange);
+          background: color-mix(in srgb, var(--sketch-accent-orange) 15%, var(--sketch-bg-dim));
+          box-shadow: 0 4px 16px rgba(249, 115, 22, 0.25);
+          transform: scale(1.02);
         }
-        .iq-ov-icon { font-size: 1rem; flex-shrink: 0; }
+        .iq-ov-icon { font-size: 1.3rem; flex-shrink: 0; }
         .iq-ov-info { flex: 1; min-width: 0; }
         .iq-ov-name {
-          font-size: 0.7rem;
-          font-weight: 600;
+          font-size: 0.95rem;
+          font-family: 'Architects Daughter', cursive, sans-serif;
+          font-weight: 700;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           margin-bottom: 3px;
+          color: var(--sketch-text);
         }
         .iq-ov-bar {
-          height: 3px;
-          background: var(--iq-border);
+          height: 5px;
+          background: var(--sketch-bg);
           border-radius: 4px;
           overflow: hidden;
+          border: 1px solid var(--sketch-border);
         }
         .iq-ov-fill {
           height: 100%;
@@ -411,27 +416,28 @@ export default function InterviewQuestionHub() {
           transition: width 0.6s ease;
         }
         .iq-ov-pct {
-          font-size: 0.6rem;
+          font-size: 0.75rem;
           font-family: 'JetBrains Mono', monospace;
-          color: var(--iq-muted);
+          color: var(--sketch-text-muted);
           flex-shrink: 0;
+          font-weight: 700;
         }
 
-        /* ═══ Nav Tabs ═══ */
+        /* ═══ Sticky Nav Tabs ═══ */
         .iq-nav-wrap {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: rgba(10,12,18,0.92);
+          background: var(--sketch-bg);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
-          border-bottom: 1px solid var(--iq-border);
-          margin: 0 -28px;
-          padding: 0 28px;
+          border-bottom: 2px solid var(--sketch-border);
+          margin: 0 -28px 24px;
+          padding: 8px 28px;
         }
         .iq-nav-tabs {
           display: flex;
-          gap: 2px;
+          gap: 6px;
           overflow-x: auto;
           scrollbar-width: none;
           padding: 6px 0;
@@ -439,16 +445,16 @@ export default function InterviewQuestionHub() {
         .iq-nav-tabs::-webkit-scrollbar { display: none; }
         .iq-nav-tab {
           flex-shrink: 0;
-          padding: 10px 16px;
-          background: none;
-          border: none;
-          border-radius: 8px;
-          color: var(--iq-muted);
-          font-family: var(--font-sans);
-          font-size: 0.85rem;
-          font-weight: 600;
+          padding: 8px 18px;
+          background: transparent;
+          border: 2px solid transparent;
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          color: var(--sketch-text-muted);
+          font-family: 'Patrick Hand', cursive, sans-serif;
+          font-size: 1.1rem;
+          font-weight: 700;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.2s ease;
           white-space: nowrap;
           display: flex;
           align-items: center;
@@ -456,72 +462,70 @@ export default function InterviewQuestionHub() {
           position: relative;
         }
         .iq-nav-tab:hover {
-          color: var(--iq-text);
-          background: var(--iq-surface);
+          color: var(--sketch-text);
+          border-color: var(--sketch-border);
+          transform: rotate(-1deg);
         }
         .iq-nav-tab.active {
-          color: var(--iq-tab-accent, var(--iq-text));
-          background: color-mix(in srgb, var(--iq-tab-accent, transparent) 10%, var(--iq-surface2));
+          color: #ffffff !important;
+          background: var(--sketch-accent-orange);
+          border-color: #f59e0b;
+          box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+          transform: scale(1.04);
         }
         .iq-nav-dot {
-          width: 7px; height: 7px;
+          width: 8px; height: 8px;
           border-radius: 50%;
           flex-shrink: 0;
         }
         .iq-nav-progress {
-          font-size: 0.6rem;
+          font-size: 0.75rem;
           font-family: 'JetBrains Mono', monospace;
-          opacity: 0.5;
+          opacity: 0.8;
           margin-left: 2px;
-        }
-        .iq-nav-indicator {
-          position: absolute;
-          bottom: -1px;
-          left: 0; right: 0;
-          height: 2px;
-          border-radius: 2px;
         }
 
         /* ═══ Search ═══ */
         .iq-search-wrap {
           position: relative;
           z-index: 1;
-          padding: 20px 0 4px;
+          padding: 4px 0 12px;
+          font-family: 'Patrick Hand', cursive, sans-serif;
         }
         .iq-search {
           width: 100%;
-          background: var(--iq-surface);
-          border: 1px solid var(--iq-border);
-          border-radius: var(--iq-radius);
-          color: var(--iq-text);
-          font-family: var(--font-sans);
-          font-size: 0.9rem;
-          padding: 12px 44px 12px 46px;
+          background: var(--sketch-bg-dim);
+          border: 2px solid var(--sketch-border);
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          color: var(--sketch-text);
+          font-family: 'Patrick Hand', cursive, sans-serif;
+          font-size: 1.15rem;
+          padding: 12px 44px 12px 48px;
           outline: none;
           transition: border-color 0.25s, box-shadow 0.25s;
           box-sizing: border-box;
         }
         .iq-search:focus {
-          border-color: var(--iq-search-accent, #f7df1e);
-          box-shadow: 0 0 0 3px color-mix(in srgb, var(--iq-search-accent, #f7df1e) 12%, transparent);
+          border-color: var(--sketch-accent-orange);
+          box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
         }
-        .iq-search::placeholder { color: var(--iq-muted); }
+        .iq-search::placeholder { color: var(--sketch-text-muted); }
         .iq-search-icon {
           position: absolute;
-          left: 16px;
+          left: 18px;
           top: 50%;
           transform: translateY(-50%);
-          color: var(--iq-muted);
+          color: var(--sketch-text-muted);
           pointer-events: none;
         }
         .iq-search-clear {
           position: absolute;
-          right: 12px;
+          right: 14px;
           top: 50%;
           transform: translateY(-50%);
           background: none;
           border: none;
-          color: var(--iq-muted);
+          color: var(--sketch-text-muted);
           cursor: pointer;
           padding: 4px;
           border-radius: 4px;
@@ -530,497 +534,136 @@ export default function InterviewQuestionHub() {
           align-items: center;
           justify-content: center;
         }
-        .iq-search-clear:hover { color: var(--iq-text); }
+        .iq-search-clear:hover { color: var(--sketch-text); }
         .iq-search-hint {
           position: absolute;
-          right: 40px;
+          right: 44px;
           top: 50%;
           transform: translateY(-50%);
-          font-size: 0.6rem;
-          color: var(--iq-muted);
-          background: var(--iq-surface2);
-          padding: 2px 6px;
-          border-radius: 4px;
-          border: 1px solid var(--iq-border);
-          letter-spacing: 0.5px;
+          font-size: 0.7rem;
+          color: var(--sketch-accent-orange);
+          background: var(--sketch-bg);
+          padding: 2px 8px;
+          border-radius: 6px;
+          border: 1px solid var(--sketch-border);
           font-family: 'JetBrains Mono', monospace;
-          opacity: 0.6;
+          font-weight: 700;
         }
 
         /* ═══ Difficulty Filter Bar ═══ */
         .iq-filter-bar {
           display: flex;
-          gap: 6px;
-          padding: 10px 0 4px;
+          align-items: center;
+          gap: 8px;
+          padding: 6px 0 16px;
           flex-wrap: wrap;
+          font-family: 'Patrick Hand', cursive, sans-serif;
         }
         .iq-filter-btn {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 6px 14px;
-          border-radius: 999px;
-          border: 1px solid var(--iq-border);
-          background: var(--iq-surface);
-          color: var(--iq-muted);
-          font-family: var(--font-sans);
-          font-size: 0.75rem;
-          font-weight: 600;
+          padding: 6px 16px;
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          border: 2px solid var(--sketch-border);
+          background: var(--sketch-bg-dim);
+          color: var(--sketch-text-muted);
+          font-family: 'Patrick Hand', cursive, sans-serif;
+          font-size: 1rem;
+          font-weight: 700;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.2s ease;
           white-space: nowrap;
-          letter-spacing: 0.2px;
         }
         .iq-filter-btn:hover {
-          border-color: var(--iq-border-light);
-          color: var(--iq-text);
-          background: var(--iq-surface2);
+          border-color: var(--sketch-text);
+          color: var(--sketch-text);
+          transform: rotate(-1deg);
         }
         .iq-filter-btn.active-all {
-          background: var(--iq-surface2);
-          border-color: var(--iq-border-light);
-          color: var(--iq-text);
+          background: var(--sketch-text);
+          color: var(--sketch-bg);
+          border-color: var(--sketch-text);
         }
         .iq-filter-btn.active-easy {
-          background: rgba(34,197,94,0.12);
-          border-color: rgba(34,197,94,0.3);
-          color: #4ade80;
+          background: rgba(34,197,94,0.2);
+          border-color: #22c55e;
+          color: #22c55e;
         }
         .iq-filter-btn.active-med {
-          background: rgba(251,146,60,0.12);
-          border-color: rgba(251,146,60,0.3);
+          background: rgba(251,146,60,0.2);
+          border-color: #fb923c;
           color: #fb923c;
         }
         .iq-filter-btn.active-hard {
-          background: rgba(239,68,68,0.12);
-          border-color: rgba(239,68,68,0.3);
+          background: rgba(239,68,68,0.2);
+          border-color: #f87171;
           color: #f87171;
         }
         .iq-filter-count {
-          font-size: 0.6rem;
-          font-family: var(--font-mono);
-          opacity: 0.6;
-          min-width: 16px;
-          text-align: center;
-        }
-        .iq-filter-spacer {
-          flex: 1;
-        }
-        .iq-filter-clear {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 6px 10px;
-          border-radius: 6px;
-          border: none;
-          background: none;
-          color: var(--iq-muted);
-          font-family: var(--font-sans);
-          font-size: 0.7rem;
-          cursor: pointer;
-          transition: color 0.2s;
-          opacity: 0;
-          pointer-events: none;
-        }
-        .iq-filter-clear.visible {
-          opacity: 1;
-          pointer-events: auto;
-        }
-        .iq-filter-clear:hover {
-          color: var(--iq-text);
+          font-size: 0.8rem;
+          font-family: 'JetBrains Mono', monospace;
+          opacity: 0.8;
+          font-weight: 700;
         }
         .iq-practice-btn {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
-          padding: 6px 14px;
-          border-radius: 999px;
-          border: 1px solid var(--iq-border);
-          background: var(--iq-surface);
-          color: var(--iq-muted);
-          font-family: var(--font-sans);
-          font-size: 0.75rem;
-          font-weight: 600;
+          gap: 8px;
+          padding: 8px 18px;
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          border: 2px solid #f59e0b;
+          background: rgba(245, 158, 11, 0.2);
+          color: #f59e0b;
+          font-family: 'Architects Daughter', cursive, sans-serif;
+          font-size: 1rem;
+          font-weight: 700;
           cursor: pointer;
-          transition: all 0.2s;
-          white-space: nowrap;
-          letter-spacing: 0.2px;
+          transition: all 0.2s ease;
           margin-left: auto;
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
         }
         .iq-practice-btn:hover {
-          border-color: var(--iq-tab-accent, var(--iq-border-light));
-          color: var(--iq-tab-accent, var(--iq-text));
-          background: color-mix(in srgb, var(--iq-tab-accent, transparent) 8%, var(--iq-surface2));
-        }
-
-        /* ═══ Quiz / Practice Mode ═══ */
-        .iq-quiz-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 200;
-          background: var(--iq-bg);
-          display: flex;
-          flex-direction: column;
-          padding: 0;
-          overflow-y: auto;
-        }
-        .iq-quiz-header {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          padding: 16px 28px;
-          border-bottom: 1px solid var(--iq-border);
-          background: rgba(10,12,18,0.95);
-          backdrop-filter: blur(12px);
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
-        .iq-quiz-back {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 8px 14px;
-          border-radius: 8px;
-          border: 1px solid var(--iq-border);
-          background: var(--iq-surface);
-          color: var(--iq-muted);
-          font-family: var(--font-sans);
-          font-size: 0.78rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .iq-quiz-back:hover {
-          border-color: var(--iq-border-light);
-          color: var(--iq-text);
-        }
-        .iq-quiz-progress-text {
-          font-family: var(--font-mono);
-          font-size: 0.78rem;
-          color: var(--iq-muted);
-          flex: 1;
-          text-align: center;
-        }
-        .iq-quiz-progress-text span {
-          color: var(--iq-text);
-          font-weight: 700;
-        }
-        .iq-quiz-tab-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 6px 12px;
-          border-radius: 8px;
-          font-size: 0.72rem;
-          font-weight: 600;
-          background: color-mix(in srgb, var(--iq-tab-accent, #f7df1e) 12%, var(--iq-surface2));
-          color: var(--iq-tab-accent, var(--iq-text));
-          border: 1px solid color-mix(in srgb, var(--iq-tab-accent, #f7df1e) 20%, transparent);
-        }
-        .iq-quiz-body {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 40px 28px;
-        }
-        .iq-quiz-card {
-          width: 100%;
-          max-width: 800px;
-          background: var(--iq-surface);
-          border: 1px solid var(--iq-border);
-          border-radius: 16px;
-          padding: 40px 44px;
-          position: relative;
-          overflow: hidden;
-        }
-        .iq-quiz-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: var(--iq-tab-accent, var(--iq-border-light));
-          opacity: 0.4;
-        }
-        .iq-quiz-question-num {
-          font-family: var(--font-mono);
-          font-size: 0.7rem;
-          font-weight: 700;
-          color: var(--iq-muted);
-          text-transform: uppercase;
-          letter-spacing: 1.5px;
-          margin-bottom: 8px;
-        }
-        .iq-quiz-question-num span {
-          color: var(--iq-tab-accent, var(--iq-text));
-        }
-        .iq-quiz-question-text {
-          font-size: 1.2rem;
-          font-weight: 600;
-          line-height: 1.6;
-          margin-bottom: 20px;
-          color: var(--iq-text);
-        }
-        .iq-quiz-diff {
-          display: inline-flex;
-          font-size: 0.6rem;
-          padding: 4px 12px;
-          border-radius: 999px;
-          font-weight: 600;
-          letter-spacing: 0.4px;
-          text-transform: uppercase;
-          margin-bottom: 24px;
-        }
-        .iq-quiz-actions {
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
-          margin-top: 28px;
-        }
-        .iq-quiz-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 24px;
-          border-radius: 10px;
-          border: 1px solid var(--iq-border);
-          font-family: var(--font-sans);
-          font-size: 0.85rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .iq-quiz-btn-primary {
-          background: var(--iq-tab-accent, #f7df1e);
-          color: #000;
-          border-color: var(--iq-tab-accent, #f7df1e);
-        }
-        .iq-quiz-btn-primary:hover {
-          filter: brightness(1.15);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 16px color-mix(in srgb, var(--iq-tab-accent, #f7df1e) 25%, transparent);
-        }
-        .iq-quiz-btn-success {
-          background: #22c55e;
-          color: #000;
-          border-color: #22c55e;
-        }
-        .iq-quiz-btn-success:hover {
-          filter: brightness(1.1);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 16px rgba(34,197,94,0.25);
-        }
-        .iq-quiz-btn-skip {
-          background: var(--iq-surface2);
-          color: var(--iq-muted);
-          border-color: var(--iq-border);
-        }
-        .iq-quiz-btn-skip:hover {
-          border-color: var(--iq-border-light);
-          color: var(--iq-text);
-        }
-        .iq-quiz-btn-ghost {
-          background: transparent;
-          color: var(--iq-muted);
-          border-color: transparent;
-          padding: 12px 16px;
-        }
-        .iq-quiz-btn-ghost:hover {
-          color: var(--iq-text);
-        }
-        .iq-quiz-answer-panel {
-          margin-top: 28px;
-          padding: 20px 24px;
-          background: color-mix(in srgb, var(--iq-bg) 60%, var(--iq-surface2));
-          border-radius: 12px;
-          border: 1px solid var(--iq-border);
-          border-left: 3px solid var(--iq-tab-accent, var(--iq-border-light));
-        }
-        .iq-quiz-answer-label {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 0.6rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 1.2px;
-          color: var(--iq-tab-accent, var(--iq-text));
-          margin-bottom: 12px;
-          padding: 4px 10px;
-          border-radius: 4px;
-          background: color-mix(in srgb, var(--iq-tab-accent, transparent) 10%, transparent);
-          border: 1px solid color-mix(in srgb, var(--iq-tab-accent, transparent) 15%, transparent);
-          width: fit-content;
-        }
-        .iq-quiz-answer-label svg { width: 12px; height: 12px; }
-
-        /* Quiz completion */
-        .iq-quiz-done {
-          text-align: center;
-          padding: 60px 40px;
-        }
-        .iq-quiz-done-icon {
-          font-size: 4rem;
-          margin-bottom: 16px;
-        }
-        .iq-quiz-done-title {
-          font-size: 1.8rem;
-          font-weight: 800;
-          margin-bottom: 8px;
-          background: linear-gradient(135deg, #22c55e, #4ade80);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-        .iq-quiz-done-sub {
-          color: var(--iq-muted);
-          font-size: 1rem;
-          margin-bottom: 32px;
-        }
-        .iq-quiz-done-stats {
-          display: flex;
-          justify-content: center;
-          gap: 32px;
-          margin-bottom: 32px;
-        }
-        .iq-quiz-done-stat {
-          text-align: center;
-        }
-        .iq-quiz-done-stat-num {
-          font-family: var(--font-mono);
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: var(--iq-text);
-        }
-        .iq-quiz-done-stat-label {
-          font-size: 0.72rem;
-          color: var(--iq-muted);
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin-top: 4px;
-        }
-
-        /* ═══ Section Header ═══ */
-        .iq-section-header {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          margin: 24px 0 16px;
-          padding-bottom: 14px;
-          border-bottom: 1px solid var(--iq-border);
-        }
-        .iq-section-icon {
-          font-family: var(--font-mono);
-          font-size: 1.3rem;
-          font-weight: 700;
-          width: 48px; height: 48px;
-          display: flex; align-items: center; justify-content: center;
-          border-radius: 14px;
-          flex-shrink: 0;
-          border: 1px solid var(--iq-border-light);
-          background: var(--iq-surface);
-        }
-        .iq-section-info { flex: 1; }
-        .iq-section-title { font-size: 1.15rem; font-weight: 700; }
-        .iq-section-count { font-size: 0.75rem; color: var(--iq-muted); margin-top: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .iq-section-count-sep { opacity: 0.4; }
-        .iq-section-count-filtered {
-          color: var(--iq-card-accent, var(--iq-muted));
-          font-weight: 600;
-          font-family: var(--font-mono);
-          font-size: 0.65rem;
-        }
-        .iq-section-pct {
-          font-size: 0.85rem;
-          font-family: 'JetBrains Mono', monospace;
-          font-weight: 600;
-          text-align: right;
-        }
-
-        /* ═══ Progress Bar ═══ */
-        .iq-progress-wrap { margin-bottom: 24px; }
-        .iq-progress-row {
-          display: flex;
-          justify-content: space-between;
-          font-size: 0.75rem;
-          color: var(--iq-muted);
-          margin-bottom: 8px;
-        }
-        .iq-progress-bar {
-          height: 5px;
-          background: var(--iq-surface3);
-          border-radius: 999px;
-          overflow: hidden;
-          position: relative;
-        }
-        .iq-progress-fill {
-          height: 100%;
-          border-radius: 999px;
-          transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-          position: relative;
-        }
-        .iq-progress-fill::after {
-          content: '';
-          position: absolute;
-          top: 0; left: 0; right: 0; bottom: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-          animation: iq-shimmer 2.5s ease-in-out infinite;
-        }
-        @keyframes iq-shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          transform: scale(1.04) rotate(-1deg);
+          background: #f59e0b;
+          color: #000000;
         }
 
         /* ═══ Question Cards ═══ */
         .iq-grid {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 12px;
+          font-family: 'Patrick Hand', cursive, sans-serif;
         }
         .iq-card {
-          background: var(--iq-surface);
-          border: 1px solid var(--iq-border);
-          border-radius: var(--iq-radius);
-          padding: 14px 18px;
+          background: var(--sketch-bg-dim);
+          border: 2px solid var(--sketch-border);
+          border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+          padding: 16px 20px;
           display: flex;
           flex-direction: column;
-          transition: border-color 0.2s, background 0.2s;
+          transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
           cursor: pointer;
           position: relative;
           overflow: hidden;
-        }
-        .iq-card::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0;
-          bottom: 0;
-          width: 3px;
-          background: var(--iq-card-accent, transparent);
-          opacity: 0;
-          transition: opacity 0.2s;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         .iq-card:hover {
-          background: var(--iq-surface2);
-          border-color: var(--iq-border-light);
+          background: var(--sketch-bg-dim);
+          border-color: var(--sketch-accent-orange);
+          transform: rotate(-0.5deg) translateY(-2px);
+          box-shadow: 0 8px 24px rgba(249, 115, 22, 0.18);
         }
-        .iq-card:hover::before { opacity: 1; }
         .iq-card.done {
-          opacity: 0.5;
-          border-color: transparent;
-        }
-        .iq-card.done::before {
-          opacity: 1;
-          background: #22c55e;
+          opacity: 0.7;
+          border-color: #22c55e;
+          background: color-mix(in srgb, #22c55e 8%, var(--sketch-bg-dim));
         }
         .iq-card.expanded {
-          border-color: var(--iq-card-accent, var(--iq-border-light));
-          background: var(--iq-surface2);
-          box-shadow: 0 0 40px color-mix(in srgb, var(--iq-card-accent, transparent) 6%, transparent),
-                      0 8px 32px rgba(0,0,0,0.12);
+          border-color: var(--sketch-accent-orange);
+          background: var(--sketch-bg-dim);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
         }
         .iq-card-row {
           display: flex;
@@ -1029,37 +672,38 @@ export default function InterviewQuestionHub() {
           width: 100%;
         }
         .iq-num {
-          font-family: var(--font-mono);
-          font-size: 0.7rem;
-          font-weight: 600;
-          min-width: 26px;
-          color: var(--iq-muted);
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.85rem;
+          font-weight: 700;
+          min-width: 32px;
+          color: var(--sketch-accent-orange);
           flex-shrink: 0;
-          opacity: 0.6;
         }
-        .iq-card.done .iq-num { color: #22c55e; opacity: 1; }
+        .iq-card.done .iq-num { color: #22c55e; }
         .iq-text {
-          font-size: 0.88rem;
-          font-weight: 500;
+          font-family: 'Architects Daughter', cursive, sans-serif;
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: var(--sketch-text);
           flex: 1;
-          line-height: 1.5;
+          line-height: 1.4;
         }
-        .iq-card.done .iq-text { text-decoration: line-through; text-decoration-color: rgba(34,197,94,0.3); }
+        .iq-card.done .iq-text { text-decoration: line-through; text-decoration-color: rgba(34,197,94,0.5); }
 
         .iq-check {
-          width: 22px; height: 22px;
-          border: 1.5px solid var(--iq-border);
-          border-radius: 6px;
+          width: 26px; height: 26px;
+          border: 2px solid var(--sketch-border);
+          border-radius: 8px;
           flex-shrink: 0;
           display: flex; align-items: center; justify-content: center;
           transition: all 0.2s;
-          position: relative;
+          cursor: pointer;
         }
-        .iq-card:hover .iq-check { border-color: var(--iq-border-light); }
+        .iq-card:hover .iq-check { border-color: var(--sketch-accent-orange); }
         .iq-card.done .iq-check {
-          background: var(--green-500);
-          border-color: var(--green-500);
-          box-shadow: 0 0 12px rgba(34,197,94,0.3);
+          background: #22c55e;
+          border-color: #22c55e;
+          box-shadow: 0 0 12px rgba(34,197,94,0.4);
         }
         .iq-check svg {
           opacity: 0;
@@ -1067,88 +711,77 @@ export default function InterviewQuestionHub() {
         }
         .iq-card.done .iq-check svg { opacity: 1; }
         .iq-expand-icon {
-          width: 18px; height: 18px;
+          width: 24px; height: 24px;
           flex-shrink: 0;
-          color: var(--iq-muted);
+          color: var(--sketch-text-muted);
           transition: transform 0.3s ease, color 0.2s;
           display: flex; align-items: center; justify-content: center;
         }
-        .iq-card.expanded .iq-expand-icon { transform: rotate(180deg); color: var(--iq-card-accent, var(--iq-text)); }
+        .iq-card.expanded .iq-expand-icon { transform: rotate(180deg); color: var(--sketch-accent-orange); }
 
         /* ═══ Answer Panel ═══ */
         .iq-answer {
           overflow: hidden;
         }
         .iq-answer-inner {
-          padding: 20px 20px 16px;
-          border-top: 1px solid var(--iq-border);
-          margin-top: 14px;
-          background: color-mix(in srgb, var(--iq-bg) 60%, var(--iq-surface2));
-          border-radius: 0 0 var(--iq-radius) var(--iq-radius);
+          padding: 20px;
+          border-top: 2px dashed var(--sketch-border);
+          margin-top: 16px;
+          background: var(--sketch-bg);
+          border-radius: 16px;
           position: relative;
-        }
-        .iq-answer-inner::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 16px;
-          right: 16px;
-          height: 1.5px;
-          border-radius: 2px;
-          background: var(--iq-card-accent, var(--iq-border-light));
-          opacity: 0.3;
         }
         .iq-answer-label {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          font-size: 0.58rem;
+          font-size: 0.75rem;
+          font-family: 'JetBrains Mono', monospace;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 1.2px;
-          color: var(--iq-card-accent, var(--iq-text));
+          color: var(--sketch-accent-orange);
           margin-bottom: 14px;
           padding: 4px 12px;
-          border-radius: 4px;
-          background: color-mix(in srgb, var(--iq-card-accent, transparent) 10%, transparent);
-          border: 1px solid color-mix(in srgb, var(--iq-card-accent, transparent) 15%, transparent);
+          border-radius: 8px;
+          background: rgba(249, 115, 22, 0.15);
+          border: 1px solid rgba(249, 115, 22, 0.3);
           width: fit-content;
         }
-        .iq-answer-label svg { width: 12px; height: 12px; }
+        .iq-answer-label svg { width: 14px; height: 14px; }
         .iq-answer-text {
-          color: var(--iq-text);
+          color: var(--sketch-text);
+          font-family: 'Patrick Hand', cursive, sans-serif;
         }
         .iq-answer-para {
           margin: 0 0 12px;
-          font-size: 0.88rem;
-          line-height: 1.8;
-          color: var(--iq-text);
-          opacity: 0.88;
+          font-size: 1.1rem;
+          line-height: 1.7;
+          color: var(--sketch-text);
         }
         .iq-answer-para:last-child {
           margin-bottom: 0;
         }
         .iq-inline-code {
-          background: var(--iq-surface3);
-          color: var(--iq-card-accent, var(--iq-text));
-          padding: 0.15em 0.45em;
-          border-radius: 4px;
-          font-family: var(--font-mono);
-          font-size: 0.82em;
-          font-weight: 500;
-          border: 1px solid color-mix(in srgb, var(--iq-card-accent, var(--iq-border)) 20%, transparent);
+          background: var(--sketch-bg-dim);
+          color: var(--sketch-accent-orange);
+          padding: 0.15em 0.5em;
+          border-radius: 6px;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.85em;
+          font-weight: 700;
+          border: 1px solid var(--sketch-border);
         }
         .iq-code-block {
-          margin: 10px 0;
-          padding: 14px 16px;
-          background: var(--iq-surface3);
-          border: 1px solid var(--iq-border);
-          border-radius: 8px;
+          margin: 14px 0;
+          padding: 16px;
+          background: #121110;
+          border: 2px solid var(--sketch-border);
+          border-radius: 12px;
           overflow-x: auto;
-          font-family: var(--font-mono);
-          font-size: 0.78rem;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.85rem;
           line-height: 1.65;
-          color: var(--iq-text);
+          color: #fde68a;
           white-space: pre;
           tab-size: 2;
         }
@@ -1161,27 +794,26 @@ export default function InterviewQuestionHub() {
         }
         .iq-no-answer {
           padding: 24px 20px;
-          font-size: 0.82rem;
-          color: var(--iq-muted);
+          font-size: 1rem;
+          color: var(--sketch-text-muted);
           font-style: italic;
-          opacity: 0.5;
           text-align: center;
-          border-top: 1px solid var(--iq-border);
-          margin-top: 12px;
+          border-top: 2px dashed var(--sketch-border);
+          margin-top: 14px;
         }
 
         .iq-diff {
-          font-size: 0.6rem;
-          padding: 3px 10px;
+          font-size: 0.75rem;
+          padding: 4px 12px;
           border-radius: 999px;
-          font-weight: 600;
-          letter-spacing: 0.3px;
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: 700;
           flex-shrink: 0;
           text-transform: uppercase;
         }
-        .iq-diff-hard  { background: color-mix(in srgb, var(--red-500) 15%, transparent); color: var(--red-400); }
-        .iq-diff-med   { background: rgba(251,146,60,0.15); color: #fb923c; }
-        .iq-diff-easy  { background: rgba(34,197,94,0.15);  color: #4ade80; }
+        .iq-diff-hard  { background: rgba(244,63,94,0.2); color: #f43f5e; border: 1px solid rgba(244,63,94,0.4); }
+        .iq-diff-med   { background: rgba(251,146,60,0.2); color: #fb923c; border: 1px solid rgba(251,146,60,0.4); }
+        .iq-diff-easy  { background: rgba(34,197,94,0.2);  color: #22c55e; border: 1px solid rgba(34,197,94,0.4); }
 
         /* Hidden by search */
         .iq-card.hidden { display: none; }
@@ -1190,11 +822,12 @@ export default function InterviewQuestionHub() {
         .iq-empty {
           text-align: center;
           padding: 64px 24px;
-          color: var(--iq-muted);
+          color: var(--sketch-text-muted);
+          font-family: 'Patrick Hand', cursive, sans-serif;
         }
-        .iq-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-        .iq-empty-text { font-size: 0.9rem; margin-bottom: 4px; }
-        .iq-empty-hint { font-size: 0.78rem; opacity: 0.6; }
+        .iq-empty-icon { font-size: 3rem; margin-bottom: 12px; }
+        .iq-empty-text { font-size: 1.5rem; font-family: 'Architects Daughter', cursive, sans-serif; margin-bottom: 6px; }
+        .iq-empty-hint { font-size: 1.1rem; opacity: 0.8; }
 
         /* ═══ Responsive ═══ */
         @media (max-width: 768px) {
@@ -1220,33 +853,62 @@ export default function InterviewQuestionHub() {
       {/* Ambient glow */}
       <div className="iq-ambient" />
 
-      {/* ═══ Header ═══ */}
+      {/* ═══ Hand-Drawn Hero Header Banner ═══ */}
       <motion.header
-        className="iq-header"
+        className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl mb-10 shadow-2xl relative overflow-hidden font-sketch border-2 border-[var(--sketch-border)]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="iq-badge">
-          <span className="iq-badge-dot" />
-          {TOTAL_QUESTIONS} Questions · {TABS.length} Technologies
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b-2 border-dashed border-[var(--sketch-border)]">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-500 text-xs font-mono font-bold uppercase tracking-wider mb-3">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              {TOTAL_QUESTIONS} Questions · {TABS.length} Tech Stacks
+            </div>
+            <h1 className="text-4xl md:text-5xl font-header font-bold text-[var(--sketch-text)] leading-tight mb-3">
+              🎯 Tech Interview Prep & Mastery Studio
+            </h1>
+            <p className="text-[var(--sketch-text-muted)] text-base md:text-lg max-w-2xl leading-relaxed font-sketch">
+              Master 1,400+ high-frequency interview questions across 15 technologies with instant progress tracking, detailed explanations, and flashcard practice mode.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={startQuiz}
+              className="sketch-button flex items-center gap-2 text-base font-bold bg-[var(--sketch-accent-orange)] text-white shadow-lg shadow-orange-500/30 scale-[1.03] hover:scale-[1.06]"
+            >
+              <span>⚡ Practice Flashcards</span>
+            </button>
+            <a
+              href={`${base}visualizer`}
+              className="sketch-button flex items-center gap-2 text-base font-bold"
+            >
+              <span>🎨 Visualizer Studio</span>
+            </a>
+          </div>
         </div>
-        <h1 className="iq-title">Interview Questions Hub</h1>
-        <p className="iq-subtitle">
-          High-frequency, hard-hitting questions across all topics. Track what you've studied.
-        </p>
-        <div className="iq-stats">
-          <div className="iq-stat">
-            <div className="iq-stat-num">{totalDone}</div>
-            <div className="iq-stat-label">Completed</div>
+
+        {/* Hero Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6">
+          <div className="sketch-panel-box sketch-border p-4 text-center rounded-2xl bg-[var(--sketch-bg)]">
+            <div className="text-3xl font-header font-bold text-amber-500">{totalDone}</div>
+            <div className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider mt-1">Questions Mastered</div>
           </div>
-          <div className="iq-stat">
-            <div className="iq-stat-num">{TOTAL_QUESTIONS}</div>
-            <div className="iq-stat-label">Total Questions</div>
+          <div className="sketch-panel-box sketch-border p-4 text-center rounded-2xl bg-[var(--sketch-bg)]">
+            <div className="text-3xl font-header font-bold text-cyan-400">{TOTAL_QUESTIONS}</div>
+            <div className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider mt-1">Total Question Deck</div>
           </div>
-          <div className="iq-stat">
-            <div className="iq-stat-num">{totalDone > 0 ? Math.round(totalDone / TOTAL_QUESTIONS * 100) : 0}%</div>
-            <div className="iq-stat-label">Overall Progress</div>
+          <div className="sketch-panel-box sketch-border p-4 text-center rounded-2xl bg-[var(--sketch-bg)]">
+            <div className="text-3xl font-header font-bold text-emerald-400">
+              {totalDone > 0 ? Math.round((totalDone / TOTAL_QUESTIONS) * 100) : 0}%
+            </div>
+            <div className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider mt-1">Overall Mastery</div>
+          </div>
+          <div className="sketch-panel-box sketch-border p-4 text-center rounded-2xl bg-[var(--sketch-bg)]">
+            <div className="text-3xl font-header font-bold text-purple-400">{TABS.length}</div>
+            <div className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider mt-1">Tech Topics</div>
           </div>
         </div>
       </motion.header>
@@ -1282,11 +944,11 @@ export default function InterviewQuestionHub() {
                     key={tab.id}
                     className={`iq-ov-item${isActive ? ' active' : ''}`}
                     style={{ '--iq-tab-accent': tab.accent }}
-                  onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
-                  whileHover={{ scale: 1.02 }}
+                    onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
+                    whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <span className="iq-ov-icon">{ICON[tab.id] || '📁'}</span>
+                    <TechIcon id={tab.id} size={24} />
                     <div className="iq-ov-info">
                       <div className="iq-ov-name" style={{ color: isActive ? tab.accent : undefined }}>{tab.label}</div>
                       <div className="iq-ov-bar">
@@ -1315,21 +977,14 @@ export default function InterviewQuestionHub() {
             const isActive = activeTab === tab.id;
             return (
               <button
-                key={tab.id}                    className={`iq-nav-tab${isActive ? ' active' : ''}`}
-                    style={{ '--iq-tab-accent': tab.accent }}
-                    onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
-                  >
-                    <span className="iq-nav-dot" style={{ background: tab.accent }} />
+                key={tab.id}
+                className={`iq-nav-tab${isActive ? ' active' : ''}`}
+                style={{ '--iq-tab-accent': tab.accent }}
+                onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
+              >
+                <TechIcon id={tab.id} size={18} />
                 {tab.label}
                 <span className="iq-nav-progress">{p.count}/{p.total}</span>
-                {isActive && (
-                  <motion.div
-                    className="iq-nav-indicator"
-                    layoutId="nav-indicator"
-                    style={{ background: tab.accent }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
               </button>
             );
           })}
@@ -1425,39 +1080,39 @@ export default function InterviewQuestionHub() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="iq-section-header">
-            <div className="iq-section-icon">{ICON[activeConfig.id] || '?'}</div>
-            <div className="iq-section-info">
-              <div className="iq-section-title">{activeConfig.label}</div>
-              <div className="iq-section-count">
-                {activeConfig.questions.length} questions
-                {(search.trim() || difficultyFilter !== 'all') && filtered.length < activeConfig.questions.length && (
-                  <>
-                    <span className="iq-section-count-sep">·</span>
-                    <span className="iq-section-count-filtered" style={{ color: activeConfig.accent }}>
-                      {filtered.length} shown
+          {/* Sketch Topic Banner */}
+          <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl mb-8 shadow-md font-sketch border-2 border-[var(--sketch-border)]">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)] shadow-inner flex items-center justify-center">
+                  <TechIcon id={activeConfig.id} size={30} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-header font-bold text-[var(--sketch-text)] flex items-center gap-2">
+                    {activeConfig.label}
+                    <span className="text-sm font-mono text-amber-500 font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30">
+                      {filtered.length} {filtered.length === 1 ? 'Question' : 'Questions'}
                     </span>
-                  </>
-                )}
+                  </h3>
+                  <p className="text-xs font-mono text-[var(--sketch-text-muted)] mt-0.5">
+                    {pct.count} of {pct.total} Mastered · ({pct.pct.toFixed(0)}% Completion)
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="text-2xl font-mono font-bold text-amber-500">{pct.pct.toFixed(0)}%</div>
+                <div className="text-xs font-mono text-[var(--sketch-text-muted)]">Category Score</div>
               </div>
             </div>
-            <div className="iq-section-pct" style={{ color: activeConfig.accent }}>
-              {pct.pct.toFixed(0)}%
-            </div>
-          </div>
 
-          <div className="iq-progress-wrap">
-            <div className="iq-progress-row">
-              <span>Progress</span>
-              <span>{pct.count} / {pct.total}</span>
-            </div>
-            <div className="iq-progress-bar">
+            {/* Sketch Animated Bar */}
+            <div className="w-full h-3 bg-[var(--sketch-bg)] rounded-full overflow-hidden border border-[var(--sketch-border)]">
               <motion.div
-                className="iq-progress-fill"
+                className="h-full rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-400"
                 initial={{ width: 0 }}
                 animate={{ width: `${pct.pct}%` }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
-                style={{ background: `linear-gradient(90deg, ${activeConfig.accent}, ${activeConfig.accent}cc)` }}
               />
             </div>
           </div>
@@ -1579,8 +1234,8 @@ export default function InterviewQuestionHub() {
             ) : (
               <div className="iq-quiz-progress-text">Complete!</div>
             )}
-            <div className="iq-quiz-tab-badge">
-              {ICON[activeTab] || '📁'} {activeConfig?.label || ''}
+            <div className="iq-quiz-tab-badge flex items-center gap-1.5">
+              <TechIcon id={activeTab} size={18} /> {activeConfig?.label || ''}
             </div>
           </div>
 
@@ -1726,6 +1381,168 @@ export default function InterviewQuestionHub() {
           </div>
         </motion.div>
       )}
+      {/* Sketch Blackboard Footer */}
+      <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16">
+        {/* Top Branding & Description */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-3xl">🎯</span>
+              <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)]">
+                Interview Questions Hub & Practice Studio
+              </h3>
+            </div>
+            <p className="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
+              Over 1400+ high-frequency tech interview questions covering JavaScript, React, Next.js, Node.js, Python, DSA, Databases, Docker, and OOP with step-by-step solutions and progress tracking.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/prathameshp107/DSA-Notes-Problems"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
+            >
+              <span>⭐ Star on GitHub</span>
+            </a>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="sketch-button flex items-center gap-1.5 text-sm font-bold"
+              title="Back to top"
+            >
+              <span>↑ Top</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Column Quick Links Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+          {/* Column 1: Frontend Stack */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="react" size={18} /> Frontend Stack
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}interview-questions?tab=js`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="js" size={15} /> JavaScript (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=react`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="react" size={15} /> React (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=next`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="next" size={15} /> Next.js (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=angular`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="angular" size={15} /> Angular (200 Questions)
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: Backend & Languages */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="python" size={18} /> Backend & Core
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}interview-questions?tab=nodejs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="nodejs" size={15} /> Node.js (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=python`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="python" size={15} /> Python (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=dsa`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="dsa" size={15} /> DSA Patterns (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=oops`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="oops" size={15} /> OOP Design (200 Questions)
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Databases & DevOps */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="docker" size={18} /> DB & DevOps
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}interview-questions?tab=mongodb`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="mongodb" size={15} /> MongoDB (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=mysql`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="mysql" size={15} /> MySQL (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=redis`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="redis" size={15} /> Redis (140+ Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=docker`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="docker" size={15} /> Docker (200 Questions)
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Platform Navigation */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>🚀</span> Visualizers & Docs
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Visualizer Studio
+                </a>
+              </li>
+              <li>
+                <a href={`${base}overview`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Docs & Practice Notes
+                </a>
+              </li>
+              <li>
+                <a href={base} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Home Page
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Copyright & Design Bar */}
+        <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+          <div>
+            © {new Date().getFullYear()} DSA & Tech Interview Studio · Hand-crafted Blackboard UI.
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-emerald-500 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              {TOTAL_QUESTIONS}+ Interview Questions Active
+            </span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

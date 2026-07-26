@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import EstimationCalculator from './EstimationCalculator';
 import DatabaseAdvisor from './DatabaseAdvisor';
+import { CategoryIcon } from '../mcq/CategoryIcons.jsx';
+import '../../styles/sketch-visualizer.css';
 
 const CASE_STUDIES = [
   { slug: 'url-shortener', title: 'Design URL Shortener (TinyURL)', desc: 'Key generation, redirection, caching, and database scaling.', interactive: true, link: '/system-design/url-shortener' },
@@ -39,96 +41,104 @@ export default function SystemDesignHub() {
   const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? '';
 
   return (
-    <div className="sys-hub-container">
-      {/* Hero Section */}
-      <section className="sys-hub-hero">
-        <div className="sys-hub-badge">Premium Feature</div>
-        <h1 className="sys-hub-title">System Design Hub</h1>
-        <p className="sys-hub-subtitle">
+    <div className="sys-hub-container font-sketch max-w-6xl mx-auto px-4 py-8">
+      {/* Chalkboard Hero Section */}
+      <section className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl text-center mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
+        <div className="inline-block sketch-border-soft px-4 py-1.5 text-xs font-mono font-bold bg-amber-500/20 text-amber-500 border-amber-500/40 rounded-full mb-4">
+          ⚡ SYSTEM DESIGN STUDIO
+        </div>
+        <h1 className="font-header font-bold text-4xl md:text-5xl text-[var(--sketch-text)] mb-4">
+          System Design Hub
+        </h1>
+        <p className="text-[var(--sketch-text-muted)] text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-8 font-sketch">
           Evolve architectures from a single server to serving billions of users. 
-          Learn High-Level Design (HLD) and Low-Level Design (LLD) with interactive visualizers.
+          Learn High-Level Design (HLD) and Low-Level Design (LLD) with interactive calculators and visualizers.
         </p>
 
-        {/* Quick Stats */}
-        <div className="sys-hub-stats-row">
-          <div className="sys-hub-stat-item">
-            <span className="stat-num">20</span>
-            <span className="stat-lbl">HLD Topics</span>
+        {/* Quick Stats Grid */}
+        <div className="flex flex-wrap items-center justify-center gap-6 pt-4 border-t border-[var(--sketch-border)] max-w-2xl mx-auto">
+          <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
+            <span className="font-header text-3xl font-bold text-amber-500 block">20</span>
+            <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">HLD Topics</span>
           </div>
-          <div className="sys-hub-divider"></div>
-          <div className="sys-hub-stat-item">
-            <span className="stat-num">10</span>
-            <span className="stat-lbl">Case Studies</span>
+          <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
+            <span className="font-header text-3xl font-bold text-emerald-400 block">10</span>
+            <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">Case Studies</span>
           </div>
-          <div className="sys-hub-divider"></div>
-          <div className="sys-hub-stat-item">
-            <span className="stat-num">15</span>
-            <span className="stat-lbl">LLD Projects</span>
+          <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
+            <span className="font-header text-3xl font-bold text-cyan-400 block">15</span>
+            <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">LLD Projects</span>
           </div>
         </div>
       </section>
 
-      {/* Grid: Main Sections / Hub Tabs */}
-      <div className="sys-hub-tabs">
+      {/* Chalkboard Mode Tabs */}
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-10 font-sketch">
         <button 
-          className={`sys-hub-tab-btn ${activeTab === 'case-studies' ? 'active' : ''}`}
+          className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'case-studies' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
           onClick={() => setActiveTab('case-studies')}
         >
-          📂 Case Studies
+          <span>📂</span> Case Studies
         </button>
         <button 
-          className={`sys-hub-tab-btn ${activeTab === 'calculator' ? 'active' : ''}`}
+          className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'calculator' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
           onClick={() => setActiveTab('calculator')}
         >
-          🧮 Capacity Calculator
+          <span>🧮</span> Capacity Calculator
         </button>
         <button 
-          className={`sys-hub-tab-btn ${activeTab === 'lld' ? 'active' : ''}`}
+          className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'lld' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
           onClick={() => setActiveTab('lld')}
         >
-          ⚙️ LLD / OOP Design
+          <span>⚙️</span> LLD / OOP Design
         </button>
         <button 
-          className={`sys-hub-tab-btn ${activeTab === 'advisor' ? 'active' : ''}`}
+          className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'advisor' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
           onClick={() => setActiveTab('advisor')}
         >
-          🤖 DB Advisor
+          <span>🤖</span> DB Advisor
         </button>
       </div>
 
       {/* Tab Panels */}
-      <div className="sys-hub-content">
+      <div className="sys-hub-content mb-16">
         {/* PANEL: Case Studies */}
         {activeTab === 'case-studies' && (
-          <div className="sys-hub-panel">
-            <div className="panel-header">
-              <h2>Architectural Case Studies</h2>
-              <p>Step-by-step scaling patterns from real-world products.</p>
+          <div className="sys-hub-panel space-y-8">
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
+              <h2 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Architectural Case Studies</h2>
+              <p className="text-[var(--sketch-text-muted)] text-sm font-sketch">Step-by-step scaling patterns from real-world products.</p>
             </div>
             
-            <div className="sys-hub-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {CASE_STUDIES.map((c) => (
-                <div key={c.slug} className={`sys-hub-card ${c.interactive ? 'interactive-card' : ''}`}>
-                  {c.interactive && (
-                    <div className="card-badge-wrap">
-                      <span className="card-badge animate-pulse">Interactive</span>
-                    </div>
-                  )}
-                  <h3 className="card-title">{c.title}</h3>
-                  <p className="card-desc">{c.desc}</p>
-                  <div className="card-footer">
+                <div key={c.slug} className="sketch-panel-box sketch-border group flex flex-col justify-between p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500 hover:shadow-xl bg-[var(--sketch-bg-dim)] cursor-pointer">
+                  <div>
+                    {c.interactive && (
+                      <span className="inline-block sketch-border-soft px-3 py-1 text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full mb-3 animate-pulse">
+                        ⚡ Interactive Visualizer
+                      </span>
+                    )}
+                    <h3 className="font-header font-bold text-xl text-[var(--sketch-text)] group-hover:text-amber-500 transition-colors mb-2">
+                      {c.title}
+                    </h3>
+                    <p className="text-[var(--sketch-text-muted)] text-sm leading-relaxed mb-6 font-sketch">
+                      {c.desc}
+                    </p>
+                  </div>
+                  <div className="pt-4 border-t border-[var(--sketch-border)]">
                     {c.interactive ? (
                       <a 
                         href={c.slug === 'url-shortener' 
                           ? `${base}/system-design/url-shortener` 
                           : `${base}/system-design/url-shortener?case=${c.slug}`
                         } 
-                        className="card-action-btn primary"
+                        className="sketch-button flex items-center justify-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 w-full text-center"
                       >
                         Launch Visualizer →
                       </a>
                     ) : (
-                      <a href={`${base}/hld/case-studies/design-${c.slug}`} className="card-action-btn secondary">
+                      <a href={`${base}/hld/case-studies/design-${c.slug}`} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold w-full text-center">
                         Read Guide
                       </a>
                     )}
@@ -138,12 +148,14 @@ export default function SystemDesignHub() {
             </div>
 
             {/* Quick HLD Course Links */}
-            <div className="sys-hub-course-box">
-              <h3>📚 HLD Fundamentals Course</h3>
-              <p>Master the building blocks of distributed systems before diving into case studies.</p>
-              <div className="course-links-grid">
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl border-2 border-[var(--sketch-border)] shadow-xl">
+              <h3 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-2 flex items-center gap-2">
+                <span>📚</span> HLD Fundamentals Course
+              </h3>
+              <p className="text-[var(--sketch-text-muted)] text-sm mb-6 font-sketch">Master the building blocks of distributed systems before diving into case studies.</p>
+              <div className="flex flex-wrap gap-3">
                 {HLD_TOPICS.map((topic, i) => (
-                  <a key={i} href={`${base}/hld/${topic.slug}`} className="course-link-chip">
+                  <a key={i} href={`${base}/hld/${topic.slug}`} className="sketch-button text-sm font-bold text-[var(--sketch-text)] hover:text-amber-500 hover:border-amber-500">
                     {topic.title}
                   </a>
                 ))}
@@ -154,57 +166,63 @@ export default function SystemDesignHub() {
 
         {/* PANEL: Calculator */}
         {activeTab === 'calculator' && (
-          <div className="sys-hub-panel">
-            <div className="panel-header">
-              <h2>Back-of-the-Envelope Calculator</h2>
-              <p>Estimate QPS, bandwidth, and database storage needs in seconds.</p>
+          <div className="sys-hub-panel space-y-8">
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
+              <h2 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Back-of-the-Envelope Calculator</h2>
+              <p className="text-[var(--sketch-text-muted)] text-sm font-sketch">Estimate QPS, bandwidth, and database storage needs in seconds.</p>
             </div>
-            <EstimationCalculator />
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+              <EstimationCalculator />
+            </div>
 
             {/* Quick Cheat Sheet / Reference */}
-            <div className="sys-hub-cheatsheet-container">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Card 1: Latency */}
-              <div className="sys-hub-cheatsheet-card">
-                <h4 className="cheatsheet-card-title">⏱️ Latencies Systems Engineers Should Know</h4>
-                <div className="cheatsheet-table-wrap">
-                  <table className="cheatsheet-table">
+              <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
+                <h4 className="font-header font-bold text-lg text-amber-500 mb-4 flex items-center gap-2">
+                  ⏱️ Latencies Engineers Should Know
+                </h4>
+                <div className="overflow-x-auto font-mono text-xs">
+                  <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr>
-                        <th>Operation</th>
-                        <th>Latency (Approx)</th>
+                      <tr className="border-b border-[var(--sketch-border)] text-[var(--sketch-text-muted)]">
+                        <th className="pb-2">Operation</th>
+                        <th className="pb-2">Latency</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr><td>L1 Cache reference</td><td className="mono-val">0.5 ns</td></tr>
-                      <tr><td>L2 Cache reference</td><td className="mono-val">7 ns</td></tr>
-                      <tr><td>Main memory reference</td><td className="mono-val">100 ns</td></tr>
-                      <tr><td>Send 2KB over 1 Gbps network</td><td className="mono-val">20,000 ns (20 µs)</td></tr>
-                      <tr><td>Read 1MB sequentially from SSD</td><td className="mono-val">1,000,000 ns (1 ms)</td></tr>
-                      <tr><td>Disk seek (HDD)</td><td className="mono-val">10,000,000 ns (10 ms)</td></tr>
-                      <tr><td>Round trip within same DC</td><td className="mono-val">500,000 ns (500 µs)</td></tr>
-                      <tr><td>WAN Round trip (SF to NY)</td><td className="mono-val">45 ms</td></tr>
+                    <tbody className="divide-y divide-[var(--sketch-border)] text-[var(--sketch-text)]">
+                      <tr><td className="py-2">L1 Cache reference</td><td className="text-amber-400 font-bold">0.5 ns</td></tr>
+                      <tr><td className="py-2">L2 Cache reference</td><td className="text-amber-400 font-bold">7 ns</td></tr>
+                      <tr><td className="py-2">Main memory reference</td><td className="text-amber-400 font-bold">100 ns</td></tr>
+                      <tr><td className="py-2">Send 2KB over 1 Gbps network</td><td className="text-amber-400 font-bold">20 µs</td></tr>
+                      <tr><td className="py-2">Read 1MB sequentially from SSD</td><td className="text-amber-400 font-bold">1 ms</td></tr>
+                      <tr><td className="py-2">Disk seek (HDD)</td><td className="text-amber-400 font-bold">10 ms</td></tr>
+                      <tr><td className="py-2">Round trip within same DC</td><td className="text-amber-400 font-bold">500 µs</td></tr>
+                      <tr><td className="py-2">WAN Round trip (SF to NY)</td><td className="text-amber-400 font-bold">45 ms</td></tr>
                     </tbody>
                   </table>
                 </div>
               </div>
 
               {/* Card 2: SLA */}
-              <div className="sys-hub-cheatsheet-card">
-                <h4 className="cheatsheet-card-title">🎯 High Availability SLA / Downtime Limits</h4>
-                <div className="cheatsheet-table-wrap">
-                  <table className="cheatsheet-table">
+              <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
+                <h4 className="font-header font-bold text-lg text-amber-500 mb-4 flex items-center gap-2">
+                  🎯 SLA / Availability Limits
+                </h4>
+                <div className="overflow-x-auto font-mono text-xs">
+                  <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr>
-                        <th>SLA Percent</th>
-                        <th>Downtime per Year</th>
-                        <th>Downtime per Day</th>
+                      <tr className="border-b border-[var(--sketch-border)] text-[var(--sketch-text-muted)]">
+                        <th className="pb-2">SLA %</th>
+                        <th className="pb-2">Downtime/Year</th>
+                        <th className="pb-2">Downtime/Day</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr><td>99% ("Two Nines")</td><td>3.65 days</td><td>14.4 minutes</td></tr>
-                      <tr><td>99.9% ("Three Nines")</td><td>8.77 hours</td><td>1.44 minutes</td></tr>
-                      <tr><td>99.99% ("Four Nines")</td><td className="green-val">52.56 minutes</td><td className="green-val">8.6 seconds</td></tr>
-                      <tr><td>99.999% ("Five Nines")</td><td className="gold-val">5.26 minutes</td><td className="gold-val">864 ms</td></tr>
+                    <tbody className="divide-y divide-[var(--sketch-border)] text-[var(--sketch-text)]">
+                      <tr><td className="py-2 font-bold">99%</td><td>3.65 days</td><td>14.4 mins</td></tr>
+                      <tr><td className="py-2 font-bold">99.9%</td><td>8.77 hours</td><td>1.44 mins</td></tr>
+                      <tr><td className="py-2 font-bold text-emerald-400">99.99%</td><td className="text-emerald-400">52.56 mins</td><td className="text-emerald-400">8.6 secs</td></tr>
+                      <tr><td className="py-2 font-bold text-amber-400">99.999%</td><td className="text-amber-400">5.26 mins</td><td className="text-amber-400">864 ms</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -215,29 +233,35 @@ export default function SystemDesignHub() {
 
         {/* PANEL: LLD */}
         {activeTab === 'lld' && (
-          <div className="sys-hub-panel">
-            <div className="panel-header">
-              <h2>Low-Level & Object-Oriented Design</h2>
-              <p>Master machine coding, SOLID principles, and object-oriented design patterns.</p>
+          <div className="sys-hub-panel space-y-8">
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
+              <h2 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Low-Level & Object-Oriented Design</h2>
+              <p className="text-[var(--sketch-text-muted)] text-sm font-sketch">Master machine coding, SOLID principles, and object-oriented design patterns.</p>
             </div>
 
-            <div className="sys-hub-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {LLD_PROJECTS.map((p) => (
-                <div key={p.slug} className={`sys-hub-card ${p.diagram ? 'lld-interactive-card' : ''}`}>
-                  {p.diagram && (
-                    <div className="card-badge-wrap">
-                      <span className="card-badge lld">UML Class Diagram</span>
-                    </div>
-                  )}
-                  <h3 className="card-title">{p.title}</h3>
-                  <p className="card-desc">Design patterns: <code>{p.patterns}</code></p>
-                  <div className="card-footer">
+                <div key={p.slug} className="sketch-panel-box sketch-border group flex flex-col justify-between p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500 hover:shadow-xl bg-[var(--sketch-bg-dim)] cursor-pointer">
+                  <div>
+                    {p.diagram && (
+                      <span className="inline-block sketch-border-soft px-3 py-1 text-[10px] font-mono font-bold bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/40 rounded-full mb-3">
+                        UML Class Schema
+                      </span>
+                    )}
+                    <h3 className="font-header font-bold text-xl text-[var(--sketch-text)] group-hover:text-amber-500 transition-colors mb-2">
+                      {p.title}
+                    </h3>
+                    <p className="text-[var(--sketch-text-muted)] text-sm font-sketch mb-4">
+                      Patterns: <code className="font-mono text-amber-400">{p.patterns}</code>
+                    </p>
+                  </div>
+                  <div className="pt-4 border-t border-[var(--sketch-border)]">
                     {p.diagram ? (
-                      <a href={`${base}/lld/projects/design-${p.slug}`} className="card-action-btn primary lld-btn">
+                      <a href={`${base}/lld/projects/design-${p.slug}`} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 w-full text-center">
                         View Class Schema →
                       </a>
                     ) : (
-                      <a href={`${base}/lld/projects/design-${p.slug}`} className="card-action-btn secondary">
+                      <a href={`${base}/lld/projects/design-${p.slug}`} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold w-full text-center">
                         View Code
                       </a>
                     )}
@@ -247,15 +271,17 @@ export default function SystemDesignHub() {
             </div>
 
             {/* LLD theory links */}
-            <div className="sys-hub-course-box">
-              <h3>🛠️ LLD & OOP Principles</h3>
-              <div className="course-links-grid">
-                <a href={`${base}/lld/01-oop-fundamentals`} className="course-link-chip">OOP Fundamentals</a>
-                <a href={`${base}/lld/02-solid-principles`} className="course-link-chip">SOLID Principles</a>
-                <a href={`${base}/lld/04-class-diagrams`} className="course-link-chip">Class Diagrams (UML)</a>
-                <a href={`${base}/lld/05-object-relationships`} className="course-link-chip">Object Relationships</a>
-                <a href={`${base}/lld/07-dependency-injection`} className="course-link-chip">Dependency Injection</a>
-                <a href={`${base}/lld/09-machine-coding-approach`} className="course-link-chip">Machine Coding Strategy</a>
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl border-2 border-[var(--sketch-border)] shadow-xl">
+              <h3 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-2 flex items-center gap-2">
+                <span>🛠️</span> LLD & OOP Principles
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                <a href={`${base}/lld/01-oop-fundamentals`} className="sketch-button text-sm font-bold">OOP Fundamentals</a>
+                <a href={`${base}/lld/02-solid-principles`} className="sketch-button text-sm font-bold">SOLID Principles</a>
+                <a href={`${base}/lld/04-class-diagrams`} className="sketch-button text-sm font-bold">Class Diagrams (UML)</a>
+                <a href={`${base}/lld/05-object-relationships`} className="sketch-button text-sm font-bold">Object Relationships</a>
+                <a href={`${base}/lld/07-dependency-injection`} className="sketch-button text-sm font-bold">Dependency Injection</a>
+                <a href={`${base}/lld/09-machine-coding-approach`} className="sketch-button text-sm font-bold">Machine Coding Strategy</a>
               </div>
             </div>
           </div>
@@ -263,15 +289,180 @@ export default function SystemDesignHub() {
 
         {/* PANEL: Advisor */}
         {activeTab === 'advisor' && (
-          <div className="sys-hub-panel">
-            <div className="panel-header">
-              <h2>Interactive Database Advisor</h2>
-              <p>Determine the optimal database technology for your application requirements.</p>
+          <div className="sys-hub-panel space-y-8">
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
+              <h2 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Interactive Database Advisor</h2>
+              <p className="text-[var(--sketch-text-muted)] text-sm font-sketch">Determine the optimal database technology for your application requirements.</p>
             </div>
-            <DatabaseAdvisor />
+            <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+              <DatabaseAdvisor />
+            </div>
           </div>
         )}
       </div>
+
+      {/* Sketch Blackboard Footer */}
+      <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16 max-w-6xl mx-auto mb-10">
+        {/* Top Branding & Description */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-3xl">🏗️</span>
+              <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)]">
+                System Design Studio
+              </h3>
+            </div>
+            <p className="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
+              Master High-Level & Low-Level System Design for FAANG & top tech companies with interactive diagram visualizers, estimation tools, and case studies.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/prathameshp107/DSA-Notes-Problems"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
+            >
+              <span>⭐ Star on GitHub</span>
+            </a>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="sketch-button flex items-center gap-1.5 text-sm font-bold"
+              title="Back to top"
+            >
+              <span>↑ Top</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4-Column Quick Links Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+          {/* Column 1: HLD Case Studies */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>📐</span> HLD Case Studies
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}/system-design/url-shortener`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> TinyURL Shortener
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/system-design/url-shortener?case=uber`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Uber Ride Matching
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/system-design/url-shortener?case=whatsapp`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> WhatsApp Chat Service
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/hld/case-studies/design-youtube`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> YouTube Streaming
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: LLD Projects */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>⚙️</span> LLD Machine Coding
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}/lld/projects/design-parking-lot`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Parking Lot System
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/lld/projects/design-cache-system`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> LRU/LFU Cache
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/lld/projects/design-rate-limiter`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Distributed Rate Limiter
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/lld/02-solid-principles`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> SOLID Principles
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Interactive Tools */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>🧮</span> Design Tools
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <button onClick={() => setActiveTab('calculator')} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5 text-left">
+                  <span>•</span> Capacity Calculator
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setActiveTab('advisor')} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5 text-left">
+                  <span>•</span> DB Advisor Tool
+                </button>
+              </li>
+              <li>
+                <a href={`${base}/hld/03-capacity-estimation`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Estimation Sheet
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Quick Navigation */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>🚀</span> Explore Hubs
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}/visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Visualizer Studio
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/mcq`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> MCQ Quiz Studio
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/interview-questions`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Interview Questions
+                </a>
+              </li>
+              <li>
+                <a href={`${base}/labs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> Practice Labs Hub
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Copyright & Design Bar */}
+        <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+          <div>
+            © {new Date().getFullYear()} System Design Studio · Hand-crafted Blackboard UI.
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-emerald-500 font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              HLD & LLD Modules Loaded
+            </span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

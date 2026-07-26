@@ -6,53 +6,49 @@
 
 /* ─── Theme Variables ─── */
 :root {
-  --mcq-bg: var(--white);
-  --mcq-bg-rgb: 255, 255, 255;
-  --mcq-text: var(--slate-800);
-  --mcq-text-primary: var(--slate-900);
-  --mcq-text-secondary: var(--slate-600);
-  --mcq-text-muted: var(--slate-400);
-  --mcq-text-body: var(--slate-700);
-  /* Light surfaces: progressive depth */
-  --mcq-surface: var(--slate-50);          /* base surface */
-  --mcq-surface-20: var(--slate-100);       /* +1 elevation */
-  --mcq-surface-30: var(--slate-200);       /* +2 elevation */
-  --mcq-surface-40: var(--white);           /* topmost (lightest) */
-  --mcq-surface-hover: var(--slate-100);
-  --mcq-surface-hover-40: var(--slate-200);
-  --mcq-nav-bg: rgba(255, 255, 255, 0.85);
-  --mcq-border: var(--slate-200);
-  --mcq-border-hover: var(--indigo-500);
-  --mcq-border-strong: var(--slate-300);
-  --mcq-border-light: var(--slate-100);
-  /* Code: distinct from surface */
-  --mcq-code-bg: var(--slate-100);
-  --mcq-snippet-header: var(--slate-200);
+  --mcq-bg: var(--sketch-bg);
+  --mcq-bg-rgb: 22, 21, 18;
+  --mcq-text: var(--sketch-text);
+  --mcq-text-primary: var(--sketch-text);
+  --mcq-text-secondary: var(--sketch-text-muted);
+  --mcq-text-muted: var(--sketch-text-muted);
+  --mcq-text-body: var(--sketch-text);
+  --mcq-surface: var(--sketch-bg-dim);
+  --mcq-surface-20: var(--sketch-bg);
+  --mcq-surface-30: var(--sketch-bg-dim);
+  --mcq-surface-40: var(--sketch-bg);
+  --mcq-surface-hover: var(--sketch-bg-dim);
+  --mcq-surface-hover-40: var(--sketch-bg);
+  --mcq-nav-bg: var(--sketch-bg-dim);
+  --mcq-border: var(--sketch-border);
+  --mcq-border-hover: #f59e0b;
+  --mcq-border-strong: var(--sketch-border);
+  --mcq-border-light: var(--sketch-border);
+  --mcq-code-bg: var(--sketch-bg-dim);
+  --mcq-snippet-header: var(--sketch-bg);
 }
 
 :root[data-theme='dark'] {
-  --mcq-bg: var(--slate-950);
-  --mcq-bg-rgb: 2, 6, 23;
-  --mcq-text: var(--slate-100);
-  --mcq-text-primary: var(--slate-50);
-  --mcq-text-secondary: var(--slate-400);
-  --mcq-text-muted: var(--slate-500);
-  --mcq-text-body: var(--slate-300);
-  /* Dark surfaces: progressive depth */
-  --mcq-surface: var(--slate-900);          /* base surface */
-  --mcq-surface-20: var(--slate-750);       /* +1 elevation — one step lighter */
-  --mcq-surface-30: var(--slate-700);       /* +2 elevation */
-  --mcq-surface-40: var(--ink-800);         /* deepest inset */
-  --mcq-surface-hover: var(--slate-700);
-  --mcq-surface-hover-40: var(--slate-700);
-  --mcq-nav-bg: rgba(2, 6, 23, 0.85);
-  --mcq-border: var(--slate-800);
-  --mcq-border-hover: var(--indigo-400);
-  --mcq-border-strong: var(--slate-700);
-  --mcq-border-light: var(--slate-900);
-  /* Code: distinct from surface */
-  --mcq-code-bg: var(--ink-850);
-  --mcq-snippet-header: var(--ink-800);
+  --mcq-bg: var(--sketch-bg);
+  --mcq-bg-rgb: 22, 21, 18;
+  --mcq-text: var(--sketch-text);
+  --mcq-text-primary: var(--sketch-text);
+  --mcq-text-secondary: var(--sketch-text-muted);
+  --mcq-text-muted: var(--sketch-text-muted);
+  --mcq-text-body: var(--sketch-text);
+  --mcq-surface: var(--sketch-bg-dim);
+  --mcq-surface-20: var(--sketch-bg);
+  --mcq-surface-30: var(--sketch-bg-dim);
+  --mcq-surface-40: var(--sketch-bg);
+  --mcq-surface-hover: var(--sketch-bg-dim);
+  --mcq-surface-hover-40: var(--sketch-bg);
+  --mcq-nav-bg: var(--sketch-bg-dim);
+  --mcq-border: var(--sketch-border);
+  --mcq-border-hover: #f59e0b;
+  --mcq-border-strong: var(--sketch-border);
+  --mcq-border-light: var(--sketch-border);
+  --mcq-code-bg: var(--sketch-bg-dim);
+  --mcq-snippet-header: var(--sketch-bg);
 }
 
 @layer base {
@@ -95,36 +91,46 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--white);
-    background: var(--indigo-500);
-    border: none;
-    transition: all 0.15s ease;
+    padding: 0.75rem 1.5rem;
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    font-family: var(--font-header, "Architects Daughter", cursive, sans-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.2);
+    border: 2px solid #f59e0b;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.2);
+    cursor: pointer;
   }
 
   .mcq-btn-primary:hover {
-    background: var(--indigo-700);
+    transform: scale(1.04);
+    background: rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
   }
 
   .mcq-btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--mcq-text-primary);
-    background: var(--mcq-surface);
-    border: 1px solid var(--mcq-border);
-    transition: all 0.15s ease;
+    padding: 0.75rem 1.5rem;
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    font-family: var(--font-sketch, "Patrick Hand", cursive, sans-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--sketch-text);
+    background: var(--sketch-bg-dim);
+    border: 2px solid var(--sketch-border);
+    transition: all 0.2s ease;
+    cursor: pointer;
   }
 
   .mcq-btn-secondary:hover {
-    border-color: var(--mcq-border-hover);
+    border-color: #f59e0b;
+    color: #f59e0b;
+    transform: rotate(-0.5deg) translateY(-2px);
   }
 
   .mcq-btn-ghost {

@@ -3,6 +3,7 @@ import AppNav from '../../components/AppNav.jsx';
 import PlanGallery from '../../components/plans/PlanGallery.jsx';
 import '../../styles/landing.css';
 import '../../styles/plans.css';
+import '../../styles/sketch-visualizer.css';
 
 const { getPlanManifest, getPlans } = await import('../../data/plans/index.js');
 const plans = getPlans();
@@ -21,16 +22,24 @@ const manifest = getPlanManifest();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
-  <body class="plan-page">
+  <body class="plan-page font-sketch">
     <AppNav activeSection="plans" client:load />
-    <div class="plan-page-header">
-      <div class="plan-page-header-badge">
-        <span class="plan-page-header-badge-dot"></span>
-        Structured Learning Paths
-      </div>
-      <h1>Study Plans</h1>
-      <p>Pick a plan. The site tells you exactly what to do every day.</p>
+    
+    <div class="max-w-6xl mx-auto px-4 py-8">
+      <!-- Chalkboard Hero Section -->
+      <header class="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl text-center mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
+        <div class="inline-block sketch-border-soft px-4 py-1.5 text-xs font-mono font-bold bg-amber-500/20 text-amber-500 border-amber-500/40 rounded-full mb-4">
+          🚀 STRUCTURED LEARNING PATHS
+        </div>
+        <h1 class="font-header font-bold text-4xl md:text-5xl text-[var(--sketch-text)] mb-4">
+          Study Plans Studio
+        </h1>
+        <p class="text-[var(--sketch-text-muted)] text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-sketch">
+          Pick a plan. The site tells you exactly what to do every day with interactive task tracking.
+        </p>
+      </header>
+
+      <PlanGallery plans={plans} client:only="react" />
     </div>
-    <PlanGallery plans={plans} client:only="react" />
   </body>
 </html>
