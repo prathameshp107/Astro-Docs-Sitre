@@ -7,6 +7,8 @@ import mdx from '@astrojs/mdx';
 import remarkPracticeLinks from './src/plugins/remark-practice-links.mjs';
 import sidebar from './src/config/sidebar.js';
 
+import { fileURLToPath, URL } from 'node:url';
+
 const isVercel = !!process.env.VERCEL;
 const site = isVercel && process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -21,6 +23,9 @@ export default defineConfig({
   },
   vite: {
     resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
       dedupe: ['react', 'react-dom'],
     },
     server: {

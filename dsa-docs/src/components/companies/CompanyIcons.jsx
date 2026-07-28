@@ -1,12 +1,12 @@
 import {
   SiGoogle,
-  SiAmazon,
   SiMeta,
   SiApple,
   SiNetflix,
   SiUber,
   SiWhatsapp,
 } from 'react-icons/si';
+import { FaAmazon } from 'react-icons/fa';
 
 // Official Microsoft 4-Color Logo SVG
 function MicrosoftIcon({ size = 24 }) {
@@ -76,7 +76,7 @@ function InfosysIcon({ size = 24, color = '#007cc3' }) {
 
 export const COMPANY_ICONS = {
   google:    { Component: SiGoogle,      color: '#4285f4' },
-  amazon:    { Component: SiAmazon,      color: '#ff9900' },
+  amazon:    { Component: FaAmazon,      color: '#ff9900' },
   meta:      { Component: SiMeta,        color: '#0668e1' },
   microsoft: { Component: MicrosoftIcon, color: '#00a4ef' },
   apple:     { Component: SiApple,       color: '#f3f4f6' },
