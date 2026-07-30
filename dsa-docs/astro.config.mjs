@@ -36,8 +36,9 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
-      include: ['@babel/standalone', 'react', 'react-dom', 'react/jsx-runtime'],
-      exclude: ['pyodide'],
+      noDiscovery: true,
+      include: ['react', 'react-dom', 'react/jsx-runtime'],
+      exclude: ['pyodide', '@babel/standalone'],
     },
   },
   integrations: [starlight({
