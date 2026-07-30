@@ -140,6 +140,25 @@ function buildPrefixMap() {
 
 ---
 
+## Follow-up Questions
+
+**Q: The prefix map only rebuilds daily — how do you surface a suddenly trending query within minutes?**
+Run a separate real-time counter (sliding-window count-min sketch or a Kafka stream aggregating query logs) alongside the daily batch job. At read time, merge the top result from the real-time layer with the precomputed Redis suggestions so a spiking query can jump into the top 5 before the next rebuild.
+
+**Q: How would you personalize suggestions per user without adding latency to every keystroke?**
+Keep the base Redis lookup as the fast path, then rerank or splice in personalized results asynchronously (e.g., from a small per-user recent-search cache) client-side or in a lightweight second call that doesn't block rendering the generic suggestions. Avoid computing personalization from scratch per request — precompute per-user-segment rather than per-user.
+
+**Q: How do you keep offensive or inappropriate suggestions out of autocomplete?**
+Filter candidate queries against a blocklist/profanity classifier during the offline `buildPrefixMap` job, before they're written to Redis, and additionally check any real-time-injected trending queries against the same filter so a bad query can't sneak in through the fast path.
+
+**Q: A prefix map holding only the top 5M queries — what happens on a prefix that has no cached entry (long-tail query)?**
+Return an empty or generic result from Redis (cache miss), and optionally fall back to the trie approach or an on-demand DB/search-index prefix query for rare prefixes, accepting higher latency for the long tail since it's not worth precomputing.
+
+**Q: At 58K+ QPS, is a single Redis instance holding the whole prefix map enough?**
+No — shard the prefix map across multiple Redis nodes (e.g., hash the prefix to pick a shard) behind the cache router, the same way the distributed-cache case study spreads keys with consistent hashing.
+
+---
+
 ## In Simple Words
 
 - Autocomplete = as user types, show top 5 suggestions for that prefix.

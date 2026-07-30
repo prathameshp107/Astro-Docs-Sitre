@@ -130,6 +130,25 @@ wait(rules.crawlDelay * 1000); // Wait for politeness
 
 ---
 
+## Follow-up Questions
+
+**Q: How do you avoid crawling the same content reachable via different URLs (tracking params, session IDs, trailing slashes)?**
+Canonicalize URLs before they hit the frontier — strip known tracking/session query params, normalize casing and trailing slashes, sort remaining query params. This is separate from the content-hash dedup (SimHash), which catches cases canonicalization misses, like mirrored content on entirely different domains.
+
+**Q: A site changes its robots.txt mid-crawl to suddenly disallow a path you're already crawling — what happens?**
+Cache robots.txt with a short TTL (not once per crawl) and re-fetch it periodically per domain. Any URLs newly disallowed get pulled from the frontier queue for that domain going forward, but pages already fetched before the change don't need to be retroactively purged.
+
+**Q: How do you prioritize re-crawling a frequently-changing news homepage vs. a static reference page?**
+Track a per-URL change frequency estimate from crawl history (e.g., how often content hash differs between visits) and use it to set re-crawl priority/interval — high-churn pages get short intervals, static pages get pushed to the back of the frontier and revisited rarely.
+
+**Q: What stops the crawler from getting stuck in an infinite space, like a calendar page that links to "next month" forever?**
+Cap crawl depth per domain and detect URL pattern explosion (e.g., near-identical URLs differing only by an incrementing param) to throttle or blacklist that pattern rather than exhausting the frontier on one infinite-generator site.
+
+**Q: How do you handle a domain that's intermittently slow or timing out rather than fully down?**
+Track per-domain error/timeout rates and back off adaptively — increase that domain's politeness delay or temporarily deprioritize it in the frontier, rather than retrying at the same rate and wasting fetcher capacity on a struggling host.
+
+---
+
 ## In Simple Words
 
 - Web crawler = start with seed URLs → download → extract links → repeat, respecting politeness.

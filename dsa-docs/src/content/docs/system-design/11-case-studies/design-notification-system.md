@@ -139,6 +139,25 @@ CREATE TABLE user_preferences (
 
 ---
 
+## Follow-up Questions
+
+**Q: How do you avoid a notification storm when a post gets 1M likes in an hour?**
+Don't fan out one notification per like — aggregate them server-side into a rolling digest ("You and 999,999 others' post got new likes") and only push an update when the count crosses meaningful thresholds or on a fixed interval, not per event.
+
+**Q: A user disabled push for months and just re-enabled it — do they get a flood of backlog notifications?**
+No — notifications should carry a TTL/relevance window at creation time. On re-enable, only recent and still-relevant notifications (e.g., last 24-48h, not "order shipped" from 3 months ago) get delivered, and low-priority categories are dropped entirely rather than replayed.
+
+**Q: If a user has push, email, and SMS all enabled, how do you decide which channel(s) to actually use?**
+Prioritize by urgency and cost: push first (cheap, fast) for time-sensitive alerts, fall back to email/SMS only if push delivery fails or isn't acknowledged within a window, and reserve SMS for high-priority categories only since it's the most expensive channel per message.
+
+**Q: What happens if a downstream provider (FCM, SendGrid, Twilio) is down for an extended period?**
+The worker's rate limiter/circuit breaker trips and messages queue up in Kafka rather than being dropped; combined with at-least-once delivery, they replay once the provider recovers. If the outage is long, consider failing over to an alternate channel for that category.
+
+**Q: How do you guarantee at-least-once delivery without duplicate notifications when a worker crashes mid-send?**
+Track delivery status per (notification_id, channel) in the DB and use idempotency keys when calling the provider API, so a retried send after a crash either gets deduped by the provider or is checked against the "sent" status before resending.
+
+---
+
 ## In Simple Words
 
 - Notification system = receive event → queue → render template → deliver via push/email/SMS.

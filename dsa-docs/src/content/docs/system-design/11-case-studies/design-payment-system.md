@@ -172,6 +172,25 @@ CREATE TABLE ledger_entries (
 
 ---
 
+## Follow-up Questions
+
+**Q: Your API call to the payment processor times out, but their webhook confirming success arrives 30 seconds later — what state is the transaction in, and how do you avoid a double charge?**
+Mark the transaction `pending` on timeout rather than assuming failure. The webhook is the source of truth: when it arrives, it transitions `pending → succeeded` using the same idempotency key, so if the client also retries the original request, the idempotency check returns the already-recorded result instead of charging again.
+
+**Q: With multi-currency payments, how do you keep the conversion rate consistent if a request is retried?**
+Lock the exchange rate at the moment the idempotency key is first created and store it with the transaction record. Retries reuse the stored rate instead of re-fetching the live rate, otherwise a retry minutes later could settle at a different amount than the client confirmed.
+
+**Q: How do you support a partial refund on an order with multiple line items?**
+Track a `refunded_amount` per line item (or per ledger sub-entry) rather than only at the order level, and write each partial refund as its own double-entry pair. Validate that the sum of all partial refunds for a line item never exceeds its original charged amount.
+
+**Q: What if the same idempotency key is replayed but with a different amount?**
+Treat it as a conflict, not a valid retry — reject with an error (e.g., 409) instead of silently returning the original result. A changed amount on a reused key usually means a client bug or a replay/tampering attempt, and honoring it would break the exactly-once guarantee.
+
+**Q: A chargeback comes in three weeks after the transaction settled — how does that flow through an immutable ledger?**
+You never mutate the original transaction row; you record a new reversing transaction (debit the merchant, credit back the processor/buyer side) that references the original `transaction_id`, so the audit trail shows both the original charge and its reversal instead of rewriting history.
+
+---
+
 ## In Simple Words
 
 - Payment system = the most correctness-critical system. No double charges allowed!

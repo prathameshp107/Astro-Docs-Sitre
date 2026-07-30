@@ -163,6 +163,25 @@ class CacheNode {
 
 ---
 
+## Follow-up Questions
+
+**Q: What happens if the entire cache cluster restarts (e.g., a bad deploy)? Won't every request stampede the database?**
+Yes — a cold cluster with 0% hit rate hitting a DB built for a small miss rate can take it down. Mitigate with staggered node warm-up, request coalescing (only one in-flight DB read per key, others wait on it), and pre-warming known hot keys from a snapshot or the DB before routing live traffic to the new nodes.
+
+**Q: The bottleneck table says replicate hot keys — but what if one key's traffic exceeds what even a replica can serve?**
+Go beyond node-level replication: fan the key out to N replicas and have clients pick one at random (or round-robin) per read, effectively sharding reads for that single key. For extreme cases, add a local in-process (L1) cache on the app servers so most reads never leave the host.
+
+**Q: How would you warm the cache ahead of a planned traffic spike (e.g., a big sale)?**
+Run a background job before the event that reads the expected hot key set from the source of truth and pre-populates the cache nodes, so the first wave of real traffic hits warm nodes instead of triggering cold misses.
+
+**Q: With async replication and failover, can a network partition cause two nodes to think they're both primary for the same key range?**
+Yes — a healed partition can leave a stale old primary accepting writes after a replica was already promoted. Use a fencing token or epoch number that increments on every promotion; nodes reject writes tagged with an older epoch than the one they've seen.
+
+**Q: How do you know when the cache is simply too small for the workload, versus a routing problem?**
+Track eviction rate and hit ratio per node. A high eviction rate with a still-low hit ratio signals the working set doesn't fit — the fix is adding nodes (consistent hashing rebalances with minimal key movement) rather than tuning the router.
+
+---
+
 ## In Simple Words
 
 - Distributed cache = many memory stores working together as one.

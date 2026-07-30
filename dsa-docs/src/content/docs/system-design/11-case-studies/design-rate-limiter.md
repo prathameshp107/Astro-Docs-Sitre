@@ -116,6 +116,25 @@ end
 
 ---
 
+## Follow-up Questions
+
+**Q: How do you rate-limit consistently across multiple data centers when clocks drift?**
+Don't rely on wall-clock comparisons across regions for the shared counter — use Redis's own `TIME` command (as the Lua script already does) so refill math is computed relative to a single authoritative clock per Redis node, and route a given user consistently to one region's Redis (or replicate with last-write-wins and accept some slack) rather than trying to synchronize NTP-perfect clocks across data centers.
+
+**Q: The rate limiter middleware depends on Redis — how do you avoid it becoming a single point of failure for the whole API?**
+Fail open with a local, in-process fallback limiter (e.g., a coarser per-instance token bucket) when Redis is unreachable, so a Redis outage degrades rate-limiting accuracy instead of blocking all traffic. Pair this with Redis Cluster/replicas for HA so the fallback is rarely needed.
+
+**Q: How would you support per-user AND per-IP limits at the same time?**
+Run two independent bucket checks per request — one keyed by `user_id`, one by `ip` — and reject if either is exhausted. This needs two Lua script calls (or one script checking both keys atomically) so a single expensive request only costs one round trip, and it catches both a compromised account and a single IP hitting many accounts.
+
+**Q: What happens when the background refill causes a thundering herd right at the top of each window (fixed window problem)?**
+Token bucket already avoids the classic fixed-window edge burst since tokens refill continuously rather than resetting at a boundary, but if refill is batched (e.g., a cron every 100ms) many buckets can still refill in lockstep — smooth refill by computing elapsed-time-based refill per request (as the Lua script does) instead of a scheduled batch job.
+
+**Q: If requests come through a CDN or corporate NAT, how do you get the real client identity for IP-based limiting?**
+Trust `X-Forwarded-For` only from your own edge/CDN layer (never from the raw client), and prefer rate-limiting by an authenticated user/API-key when available since shared IPs behind NAT or a CDN would otherwise unfairly throttle many distinct users together.
+
+---
+
 ## In Simple Words
 
 - Rate limiter = configurable "stop" sign per user/IP. Token bucket is the most common algorithm.

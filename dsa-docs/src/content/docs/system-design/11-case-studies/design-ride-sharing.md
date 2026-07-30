@@ -112,6 +112,25 @@ sequenceDiagram
 
 ---
 
+## Follow-up Questions
+
+**Q: What happens when a driver's or rider's GPS signal drops mid-trip?**
+The app falls back to the last known location plus dead-reckoning from device sensors (speed, heading) for a short window, and the trip continues on a stale-but-plausible position. If the gap exceeds a threshold (e.g., 30-60s with no update), flag the trip for manual review rather than silently trusting extrapolated coordinates.
+
+**Q: How do you handle a region with far more riders than drivers, beyond just raising surge price?**
+Surge alone doesn't create supply instantly, so combine it with driver incentives to reposition into the zone (bonus for accepting rides that end near the shortage), temporarily widening the matching radius, and rider-side signals like longer ETAs or ride-pooling suggestions to reduce demand pressure.
+
+**Q: How do you prevent GPS spoofing for fraud (fake rides, fare manipulation)?**
+Cross-check reported GPS against network-based location (cell tower/WiFi triangulation) and flag mismatches. Also validate physical plausibility — speed between consecutive location pings can't exceed realistic travel speed — and require the trip start location to match the matched pickup point within a tolerance.
+
+**Q: What if two drivers accept the same ride request at the same time (race condition)?**
+Use an atomic compare-and-swap on the ride's status in Redis/DB (e.g., `SETNX` or a conditional update) so only the first accept wins; the second driver's accept fails the conditional check and they get the "ride no longer available" response already built into the flow.
+
+**Q: How do you handle a driver going offline mid-trip (app crash, phone dies)?**
+The trip state machine treats missing location pings past a timeout as "driver unreachable," notifies the rider, and after a grace period allows support to intervene or auto-complete the trip using the last known fare calculation, since payment must still be reconciled.
+
+---
+
 ## In Simple Words
 
 - Uber = real-time location tracking + fast nearest-driver matching + payment.

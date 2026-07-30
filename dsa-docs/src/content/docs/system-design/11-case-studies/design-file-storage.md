@@ -173,6 +173,25 @@ CREATE TABLE file_versions (
 
 ---
 
+## Follow-up Questions
+
+**Q: If the app crashes mid-upload of a multi-GB file, does the client restart from chunk 0?**
+No — the client should call a status endpoint with the `uploadId` to ask which chunk indices the server already has, then resume from the first missing chunk instead of re-uploading everything. This needs the server to persist per-chunk upload state (not just the final assembled file) keyed by `uploadId`.
+
+**Q: A recipient already downloaded a file you shared with them — can you truly revoke their access?**
+Not to the copy they already downloaded — you can only prevent *future* access by removing the permission row in the metadata DB and invalidating the share link. If that's not good enough (e.g., leaked confidential doc), the only real mitigation is link expiry and audit logging up front, not after-the-fact revocation.
+
+**Q: Content-addressable storage dedupes identical files, but what about storage overhead from millions of tiny files?**
+Each block-store object (e.g., an S3 PUT) has fixed overhead, so many small files waste both storage and request cost. Pack small chunks together into larger container objects (similar to Git packfiles) and keep an index mapping file → offset within the pack, unpacking only on read.
+
+**Q: What happens when a user deletes a file — is it gone immediately?**
+No, use soft delete: flip `is_deleted` and keep the blocks/versions around for a retention window (e.g., 30 days) so the user can restore from trash. A background purge job only removes the underlying blocks after retention expires and no other user reference (dedup link) remains.
+
+**Q: For a 10 GB file, is a flat 4 MB chunk size still fine, and how do you avoid re-uploading shared content across large files?**
+The chunk size itself scales fine (just more chunks), but you can also dedupe at the chunk level, not just whole-file level — if two large files share long identical byte ranges (e.g., a re-exported video), matching chunk hashes let you skip uploading those chunks entirely, not just skip the whole file.
+
+---
+
 ## In Simple Words
 
 - File storage = upload chunks → content-addressable store → deduplicate → sync across devices.

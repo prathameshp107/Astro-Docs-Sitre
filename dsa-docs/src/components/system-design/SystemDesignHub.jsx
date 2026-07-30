@@ -6,13 +6,25 @@ import '../../styles/sketch-visualizer.css';
 
 const CASE_STUDIES = [
   { slug: 'url-shortener', title: 'Design URL Shortener (TinyURL)', desc: 'Key generation, redirection, caching, and database scaling.', interactive: true, link: '/system-design/url-shortener' },
-  { slug: 'uber', title: 'Design Ride-Sharing (Uber)', desc: 'Geospatial indexing (Geohash), WebSocket connections, and matching service.', interactive: true, link: '/system-design/url-shortener?case=uber' }, // we can support query params or separate pages. Let's make separate pages or load them dynamically.
-  { slug: 'whatsapp', title: 'Design Chat App (WhatsApp)', desc: 'WebSocket servers, message queuing, delivery status checks, and presence store.', interactive: true, link: '/system-design/url-shortener?case=whatsapp' },
-  { slug: 'instagram', title: 'Design News Feed (Instagram)', desc: 'Fan-out write/read paths, feed caching, media storage, and scaling read paths.', interactive: false },
-  { slug: 'youtube', title: 'Design Video Platform (YouTube)', desc: 'Transcoding pipelines, CDN delivery, view counters, and upload flow.', interactive: false },
-  { slug: 'google-drive', title: 'Design Cloud Storage (Google Drive)', desc: 'Chunking uploads, sync conflict resolution, and metadata sharding.', interactive: false },
-  { slug: 'netflix', title: 'Design Video Streaming (Netflix)', desc: 'Content delivery networks, localized transcoding, and playback architecture.', interactive: false },
-  { slug: 'payment-gateway', title: 'Design Payment Gateway', desc: 'Idempotent transactions, reconciliation loops, and ledger architecture.', interactive: false },
+  { slug: 'ride-sharing', title: 'Design Ride-Sharing (Uber)', desc: 'Geospatial indexing (Geohash), WebSocket connections, and matching service.', interactive: true, link: '/system-design/url-shortener?case=ride-sharing' }, // we can support query params or separate pages. Let's make separate pages or load them dynamically.
+  { slug: 'chat-system', title: 'Design Chat App (WhatsApp)', desc: 'WebSocket servers, message queuing, delivery status checks, and presence store.', interactive: true, link: '/system-design/url-shortener?case=chat-system' },
+  { slug: 'rate-limiter', title: 'Design a Rate Limiter', desc: 'Token bucket in Redis for fair, distributed API request limiting.', interactive: false },
+  { slug: 'news-feed', title: 'Design a News Feed (Twitter/Instagram)', desc: 'Fan-out write/read paths, feed caching, media storage, and scaling read paths.', interactive: false },
+  { slug: 'video-streaming', title: 'Design Video Streaming (YouTube/Netflix)', desc: 'Transcoding pipelines, CDN delivery, view counters, and upload flow.', interactive: false },
+  { slug: 'notification-system', title: 'Design a Notification System', desc: 'Batching, delivery, and multi-channel (push, email, SMS) fan-out.', interactive: false },
+  { slug: 'web-crawler', title: 'Design a Web Crawler', desc: 'Frontier, politeness, deduplication, and storage at Googlebot scale.', interactive: false },
+  { slug: 'search-autocomplete', title: 'Design Search Autocomplete', desc: 'Real-time typeahead suggestions like Google Search autocomplete.', interactive: false },
+  { slug: 'distributed-cache', title: 'Design a Distributed Cache', desc: 'Consistent hashing, replication, and failover like Redis or Memcached.', interactive: false },
+  { slug: 'file-storage', title: 'Design Cloud Storage (Google Drive)', desc: 'Chunking uploads, sync conflict resolution, and metadata sharding.', interactive: false },
+  { slug: 'payment-system', title: 'Design a Payment System', desc: 'Idempotent transactions, reconciliation loops, and ledger architecture.', interactive: false },
+  { slug: 'ticket-booking-system', title: 'Design a Ticket Booking System (BookMyShow)', desc: 'Seat-hold locking to prevent double-booking and flash-sale traffic spikes.', interactive: false },
+  { slug: 'ecommerce-order-system', title: 'Design an E-commerce Order System (Amazon)', desc: 'Inventory reservation, order state machine, and saga-coordinated checkout.', interactive: false },
+  { slug: 'distributed-key-value-store', title: 'Design a Distributed Key-Value Store (DynamoDB)', desc: 'Quorum reads/writes, vector clocks, hinted handoff, and LSM-trees.', interactive: false },
+  { slug: 'proximity-service', title: 'Design a Proximity Service (Yelp)', desc: 'Geohashing and quadtrees for fast nearby-places search at scale.', interactive: false },
+  { slug: 'collaborative-editor', title: 'Design a Collaborative Editor (Google Docs)', desc: 'Operational Transformation, CRDTs, and live multi-user presence.', interactive: false },
+  { slug: 'distributed-job-scheduler', title: 'Design a Distributed Job Scheduler', desc: 'Leader election, exactly-once triggers, and DAG dependencies.', interactive: false },
+  { slug: 'ad-click-aggregation', title: 'Design an Ad Click Aggregation System', desc: 'Streaming aggregation, HyperLogLog counting, and fraud dedup.', interactive: false },
+  { slug: 'distributed-lock-service', title: 'Design a Distributed Lock Service', desc: 'Leases, fencing tokens, and consensus-backed mutual exclusion.', interactive: false },
 ];
 
 const LLD_PROJECTS = [
@@ -62,7 +74,7 @@ export default function SystemDesignHub() {
             <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">HLD Topics</span>
           </div>
           <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
-            <span className="font-header text-3xl font-bold text-emerald-400 block">10</span>
+            <span className="font-header text-3xl font-bold text-emerald-400 block">20</span>
             <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">Case Studies</span>
           </div>
           <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
@@ -138,7 +150,7 @@ export default function SystemDesignHub() {
                         Launch Visualizer →
                       </a>
                     ) : (
-                      <a href={`${base}/hld/case-studies/design-${c.slug}`} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold w-full text-center">
+                      <a href={`${base}/system-design/11-case-studies/design-${c.slug}`} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold w-full text-center">
                         Read Guide
                       </a>
                     )}
