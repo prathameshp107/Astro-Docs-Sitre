@@ -1,0 +1,60 @@
+{
+  "id": "web-crawler",
+  "title": "Design a Scalable Web Crawler",
+  "subtitle": "From single-threaded URL fetcher to multi-million page distributed frontier",
+  "stages": [
+    {
+      "title": "Stage 1 — Basic Single-Threaded Fetcher",
+      "bottleneck": "Infinite loops (crawling duplicate URLs), politeness violations (DDOSing target domains), memory overflow.",
+      "nodes": [
+        { "id": "seed", "type": "server", "label": "Seed URLs", "position": { "x": 50, "y": 200 } },
+        { "id": "crawler", "type": "server", "label": "Crawler Engine", "position": { "x": 350, "y": 200 } },
+        { "id": "web", "type": "service", "label": "Target Websites", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "seed", "target": "crawler", "label": "Initial queue" },
+        { "id": "e2", "source": "crawler", "target": "web", "label": "HTTP GET HTML" }
+      ],
+      "requestPath": ["seed", "crawler", "web", "crawler"],
+      "narrative": "**Naive Web Crawler.** A script pops a URL from a list, fetches the HTML, extracts links using regex, and appends them back to the list.\n\n**Issues:** Trapped in cyclic links (`/a -> /b -> /a`), overwhelms small web servers by firing 1,000 requests/sec to a single domain."
+    },
+    {
+      "title": "Stage 2 — URL Frontier with Politeness & Priority",
+      "bottleneck": "Storing billions of seen URLs in RAM for deduplication causes Out-Of-Memory (OOM) crashes.",
+      "nodes": [
+        { "id": "frontier", "type": "queue", "label": "URL Frontier\n(Priority & Politeness)", "position": { "x": 100, "y": 200 } },
+        { "id": "fetcher", "type": "server", "label": "Distributed Fetchers", "position": { "x": 350, "y": 200 } },
+        { "id": "dns", "type": "cache", "label": "DNS Resolver Cache", "position": { "x": 350, "y": 50 } },
+        { "id": "web", "type": "service", "label": "Target Servers", "position": { "x": 600, "y": 200 } },
+        { "id": "parser", "type": "service", "label": "HTML Parser &\nExtractor", "position": { "x": 600, "y": 380 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "frontier", "target": "fetcher", "label": "Pop polite URL" },
+        { "id": "e2", "source": "fetcher", "target": "dns", "label": "Lookup IP" },
+        { "id": "e3", "source": "fetcher", "target": "web", "label": "Download HTML" },
+        { "id": "e4", "source": "fetcher", "target": "parser", "label": "Parse DOM" }
+      ],
+      "requestPath": ["frontier", "fetcher", "dns", "fetcher", "web", "fetcher", "parser"],
+      "narrative": "**URL Frontier & Politeness.** The Frontier uses 2 sets of queues:\n1. **Priority Queues:** Rank URLs based on PageRank or refresh frequency.\n2. **Politeness Queues:** Assign 1 queue per target host with a delay timer (e.g. 1s between requests to `example.com`)."
+    },
+    {
+      "title": "Stage 3 — Distributed Deduplication & Storage",
+      "bottleneck": "Duplicate content across mirrors/CDNs wastes bandwidth and storage.",
+      "nodes": [
+        { "id": "parser", "type": "service", "label": "HTML Parser", "position": { "x": 50, "y": 200 } },
+        { "id": "bloom", "type": "cache", "label": "Bloom Filter\n(URL Seen Test)", "position": { "x": 280, "y": 100 } },
+        { "id": "simhash", "type": "service", "label": "SimHash Deduplicator\n(Content Similarity)", "position": { "x": 280, "y": 300 } },
+        { "id": "bigtable", "type": "database", "label": "Bigtable / HBase\n(Raw HTML Web Repository)", "position": { "x": 550, "y": 200 } },
+        { "id": "frontier", "type": "queue", "label": "URL Frontier", "position": { "x": 550, "y": 380 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "parser", "target": "bloom", "label": "Check URL hash" },
+        { "id": "e2", "source": "parser", "target": "simhash", "label": "Check fingerprint" },
+        { "id": "e3", "source": "parser", "target": "bigtable", "label": "Write document" },
+        { "id": "e4", "source": "bloom", "target": "frontier", "label": "Enqueuer if NEW url" }
+      ],
+      "requestPath": ["parser", "bloom", "simhash", "bigtable"],
+      "narrative": "**Scalable Content & Link Filtering.**\n1. **Bloom Filters:** In-memory probabilistic datastructure tests whether a URL has been seen with 99.9% accuracy in sub-microsecond time.\n2. **SimHash / Near-duplicate detection:** Fingerprints page text to ignore duplicate mirror sites."
+    }
+  ]
+}

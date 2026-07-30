@@ -62,7 +62,7 @@
         { "id": "e5", "source": "receipts", "target": "ws1", "label": "Send checkmark" },
         { "id": "e6", "source": "ws1", "target": "userA", "label": "Display Sent (✓)" }
       ],
-      "requestPath": ["userA", "ws1", "queue", "db"],
+      "requestPath": ["userA", "ws1", "queue", "db", "ws1", "receipts", "ws1", "userA"],
       "narrative": "**Handling Offline Users.** If User B is offline (checked via Session store), the message is held in the NoSQL database as 'pending'.\n\n**Delivery Receipts:** On successfully enqueuing the message, User A is notified with a 'Sent' receipt (single checkmark). When User B goes online, they pull pending messages from the queue, returning a 'Delivered' receipt (double checkmark) back to User A."
     },
     {
@@ -85,7 +85,7 @@
         { "id": "e5", "source": "msg-svc", "target": "db1", "label": "Write" },
         { "id": "e6", "source": "msg-svc", "target": "db2", "label": "Write" }
       ],
-      "requestPath": ["userB", "ws", "presence"],
+      "requestPath": ["userA", "ws", "msg-svc", "db1", "msg-svc", "ws", "userB", "ws", "presence"],
       "narrative": "**Production scaling patterns.** Messages are archived in **sharded Cassandra databases** sharded by `chat_id` for quick chronological retrieval.\n\n**Presence system:** We offload user heartbeats to a dedicated Presence Service. Users send heartbeats every 30s. If a heartbeat is missed, they are marked offline. When User A opens User B's chat, they query the Presence Service to fetch the status ('Online' or 'Last seen at...')."
     }
   ]

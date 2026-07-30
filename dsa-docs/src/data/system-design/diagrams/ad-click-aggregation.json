@@ -1,0 +1,58 @@
+{
+  "id": "ad-click-aggregation",
+  "title": "Design an Ad Click Aggregation System",
+  "subtitle": "Real-time streaming analytics, Kafka partitioning, HyperLogLog counting, and click-fraud deduplication",
+  "stages": [
+    {
+      "title": "Stage 1 — Direct Synchronous Database Counters",
+      "bottleneck": "At 50,000 ad clicks per second, `UPDATE ads SET click_count = click_count + 1 WHERE ad_id = 123` locks database rows and crashes database CPU.",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "Web User", "position": { "x": 50, "y": 200 } },
+        { "id": "server", "type": "server", "label": "Ad Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "SQL Database", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "server", "label": "Click Ad banner" },
+        { "id": "e2", "source": "server", "target": "db", "label": "UPDATE click_count + 1" }
+      ],
+      "requestPath": ["user", "server", "db"],
+      "narrative": "**Synchronous DB Increment.** Directly updating row counts in SQL for every ad click."
+    },
+    {
+      "title": "Stage 2 — Kafka Ingestion & Flink Stream Window Aggregation",
+      "bottleneck": "Click fraud (botnets firing 10,000 clicks/sec from single IP to drain advertiser budgets).",
+      "nodes": [
+        { "id": "users", "type": "client", "label": "Ad Traffic", "position": { "x": 50, "y": 200 } },
+        { "id": "collector", "type": "lb", "label": "Click Collector API", "position": { "x": 220, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka Click Topic\n(Partitioned by ad_id)", "position": { "x": 420, "y": 200 } },
+        { "id": "flink", "type": "service", "label": "Apache Flink\n(1-Minute Tumbling Windows)", "position": { "x": 650, "y": 120 } },
+        { "id": "olap", "type": "database", "label": "ClickHouse OLAP DB", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "users", "target": "collector", "label": "" },
+        { "id": "e2", "source": "collector", "target": "kafka", "label": "" },
+        { "id": "e3", "source": "kafka", "target": "flink", "label": "Stream" },
+        { "id": "e4", "source": "flink", "target": "olap", "label": "Write aggregated metrics" }
+      ],
+      "requestPath": ["users", "collector", "kafka", "flink", "olap"],
+      "narrative": "**Kafka & Flink Stream Aggregation.** Click events stream into Kafka. Apache Flink aggregates clicks into 1-minute tumbling windows in memory before writing single aggregate rows to ClickHouse."
+    },
+    {
+      "title": "Stage 3 — Anti-Fraud Filter & HyperLogLog Unique User Counting",
+      "bottleneck": "Storing billions of unique user IDs to count unique clicks consumes massive RAM.",
+      "nodes": [
+        { "id": "kafka", "type": "queue", "label": "Kafka Event Stream", "position": { "x": 50, "y": 200 } },
+        { "id": "fraud", "type": "service", "label": "Anti-Fraud Filter\n(IP / UserAgent Rules)", "position": { "x": 280, "y": 200 } },
+        { "id": "hll", "type": "cache", "label": "Redis HyperLogLog\n(PFADD / PFCOUNT)", "position": { "x": 550, "y": 100 } },
+        { "id": "olap", "type": "database", "label": "ClickHouse Data Mart", "position": { "x": 550, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "kafka", "target": "fraud", "label": "Pass click event" },
+        { "id": "e2", "source": "fraud", "target": "hll", "label": "Estimate unique users" },
+        { "id": "e3", "source": "fraud", "target": "olap", "label": "Save validated clicks" }
+      ],
+      "requestPath": ["kafka", "fraud", "hll", "olap"],
+      "narrative": "**Anti-Fraud & HyperLogLog.**\n1. **Fraud Filter:** Rejects bot traffic based on IP click velocity rules.\n2. **HyperLogLog (HLL):** Estimates unique user counts with 99% accuracy using only 12KB of memory per ad."
+    }
+  ]
+}

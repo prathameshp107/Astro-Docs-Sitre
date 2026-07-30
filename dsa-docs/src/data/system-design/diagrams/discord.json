@@ -1,0 +1,82 @@
+{
+  "id": "discord",
+  "title": "Design Real-Time Chat & Voice (Discord)",
+  "subtitle": "Low-latency guild messaging, WebRTC voice channels, and presence aggregation at scale",
+  "stages": [
+    {
+      "title": "Stage 1 — Monolithic HTTP Polling",
+      "bottleneck": "Millions of users polling channels every 1s overloads relational database connections.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B", "position": { "x": 50, "y": 280 } },
+        { "id": "server", "type": "server", "label": "Monolith Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "server", "label": "POST /message" },
+        { "id": "e2", "source": "userB", "target": "server", "label": "GET /messages (polling)" },
+        { "id": "e3", "source": "server", "target": "db", "label": "Query messages" }
+      ],
+      "requestPath": ["userA", "server", "db", "server", "userB"],
+      "narrative": "**Simple Polling MVP.** Users send HTTP POST requests and poll the monolith server to check for new channel messages.\n\n**Bottleneck:** Extremely high CPU overhead and DB connection exhaustion under active channel chatter."
+    },
+    {
+      "title": "Stage 2 — WebSocket Gateway & Guild Router",
+      "bottleneck": "Routing messages across thousands of active Discord servers (Guilds) with 100K+ concurrent members in a channel.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B", "position": { "x": 50, "y": 280 } },
+        { "id": "gw", "type": "server", "label": "Gateway Cluster\n(Elixir / Erlang Nodes)", "position": { "x": 300, "y": 200 } },
+        { "id": "guild-svc", "type": "service", "label": "Guild Router", "position": { "x": 550, "y": 120 } },
+        { "id": "session-store", "type": "cache", "label": "Session Registry\n(Redis)", "position": { "x": 550, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "gw", "label": "WS Connection" },
+        { "id": "e2", "source": "userB", "target": "gw", "label": "WS Connection" },
+        { "id": "e3", "source": "gw", "target": "guild-svc", "label": "Dispatch to Guild" },
+        { "id": "e4", "source": "guild-svc", "target": "session-store", "label": "Lookup connected sockets" },
+        { "id": "e5", "source": "gw", "target": "userB", "label": "Fan-out push" }
+      ],
+      "requestPath": ["userA", "gw", "guild-svc", "session-store", "guild-svc", "gw", "userB"],
+      "narrative": "**Elixir Gateway & Guild Routing.** Discord uses lightweight Elixir/Erlang processes to maintain millions of persistent WebSocket connections. Incoming channel messages are dispatched to the Guild Router, which fans out updates to all active channel members."
+    },
+    {
+      "title": "Stage 3 — ScyllaDB / Cassandra Channel Storage",
+      "bottleneck": "Millions of messages sent per minute exhausts MongoDB / SQL disk space. Need fast sequential write archiving.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A", "position": { "x": 50, "y": 180 } },
+        { "id": "gw", "type": "server", "label": "Gateway Server", "position": { "x": 250, "y": 180 } },
+        { "id": "msg-svc", "type": "service", "label": "Message Writer Service", "position": { "x": 480, "y": 180 } },
+        { "id": "scylla", "type": "database", "label": "ScyllaDB / Cassandra Cluster\n(Partitioned by channel_id)", "position": { "x": 720, "y": 120 } },
+        { "id": "cache", "type": "cache", "label": "Recent Messages Cache\n(Redis Ring Buffer)", "position": { "x": 720, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "gw", "label": "Send Message" },
+        { "id": "e2", "source": "gw", "target": "msg-svc", "label": "Process payload" },
+        { "id": "e3", "source": "msg-svc", "target": "scylla", "label": "Append to channel partition" },
+        { "id": "e4", "source": "msg-svc", "target": "cache", "label": "Update top 50 messages" }
+      ],
+      "requestPath": ["userA", "gw", "msg-svc", "scylla", "msg-svc", "cache"],
+      "narrative": "**ScyllaDB Channel Partitioning.** Discord switched from MongoDB to ScyllaDB (C++ rewrite of Cassandra) sharded by `channel_id` + Snowflake ID order. Writing channel messages is a fast sequential append to LSM trees on disk."
+    },
+    {
+      "title": "Stage 4 — WebRTC Voice Servers & Global SFUs",
+      "bottleneck": "Peer-to-peer (P2P) voice call bandwidth degrades when more than 4 users join a voice channel.",
+      "nodes": [
+        { "id": "userA", "type": "client", "label": "User A (Voice)", "position": { "x": 50, "y": 120 } },
+        { "id": "userB", "type": "client", "label": "User B (Voice)", "position": { "x": 50, "y": 280 } },
+        { "id": "signaling", "type": "server", "label": "Voice Signaling Gateway", "position": { "x": 300, "y": 200 } },
+        { "id": "sfu", "type": "server", "label": "Selective Forwarding Unit\n(Media SFU Server Pool)", "position": { "x": 600, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "userA", "target": "signaling", "label": "Join Voice Channel" },
+        { "id": "e2", "source": "userB", "target": "signaling", "label": "Join Voice Channel" },
+        { "id": "e3", "source": "signaling", "target": "sfu", "label": "Allocate SFU UDP Port" },
+        { "id": "e4", "source": "userA", "target": "sfu", "label": "Send UDP RTP Stream", "animated": true },
+        { "id": "e5", "source": "sfu", "target": "userB", "label": "Forward UDP RTP Stream", "animated": true }
+      ],
+      "requestPath": ["userA", "signaling", "sfu", "userB"],
+      "narrative": "**WebRTC Media Server (SFU).** For voice channels, clients connect to dedicated **Selective Forwarding Units (SFUs)** over UDP. Instead of mixing audio server-side, the SFU receives 1 audio stream per speaker and selectively forwards audio streams to listeners."
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "id": "news-feed",
+  "title": "Design a News Feed (Twitter/Instagram)",
+  "subtitle": "From pull-on-read SQL queries to fan-out hybrid push/pull with Redis feed caches",
+  "stages": [
+    {
+      "title": "Stage 1 — Pull Model on Relational DB",
+      "bottleneck": "Heavy SQL JOINs across users, follows, and posts tables on every home feed refresh.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "User Mobile", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "RDBMS\n(Posts & Follows)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "GET /feed" },
+        { "id": "e2", "source": "app", "target": "db", "label": "SELECT * WHERE followee_id IN (...)" }
+      ],
+      "requestPath": ["client", "app", "db", "app", "client"],
+      "narrative": "**Pull model (Fan-out on Read).** When a user opens their feed, the app queries the DB for all users they follow, pulls their recent posts, orders them by timestamp, and returns them.\n\n**Problem:** At 1,000 followees per user, every feed request triggers expensive indexed disk reads."
+    },
+    {
+      "title": "Stage 2 — Push Model with Redis Feed Caches",
+      "bottleneck": "Celebrity problem (Fan-out on Write). If a user with 50M followers posts, 50M Redis writes overload the system.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Creator", "position": { "x": 50, "y": 150 } },
+        { "id": "app", "type": "server", "label": "App Server", "position": { "x": 250, "y": 150 } },
+        { "id": "queue", "type": "queue", "label": "Fan-out Queue\n(Kafka)", "position": { "x": 450, "y": 150 } },
+        { "id": "worker", "type": "service", "label": "Fan-out Workers", "position": { "x": 650, "y": 150 } },
+        { "id": "redis", "type": "cache", "label": "Redis Timelines\n(User Feed ZSETs)", "position": { "x": 850, "y": 150 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "POST /tweet" },
+        { "id": "e2", "source": "app", "target": "queue", "label": "Publish Post Event" },
+        { "id": "e3", "source": "queue", "target": "worker", "label": "Consume" },
+        { "id": "e4", "source": "worker", "target": "redis", "label": "LPUSH post_id into each follower timeline" }
+      ],
+      "requestPath": ["client", "app", "queue", "worker", "redis"],
+      "narrative": "**Push model (Fan-out on Write).** When a user posts, async workers push the `post_id` directly into every follower's Redis timeline cache.\n\n**Advantage:** Feed generation is instantaneous (`O(1)` ZRANGE read).\n\n**Flaw:** Writing to 50 million follower timelines for a celebrity post causes massive write amplification and delay."
+    },
+    {
+      "title": "Stage 3 — Hybrid Fan-Out Architecture",
+      "bottleneck": "Storing entire post payloads in Redis consumes enormous RAM.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Reader", "position": { "x": 50, "y": 200 } },
+        { "id": "lb", "type": "lb", "label": "Load Balancer", "position": { "x": 220, "y": 200 } },
+        { "id": "app", "type": "server", "label": "Feed Service", "position": { "x": 400, "y": 200 } },
+        { "id": "redis", "type": "cache", "label": "Redis Timelines\n(Post IDs only)", "position": { "x": 600, "y": 100 } },
+        { "id": "post-service", "type": "service", "label": "Post Hydrator\nService", "position": { "x": 600, "y": 300 } },
+        { "id": "post-db", "type": "database", "label": "NoSQL Post Store\n(Cassandra / Dynamo)", "position": { "x": 800, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "lb", "label": "" },
+        { "id": "e2", "source": "lb", "target": "app", "label": "" },
+        { "id": "e3", "source": "app", "target": "redis", "label": "Fetch timeline IDs" },
+        { "id": "e4", "source": "app", "target": "post-service", "label": "Batch hydrate details" },
+        { "id": "e5", "source": "post-service", "target": "post-db", "label": "Multi-get post objects" }
+      ],
+      "requestPath": ["client", "lb", "app", "redis", "app", "post-service", "post-db", "post-service", "app", "client"],
+      "narrative": "**Hybrid Model & ID-only Timelines.** Regular users use Push (Fan-out on Write). Celebrities (>10K followers) use Pull (Fan-out on Read).\n\n**ID-only caching:** Timelines store only 64-bit `post_id`s in Redis. Content (text, media URLs, author info) is hydrated in a single multi-get batch call."
+    },
+    {
+      "title": "Stage 4 — ML Ranking & Media CDN Delivery",
+      "bottleneck": "Chronological feeds lack engagement; serving heavy video/image assets directly from storage exhausts bandwidth.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Global App", "position": { "x": 50, "y": 220 } },
+        { "id": "cdn", "type": "cdn", "label": "CDN Edge\n(Images & Video)", "position": { "x": 220, "y": 100 } },
+        { "id": "gateway", "type": "lb", "label": "API Gateway", "position": { "x": 220, "y": 300 } },
+        { "id": "ranker", "type": "service", "label": "ML Feed Ranker", "position": { "x": 450, "y": 300 } },
+        { "id": "user-ctx", "type": "cache", "label": "User Profile &\nInterest Store", "position": { "x": 700, "y": 200 } },
+        { "id": "post-db", "type": "database", "label": "Post DB Cluster", "position": { "x": 700, "y": 380 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "cdn", "label": "Stream media" },
+        { "id": "e2", "source": "client", "target": "gateway", "label": "Get Feed" },
+        { "id": "e3", "source": "gateway", "target": "ranker", "label": "Rank Candidate Posts" },
+        { "id": "e4", "source": "ranker", "target": "user-ctx", "label": "Fetch user affinities" },
+        { "id": "e5", "source": "ranker", "target": "post-db", "label": "Fetch post features" }
+      ],
+      "requestPath": ["client", "gateway", "ranker", "user-ctx", "post-db", "ranker", "gateway", "client"],
+      "narrative": "**Personalized Feed Ranking Engine.** Candidates are generated via vector similarity & social graph, then passed to lightweight GBDT / Neural Net ranking models that score posts based on click/like probability."
+    }
+  ]
+}

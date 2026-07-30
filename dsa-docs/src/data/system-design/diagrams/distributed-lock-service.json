@@ -1,0 +1,60 @@
+{
+  "id": "distributed-lock-service",
+  "title": "Design a Distributed Lock Service (Chubby / Redlock)",
+  "subtitle": "Leases, fencing tokens, Redis Redlock algorithm, and ZooKeeper ephemeral sequential nodes",
+  "stages": [
+    {
+      "title": "Stage 1 — Single Redis Key Lock (SETNX)",
+      "bottleneck": "If the lock holder process hangs or experiences a GC pause, the key expires, letting a 2nd process acquire the lock while Process 1 is still executing (Split-brain).",
+      "nodes": [
+        { "id": "p1", "type": "server", "label": "Worker Process 1", "position": { "x": 50, "y": 120 } },
+        { "id": "p2", "type": "server", "label": "Worker Process 2", "position": { "x": 50, "y": 280 } },
+        { "id": "redis", "type": "cache", "label": "Single Redis Node\n(SET lock_key val NX EX 30)", "position": { "x": 400, "y": 200 } },
+        { "id": "resource", "type": "database", "label": "Shared Resource", "position": { "x": 700, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "p1", "target": "redis", "label": "Acquire lock" },
+        { "id": "e2", "source": "p2", "target": "redis", "label": "Lock rejected" },
+        { "id": "e3", "source": "p1", "target": "resource", "label": "Write critical section" }
+      ],
+      "requestPath": ["p1", "redis", "resource"],
+      "narrative": "**Naive Single Redis Lock.** Acquires lock via `SET lock_key client_id NX EX 30`. If Redis master crashes before replicating to slave, lock is lost."
+    },
+    {
+      "title": "Stage 2 — Fencing Tokens & Redlock Multi-Master Algorithm",
+      "bottleneck": "Process GC pauses still risk race conditions if backend storage does not enforce monotonically increasing fencing tokens.",
+      "nodes": [
+        { "id": "client", "type": "server", "label": "Client App", "position": { "x": 50, "y": 200 } },
+        { "id": "r1", "type": "cache", "label": "Redis Master 1", "position": { "x": 350, "y": 80 } },
+        { "id": "r2", "type": "cache", "label": "Redis Master 2", "position": { "x": 350, "y": 200 } },
+        { "id": "r3", "type": "cache", "label": "Redis Master 3", "position": { "x": 350, "y": 320 } },
+        { "id": "storage", "type": "database", "label": "Storage Guarded by\nFencing Token (> 83)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "r1", "label": "Acquire" },
+        { "id": "e2", "source": "client", "target": "r2", "label": "Acquire" },
+        { "id": "e3", "source": "client", "target": "r3", "label": "Acquire (Majority 2/3)" },
+        { "id": "e4", "source": "client", "target": "storage", "label": "Write with Fencing Token #84" }
+      ],
+      "requestPath": ["client", "r1", "r2", "storage"],
+      "narrative": "**Redlock & Fencing Tokens.**\n1. **Redlock Algorithm:** Client attempts lock on 3-5 independent Redis masters. Lock is granted if acquired on majority (`N/2 + 1`) nodes within lock timeout.\n2. **Fencing Tokens:** Master returns a monotonically increasing integer (`fencing_token = 84`). Storage rejects writes with token ≤ 83."
+    },
+    {
+      "title": "Stage 3 — ZooKeeper Consensus & Ephemeral Sequential Watchers",
+      "bottleneck": "High network traffic from polling locks.",
+      "nodes": [
+        { "id": "client1", "type": "server", "label": "Worker 1", "position": { "x": 50, "y": 120 } },
+        { "id": "client2", "type": "server", "label": "Worker 2", "position": { "x": 50, "y": 280 } },
+        { "id": "zk", "type": "service", "label": "ZooKeeper Ensemble\n(/lock/node-00001)", "position": { "x": 400, "y": 200 } },
+        { "id": "resource", "type": "database", "label": "Protected Service", "position": { "x": 700, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client1", "target": "zk", "label": "Create znode-001 (Lowest)" },
+        { "id": "e2", "source": "client2", "target": "zk", "label": "Create znode-002 -> Watch znode-001" },
+        { "id": "e3", "source": "client1", "target": "resource", "label": "Execute work" }
+      ],
+      "requestPath": ["client1", "zk", "resource"],
+      "narrative": "**ZooKeeper Ephemeral Sequential Nodes.** Clients create nodes under `/lock/lock-`. The client with the lowest sequence number holds the lock. Other clients set a Watcher on the node immediately preceding theirs, avoiding thundering herd polling."
+    }
+  ]
+}

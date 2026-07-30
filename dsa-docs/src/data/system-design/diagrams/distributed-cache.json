@@ -1,0 +1,78 @@
+{
+  "id": "distributed-cache",
+  "title": "Design a Distributed Cache",
+  "subtitle": "From single-node LRU to Consistent Hashing, Replication, and Memcached/Redis clusters",
+  "stages": [
+    {
+      "title": "Stage 1 — In-Process LRU Cache",
+      "bottleneck": "Memory bounded by single process size; memory wasted as each app server duplicates the same cached items.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Client", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server\n(Local LRU Map)", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Database", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "GET /data" },
+        { "id": "e2", "source": "app", "target": "db", "label": "Cache miss -> Query DB" }
+      ],
+      "requestPath": ["client", "app", "db", "app", "client"],
+      "narrative": "**In-Process LRU Cache.** Uses a HashMap + Doubly Linked List inside the application memory footprint. Fast sub-microsecond access, but cannot share cached state across 50 API instances."
+    },
+    {
+      "title": "Stage 2 — Modulo Sharded Centralized Cache",
+      "bottleneck": "Adding or removing a cache node invalidates almost 100% of keys (`hash(key) % N`), triggering a massive DB cache stampede.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "App Servers", "position": { "x": 50, "y": 200 } },
+        { "id": "c0", "type": "cache", "label": "Cache Node 0", "position": { "x": 450, "y": 80 } },
+        { "id": "c1", "type": "cache", "label": "Cache Node 1", "position": { "x": 450, "y": 200 } },
+        { "id": "c2", "type": "cache", "label": "Cache Node 2", "position": { "x": 450, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "c0", "label": "hash(key) % 3 == 0" },
+        { "id": "e2", "source": "client", "target": "c1", "label": "hash(key) % 3 == 1" },
+        { "id": "e3", "source": "client", "target": "c2", "label": "hash(key) % 3 == 2" }
+      ],
+      "requestPath": ["client", "c1", "client"],
+      "narrative": "**Modulo Routing (`key % N`).** Cache keys are routed to node `i` based on `hash(key) % N`.\n\n**Catastrophic Flaw:** If Node 2 dies (`N` goes from 3 to 2), almost every key hashes to a different node. Cache hit rate drops to 0%!"
+    },
+    {
+      "title": "Stage 3 — Consistent Hashing Ring with Virtual Nodes",
+      "bottleneck": "Single hot key (e.g. viral post ID) overloads the specific cache node responsible for that hash ring sector.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Cache Client SDK", "position": { "x": 50, "y": 200 } },
+        { "id": "ring", "type": "lb", "label": "Consistent Hash Ring\n(256 Virtual Nodes/Node)", "position": { "x": 300, "y": 200 } },
+        { "id": "c0", "type": "cache", "label": "Redis Node A", "position": { "x": 600, "y": 80 } },
+        { "id": "c1", "type": "cache", "label": "Redis Node B", "position": { "x": 600, "y": 200 } },
+        { "id": "c2", "type": "cache", "label": "Redis Node C", "position": { "x": 600, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "ring", "label": "Locate key position" },
+        { "id": "e2", "source": "ring", "target": "c0", "label": "Clockwise walk -> Node A" },
+        { "id": "e3", "source": "ring", "target": "c1", "label": "Node B" },
+        { "id": "e4", "source": "ring", "target": "c2", "label": "Node C" }
+      ],
+      "requestPath": ["client", "ring", "c0", "client"],
+      "narrative": "**Consistent Hashing & Virtual Nodes.** Nodes and keys are mapped onto a 32-bit hash ring (`0 to 2^32 - 1`). When a node is added or removed, only `k/N` keys are remapped (`1/N` of total keys).\n\n**Virtual Nodes:** Each physical node is mapped to 200+ positions on the ring to ensure even load distribution."
+    },
+    {
+      "title": "Stage 4 — Master-Replica Failover & Read Sharding",
+      "bottleneck": "Network partitioning across data centers.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "App Pool", "position": { "x": 50, "y": 200 } },
+        { "id": "proxy", "type": "lb", "label": "Twemproxy / Envoy", "position": { "x": 250, "y": 200 } },
+        { "id": "m1", "type": "cache", "label": "Primary Node 1", "position": { "x": 500, "y": 100 } },
+        { "id": "r1", "type": "replica", "label": "Replica Node 1", "position": { "x": 750, "y": 100 } },
+        { "id": "m2", "type": "cache", "label": "Primary Node 2", "position": { "x": 500, "y": 300 } },
+        { "id": "r2", "type": "replica", "label": "Replica Node 2", "position": { "x": 750, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "proxy", "label": "" },
+        { "id": "e2", "source": "proxy", "target": "m1", "label": "Write" },
+        { "id": "e3", "source": "m1", "target": "r1", "label": "Async Replication", "animated": true },
+        { "id": "e4", "source": "proxy", "target": "r1", "label": "Read" }
+      ],
+      "requestPath": ["client", "proxy", "r1", "proxy", "client"],
+      "narrative": "**Replicated High Availability Cache.** Primary nodes accept writes while read replicas handle high volume GET queries. Auto-failover via Sentinel promotes replicas if a primary crashes."
+    }
+  ]
+}

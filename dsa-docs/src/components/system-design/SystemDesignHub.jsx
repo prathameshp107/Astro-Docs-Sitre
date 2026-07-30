@@ -1,30 +1,36 @@
 import { useState } from 'react';
 import EstimationCalculator from './EstimationCalculator';
 import DatabaseAdvisor from './DatabaseAdvisor';
+import BrandIcon from './BrandIcon.jsx';
 import { CategoryIcon } from '../mcq/CategoryIcons.jsx';
 import '../../styles/sketch-visualizer.css';
 
 const CASE_STUDIES = [
-  { slug: 'url-shortener', title: 'Design URL Shortener (TinyURL)', desc: 'Key generation, redirection, caching, and database scaling.', interactive: true, link: '/system-design/url-shortener' },
-  { slug: 'ride-sharing', title: 'Design Ride-Sharing (Uber)', desc: 'Geospatial indexing (Geohash), WebSocket connections, and matching service.', interactive: true, link: '/system-design/url-shortener?case=ride-sharing' }, // we can support query params or separate pages. Let's make separate pages or load them dynamically.
-  { slug: 'chat-system', title: 'Design Chat App (WhatsApp)', desc: 'WebSocket servers, message queuing, delivery status checks, and presence store.', interactive: true, link: '/system-design/url-shortener?case=chat-system' },
-  { slug: 'rate-limiter', title: 'Design a Rate Limiter', desc: 'Token bucket in Redis for fair, distributed API request limiting.', interactive: false },
-  { slug: 'news-feed', title: 'Design a News Feed (Twitter/Instagram)', desc: 'Fan-out write/read paths, feed caching, media storage, and scaling read paths.', interactive: false },
-  { slug: 'video-streaming', title: 'Design Video Streaming (YouTube/Netflix)', desc: 'Transcoding pipelines, CDN delivery, view counters, and upload flow.', interactive: false },
-  { slug: 'notification-system', title: 'Design a Notification System', desc: 'Batching, delivery, and multi-channel (push, email, SMS) fan-out.', interactive: false },
-  { slug: 'web-crawler', title: 'Design a Web Crawler', desc: 'Frontier, politeness, deduplication, and storage at Googlebot scale.', interactive: false },
-  { slug: 'search-autocomplete', title: 'Design Search Autocomplete', desc: 'Real-time typeahead suggestions like Google Search autocomplete.', interactive: false },
-  { slug: 'distributed-cache', title: 'Design a Distributed Cache', desc: 'Consistent hashing, replication, and failover like Redis or Memcached.', interactive: false },
-  { slug: 'file-storage', title: 'Design Cloud Storage (Google Drive)', desc: 'Chunking uploads, sync conflict resolution, and metadata sharding.', interactive: false },
-  { slug: 'payment-system', title: 'Design a Payment System', desc: 'Idempotent transactions, reconciliation loops, and ledger architecture.', interactive: false },
-  { slug: 'ticket-booking-system', title: 'Design a Ticket Booking System (BookMyShow)', desc: 'Seat-hold locking to prevent double-booking and flash-sale traffic spikes.', interactive: false },
-  { slug: 'ecommerce-order-system', title: 'Design an E-commerce Order System (Amazon)', desc: 'Inventory reservation, order state machine, and saga-coordinated checkout.', interactive: false },
-  { slug: 'distributed-key-value-store', title: 'Design a Distributed Key-Value Store (DynamoDB)', desc: 'Quorum reads/writes, vector clocks, hinted handoff, and LSM-trees.', interactive: false },
-  { slug: 'proximity-service', title: 'Design a Proximity Service (Yelp)', desc: 'Geohashing and quadtrees for fast nearby-places search at scale.', interactive: false },
-  { slug: 'collaborative-editor', title: 'Design a Collaborative Editor (Google Docs)', desc: 'Operational Transformation, CRDTs, and live multi-user presence.', interactive: false },
-  { slug: 'distributed-job-scheduler', title: 'Design a Distributed Job Scheduler', desc: 'Leader election, exactly-once triggers, and DAG dependencies.', interactive: false },
-  { slug: 'ad-click-aggregation', title: 'Design an Ad Click Aggregation System', desc: 'Streaming aggregation, HyperLogLog counting, and fraud dedup.', interactive: false },
-  { slug: 'distributed-lock-service', title: 'Design a Distributed Lock Service', desc: 'Leases, fencing tokens, and consensus-backed mutual exclusion.', interactive: false },
+  { slug: 'url-shortener', title: 'Design URL Shortener (TinyURL)', desc: 'Key generation, redirection, caching, and database scaling.', interactive: true },
+  { slug: 'ride-sharing', title: 'Design Ride-Sharing (Uber)', desc: 'Geospatial indexing (Geohash), WebSocket connections, and matching service.', interactive: true },
+  { slug: 'chat-system', title: 'Design Chat App (WhatsApp)', desc: 'WebSocket servers, message queuing, delivery status checks, and presence store.', interactive: true },
+  { slug: 'rate-limiter', title: 'Design a Rate Limiter', desc: 'Token bucket in Redis for fair, distributed API request limiting.', interactive: true },
+  { slug: 'news-feed', title: 'Design a News Feed (Twitter/Instagram)', desc: 'Fan-out write/read paths, feed caching, media storage, and scaling read paths.', interactive: true },
+  { slug: 'video-streaming', title: 'Design Video Streaming (YouTube/Netflix)', desc: 'Transcoding pipelines, CDN delivery, view counters, and upload flow.', interactive: true },
+  { slug: 'tiktok', title: 'Design Short Video Platform (TikTok/Reels)', desc: 'Parallel chunk uploads, HLS transcoding, recommendation feed ranker, and Flink analytics.', interactive: true },
+  { slug: 'discord', title: 'Design Real-Time Chat & Voice (Discord/Slack)', desc: 'Elixir WS gateway, ScyllaDB channel logs, WebRTC SFUs, and presence aggregation.', interactive: true },
+  { slug: 'airbnb', title: 'Design Property & Hotel Booking (Airbnb)', desc: '365-day availability bitmaps, 15-min SETNX reservation holds, and Quadtree search.', interactive: true },
+  { slug: 'notification-system', title: 'Design a Notification System', desc: 'Batching, delivery, and multi-channel (push, email, SMS) fan-out.', interactive: true },
+  { slug: 'web-crawler', title: 'Design a Web Crawler', desc: 'Frontier, politeness, deduplication, and storage at Googlebot scale.', interactive: true },
+  { slug: 'search-autocomplete', title: 'Design Search Autocomplete', desc: 'Real-time typeahead suggestions like Google Search autocomplete.', interactive: true },
+  { slug: 'distributed-cache', title: 'Design a Distributed Cache', desc: 'Consistent hashing, replication, and failover like Redis or Memcached.', interactive: true },
+  { slug: 'file-storage', title: 'Design Cloud Storage (Google Drive)', desc: 'Chunking uploads, sync conflict resolution, and metadata sharding.', interactive: true },
+  { slug: 'payment-system', title: 'Design a Payment System', desc: 'Idempotent transactions, reconciliation loops, and ledger architecture.', interactive: true },
+  { slug: 'ticket-booking-system', title: 'Design a Ticket Booking System (BookMyShow)', desc: 'Seat-hold locking to prevent double-booking and flash-sale traffic spikes.', interactive: true },
+  { slug: 'ecommerce-order-system', title: 'Design an E-commerce Order System (Amazon)', desc: 'Inventory reservation, order state machine, and saga-coordinated checkout.', interactive: true },
+  { slug: 'distributed-key-value-store', title: 'Design a Distributed Key-Value Store (DynamoDB)', desc: 'Quorum reads/writes, vector clocks, hinted handoff, and LSM-trees.', interactive: true },
+  { slug: 'proximity-service', title: 'Design a Proximity Service (Yelp)', desc: 'Geohashing and quadtrees for fast nearby-places search at scale.', interactive: true },
+  { slug: 'collaborative-editor', title: 'Design a Collaborative Editor (Google Docs)', desc: 'Operational Transformation, CRDTs, and live multi-user presence.', interactive: true },
+  { slug: 'distributed-job-scheduler', title: 'Design a Distributed Job Scheduler', desc: 'Leader election, exactly-once triggers, and DAG dependencies.', interactive: true },
+  { slug: 'metrics-monitoring', title: 'Design Metrics & Monitoring System (Prometheus)', desc: 'Pull metrics scraper, Gorilla XOR TSDB compression, and rollup downsampling.', interactive: true },
+  { slug: 'distributed-message-queue', title: 'Design Distributed Message Queue (Kafka)', desc: 'Partitioned commit logs, consumer groups, OS zero-copy (sendfile), and ISR replicas.', interactive: true },
+  { slug: 'ad-click-aggregation', title: 'Design an Ad Click Aggregation System', desc: 'Streaming aggregation, HyperLogLog counting, and fraud dedup.', interactive: true },
+  { slug: 'distributed-lock-service', title: 'Design a Distributed Lock Service', desc: 'Leases, fencing tokens, and consensus-backed mutual exclusion.', interactive: true },
 ];
 
 const LLD_PROJECTS = [
@@ -54,32 +60,105 @@ export default function SystemDesignHub() {
 
   return (
     <div className="sys-hub-container font-sketch max-w-6xl mx-auto px-4 py-8">
-      {/* Chalkboard Hero Section */}
-      <section className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl text-center mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
-        <div className="inline-block sketch-border-soft px-4 py-1.5 text-xs font-mono font-bold bg-amber-500/20 text-amber-500 border-amber-500/40 rounded-full mb-4">
-          ⚡ SYSTEM DESIGN STUDIO
-        </div>
-        <h1 className="font-header font-bold text-4xl md:text-5xl text-[var(--sketch-text)] mb-4">
-          System Design Hub
-        </h1>
-        <p className="text-[var(--sketch-text-muted)] text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-8 font-sketch">
-          Evolve architectures from a single server to serving billions of users. 
-          Learn High-Level Design (HLD) and Low-Level Design (LLD) with interactive calculators and visualizers.
-        </p>
+      {/* Redesigned Chalkboard Hero Header Section */}
+      <section className="sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
+        {/* Top Control & Quick Launcher Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[var(--sketch-border)] mb-6">
+          <div className="flex items-center gap-2">
+            <span className="sketch-border-soft px-3 py-1 text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              ⚡ ARCHITECTURE & SYSTEM DESIGN HUB
+            </span>
+          </div>
 
-        {/* Quick Stats Grid */}
-        <div className="flex flex-wrap items-center justify-center gap-6 pt-4 border-t border-[var(--sketch-border)] max-w-2xl mx-auto">
-          <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
-            <span className="font-header text-3xl font-bold text-amber-500 block">20</span>
-            <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">HLD Topics</span>
+          {/* Quick Case Launcher Dropdown */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="hub-case-select" className="text-xs font-mono font-bold text-amber-500 uppercase tracking-wider hidden sm:inline">
+              🚀 Launch Visualizer:
+            </label>
+            <select
+              id="hub-case-select"
+              onChange={(e) => {
+                if (e.target.value) {
+                  const targetSlug = e.target.value;
+                  window.location.href = targetSlug === 'url-shortener'
+                    ? `${base}/system-design/url-shortener`
+                    : `${base}/system-design/url-shortener?case=${targetSlug}`;
+                }
+              }}
+              defaultValue=""
+              className="sketch-button bg-[var(--sketch-bg)] text-[var(--sketch-text)] text-xs md:text-sm font-bold font-sketch border-2 border-[var(--sketch-border)] rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 cursor-pointer shadow-md"
+            >
+              <option value="" disabled>Choose a Case Study (25)...</option>
+              {CASE_STUDIES.map((c) => (
+                <option key={c.slug} value={c.slug} className="bg-slate-900 text-slate-100">
+                  {c.title}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
-            <span className="font-header text-3xl font-bold text-emerald-400 block">20</span>
-            <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">Case Studies</span>
+        </div>
+
+        {/* Hero Title & Subtitle */}
+        <div className="text-center max-w-3xl mx-auto mb-6">
+          <h1 className="font-header font-bold text-3xl md:text-5xl text-[var(--sketch-text)] mb-3 leading-tight">
+            System Design Studio & Interactive Visualizers
+          </h1>
+          <p className="text-[var(--sketch-text-muted)] text-sm md:text-base leading-relaxed font-sketch">
+            Master High-Level Design (HLD) and Low-Level Design (LLD) from single-server monoliths to global-scale distributed systems handling billions of users.
+          </p>
+        </div>
+
+        {/* Featured Brand Icon Launchpad Pills */}
+        <div className="mb-6 pt-2">
+          <div className="text-center text-xs font-mono font-bold text-[var(--sketch-text-muted)] uppercase tracking-wider mb-3">
+            🔥 Featured Interactive Architectures
           </div>
-          <div className="sketch-panel-box sketch-border p-4 px-6 text-center min-w-[130px]">
-            <span className="font-header text-3xl font-bold text-cyan-400 block">15</span>
-            <span className="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">LLD Projects</span>
+          <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-4xl mx-auto">
+            {[
+              { slug: 'whatsapp', name: 'WhatsApp' },
+              { slug: 'youtube', name: 'YouTube' },
+              { slug: 'uber', name: 'Uber' },
+              { slug: 'tiktok', name: 'TikTok/Reels' },
+              { slug: 'discord', name: 'Discord/Slack' },
+              { slug: 'airbnb', name: 'Airbnb' },
+              { slug: 'url-shortener', name: 'TinyURL' },
+              { slug: 'rate-limiter', name: 'Rate Limiter' },
+              { slug: 'web-crawler', name: 'Googlebot' },
+              { slug: 'distributed-message-queue', name: 'Kafka Queue' },
+            ].map((item) => (
+              <a
+                key={item.slug}
+                href={item.slug === 'url-shortener'
+                  ? `${base}/system-design/url-shortener`
+                  : `${base}/system-design/url-shortener?case=${item.slug}`
+                }
+                className="sketch-button group inline-flex items-center gap-2 text-xs font-bold text-[var(--sketch-text)] bg-[var(--sketch-bg)] hover:bg-amber-500/10 hover:border-amber-500 px-3 py-1.5 rounded-xl border border-[var(--sketch-border)] transition-all shadow-sm"
+              >
+                <BrandIcon slug={item.slug} size={18} />
+                <span className="group-hover:text-amber-400 font-sketch">{item.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 border-t border-[var(--sketch-border)] max-w-4xl mx-auto">
+          <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
+            <span className="font-header text-2xl md:text-3xl font-bold text-amber-500 block">25</span>
+            <span className="text-[10px] md:text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">Interactive Diagrams</span>
+          </div>
+          <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
+            <span className="font-header text-2xl md:text-3xl font-bold text-emerald-400 block">20</span>
+            <span className="text-[10px] md:text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">HLD Written Guides</span>
+          </div>
+          <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
+            <span className="font-header text-2xl md:text-3xl font-bold text-cyan-400 block">15</span>
+            <span className="text-[10px] md:text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">LLD Machine Coding</span>
+          </div>
+          <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
+            <span className="font-header text-2xl md:text-3xl font-bold text-rose-400 block">100%</span>
+            <span className="text-[10px] md:text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">Free & Hands-On</span>
           </div>
         </div>
       </section>
@@ -131,9 +210,12 @@ export default function SystemDesignHub() {
                         ⚡ Interactive Visualizer
                       </span>
                     )}
-                    <h3 className="font-header font-bold text-xl text-[var(--sketch-text)] group-hover:text-amber-500 transition-colors mb-2">
-                      {c.title}
-                    </h3>
+                    <div className="flex items-center gap-3 mb-3">
+                      <BrandIcon slug={c.slug} size={28} />
+                      <h3 className="font-header font-bold text-xl text-[var(--sketch-text)] group-hover:text-amber-500 transition-colors">
+                        {c.title}
+                      </h3>
+                    </div>
                     <p className="text-[var(--sketch-text-muted)] text-sm leading-relaxed mb-6 font-sketch">
                       {c.desc}
                     </p>
@@ -372,7 +454,7 @@ export default function SystemDesignHub() {
                 </a>
               </li>
               <li>
-                <a href={`${base}/hld/case-studies/design-youtube`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}/system-design/11-case-studies/design-video-streaming`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> YouTube Streaming
                 </a>
               </li>

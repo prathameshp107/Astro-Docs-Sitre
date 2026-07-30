@@ -1,0 +1,79 @@
+{
+  "id": "metrics-monitoring",
+  "title": "Design Metrics & Monitoring System (Prometheus / Datadog)",
+  "subtitle": "High-throughput time-series metrics collection, TSDB sharding, downsampling, and alerting",
+  "stages": [
+    {
+      "title": "Stage 1 — Push-Based Logs & Cron Aggregation",
+      "bottleneck": "App servers sending logs over HTTP blocks request execution. Log parsing script takes hours on large logs.",
+      "nodes": [
+        { "id": "app1", "type": "server", "label": "App Server 1", "position": { "x": 50, "y": 120 } },
+        { "id": "app2", "type": "server", "label": "App Server 2", "position": { "x": 50, "y": 280 } },
+        { "id": "log-server", "type": "server", "label": "Central Log Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "MySQL Log DB", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "app1", "target": "log-server", "label": "Push HTTP Log" },
+        { "id": "e2", "source": "app2", "target": "log-server", "label": "Push HTTP Log" },
+        { "id": "e3", "source": "log-server", "target": "db", "label": "Parse & Insert" }
+      ],
+      "requestPath": ["app1", "log-server", "db"],
+      "narrative": "**Log-based Monitoring MVP.** Application servers push log lines to a log server, which parses CPU and error rates into MySQL.\n\n**Bottleneck:** High disk I/O cost and missing real-time visibility into production outages."
+    },
+    {
+      "title": "Stage 2 — Pull-Based Metrics Scraper & Time-Series DB (Prometheus)",
+      "bottleneck": "Storing millions of metric data points (`cpu_usage`, `http_requests_total`) in relational DB causes table bloat.",
+      "nodes": [
+        { "id": "app1", "type": "server", "label": "App Server 1\n(/metrics endpoint)", "position": { "x": 50, "y": 120 } },
+        { "id": "app2", "type": "server", "label": "App Server 2\n(/metrics endpoint)", "position": { "x": 50, "y": 280 } },
+        { "id": "prometheus", "type": "service", "label": "Prometheus Server\n(Metrics Scraper Engine)", "position": { "x": 350, "y": 200 } },
+        { "id": "tsdb", "type": "database", "label": "Time-Series DB (TSDB)\n(Gorilla Compression)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "prometheus", "target": "app1", "label": "Scrape /metrics (15s)" },
+        { "id": "e2", "source": "prometheus", "target": "app2", "label": "Scrape /metrics (15s)" },
+        { "id": "e3", "source": "prometheus", "target": "tsdb", "label": "Write compressed chunk" }
+      ],
+      "requestPath": ["prometheus", "app1", "prometheus", "tsdb"],
+      "narrative": "**Pull Architecture & TSDB Storage.** Prometheus scrapes metrics endpoints every 15 seconds. Data is compressed using **Gorilla XOR Floating-Point Encoding** (reducing 16-byte float data points down to 1.37 bytes)."
+    },
+    {
+      "title": "Stage 3 — Distributed Kafka Ingestion & TSDB Sharding",
+      "bottleneck": "A single Prometheus server runs out of disk space and CPU when monitoring 10,000+ microservice instances.",
+      "nodes": [
+        { "id": "agents", "type": "client", "label": "10,000+ App Agents", "position": { "x": 50, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka Metrics Queue", "position": { "x": 280, "y": 200 } },
+        { "id": "writers", "type": "service", "label": "TSDB Ingestion Workers", "position": { "x": 500, "y": 200 } },
+        { "id": "shard1", "type": "shard", "label": "TSDB Shard 1\n(metric_name A-M)", "position": { "x": 750, "y": 120 } },
+        { "id": "shard2", "type": "shard", "label": "TSDB Shard 2\n(metric_name N-Z)", "position": { "x": 750, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "agents", "target": "kafka", "label": "Stream metrics" },
+        { "id": "e2", "source": "kafka", "target": "writers", "label": "Consume stream" },
+        { "id": "e3", "source": "writers", "target": "shard1", "label": "Shard by metric name" },
+        { "id": "e4", "source": "writers", "target": "shard2", "label": "Shard by metric name" }
+      ],
+      "requestPath": ["agents", "kafka", "writers", "shard1"],
+      "narrative": "**Horizontal TSDB Sharding.** Metric streams are ingested into Kafka and sharded across multiple TSDB nodes by metric name + label hashes. This allows scaling metrics ingestion to millions of data points per second."
+    },
+    {
+      "title": "Stage 4 — Real-Time Alerting, Grafana Dashboards & Downsampling",
+      "bottleneck": "Querying 1 year of raw 15-second metric data points crashes browser dashboards due to payload size.",
+      "nodes": [
+        { "id": "grafana", "type": "client", "label": "Grafana Dashboard / UI", "position": { "x": 50, "y": 120 } },
+        { "id": "alertmgr", "type": "service", "label": "Alertmanager\n(PagerDuty / Slack)", "position": { "x": 50, "y": 280 } },
+        { "id": "query-gw", "type": "server", "label": "PromQL Query Gateway", "position": { "x": 300, "y": 200 } },
+        { "id": "downsampler", "type": "service", "label": "Downsampling Job\n(15s -> 1m -> 1h)", "position": { "x": 550, "y": 300 } },
+        { "id": "cold-s3", "type": "storage", "label": "Cold Storage S3\n(Historical Metrics)", "position": { "x": 750, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "grafana", "target": "query-gw", "label": "Execute PromQL Query" },
+        { "id": "e2", "source": "query-gw", "target": "cold-s3", "label": "Fetch downsampled metrics" },
+        { "id": "e3", "source": "query-gw", "target": "alertmgr", "label": "Trigger threshold alert" },
+        { "id": "e4", "source": "downsampler", "target": "cold-s3", "label": "Archive rollup chunks" }
+      ],
+      "requestPath": ["grafana", "query-gw", "cold-s3", "query-gw", "grafana"],
+      "narrative": "**Downsampling & Alertmanager.**\n1. **Downsampling:** Raw 15s data points are rolled up into 1-minute averages after 7 days, and 1-hour averages after 30 days.\n2. **Alerting:** Alertmanager evaluates PromQL rules (`cpu_usage > 90% for 5m`) and triggers PagerDuty / Slack notifications."
+    }
+  ]
+}

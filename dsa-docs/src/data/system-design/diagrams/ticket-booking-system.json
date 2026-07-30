@@ -1,0 +1,62 @@
+{
+  "id": "ticket-booking-system",
+  "title": "Design a Ticket Booking System (BookMyShow)",
+  "subtitle": "Distributed seat locks, Redis TTL reservations, and flash-sale queue management",
+  "stages": [
+    {
+      "title": "Stage 1 — RDBMS Row Locks",
+      "bottleneck": "During blockbuster movie release (100,000 users selecting seat A1 simultaneously), database `SELECT FOR UPDATE` causes row lock contention & deadlock crashes.",
+      "nodes": [
+        { "id": "user1", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "user2", "type": "client", "label": "User B", "position": { "x": 50, "y": 280 } },
+        { "id": "app", "type": "server", "label": "Booking Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL\n(SELECT FOR UPDATE seat)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user1", "target": "app", "label": "Book Seat A1" },
+        { "id": "e2", "source": "user2", "target": "app", "label": "Book Seat A1" },
+        { "id": "e3", "source": "app", "target": "db", "label": "Lock row A1" }
+      ],
+      "requestPath": ["user1", "app", "db", "app", "user1"],
+      "narrative": "**Database Row Locks.** RDBMS pessimistic locking on seat rows prevents double booking, but database connection pools blow up under 100K flash sale users."
+    },
+    {
+      "title": "Stage 2 — Redis Temporary Distributed Seat Holds (10-Min TTL)",
+      "bottleneck": "If a user locks a seat and abandons payment, the seat remains locked forever without automated expiry.",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "User Mobile", "position": { "x": 50, "y": 200 } },
+        { "id": "gw", "type": "lb", "label": "API Gateway", "position": { "x": 250, "y": 200 } },
+        { "id": "booking-service", "type": "server", "label": "Booking Engine", "position": { "x": 450, "y": 200 } },
+        { "id": "redis", "type": "cache", "label": "Redis Seat Lock\n(SETNX key EX 600)", "position": { "x": 700, "y": 100 } },
+        { "id": "payment", "type": "service", "label": "Payment Gateway", "position": { "x": 700, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "gw", "label": "Hold Seat A1" },
+        { "id": "e2", "source": "gw", "target": "booking-service", "label": "Pass" },
+        { "id": "e3", "source": "booking-service", "target": "redis", "label": "SET show_123:A1 user_456 NX EX 600" },
+        { "id": "e4", "source": "booking-service", "target": "payment", "label": "Redirect to checkout" }
+      ],
+      "requestPath": ["user", "gw", "booking-service", "redis", "booking-service", "user"],
+      "narrative": "**Distributed Redis Seat Holding.** Seat reservation uses Redis atomic `SETNX` (Set if Not Exists) with a 10-minute expiration TTL.\n\nIf payment succeeds within 10 minutes, convert to permanent DB booking. If payment fails/times out, Redis TTL key naturally expires, releasing the seat instantly for other buyers."
+    },
+    {
+      "title": "Stage 3 — Virtual Waiting Room & Queue Throttling",
+      "bottleneck": "Surge traffic crashing ticket servers during Coldplay concert booking.",
+      "nodes": [
+        { "id": "users", "type": "client", "label": "500K Fans", "position": { "x": 50, "y": 200 } },
+        { "id": "waiting-room", "type": "lb", "label": "Virtual Waiting Room\n(Fair Queue Token)", "position": { "x": 250, "y": 200 } },
+        { "id": "booking-cluster", "type": "server", "label": "Throttled Booking Cluster", "position": { "x": 500, "y": 200 } },
+        { "id": "redis-cluster", "type": "cache", "label": "Redis Seat State", "position": { "x": 750, "y": 120 } },
+        { "id": "db", "type": "database", "label": "Order Ledger DB", "position": { "x": 750, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "users", "target": "waiting-room", "label": "Join queue" },
+        { "id": "e2", "source": "waiting-room", "target": "booking-cluster", "label": "Allow 1,000 users/sec" },
+        { "id": "e3", "source": "booking-cluster", "target": "redis-cluster", "label": "Atomically claim seat" },
+        { "id": "e4", "source": "booking-cluster", "target": "db", "label": "Commit confirmed ticket" }
+      ],
+      "requestPath": ["users", "waiting-room", "booking-cluster", "redis-cluster"],
+      "narrative": "**Virtual Waiting Room & Rate Throttling.** Excess traffic is held in a virtual queue with a visual position number (e.g. \"You are #4,102 in line\"). Only a calibrated rate of users enter the seat map selection page."
+    }
+  ]
+}

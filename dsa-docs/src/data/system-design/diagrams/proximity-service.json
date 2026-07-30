@@ -1,0 +1,58 @@
+{
+  "id": "proximity-service",
+  "title": "Design a Proximity Service (Yelp / Google Maps Nearby)",
+  "subtitle": "Geohashing, Spatial Quadtrees, and Redis Geospatial indexing for sub-10ms location searches",
+  "stages": [
+    {
+      "title": "Stage 1 — SQL Spatial Query (Bounding Box / Haversine)",
+      "bottleneck": "Executing `WHERE latitude BETWEEN x1 AND x2 AND longitude BETWEEN y1 AND y2` scans millions of rows; 2D spatial indexing is slow on relational DBs.",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "Mobile App", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "Search Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "SQL Database\n(Haversine Distance)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "app", "label": "GET /places?lat=37.77&lng=-122.41" },
+        { "id": "e2", "source": "app", "target": "db", "label": "SQL 2D Range Scan" }
+      ],
+      "requestPath": ["user", "app", "db", "app", "user"],
+      "narrative": "**Relational Spatial Query.** Calculates Haversine distance between user coordinates and every restaurant in the database table."
+    },
+    {
+      "title": "Stage 2 — Geohash Grid Indexing in Redis",
+      "bottleneck": "Geohash boundary precision issues (two places 50m apart across a grid border have completely different prefix strings).",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "Mobile App", "position": { "x": 50, "y": 200 } },
+        { "id": "gw", "type": "lb", "label": "API Gateway", "position": { "x": 250, "y": 200 } },
+        { "id": "loc-service", "type": "server", "label": "Proximity Service", "position": { "x": 450, "y": 200 } },
+        { "id": "redis-geo", "type": "cache", "label": "Redis GEO\n(GEOADD / GEORADIUS)", "position": { "x": 700, "y": 100 } },
+        { "id": "biz-db", "type": "database", "label": "Business Details DB", "position": { "x": 700, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "gw", "label": "" },
+        { "id": "e2", "source": "gw", "target": "loc-service", "label": "" },
+        { "id": "e3", "source": "loc-service", "target": "redis-geo", "label": "1. GEORADIUS 5km + 8 neighbor grids" },
+        { "id": "e4", "source": "loc-service", "target": "biz-db", "label": "2. Multi-get business metadata" }
+      ],
+      "requestPath": ["user", "gw", "loc-service", "redis-geo", "loc-service", "biz-db"],
+      "narrative": "**Geohashing Grid Index.** Encodes 2D coordinates into a Base32 1D string (e.g. `9q9hv`).\n\n**8 Neighbor Check:** To prevent grid border misses, the search queries the center Geohash plus all 8 adjacent neighbor grid cells."
+    },
+    {
+      "title": "Stage 3 — Spatial Quadtree Memory Index & CDN Edge Caching",
+      "bottleneck": "Static business location data changes rarely, but queries spike constantly.",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "App", "position": { "x": 50, "y": 200 } },
+        { "id": "cdn", "type": "cdn", "label": "CDN Edge Cache\n(Cached Grid Clusters)", "position": { "x": 250, "y": 200 } },
+        { "id": "quadtree", "type": "service", "label": "Quadtree Service\n(In-Memory Spatial Tree)", "position": { "x": 500, "y": 200 } },
+        { "id": "read-db", "type": "replica", "label": "Place Info Read Replicas", "position": { "x": 750, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "cdn", "label": "Check grid tile" },
+        { "id": "e2", "source": "cdn", "target": "quadtree", "label": "Tree search if cache miss" },
+        { "id": "e3", "source": "quadtree", "target": "read-db", "label": "Fetch details" }
+      ],
+      "requestPath": ["user", "cdn", "quadtree", "read-db"],
+      "narrative": "**Quadtrees & Edge Tile Caching.** A Quadtree recursively subdivides 2D space into 4 quadrants until each node contains ≤ 100 places. Map tiles are pre-rendered and cached at CDN edge locations."
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "id": "distributed-message-queue",
+  "title": "Design Distributed Message Queue (Apache Kafka)",
+  "subtitle": "High-throughput commit log, consumer groups, zero-copy network transfer, and partition replicas",
+  "stages": [
+    {
+      "title": "Stage 1 — In-Memory FIFO Queue Server",
+      "bottleneck": "Storing messages in server RAM causes data loss on crash. Single thread limits queue throughput to 10K msgs/sec.",
+      "nodes": [
+        { "id": "producer", "type": "client", "label": "Producer App", "position": { "x": 50, "y": 180 } },
+        { "id": "queue-server", "type": "server", "label": "Queue Server\n(In-Memory Array)", "position": { "x": 350, "y": 180 } },
+        { "id": "consumer", "type": "client", "label": "Consumer App", "position": { "x": 650, "y": 180 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "producer", "target": "queue-server", "label": "Push message" },
+        { "id": "e2", "source": "queue-server", "target": "consumer", "label": "Pop message" }
+      ],
+      "requestPath": ["producer", "queue-server", "consumer"],
+      "narrative": "**In-Memory Queue MVP.** Producers push items into an in-memory queue, and consumers pop items.\n\n**Bottleneck:** Memory limits message buffering capacity. Server reboot wipes all unconsumed messages."
+    },
+    {
+      "title": "Stage 2 — Partitioned Disk-Backed Commit Logs",
+      "bottleneck": "Sequential disk writes are fast (100MB/s), but a single disk partition cannot scale beyond 1 disk's IOPS limit.",
+      "nodes": [
+        { "id": "producer", "type": "client", "label": "Producer Pool", "position": { "x": 50, "y": 200 } },
+        { "id": "broker", "type": "server", "label": "Kafka Broker Node", "position": { "x": 280, "y": 200 } },
+        { "id": "p0", "type": "storage", "label": "Topic Partition 0\n(Append-Only Log)", "position": { "x": 550, "y": 100 } },
+        { "id": "p1", "type": "storage", "label": "Topic Partition 1\n(Append-Only Log)", "position": { "x": 550, "y": 200 } },
+        { "id": "p2", "type": "storage", "label": "Topic Partition 2\n(Append-Only Log)", "position": { "x": 550, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "producer", "target": "broker", "label": "Send (Key, Payload)" },
+        { "id": "e2", "source": "broker", "target": "p0", "label": "Write Key Hash % N" },
+        { "id": "e3", "source": "broker", "target": "p1", "label": "Write Key Hash % N" },
+        { "id": "e4", "source": "broker", "target": "p2", "label": "Write Key Hash % N" }
+      ],
+      "requestPath": ["producer", "broker", "p0"],
+      "narrative": "**Append-Only Commit Logs & Partitions.** Topics are split into **Partitions**. Messages are appended to sequential disk segment files with an incremental 64-bit integer **Offset**."
+    },
+    {
+      "title": "Stage 3 — Consumer Groups, Offset Tracking & Metadata Coordinator",
+      "bottleneck": "How to allow 100 consumers to read from a topic without message duplication or processing conflicts?",
+      "nodes": [
+        { "id": "brokers", "type": "server", "label": "Kafka Cluster Brokers", "position": { "x": 300, "y": 180 } },
+        { "id": "zookeeper", "type": "service", "label": "KRaft / ZooKeeper\n(Cluster Metadata & Elections)", "position": { "x": 300, "y": 340 } },
+        { "id": "c1", "type": "client", "label": "Consumer 1 (Group A)", "position": { "x": 650, "y": 100 } },
+        { "id": "c2", "type": "client", "label": "Consumer 2 (Group A)", "position": { "x": 650, "y": 260 } },
+        { "id": "offset-topic", "type": "cache", "label": "__consumer_offsets\n(Offset Store)", "position": { "x": 50, "y": 180 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "brokers", "target": "c1", "label": "Assigned Partition 0,1" },
+        { "id": "e2", "source": "brokers", "target": "c2", "label": "Assigned Partition 2" },
+        { "id": "e3", "source": "c1", "target": "offset-topic", "label": "Commit Offset 1042" },
+        { "id": "e4", "source": "brokers", "target": "zookeeper", "label": "Leader Heartbeats" }
+      ],
+      "requestPath": ["brokers", "c1", "offset-topic"],
+      "narrative": "**Consumer Groups & Offset Management.**\n1. **Consumer Group:** Multiple workers share partition load. Each partition is consumed by exactly 1 consumer within a group.\n2. **Offset Commits:** Consumers periodically record their current offset (`__consumer_offsets`), enabling instant crash recovery."
+    },
+    {
+      "title": "Stage 4 — Zero-Copy OS Transfers & Partition Replicas",
+      "bottleneck": "Copying data from disk -> OS page cache -> user space -> socket buffer consumes CPU cycles.",
+      "nodes": [
+        { "id": "producer", "type": "client", "label": "Producers", "position": { "x": 50, "y": 120 } },
+        { "id": "leader", "type": "server", "label": "Broker 1 (Leader P0)", "position": { "x": 280, "y": 200 } },
+        { "id": "replica", "type": "shard", "label": "Broker 2 (Follower P0)", "position": { "x": 520, "y": 320 } },
+        { "id": "zero-copy", "type": "service", "label": "OS Zero-Copy (sendfile)\n(PageCache -> NIC DMA)", "position": { "x": 520, "y": 100 } },
+        { "id": "consumer", "type": "client", "label": "Consumers", "position": { "x": 750, "y": 100 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "producer", "target": "leader", "label": "Produce msg" },
+        { "id": "e2", "source": "leader", "target": "replica", "label": "ISR Replication", "animated": true },
+        { "id": "e3", "source": "leader", "target": "zero-copy", "label": "sendfile() Syscall" },
+        { "id": "e4", "source": "zero-copy", "target": "consumer", "label": "Direct DMA Network Transfer" }
+      ],
+      "requestPath": ["producer", "leader", "replica", "leader", "zero-copy", "consumer"],
+      "narrative": "**Zero-Copy Transfer & In-Sync Replicas (ISR).**\n1. **Zero-Copy Optimization:** Kafka uses the `sendfile()` system call to transfer bytes directly from OS Page Cache to the NIC DMA buffer, bypassing user memory.\n2. **High Availability:** Partitions replicate across Followers (ISR). If a Leader fails, a Follower is promoted in <1 second."
+    }
+  ]
+}

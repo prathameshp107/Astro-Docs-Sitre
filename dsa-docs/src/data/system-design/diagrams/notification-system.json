@@ -1,0 +1,70 @@
+{
+  "id": "notification-system",
+  "title": "Design a Distributed Notification System",
+  "subtitle": "Multi-channel fan-out (Push, Email, SMS) with rate limiting, deduplication, and retry queues",
+  "stages": [
+    {
+      "title": "Stage 1 — Synchronous Notification Dispatcher",
+      "bottleneck": "External vendor APIs (APNs, FCM, SendGrid, Twilio) are slow and unreliable. Sync calls block app threads.",
+      "nodes": [
+        { "id": "service", "type": "server", "label": "Order Service", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "Monolithic Notifier", "position": { "x": 350, "y": 200 } },
+        { "id": "apns", "type": "service", "label": "Apple APNs", "position": { "x": 650, "y": 100 } },
+        { "id": "sendgrid", "type": "service", "label": "SendGrid Email", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "service", "target": "app", "label": "POST /send-notification" },
+        { "id": "e2", "source": "app", "target": "apns", "label": "Sync HTTP request" },
+        { "id": "e3", "source": "app", "target": "sendgrid", "label": "Sync HTTP request" }
+      ],
+      "requestPath": ["service", "app", "apns", "app", "service"],
+      "narrative": "**Synchronous third-party calls.** Application services call vendor APIs directly inline. If SendGrid experiences a 5-second latency spike, order checkout threads freeze."
+    },
+    {
+      "title": "Stage 2 — Async Queues with Dedicated Channel Workers",
+      "bottleneck": "No deduplication mechanism (users receive duplicate emails on retry); no priority queues for critical OTPs.",
+      "nodes": [
+        { "id": "service", "type": "server", "label": "App Services", "position": { "x": 50, "y": 200 } },
+        { "id": "gw", "type": "lb", "label": "Notification API", "position": { "x": 250, "y": 200 } },
+        { "id": "queue-push", "type": "queue", "label": "Push Queue", "position": { "x": 450, "y": 100 } },
+        { "id": "queue-email", "type": "queue", "label": "Email Queue", "position": { "x": 450, "y": 300 } },
+        { "id": "worker-push", "type": "service", "label": "Push Workers", "position": { "x": 650, "y": 100 } },
+        { "id": "worker-email", "type": "service", "label": "Email Workers", "position": { "x": 650, "y": 300 } },
+        { "id": "apns", "type": "service", "label": "APNs / FCM", "position": { "x": 850, "y": 100 } },
+        { "id": "sendgrid", "type": "service", "label": "SendGrid / SES", "position": { "x": 850, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "service", "target": "gw", "label": "Async publish" },
+        { "id": "e2", "source": "gw", "target": "queue-push", "label": "Channel route" },
+        { "id": "e3", "source": "gw", "target": "queue-email", "label": "Channel route" },
+        { "id": "e4", "source": "queue-push", "target": "worker-push", "label": "" },
+        { "id": "e5", "source": "queue-email", "target": "worker-email", "label": "" },
+        { "id": "e6", "source": "worker-push", "target": "apns", "label": "" },
+        { "id": "e7", "source": "worker-email", "target": "sendgrid", "label": "" }
+      ],
+      "requestPath": ["service", "gw", "queue-push", "worker-push", "apns"],
+      "narrative": "**Async Channel Queues.** Isolate notification channels into separate message queues (RabbitMQ / Kafka topics). Slow email providers will never impact mobile push notification speed."
+    },
+    {
+      "title": "Stage 3 — Idempotency, User Preferences & Rate Limiter",
+      "bottleneck": "Unregulated notifications cause user spam & compliance fines; vendor outages cause lost messages without dead-letter queues.",
+      "nodes": [
+        { "id": "gw", "type": "lb", "label": "Notification API", "position": { "x": 50, "y": 200 } },
+        { "id": "idempotency", "type": "cache", "label": "Redis Cache\n(Deduplication Key)", "position": { "x": 250, "y": 100 } },
+        { "id": "pref-db", "type": "database", "label": "User Preference Store\n(Opt-in / Quiet Hours)", "position": { "x": 250, "y": 300 } },
+        { "id": "router", "type": "service", "label": "Router & Priority Evaluator", "position": { "x": 450, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "High/Low Priority Kafka", "position": { "x": 650, "y": 200 } },
+        { "id": "dlq", "type": "queue", "label": "Dead Letter Queue (DLQ)", "position": { "x": 650, "y": 350 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "gw", "target": "idempotency", "label": "Check event_id" },
+        { "id": "e2", "source": "gw", "target": "pref-db", "label": "Check quiet hours" },
+        { "id": "e3", "source": "gw", "target": "router", "label": "Pass validated event" },
+        { "id": "e4", "source": "router", "target": "kafka", "label": "Enqueuer" },
+        { "id": "e5", "source": "router", "target": "dlq", "label": "Failed retries after 3x" }
+      ],
+      "requestPath": ["gw", "idempotency", "pref-db", "router", "kafka"],
+      "narrative": "**Idempotency & User Preferences.** Check unique `event_id` in Redis (TTL 24h) to block duplicates. Evaluate user opt-out rules and quiet hours before enqueuing to high/low priority queues."
+    }
+  ]
+}

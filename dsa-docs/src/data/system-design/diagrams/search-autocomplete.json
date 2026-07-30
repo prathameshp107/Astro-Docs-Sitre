@@ -1,0 +1,75 @@
+{
+  "id": "search-autocomplete",
+  "title": "Design Search Autocomplete",
+  "subtitle": "Real-time typeahead suggestions using Trie data structures and pre-computed Top-K caches",
+  "stages": [
+    {
+      "title": "Stage 1 — SQL LIKE Query Search",
+      "bottleneck": "Executing SQL `SELECT * FROM queries WHERE text LIKE 'macb%'` on every single keystroke destroys DB performance.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Search Box", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "SQL Database", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "Keystroke 'm-a-c-b'" },
+        { "id": "e2", "source": "app", "target": "db", "label": "LIKE 'macb%' query" }
+      ],
+      "requestPath": ["client", "app", "db", "app", "client"],
+      "narrative": "**Naive Autocomplete.** Every keystroke fires an HTTP request that translates into a string prefix lookup in SQL.\n\n**Failure mode:** At 50,000 queries/sec, the relational database experiences full table scans."
+    },
+    {
+      "title": "Stage 2 — In-Memory Trie Data Structure",
+      "bottleneck": "Traversing deep Trie branches and sorting top 5 items dynamically at runtime is too expensive (`O(p + n + n log k)`).",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Client UI", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "Typeahead Service", "position": { "x": 350, "y": 200 } },
+        { "id": "trie", "type": "cache", "label": "In-Memory Trie\n(Prefix Tree)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "GET /autocomplete?q=mac" },
+        { "id": "e2", "source": "app", "target": "trie", "label": "Find node 'mac' → Collect child frequencies" }
+      ],
+      "requestPath": ["client", "app", "trie", "app", "client"],
+      "narrative": "**Trie (Prefix Tree) Datastructure.** Store search query histories in a Trie tree where each node represents a character. Finding prefix matches takes `O(p)` where `p` is length of query string."
+    },
+    {
+      "title": "Stage 3 — Pre-computed Top-5 at Each Trie Node + Redis Cache",
+      "bottleneck": "Updating frequency counts in real-time on live search traffic locks the Trie datastructure.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Browser / Mobile", "position": { "x": 50, "y": 200 } },
+        { "id": "lb", "type": "lb", "label": "Load Balancer", "position": { "x": 250, "y": 200 } },
+        { "id": "app", "type": "server", "label": "Query Service", "position": { "x": 450, "y": 200 } },
+        { "id": "redis", "type": "cache", "label": "Redis Cache\n(Prefix -> Top 5 JSON)", "position": { "x": 650, "y": 100 } },
+        { "id": "trie-server", "type": "service", "label": "Trie Cluster\n(Pre-computed Top K)", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "lb", "label": "" },
+        { "id": "e2", "source": "lb", "target": "app", "label": "" },
+        { "id": "e3", "source": "app", "target": "redis", "label": "1. Sub-ms Cache Lookup" },
+        { "id": "e4", "source": "app", "target": "trie-server", "label": "2. Fallback to Trie" }
+      ],
+      "requestPath": ["client", "lb", "app", "redis", "app", "client"],
+      "narrative": "**Optimized Trie with Pre-computed Top 5.**\n1. **Pre-computation:** Every Trie node stores an array of its top 5 most popular completion strings. Time complexity drops to `O(1)`!\n2. **Redis Cache:** Front prefix queries (e.g. `q=m`, `q=ma`) are cached directly in Redis with a 1-hour TTL."
+    },
+    {
+      "title": "Stage 4 — Offline Analytics Pipeline & Async Trie Builder",
+      "bottleneck": "Filtering objectionable content or trending news spikes safely.",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "Search Traffic", "position": { "x": 50, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka Query Logs", "position": { "x": 250, "y": 200 } },
+        { "id": "mapreduce", "type": "service", "label": "Spark Aggregator\n(Weekly Frequency Count)", "position": { "x": 450, "y": 200 } },
+        { "id": "filter", "type": "service", "label": "Profanity & Spam Filter", "position": { "x": 650, "y": 200 } },
+        { "id": "trie-db", "type": "database", "label": "Trie Snapshot Store\n(Serialized DB)", "position": { "x": 850, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "kafka", "label": "Log search string" },
+        { "id": "e2", "source": "kafka", "target": "mapreduce", "label": "Batch aggregation" },
+        { "id": "e3", "source": "mapreduce", "target": "filter", "label": "Clean keywords" },
+        { "id": "e4", "source": "filter", "target": "trie-db", "label": "Build new Trie partition" }
+      ],
+      "requestPath": ["user", "kafka", "mapreduce", "filter", "trie-db"],
+      "narrative": "**Offline Pipeline & Real-Time Sync.** Search logs are aggregated asynchronously using Spark. A fresh snapshot of the Trie is built offline once a week (or hourly for trending topics) and hot-swapped into memory without downtime."
+    }
+  ]
+}

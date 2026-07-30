@@ -1,0 +1,80 @@
+{
+  "id": "airbnb",
+  "title": "Design Hotel & Property Booking (Airbnb)",
+  "subtitle": "Geospatial search, date-range availability bitmasks, and double-booking prevention",
+  "stages": [
+    {
+      "title": "Stage 1 — Basic Relational Property Search",
+      "bottleneck": "SQL queries checking date availability (`WHERE checkin >= X AND checkout <= Y`) scan millions of rows, locking the DB under search spikes.",
+      "nodes": [
+        { "id": "guest", "type": "client", "label": "Guest App", "position": { "x": 50, "y": 180 } },
+        { "id": "server", "type": "server", "label": "Monolith App Server", "position": { "x": 350, "y": 180 } },
+        { "id": "db", "type": "database", "label": "PostgreSQL\n(Listings & Bookings)", "position": { "x": 650, "y": 180 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "guest", "target": "server", "label": "Search (City, Dates)" },
+        { "id": "e2", "source": "server", "target": "db", "label": "SQL Date Range Join" }
+      ],
+      "requestPath": ["guest", "server", "db", "server", "guest"],
+      "narrative": "**Monolithic Date-Range Queries.** Search requests execute a heavy `JOIN` between listings and bookings tables to check if dates overlap.\n\n**Bottleneck:** High latency (>1s) and database locks during peak holiday search spikes."
+    },
+    {
+      "title": "Stage 2 — Date-Range Availability Bitmaps & Redis Cache",
+      "bottleneck": "Searching 10M listings across 365 calendar days requires fast bitwise date checks.",
+      "nodes": [
+        { "id": "guest", "type": "client", "label": "Guest App", "position": { "x": 50, "y": 180 } },
+        { "id": "gw", "type": "server", "label": "API Gateway", "position": { "x": 280, "y": 180 } },
+        { "id": "search-svc", "type": "service", "label": "Search Service", "position": { "x": 500, "y": 180 } },
+        { "id": "bitmap-cache", "type": "cache", "label": "Redis Date Bitmaps\n(365 bits/year/listing)", "position": { "x": 750, "y": 120 } },
+        { "id": "geo", "type": "service", "label": "Geohash Location Index", "position": { "x": 750, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "guest", "target": "gw", "label": "Search Paris, July 1-7" },
+        { "id": "e2", "source": "gw", "target": "search-svc", "label": "Route query" },
+        { "id": "e3", "source": "search-svc", "target": "geo", "label": "Get Paris listings" },
+        { "id": "e4", "source": "search-svc", "target": "bitmap-cache", "label": "BITOP AND check availability" }
+      ],
+      "requestPath": ["guest", "gw", "search-svc", "geo", "search-svc", "bitmap-cache", "search-svc", "gw", "guest"],
+      "narrative": "**Bitwise Availability Indexing.** Each listing represents 365 calendar days as a 365-bit vector in Redis (`0` = booked, `1` = available). Checking 7-day availability executes a single bitwise `AND` operation in sub-millisecond time."
+    },
+    {
+      "title": "Stage 3 — Distributed Reservation Locks (Saga Pattern)",
+      "bottleneck": "Two guests trying to book the exact same apartment for the same dates at the same second.",
+      "nodes": [
+        { "id": "guestA", "type": "client", "label": "Guest A", "position": { "x": 50, "y": 120 } },
+        { "id": "guestB", "type": "client", "label": "Guest B", "position": { "x": 50, "y": 280 } },
+        { "id": "booking-svc", "type": "service", "label": "Booking Service", "position": { "x": 300, "y": 200 } },
+        { "id": "redis-lock", "type": "cache", "label": "Redis 15-Min Hold Lock\n(SETNX listing_date_range)", "position": { "x": 550, "y": 120 } },
+        { "id": "pay-svc", "type": "service", "label": "Payment Service", "position": { "x": 550, "y": 280 } },
+        { "id": "db", "type": "database", "label": "Final Bookings DB", "position": { "x": 780, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "guestA", "target": "booking-svc", "label": "Hold listing" },
+        { "id": "e2", "source": "booking-svc", "target": "redis-lock", "label": "Acquire 15m hold" },
+        { "id": "e3", "source": "booking-svc", "target": "pay-svc", "label": "Charge card" },
+        { "id": "e4", "source": "pay-svc", "target": "db", "label": "Confirm booking" }
+      ],
+      "requestPath": ["guestA", "booking-svc", "redis-lock", "booking-svc", "pay-svc", "db"],
+      "narrative": "**Double-Booking Prevention.** When a guest clicks 'Reserve', an atomic Redis hold (`SETNX listing_id:date_range user_id EX 900`) grants a 15-minute temporary reservation lock. If payment succeeds, the hold turns into a confirmed DB booking."
+    },
+    {
+      "title": "Stage 4 — Global Search & Dynamic Pricing Engine",
+      "bottleneck": "Prices fluctuate based on seasonality, local events, and demand spikes. Elasticsearch needed for complex category filters.",
+      "nodes": [
+        { "id": "guest", "type": "client", "label": "Global Guests", "position": { "x": 50, "y": 200 } },
+        { "id": "cdn", "type": "cdn", "label": "CDN Edge\n(Cached Map Tiles)", "position": { "x": 240, "y": 200 } },
+        { "id": "es", "type": "database", "label": "Elasticsearch Cluster\n(Geo & Attribute Search)", "position": { "x": 480, "y": 120 } },
+        { "id": "pricing", "type": "service", "label": "Dynamic Pricing Engine\n(Demand ML Model)", "position": { "x": 480, "y": 280 } },
+        { "id": "replica-db", "type": "database", "label": "Read Replicas DB", "position": { "x": 720, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "guest", "target": "cdn", "label": "Get search page" },
+        { "id": "e2", "source": "cdn", "target": "es", "label": "Query listings" },
+        { "id": "e3", "source": "es", "target": "pricing", "label": "Apply dynamic surge rate" },
+        { "id": "e4", "source": "pricing", "target": "replica-db", "label": "Get host details" }
+      ],
+      "requestPath": ["guest", "cdn", "es", "pricing", "replica-db"],
+      "narrative": "**Elasticsearch & Dynamic Pricing.** Search attributes ('Pool', 'Pet friendly', 'Beachfront') are indexed in Elasticsearch. The Dynamic Pricing Engine applies ML demand models to suggest optimized rates to hosts in real-time."
+    }
+  ]
+}

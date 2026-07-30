@@ -17,7 +17,7 @@
         { "id": "e2", "source": "driver", "target": "monolith", "label": "Ping location" },
         { "id": "e3", "source": "monolith", "target": "db", "label": "Geo Queries / Updates" }
       ],
-      "requestPath": ["rider", "monolith", "db", "monolith", "rider"],
+      "requestPath": ["rider", "monolith", "db", "monolith", "driver"],
       "narrative": "**The simplest ride matching service.** Driver locations are updated every 4 seconds via HTTP POST and saved to PostgreSQL. When a rider requests a ride, the server does a bounding-box coordinate search using SQL index.\n\n**Bottleneck:** High write volume (pings) from thousands of drivers locks rows. Geospatial queries scan the entire table, making it impossible to support more than a few hundred active users."
     },
     {
@@ -91,7 +91,7 @@
         { "id": "e8", "source": "match", "target": "geo1", "label": "" },
         { "id": "e9", "source": "match", "target": "db", "label": "Persist trip" }
       ],
-      "requestPath": ["driver", "lb", "ws", "kafka", "geo1"],
+      "requestPath": ["rider", "lb", "ws", "match", "geo1", "db", "ws", "driver"],
       "narrative": "**Production scale.** Since riders and drivers are localized to cities (you can't match a rider in NY with a driver in SF), we **shard drivers by city ID**.\n\n**Consistent Hashing:** Route WebSocket connections based on user location so adjacent cities share pools.\n\n**Kafka integration:** Driver location updates are stream-written to Kafka, allowing multiple consumers (Matching, ETAs, Map data, and Fraud logs) to digest updates asynchronously without locking the critical path."
     }
   ]
