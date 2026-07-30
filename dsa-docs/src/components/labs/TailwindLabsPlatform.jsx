@@ -4,6 +4,7 @@ import Editor from "@monaco-editor/react";
 import { SkeletonLabPlatform } from "../Skeleton.jsx";
 
 import { TW_LESSONS, TW_PLAYGROUND_DEFAULT } from "../../data/tailwind-labs-curriculum.js";
+import { verifyDomAndStyles } from "./shared/domValidator.js";
 
 import {
   LabResizableHandle,
@@ -23,12 +24,33 @@ import {
 
 
 
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
+
 // ─── MAIN PLATFORM ───
 
 export default function TailwindLabsPlatform() {
+  const DRAFT_KEY = "tw-draft";
   const [loading, setLoading] = useState(true);
   const [activeLesson, setActiveLesson] = useState(TW_LESSONS[0]?.id || null);
-  const [code, setCode] = useState(TW_LESSONS[0]?.starterCode || "");
+  const [code, setCode] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = TW_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode("tw-draft", "learn", firstId, TW_LESSONS[0]?.starterCode) : "";
+  });
   const [testResults, setTestResults] = useState([]);
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
@@ -44,8 +66,30 @@ export default function TailwindLabsPlatform() {
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [contentRatio, setContentRatio] = useState(0.5);
   const [previewHeight, setPreviewHeight] = useState(250);
+  const [testsHeight, setTestsHeight] = useState(140);
   const bodyRef = useRef(null);
   const workspaceRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("tw-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId = activeLesson;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`learn:${activeId}`] = code;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [code, activeLesson, loading]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 100);
@@ -77,7 +121,7 @@ export default function TailwindLabsPlatform() {
   const selectLesson = (id) => {
     if (id === "playground") {
       setActiveLesson("playground");
-      setCode(TW_PLAYGROUND_DEFAULT);
+      setCode(getDraftCode(DRAFT_KEY, "learn", "playground", TW_PLAYGROUND_DEFAULT));
       setShowHint(false);
       setShowSolution(false);
       setTestResults([]);
@@ -87,7 +131,7 @@ export default function TailwindLabsPlatform() {
     const lesson = TW_LESSONS.find(l => l.id === id);
     if (!lesson) return;
     setActiveLesson(id);
-    setCode(lesson.starterCode);
+    setCode(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterCode));
     setShowHint(false);
     setShowSolution(false);
     setTestResults([]);
@@ -189,13 +233,32 @@ export default function TailwindLabsPlatform() {
     setPreviewHeight(Math.max(120, Math.min(maxH, rect.bottom - clientY)));
   }, []);
 
+  const handleTestsDrag = useCallback(({ clientY }) => {
+    if (!contentPanelRef.current) return;
+    const rect = contentPanelRef.current.getBoundingClientRect();
+    const maxH = rect.height * 0.6;
+    setTestsHeight(Math.max(100, Math.min(maxH, rect.bottom - clientY)));
+  }, []);
+
   // Run tests
   const runTests = useCallback(() => {
     const tests = currentLesson?.tests || [];
+    const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document || null;
+
     const results = tests.map((test, i) => {
       try {
-        const passed = test.validate(code);
-        return { index: i, name: test.name, passed, error: passed ? null : `Expected: ${test.name}` };
+        let passed = test.validate(code);
+        let errorDetail = null;
+
+        if (passed && doc) {
+          const domPassed = verifyDomAndStyles(code, test.name, doc);
+          if (!domPassed) {
+            passed = false;
+            errorDetail = "DOM/Tailwind validation failed. Please check the classes applied to the rendered elements.";
+          }
+        }
+
+        return { index: i, name: test.name, passed, error: passed ? null : (errorDetail || `Expected: ${test.name}`) };
       } catch (e) {
         return { index: i, name: test.name, passed: false, error: e?.message || `Expected: ${test.name}` };
       }
@@ -387,8 +450,8 @@ export default function TailwindLabsPlatform() {
               {/* Tests Panel */}
               {currentTests.length > 0 && (
                 <>
-                  <LabResizableHandle onDrag={handlePreviewDrag} orientation="horizontal" />
-                  <div className="jsl-tests-panel" style={{ height: 120, maxHeight: 120, minHeight: 120 }}>
+                  <LabResizableHandle onDrag={handleTestsDrag} orientation="horizontal" />
+                  <div className="jsl-tests-panel" style={{ height: testsHeight, maxHeight: testsHeight, minHeight: testsHeight }}>
                     <div className="jsl-tests-header">
                       <span className="jsl-tests-title">
                         <FiCheck color="#38bdf8" size={14} />
@@ -427,7 +490,7 @@ export default function TailwindLabsPlatform() {
 
             {/* Editor & Preview */}
             <LabResizableHandle onDrag={handleContentDrag} />
-            <div className="jsl-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
+            <div className={`jsl-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`} ref={editorPanelRef} style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}>
               <LabEditorToolbar
                 isRunning={false}
                 onRun={updatePreview}
@@ -442,6 +505,12 @@ export default function TailwindLabsPlatform() {
                 runLabel="Preview"
                 lang="HTML+Tailwind"
                 runButtonStyle={{ background: "rgba(56,189,248,0.14)", color: "#38bdf8" }}
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('tw-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('tw-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
+                code={code}
               />
 
               <div className="jsl-editor-wrapper">
@@ -454,7 +523,7 @@ export default function TailwindLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "var(--font-mono)",
                     minimap: { enabled: false },
                     roundedSelection: true,
@@ -527,7 +596,7 @@ export default function TailwindLabsPlatform() {
                         width: "100%", height: "100%", border: "none",
                         background: "#ffffff", borderRadius: "0 0 8px 8px",
                       }}
-                      sandbox="allow-scripts"
+                      sandbox="allow-scripts allow-same-origin"
                       srcDoc={previewCode}
                     />
                   </div>
@@ -630,5 +699,3 @@ function LessonView({ lesson, showHint, showSolution, onToggleHint, onToggleSolu
     </div>
   );
 }
-
-

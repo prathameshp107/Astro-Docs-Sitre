@@ -1,4 +1,36 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import {
+  SiHtml5,
+  SiCss,
+  SiJavascript,
+  SiReact,
+  SiPython,
+  SiMongodb,
+  SiGit,
+  SiTailwindcss,
+} from 'react-icons/si';
+import { LuBinary, LuDatabase } from 'react-icons/lu';
+import '../../styles/sketch-visualizer.css';
+
+const LAB_ICON_MAP = {
+  html: { Icon: SiHtml5, color: '#E34F26' },
+  css: { Icon: SiCss, color: '#1572B6' },
+  js: { Icon: SiJavascript, color: '#F7DF1E' },
+  react: { Icon: SiReact, color: '#61DAFB' },
+  dsa: { Icon: LuBinary, color: '#8B5CF6' },
+  sql: { Icon: LuDatabase, color: '#F59E0B' },
+  python: { Icon: SiPython, color: '#3776AB' },
+  mongodb: { Icon: SiMongodb, color: '#47A248' },
+  git: { Icon: SiGit, color: '#F05032' },
+  tailwind: { Icon: SiTailwindcss, color: '#38BDF8' },
+};
+
+function LabIcon({ id, size = 28, className = "" }) {
+  const item = LAB_ICON_MAP[id];
+  if (!item) return <span>🧪</span>;
+  const { Icon, color } = item;
+  return <Icon size={size} className={`inline-block flex-shrink-0 ${className}`} style={{ color }} />;
+}
 
 const labs = [
   {
@@ -7,7 +39,7 @@ const labs = [
     shortIcon: "HT",
     description:
       "Master HTML through interactive learning. 16 guided lessons, 10 coding challenges, 6 real-world projects, HTML playground with live preview, and interview preparation.",
-    path: "/labs/html",
+    path: "/labs/html-lab",
     color: "#fb923c",
     track: "frontend",
     features: [
@@ -18,7 +50,7 @@ const labs = [
       "50+ Interview Questions",
       "HTML Playground",
     ],
-    challengeCount: 32,
+    challengeCount: 38,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -27,7 +59,7 @@ const labs = [
     shortIcon: "CS",
     description:
       "Master CSS through interactive learning. 20 guided lessons, 10 coding challenges, 10 reusable components, 6 animations, and an interactive playground.",
-    path: "/labs/css",
+    path: "/labs/css-lab",
     color: "#60a5fa",
     track: "frontend",
     features: [
@@ -57,7 +89,7 @@ const labs = [
       "Timed Interview Mode",
       "Mini App Projects",
     ],
-    challengeCount: 150,
+    challengeCount: 44,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -76,7 +108,7 @@ const labs = [
       "Forms & Validation",
       "Performance Tuning",
     ],
-    challengeCount: 80,
+    challengeCount: 42,
     difficulty: "Intermediate",
   },
   {
@@ -104,7 +136,7 @@ const labs = [
     shortIcon: "SQ",
     description:
       "Write and execute SQL queries against sample databases. Practice joins, aggregations, subqueries, and query optimization.",
-    path: "/labs/mysql",
+    path: "/labs/sql-lab",
     color: "#f59e0b",
     track: "data",
     features: [
@@ -114,7 +146,7 @@ const labs = [
       "Indexing Challenges",
       "Query Optimization",
     ],
-    challengeCount: 100,
+    challengeCount: 25,
     difficulty: "Intermediate",
   },
   {
@@ -122,8 +154,8 @@ const labs = [
     title: "Python Labs",
     shortIcon: "PY",
     description:
-      "Master Python from beginner to advanced. 20 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
-    path: "/labs/python",
+      "Master Python from beginner to advanced. 24 guided lessons, 10 coding challenges, 8 real-world projects, and 10 debugging exercises.",
+    path: "/labs/python-lab",
     color: "#3776AB",
     track: "data",
     features: [
@@ -133,7 +165,7 @@ const labs = [
       "10 Debug Challenges",
       "Monaco Editor + Pyodide",
     ],
-    challengeCount: 48,
+    challengeCount: 52,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -142,7 +174,7 @@ const labs = [
     shortIcon: "MO",
     description:
       "Learn MongoDB with guided lessons, interactive queries, aggregation pipeline builder, and real-time document exploration. Master NoSQL the right way.",
-    path: "/labs/mongodb",
+    path: "/labs/mongodb-lab",
     color: "#13aa52",
     track: "data",
     features: [
@@ -152,7 +184,7 @@ const labs = [
       "Collections Explorer",
       "8+ Query Challenges",
     ],
-    challengeCount: 30,
+    challengeCount: 40,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -161,7 +193,7 @@ const labs = [
     shortIcon: "GI",
     description:
       "Master Git and GitHub through interactive visual simulations. Learn branching, merging, rebasing, merge conflicts, and team collaboration workflows.",
-    path: "/labs/git",
+    path: "/labs/git-lab",
     color: "#f97316",
     track: "core",
     features: [
@@ -172,7 +204,7 @@ const labs = [
       "Team Collaboration Simulator",
       "Boss Battles & Achievements",
     ],
-    challengeCount: 50,
+    challengeCount: 30,
     difficulty: "Beginner to Advanced",
   },
   {
@@ -192,7 +224,7 @@ const labs = [
       "Responsive Preview Modes",
       "Automated Tests",
     ],
-    challengeCount: 50,
+    challengeCount: 23,
     difficulty: "Beginner to Advanced",
   },
 ];
@@ -561,22 +593,162 @@ export default function LabHub() {
           )}
         </section>
 
-        {/* ─── Footer ─── */}
-        <footer className="lh-footer">
-          <span>
-            Built by <strong>Prathamesh Pawar</strong>
-          </span>
-          <span>
-            <a
-              href="https://github.com/prathameshp107/DSA-Notes-Problems"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              github
-            </a>
-            <a href={`${base}overview`}>docs</a>
-            <a href={base}>home</a>
-          </span>
+        {/* Sketch Blackboard Footer */}
+        <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16">
+          {/* Top Branding & Description */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-3xl">🧪</span>
+                <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)]">
+                  Practice Labs & Interactive Coding Playground
+                </h3>
+              </div>
+              <p className="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
+                Hands-on practice labs for HTML, CSS, JavaScript, React, Python, SQL, MongoDB, Git, Tailwind, and DSA with live previews, Pyodide execution, and automated test runners.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/prathameshp107/DSA-Notes-Problems"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
+              >
+                <span>⭐ Star on GitHub</span>
+              </a>
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="sketch-button flex items-center gap-1.5 text-sm font-bold"
+                title="Back to top"
+              >
+                <span>↑ Top</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 4-Column Quick Links Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+            {/* Column 1: Frontend Labs */}
+            <div>
+              <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+                <LabIcon id="react" size={18} /> Frontend Labs
+              </h4>
+              <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+                <li>
+                  <a href={`${base}labs/html-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="html" size={15} /> HTML Lab (38 Challenges)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/css-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="css" size={15} /> CSS Lab (46 Challenges)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/js-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="js" size={15} /> JS Interview Lab (44 Challenges)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/react-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="react" size={15} /> React Practice Lab (42 Challenges)
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 2: Data & Backend Labs */}
+            <div>
+              <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+                <LabIcon id="python" size={18} /> Data & Backend
+              </h4>
+              <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+                <li>
+                  <a href={`${base}labs/python-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="python" size={15} /> Python Lab (52 Challenges)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/sql-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="sql" size={15} /> SQL Query Lab (25 Challenges)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/mongodb-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="mongodb" size={15} /> MongoDB Lab (40 Challenges)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/tailwind-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="tailwind" size={15} /> Tailwind Lab (23 Challenges)
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: Core CS & Tools */}
+            <div>
+              <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+                <LabIcon id="git" size={18} /> Core CS & Tools
+              </h4>
+              <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+                <li>
+                  <a href={`${base}dsa/problems`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="dsa" size={15} /> DSA Problem Lab (20 Problems)
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}labs/git-lab`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                    <LabIcon id="git" size={15} /> Git & GitHub Lab (30 Challenges)
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Platform Navigation */}
+            <div>
+              <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+                <span>🚀</span> Visualizers & Docs
+              </h4>
+              <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+                <li>
+                  <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                    <span>•</span> Visualizer Studio
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}interview-questions`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                    <span>•</span> Interview Questions Hub
+                  </a>
+                </li>
+                <li>
+                  <a href={`${base}overview`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                    <span>•</span> Docs & Practice Notes
+                  </a>
+                </li>
+                <li>
+                  <a href={base} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                    <span>•</span> Home Page
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Copyright & Design Bar */}
+          <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+            <div>
+              © {new Date().getFullYear()} Practice Labs Studio · Hand-crafted Blackboard UI.
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1 text-emerald-500 font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                10 Interactive Practice Labs Active
+              </span>
+            </div>
+          </div>
         </footer>
       </div>
     </div>
@@ -630,8 +802,10 @@ function LabCard({ lab, index, visited, onOpen, delay }) {
         )}
       </div>
 
-      <div className="lh-card-head">
-        <span className="lh-card-icon">{lab.shortIcon}</span>
+      <div className="lh-card-head flex items-center gap-3">
+        <div className="p-2 rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)] shadow-inner flex items-center justify-center">
+          <LabIcon id={lab.id} size={28} />
+        </div>
         <div>
           <h3 className="lh-card-title">{lab.title}</h3>
           <div className="lh-card-diff">{lab.difficulty.toLowerCase()}</div>

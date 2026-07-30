@@ -51,13 +51,53 @@ module.exports = {
           'accent-dark': '#60a5fa',
         },
         // Semantics
-        success: '#22c55e',
-        warning: '#f97316',
+        success: 'var(--success, #22c55e)',
+        warning: 'var(--warning, #f97316)',
         danger: '#ef4444',
-        accent: '#f59e0b',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        card: {
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
+        },
+        popover: {
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
+        },
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
+          soft: 'var(--accent-soft)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+        },
+        border: {
+          DEFAULT: 'var(--border)',
+          strong: 'var(--border-strong)',
+        },
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        surface: 'var(--surface)',
+        elevated: 'var(--elevated)',
       },
       fontFamily: {
+        display: ['"Space Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       animation: {

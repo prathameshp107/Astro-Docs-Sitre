@@ -2,47 +2,41 @@
    Scope: all classes prefixed lh- to avoid collisions with landing/practice css */
 
 .lh-page {
-  --lh-bg: #0a0e17;
-  --lh-bg-soft: #0e1420;
-  --lh-panel: #101827;
-  --lh-panel-2: #131c2e;
-  --lh-line: rgba(148, 163, 184, 0.14);
-  --lh-line-strong: rgba(148, 163, 184, 0.24);
-  --lh-ink: #e8ecf6;
-  --lh-ink-mute: #94a3b8;
-  --lh-ink-faint: #64748b;
-  --lh-prompt: #4ade80;
-  --lh-accent: #818cf8;
+  --lh-bg: var(--sketch-bg);
+  --lh-bg-soft: var(--sketch-bg-dim);
+  --lh-panel: var(--sketch-bg-dim);
+  --lh-panel-2: var(--sketch-bg);
+  --lh-line: var(--sketch-border);
+  --lh-line-strong: var(--sketch-border);
+  --lh-ink: var(--sketch-text);
+  --lh-ink-mute: var(--sketch-text-muted);
+  --lh-ink-faint: var(--sketch-text-muted);
+  --lh-prompt: #f59e0b;
+  --lh-accent: #f97316;
   --lh-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --lh-display: "Space Grotesk", "Inter", sans-serif;
-  --lh-body: "Inter", system-ui, sans-serif;
+  --lh-display: "Architects Daughter", cursive, sans-serif;
+  --lh-body: "Patrick Hand", cursive, sans-serif;
 
   min-height: 100vh;
-  background:
-    radial-gradient(1100px 500px at 70% -10%, rgba(129, 140, 248, 0.08), transparent 60%),
-    radial-gradient(900px 420px at 10% 10%, rgba(74, 222, 128, 0.05), transparent 55%),
-    var(--lh-bg);
-  color: var(--lh-ink);
+  background: var(--sketch-bg);
+  color: var(--sketch-text);
   font-family: var(--lh-body);
-  padding: 96px 20px 0;
+  padding: 80px 20px 0;
 }
 
 [data-theme="light"] .lh-page {
-  --lh-bg: #f4f6fb;
-  --lh-bg-soft: #eef1f8;
-  --lh-panel: #ffffff;
-  --lh-panel-2: #f8fafd;
-  --lh-line: rgba(15, 23, 42, 0.1);
-  --lh-line-strong: rgba(15, 23, 42, 0.18);
-  --lh-ink: #101828;
-  --lh-ink-mute: #475569;
-  --lh-ink-faint: #64748b;
-  --lh-prompt: #16a34a;
-  --lh-accent: #4f46e5;
-  background:
-    radial-gradient(1100px 500px at 70% -10%, rgba(79, 70, 229, 0.07), transparent 60%),
-    radial-gradient(900px 420px at 10% 10%, rgba(22, 163, 74, 0.05), transparent 55%),
-    var(--lh-bg);
+  --lh-bg: var(--sketch-bg);
+  --lh-bg-soft: var(--sketch-bg-dim);
+  --lh-panel: var(--sketch-bg-dim);
+  --lh-panel-2: var(--sketch-bg);
+  --lh-line: var(--sketch-border);
+  --lh-line-strong: var(--sketch-border);
+  --lh-ink: var(--sketch-text);
+  --lh-ink-mute: var(--sketch-text-muted);
+  --lh-ink-faint: var(--sketch-text-muted);
+  --lh-prompt: #d97706;
+  --lh-accent: #ea580c;
+  background: var(--sketch-bg);
 }
 
 .lh-wrap {
@@ -390,20 +384,21 @@
 }
 
 .lh-card {
-  --hue: #818cf8;
+  --hue: #f59e0b;
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 1px solid var(--lh-line);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--lh-panel) 88%, transparent);
-  padding: 18px 18px 16px 22px;
+  gap: 12px;
+  border: 2px solid var(--sketch-border);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  background: var(--sketch-bg-dim);
+  padding: 20px;
   cursor: pointer;
   overflow: hidden;
   opacity: 0;
   transform: translateY(14px);
-  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 .lh-card.in-view {
@@ -415,19 +410,9 @@
 }
 
 .lh-card:hover, .lh-card:focus-visible {
-  border-color: color-mix(in srgb, var(--hue) 55%, var(--lh-line));
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(2, 6, 17, 0.35);
-}
-
-[data-theme="light"] .lh-card:hover,
-[data-theme="light"] .lh-card:focus-visible {
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.1);
-}
-
-.lh-card:focus-visible {
-  outline: 2px solid var(--hue);
-  outline-offset: 2px;
+  border-color: var(--sketch-accent-orange);
+  transform: rotate(-0.5deg) translateY(-3px);
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
 }
 
 /* per-lab color rail */

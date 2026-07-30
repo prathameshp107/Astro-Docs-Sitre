@@ -3,74 +3,698 @@
   "title": "Blind 75 (Guided)",
   "tagline": "The 75 questions every FAANG interviewer expects — with our notes, visualizers, and verdicts.",
   "difficulty": "intermediate",
-  "durationDays": 56,
+  "durationDays": 30,
   "hoursPerDay": 1.5,
-  "tags": ["dsa", "faang", "leetcode"],
-  "heroTopics": ["Arrays", "Trees", "DP", "Graphs"],
+  "tags": [
+    "dsa",
+    "faang",
+    "leetcode",
+    "blind-75"
+  ],
+  "heroTopics": [
+    "Arrays",
+    "Trees",
+    "DP",
+    "Graphs",
+    "Strings"
+  ],
   "days": [
     {
       "day": 1,
-      "title": "Arrays & Hashing — The Foundation",
+      "title": "Arrays — Hashing & Foundation",
       "items": [
-        { "type": "note",       "ref": "/docs/data-structures/arrays",     "label": "Read: Array fundamentals",              "minutes": 15 },
-        { "type": "visualizer", "ref": "/visualizer",                      "label": "Visualize: Array operations",           "minutes": 10 },
-        { "type": "problem",    "ref": "two-sum",                          "label": "Solve: Two Sum",                        "minutes": 25 },
-        { "type": "problem",    "ref": "contains-duplicate",               "label": "Solve: Contains Duplicate",             "minutes": 20 }
+        {
+          "type": "note",
+          "ref": "/docs/data-structures/arrays",
+          "label": "Read: Array fundamentals",
+          "minutes": 15
+        },
+        {
+          "type": "visualizer",
+          "ref": "/visualizer",
+          "label": "Visualize: Array operations",
+          "minutes": 10
+        },
+        {
+          "type": "problem",
+          "ref": "two-sum",
+          "label": "Solve: Two Sum",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "contains-duplicate",
+          "label": "Solve: Contains Duplicate",
+          "minutes": 20
+        }
       ]
     },
     {
       "day": 2,
-      "title": "More Arrays — Sliding Window & Prefix",
+      "title": "Arrays — Sliding Window & Prefix",
       "items": [
-        { "type": "problem",    "ref": "best-time-to-buy-sell-stock",      "label": "Solve: Best Time to Buy/Sell Stock",    "minutes": 25 },
-        { "type": "problem",    "ref": "maximum-subarray",                 "label": "Solve: Maximum Subarray (Kadane's)",    "minutes": 30 },
-        { "type": "problem",    "ref": "product-of-array-except-self",     "label": "Solve: Product of Array Except Self",   "minutes": 35 }
+        {
+          "type": "problem",
+          "ref": "best-time-to-buy-sell-stock",
+          "label": "Solve: Best Time to Buy & Sell Stock",
+          "minutes": 25
+        },
+        {
+          "type": "problem",
+          "ref": "maximum-subarray",
+          "label": "Solve: Maximum Subarray (Kadane's)",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "product-of-array-except-self",
+          "label": "Solve: Product of Array Except Self",
+          "minutes": 35
+        }
       ]
     },
     {
       "day": 3,
-      "title": "Two Pointers",
+      "title": "Arrays — Rotated Search & Two Pointers",
       "items": [
-        { "type": "note",       "ref": "/docs/algorithms/two-pointers",    "label": "Read: Two Pointers technique",          "minutes": 15 },
-        { "type": "problem",    "ref": "valid-palindrome",                 "label": "Solve: Valid Palindrome",               "minutes": 20 },
-        { "type": "problem",    "ref": "three-sum",                        "label": "Solve: Three Sum",                      "minutes": 35 },
-        { "type": "problem",    "ref": "container-with-most-water",        "label": "Solve: Container With Most Water",      "minutes": 30 }
+        {
+          "type": "note",
+          "ref": "/docs/algorithms/two-pointers",
+          "label": "Read: Two Pointers technique",
+          "minutes": 15
+        },
+        {
+          "type": "problem",
+          "ref": "maximum-product-subarray",
+          "label": "Solve: Maximum Product Subarray",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "find-min-rotated",
+          "label": "Solve: Find Minimum in Rotated Sorted Array",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "search-rotated-array",
+          "label": "Solve: Search in Rotated Sorted Array",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "three-sum",
+          "label": "Solve: 3Sum",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "container-with-most-water",
+          "label": "Solve: Container With Most Water",
+          "minutes": 30
+        }
       ]
     },
     {
       "day": 4,
-      "title": "Strings & Hashmaps",
+      "title": "Binary & Bit Manipulation — Basics",
       "items": [
-        { "type": "problem",    "ref": "valid-anagram",                    "label": "Solve: Valid Anagram",                  "minutes": 20 },
-        { "type": "problem",    "ref": "group-anagrams",                   "label": "Solve: Group Anagrams",                 "minutes": 30 },
-        { "type": "problem",    "ref": "longest-substring-without-repeating", "label": "Solve: Longest Substring Without Repeating", "minutes": 30 }
+        {
+          "type": "problem",
+          "ref": "sum-of-two-integers",
+          "label": "Solve: Sum of Two Integers",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "number-of-1-bits",
+          "label": "Solve: Number of 1 Bits",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "counting-bits",
+          "label": "Solve: Counting Bits",
+          "minutes": 25
+        }
       ]
     },
     {
       "day": 5,
-      "title": "Stack Problems",
+      "title": "Binary & Bit Manipulation — Advanced Tricks",
       "items": [
-        { "type": "note",       "ref": "/docs/data-structures/stack",      "label": "Read: Stack data structure",            "minutes": 10 },
-        { "type": "problem",    "ref": "valid-parentheses",                "label": "Solve: Valid Parentheses",              "minutes": 20 },
-        { "type": "problem",    "ref": "daily-temperatures",               "label": "Solve: Daily Temperatures",             "minutes": 30 }
+        {
+          "type": "problem",
+          "ref": "array-missing-number",
+          "label": "Solve: Missing Number",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "reverse-bits",
+          "label": "Solve: Reverse Bits",
+          "minutes": 25
+        }
       ]
     },
     {
       "day": 6,
-      "title": "Binary Search",
+      "title": "Dynamic Programming — 1D Basics",
       "items": [
-        { "type": "note",       "ref": "/docs/algorithms/binary-search",   "label": "Read: Binary Search",                  "minutes": 15 },
-        { "type": "visualizer", "ref": "/visualizer",                      "label": "Visualize: Binary Search",             "minutes": 10 },
-        { "type": "problem",    "ref": "binary-search",                    "label": "Solve: Binary Search",                  "minutes": 20 },
-        { "type": "problem",    "ref": "search-rotated-array",             "label": "Solve: Search in Rotated Array",        "minutes": 35 }
+        {
+          "type": "problem",
+          "ref": "climbing-stairs",
+          "label": "Solve: Climbing Stairs",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "house-robber",
+          "label": "Solve: House Robber",
+          "minutes": 25
+        },
+        {
+          "type": "problem",
+          "ref": "house-robber-ii",
+          "label": "Solve: House Robber II",
+          "minutes": 30
+        }
       ]
     },
     {
       "day": 7,
-      "title": "Week 1 Review & Arrays Revision",
+      "title": "Dynamic Programming — Unbounded Knapsack & Subsequences",
       "items": [
-        { "type": "problem",    "ref": "majority-element",                 "label": "Solve: Majority Element",               "minutes": 25 },
-        { "type": "mcq",        "ref": "arrays-review",                    "label": "Quiz: Arrays & Hashing Review (10 Qs)", "minutes": 15 }
+        {
+          "type": "problem",
+          "ref": "coin-change",
+          "label": "Solve: Coin Change",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "longest-increasing-subsequence",
+          "label": "Solve: Longest Increasing Subsequence",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "word-break",
+          "label": "Solve: Word Break",
+          "minutes": 35
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Dynamic Programming — 2D & Grids",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "longest-common-subsequence",
+          "label": "Solve: Longest Common Subsequence",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "unique-paths",
+          "label": "Solve: Unique Paths",
+          "minutes": 25
+        },
+        {
+          "type": "problem",
+          "ref": "decode-ways",
+          "label": "Solve: Decode Ways",
+          "minutes": 35
+        }
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Dynamic Programming — Backtracking & Greedy",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "combination-sum",
+          "label": "Solve: Combination Sum",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "jump-game",
+          "label": "Solve: Jump Game",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 10,
+      "title": "Graphs — Traversal & Connectivity",
+      "items": [
+        {
+          "type": "note",
+          "ref": "/docs/data-structures/graphs",
+          "label": "Read: Graph fundamentals",
+          "minutes": 15
+        },
+        {
+          "type": "problem",
+          "ref": "clone-graph",
+          "label": "Solve: Clone Graph",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "number-of-islands",
+          "label": "Solve: Number of Islands",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "pacific-atlantic-water-flow",
+          "label": "Solve: Pacific Atlantic Water Flow",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 11,
+      "title": "Graphs — Topological Sort & Cycles",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "course-schedule",
+          "label": "Solve: Course Schedule",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "alien-dictionary",
+          "label": "Solve: Alien Dictionary",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 12,
+      "title": "Graphs — Disjoint Set & Union Find",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "longest-consecutive-sequence",
+          "label": "Solve: Longest Consecutive Sequence",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "graph-valid-tree",
+          "label": "Solve: Graph Valid Tree",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "number-of-connected-components",
+          "label": "Solve: Number of Connected Components in an Undirected Graph",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 13,
+      "title": "Intervals — Insertion & Merging",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "insert-interval",
+          "label": "Solve: Insert Interval",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "merge-intervals",
+          "label": "Solve: Merge Intervals",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 14,
+      "title": "Intervals — Non-overlapping & Meetings",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "non-overlapping-intervals",
+          "label": "Solve: Non-overlapping Intervals",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "meeting-rooms",
+          "label": "Solve: Meeting Rooms",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "meeting-rooms-ii",
+          "label": "Solve: Meeting Rooms II",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 15,
+      "title": "Linked Lists — Fast & Slow Pointers",
+      "items": [
+        {
+          "type": "note",
+          "ref": "/docs/data-structures/linked-lists",
+          "label": "Read: Linked List fundamentals",
+          "minutes": 15
+        },
+        {
+          "type": "problem",
+          "ref": "reverse-linked-list",
+          "label": "Solve: Reverse a Linked List",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "linked-list-cycle",
+          "label": "Solve: Detect Cycle in a Linked List",
+          "minutes": 25
+        }
+      ]
+    },
+    {
+      "day": 16,
+      "title": "Linked Lists — Merging & Reordering",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "merge-two-sorted-lists",
+          "label": "Solve: Merge Two Sorted Lists",
+          "minutes": 25
+        },
+        {
+          "type": "problem",
+          "ref": "merge-k-sorted-lists",
+          "label": "Solve: Merge K Sorted Lists",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 17,
+      "title": "Linked Lists — Modification & Removal",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "remove-nth-node-from-end",
+          "label": "Solve: Remove Nth Node From End of List",
+          "minutes": 25
+        },
+        {
+          "type": "problem",
+          "ref": "reorder-list",
+          "label": "Solve: Reorder List",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 18,
+      "title": "Matrix — Grid Manipulations",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "set-matrix-zeroes",
+          "label": "Solve: Set Matrix Zeroes",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "spiral-matrix",
+          "label": "Solve: Spiral Matrix",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 19,
+      "title": "Matrix — Rotation & Board Search",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "rotate-image",
+          "label": "Solve: Rotate Image",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "word-search",
+          "label": "Solve: Word Search",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 20,
+      "title": "Strings — Sliding Window",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "longest-substring-without-repeating",
+          "label": "Solve: Longest Substring Without Repeating Characters",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "longest-repeating-character-replacement",
+          "label": "Solve: Longest Repeating Character Replacement",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "minimum-window-substring",
+          "label": "Solve: Minimum Window Substring",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 21,
+      "title": "Strings — Hashing & Anagrams",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "valid-anagram",
+          "label": "Solve: Valid Anagram",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "group-anagrams",
+          "label": "Solve: Group Anagrams",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "encode-and-decode-strings",
+          "label": "Solve: Encode and Decode Strings",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 22,
+      "title": "Strings — Palindromes & Parsing",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "valid-parentheses",
+          "label": "Solve: Valid Parentheses",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "valid-palindrome",
+          "label": "Solve: Valid Palindrome",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "longest-palindromic-substring",
+          "label": "Solve: Longest Palindromic Substring",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "palindromic-substrings",
+          "label": "Solve: Palindromic Substrings",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 23,
+      "title": "Trees — Traversal & Structure",
+      "items": [
+        {
+          "type": "note",
+          "ref": "/docs/data-structures/trees",
+          "label": "Read: Tree data structure",
+          "minutes": 15
+        },
+        {
+          "type": "problem",
+          "ref": "maximum-depth-of-binary-tree",
+          "label": "Solve: Maximum Depth of Binary Tree",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "same-tree",
+          "label": "Solve: Same Tree",
+          "minutes": 20
+        },
+        {
+          "type": "problem",
+          "ref": "invert-binary-tree",
+          "label": "Solve: Invert / Flip Binary Tree",
+          "minutes": 20
+        }
+      ]
+    },
+    {
+      "day": 24,
+      "title": "Trees — Advanced Traversal & Path Sum",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "binary-tree-maximum-path-sum",
+          "label": "Solve: Binary Tree Maximum Path Sum",
+          "minutes": 40
+        },
+        {
+          "type": "problem",
+          "ref": "binary-tree-level-order-traversal",
+          "label": "Solve: Binary Tree Level Order Traversal",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "serialize-deserialize-binary-tree",
+          "label": "Solve: Serialize and Deserialize Binary Tree",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 25,
+      "title": "Trees — Subtrees & Construction",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "subtree-of-another-tree",
+          "label": "Solve: Subtree of Another Tree",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "construct-binary-tree-preorder-inorder",
+          "label": "Solve: Construct Binary Tree from Preorder and Inorder",
+          "minutes": 40
+        }
+      ]
+    },
+    {
+      "day": 26,
+      "title": "Binary Search Trees (BST)",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "validate-binary-search-tree",
+          "label": "Solve: Validate Binary Search Tree",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "kth-smallest-element-bst",
+          "label": "Solve: Kth Smallest Element in a BST",
+          "minutes": 30
+        },
+        {
+          "type": "problem",
+          "ref": "lowest-common-ancestor-bst",
+          "label": "Solve: Lowest Common Ancestor of a BST",
+          "minutes": 25
+        }
+      ]
+    },
+    {
+      "day": 27,
+      "title": "Tries — Prefix Tree Design",
+      "items": [
+        {
+          "type": "note",
+          "ref": "/docs/data-structures/trie",
+          "label": "Read: Trie data structure",
+          "minutes": 15
+        },
+        {
+          "type": "problem",
+          "ref": "implement-trie",
+          "label": "Solve: Implement Trie (Prefix Tree)",
+          "minutes": 35
+        }
+      ]
+    },
+    {
+      "day": 28,
+      "title": "Tries — Search & Board Integration",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "add-and-search-word",
+          "label": "Solve: Add and Search Word",
+          "minutes": 35
+        },
+        {
+          "type": "problem",
+          "ref": "word-search-ii",
+          "label": "Solve: Word Search II",
+          "minutes": 45
+        }
+      ]
+    },
+    {
+      "day": 29,
+      "title": "Heaps & Priority Queues",
+      "items": [
+        {
+          "type": "note",
+          "ref": "/docs/data-structures/heap",
+          "label": "Read: Heap data structure",
+          "minutes": 15
+        },
+        {
+          "type": "problem",
+          "ref": "top-k-frequent-elements",
+          "label": "Solve: Top K Frequent Elements",
+          "minutes": 30
+        }
+      ]
+    },
+    {
+      "day": 30,
+      "title": "Streaming & Final Review",
+      "items": [
+        {
+          "type": "problem",
+          "ref": "find-median-from-data-stream",
+          "label": "Solve: Find Median from Data Stream",
+          "minutes": 40
+        }
       ]
     }
   ]

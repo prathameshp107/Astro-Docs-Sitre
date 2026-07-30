@@ -1,0 +1,307 @@
+/* ==========================================================================
+   SKETCH VISUALIZER DESIGN SYSTEM (CHALKBOARD / PARCHMENT LOOK)
+   ========================================================================== */
+
+:root {
+  /* Dark Mode Blackboard (Chalkboard) Colors */
+  --sketch-bg: #161512;
+  --sketch-bg-dim: #1e1d1a;
+  --sketch-border: rgba(234, 233, 230, 0.4);
+  --sketch-border-active: #d97706; /* orange chalk */
+  --sketch-text: #eae9e6;
+  --sketch-text-muted: #a6a5a2;
+  --sketch-accent-orange: #f97316;
+  --sketch-accent-blue: #3b82f6;
+  --sketch-accent-green: #22c55e;
+}
+
+[data-theme='light'] {
+  /* Light Mode Parchment Colors */
+  --sketch-bg: #FAF8F5;
+  --sketch-bg-dim: #F3EFEA;
+  --sketch-border: rgba(44, 42, 41, 0.3);
+  --sketch-border-active: #ea580c;
+  --sketch-text: #2c2a29;
+  --sketch-text-muted: #736e6b;
+  --sketch-accent-orange: #ea580c;
+  --sketch-accent-blue: #2563eb;
+  --sketch-accent-green: #16a34a;
+}
+
+/* ─── Irregular Hand-Drawn Sketch Borders ─── */
+.sketch-border {
+  border: 2px solid var(--sketch-border);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.sketch-border-soft {
+  border: 1px solid var(--sketch-border);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.sketch-button {
+  background: transparent;
+  color: var(--sketch-text);
+  border: 2px solid var(--sketch-border);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  font-family: 'Patrick Hand', cursive;
+  padding: 0.35rem 0.85rem;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.sketch-button:hover:not(:disabled) {
+  transform: rotate(-1deg) scale(1.02);
+  border-color: var(--sketch-text);
+}
+
+.sketch-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.sketch-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ─── Fonts ─── */
+.font-sketch {
+  font-family: 'Patrick Hand', cursive, sans-serif;
+}
+
+.font-hand {
+  font-family: 'Caveat', cursive, sans-serif;
+}
+
+.font-header {
+  font-family: 'Architects Daughter', cursive, sans-serif;
+}
+
+/* ─── Visualizer Core Layout ─── */
+.sketch-page {
+  background: var(--sketch-bg) !important;
+  color: var(--sketch-text) !important;
+  min-height: 100vh;
+  display: flex;
+}
+
+.sketch-container {
+  width: 100%;
+  background: var(--sketch-bg);
+  color: var(--sketch-text);
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+}
+
+.sketch-canvas-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .sketch-canvas-row {
+    flex-direction: column;
+  }
+}
+
+.sketch-canvas-box {
+  flex: 1;
+  min-height: 380px;
+  background: var(--sketch-bg-dim);
+  padding: 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Blackboard Element Cards ─── */
+.sketch-card {
+  width: 4.5rem;
+  height: 4.5rem;
+  background: transparent;
+  color: var(--sketch-text);
+  border: 3px solid var(--sketch-border);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  font-family: 'Patrick Hand', cursive;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sketch-card.active-orange {
+  border-color: var(--sketch-accent-orange);
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.3);
+  transform: translateY(-4px) rotate(1deg);
+}
+
+.sketch-card.active-blue {
+  border-color: var(--sketch-accent-blue);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-4px) rotate(-1deg);
+}
+
+.sketch-card-index {
+  position: absolute;
+  bottom: -1.75rem;
+  font-size: 0.85rem;
+  font-family: 'Patrick Hand', cursive;
+  color: var(--sketch-text-muted);
+}
+
+/* ─── Pointers ─── */
+.sketch-pointer {
+  position: absolute;
+  top: 5.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.sketch-pointer-orange {
+  color: var(--sketch-accent-orange);
+}
+
+.sketch-pointer-blue {
+  color: var(--sketch-accent-blue);
+}
+
+/* ─── Side Debugger Panel ─── */
+.sketch-debug-panel {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .sketch-debug-panel {
+    width: 100%;
+  }
+}
+
+.sketch-panel-box {
+  background: var(--sketch-bg-dim);
+  padding: 1.25rem;
+}
+
+/* Code pseudocode stepping */
+.sketch-code-line {
+  display: flex;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-left: 3px solid transparent;
+  color: var(--sketch-text-muted);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.sketch-code-line.active {
+  background: color-mix(in srgb, var(--sketch-accent-orange) 15%, transparent);
+  border-left-color: var(--sketch-accent-orange);
+  color: var(--sketch-text);
+  font-weight: bold;
+}
+
+/* State Variable Table */
+.sketch-state-var {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed var(--sketch-border);
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.1rem;
+}
+
+/* Bottom Explanation & Playback Controls */
+.sketch-explanation-bar {
+  background: var(--sketch-bg-dim);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+}
+
+.sketch-playback-bar {
+  background: var(--sketch-bg-dim);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  border-radius: 12px;
+}
+
+@media (max-width: 640px) {
+  .sketch-playback-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Scrubber Range Input */
+.sketch-scrubber {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--sketch-border);
+  outline: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.sketch-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--sketch-accent-orange);
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--sketch-accent-orange);
+}
+
+/* Milestone Dots */
+.sketch-milestones {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.sketch-milestone-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sketch-border);
+  transition: all 0.2s ease;
+}
+
+.sketch-milestone-dot.active {
+  background: var(--sketch-accent-orange);
+  box-shadow: 0 0 6px var(--sketch-accent-orange);
+}
+
+/* ─── Hide Internal Canvas Scrollbars ─── */
+.sketch-no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.sketch-no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+

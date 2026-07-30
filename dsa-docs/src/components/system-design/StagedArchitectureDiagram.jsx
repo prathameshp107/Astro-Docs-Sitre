@@ -9,7 +9,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArchNode, NODE_WIDTH, NODE_HEIGHT } from './ArchNode';
+import { ArchNode, NODE_WIDTH, NODE_HEIGHT } from './ArchNode.jsx';
 import '@xyflow/react/dist/style.css';
 
 /* ── Helpers ──────────────────────────────────────────────────────── */

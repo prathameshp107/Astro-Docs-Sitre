@@ -6,6 +6,67 @@ import { getInitialProgress, saveProgress, subscribeMCQ } from '../../components
 import { useSrsStore } from '../../store/srsStore';
 import { mergeJudge, mergePlans, mergeMcq, mergeSrs } from './merges';
 
+// ─── Lab localStorage adapters ───
+// Labs store progress directly in localStorage (not Zustand).
+// This factory creates a compatible {get, set, subscribe} adapter for syncManager.
+function labLocalStorageStore(key, defaultValue = {}) {
+  const listeners = new Set();
+
+  function get() {
+    try {
+      return JSON.parse(localStorage.getItem(key)) || defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  }
+
+  function set(data) {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+      listeners.forEach((cb) => cb(data));
+    } catch {
+      /* storage blocked */
+    }
+  }
+
+  function subscribe(cb) {
+    listeners.add(cb);
+    // Also listen for cross-tab updates via the storage event
+    const handler = (e) => {
+      if (e.key === key) cb(get());
+    };
+    if (typeof window !== 'undefined') window.addEventListener('storage', handler);
+    return () => {
+      listeners.delete(cb);
+      if (typeof window !== 'undefined') window.removeEventListener('storage', handler);
+    };
+  }
+
+  return { get, set, subscribe };
+}
+
+// Merge strategy for lab progress: union of completed IDs (additive — never strips done items)
+function mergeLabProgress(remote, local) {
+  const merged = { ...remote };
+  Object.keys(local).forEach((k) => {
+    if (Array.isArray(local[k])) {
+      const remoteArr = Array.isArray(remote[k]) ? remote[k] : [];
+      merged[k] = [...new Set([...remoteArr, ...local[k]])];
+    }
+  });
+  return merged;
+}
+
+// Merge strategy for lab XP: take the higher XP total, union awards and days
+function mergeLabXP(remote, local) {
+  return {
+    xp: Math.max(remote.xp || 0, local.xp || 0),
+    awards: { ...(remote.awards || {}), ...(local.awards || {}) },
+    days: { ...(remote.days || {}), ...(local.days || {}) },
+  };
+}
+
+
 class SyncManager {
   constructor() {
     this.userId = null;
@@ -62,6 +123,38 @@ class SyncManager {
       set: (data) => useSrsStore.setState(data),
       subscribe: (cb) => useSrsStore.subscribe(cb),
       merge: mergeSrs
+    });
+
+    // ─── Lab progress stores ───
+    const labStores = [
+      { name: 'lab-js',       key: 'jsl-progress',  def: { lessons: [], bugs: [], projects: [] } },
+      { name: 'lab-css',      key: 'css-progress',  def: { lessons: [], challenges: [], components: [], animations: [], interview: [] } },
+      { name: 'lab-html',     key: 'html-progress', def: { lessons: [], challenges: [], projects: [], interview: [] } },
+      { name: 'lab-react',    key: 'rl-progress',   def: { lessons: [], bugs: [], projects: [] } },
+      { name: 'lab-python',   key: 'pyl-progress',  def: { lessons: [], challenges: [], projects: [], debug: [] } },
+      { name: 'lab-sql',      key: 'sql-progress',  def: { lessons: [], challenges: [], projects: [] } },
+      { name: 'lab-mongo',    key: 'mongo-progress',def: { lessons: [], challenges: [], projects: [], agg: [] } },
+      { name: 'lab-git',      key: 'git-progress',  def: { lessons: [], achievements: [] } },
+      { name: 'lab-tailwind', key: 'tw-progress',   def: { lessons: [] } },
+    ];
+
+    labStores.forEach(({ name, key, def }) => {
+      const store = labLocalStorageStore(key, def);
+      this.registerStore(name, {
+        get: store.get,
+        set: store.set,
+        subscribe: store.subscribe,
+        merge: mergeLabProgress,
+      });
+    });
+
+    // Lab XP store (cross-lab, shared key)
+    const xpStore = labLocalStorageStore('lab-xp-v1', { xp: 0, awards: {}, days: {} });
+    this.registerStore('lab-xp', {
+      get: xpStore.get,
+      set: xpStore.set,
+      subscribe: xpStore.subscribe,
+      merge: mergeLabXP,
     });
   }
 

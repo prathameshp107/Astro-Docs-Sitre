@@ -1,200 +1,405 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useHeapStore } from '../../store/visualizers/heapStore';
 
+const MIN_HEAP_INSERT_CODE = [
+  { line: 1, text: 'heap.push(val) // Insert at bottom-left position' },
+  { line: 2, text: 'while i > 0 and heap[i] < heap[parent(i)]:' },
+  { line: 3, text: '    swap(heap[i], heap[parent(i)])' },
+  { line: 4, text: '    i ← parent(i)' },
+];
+
+const EXTRACT_MIN_CODE = [
+  { line: 1, text: 'minVal ← heap[0]' },
+  { line: 2, text: 'heap[0] ← heap.pop() // Replace root with last' },
+  { line: 3, text: 'heapifyDown(0) // Bubble down root' },
+  { line: 4, text: 'return minVal' },
+];
+
+const MAX_HEAPIFY_CODE = [
+  { line: 1, text: 'largest ← argmax(node, left, right)' },
+  { line: 2, text: 'if largest != node:' },
+  { line: 3, text: '    swap(heap[node], heap[largest])' },
+  { line: 4, text: '    heapifyDown(largest)' },
+];
+
+const HEAP_SORT_CODE = [
+  { line: 1, text: 'buildMaxHeap(array)' },
+  { line: 2, text: 'for i = n-1 down to 1:' },
+  { line: 3, text: '    swap(heap[0], heap[i])' },
+  { line: 4, text: '    heapifyDown(0, heapSize = i)' },
+];
+
+const TRACK_TITLES = {
+  'min-heap-insert': '1. Min-Heap Insertion (Heapify Up)',
+  'min-heap-extract': '2. Extract Minimum (Heapify Down)',
+  'max-heapify': '3. Max-Heapify Property',
+  'heap-sort': '4. Heap Sort Algorithm',
+};
+
+const EXPECTED_OUTPUTS = {
+  'min-heap-insert': 'Heap Array: [5, 25, 10, 40, 35, 15] (Min at Root)',
+  'min-heap-extract': 'Extracted Min: 5 → Heap Array: [10, 25, 15, 40, 35]',
+  'max-heapify': 'Max Heap: [10, 5, 3, 4, 1] (Parent >= Children)',
+  'heap-sort': 'Sorted Array: [1, 3, 4, 5, 10] (O(n log n))',
+};
+
+// Tree Coordinates for max 7 Heap Nodes
+const HEAP_TREE_POSITIONS = [
+  { id: 0, x: 250, y: 45 },
+  { id: 1, x: 130, y: 115 },
+  { id: 2, x: 370, y: 115 },
+  { id: 3, x: 70, y: 195 },
+  { id: 4, x: 190, y: 195 },
+  { id: 5, x: 310, y: 195 },
+  { id: 6, x: 430, y: 195 },
+];
+
 export default function HeapVisualizer() {
-  const { heap, heapType, highlighted, lastOperation, setHeapType, initialize, insert, extract, randomInsert } = useHeapStore();
-  const [value, setValue] = useState('');
-  const [stepDesc, setStepDesc] = useState('');
+  const {
+    track,
+    steps,
+    currentStep,
+    isPlaying,
+    speed,
+    practiceMode,
+    userCode,
+    setCurrentStep,
+    nextStep,
+    prevStep,
+    restart,
+    togglePlay,
+    setSpeed,
+    togglePracticeMode,
+    setUserCode,
+  } = useHeapStore();
 
-  useEffect(() => { initialize(); }, []);
+  const step = steps[currentStep] || steps[0];
+
+  // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
-    if (!lastOperation) return;
-    if (lastOperation.type === 'insert') {
-      const pos = heap.indexOf(lastOperation.value);
-      setStepDesc(`Insert(${lastOperation.value}): Added ${lastOperation.value} to the bottom of the heap (index ${heap.length - 1}), then "bubbled up" by swapping with its parent until the ${heapType}-heap property is restored. The heap now has ${heap.length} elements.`);
-    } else {
-      setStepDesc(`Extract ${heapType === 'min' ? 'Min' : 'Max'}(): Removed the root element (${lastOperation.value}), moved the last element to the root, then "sifted down" by swapping with the larger${heapType === 'min' ? '/smaller' : ''} child until the ${heapType}-heap property is restored.`);
+    if (!isPlaying) return;
+    if (currentStep >= steps.length - 1) {
+      useHeapStore.setState({ isPlaying: false });
+      return;
     }
-    setTimeout(() => setStepDesc(''), 2500);
-  }, [lastOperation]);
+    const delay = 2200 / speed;
+    const timeout = setTimeout(() => {
+      nextStep();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
-  const handleInsert = () => {
-    const val = parseInt(value);
-    if (isNaN(val)) return;
-    insert(val);
-    setValue('');
-  };
+  const activeCode =
+    track === 'min-heap-insert'
+      ? MIN_HEAP_INSERT_CODE
+      : track === 'min-heap-extract'
+      ? EXTRACT_MIN_CODE
+      : track === 'max-heapify'
+      ? MAX_HEAPIFY_CODE
+      : HEAP_SORT_CODE;
 
-  const getNodePosition = (index, totalNodes) => {
-    const TOP_OFFSET = 30;
-    const LEVEL_HEIGHT = 80;
-    const TREE_WIDTH = 480;
-    const LEFT_MARGIN = 70;
+  const trackLabel = TRACK_TITLES[track] || 'Heap Algorithm';
+  const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Result';
 
-    const depth = Math.floor(Math.log2(index + 1));
-    const nodesInLevel = Math.pow(2, depth);
-    const indexInLevel = index - (nodesInLevel - 1);
-    const spacing = TREE_WIDTH / nodesInLevel;
-    const x = LEFT_MARGIN + (indexInLevel + 0.5) * spacing;
-    const y = depth * LEVEL_HEIGHT + TOP_OFFSET;
-    return { x: Math.max(50, Math.min(590, Math.round(x))), y };
-  };
+  const heapArray = step.heapArray || [];
+  const activeNodeId = step.currNode;
+  const swapNodes = step.swapNodes;
 
   return (
-    <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 p-4 rounded-xl bg-[var(--mcq-surface-30)] border border-[var(--mcq-border)]">
-        <select
-          value={heapType}
-          onChange={(e) => setHeapType(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] focus:outline-none focus:border-blue-400"
-        >
-          <option value="min">Min Heap</option>
-          <option value="max">Max Heap</option>
-        </select>
+    <div className="sketch-container font-sketch">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
+            DATA STRUCTURE PATTERN
+          </div>
+          <h2 className="text-3xl font-bold font-header flex items-center gap-3">
+            Heaps (Priority Queue)
+            <span className="text-sm px-3 py-0.5 rounded-full sketch-border-soft text-[var(--sketch-accent-orange)] font-sketch">
+              {trackLabel}
+            </span>
+          </h2>
+        </div>
 
+        {/* Expected Output Card */}
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs text-amber-300 shadow-sm">
+          <span className="text-amber-400 font-bold font-header text-sm">🎯 Expected:</span>
+          <span>{expectedOutput}</span>
+        </div>
+      </div>
+
+      {/* Progress Milestone Dots */}
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+        <span>Milestones:</span>
+        <div className="sketch-milestones">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setCurrentStep(i)}
+              className={`sketch-milestone-dot cursor-pointer ${i <= currentStep ? 'active' : ''}`}
+              title={`Step ${i + 1}`}
+            />
+          ))}
+        </div>
+        <span className="font-mono ml-2">step {currentStep + 1} / {steps.length}</span>
+      </div>
+
+      {/* Main Canvas + Debugger Row */}
+      <div className="sketch-canvas-row">
+        {/* Dual Visualization Canvas (Binary Tree + Flat Array) */}
+        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[420px]">
+          <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
+            <span>Binary Heap Tree & Flat Array Memory Inspector</span>
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active Node</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-rose-400"></span> Swapping</span>
+            </div>
+          </div>
+
+          {/* SVG Binary Heap Tree Container */}
+          <div className="relative w-full max-w-[500px] h-[240px] mx-auto my-auto">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {heapArray.map((_, idx) => {
+                if (idx === 0) return null;
+                const parentIdx = Math.floor((idx - 1) / 2);
+                const posNode = HEAP_TREE_POSITIONS[idx];
+                const posParent = HEAP_TREE_POSITIONS[parentIdx];
+                if (!posNode || !posParent) return null;
+
+                const isSwappingEdge =
+                  swapNodes &&
+                  ((swapNodes.parent === parentIdx && swapNodes.child === idx) ||
+                    (swapNodes.parent === idx && swapNodes.child === parentIdx));
+
+                return (
+                  <line
+                    key={`edge-${idx}`}
+                    x1={posParent.x}
+                    y1={posParent.y}
+                    x2={posNode.x}
+                    y2={posNode.y}
+                    stroke={isSwappingEdge ? '#f43f5e' : 'var(--sketch-border)'}
+                    strokeWidth={isSwappingEdge ? '3.5' : '2'}
+                    strokeDasharray={isSwappingEdge ? 'none' : '4 2'}
+                  />
+                );
+              })}
+            </svg>
+
+            {/* Tree Node Circles */}
+            {heapArray.map((val, idx) => {
+              const pos = HEAP_TREE_POSITIONS[idx];
+              if (!pos) return null;
+
+              const isActive = activeNodeId === idx;
+              const isSwapping =
+                swapNodes && (swapNodes.parent === idx || swapNodes.child === idx);
+
+              return (
+                <div
+                  key={`node-${idx}`}
+                  style={{ left: `${pos.x - 22}px`, top: `${pos.y - 22}px` }}
+                  className="absolute flex flex-col items-center"
+                >
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isSwapping && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap animate-bounce"
+                      >
+                        🔄 Swap
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    animate={{
+                      scale: isSwapping ? 1.25 : isActive ? 1.15 : 1,
+                      y: isSwapping || isActive ? -4 : 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                    className={`w-11 h-11 rounded-full flex items-center justify-center font-header font-bold text-xl border-2 shadow-md transition-all relative ${
+                      isSwapping
+                        ? '!border-rose-400 !bg-rose-500/30 text-rose-500 ring-4 ring-rose-400/50 shadow-rose-500/50'
+                        : isActive
+                        ? '!border-amber-400 !bg-amber-500/30 text-amber-500 ring-4 ring-amber-400/40 shadow-amber-500/50'
+                        : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                    }`}
+                  >
+                    {val}
+                  </motion.div>
+
+                  {/* Node Index Tag */}
+                  <span className="text-[10px] font-mono text-[var(--sketch-text-muted)] mt-0.5">[{idx}]</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Underlying Flat Array Memory Inspector */}
+          <div className="w-full mt-2 pt-3 border-t border-[var(--sketch-border)] flex flex-col items-center gap-1.5">
+            <div className="w-full flex items-center justify-between font-mono text-[11px] text-[var(--sketch-text-muted)] px-2">
+              <span className="text-amber-500 font-bold">Underlying Heap Array:</span>
+              <span className="text-[var(--sketch-text-muted)] opacity-80">parent = ⌊(i-1)/2⌋ | left = 2i+1 | right = 2i+2</span>
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto sketch-no-scrollbar w-full justify-center py-1">
+              {heapArray.map((val, idx) => {
+                const isActive = activeNodeId === idx;
+                const isSwapping =
+                  swapNodes && (swapNodes.parent === idx || swapNodes.child === idx);
+
+                return (
+                  <motion.div
+                    key={`array-${idx}`}
+                    animate={{
+                      scale: isSwapping ? 1.12 : isActive ? 1.06 : 1,
+                    }}
+                    className={`sketch-card min-w-[48px] py-1.5 px-3 flex flex-col items-center ${
+                      isSwapping
+                        ? '!border-rose-400 !bg-rose-500/20 text-rose-500 ring-2 ring-rose-400'
+                        : isActive
+                        ? '!border-amber-400 !bg-amber-500/20 text-amber-500'
+                        : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                    }`}
+                  >
+                    <span className="text-lg font-bold font-header">{val}</span>
+                    <span className="text-[9px] font-mono text-[var(--sketch-text-muted)] mt-0.5">[{idx}]</span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Debug Panel (Code & State) */}
+        <div className="sketch-debug-panel">
+          {/* Pseudocode Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
+              <span className="font-header font-bold text-lg">Concept Code</span>
+              <button
+                onClick={togglePracticeMode}
+                className="px-2.5 py-1 text-xs sketch-button"
+              >
+                {practiceMode ? '👁️ View' : '✏️ Practice'}
+              </button>
+            </div>
+
+            {practiceMode ? (
+              <textarea
+                value={userCode}
+                onChange={(e) => setUserCode(e.target.value)}
+                rows={8}
+                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
+              />
+            ) : (
+              <div className="space-y-0.5">
+                {activeCode.map((c) => {
+                  const isActive = step.activeLine === c.line;
+                  return (
+                    <div
+                      key={c.line}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
+                      <span className="whitespace-pre font-mono flex-1">{c.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* State Variable Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)]">
+              State Variables
+            </div>
+            <div className="space-y-1">
+              {Object.entries(step.state || {}).map(([key, value]) => (
+                <div key={key} className="sketch-state-var">
+                  <span className="text-[var(--sketch-text-muted)]">{key}</span>
+                  <span className="font-bold text-[var(--sketch-accent-orange)]">{String(value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Explanation Banner */}
+      <div className="sketch-explanation-bar sketch-border">
+        <span className="text-xl select-none">✏️</span>
+        <div className="flex-1 text-sm md:text-base leading-relaxed">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+            line {step.activeLine}
+          </span>
+          {step.desc}
+        </div>
+      </div>
+
+      {/* Bottom Playback Controls Bar */}
+      <div className="sketch-playback-bar sketch-border">
         <div className="flex items-center gap-2">
-          <input
-            type="number"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleInsert()}
-            placeholder="Value"
-            className="w-20 px-3 py-2 rounded-lg bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] text-sm text-[var(--mcq-text)] placeholder:text-[var(--mcq-text-muted)] focus:outline-none focus:border-blue-400"
-          />
-          <button onClick={handleInsert} className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-emerald-400 text-white text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-xl transition-all">
-            Insert
+          <button
+            onClick={restart}
+            className="sketch-button px-3 py-1.5"
+            title="Restart"
+          >
+            ↺
           </button>
-          <button onClick={extract} disabled={heap.length === 0} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all disabled:opacity-50">
-            Extract {heapType === 'min' ? 'Min' : 'Max'}
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="sketch-button px-3 py-1.5"
+            title="Previous step"
+          >
+            |◀
           </button>
-          <button onClick={randomInsert} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
-            Random
+          <button
+            onClick={togglePlay}
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+          <button
+            onClick={nextStep}
+            disabled={currentStep >= steps.length - 1}
+            className="sketch-button px-3 py-1.5"
+            title="Next step"
+          >
+            ▶|
           </button>
         </div>
-        <div className="w-px h-8 bg-white/10" />
-        <button onClick={initialize} className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all">
-          Reset
-        </button>
-      </div>
 
-      {/* Step Description */}
-      {stepDesc && (
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-4 py-2.5 rounded-xl border text-sm leading-relaxed"
-          style={{
-            backgroundColor: stepDesc.includes('Extract')
-              ? 'rgba(245, 158, 11, 0.08)'
-              : 'rgba(34, 197, 94, 0.08)',
-            borderColor: stepDesc.includes('Extract')
-              ? 'rgba(245, 158, 11, 0.15)'
-              : 'rgba(34, 197, 94, 0.15)',
-            color: 'var(--mcq-text-body)',
-          }}
-        >
-          <span className="mr-1.5">
-            {stepDesc.includes('Insert') ? '➕' : '🗑️'}
-          </span>
-          {stepDesc}
-        </motion.div>
-      )}
+        {/* Scrubber Timeline */}
+        <div className="flex-1 flex items-center gap-3">
+          <input
+            type="range"
+            min="0"
+            max={steps.length - 1}
+            value={currentStep}
+            onChange={(e) => setCurrentStep(Number(e.target.value))}
+            className="sketch-scrubber"
+          />
+        </div>
 
-      {/* Info */}
-      <div className="flex flex-wrap gap-4 text-xs text-[var(--mcq-text-muted)]">
-        <span>Type: <strong className="text-white capitalize">{heapType} heap</strong></span>
-        <span>| Size: <strong className="text-white">{heap.length}</strong></span>
-        <span>| Root ({heapType === 'min' ? 'minimum' : 'maximum'}): <strong className={heapType === 'min' ? 'text-emerald-400' : 'text-red-400'}>{heap[0] ?? '—'}</strong></span>
-        {lastOperation && (
-          <span>| Last: <strong className="text-blue-400">{lastOperation.type === 'insert' ? `insert(${lastOperation.value})` : `extract() → ${lastOperation.value}`}</strong></span>
-        )}
-      </div>
-
-      {/* Heap Property Explanation */}
-      <div className="px-4 py-2 rounded-xl bg-blue-500/5 border border-blue-500/10 text-xs text-[var(--mcq-text-secondary)] leading-relaxed">
-        <span className="font-semibold text-blue-400">{heapType === 'min' ? 'Min-Heap' : 'Max-Heap'} property: </span>
-        {heapType === 'min'
-          ? 'Every parent node is ≤ its children. The root (index 0) is always the MINIMUM element.'
-          : 'Every parent node is ≥ its children. The root (index 0) is always the MAXIMUM element.'}
-        {' '}Array index formula: left child = 2i+1, right child = 2i+2, parent = ⌊(i-1)/2⌋
-      </div>
-
-      {/* Heap Tree Visualization */}
-      <div className="relative w-full min-h-[350px] p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] overflow-hidden">
-        {/* SVG Connections */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-          {heap.map((val, i) => {
-            if (i === 0) return null;
-            const parent = Math.floor((i - 1) / 2);
-            const pos = getNodePosition(i, heap.length);
-            const parentPos = getNodePosition(parent, heap.length);
-            const isHL = highlighted.includes(i) || highlighted.includes(parent);
-            return (
-              <line
-                key={i}
-                x1={parentPos.x} y1={parentPos.y + 25}
-                x2={pos.x} y2={pos.y - 25}
-                stroke={isHL ? 'rgba(96, 165, 250, 0.5)' : 'rgba(255,255,255,0.08)'}
-                strokeWidth={isHL ? '2.5' : '1.5'}
-                className="transition-all duration-300"
-              />
-            );
-          })}
-        </svg>
-
-        {/* Nodes */}
-        <AnimatePresence>
-          {heap.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="absolute inset-0 flex items-center justify-center text-[var(--mcq-text-muted)] text-sm">
-              Heap is empty
-            </motion.div>
-          ) : (
-            heap.map((val, i) => {
-              const pos = getNodePosition(i, heap.length);
-              const isHL = highlighted.includes(i);
-              const isRoot = i === 0;
-              return (
-                <motion.div
-                  key={`${i}-${val}`}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{
-                    opacity: 1, scale: 1,
-                    x: pos.x - 24, y: pos.y,
-                    backgroundColor: isHL ? '#60a5fa' : isRoot ? 'rgba(96, 165, 250, 0.2)' : 'rgba(99, 102, 241, 0.12)',
-                    borderColor: isHL ? '#60a5fa' : isRoot ? 'rgba(96, 165, 250, 0.4)' : 'rgba(99, 102, 241, 0.2)',
-                    boxShadow: isHL ? '0 0 15px rgba(96, 165, 250, 0.4)' : 'none',
-                  }}
-                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                  className="absolute w-[48px] h-[48px] flex items-center justify-center rounded-xl border-2 text-sm font-bold font-mono z-10"
-                  style={{ color: isHL ? '#fff' : 'rgba(255,255,255,0.8)' }}
-                >
-                  {val}
-                  {isRoot && <span className="absolute -top-4 text-[9px] text-amber-400 font-semibold whitespace-nowrap">ROOT ({heapType === 'min' ? 'min' : 'max'})</span>}
-                </motion.div>
-              );
-            })
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Array Representation */}
-      <div className="p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)]">
-        <div className="text-xs font-semibold text-[var(--mcq-text-muted)] mb-2 uppercase tracking-wider">Array Representation</div>
-        <div className="flex flex-wrap gap-1.5">
-          {heap.map((val, i) => (
-            <motion.span
-              key={i}
-              animate={{
-                backgroundColor: highlighted.includes(i) ? 'rgba(96, 165, 250, 0.15)' : 'rgba(255,255,255,0.04)',
-                borderColor: highlighted.includes(i) ? 'rgba(96, 165, 250, 0.3)' : 'rgba(255,255,255,0.08)',
-                color: highlighted.includes(i) ? '#60a5fa' : 'var(--mcq-text-muted)',
-              }}
-              className="px-2.5 py-1 rounded text-xs font-mono font-medium border"
+        {/* Speed Multiplier Pills */}
+        <div className="flex items-center gap-1">
+          {[0.5, 1, 1.5, 2].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
             >
-              [{i}]: {val}
-            </motion.span>
+              {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
+            </button>
           ))}
         </div>
       </div>

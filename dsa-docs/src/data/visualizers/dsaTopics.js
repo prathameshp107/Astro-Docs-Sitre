@@ -1,4 +1,83 @@
 export const DSA_TOPICS = {
+  'two-pointers': {
+    title: 'Two Pointers',
+    icon: '👉👈',
+    description: 'An algorithmic pattern where two pointers iterate across a data structure together to solve search and window subproblems.',
+    overview: {
+      what: 'The Two Pointers pattern involves iterating two pointers over a sequence (such as an array or linked list) simultaneously to reduce time complexity from O(n²) to O(n).',
+      why: 'Opposite-ends pointers or fast/slow pointers allow searching sorted arrays or detecting cycles in linear time with O(1) extra space.',
+      examples: ['Two Sum II on sorted array', 'Valid Palindrome checking', '3Sum & 4Sum problems', 'Container With Most Water', 'Trapping Rain Water'],
+      advantages: ['Reduces O(n²) nested loops to O(n) linear scans', 'O(1) auxiliary space (in-place operation)', 'Intuitive geometric/converging logic', 'Foundation for Sliding Window technique'],
+      disadvantages: ['Requires array to be sorted for opposite-ends variant', 'Does not work directly on non-sequential data structures', 'Careful edge case handling required for index boundary checks'],
+    },
+    complexity: [
+      { operation: 'Two Sum II (Sorted)', time: 'O(n)', space: 'O(1)' },
+      { operation: 'Valid Palindrome', time: 'O(n)', space: 'O(1)' },
+      { operation: '3Sum', time: 'O(n²)', space: 'O(1)' },
+      { operation: 'Container With Most Water', time: 'O(n)', space: 'O(1)' },
+      { operation: 'Remove Duplicates', time: 'O(n)', space: 'O(1)' },
+    ],
+    code: {
+      javascript: `// Two Sum II - Opposite Ends Two Pointers in JavaScript
+function twoSumII(numbers, target) {
+  let left = 0, right = numbers.length - 1;
+  while (left < right) {
+    const sum = numbers[left] + numbers[right];
+    if (sum === target) return [left + 1, right + 1];
+    if (sum < target) left++;
+    else right--;
+  }
+  return [];
+}`,
+      typescript: `function twoSumII(numbers: number[], target: number): number[] {
+  let left = 0, right = numbers.length - 1;
+  while (left < right) {
+    const sum = numbers[left] + numbers[right];
+    if (sum === target) return [left + 1, right + 1];
+    if (sum < target) left++;
+    else right--;
+  }
+  return [];
+}`,
+      python: `# Two Sum II in Python
+def two_sum_ii(numbers: list[int], target: int) -> list[int]:
+    left, right = 0, len(numbers) - 1
+    while left < right:
+        s = numbers[left] + numbers[right]
+        if s == target:
+            return [left + 1, right + 1]
+        elif s < target:
+            left += 1
+        else:
+            right -= 1
+    return []`,
+      java: `public int[] twoSum(int[] numbers, int target) {
+    int left = 0, right = numbers.length - 1;
+    while (left < right) {
+        int sum = numbers[left] + numbers[right];
+        if (sum == target) return new int[]{left + 1, right + 1};
+        if (sum < target) left++;
+        else right--;
+    }
+    return new int[0];
+}`,
+      cpp: `vector<int> twoSum(vector<int>& numbers, int target) {
+    int left = 0, right = numbers.size() - 1;
+    while (left < right) {
+        int sum = numbers[left] + numbers[right];
+        if (sum == target) return {left + 1, right + 1};
+        if (sum < target) left++;
+        else right--;
+    }
+    return {};
+}`,
+    },
+    interviewQuestions: [
+      { question: 'Two Sum II - Input Array Is Sorted', difficulty: 'Medium', hint: 'If sum < target, increment left; if sum > target, decrement right.' },
+      { question: 'Valid Palindrome', difficulty: 'Easy', hint: 'Compare left and right characters while skipping non-alphanumeric characters.' },
+      { question: 'Container With Most Water', difficulty: 'Medium', hint: 'Width decreases every step, so move the shorter line inward to attempt finding a higher line.' },
+    ],
+  },
   arrays: {
     title: 'Arrays',
     icon: '\u{1F4CB}',
@@ -348,7 +427,35 @@ export const DSA_TOPICS = {
       { question: 'Search in a 2D matrix', difficulty: 'Medium', hint: 'Treat as flattened sorted array, or start from top-right corner' },
     ],
   },
+  'hash-table': {
+    title: 'Hash Tables',
+    icon: '🔑',
+    description: 'A hash table is a data structure that maps keys to values using a hash function for O(1) average lookup time.',
+    overview: {
+      what: 'Hash tables transform key strings into array index numbers via a hash function, storing key-value pairs in buckets.',
+      why: 'Provides O(1) average time complexity for insert, search, and delete operations.',
+      examples: ['Database indexing', 'Caching and memoization', 'Symbol tables in compilers', 'Group Anagrams and Two Sum algorithms'],
+      advantages: ['O(1) average lookup and insertion time', 'Flexible key types (strings, numbers, objects)', 'Fast set membership tests'],
+      disadvantages: ['Worst case O(n) during severe collisions', 'Unordered keys', 'Memory overhead for bucket capacity'],
+    },
+    complexity: [
+      { operation: 'Search', time: 'O(1) avg', space: 'O(n)' },
+      { operation: 'Insert', time: 'O(1) avg', space: 'O(n)' },
+      { operation: 'Delete', time: 'O(1) avg', space: 'O(n)' },
+    ],
+    code: {
+      javascript: `class HashTable {\n  constructor(size = 8) {\n    this.buckets = new Array(size).fill(null).map(() => []);\n  }\n  hash(key) {\n    let sum = 0;\n    for (let c of key) sum += c.charCodeAt(0);\n    return sum % this.buckets.length;\n  }\n  set(key, val) {\n    const idx = this.hash(key);\n    this.buckets[idx].push({ key, val });\n  }\n}`,
+      python: `hash_map = {}\nhash_map["apple"] = 10  # Insert O(1)\nval = hash_map.get("apple")  # Lookup O(1)`,
+    },
+    interviewQuestions: [
+      { question: 'Two Sum', difficulty: 'Easy', hint: 'Use a hash map to store complements (target - num).' },
+      { question: 'Group Anagrams', difficulty: 'Medium', hint: 'Sort string to build canonical hash key.' },
+    ],
+  },
 };
+
+DSA_TOPICS.heaps = DSA_TOPICS.heap;
+DSA_TOPICS['hash-tables'] = DSA_TOPICS['hash-table'];
 
 // ─── Visualizer metadata for routing ───
 export const VISUALIZER_LIST = [

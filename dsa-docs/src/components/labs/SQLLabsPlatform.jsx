@@ -267,16 +267,37 @@ function SingleResultTable({ batch }) {
   );
 }
 
+const getDraftCode = (draftKey, view, id, defaultCode) => {
+  if (typeof window === "undefined") return defaultCode;
+  try {
+    const drafts = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    const key = `${view}:${id}`;
+    return drafts[key] !== undefined ? drafts[key] : defaultCode;
+  } catch {
+    return defaultCode;
+  }
+};
+
 // ─── MAIN PLATFORM ───
 
 export default function SQLLabsPlatform() {
+  const DRAFT_KEY = "sql-draft";
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(SQL_LESSONS[0]?.id || null);
   const [activeChallenge, setActiveChallenge] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
   const [activeMilestone, setActiveMilestone] = useState(0);
-  const [query, setQuery] = useState(SQL_LESSONS[0]?.starterQuery || "");
+  const [query, setQuery] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {
+      try {
+        const hash = window.location.hash.replace("#code=", "");
+        return decodeURIComponent(escape(atob(hash)));
+      } catch {}
+    }
+    const firstId = SQL_LESSONS[0]?.id || null;
+    return firstId ? getDraftCode("sql-draft", "learn", firstId, SQL_LESSONS[0]?.starterQuery) : "";
+  });
   const [results, setResults] = useState({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
   const [queryError, setQueryError] = useState(null);
   const [showHint, setShowHint] = useState(false);
@@ -300,6 +321,31 @@ export default function SQLLabsPlatform() {
   const [dbKey, setDbKey] = useState(0);
   const [testResults, setTestResults] = useState([]);
   const [testsHeight, setTestsHeight] = useState(140);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fontSize, setFontSize] = useState(() => {
+    try { return parseInt(localStorage.getItem("sql-font-size"), 10) || 13; } catch { return 13; }
+  });
+
+  // Debounced autosave for drafts
+  useEffect(() => {
+    if (loading) return;
+    const activeId =
+      view === "learn" ? activeLesson
+      : view === "challenge" ? activeChallenge
+      : view === "project" ? `${activeProject}:${activeMilestone}`
+      : null;
+    if (!activeId) return;
+
+    const timer = setTimeout(() => {
+      try {
+        const drafts = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+        drafts[`${view}:${activeId}`] = query;
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+      } catch (e) { /* ignore */ }
+    }, 1000); // 1s debounce
+
+    return () => clearTimeout(timer);
+  }, [query, view, activeLesson, activeChallenge, activeProject, activeMilestone, loading]);
 
   const handleTestsDrag = useCallback(({ clientY }) => {
     if (!contentPanelRef.current) return;
@@ -514,7 +560,7 @@ export default function SQLLabsPlatform() {
     setActiveChallenge(null);
     setActiveProject(null);
     setActiveMilestone(0);
-    setQuery(lesson.starterQuery);
+    setQuery(getDraftCode(DRAFT_KEY, "learn", id, lesson.starterQuery));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
@@ -532,7 +578,7 @@ export default function SQLLabsPlatform() {
     setActiveChallenge(id);
     setActiveProject(null);
     setActiveMilestone(0);
-    setQuery("-- Write your SQL query here\n");
+    setQuery(getDraftCode(DRAFT_KEY, "challenge", id, "-- Write your SQL query here\n"));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
@@ -551,7 +597,8 @@ export default function SQLLabsPlatform() {
     setActiveProject(id);
     setActiveMilestone(0);
     const firstMilestone = project.milestones[0];
-    setQuery(firstMilestone ? `-- Milestone ${1}: ${firstMilestone.title}\n${firstMilestone.solutionQuery.split("\n")[0]}\n` : "-- Write your SQL query here\n");
+    const defaultQuery = firstMilestone ? `-- Milestone ${1}: ${firstMilestone.title}\n${firstMilestone.solutionQuery.split("\n")[0]}\n` : "-- Write your SQL query here\n";
+    setQuery(getDraftCode(DRAFT_KEY, "project", `${id}:0`, defaultQuery));
     setShowHint(false);
     setShowSolution(false);
     setResults({ batches: [], totalRows: 0, totalAffected: 0, executionTime: 0 });
@@ -966,7 +1013,7 @@ export default function SQLLabsPlatform() {
 
             {/* Editor + Results Panel (right side) */}
             <LabResizableHandle onDrag={handleContentDrag} />
-            <div className="sql-editor-panel" ref={editorPanelRef} style={{ flex: `${1 - contentRatio} 1 0` }}>
+            <div className={`sql-editor-panel${isFullscreen ? " jsl-editor-fullscreen" : ""}`} ref={editorPanelRef} style={isFullscreen ? {} : { flex: `${1 - contentRatio} 1 0` }}>
               <LabEditorToolbar
                 isRunning={isRunning}
                 onRun={runQuery}
@@ -983,6 +1030,12 @@ export default function SQLLabsPlatform() {
                 runLabel="Run Query"
                 lang="SQL"
                 prefix="sql"
+                fontSize={fontSize}
+                onFontSizeDown={() => setFontSize(s => { const n = Math.max(10, s-1); try { localStorage.setItem('sql-font-size', n); } catch {} return n; })}
+                onFontSizeUp={() => setFontSize(s => { const n = Math.min(24, s+1); try { localStorage.setItem('sql-font-size', n); } catch {} return n; })}
+                onFullscreen={() => setIsFullscreen(f => !f)}
+                isFullscreen={isFullscreen}
+                code={query}
                 extraButtons={
                   <button className={`sql-btn-schema ${showSchema ? "active" : ""}`} onClick={() => setShowSchema(s => !s)} title="Toggle schema diagram">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1005,7 +1058,7 @@ export default function SQLLabsPlatform() {
                   onChange={handleCodeChange}
                   onMount={handleEditorMount}
                   options={{
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontFamily: "Consolas, 'Courier New', monospace",
                     minimap: { enabled: false },
                     scrollBeyondLastLine: false,

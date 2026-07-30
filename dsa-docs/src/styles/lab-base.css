@@ -2147,3 +2147,30 @@ textarea:focus-visible,
 .lab-tour-btn-primary:hover {
   background: var(--accent-hover, #4f46e5);
 }
+/* --- Fullscreen Editor --- */
+.jsl-editor-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: var(--bg, #0f172a) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.jsl-editor-fullscreen .jsl-editor-wrapper {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+/* --- Editor Font-size display --- */
+.jsl-editor-actions .font-size-label {
+  font-size: 11px;
+  opacity: 0.55;
+  user-select: none;
+  min-width: 28px;
+  text-align: center;
+  color: var(--text-muted, #94a3b8);
+}

@@ -1,5 +1,6 @@
 import { useJudgeStore } from "../../store/judgeStore.js";
 import { usePlanStore } from "../../store/planStore.js";
+import { PROBLEM_DOC_MAP } from "../../data/plans/problem-doc-map.js";
 
 const TYPE_ICON = {
   note: "📖",
@@ -33,10 +34,16 @@ export default function PlanDayItem({ planId, day, itemIndex, item }) {
 
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 
-  // Build the href — problem type links to /problems/ref, others use ref directly
+  // Build the href — problem type links to /dsa/problems/ref, others use ref directly
   let href = item.ref;
+  let docUrl = null;
+
   if (item.type === "problem") {
-    href = `${base}problems/${item.ref}`;
+    href = `${base}dsa/problems/${item.ref}`;
+    const mappedDoc = PROBLEM_DOC_MAP[item.ref];
+    if (mappedDoc) {
+      docUrl = `${base}${mappedDoc.replace(/^\//, "")}`;
+    }
   }
 
   return (
@@ -56,13 +63,23 @@ export default function PlanDayItem({ planId, day, itemIndex, item }) {
 
       {/* Content */}
       <div className="plan-item-content">
-        <a
-          href={href}
-          className={`plan-item-label ${checked ? "done-text" : ""}`}
-          target={item.type === "note" || item.type === "visualizer" ? "_self" : "_self"}
-        >
-          {item.label}
-        </a>
+        <div className="plan-item-title-group">
+          {docUrl && (
+            <a
+              href={docUrl}
+              className="plan-item-doc-btn"
+              title="Read detailed explanation & Mermaid diagram"
+            >
+              📖 Read Doc
+            </a>
+          )}
+          <a
+            href={href}
+            className={`plan-item-label ${checked ? "done-text" : ""}`}
+          >
+            {item.label}
+          </a>
+        </div>
         <div className="plan-item-meta">
           {item.minutes} min
           {isAutoDone && (

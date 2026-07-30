@@ -1,191 +1,458 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTreeStore } from '../../store/visualizers/treeStore';
 
-const TRAVERSALS = [
-  { id: 'inorder', label: 'Inorder (LNR)', desc: 'Left → Node → Right' },
-  { id: 'preorder', label: 'Preorder (NLR)', desc: 'Node → Left → Right' },
-  { id: 'postorder', label: 'Postorder (LRN)', desc: 'Left → Right → Node' },
-  { id: 'levelorder', label: 'Level Order', desc: 'BFS by level' },
+const INORDER_CODE = [
+  { line: 1, text: 'if node == null: return' },
+  { line: 2, text: 'inorder(node.left)' },
+  { line: 3, text: 'visit(node.val)' },
+  { line: 4, text: 'inorder(node.right)' },
+];
+
+const PREORDER_CODE = [
+  { line: 1, text: 'if node == null: return' },
+  { line: 2, text: 'visit(node.val)' },
+  { line: 3, text: 'preorder(node.left)' },
+  { line: 4, text: 'preorder(node.right)' },
+];
+
+const POSTORDER_CODE = [
+  { line: 1, text: 'if node == null: return' },
+  { line: 2, text: 'postorder(node.left)' },
+  { line: 3, text: 'postorder(node.right)' },
+  { line: 4, text: 'visit(node.val)' },
+];
+
+const BST_SEARCH_CODE = [
+  { line: 1, text: 'if node == null or node.val == target: return node' },
+  { line: 2, text: 'if target < node.val: return search(node.left, target)' },
+  { line: 3, text: 'return search(node.right, target)' },
+];
+
+const TRACK_TITLES = {
+  inorder: '1. Inorder Traversal (L → Root → R)',
+  preorder: '2. Preorder Traversal (Root → L → R)',
+  postorder: '3. Postorder Traversal (L → R → Root)',
+  'bst-search': '4. BST Search (Target = 5)',
+};
+
+const EXPECTED_OUTPUTS = {
+  inorder: '[1, 2, 3, 4, 5, 6, 7] (Sorted Order)',
+  preorder: '[4, 2, 1, 3, 6, 5, 7] (Root First)',
+  postorder: '[1, 3, 2, 5, 7, 6, 4] (Root Last)',
+  'bst-search': 'Found Node 5 at Depth 2 in O(log n)',
+};
+
+// Tree Node Positions for SVG Canvas
+const TREE_NODES = [
+  { id: 4, val: 4, x: 250, y: 45, role: 'ROOT', level: 0 },
+  { id: 2, val: 2, x: 130, y: 130, role: null, level: 1 },
+  { id: 6, val: 6, x: 370, y: 130, role: null, level: 1 },
+  { id: 1, val: 1, x: 70, y: 215, role: 'LEAF', level: 2 },
+  { id: 3, val: 3, x: 190, y: 215, role: 'LEAF', level: 2 },
+  { id: 5, val: 5, x: 310, y: 215, role: 'LEAF', level: 2 },
+  { id: 7, val: 7, x: 430, y: 215, role: 'LEAF', level: 2 },
+];
+
+const TREE_EDGES = [
+  { from: 4, to: 2, dir: '↙' },
+  { from: 4, to: 6, dir: '↘' },
+  { from: 2, to: 1, dir: '↙' },
+  { from: 2, to: 3, dir: '↘' },
+  { from: 6, to: 5, dir: '↙' },
+  { from: 6, to: 7, dir: '↘' },
 ];
 
 export default function TreeVisualizer() {
-  const { nodes, edges, highlighted, traversalPath, traversalType, setTraversalType, reset, generateBST, traverse } = useTreeStore();
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [animationQueue, setAnimationQueue] = useState([]);
+  const {
+    track,
+    steps,
+    currentStep,
+    isPlaying,
+    speed,
+    practiceMode,
+    userCode,
+    setCurrentStep,
+    nextStep,
+    prevStep,
+    restart,
+    togglePlay,
+    setSpeed,
+    togglePracticeMode,
+    setUserCode,
+  } = useTreeStore();
 
-  const handleTraverse = (type) => {
-    reset();
-    setCurrentIndex(-1);
-    setIsAnimating(false);
-    const path = traverse(type);
-    if (path && path.length > 0) {
-      setAnimationQueue(path);
-      setIsAnimating(true);
-      setCurrentIndex(0);
-    }
-  };
+  const step = steps[currentStep] || steps[0];
 
+  // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
-    if (isAnimating && currentIndex >= 0 && currentIndex < animationQueue.length) {
-      const timer = setTimeout(() => {
-        setCurrentIndex(prev => prev + 1);
-      }, 600);
-      return () => clearTimeout(timer);
+    if (!isPlaying) return;
+    if (currentStep >= steps.length - 1) {
+      useTreeStore.setState({ isPlaying: false });
+      return;
     }
-    if (currentIndex >= animationQueue.length && animationQueue.length > 0) {
-      setIsAnimating(false);
-    }
-  }, [isAnimating, currentIndex, animationQueue]);
+    const delay = 2200 / speed;
+    const timeout = setTimeout(() => {
+      nextStep();
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
-  const currentlyHighlighted = animationQueue.slice(0, currentIndex + 1);
-  const currentNodeId = currentIndex >= 0 && currentIndex < animationQueue.length ? animationQueue[currentIndex] : null;
+  const activeCode =
+    track === 'inorder'
+      ? INORDER_CODE
+      : track === 'preorder'
+      ? PREORDER_CODE
+      : track === 'postorder'
+      ? POSTORDER_CODE
+      : BST_SEARCH_CODE;
+
+  const trackLabel = TRACK_TITLES[track] || 'Tree Algorithm';
+  const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Result';
+
+  const visitedSet = new Set(step.visited || []);
+  const activeNodeId = step.activeNode;
 
   return (
-    <div className="space-y-6">
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 p-4 rounded-xl bg-[var(--mcq-surface-30)] border border-[var(--mcq-border)]">
-        {TRAVERSALS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => handleTraverse(t.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-              traversalType === t.id && isAnimating
-                ? 'bg-gradient-to-r from-blue-500 to-emerald-400 text-white shadow-lg'
-                : 'border border-[var(--mcq-border)] text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-        <div className="w-px h-8 bg-white/10" />
-        <button
-          onClick={() => { reset(); setCurrentIndex(-1); setIsAnimating(false); }}
-          className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-        >
-          Reset
-        </button>
-        <button
-          onClick={() => { generateBST(); reset(); setCurrentIndex(-1); setIsAnimating(false); }}
-          className="px-4 py-2 rounded-lg border border-[var(--mcq-border)] text-sm font-semibold text-[var(--mcq-text-secondary)] hover:text-white hover:bg-white/5 transition-all"
-        >
-          New Tree
-        </button>
-      </div>
-
-      {/* Traversal Info */}
-      <div className="flex gap-3 text-xs text-[var(--mcq-text-muted)]">
-        {TRAVERSALS.map((t) => (
-          <span key={t.id} className={`px-2 py-1 rounded ${traversalType === t.id ? 'bg-blue-500/10 text-blue-400' : ''}`}>
-            {t.desc}
-          </span>
-        ))}
-      </div>
-
-      {/* Current Node Info */}
-      {currentNodeId && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium"
-        >
-          Visiting: Node {nodes.find(n => n.id === currentNodeId)?.value} ({traversalType} order)
-          {currentIndex < animationQueue.length - 1 ? ` — Next: ${nodes.find(n => n.id === animationQueue[currentIndex + 1])?.value}` : ' — Complete!'}
-        </motion.div>
-      )}
-
-      {/* Tree Visualization */}
-      <div className="relative w-full min-h-[450px] p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)] overflow-hidden">
-        {/* SVG connections */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-          {edges.map((edge, i) => {
-            const from = nodes.find(n => n.id === edge.from);
-            const to = nodes.find(n => n.id === edge.to);
-            if (!from || !to) return null;
-            return (
-              <line
-                key={i}
-                x1={from.x}
-                y1={from.y + 25}
-                x2={to.x}
-                y2={to.y - 25}
-                stroke="rgba(255,255,255,0.08)"
-                strokeWidth="2"
-                strokeDasharray={currentNodeId && (currentlyHighlighted.includes(edge.from) || currentlyHighlighted.includes(edge.to)) ? 'none' : '4 4'}
-                className="transition-all duration-500"
-              />
-            );
-          })}
-        </svg>
-
-        {/* Nodes */}
-        {nodes.map((node) => {
-          const isCurrent = node.id === currentNodeId;
-          const isVisited = currentlyHighlighted.includes(node.id);
-
-          return (
-            <motion.div
-              key={node.id}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                x: node.x - 25,
-                y: node.y,
-                backgroundColor: isCurrent
-                  ? '#60a5fa'
-                  : isVisited
-                  ? '#22c55e'
-                  : 'rgba(59, 130, 246, 0.15)',
-                borderColor: isCurrent
-                  ? '#60a5fa'
-                  : isVisited
-                  ? '#22c55e'
-                  : 'rgba(59, 130, 246, 0.3)',
-                boxShadow: isCurrent
-                  ? '0 0 20px rgba(96, 165, 250, 0.5)'
-                  : isVisited
-                  ? '0 0 10px rgba(34, 197, 94, 0.3)'
-                  : 'none',
-              }}
-              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-              className="absolute w-[50px] h-[50px] flex items-center justify-center rounded-xl border-2 text-sm font-bold font-mono z-10"
-              style={{ color: isCurrent ? '#fff' : isVisited ? '#22c55e' : 'rgba(255,255,255,0.7)' }}
-            >
-              {node.value}
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Traversal Path Display */}
-      {animationQueue.length > 0 && (
-        <div className="p-4 rounded-xl bg-[var(--mcq-surface-20)] border border-[var(--mcq-border)]">
-          <div className="text-xs font-semibold text-[var(--mcq-text-muted)] mb-2 uppercase tracking-wider">
-            Traversal Path ({traversalType})
+    <div className="sketch-container font-sketch">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+        <div>
+          <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
+            DATA STRUCTURE PATTERN
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {animationQueue.map((id, i) => {
-              const node = nodes.find(n => n.id === id);
-              if (!node) return null;
-              const isActive = i < currentIndex;
+          <h2 className="text-3xl font-bold font-header flex items-center gap-3">
+            Trees
+            <span className="text-sm px-3 py-0.5 rounded-full sketch-border-soft text-[var(--sketch-accent-orange)] font-sketch">
+              {trackLabel}
+            </span>
+          </h2>
+        </div>
+
+        {/* Expected Output Card */}
+        <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-mono text-xs text-amber-300 shadow-sm">
+          <span className="text-amber-400 font-bold font-header text-sm">🎯 Expected:</span>
+          <span>{expectedOutput}</span>
+        </div>
+      </div>
+
+      {/* Progress Milestone Dots */}
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+        <span>Milestones:</span>
+        <div className="sketch-milestones">
+          {steps.map((_, i) => (
+            <div
+              key={i}
+              onClick={() => setCurrentStep(i)}
+              className={`sketch-milestone-dot cursor-pointer ${i <= currentStep ? 'active' : ''}`}
+              title={`Step ${i + 1}`}
+            />
+          ))}
+        </div>
+        <span className="font-mono ml-2">step {currentStep + 1} / {steps.length}</span>
+      </div>
+
+      {/* Main Canvas + Debugger Row */}
+      <div className="sketch-canvas-row">
+        {/* Visualization Canvas */}
+        <div className="sketch-canvas-box sketch-border relative flex flex-col items-center justify-between p-4 min-h-[380px]">
+          <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
+            <span>Binary Search Tree Canvas</span>
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active Node</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Visited</span>
+            </div>
+          </div>
+
+          {/* Depth Level Indicators on Left */}
+          <div className="absolute left-3 top-16 flex flex-col gap-14 text-[10px] font-mono text-[var(--sketch-text-muted)] opacity-60">
+            <div>Level 0</div>
+            <div>Level 1</div>
+            <div>Level 2</div>
+          </div>
+
+          {/* SVG Tree Canvas */}
+          <div className="relative w-full max-w-[500px] h-[280px] my-auto">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {TREE_EDGES.map((edge) => {
+                const parentNode = TREE_NODES.find((n) => n.id === edge.from);
+                const childNode = TREE_NODES.find((n) => n.id === edge.to);
+                if (!parentNode || !childNode) return null;
+                const isEdgeActive =
+                  (visitedSet.has(edge.from) && visitedSet.has(edge.to)) ||
+                  (activeNodeId === edge.to && visitedSet.has(edge.from));
+
+                return (
+                  <g key={`${edge.from}-${edge.to}`}>
+                    <line
+                      x1={parentNode.x}
+                      y1={parentNode.y + 20}
+                      x2={childNode.x}
+                      y2={childNode.y - 20}
+                      stroke={isEdgeActive ? '#f59e0b' : 'var(--sketch-border)'}
+                      strokeWidth={isEdgeActive ? '3' : '2'}
+                      strokeDasharray={isEdgeActive ? 'none' : '4 2'}
+                    />
+                  </g>
+                );
+              })}
+            </svg>
+
+            {/* Tree Node Elements */}
+            {TREE_NODES.map((node) => {
+              const isActive = activeNodeId === node.id;
+              const isVisited = visitedSet.has(node.id);
+              const isJustVisited = isVisited && isActive && step.state?.visitedVal === node.val;
+
               return (
-                <span
-                  key={id}
-                  className={`px-2.5 py-1 rounded text-xs font-mono font-medium border transition-all ${
-                    isActive || i === currentIndex
-                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                      : 'bg-white/5 text-[var(--mcq-text-muted)] border-white/10'
-                  }`}
+                <div
+                  key={node.id}
+                  style={{ left: `${node.x - 24}px`, top: `${node.y - 24}px` }}
+                  className="absolute flex flex-col items-center"
                 >
-                  {node.value}
-                </span>
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isJustVisited && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-emerald-500/50 whitespace-nowrap animate-bounce"
+                      >
+                        🎯 Visited!
+                      </motion.div>
+                    )}
+                    {isActive && !isJustVisited && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
+                        animate={{ opacity: 1, y: -26, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md shadow-amber-500/30 whitespace-nowrap"
+                      >
+                        🔍 Inspecting
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <motion.div
+                    animate={{
+                      scale: isActive ? 1.25 : 1,
+                      y: isActive ? -4 : 0,
+                    }}
+                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center font-header font-bold text-xl border-2 shadow-md transition-all relative ${
+                      isActive
+                        ? '!border-amber-400 !bg-amber-500/30 text-amber-500 ring-4 ring-amber-400/40 shadow-amber-500/50'
+                        : isVisited
+                        ? '!border-emerald-400 !bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-emerald-500/30'
+                        : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                    }`}
+                  >
+                    {node.val}
+
+                    {/* Role Tag (ROOT / LEAF) */}
+                    {node.role === 'ROOT' && (
+                      <span className="absolute -top-2.5 bg-amber-500 text-black font-mono text-[9px] font-bold px-1.5 py-0.2 rounded shadow">
+                        ROOT
+                      </span>
+                    )}
+                    {node.role === 'LEAF' && (
+                      <span className="absolute -bottom-2 bg-white/10 text-[var(--sketch-text-muted)] font-mono text-[8px] px-1 rounded border border-white/10">
+                        LEAF
+                      </span>
+                    )}
+                  </motion.div>
+
+                  {/* Active Pointer Arrow */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        className="sketch-pointer sketch-pointer-orange absolute -bottom-7"
+                      >
+                        <div className="text-[10px]">curr</div>
+                        <div className="text-[10px] leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               );
             })}
           </div>
+
+          {/* Visited Sequence Bar */}
+          <div className="mt-3 w-full flex items-center gap-3 font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-amber-500 font-bold">Visited Output:</span>
+              <div className="flex items-center gap-1.5">
+                {step.visited?.map((v, i) => (
+                  <span key={i} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 font-bold">
+                    #{i + 1}: {v}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <span className="text-[10px] text-[var(--sketch-text-muted)]">Total: {step.visited?.length || 0} / 7 nodes</span>
+          </div>
         </div>
-      )}
+
+        {/* Debug Panel (Code & State) */}
+        <div className="sketch-debug-panel">
+          {/* Pseudocode Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
+              <span className="font-header font-bold text-lg">Concept Code</span>
+              <button
+                onClick={togglePracticeMode}
+                className="px-2.5 py-1 text-xs sketch-button"
+              >
+                {practiceMode ? '👁️ View' : '✏️ Practice'}
+              </button>
+            </div>
+
+            {practiceMode ? (
+              <textarea
+                value={userCode}
+                onChange={(e) => setUserCode(e.target.value)}
+                rows={8}
+                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
+              />
+            ) : (
+              <div className="space-y-0.5">
+                {activeCode.map((c) => {
+                  const isActive = step.activeLine === c.line;
+                  return (
+                    <div
+                      key={c.line}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                    >
+                      <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
+                      <span className="whitespace-pre font-mono flex-1">{c.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Call Stack & State Variable Box */}
+          <div className="sketch-panel-box sketch-border">
+            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)] flex items-center justify-between">
+              <span>Recursion Stack</span>
+              <span className="text-xs font-mono text-[var(--sketch-accent-orange)]">
+                Depth: {step.stack?.length || 0}
+              </span>
+            </div>
+
+            {/* Recursion Stack Frame List */}
+            <div className="space-y-1 mb-3">
+              {step.stack?.length > 0 ? (
+                step.stack.map((fn, idx) => (
+                  <div
+                    key={idx}
+                    className={`text-xs font-mono px-2.5 py-1 rounded-md border flex items-center justify-between ${
+                      idx === step.stack.length - 1
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+                        : 'bg-white/5 text-[var(--sketch-text-muted)] border-white/10'
+                    }`}
+                  >
+                    <span>{fn}</span>
+                    <span className="text-[10px] opacity-60">frame #{idx + 1}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="text-xs text-[var(--sketch-text-muted)] font-mono italic">Stack is empty</div>
+              )}
+            </div>
+
+            <div className="font-header font-bold text-sm mb-1 pb-1 border-b border-[var(--sketch-border)]">
+              State Variables
+            </div>
+            <div className="space-y-1">
+              {Object.entries(step.state || {}).map(([key, value]) => (
+                <div key={key} className="sketch-state-var">
+                  <span className="text-[var(--sketch-text-muted)]">{key}</span>
+                  <span className="font-bold text-[var(--sketch-accent-orange)]">{String(value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Explanation Banner */}
+      <div className="sketch-explanation-bar sketch-border">
+        <span className="text-xl select-none">✏️</span>
+        <div className="flex-1 text-sm md:text-base leading-relaxed">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+            line {step.activeLine}
+          </span>
+          {step.desc}
+        </div>
+      </div>
+
+      {/* Bottom Playback Controls Bar */}
+      <div className="sketch-playback-bar sketch-border">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={restart}
+            className="sketch-button px-3 py-1.5"
+            title="Restart"
+          >
+            ↺
+          </button>
+          <button
+            onClick={prevStep}
+            disabled={currentStep === 0}
+            className="sketch-button px-3 py-1.5"
+            title="Previous step"
+          >
+            |◀
+          </button>
+          <button
+            onClick={togglePlay}
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? '⏸' : '▶'}
+          </button>
+          <button
+            onClick={nextStep}
+            disabled={currentStep >= steps.length - 1}
+            className="sketch-button px-3 py-1.5"
+            title="Next step"
+          >
+            ▶|
+          </button>
+        </div>
+
+        {/* Scrubber Timeline */}
+        <div className="flex-1 flex items-center gap-3">
+          <input
+            type="range"
+            min="0"
+            max={steps.length - 1}
+            value={currentStep}
+            onChange={(e) => setCurrentStep(Number(e.target.value))}
+            className="sketch-scrubber"
+          />
+        </div>
+
+        {/* Speed Multiplier Pills */}
+        <div className="flex items-center gap-1">
+          {[0.5, 1, 1.5, 2].map((s) => (
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+            >
+              {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
