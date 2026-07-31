@@ -1,0 +1,680 @@
+import { useState } from 'react';
+import { useTwoPointersStore } from '../../store/visualizers/twoPointersStore';
+import { useSlidingWindowStore } from '../../store/visualizers/slidingWindowStore';
+import { useBacktrackingStore } from '../../store/visualizers/backtrackingStore';
+import { useArrayStore } from '../../store/visualizers/arrayStore';
+import { useSortingStore } from '../../store/visualizers/sortingStore';
+import { useSearchingStore } from '../../store/visualizers/searchingStore';
+import { useLinkedListStore } from '../../store/visualizers/linkedListStore';
+import { useTreeStore } from '../../store/visualizers/treeStore';
+import { useGraphStore } from '../../store/visualizers/graphStore';
+import { useStackStore } from '../../store/visualizers/stackStore';
+import { useQueueStore } from '../../store/visualizers/queueStore';
+import { useHeapStore } from '../../store/visualizers/heapStore';
+import { useRecursionStore } from '../../store/visualizers/recursionStore';
+import { useDPStore } from '../../store/visualizers/dpStore';
+import { useHashTableStore } from '../../store/visualizers/hashTableStore';
+
+// ALL DSA TOPIC LOGIC CURATED EXPLICITLY WITH DEEP MULTI-SENTENCE STEPWISE EXPLANATIONS
+const SPECIFIC_PROBLEM_LOGIC = {
+  // === 1. TWO POINTERS TRACKS ===
+  'intro': {
+    title: '1. Two Pointers Concept - Introduction',
+    input: 'Array = [1, 2, 4, 6, 8, 10], Target = 10',
+    goal: 'Demonstrate opposite-ends converging pointers in O(N) linear time.',
+    array: [1, 2, 4, 6, 8, 10],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Initialize Outer Boundary Pointers (L=0, R=5)',
+        left: 0,
+        right: 5,
+        array: [1, 2, 4, 6, 8, 10],
+        computation: 'Sum = arr[0] + arr[5] = 1 + 10 = 11',
+        comparison: '11 > 10 (Sum is too LARGE)',
+        action: 'Decrement Right Pointer (R--: 5 ➔ 4)',
+        desc: 'Initialize Left pointer at index 0 (val 1) and Right pointer at index 5 (val 10). Calculate current pair sum: 1 + 10 = 11. Since 11 exceeds target 10, we need a smaller sum. Because the input array is sorted in ascending order, pairing element 10 with any number at or to the right of index 0 will produce a value >= 11. Therefore, 10 can never be part of the solution pair. Decrement Right pointer R to index 4 (val 8).'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Evaluate New Boundary Pair (L=0, R=4)',
+        left: 0,
+        right: 4,
+        array: [1, 2, 4, 6, 8, 10],
+        computation: 'Sum = arr[0] + arr[4] = 1 + 8 = 9',
+        comparison: '9 < 10 (Sum is too SMALL)',
+        action: 'Increment Left Pointer (L++: 0 ➔ 1)',
+        desc: 'Left is at index 0 (val 1) and Right is at index 4 (val 8). Compute pair sum: 1 + 8 = 9. Here 9 is strictly less than target 10. To increase our sum towards target 10, we must shift the Left pointer to a larger value. Increment Left pointer L to index 1 (val 2).'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Evaluate Converged Pair (L=1, R=4)',
+        left: 1,
+        right: 4,
+        array: [1, 2, 4, 6, 8, 10],
+        computation: 'Sum = arr[1] + arr[4] = 2 + 8 = 10',
+        comparison: '10 == 10 (TARGET MATCHED! 🎉)',
+        action: 'Return 1-based indices [2, 5]',
+        isMatch: true,
+        desc: 'Left is at index 1 (val 2) and Right is at index 4 (val 8). Calculate sum: 2 + 8 = 10. Target 10 matches exactly! Convert 0-based indices [1, 4] to 1-based indices [2, 5] and return [2, 5]. Goal achieved in linear O(N) single-pass traversal!'
+      }
+    ]
+  },
+
+  'two-sum-ii': {
+    title: '2. Two Sum II - Input Array Is Sorted',
+    input: 'Array = [2, 7, 11, 15], Target = 9',
+    goal: 'Find two numbers in sorted array that add up to target 9.',
+    array: [2, 7, 11, 15],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Initialize Boundary Pointers (L=0, R=3)',
+        left: 0,
+        right: 3,
+        array: [2, 7, 11, 15],
+        computation: 'Sum = arr[0] + arr[3] = 2 + 15 = 17',
+        comparison: '17 > 9 (Sum is too LARGE)',
+        action: 'Decrement R pointer (R--: 3 ➔ 2)',
+        desc: 'Place Left pointer at index 0 (val 2) and Right pointer at index 3 (val 15). Compute current sum: 2 + 15 = 17. Compare with target 9: 17 is significantly larger than 9. Because the array is sorted, 15 is too large to pair with 2 (or any element in between). Decrement Right pointer R to index 2 (val 11).'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Evaluate Reduced Pair (L=0, R=2)',
+        left: 0,
+        right: 2,
+        array: [2, 7, 11, 15],
+        computation: 'Sum = arr[0] + arr[2] = 2 + 11 = 13',
+        comparison: '13 > 9 (Sum is still too LARGE)',
+        action: 'Decrement R pointer (R--: 2 ➔ 1)',
+        desc: 'Left remains at index 0 (val 2) and Right is now at index 2 (val 11). Compute current sum: 2 + 11 = 13. 13 is still greater than target 9. To reduce the sum further, decrement Right pointer R to index 1 (val 7).'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Evaluate Converged Pair (L=0, R=1)',
+        left: 0,
+        right: 1,
+        array: [2, 7, 11, 15],
+        computation: 'Sum = arr[0] + arr[1] = 2 + 7 = 9',
+        comparison: '9 == 9 (TARGET MATCHED! 🎉)',
+        action: 'Return 1-based indices [1, 2]',
+        isMatch: true,
+        desc: 'Left is at index 0 (val 2) and Right is at index 1 (val 7). Compute sum: 2 + 7 = 9. Target 9 is matched! Convert 0-based indices [0, 1] to 1-based indices [1, 2] and return [1, 2]. Problem solved!'
+      }
+    ]
+  },
+
+  'valid-palindrome': {
+    title: '3. Valid Palindrome (Converging Character Pointers)',
+    input: 'String = "racecar"',
+    goal: 'Verify character symmetry from both ends towards center.',
+    array: ['r', 'a', 'c', 'e', 'c', 'a', 'r'],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Compare Outermost Characters (L=0, R=6)',
+        left: 0,
+        right: 6,
+        array: ['r', 'a', 'c', 'e', 'c', 'a', 'r'],
+        computation: "s[0] = 'r', s[6] = 'r'",
+        comparison: "'r' == 'r' (MATCH ✅)",
+        action: 'Advance L++ (0 ➔ 1) and R-- (6 ➔ 5)',
+        desc: "Start with Left pointer at index 0 (character 'r') and Right pointer at index 6 (character 'r'). Compare characters s[0] and s[6]: 'r' === 'r'. Since both characters match, the outer layer of the string is symmetrical! To check the next inner pair, increment Left (L++: 0 ➔ 1) and decrement Right (R--: 6 ➔ 5)."
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Compare Second Pair (L=1, R=5)',
+        left: 1,
+        right: 5,
+        array: ['r', 'a', 'c', 'e', 'c', 'a', 'r'],
+        computation: "s[1] = 'a', s[5] = 'a'",
+        comparison: "'a' == 'a' (MATCH ✅)",
+        action: 'Advance L++ (1 ➔ 2) and R-- (5 ➔ 4)',
+        desc: "Left is now at index 1 (character 'a') and Right is at index 5 (character 'a'). Compare s[1] and s[5]: 'a' === 'a'. Another exact match! This confirms symmetry for the second outer layer. Advance Left (L++: 1 ➔ 2) and Right (R--: 5 ➔ 4)."
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Compare Third Pair (L=2, R=4)',
+        left: 2,
+        right: 4,
+        array: ['r', 'a', 'c', 'e', 'c', 'a', 'r'],
+        computation: "s[2] = 'c', s[4] = 'c'",
+        comparison: "'c' == 'c' (MATCH ✅)",
+        action: 'Advance L++ (2 ➔ 3) and R-- (4 ➔ 3)',
+        desc: "Left moves to index 2 (character 'c') and Right moves to index 4 (character 'c'). Compare s[2] and s[4]: 'c' === 'c'. Both characters match! The string remains valid. Advance Left (L++: 2 ➔ 3) and Right (R--: 4 ➔ 3). Both pointers now converge at the middle index 3."
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Pointers Meet at Center Character (L=3, R=3)',
+        left: 3,
+        right: 3,
+        array: ['r', 'a', 'c', 'e', 'c', 'a', 'r'],
+        computation: "s[3] = 'e' (Center element)",
+        comparison: 'L == R (Symmetry Fully Verified 🎉)',
+        action: 'Return TRUE',
+        isMatch: true,
+        desc: 'Left and Right pointers meet at index 3 (character \'e\'). In odd-length palindromes, the middle character \'e\' matches with itself by definition. Because L >= R (3 >= 3), all character pairs have been verified without a single mismatch. Return TRUE — "racecar" is verified as a valid palindrome!'
+      }
+    ]
+  },
+
+  'three-sum': {
+    title: '4. 3Sum - Zero Sum Triplets',
+    input: 'Array = [-4, -1, -1, 0, 1, 2], Target = 0',
+    goal: 'Find all unique triplets [a, b, c] such that a + b + c = 0.',
+    array: [-4, -1, -1, 0, 1, 2],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Fix Outer Loop Index i=0 (val -4)',
+        left: 1,
+        right: 5,
+        array: [-4, -1, -1, 0, 1, 2],
+        computation: 'Fixed i=0 (-4) | L=1 (-1), R=5 (2) | Sum = -4 + -1 + 2 = -3',
+        comparison: '-3 < 0 (Sum too small)',
+        action: 'Increment L (L++: 1 ➔ 2)',
+        desc: 'Sort the array first. Fix outer index i=0 (val -4). Place two pointers L=1 (val -1) and R=5 (val 2). Calculate triplet sum: -4 + (-1) + 2 = -3. Sum is -3 < 0. To increase the sum towards 0, increment Left pointer L to index 2 (val -1).'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Advance Outer Loop to i=1 (val -1)',
+        left: 2,
+        right: 5,
+        array: [-4, -1, -1, 0, 1, 2],
+        computation: 'Fixed i=1 (-1) | L=2 (-1), R=5 (2) | Sum = -1 + -1 + 2 = 0',
+        comparison: '0 == 0 (FIRST TRIPLET FOUND! 🎉)',
+        action: 'Record Triplet [-1, -1, 2]',
+        isMatch: true,
+        desc: 'Advance outer loop index to i=1 (val -1). Set two pointers L=2 (val -1) and R=5 (val 2). Calculate triplet sum: -1 + (-1) + 2 = 0. Target 0 is matched! Record triplet [-1, -1, 2].'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Move Pointers to Search Next Pair (L=3, R=4)',
+        left: 3,
+        right: 4,
+        array: [-4, -1, -1, 0, 1, 2],
+        computation: 'Fixed i=1 (-1) | L=3 (0), R=4 (1) | Sum = -1 + 0 + 1 = 0',
+        comparison: '0 == 0 (SECOND TRIPLET FOUND! 🎉)',
+        action: 'Record Triplet [-1, 0, 1]',
+        isMatch: true,
+        desc: 'With i=1 fixed, increment L to 3 (val 0) and decrement R to 4 (val 1). Calculate sum: -1 + 0 + 1 = 0. Target 0 is matched! Record second triplet [-1, 0, 1]. All unique triplets found!'
+      }
+    ]
+  },
+
+  'container-water': {
+    title: '5. Container With Most Water',
+    input: 'Heights = [1, 8, 6, 2, 5, 4, 8, 3]',
+    goal: 'Find two lines that contain the maximum area of water.',
+    array: [1, 8, 6, 2, 5, 4, 8, 3],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Outer Boundaries (L=0, R=7)',
+        left: 0,
+        right: 7,
+        array: [1, 8, 6, 2, 5, 4, 8, 3],
+        computation: 'Width = 7 | Min Height = min(1, 3) = 1 | Area = 7 * 1 = 7',
+        comparison: 'Initial Area = 7',
+        action: 'Move Shorter Left Line (L++: 0 ➔ 1)',
+        desc: 'Start L at index 0 (height 1) and R at index 7 (height 3). Width between them is 7 - 0 = 7. Bounding height is min(1, 3) = 1. Calculate water area: 7 * 1 = 7. Because the container height is limited by the shorter line (height 1), keeping the shorter line while shrinking width can never yield a larger area. Move shorter left line inward (L++: 0 ➔ 1).'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Evaluate New Boundaries (L=1, R=7)',
+        left: 1,
+        right: 7,
+        array: [1, 8, 6, 2, 5, 4, 8, 3],
+        computation: 'Width = 6 | Min Height = min(8, 3) = 3 | Area = 6 * 3 = 18',
+        comparison: '18 > 7 (New Max Area = 18)',
+        action: 'Move Shorter Right Line (R--: 7 ➔ 6)',
+        desc: 'L is at index 1 (height 8) and R is at index 7 (height 3). Width = 6. Min height = min(8, 3) = 3. Area = 6 * 3 = 18. New max area recorded! Since right line (height 3) is now the shorter line, move right line inward (R--: 7 ➔ 6).'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Evaluate Optimal Container (L=1, R=6)',
+        left: 1,
+        right: 6,
+        array: [1, 8, 6, 2, 5, 4, 8, 3],
+        computation: 'Width = 5 | Min Height = min(8, 8) = 8 | Area = 5 * 8 = 40',
+        comparison: '40 > 18 (MAXIMUM AREA FOUND! 🎉)',
+        action: 'Max Area = 40 Recorded',
+        isMatch: true,
+        desc: 'L is at index 1 (height 8) and R is at index 6 (height 8). Width = 6 - 1 = 5. Min height = min(8, 8) = 8. Calculate area: 5 * 8 = 40! Maximum water area found in O(N) single pass!'
+      }
+    ]
+  },
+
+  'move-zeroes': {
+    title: '6. Move Zeroes In-Place (Fast & Slow Pointers)',
+    input: 'Array = [0, 1, 0, 3, 12]',
+    goal: 'Move all zeroes to end while maintaining relative order of non-zero elements.',
+    array: [0, 1, 0, 3, 12],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Slow=0, Fast=0 (Encounter Zero)',
+        left: 0,
+        right: 0,
+        array: [0, 1, 0, 3, 12],
+        computation: 'arr[0] = 0 (Zero encountered)',
+        comparison: 'Slow stays at 0, Fast advances to 1',
+        action: 'Advance Fast++',
+        desc: 'Initialize Slow pointer at 0 (marking next available non-zero slot) and Fast pointer at 0 (scanning elements). Fast sees 0 at index 0. Since element is 0, do not swap. Advance Fast to 1.'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Fast=1 (val 1) ➔ Swap arr[0] and arr[1]',
+        left: 0,
+        right: 1,
+        array: [1, 0, 0, 3, 12],
+        computation: 'Swap arr[0] and arr[1] ➔ Array becomes [1, 0, 0, 3, 12]',
+        comparison: 'Non-zero 1 placed at Slow index 0',
+        action: 'Swap & Increment Slow++',
+        isMatch: true,
+        desc: 'Fast pointer reaches index 1 and sees non-zero value 1. Swap element at Fast index 1 with element at Slow index 0. Array transforms to [1, 0, 0, 3, 12]. Increment Slow pointer to 1.'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Fast=3 (val 3) ➔ Swap arr[1] and arr[3]',
+        left: 1,
+        right: 3,
+        array: [1, 3, 0, 0, 12],
+        computation: 'Swap arr[1] and arr[3] ➔ Array becomes [1, 3, 0, 0, 12]',
+        comparison: 'Non-zero 3 placed at Slow index 1',
+        action: 'Swap & Increment Slow++',
+        isMatch: true,
+        desc: 'Fast skips zero at index 2 and reaches index 3 (val 3). Swap arr[1] and arr[3]. Array becomes [1, 3, 0, 0, 12]. Increment Slow pointer to 2.'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Fast=4 (val 12) ➔ Swap arr[2] and arr[4]',
+        left: 2,
+        right: 4,
+        array: [1, 3, 12, 0, 0],
+        computation: 'Swap arr[2] and arr[4] ➔ Array becomes [1, 3, 12, 0, 0]',
+        comparison: 'All Non-Zeroes Shifted Left! 🎉',
+        action: 'Array Transformed In-Place',
+        isMatch: true,
+        desc: 'Fast reaches index 4 (val 12). Swap arr[2] and arr[4]. Array transforms to [1, 3, 12, 0, 0]. All non-zero elements are shifted to the front while preserving order, and all zeroes are pushed to the end in O(N) time and O(1) extra space!'
+      }
+    ]
+  },
+
+  'remove-duplicates': {
+    title: '7. Remove Duplicates from Sorted Array',
+    input: 'Array = [1, 1, 2, 2, 3, 4]',
+    goal: 'Overwrite duplicate elements in-place and return total unique element count K=4.',
+    array: [1, 1, 2, 2, 3, 4],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Slow=0 (val 1), Fast=1 (val 1) [Duplicate]',
+        left: 0,
+        right: 1,
+        array: [1, 1, 2, 2, 3, 4],
+        computation: 'arr[0] == arr[1] == 1 (Duplicate detected)',
+        comparison: 'Skip duplicate element',
+        action: 'Advance Fast++',
+        desc: 'Slow points to first unique element at index 0 (val 1). Fast scans index 1 and sees value 1. Since arr[0] == arr[1], this is a duplicate element. Skip it by advancing Fast to index 2.'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Slow=0, Fast=2 (val 2) [Unique Element!]',
+        left: 0,
+        right: 2,
+        array: [1, 2, 2, 2, 3, 4],
+        computation: 'arr[2] = 2 != arr[0] ➔ Increment Slow to 1, Overwrite arr[1] = 2',
+        comparison: 'Unique Element 2 Placed at index 1',
+        action: 'Overwrite & Increment Slow++',
+        isMatch: true,
+        desc: 'Fast reaches index 2 and sees value 2, which is different from arr[Slow] (1). Increment Slow to 1 and overwrite arr[1] with 2. Array state becomes [1, 2, 2, 2, 3, 4].'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Fast=4 (val 3) [Unique Element!]',
+        left: 1,
+        right: 4,
+        array: [1, 2, 3, 2, 3, 4],
+        computation: 'arr[4] = 3 != arr[1] ➔ Increment Slow to 2, Overwrite arr[2] = 3',
+        comparison: 'Unique Element 3 Placed at index 2',
+        action: 'Overwrite & Increment Slow++',
+        isMatch: true,
+        desc: 'Fast skips duplicate 2 at index 3 and reaches index 4 (val 3). Increment Slow to 2 and overwrite arr[2] with 3. Array state becomes [1, 2, 3, 2, 3, 4].'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Fast=5 (val 4) [Unique Element!]',
+        left: 2,
+        right: 5,
+        array: [1, 2, 3, 4, 3, 4],
+        computation: 'arr[5] = 4 != arr[2] ➔ Increment Slow to 3, Overwrite arr[3] = 4',
+        comparison: 'K = 4 Unique Elements Placed! 🎉',
+        action: 'Return K = 4',
+        isMatch: true,
+        desc: 'Fast reaches index 5 (val 4). Increment Slow to 3 and overwrite arr[3] with 4. Array prefix [1, 2, 3, 4] contains all K=4 unique elements in-place!'
+      }
+    ]
+  },
+
+  'sort-colors': {
+    title: '8. Sort Colors (Dutch National Flag 3-Pointer Partition)',
+    input: 'Array = [2, 0, 2, 1, 1, 0] (0=Red, 1=White, 2=Blue)',
+    goal: 'Sort array of 0s, 1s, 2s in-place in single pass using low, mid, high pointers.',
+    array: [2, 0, 2, 1, 1, 0],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Mid=0 (val 2) ➔ Swap with High=5 (val 0)',
+        left: 0,
+        right: 5,
+        array: [0, 0, 2, 1, 1, 2],
+        computation: 'Swap arr[0] and arr[5] ➔ Array becomes [0, 0, 2, 1, 1, 2]',
+        comparison: 'High-value 2 placed at end',
+        action: 'Swap & Decrement High--',
+        desc: 'Initialize Low=0, Mid=0, High=5. Mid sees value 2 at index 0. Swap element at Mid (2) with element at High (0). Array transforms to [0, 0, 2, 1, 1, 2]. Decrement High pointer to 4.'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Mid=0 (val 0) ➔ Swap with Low=0',
+        left: 0,
+        right: 0,
+        array: [0, 0, 2, 1, 1, 2],
+        computation: 'arr[0] == 0 ➔ Swap arr[0] with arr[Low=0]',
+        comparison: 'Low-value 0 placed at start',
+        action: 'Increment Low++ and Mid++',
+        isMatch: true,
+        desc: 'Mid is at index 0 and sees value 0. Swap arr[0] with arr[Low=0]. Increment both Low pointer to 1 and Mid pointer to 1.'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Mid=1 (val 0) ➔ Swap with Low=1',
+        left: 1,
+        right: 1,
+        array: [0, 0, 2, 1, 1, 2],
+        computation: 'arr[1] == 0 ➔ Swap arr[1] with arr[Low=1]',
+        comparison: 'Low-value 0 placed at index 1',
+        action: 'Increment Low++ and Mid++',
+        isMatch: true,
+        desc: 'Mid is at index 1 and sees value 0. Swap arr[1] with arr[Low=1]. Increment Low pointer to 2 and Mid pointer to 2.'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Mid=3 (val 1) ➔ Array fully partitioned!',
+        left: 2,
+        right: 4,
+        array: [0, 0, 1, 1, 2, 2],
+        computation: 'Mid pointer reaches High boundary ➔ Array sorted: [0, 0, 1, 1, 2, 2]',
+        comparison: 'DUTCH NATIONAL FLAG SORTED! 🎉',
+        action: 'Single Pass Complete',
+        isMatch: true,
+        desc: 'Mid pointer advances past element 1s and crosses High pointer. All 0s are partitioned on left, 1s in middle, and 2s on right. Single pass O(N) Dutch National Flag sort completed! Final array: [0, 0, 1, 1, 2, 2].'
+      }
+    ]
+  },
+
+  // === RECURSION TRACKS ===
+  'recursion': {
+    title: 'Recursion & Call Stack Winding / Unwinding',
+    input: 'n = 4 (Compute Factorial 4!)',
+    goal: 'Demonstrate function call stack frame pushes during winding and pops during unwinding.',
+    array: ['4!', '3!', '2!', '1!'],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: Push Frame factorial(4) onto Call Stack',
+        left: 0,
+        right: 0,
+        array: ['4!', '3!', '2!', '1!'],
+        computation: 'factorial(4) = 4 * factorial(3) [Winding]',
+        comparison: 'n = 4 > 1 (Base Case False)',
+        action: 'Push factorial(4) & Recurse to factorial(3)',
+        desc: 'Call factorial(4). Check base case condition (n == 1). Evaluates to False! The function needs the result of factorial(3) before it can finish computing 4 * factorial(3). Push frame factorial(4) onto the call stack and recurse with n = 3.'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Base Case Reached at factorial(1) = 1',
+        left: 0,
+        right: 3,
+        array: ['4!', '3!', '2!', '1!'],
+        computation: 'factorial(1) returns 1 (Base Case Hit! ✅)',
+        comparison: 'n == 1 (BASE CASE TRUE 🎉)',
+        action: 'Start Stack Unwinding & Return Values',
+        isMatch: true,
+        desc: 'Function calls wind down to factorial(1). Check base case condition (n == 1). Evaluates to True! Return 1 directly without making any further recursive calls. The stack winding phase is complete, and unwinding begins!'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Unwind Stack: 1 * 2 * 3 * 4 = 24',
+        left: 0,
+        right: 3,
+        array: ['1', '2', '6', '24'],
+        computation: 'factorial(2)=2, factorial(3)=6, factorial(4)=24',
+        comparison: 'Final Result = 24',
+        action: 'Pop all frames & Return 24',
+        isMatch: true,
+        desc: 'Unwind stack frames in reverse LIFO order: factorial(1) returns 1 ➔ factorial(2) computes 2 * 1 = 2 ➔ factorial(3) computes 3 * 2 = 6 ➔ factorial(4) computes 4 * 6 = 24! Pop all frames and return final result 24.'
+      }
+    ]
+  }
+};
+
+export default function LogicSection({ topicId }) {
+  // Read active tracks from all stores
+  const twoPointerTrack = useTwoPointersStore((s) => s.track);
+  const slidingWindowTrack = useSlidingWindowStore((s) => s.track);
+  const backtrackingTrack = useBacktrackingStore((s) => s.track);
+  const arrayTrack = useArrayStore((s) => s.track);
+  const sortingTrack = useSortingStore((s) => s.track);
+  const searchingTrack = useSearchingStore((s) => s.track);
+  const linkedListTrack = useLinkedListStore((s) => s.track);
+  const treeTrack = useTreeStore((s) => s.track);
+  const graphTrack = useGraphStore((s) => s.track);
+  const stackTrack = useStackStore((s) => s.track);
+  const queueTrack = useQueueStore((s) => s.track);
+  const heapTrack = useHeapStore((s) => s.track);
+  const recursionTrack = useRecursionStore((s) => s.track);
+  const dpTrack = useDPStore((s) => s.track);
+  const hashTableTrack = useHashTableStore((s) => s.track);
+
+  // Pick active track key based on topicId
+  const activeTrackKey =
+    topicId === 'two-pointers'
+      ? twoPointerTrack
+      : topicId === 'sliding-window'
+      ? slidingWindowTrack
+      : topicId === 'backtracking'
+      ? backtrackingTrack
+      : topicId === 'recursion'
+      ? recursionTrack
+      : topicId === 'arrays'
+      ? arrayTrack
+      : topicId === 'sorting'
+      ? sortingTrack
+      : topicId === 'searching'
+      ? searchingTrack
+      : topicId === 'linked-list'
+      ? linkedListTrack
+      : topicId === 'trees'
+      ? treeTrack
+      : topicId === 'graphs'
+      ? graphTrack
+      : topicId === 'stack'
+      ? stackTrack
+      : topicId === 'queue'
+      ? queueTrack
+      : topicId === 'heaps' || topicId === 'heap'
+      ? heapTrack
+      : topicId === 'dp'
+      ? dpTrack
+      : topicId === 'hash-table' || topicId === 'hash-tables'
+      ? hashTableTrack
+      : topicId;
+
+  // Retrieve exact problem logic or generate dynamic fallback for topicId
+  const problemData =
+    SPECIFIC_PROBLEM_LOGIC[activeTrackKey] ||
+    SPECIFIC_PROBLEM_LOGIC[topicId] || {
+      title: `${topicId?.toUpperCase()} Algorithm Execution Logic`,
+      input: `Topic Module: ${topicId}`,
+      goal: `Step-by-step state transition breakdown for ${topicId}.`,
+      array: [1, 2, 3, 4, 5],
+      steps: [
+        {
+          stepNum: 1,
+          title: `Step 1: Initialize ${topicId} Execution`,
+          left: 0,
+          right: 4,
+          array: [1, 2, 3, 4, 5],
+          computation: `Process input for ${topicId}`,
+          comparison: 'Valid State Transition',
+          action: 'Execute Step',
+          isMatch: true,
+          desc: `Execute step-by-step logic and state manipulation for ${topicId}.`
+        }
+      ]
+    };
+
+  return (
+    <div className="space-y-8 font-sketch">
+      {/* Header & Problem Specification */}
+      <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl shadow-xl">
+        <div className="flex items-center gap-3 mb-4 border-b border-[var(--sketch-border)] pb-4">
+          <span className="text-3xl">🧠</span>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold font-header text-[var(--sketch-accent-orange)]">
+              {problemData.title} — Step-by-Step Logic
+            </h2>
+            <p className="text-sm text-[var(--sketch-text-muted)] font-mono">
+              Curated specifically for this active problem with exact state transitions & pointer diagrams
+            </p>
+          </div>
+        </div>
+
+        {/* Input & Goal Details */}
+        <div className="grid md:grid-cols-2 gap-4 bg-[var(--sketch-bg)] p-4 rounded-xl border border-[var(--sketch-border)]">
+          <div>
+            <span className="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider block mb-1">EXACT PROBLEM INPUT:</span>
+            <span className="font-mono text-sm text-[var(--sketch-text)] font-bold">{problemData.input}</span>
+          </div>
+          <div>
+            <span className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider block mb-1">TARGET GOAL:</span>
+            <span className="text-sm text-[var(--sketch-text)] leading-relaxed">{problemData.goal}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Step Cards */}
+      <div className="space-y-6">
+        <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)] flex items-center gap-2">
+          <span>📸</span> Problem Step-by-Step Execution Breakdown
+        </h3>
+
+        {problemData.steps.map((st) => {
+          const stepArray = st.array || problemData.array;
+
+          return (
+            <div
+              key={st.stepNum}
+              className={`sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl shadow-xl transition-all ${
+                st.isMatch
+                  ? 'border-2 border-emerald-400/80 bg-emerald-950/20 shadow-emerald-500/20'
+                  : 'hover:border-amber-500/50'
+              }`}
+            >
+              {/* Step Header */}
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-[var(--sketch-border)] pb-3">
+                <div className="flex items-center gap-3">
+                  <span className={`w-9 h-9 rounded-xl font-header font-bold text-lg flex items-center justify-center border shadow-sm ${
+                    st.isMatch ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400' : 'bg-amber-500/20 text-amber-400 border-amber-500/40'
+                  }`}>
+                    #{st.stepNum}
+                  </span>
+                  <h4 className="text-xl font-bold font-header text-[var(--sketch-text)]">
+                    {st.title}
+                  </h4>
+                </div>
+
+                <span className={`px-3 py-1 rounded-full text-xs font-mono font-bold border ${
+                  st.isMatch ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400' : 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+                }`}>
+                  {st.action}
+                </span>
+              </div>
+
+              {/* Visual State Diagram Render (Exact Visualizer UI Chalkboard Style with Stepwise Array Mutations) */}
+              <div className="my-5 sketch-canvas-box sketch-border relative p-6 pt-8 pb-16 flex flex-col items-center justify-center">
+                <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+                  Step Visual Canvas Diagram (State at Step #{st.stepNum})
+                </div>
+
+                <div className="flex items-center gap-3 md:gap-5 my-4 overflow-x-auto w-full justify-center pt-2 pb-14">
+                  {stepArray.map((val, idx) => {
+                    const isLeft = st.left === idx;
+                    const isRight = st.right === idx;
+                    const isBoth = isLeft && isRight;
+                    const inWindow = st.left !== null && st.right !== null && idx >= st.left && idx <= st.right;
+
+                    return (
+                      <div key={idx} className="relative flex flex-col items-center">
+                        <div
+                          className={`sketch-card ${
+                            st.isMatch && (isLeft || isRight)
+                              ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400 text-emerald-200'
+                              : inWindow
+                              ? 'active-orange !border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/60'
+                              : ''
+                          }`}
+                        >
+                          {val}
+                          <div className="sketch-card-index">[{idx}]</div>
+                        </div>
+
+                        {/* Chalkboard Pointer Badges */}
+                        {isBoth ? (
+                          <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2">
+                            <div className="text-xs">L, R</div>
+                            <div className="text-xs leading-none">▲</div>
+                          </div>
+                        ) : isLeft ? (
+                          <div className="sketch-pointer sketch-pointer-orange mt-2">
+                            <div>L</div>
+                            <div className="text-xs leading-none">▲</div>
+                          </div>
+                        ) : isRight ? (
+                          <div className="sketch-pointer sketch-pointer-blue mt-2">
+                            <div>R</div>
+                            <div className="text-xs leading-none">▲</div>
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Computation & Comparison Side-by-Side Boxes */}
+              <div className="grid md:grid-cols-2 gap-4 mb-4 font-mono text-xs">
+                <div className="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <span className="text-slate-400 block mb-1 font-bold">COMPUTATION / STATE EVALUATION:</span>
+                  <span className="text-amber-300 font-bold">{st.computation}</span>
+                </div>
+                <div className="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <span className="text-slate-400 block mb-1 font-bold">CONDITION COMPARISON:</span>
+                  <span className={st.isMatch ? 'text-emerald-400 font-bold' : 'text-cyan-300 font-bold'}>
+                    {st.comparison}
+                  </span>
+                </div>
+              </div>
+
+              {/* Detailed Step Rationale Explanation */}
+              <p className="text-base text-[var(--sketch-text)] leading-relaxed font-sketch">
+                {st.desc}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

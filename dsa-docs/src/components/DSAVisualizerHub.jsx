@@ -4,6 +4,8 @@ import DSATopicIcon from './visualizer-common/DSATopicIcon.jsx';
 
 const DSA_TOPICS = [
   { id: 'two-pointers', icon: '👉👈', label: 'Two Pointers', desc: 'Opposite-ends & fast-slow pointer walks (Two Sum II, 3Sum, Container Water)', color: '#f59e0b', trackCount: 8 },
+  { id: 'sliding-window', icon: '🪟', label: 'Sliding Window', desc: 'Contiguous subarray/substring window algorithms (Fixed K sum, Longest Substring, Min Subarray Sum)', color: '#10b981', trackCount: 5 },
+  { id: 'backtracking', icon: '🧩', label: 'Backtracking', desc: 'State space tree search and constraint pruning (N-Queens, Sudoku Solver, Subsets)', color: '#ec4899', trackCount: 3 },
   { id: 'arrays', icon: '📋', label: 'Arrays', desc: 'Access, insertion, deletion, prefix sum, and array reversals', color: '#7c3aed', trackCount: 6 },
   { id: 'sorting', icon: '🔀', label: 'Sorting Algorithms', desc: 'Bubble, Selection, Insertion, Quick, and Merge Sort step-by-step', color: '#c026d3', trackCount: 5 },
   { id: 'trees', icon: '🌳', label: 'Trees & BST', desc: 'Binary search tree lookups, Inorder, Preorder, and Postorder traversals', color: '#10b981', trackCount: 4 },

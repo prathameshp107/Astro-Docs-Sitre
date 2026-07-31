@@ -13,6 +13,8 @@ import { useHeapStore } from '../../store/visualizers/heapStore';
 import { useRecursionStore } from '../../store/visualizers/recursionStore';
 import { useDPStore } from '../../store/visualizers/dpStore';
 import { useHashTableStore } from '../../store/visualizers/hashTableStore';
+import { useSlidingWindowStore } from '../../store/visualizers/slidingWindowStore';
+import { useBacktrackingStore } from '../../store/visualizers/backtrackingStore';
 
 const TOPIC_TRACKS = {
   'two-pointers': {
@@ -27,6 +29,26 @@ const TOPIC_TRACKS = {
       { id: 'move-zeroes', label: '6. Move Zeroes', subtitle: 'Fast & slow pointers in-place swap' },
       { id: 'remove-duplicates', label: '7. Remove Duplicates', subtitle: 'In-place array overwrite · O(n)' },
       { id: 'sort-colors', label: '8. Sort Colors', subtitle: 'Dutch National Flag 3-pointer partition' },
+    ],
+  },
+  'sliding-window': {
+    title: 'Sliding Window',
+    icon: '🪟',
+    items: [
+      { id: 'intro', label: '1. Introduction', subtitle: 'Fixed window slide concept (K=3)' },
+      { id: 'max-sum-subarray', label: '2. Max Sum Subarray K', subtitle: 'Fixed window size K max sum' },
+      { id: 'longest-substring', label: '3. Longest Substring', subtitle: 'Non-repeating chars dynamic window' },
+      { id: 'min-subarray-sum', label: '4. Min Subarray Sum', subtitle: 'Dynamic window target sum shrink' },
+      { id: 'fruit-into-baskets', label: '5. Fruit Into Baskets', subtitle: 'Max 2 distinct character types' },
+    ],
+  },
+  'backtracking': {
+    title: 'Backtracking',
+    icon: '🧩',
+    items: [
+      { id: 'n-queens', label: '1. N-Queens Problem', subtitle: '4x4 Chessboard non-attacking placement' },
+      { id: 'sudoku', label: '2. Sudoku Solver', subtitle: '4x4 Mini Sudoku constraint solver' },
+      { id: 'subsets', label: '3. Subsets (Power Set)', subtitle: 'Include / Exclude decision tree' },
     ],
   },
   arrays: {
@@ -168,7 +190,9 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
   const { track: activeRecursionTrack, setTrack: setRecursionTrack } = useRecursionStore();
   const { track: activeDPTrack, setTrack: setDPTrack } = useDPStore();
   const { track: activeHashTableTrack, setTrack: setHashTableTrack } = useHashTableStore();
-  const [expandedTopics, setExpandedTopics] = useState({ 'two-pointers': true, arrays: true, sorting: true, searching: true, 'linked-list': true, trees: true, graphs: true, stack: true, queue: true, heaps: true, recursion: true, dp: true, 'hash-table': true });
+  const { track: activeSlidingWindowTrack, setTrack: setSlidingWindowTrack } = useSlidingWindowStore();
+  const { track: activeBacktrackingTrack, setTrack: setBacktrackingTrack } = useBacktrackingStore();
+  const [expandedTopics, setExpandedTopics] = useState({ 'two-pointers': true, 'sliding-window': true, backtracking: true, arrays: true, sorting: true, searching: true, 'linked-list': true, trees: true, graphs: true, stack: true, queue: true, heaps: true, recursion: true, dp: true, 'hash-table': true });
 
   // Save scroll position on user scroll
   const handleScroll = (e) => {
@@ -240,6 +264,8 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                 <ul className="pl-4 space-y-1 border-l-2 border-[var(--sketch-border)] ml-2">
                   {topicData.items.map((item) => {
                     const isTwoPointerTopic = topicId === 'two-pointers';
+                    const isSlidingWindowTopic = topicId === 'sliding-window';
+                    const isBacktrackingTopic = topicId === 'backtracking';
                     const isArrayTopic = topicId === 'arrays';
                     const isSortingTopic = topicId === 'sorting';
                     const isSearchingTopic = topicId === 'searching';
@@ -257,6 +283,10 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                       isCurrentTopic &&
                       (isTwoPointerTopic
                         ? activeTwoPointerTrack === item.id
+                        : isSlidingWindowTopic
+                        ? activeSlidingWindowTrack === item.id
+                        : isBacktrackingTopic
+                        ? activeBacktrackingTrack === item.id
                         : isArrayTopic
                         ? activeArrayTrack === item.id
                         : isSortingTopic
@@ -291,6 +321,8 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                         window.location.href = `${currentBase}visualizer/${topicId}`;
                       } else {
                         if (isTwoPointerTopic) setTwoPointerTrack(item.id);
+                        if (isSlidingWindowTopic) setSlidingWindowTrack(item.id);
+                        if (isBacktrackingTopic) setBacktrackingTrack(item.id);
                         if (isArrayTopic) setArrayTrack(item.id);
                         if (isSortingTopic) setSortingTrack(item.id);
                         if (isSearchingTopic) setSearchingTrack(item.id);
@@ -308,7 +340,7 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
 
                     return (
                       <li key={item.id} ref={isSelected ? selectedItemRef : null}>
-                        {isTwoPointerTopic || isArrayTopic || isSortingTopic || isSearchingTopic || isLinkedListTopic || isTreeTopic || isGraphTopic || isStackTopic || isQueueTopic || isHeapTopic || isRecursionTopic || isDPTopic || isHashTableTopic ? (
+                        {isTwoPointerTopic || isSlidingWindowTopic || isBacktrackingTopic || isArrayTopic || isSortingTopic || isSearchingTopic || isLinkedListTopic || isTreeTopic || isGraphTopic || isStackTopic || isQueueTopic || isHeapTopic || isRecursionTopic || isDPTopic || isHashTableTopic ? (
                           <button
                             onClick={handleClick}
                             className={`w-full text-left block px-3 py-1.5 rounded-lg transition-all ${

@@ -593,9 +593,9 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
 
   const articleDocSlug = ARTICLE_SLUG_MAP[slug] || (slug.startsWith('design-') ? slug : `design-${slug}`);
 
-  const base = (typeof window !== 'undefined' && window.location.pathname.startsWith('/DSA-Notes-Problems')) 
-    ? '/DSA-Notes-Problems' 
-    : '';
+  const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
+    ? import.meta.env.BASE_URL.replace(/\/$/, '')
+    : '/DSA-Notes-Problems';
 
   return (
     <div className="case-study-interactive-page font-sketch max-w-6xl mx-auto px-4 py-6">

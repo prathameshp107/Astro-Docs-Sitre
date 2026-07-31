@@ -16,10 +16,14 @@ import RecursionVisualizer from './RecursionVisualizer';
 import DPVisualizer from './DPVisualizer';
 import SearchingVisualizer from './SearchingVisualizer';
 import TwoPointersVisualizer from './TwoPointersVisualizer';
+import SlidingWindowVisualizer from './SlidingWindowVisualizer';
+import BacktrackingVisualizer from './BacktrackingVisualizer';
 import HashTableVisualizer from './HashTableVisualizer';
 
 const VISUALIZER_MAP = {
   'two-pointers': TwoPointersVisualizer,
+  'sliding-window': SlidingWindowVisualizer,
+  'backtracking': BacktrackingVisualizer,
   arrays: ArrayVisualizer,
   sorting: SortingVisualizer,
   searching: SearchingVisualizer,
@@ -116,6 +120,7 @@ function AccordionItem({ question, difficulty, hint, index }) {
 }
 
 import VisualizerSidebar from './VisualizerSidebar';
+import LogicSection from './LogicSection';
 
 export default function DSAVisualizerPage({ topicId }) {
   const normalizedTopicId = topicId === 'heaps' ? 'heap' : topicId;
@@ -180,6 +185,7 @@ export default function DSAVisualizerPage({ topicId }) {
 
   const sections = [
     { id: 'visualizer', label: 'Visualizer', icon: '🎨' },
+    { id: 'logic', label: 'Core Logic & Breakdown', icon: '🧠' },
     { id: 'overview', label: 'Overview', icon: '📖' },
     { id: 'complexity', label: 'Complexity', icon: '⚡' },
     { id: 'code', label: 'Code Examples', icon: '💻' },
@@ -246,7 +252,7 @@ export default function DSAVisualizerPage({ topicId }) {
         {/* Visualizer Section */}
         {activeSection === 'visualizer' && (
           <div className="mb-10">
-            {topicId === 'two-pointers' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' ? (
+            {topicId === 'two-pointers' || topicId === 'sliding-window' || topicId === 'backtracking' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' ? (
               <VisualizerComponent />
             ) : (
               <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl text-center shadow-xl">
@@ -261,6 +267,13 @@ export default function DSAVisualizerPage({ topicId }) {
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Dedicated Core Logic Section */}
+        {activeSection === 'logic' && (
+          <div className="mb-10">
+            <LogicSection topicId={topicId} />
           </div>
         )}
 

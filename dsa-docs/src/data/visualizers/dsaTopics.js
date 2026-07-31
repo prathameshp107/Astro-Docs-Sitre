@@ -78,6 +78,197 @@ def two_sum_ii(numbers: list[int], target: int) -> list[int]:
       { question: 'Container With Most Water', difficulty: 'Medium', hint: 'Width decreases every step, so move the shorter line inward to attempt finding a higher line.' },
     ],
   },
+  'sliding-window': {
+    title: 'Sliding Window',
+    icon: '🪟',
+    description: 'An optimization technique that maintains a running window (subsegment) over an array or string to process contiguous elements in O(n) time.',
+    overview: {
+      what: 'The Sliding Window pattern reuses computational results from previous contiguous subarrays by expanding or contracting boundaries (L and R pointers) instead of recalculating from scratch.',
+      why: 'Transforms brute-force O(n * k) or O(n²) contiguous subarray/substring search algorithms into optimal O(n) single-pass solutions.',
+      examples: ['Maximum Sum Subarray of Size K', 'Longest Substring Without Repeating Characters', 'Minimum Size Subarray Sum', 'Fruit Into Baskets', 'Sliding Window Maximum'],
+      advantages: ['Reduces nested O(n²) or O(n*k) loops to linear O(n) time', 'Reuses rolling sum/frequency state without re-scanning elements', 'Handles both fixed-size windows and dynamic-size shrinking/expanding windows'],
+      disadvantages: ['Only applicable to contiguous subarrays or substrings', 'Requires extra space for frequency maps or deque in complex variants', 'Careful state update order when shrinking left boundary'],
+    },
+    complexity: [
+      { operation: 'Max Sum Subarray Size K', time: 'O(n)', space: 'O(1)' },
+      { operation: 'Longest Substring Without Repeats', time: 'O(n)', space: 'O(k)' },
+      { operation: 'Minimum Size Subarray Sum', time: 'O(n)', space: 'O(1)' },
+      { operation: 'Fruit Into Baskets', time: 'O(n)', space: 'O(1)' },
+      { operation: 'Sliding Window Maximum (Deque)', time: 'O(n)', space: 'O(k)' },
+    ],
+    code: {
+      javascript: `// Longest Substring Without Repeating Characters (Sliding Window in JS)
+function lengthOfLongestSubstring(s) {
+  let left = 0, maxLen = 0;
+  const seen = new Set();
+  
+  for (let right = 0; right < s.length; right++) {
+    while (seen.has(s[right])) {
+      seen.delete(s[left]);
+      left++;
+    }
+    seen.add(s[right]);
+    maxLen = Math.max(maxLen, right - left + 1);
+  }
+  return maxLen;
+}`,
+      typescript: `function lengthOfLongestSubstring(s: string): number {
+  let left = 0, maxLen = 0;
+  const seen = new Set<string>();
+  
+  for (let right = 0; right < s.length; right++) {
+    while (seen.has(s[right])) {
+      seen.delete(s[left]);
+      left++;
+    }
+    seen.add(s[right]);
+    maxLen = Math.max(maxLen, right - left + 1);
+  }
+  return maxLen;
+}`,
+      python: `# Longest Substring Without Repeating Characters in Python
+def length_of_longest_substring(s: str) -> int:
+    left, max_len = 0, 0
+    seen = set()
+    
+    for right in range(len(s)):
+        while s[right] in seen:
+            seen.remove(s[left])
+            left += 1
+        seen.add(s[right])
+        max_len = max(max_len, right - left + 1)
+    return max_len`,
+      java: `public int lengthOfLongestSubstring(String s) {
+    int left = 0, maxLen = 0;
+    Set<Character> seen = new HashSet<>();
+    
+    for (int right = 0; right < s.length(); right++) {
+        while (seen.contains(s.charAt(right))) {
+            seen.remove(s.charAt(left));
+            left++;
+        }
+        seen.add(s.charAt(right));
+        maxLen = Math.max(maxLen, right - left + 1);
+    }
+    return maxLen;
+}`,
+      cpp: `int lengthOfLongestSubstring(string s) {
+    int left = 0, maxLen = 0;
+    unordered_set<char> seen;
+    
+    for (int right = 0; right < s.length(); right++) {
+        while (seen.count(s[right])) {
+            seen.erase(s[left]);
+            left++;
+        }
+        seen.insert(s[right]);
+        maxLen = max(maxLen, right - left + 1);
+    }
+    return maxLen;
+}`,
+    },
+    interviewQuestions: [
+      { question: 'Longest Substring Without Repeating Characters', difficulty: 'Medium', hint: 'Use dynamic sliding window. Shrink left boundary whenever a duplicate character is encountered.' },
+      { question: 'Minimum Size Subarray Sum', difficulty: 'Medium', hint: 'Expand right to reach target sum, then contract left boundary while sum remains >= target.' },
+      { question: 'Sliding Window Maximum', difficulty: 'Hard', hint: 'Maintain a monotonically decreasing deque of element indices.' },
+    ],
+  },
+  'backtracking': {
+    title: 'Backtracking',
+    icon: '🧩',
+    description: 'An algorithmic technique for solving constraint satisfaction problems incrementally, removing choices that fail to satisfy constraints.',
+    overview: {
+      what: 'Backtracking builds candidates for solutions step-by-step and abandons ("backtracks") a candidate as soon as it determines it cannot lead to a valid solution.',
+      why: 'Prunes huge search spaces (like N-Queens or Sudoku) by halting recursive branches early instead of exhaustively testing all combinations.',
+      examples: ['N-Queens Problem', 'Sudoku Solver', 'Subsets & Power Set', 'Permutations & Combinations', 'Word Search in 2D Grid'],
+      advantages: ['Guarantees finding all valid solutions or proving no solution exists', 'Significantly faster than brute-force permutation search', 'Memory efficient via single mutable state recursion'],
+      disadvantages: ['Worst-case exponential time complexity O(2^N) or O(N!)', 'Requires careful constraint check optimization to avoid TLE'],
+    },
+    complexity: [
+      { operation: 'N-Queens', time: 'O(N!)', space: 'O(N)' },
+      { operation: 'Sudoku Solver', time: 'O(9^(N*N))', space: 'O(N*N)' },
+      { operation: 'Subsets (Power Set)', time: 'O(2^N)', space: 'O(N)' },
+      { operation: 'Permutations', time: 'O(N!)', space: 'O(N)' },
+    ],
+    code: {
+      javascript: `// N-Queens Backtracking in JavaScript
+function solveNQueens(n) {
+  const result = [];
+  const board = Array(n).fill().map(() => Array(n).fill('.'));
+  
+  function backtrack(row) {
+    if (row === n) {
+      result.push(board.map(r => r.join('')));
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      if (isValid(board, row, col, n)) {
+        board[row][col] = 'Q';
+        backtrack(row + 1);
+        board[row][col] = '.'; // Backtrack
+      }
+    }
+  }
+  backtrack(0);
+  return result;
+}`,
+      typescript: `function solveNQueens(n: number): string[][] {
+  const result: string[][] = [];
+  const board: string[][] = Array(n).fill(null).map(() => Array(n).fill('.'));
+  
+  function backtrack(row: number): void {
+    if (row === n) {
+      result.push(board.map(r => r.join('')));
+      return;
+    }
+    for (let col = 0; col < n; col++) {
+      if (isValid(board, row, col, n)) {
+        board[row][col] = 'Q';
+        backtrack(row + 1);
+        board[row][col] = '.';
+      }
+    }
+  }
+  backtrack(0);
+  return result;
+}`,
+      python: `# N-Queens Backtracking in Python
+def solveNQueens(n: int) -> list[list[str]]:
+    res = []
+    board = [["."] * n for _ in range(n)]
+    
+    def backtrack(r):
+        if r == n:
+            res.append(["".join(row) for row in board])
+            return
+        for c in range(n):
+            if is_valid(board, r, c, n):
+                board[r][c] = "Q"
+                backtrack(r + 1)
+                board[r][c] = "."
+                
+    backtrack(0)
+    return res`,
+      java: `public List<List<String>> solveNQueens(int n) {
+    List<List<String>> result = new ArrayList<>();
+    char[][] board = new char[n][n];
+    for (char[] row : board) Arrays.fill(row, '.');
+    backtrack(0, board, result, n);
+    return result;
+}`,
+      cpp: `vector<vector<string>> solveNQueens(int n) {
+    vector<vector<string>> result;
+    vector<string> board(n, string(n, '.'));
+    backtrack(0, board, result, n);
+    return result;
+}`,
+    },
+    interviewQuestions: [
+      { question: 'N-Queens', difficulty: 'Hard', hint: 'Place queens row by row. Track columns, positive diagonals, and negative diagonals using boolean arrays.' },
+      { question: 'Sudoku Solver', difficulty: 'Hard', hint: 'Find the first empty cell, try digits 1-9, check row/col/box validity, and backtrack on failure.' },
+      { question: 'Subsets', difficulty: 'Medium', hint: 'At each index, make 2 choices: Include current element in path, or Exclude it.' },
+    ],
+  },
   arrays: {
     title: 'Arrays',
     icon: '\u{1F4CB}',

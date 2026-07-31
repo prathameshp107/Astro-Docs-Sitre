@@ -56,18 +56,48 @@ const HLD_TOPICS = [
 export default function SystemDesignHub() {
   const [activeTab, setActiveTab] = useState('case-studies');
 
-  const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? '';
+  const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
+    ? import.meta.env.BASE_URL.replace(/\/$/, '')
+    : '/DSA-Notes-Problems';
 
   return (
     <div className="sys-hub-container font-sketch max-w-6xl mx-auto px-4 py-8">
+      {/* Top Cross-Hub Navigation Header (Outside & Above Hero Section) */}
+      <nav className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-[var(--sketch-border)]">
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href={`${base}/system-design`}
+            className="sketch-button flex items-center gap-1.5 text-xs font-bold text-amber-400 border-amber-500/50 bg-amber-500/10 py-1.5 px-3.5 rounded-xl shadow-sm"
+          >
+            🏗️ System Design (HLD)
+          </a>
+          <a
+            href={`${base}/lld`}
+            className="sketch-button flex items-center gap-1.5 text-xs font-bold text-[var(--sketch-text-muted)] hover:text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/40 py-1.5 px-3.5 rounded-xl transition-all"
+          >
+            ⚙️ Low-Level (LLD Hub) →
+          </a>
+          <a
+            href={`${base}/ood`}
+            className="sketch-button flex items-center gap-1.5 text-xs font-bold text-[var(--sketch-text-muted)] hover:text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/40 py-1.5 px-3.5 rounded-xl transition-all"
+          >
+            🧩 Object-Oriented (OOD Hub) →
+          </a>
+        </div>
+
+        <span className="sketch-border-soft px-3 py-1 text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+          ⚡ ARCHITECTURE & SYSTEM DESIGN HUB
+        </span>
+      </nav>
+
       {/* Redesigned Chalkboard Hero Header Section */}
       <section className="sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">
         {/* Top Control & Quick Launcher Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[var(--sketch-border)] mb-6">
           <div className="flex items-center gap-2">
-            <span className="sketch-border-soft px-3 py-1 text-xs font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-              ⚡ ARCHITECTURE & SYSTEM DESIGN HUB
+            <span className="text-xs font-mono font-bold text-[var(--sketch-text-muted)]">
+              Interactive System Architecture Studio
             </span>
           </div>
 
@@ -163,25 +193,31 @@ export default function SystemDesignHub() {
         </div>
       </section>
 
-      {/* Chalkboard Mode Tabs */}
+      {/* Chalkboard Mode Tabs & Standalone Hub Links */}
       <div className="flex flex-wrap items-center justify-center gap-3 mb-10 font-sketch">
         <button 
           className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'case-studies' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
           onClick={() => setActiveTab('case-studies')}
         >
-          <span>📂</span> Case Studies
+          <span>📂</span> HLD Case Studies
         </button>
+        <a 
+          href={`${base}/lld`}
+          className="sketch-button text-base font-bold flex items-center gap-2 text-emerald-400 border-emerald-500/60 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all shadow-md"
+        >
+          <span>⚙️</span> Low-Level Design Hub (LLD) →
+        </a>
+        <a 
+          href={`${base}/ood`}
+          className="sketch-button text-base font-bold flex items-center gap-2 text-cyan-400 border-cyan-500/60 bg-cyan-500/10 hover:bg-cyan-500/20 transition-all shadow-md"
+        >
+          <span>🧩</span> Object-Oriented Design (OOD) →
+        </a>
         <button 
           className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'calculator' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
           onClick={() => setActiveTab('calculator')}
         >
           <span>🧮</span> Capacity Calculator
-        </button>
-        <button 
-          className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'lld' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
-          onClick={() => setActiveTab('lld')}
-        >
-          <span>⚙️</span> LLD / OOP Design
         </button>
         <button 
           className={`sketch-button text-base font-bold flex items-center gap-2 transition-all ${activeTab === 'advisor' ? 'bg-amber-500/20 border-amber-500 text-amber-500 shadow-lg' : ''}`}
