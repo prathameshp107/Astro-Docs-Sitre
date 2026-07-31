@@ -217,6 +217,65 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
     return () => clearTimeout(timer);
   }, [activeTopicId, activeTwoPointerTrack, activeArrayTrack, activeSortingTrack, activeSearchingTrack, activeLinkedListTrack, activeTreeTrack, activeGraphTrack, activeStackTrack, activeQueueTrack, activeHeapTrack, activeRecursionTrack, activeDPTrack, activeHashTableTrack]);
 
+  // 1. Initial Load: Parse URL Query Params (?track=... or ?problem=...)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const initialTrack = params.get('track') || params.get('problem');
+    if (!initialTrack) return;
+
+    if (activeTopicId === 'two-pointers') setTwoPointerTrack(initialTrack);
+    else if (activeTopicId === 'sliding-window') setSlidingWindowTrack(initialTrack);
+    else if (activeTopicId === 'backtracking') setBacktrackingTrack(initialTrack);
+    else if (activeTopicId === 'arrays') setArrayTrack(initialTrack);
+    else if (activeTopicId === 'sorting') setSortingTrack(initialTrack);
+    else if (activeTopicId === 'searching') setSearchingTrack(initialTrack);
+    else if (activeTopicId === 'linked-list') setLinkedListTrack(initialTrack);
+    else if (activeTopicId === 'trees') setTreeTrack(initialTrack);
+    else if (activeTopicId === 'graphs') setGraphTrack(initialTrack);
+    else if (activeTopicId === 'stack') setStackTrack(initialTrack);
+    else if (activeTopicId === 'queue') setQueueTrack(initialTrack);
+    else if (activeTopicId === 'heaps' || activeTopicId === 'heap') setHeapTrack(initialTrack);
+    else if (activeTopicId === 'recursion') setRecursionTrack(initialTrack);
+    else if (activeTopicId === 'dp') setDPTrack(initialTrack);
+    else if (activeTopicId === 'hash-table' || activeTopicId === 'hash-tables') setHashTableTrack(initialTrack);
+  }, [activeTopicId]);
+
+  // 2. Reactive Sync: Keep URL Query Param (?track=...) in sync with Active Store Track
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const currentTrack =
+      activeTopicId === 'two-pointers' ? activeTwoPointerTrack :
+      activeTopicId === 'sliding-window' ? activeSlidingWindowTrack :
+      activeTopicId === 'backtracking' ? activeBacktrackingTrack :
+      activeTopicId === 'arrays' ? activeArrayTrack :
+      activeTopicId === 'sorting' ? activeSortingTrack :
+      activeTopicId === 'searching' ? activeSearchingTrack :
+      activeTopicId === 'linked-list' ? activeLinkedListTrack :
+      activeTopicId === 'trees' ? activeTreeTrack :
+      activeTopicId === 'graphs' ? activeGraphTrack :
+      activeTopicId === 'stack' ? activeStackTrack :
+      activeTopicId === 'queue' ? activeQueueTrack :
+      (activeTopicId === 'heaps' || activeTopicId === 'heap') ? activeHeapTrack :
+      activeTopicId === 'recursion' ? activeRecursionTrack :
+      activeTopicId === 'dp' ? activeDPTrack :
+      (activeTopicId === 'hash-table' || activeTopicId === 'hash-tables') ? activeHashTableTrack : null;
+
+    if (currentTrack) {
+      const url = new URL(window.location.href);
+      if (url.searchParams.get('track') !== currentTrack) {
+        url.searchParams.set('track', currentTrack);
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+  }, [
+    activeTopicId, activeTwoPointerTrack, activeArrayTrack, activeSortingTrack,
+    activeSearchingTrack, activeLinkedListTrack, activeTreeTrack, activeGraphTrack,
+    activeStackTrack, activeQueueTrack, activeHeapTrack, activeRecursionTrack,
+    activeDPTrack, activeHashTableTrack, activeSlidingWindowTrack, activeBacktrackingTrack
+  ]);
+
   const toggleTopic = (id) => {
     setExpandedTopics((prev) => ({ ...prev, [id]: !prev[id] }));
   };
@@ -318,7 +377,7 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                         sessionStorage.setItem('dsa_sidebar_scroll', sidebarRef.current.scrollTop);
                       }
                       if (!isCurrentTopic) {
-                        window.location.href = `${currentBase}visualizer/${topicId}`;
+                        window.location.href = `${currentBase}visualizer/${topicId}?track=${item.id}`;
                       } else {
                         if (isTwoPointerTopic) setTwoPointerTrack(item.id);
                         if (isSlidingWindowTopic) setSlidingWindowTrack(item.id);

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-// 1. BUBBLE SORT STEPS WITH KEY INSIGHTS
+// 1. BUBBLE SORT STEPS (11 Granular Steps)
 const BUBBLE_SORT_STEPS = [
   {
     activeLine: 1,
@@ -8,7 +8,15 @@ const BUBBLE_SORT_STEPS = [
     j: 0,
     array: [5, 2, 8, 1, 4],
     state: { keyInsight: 'Bubble largest element to end in each pass by swapping adjacent out-of-order elements O(N^2).', i: 0, j: 0, 'arr[0]': 5, 'arr[1]': 2 },
-    desc: '💡 Key insight: Bubble sort repeatedly swaps adjacent out-of-order elements (arr[j] > arr[j+1]), bubbling the largest element to the end in each pass.',
+    desc: '💡 Key insight: Bubble sort repeatedly compares adjacent pairs (arr[j] > arr[j+1]) and swaps them if out of order, bubbling the largest element to the end in each pass.',
+  },
+  {
+    activeLine: 2,
+    i: 0,
+    j: 0,
+    array: [5, 2, 8, 1, 4],
+    state: { i: 0, j: 0, compare: 'arr[0](5) > arr[1](2) ➔ TRUE ✅', status: 'Swap Required' },
+    desc: 'Step 1: Pass 1 (i=0, j=0). Compare arr[0]=5 with arr[1]=2. Since 5 > 2, swap is required!',
   },
   {
     activeLine: 3,
@@ -16,15 +24,23 @@ const BUBBLE_SORT_STEPS = [
     j: 0,
     array: [2, 5, 8, 1, 4],
     state: { i: 0, j: 0, swap: '5 ↔ 2', array: '[2, 5, 8, 1, 4]' },
-    desc: 'Step 2: arr[0]=5 > arr[1]=2. Swap 5 and 2! Array becomes [2, 5, 8, 1, 4].',
+    desc: 'Step 2: Swap elements 5 and 2. Array transforms to [2, 5, 8, 1, 4].',
   },
   {
     activeLine: 2,
     i: 0,
     j: 1,
     array: [2, 5, 8, 1, 4],
-    state: { i: 0, j: 1, 'arr[1]': 5, 'arr[2]': 8, compare: '5 < 8 (No Swap)' },
-    desc: 'Step 3: arr[1]=5 < arr[2]=8. Already in order! No swap needed.',
+    state: { i: 0, j: 1, compare: 'arr[1](5) > arr[2](8) ➔ FALSE ❌', status: 'In Order' },
+    desc: 'Step 3: Advance j to 1. Compare arr[1]=5 with arr[2]=8. Since 5 < 8, elements are in order (No swap).',
+  },
+  {
+    activeLine: 2,
+    i: 0,
+    j: 2,
+    array: [2, 5, 8, 1, 4],
+    state: { i: 0, j: 2, compare: 'arr[2](8) > arr[3](1) ➔ TRUE ✅', status: 'Swap Required' },
+    desc: 'Step 4: Advance j to 2. Compare arr[2]=8 with arr[3]=1. Since 8 > 1, swap is required!',
   },
   {
     activeLine: 3,
@@ -32,20 +48,60 @@ const BUBBLE_SORT_STEPS = [
     j: 2,
     array: [2, 5, 1, 8, 4],
     state: { i: 0, j: 2, swap: '8 ↔ 1', array: '[2, 5, 1, 8, 4]' },
-    desc: 'Step 4: arr[2]=8 > arr[3]=1. Swap 8 and 1! Array becomes [2, 5, 1, 8, 4].',
+    desc: 'Step 5: Swap elements 8 and 1. Array transforms to [2, 5, 1, 8, 4].',
+  },
+  {
+    activeLine: 2,
+    i: 0,
+    j: 3,
+    array: [2, 5, 1, 8, 4],
+    state: { i: 0, j: 3, compare: 'arr[3](8) > arr[4](4) ➔ TRUE ✅', status: 'Swap Required' },
+    desc: 'Step 6: Advance j to 3. Compare arr[3]=8 with arr[4]=4. Since 8 > 4, swap is required!',
   },
   {
     activeLine: 3,
     i: 0,
     j: 3,
     array: [2, 5, 1, 4, 8],
-    isMatch: true,
     state: { i: 0, j: 3, swap: '8 ↔ 4', sortedSuffix: '[8]', status: 'PASS 1 COMPLETE 🎉' },
-    desc: 'Step 5: arr[3]=8 > arr[4]=4. Swap 8 and 4! Largest element 8 bubbled to end! 🎉',
+    desc: 'Step 7: Swap elements 8 and 4. Array transforms to [2, 5, 1, 4, 8]. Pass 1 complete! Maximum element 8 is locked at end.',
+  },
+  {
+    activeLine: 2,
+    i: 1,
+    j: 1,
+    array: [2, 1, 5, 4, 8],
+    state: { i: 1, j: 1, swap: '5 ↔ 1', array: '[2, 1, 5, 4, 8]' },
+    desc: 'Step 8: Pass 2 (i=1). Compare and swap arr[1]=5 with arr[2]=1. Array becomes [2, 1, 5, 4, 8].',
+  },
+  {
+    activeLine: 3,
+    i: 1,
+    j: 2,
+    array: [2, 1, 4, 5, 8],
+    state: { i: 1, j: 2, swap: '5 ↔ 4', sortedSuffix: '[5, 8]', status: 'PASS 2 COMPLETE 🎉' },
+    desc: 'Step 9: Pass 2 (i=1, j=2). Compare arr[2]=5 > arr[3]=4. Swap 5 and 4. Array transforms to [2, 1, 4, 5, 8]. Element 5 locked.',
+  },
+  {
+    activeLine: 3,
+    i: 2,
+    j: 0,
+    array: [1, 2, 4, 5, 8],
+    state: { i: 2, j: 0, swap: '2 ↔ 1', sortedSuffix: '[2, 4, 5, 8]', status: 'PASS 3 COMPLETE 🎉' },
+    desc: 'Step 10: Pass 3 (i=2). Compare arr[0]=2 > arr[1]=1. Swap 2 and 1. Array becomes [1, 2, 4, 5, 8].',
+  },
+  {
+    activeLine: 4,
+    i: 3,
+    j: 0,
+    isMatch: true,
+    array: [1, 2, 4, 5, 8],
+    state: { status: 'FULLY SORTED 🎉', sortedArray: '[1, 2, 4, 5, 8]' },
+    desc: 'Step 11: Pass 4 (i=3). Zero swaps performed. Array [1, 2, 4, 5, 8] is fully sorted in O(N^2) time! 🎉',
   },
 ];
 
-// 2. SELECTION SORT STEPS WITH KEY INSIGHTS
+// 2. SELECTION SORT STEPS (10 Granular Steps)
 const SELECTION_SORT_STEPS = [
   {
     activeLine: 1,
@@ -56,42 +112,361 @@ const SELECTION_SORT_STEPS = [
     desc: '💡 Key insight: Selection sort scans the unsorted region for the minimum element and swaps it into position i at the end of each pass.',
   },
   {
+    activeLine: 2,
+    i: 0,
+    minIdx: 0,
+    array: [5, 2, 8, 1, 4],
+    state: { i: 0, minIdx: 0, minVal: 5, status: 'Scanning unsorted range [0..4]...' },
+    desc: 'Step 1: Pass 1 (i=0). Set initial minimum index minIdx = 0 (value 5).',
+  },
+  {
+    activeLine: 2,
+    i: 0,
+    minIdx: 1,
+    array: [5, 2, 8, 1, 4],
+    state: { i: 0, j: 1, minIdx: 1, minVal: 2, compare: 'arr[1](2) < arr[0](5) ➔ New Min!' },
+    desc: 'Step 2: Inspect j=1 (val 2). Since 2 < 5, update minIdx = 1.',
+  },
+  {
+    activeLine: 2,
+    i: 0,
+    minIdx: 3,
+    array: [5, 2, 8, 1, 4],
+    state: { i: 0, j: 3, minIdx: 3, minVal: 1, compare: 'arr[3](1) < arr[1](2) ➔ New Min!' },
+    desc: 'Step 3: Inspect j=2 (val 8, no change) and j=3 (val 1). Since 1 < 2, update minIdx = 3.',
+  },
+  {
     activeLine: 3,
     i: 0,
     minIdx: 3,
     array: [5, 2, 8, 1, 4],
-    state: { i: 0, minIdx: 3, minVal: 1 },
-    desc: 'Step 2: Scan unsorted elements. Minimum element found is 1 at index 3.',
+    state: { i: 0, j: 4, minIdx: 3, minVal: 1, status: 'Scan Complete (Min = 1 at index 3)' },
+    desc: 'Step 4: Inspect j=4 (val 4, 4 > 1). Minimum element in unsorted region is 1 at index 3.',
   },
   {
     activeLine: 4,
     i: 0,
     minIdx: 3,
-    isMatch: true,
     array: [1, 2, 8, 5, 4],
-    state: { i: 0, swap: 'arr[0](5) ↔ arr[3](1)', sortedPrefix: '[1]', status: 'PASS 1 COMPLETE 🎉' },
-    desc: 'Step 3: Swap minimum element 1 at index 3 with arr[0]=5. Array becomes [1, 2, 8, 5, 4]! 🎉',
+    state: { i: 0, swap: 'arr[0](5) ↔ arr[3](1)', sortedPrefix: '[1]' },
+    desc: 'Step 5: Swap min element arr[3]=1 with arr[0]=5. Array transforms to [1, 2, 8, 5, 4]. Sorted prefix = [1].',
+  },
+  {
+    activeLine: 2,
+    i: 1,
+    minIdx: 1,
+    array: [1, 2, 8, 5, 4],
+    state: { i: 1, minIdx: 1, minVal: 2, status: 'Min is already at position i=1' },
+    desc: 'Step 6: Pass 2 (i=1). Scan unsorted range [1..4]. Minimum is 2 at index 1. No swap needed! Sorted prefix = [1, 2].',
+  },
+  {
+    activeLine: 2,
+    i: 2,
+    minIdx: 4,
+    array: [1, 2, 8, 5, 4],
+    state: { i: 2, minIdx: 4, minVal: 4, status: 'New Min = 4 at index 4' },
+    desc: 'Step 7: Pass 3 (i=2). Scan unsorted range [2..4] ([8, 5, 4]). Minimum is 4 at index 4.',
+  },
+  {
+    activeLine: 4,
+    i: 2,
+    minIdx: 4,
+    array: [1, 2, 4, 5, 8],
+    state: { i: 2, swap: 'arr[2](8) ↔ arr[4](4)', sortedPrefix: '[1, 2, 4]' },
+    desc: 'Step 8: Swap arr[2]=8 with arr[4]=4. Array transforms to [1, 2, 4, 5, 8]. Sorted prefix = [1, 2, 4].',
+  },
+  {
+    activeLine: 2,
+    i: 3,
+    minIdx: 3,
+    array: [1, 2, 4, 5, 8],
+    state: { i: 3, minIdx: 3, minVal: 5, status: 'Min is 5 at index 3' },
+    desc: 'Step 9: Pass 4 (i=3). Inspect remaining range [5, 8]. Minimum is 5 at index 3.',
+  },
+  {
+    activeLine: 4,
+    i: 3,
+    minIdx: 3,
+    isMatch: true,
+    array: [1, 2, 4, 5, 8],
+    state: { status: 'FULLY SORTED 🎉', sortedArray: '[1, 2, 4, 5, 8]' },
+    desc: 'Step 10: Array [1, 2, 4, 5, 8] is fully sorted in O(N^2) time! 🎉',
   },
 ];
 
-// 3. INSERTION SORT STEPS WITH KEY INSIGHTS
+// 3. INSERTION SORT STEPS (10 Granular Steps) — i=outer index, j=inner scan index (both as array indices)
 const INSERTION_SORT_STEPS = [
   {
     activeLine: 1,
-    i: 1,
-    key: 2,
+    i: 1,        // i points to the element being inserted
+    j: null,     // j not yet set
+    key: 2,      // key value (arr[i])
     array: [5, 2, 8, 1, 4],
     state: { keyInsight: 'Build sorted prefix by taking key arr[i] and shifting larger elements right in O(N^2).', i: 1, key: 2 },
-    desc: '💡 Key insight: Insertion sort builds a sorted prefix. Take key arr[i] and shift larger elements in the prefix right to insert key into its correct spot.',
+    desc: '💡 Key insight: Insertion sort builds a sorted prefix. Take key=arr[i] and shift elements larger than key rightward to insert key into its correct spot.',
+  },
+  {
+    activeLine: 2,
+    i: 1,        // pick arr[1]=2 as key
+    j: 0,        // j starts at i-1 = 0
+    key: 2,
+    array: [5, 2, 8, 1, 4],
+    state: { i: 1, j: 0, key: 2, sortedPrefix: '[5]', status: 'Pick Key = arr[1] = 2' },
+    desc: 'Step 1: i=1. Pick key = arr[1] = 2. Set j = i-1 = 0. Sorted prefix is [5]. Now compare key=2 with arr[j]=arr[0]=5.',
   },
   {
     activeLine: 3,
-    i: 1,
+    i: 1,        // i still at 1 (key slot)
+    j: 0,        // j=0, arr[0]=5 > key=2 → shift
     key: 2,
-    isMatch: true,
+    array: [5, 5, 8, 1, 4],
+    state: { i: 1, j: 0, key: 2, shift: 'Shift arr[0]=5 right to index 1' },
+    desc: 'Step 2: arr[j]=arr[0]=5 > key=2. Shift 5 right to index 1 (arr[j+1] = arr[j]). Array becomes [5, 5, 8, 1, 4]. j-- → j=-1 (done).',
+  },
+  {
+    activeLine: 4,
+    i: 1,
+    j: 0,        // key inserts at j+1 = 0
+    key: 2,
     array: [2, 5, 8, 1, 4],
-    state: { i: 1, key: 2, shift: 'arr[0]=5 shifted right', sortedPrefix: '[2, 5]', status: 'KEY INSERTED 🎉' },
-    desc: 'Step 2: Key=2. Shift 5 right and insert 2 at index 0. Sorted prefix is now [2, 5]! 🎉',
+    state: { i: 1, j: 0, key: 2, sortedPrefix: '[2, 5]' },
+    desc: 'Step 3: j=-1 (or arr[j] <= key). Insert key=2 at index j+1=0. Array → [2, 5, 8, 1, 4]. Sorted prefix = [2, 5].',
+  },
+  {
+    activeLine: 2,
+    i: 2,        // outer loop: i=2, pick arr[2]=8
+    j: 1,        // j = i-1 = 1
+    key: 8,
+    array: [2, 5, 8, 1, 4],
+    state: { i: 2, j: 1, key: 8, sortedPrefix: '[2, 5]', compare: 'arr[j](5) < 8 ➔ No Shift' },
+    desc: 'Step 4: i=2. Pick key = arr[2] = 8. j=1. arr[j]=arr[1]=5 < key=8. No shift needed. Sorted prefix = [2, 5, 8].',
+  },
+  {
+    activeLine: 2,
+    i: 3,        // outer loop: i=3, pick arr[3]=1
+    j: 2,        // j = i-1 = 2
+    key: 1,
+    array: [2, 5, 8, 1, 4],
+    state: { i: 3, j: 2, key: 1, sortedPrefix: '[2, 5, 8]' },
+    desc: 'Step 5: i=3. Pick key = arr[3] = 1. j=2. Compare key=1 with sorted prefix elements [2, 5, 8]. All > key — shift all right.',
+  },
+  {
+    activeLine: 3,
+    i: 3,        // key slot is at i=3
+    j: 2,        // j scans from 2 downward; arr[2]=8, arr[1]=5, arr[0]=2 all > 1
+    key: 1,
+    array: [2, 2, 5, 8, 4],
+    state: { i: 3, j: 2, key: 1, shift: 'Shift 8→idx3, 5→idx2, 2→idx1' },
+    desc: 'Step 6: Shift arr[2]=8 → idx3, arr[1]=5 → idx2, arr[0]=2 → idx1. Array becomes [2, 2, 5, 8, 4]. Index 0 vacated for key.',
+  },
+  {
+    activeLine: 4,
+    i: 3,
+    j: 0,        // key inserts at j+1 = 0
+    key: 1,
+    array: [1, 2, 5, 8, 4],
+    state: { i: 3, j: 0, key: 1, sortedPrefix: '[1, 2, 5, 8]' },
+    desc: 'Step 7: Insert key=1 at index j+1=0. Array → [1, 2, 5, 8, 4]. Sorted prefix = [1, 2, 5, 8].',
+  },
+  {
+    activeLine: 2,
+    i: 4,        // outer loop: i=4, pick arr[4]=4
+    j: 3,        // j = i-1 = 3
+    key: 4,
+    array: [1, 2, 5, 8, 4],
+    state: { i: 4, j: 3, key: 4, sortedPrefix: '[1, 2, 5, 8]' },
+    desc: 'Step 8: i=4. Pick key = arr[4] = 4. j=3. Compare key=4 with arr[j]=arr[3]=8 and arr[2]=5. Both > 4 — shift right.',
+  },
+  {
+    activeLine: 3,
+    i: 4,        // key slot
+    j: 2,        // j scans left; arr[3]=8, arr[2]=5 shifted; arr[1]=2 < 4 so stop
+    key: 4,
+    array: [1, 2, 5, 5, 8],
+    state: { i: 4, j: 2, key: 4, shift: 'Shift arr[3]=8→idx4, arr[2]=5→idx3' },
+    desc: 'Step 9: Shift arr[3]=8 → idx4, arr[2]=5 → idx3. Array becomes [1, 2, 5, 5, 8]. arr[j-1]=arr[1]=2 < 4 — stop shifting. Insert at idx2.',
+  },
+  {
+    activeLine: 4,
+    i: 4,
+    j: 2,        // key inserts at j+1=2... actually j=1, insert at j+1=2
+    key: 4,
+    isMatch: true,
+    array: [1, 2, 4, 5, 8],
+    state: { status: 'FULLY SORTED 🎉', sortedArray: '[1, 2, 4, 5, 8]' },
+    desc: 'Step 10: Insert key=4 at index 2 (arr[j+1]). Array → [1, 2, 4, 5, 8]. Insertion Sort complete in O(N^2) time! 🎉',
+  },
+];
+
+// 4. QUICK SORT STEPS (10 Granular Steps) — with pivot/i/j as indices for pointer badges
+const QUICK_SORT_STEPS = [
+  {
+    activeLine: 1,
+    pivot: 4,           // pivot is at index 4 (value 4)
+    i: null, j: null,
+    array: [5, 2, 8, 1, 4],
+    state: { keyInsight: 'Partition around pivot element arr[4]=4 such that left <= pivot < right in O(N log N).', pivot: 4 },
+    desc: '💡 Key insight: Quick sort chooses a pivot (arr[4]=4) and partitions array elements into smaller (left) and larger (right) sub-arrays.',
+  },
+  {
+    activeLine: 2,
+    pivot: 4,           // arr[4] = 4 (pivot element stays at index 4 during scan)
+    i: -1, j: 0,       // i = partition boundary start (-1 means before array), j = scan pointer
+    array: [5, 2, 8, 1, 4],
+    state: { j: 0, 'arr[0]': 5, pivot: 4, compare: '5 > 4 ➔ No Swap' },
+    desc: 'Step 1: Select Pivot = arr[4] = 4. i=-1 (partition boundary). Inspect j=0 (val 5). Since 5 > 4, keep in right partition. No swap.',
+  },
+  {
+    activeLine: 3,
+    pivot: 4,
+    i: 0, j: 1,        // after swapping, i moves to 0
+    array: [2, 5, 8, 1, 4],
+    state: { j: 1, 'arr[1]': 2, pivot: 4, swap: '5 ↔ 2' },
+    desc: 'Step 2: Inspect j=1 (val 2). Since 2 <= 4, i++ = 0. Swap arr[i]=arr[0](5) with arr[j]=arr[1](2). Array becomes [2, 5, 8, 1, 4].',
+  },
+  {
+    activeLine: 2,
+    pivot: 4,
+    i: 0, j: 2,        // j advances, i stays at 0
+    array: [2, 5, 8, 1, 4],
+    state: { j: 2, 'arr[2]': 8, pivot: 4, compare: '8 > 4 ➔ No Swap' },
+    desc: 'Step 3: Inspect j=2 (val 8). Since 8 > 4, keep in right partition. No swap. i stays at 0.',
+  },
+  {
+    activeLine: 3,
+    pivot: 4,
+    i: 1, j: 3,        // after swapping arr[1] and arr[3], i moves to 1
+    array: [2, 1, 8, 5, 4],
+    state: { j: 3, 'arr[3]': 1, pivot: 4, swap: '5 ↔ 1' },
+    desc: 'Step 4: Inspect j=3 (val 1). Since 1 <= 4, i++ = 1. Swap arr[i]=arr[1](5) with arr[j]=arr[3](1). Array becomes [2, 1, 8, 5, 4].',
+  },
+  {
+    activeLine: 4,
+    pivot: 2,           // pivot is now placed at index 2
+    i: 2, j: null,
+    array: [2, 1, 4, 5, 8],
+    state: { pivotPlaced: 4, pivotIndex: 2, status: 'Pivot 4 locked at index 2' },
+    desc: 'Step 5: Partition loop finish. Swap Pivot arr[4]=4 with arr[i+1]=arr[2]=8. Array becomes [2, 1, 4, 5, 8]. Pivot 4 is locked at index 2!',
+  },
+  {
+    activeLine: 5,
+    pivot: 1,           // new pivot for left subarray [2, 1] is arr[1]=1
+    i: 0, j: 0,
+    array: [1, 2, 4, 5, 8],
+    state: { leftPartition: '[2, 1]', status: 'Recurse Left: pivot=1' },
+    desc: 'Step 6: Recurse on Left Subarray [2, 1]. Pick Pivot = arr[1]=1. Swap arr[0]=2 with arr[1]=1. Left partition becomes [1, 2].',
+  },
+  {
+    activeLine: 6,
+    pivot: 4,           // new pivot for right subarray [5, 8] is arr[4]=8
+    i: 3, j: 3,
+    array: [1, 2, 4, 5, 8],
+    state: { rightPartition: '[5, 8]', status: 'Recurse Right: pivot=8' },
+    desc: 'Step 7: Recurse on Right Subarray [5, 8]. Pick Pivot = arr[4]=8. Compare arr[3]=5 < 8 ➔ Right partition becomes [5, 8].',
+  },
+  {
+    activeLine: 7,
+    pivot: null, i: null, j: null,
+    array: [1, 2, 4, 5, 8],
+    state: { status: 'Base cases reached for partitions' },
+    desc: 'Step 8: Single element base cases reached for all sub-problems. Recursion unwinds.',
+  },
+  {
+    activeLine: 8,
+    pivot: null, i: null, j: null,
+    array: [1, 2, 4, 5, 8],
+    state: { status: 'Combine Sub-array Results' },
+    desc: 'Step 9: Combine sorted partitions [1, 2], [4], and [5, 8] in-place.',
+  },
+  {
+    activeLine: 9,
+    isMatch: true,
+    pivot: null, i: null, j: null,
+    array: [1, 2, 4, 5, 8],
+    state: { status: 'FULLY SORTED 🎉', sortedArray: '[1, 2, 4, 5, 8]' },
+    desc: 'Step 10: Array [1, 2, 4, 5, 8] fully sorted via Divide & Conquer Quick Sort O(N log N)! 🎉',
+  },
+];
+
+// 5. MERGE SORT STEPS (10 Granular Steps) — with low/mid/high for pointer badges
+const MERGE_SORT_STEPS = [
+  {
+    activeLine: 1,
+    array: [5, 2, 8, 1, 4],
+    low: 0, mid: null, high: 4,
+    state: { keyInsight: 'Divide array into halves, recursively sort halves, and merge sorted lists in O(N log N).', array: '[5, 2, 8, 1, 4]' },
+    desc: '💡 Key insight: Merge sort recursively divides array into halves until base cases (size 1) are reached, then merges sorted sub-lists.',
+  },
+  {
+    activeLine: 2,
+    array: [5, 2, 8, 1, 4],
+    low: 0, mid: 2, high: 4,
+    state: { leftHalf: '[5, 2, 8]', rightHalf: '[1, 4]', status: 'Divide at Mid = 2' },
+    desc: 'Step 1: Divide array [5, 2, 8, 1, 4] at mid index 2 into Left [5, 2, 8] (low=0, mid=2) and Right [1, 4] (mid+1=3, high=4).',
+  },
+  {
+    activeLine: 3,
+    array: [5, 2, 8, 1, 4],
+    low: 0, mid: 1, high: 2,
+    state: { leftLeft: '[5, 2]', leftRight: '[8]', status: 'Recurse Left: mergeSort(arr, 0, 2)' },
+    desc: 'Step 2: Recurse on Left subarray [5, 2, 8] — low=0, mid=1, high=2. Next divide into [5, 2] and [8].',
+  },
+  {
+    activeLine: 3,
+    array: [5, 2, 8, 1, 4],
+    low: 0, mid: 0, high: 1,
+    state: { status: 'Recurse Left-Left: mergeSort(arr, 0, 1) → Divide [5, 2]' },
+    desc: 'Step 3: Recurse on [5, 2] — low=0, mid=0, high=1. Divide into single elements [5] and [2].',
+  },
+  {
+    activeLine: 5,
+    array: [2, 5, 8, 1, 4],
+    low: 0, mid: 0, high: 1,
+    state: { merged: '[2, 5]', status: 'Merge [5] and [2] ➔ [2, 5]' },
+    desc: 'Step 4: Merge [5] and [2] — low=0, mid=0, high=1. Compare 5 vs 2 ➔ Merged sorted pair [2, 5].',
+  },
+  {
+    activeLine: 5,
+    array: [2, 5, 8, 1, 4],
+    low: 0, mid: 1, high: 2,
+    state: { mergedLeft: '[2, 5, 8]', status: 'Merge [2, 5] and [8] ➔ [2, 5, 8]' },
+    desc: 'Step 5: Merge [2, 5] with [8] — low=0, mid=1, high=2. Sorted Left subarray becomes [2, 5, 8].',
+  },
+  {
+    activeLine: 4,
+    array: [2, 5, 8, 1, 4],
+    low: 3, mid: 3, high: 4,
+    state: { rightLeft: '[1]', rightRight: '[4]', status: 'Recurse Right: mergeSort(arr, 3, 4)' },
+    desc: 'Step 6: Recurse on Right subarray [1, 4] — low=3, mid=3, high=4. Divide into single elements [1] and [4].',
+  },
+  {
+    activeLine: 5,
+    array: [2, 5, 8, 1, 4],
+    low: 3, mid: 3, high: 4,
+    state: { mergedRight: '[1, 4]', status: 'Merge [1] and [4] ➔ [1, 4]' },
+    desc: 'Step 7: Merge [1] and [4] — low=3, mid=3, high=4. Sorted Right subarray becomes [1, 4].',
+  },
+  {
+    activeLine: 5,
+    array: [1, 2, 4, 5, 8],
+    low: 0, mid: 2, high: 4,
+    state: { status: 'Merging Left [2, 5, 8] and Right [1, 4]...' },
+    desc: 'Step 8: Final Merge — low=0, mid=2, high=4. Compare head elements of Left [2, 5, 8] and Right [1, 4]. Pick 1, then 2, 4, 5, 8.',
+  },
+  {
+    activeLine: 5,
+    array: [1, 2, 4, 5, 8],
+    low: 0, mid: 2, high: 4,
+    state: { status: 'Final Merge Complete ✅' },
+    desc: 'Step 9: All elements merged in sorted order: [1, 2, 4, 5, 8]. low=0, high=4.',
+  },
+  {
+    activeLine: 5,
+    isMatch: true,
+    array: [1, 2, 4, 5, 8],
+    low: 0, mid: 2, high: 4,
+    state: { status: 'FULLY SORTED 🎉', sortedArray: '[1, 2, 4, 5, 8]' },
+    desc: 'Step 10: Array [1, 2, 4, 5, 8] fully sorted via Stable Merge Sort O(N log N)! 🎉',
   },
 ];
 
@@ -123,6 +498,12 @@ export const useSortingStore = create((set, get) => ({
     } else if (trackKey === 'insertion-sort') {
       steps = INSERTION_SORT_STEPS;
       array = SORT_ARRAYS['insertion-sort'];
+    } else if (trackKey === 'quick-sort' || trackKey === 'quick') {
+      steps = QUICK_SORT_STEPS;
+      array = SORT_ARRAYS['quick-sort'];
+    } else if (trackKey === 'merge-sort' || trackKey === 'merge') {
+      steps = MERGE_SORT_STEPS;
+      array = SORT_ARRAYS['merge-sort'];
     }
 
     set({ track: trackKey, array, steps, currentStep: 0, isPlaying: false });

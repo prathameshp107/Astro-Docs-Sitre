@@ -2526,15 +2526,125 @@ const SPECIFIC_PROBLEM_LOGIC = {
     steps: [
       {
         stepNum: 1,
-        title: 'Step 1: Bubble Largest Element 8 to End',
+        title: 'Step 1: Pass 1 (i=0, j=0) - Compare arr[0](5) > arr[1](2)',
         left: 0,
+        right: 1,
+        array: [5, 2, 8, 1, 4],
+        computation: '5 > 2 ➔ True (Swap Required)',
+        comparison: 'Out of Order ❌',
+        action: 'Swap 5 and 2',
+        desc: 'Pass 1 (i=0, j=0). Compare arr[0]=5 with arr[1]=2. Since 5 > 2, swap is required!'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Swap arr[0](5) & arr[1](2) ➔ [2, 5, 8, 1, 4]',
+        left: 0,
+        right: 1,
+        array: [2, 5, 8, 1, 4],
+        computation: 'Swap 5 ↔ 2',
+        comparison: 'Array [2, 5, 8, 1, 4]',
+        action: 'Advance j to 1',
+        desc: 'Swap elements 5 and 2. Array transforms to [2, 5, 8, 1, 4].'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Advance j=1 - Compare arr[1](5) < arr[2](8)',
+        left: 1,
+        right: 2,
+        array: [2, 5, 8, 1, 4],
+        computation: '5 < 8 ➔ False (No Swap)',
+        comparison: 'In Order ✅',
+        action: 'Advance j to 2',
+        desc: 'Advance j to 1. Compare arr[1]=5 with arr[2]=8. Since 5 < 8, elements are in order.'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Advance j=2 - Compare arr[2](8) > arr[3](1)',
+        left: 2,
+        right: 3,
+        array: [2, 5, 8, 1, 4],
+        computation: '8 > 1 ➔ True (Swap Required)',
+        comparison: 'Out of Order ❌',
+        action: 'Swap 8 and 1',
+        desc: 'Advance j to 2. Compare arr[2]=8 with arr[3]=1. Since 8 > 1, swap is required!'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Swap arr[2](8) & arr[3](1) ➔ [2, 5, 1, 8, 4]',
+        left: 2,
+        right: 3,
+        array: [2, 5, 1, 8, 4],
+        computation: 'Swap 8 ↔ 1',
+        comparison: 'Array [2, 5, 1, 8, 4]',
+        action: 'Advance j to 3',
+        desc: 'Swap elements 8 and 1. Array transforms to [2, 5, 1, 8, 4].'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: Advance j=3 - Compare arr[3](8) > arr[4](4)',
+        left: 3,
+        right: 4,
+        array: [2, 5, 1, 8, 4],
+        computation: '8 > 4 ➔ True (Swap Required)',
+        comparison: 'Out of Order ❌',
+        action: 'Swap 8 and 4',
+        desc: 'Advance j to 3. Compare arr[3]=8 with arr[4]=4. Since 8 > 4, swap is required!'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: Swap arr[3](8) & arr[4](4) ➔ Pass 1 Complete',
+        left: 3,
         right: 4,
         array: [2, 5, 1, 4, 8],
-        computation: 'Swaps: 5↔2, 8↔1, 8↔4',
+        computation: 'Swap 8 ↔ 4',
         comparison: 'Pass 1 Complete: 8 placed at end',
-        action: 'Bubble Pass 1',
+        action: 'Lock Element 8',
+        desc: 'Swap 8 and 4. Pass 1 complete! Maximum element 8 is bubbled to index 4.'
+      },
+      {
+        stepNum: 8,
+        title: 'Step 8: Pass 2 (i=1) - Swap 5 ↔ 1 ➔ [2, 1, 5, 4, 8]',
+        left: 1,
+        right: 2,
+        array: [2, 1, 5, 4, 8],
+        computation: 'Swap 5 ↔ 1',
+        comparison: 'Pass 2 Progress',
+        action: 'Advance j to 2',
+        desc: 'Pass 2 (i=1). Compare and swap arr[1]=5 with arr[2]=1. Array becomes [2, 1, 5, 4, 8].'
+      },
+      {
+        stepNum: 9,
+        title: 'Step 9: Pass 2 (j=2) - Swap 5 ↔ 4 ➔ [2, 1, 4, 5, 8]',
+        left: 2,
+        right: 3,
+        array: [2, 1, 4, 5, 8],
+        computation: 'Swap 5 ↔ 4',
+        comparison: 'Pass 2 Complete: 5 placed',
+        action: 'Lock Element 5',
+        desc: 'Compare arr[2]=5 > arr[3]=4. Swap 5 and 4. Array transforms to [2, 1, 4, 5, 8]. Element 5 locked.'
+      },
+      {
+        stepNum: 10,
+        title: 'Step 10: Pass 3 (i=2) - Swap 2 ↔ 1 ➔ [1, 2, 4, 5, 8]',
+        left: 0,
+        right: 1,
+        array: [1, 2, 4, 5, 8],
+        computation: 'Swap 2 ↔ 1',
+        comparison: 'Pass 3 Complete',
+        action: 'Verify Sorted State',
+        desc: 'Pass 3 (i=2). Compare arr[0]=2 > arr[1]=1. Swap 2 and 1. Array becomes [1, 2, 4, 5, 8].'
+      },
+      {
+        stepNum: 11,
+        title: 'Step 11: Pass 4 (i=3) - Zero Swaps ➔ Fully Sorted! 🎉',
+        left: 0,
+        right: 4,
+        array: [1, 2, 4, 5, 8],
+        computation: 'Array = [1, 2, 4, 5, 8]',
+        comparison: 'FULLY SORTED 🎉',
+        action: 'Return Array',
         isMatch: true,
-        desc: 'Pass 1 completes! Largest element 8 bubbled to rightmost position. Array becomes [2, 5, 1, 4, 8].'
+        desc: 'Pass 4 (i=3). Zero swaps performed. Array [1, 2, 4, 5, 8] is fully sorted! 🎉'
       }
     ]
   },
@@ -2544,22 +2654,133 @@ const SPECIFIC_PROBLEM_LOGIC = {
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Bubble largest elements to end via adjacent swaps in O(N^2) time.',
     terms: {
-      'Compare Window [j, j+1]': 'Adjacent elements being compared.',
+      'j (scan pointer)': 'Left element of comparison window [j, j+1]. Scans 0 to n-i-2 in each pass.',
+      'j+1': 'Right element of comparison window adjacent to j.',
       'Swap Condition': 'arr[j] > arr[j+1] triggers in-place swap.'
     },
     array: [5, 2, 8, 1, 4],
     steps: [
       {
         stepNum: 1,
-        title: 'Step 1: Pass 1 Complete ➔ [2, 5, 1, 4, 8]',
-        left: 0,
-        right: 4,
+        title: 'Step 1: Pass 1 (i=0, j=0) — Compare arr[j](5) > arr[j+1](2)',
+        left: 0, right: 1,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [5, 2, 8, 1, 4],
+        computation: 'arr[j](5) > arr[j+1](2) ➔ Swap Required',
+        comparison: 'Out of Order ❌',
+        action: 'Swap arr[j] & arr[j+1]',
+        desc: 'Pass 1 (i=0, j=0). Compare arr[j]=arr[0]=5 with arr[j+1]=arr[1]=2. Since 5 > 2, swap is required!'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Swap arr[j](5) & arr[j+1](2) ➔ [2, 5, 8, 1, 4]',
+        left: 0, right: 1,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 5, 8, 1, 4],
+        computation: 'Swap 5 ↔ 2',
+        comparison: 'Array [2, 5, 8, 1, 4]',
+        action: 'Advance j to 1',
+        desc: 'Swap arr[j]=5 and arr[j+1]=2. Array transforms to [2, 5, 8, 1, 4].'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: j=1 — Compare arr[j](5) < arr[j+1](8) — In Order',
+        left: 1, right: 2,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 5, 8, 1, 4],
+        computation: 'arr[j](5) < arr[j+1](8) ➔ In Order',
+        comparison: 'In Order ✅',
+        action: 'Advance j to 2',
+        desc: 'j=1. Compare arr[j]=5 with arr[j+1]=8. Since 5 < 8, elements are in order. No swap.'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: j=2 — Compare arr[j](8) > arr[j+1](1) — Swap',
+        left: 2, right: 3,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 5, 8, 1, 4],
+        computation: 'arr[j](8) > arr[j+1](1) ➔ Swap Required',
+        comparison: 'Out of Order ❌',
+        action: 'Swap arr[j] & arr[j+1]',
+        desc: 'j=2. Compare arr[j]=8 with arr[j+1]=1. Since 8 > 1, swap is required!'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Swap arr[j](8) & arr[j+1](1) ➔ [2, 5, 1, 8, 4]',
+        left: 2, right: 3,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 5, 1, 8, 4],
+        computation: 'Swap 8 ↔ 1',
+        comparison: 'Array [2, 5, 1, 8, 4]',
+        action: 'Advance j to 3',
+        desc: 'Swap arr[j]=8 and arr[j+1]=1. Array transforms to [2, 5, 1, 8, 4].'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: j=3 — Compare arr[j](8) > arr[j+1](4) — Swap',
+        left: 3, right: 4,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 5, 1, 8, 4],
+        computation: 'arr[j](8) > arr[j+1](4) ➔ Swap Required',
+        comparison: 'Out of Order ❌',
+        action: 'Swap arr[j] & arr[j+1]',
+        desc: 'j=3. Compare arr[j]=8 with arr[j+1]=4. Since 8 > 4, swap is required!'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: Swap arr[j](8) & arr[j+1](4) ➔ Pass 1 Complete! 8 Locked',
+        left: 3, right: 4,
+        leftLabel: 'j', rightLabel: 'j+1',
         array: [2, 5, 1, 4, 8],
-        computation: 'Swap 5↔2, 8↔1, 8↔4',
-        comparison: 'Pass 1 Complete',
-        action: 'Bubble 8 to end',
+        computation: 'Swap 8 ↔ 4',
+        comparison: 'Pass 1 Complete: 8 bubbled to end ✅',
+        action: 'Start Pass 2 (i=1)',
+        desc: 'Swap arr[j]=8 and arr[j+1]=4. Pass 1 complete! Maximum element 8 is locked at index 4.'
+      },
+      {
+        stepNum: 8,
+        title: 'Step 8: Pass 2 (i=1, j=1) — Swap arr[j](5) & arr[j+1](1)',
+        left: 1, right: 2,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 1, 5, 4, 8],
+        computation: 'Swap 5 ↔ 1',
+        comparison: 'Out of Order ❌',
+        action: 'Advance j to 2',
+        desc: 'Pass 2 (i=1). j=1. Compare arr[j]=5 > arr[j+1]=1. Swap! Array becomes [2, 1, 5, 4, 8].'
+      },
+      {
+        stepNum: 9,
+        title: 'Step 9: Pass 2 (j=2) — Swap arr[j](5) & arr[j+1](4) ➔ 5 Locked',
+        left: 2, right: 3,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [2, 1, 4, 5, 8],
+        computation: 'Swap 5 ↔ 4',
+        comparison: 'Pass 2 Complete: 5 locked ✅',
+        action: 'Start Pass 3 (i=2)',
+        desc: 'j=2. Compare arr[j]=5 > arr[j+1]=4. Swap! Array transforms to [2, 1, 4, 5, 8]. Element 5 locked at index 3.'
+      },
+      {
+        stepNum: 10,
+        title: 'Step 10: Pass 3 (i=2, j=0) — Swap arr[j](2) & arr[j+1](1)',
+        left: 0, right: 1,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Swap 2 ↔ 1',
+        comparison: 'Pass 3 Complete ✅',
+        action: 'Verify Sorted State',
+        desc: 'Pass 3 (i=2). j=0. Compare arr[j]=2 > arr[j+1]=1. Swap! Array becomes [1, 2, 4, 5, 8].'
+      },
+      {
+        stepNum: 11,
+        title: 'Step 11: Pass 4 (i=3) — Zero Swaps — Array Fully Sorted! 🎉',
+        left: 0, right: 4,
+        leftLabel: 'j', rightLabel: 'j+1',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Array = [1, 2, 4, 5, 8]',
+        comparison: 'FULLY SORTED 🎉',
+        action: 'Return Array',
         isMatch: true,
-        desc: 'Pass 1: Adjacent swaps bubble largest element 8 to the end! Array becomes [2, 5, 1, 4, 8].'
+        desc: 'Pass 4 (i=3). Zero swaps performed. Array [1, 2, 4, 5, 8] is fully sorted in O(N^2) time! 🎉'
       }
     ]
   },
@@ -2569,22 +2790,122 @@ const SPECIFIC_PROBLEM_LOGIC = {
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Find minimum element in unsorted region and swap into position i in O(N^2) time.',
     terms: {
-      'Min Index': 'Minimum element index in unsorted region.',
-      'Prefix Swap': 'Swaps min element with element at current pass index i.'
+      'i (position pointer)': 'Current sorted boundary — next slot to fill with the minimum element.',
+      'min (minIdx pointer)': 'Index of the smallest found element so far in the unsorted region.',
+      'Scan Condition': 'arr[j] < arr[minIdx] updates minIdx to j.'
     },
     array: [5, 2, 8, 1, 4],
     steps: [
       {
         stepNum: 1,
-        title: 'Step 1: Swap Minimum Element 1 with arr[0]',
-        left: 0,
-        right: 3,
+        title: 'Step 1: Pass 1 (i=0) — Set Initial minIdx = i = 0 (val 5)',
+        left: 0, right: 0,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [5, 2, 8, 1, 4],
+        computation: 'i = 0, minIdx = 0 (val 5)',
+        comparison: 'Scan Unsorted Range [0..4]',
+        action: 'Inspect j=1',
+        desc: 'Pass 1 (i=0). Set initial minimum index minIdx = i = 0 (value 5). Unsorted range is [0..4].'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Inspect j=1 (val 2 < 5) — Update minIdx = 1',
+        left: 0, right: 1,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [5, 2, 8, 1, 4],
+        computation: 'arr[j](2) < arr[minIdx](5) ➔ New minIdx = 1',
+        comparison: 'New Min Found ✅',
+        action: 'Inspect j=2',
+        desc: 'Inspect j=1 (val 2). Since arr[1](2) < arr[minIdx](5), update minIdx = 1.'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Inspect j=3 (val 1 < 2) — Update minIdx = 3',
+        left: 0, right: 3,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [5, 2, 8, 1, 4],
+        computation: 'arr[j](1) < arr[minIdx](2) ➔ New minIdx = 3',
+        comparison: 'New Min Found ✅',
+        action: 'Inspect j=4',
+        desc: 'Inspect j=2 (val 8, no change) and j=3 (val 1). Since arr[3](1) < arr[minIdx](2), update minIdx = 3.'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Scan Complete — Min Element is 1 at minIdx = 3',
+        left: 0, right: 3,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [5, 2, 8, 1, 4],
+        computation: 'Min in [0..4] = arr[3] = 1',
+        comparison: 'Min Verified ✅',
+        action: 'Swap arr[i] ↔ arr[minIdx]',
+        desc: 'Inspect j=4 (val 4, 4 > 1). Minimum element is 1 at minIdx = 3. Now swap arr[i]=arr[0]=5 with arr[minIdx]=arr[3]=1.'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Swap arr[i](5) ↔ arr[min](1) ➔ [1, 2, 8, 5, 4]',
+        left: 0, right: 3,
+        leftLabel: 'i', rightLabel: 'min',
         array: [1, 2, 8, 5, 4],
-        computation: 'Min element 1 found at index 3 ➔ Swap with arr[0]',
-        comparison: 'Pass 1 Complete',
-        action: 'Swap min to front',
+        computation: 'Swap arr[0](5) ↔ arr[3](1)',
+        comparison: 'Sorted Prefix [1] ✅',
+        action: 'Start Pass 2 (i=1)',
+        desc: 'Swap arr[i]=arr[0]=5 with arr[minIdx]=arr[3]=1. Array → [1, 2, 8, 5, 4]. Sorted prefix = [1].'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: Pass 2 (i=1) — Scan [1..4], Min is 2 at minIdx = 1 — No Swap',
+        left: 1, right: 1,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [1, 2, 8, 5, 4],
+        computation: 'minIdx = i = 1 (val 2)',
+        comparison: 'No Swap Needed ✅',
+        action: 'Start Pass 3 (i=2)',
+        desc: 'Pass 2 (i=1). Scan unsorted range [1..4]. Minimum is 2 at minIdx=1 = i. No swap needed! Sorted prefix = [1, 2].'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: Pass 3 (i=2) — Scan [2..4]: Min is 4 at minIdx = 4',
+        left: 2, right: 4,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [1, 2, 8, 5, 4],
+        computation: 'Min in [2..4] = arr[4] = 4',
+        comparison: 'New Min Found ✅',
+        action: 'Swap arr[i] ↔ arr[minIdx]',
+        desc: 'Pass 3 (i=2). Scan unsorted range [2..4] ([8, 5, 4]). Minimum is 4 at minIdx = 4.'
+      },
+      {
+        stepNum: 8,
+        title: 'Step 8: Swap arr[i](8) ↔ arr[min](4) ➔ [1, 2, 4, 5, 8]',
+        left: 2, right: 4,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Swap arr[2](8) ↔ arr[4](4)',
+        comparison: 'Sorted Prefix [1, 2, 4] ✅',
+        action: 'Start Pass 4 (i=3)',
+        desc: 'Swap arr[i]=arr[2]=8 with arr[minIdx]=arr[4]=4. Array → [1, 2, 4, 5, 8]. Sorted prefix = [1, 2, 4].'
+      },
+      {
+        stepNum: 9,
+        title: 'Step 9: Pass 4 (i=3) — Min is 5 at minIdx = 3 = i — No Swap',
+        left: 3, right: 3,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [1, 2, 4, 5, 8],
+        computation: 'minIdx = i = 3 (val 5)',
+        comparison: 'No Swap Needed ✅',
+        action: 'Finalize Sort',
+        desc: 'Pass 4 (i=3). Inspect remaining range [5, 8]. Minimum is 5 at minIdx=3=i. No swap needed.'
+      },
+      {
+        stepNum: 10,
+        title: 'Step 10: All Elements Positioned — Selection Sort Complete! 🎉',
+        left: 0, right: 4,
+        leftLabel: 'i', rightLabel: 'min',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Array = [1, 2, 4, 5, 8]',
+        comparison: 'FULLY SORTED 🎉',
+        action: 'Return Array',
         isMatch: true,
-        desc: 'Pass 1: Find minimum element 1 at index 3. Swap with arr[0]=5. Array becomes [1, 2, 8, 5, 4]! 🎉'
+        desc: 'Array [1, 2, 4, 5, 8] is fully sorted in O(N^2) time! 🎉'
       }
     ]
   },
@@ -2594,22 +2915,447 @@ const SPECIFIC_PROBLEM_LOGIC = {
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Build sorted prefix by shifting larger elements right and inserting key in O(N^2).',
     terms: {
-      'Key Element': 'Element arr[i] being inserted into sorted prefix.',
-      'Shift Right': 'Shifting elements > key right to vacate slot.'
+      'i (outer pointer)': 'Index of the element being inserted — arr[i] becomes the key for each pass.',
+      'key': 'The element extracted from arr[i] that is placed into the correct position in the sorted prefix.',
+      'j (inner pointer)': 'Scans left through sorted prefix to find the insertion position for key.'
     },
     array: [5, 2, 8, 1, 4],
     steps: [
       {
         stepNum: 1,
-        title: 'Step 1: Insert Key=2 into Sorted Prefix',
+        title: 'Step 1: i=1 — Pick Key = arr[i] = arr[1] = 2',
+        left: 1, right: 1,
+        leftLabel: 'i', rightLabel: 'key',
+        array: [5, 2, 8, 1, 4],
+        computation: 'key = arr[1] = 2, Sorted Prefix = [5]',
+        comparison: 'Compare key with arr[i-1]=arr[0]',
+        action: 'Compare Key',
+        desc: 'i=1. Extract key = arr[i] = arr[1] = 2. Current sorted prefix is [5]. Now find where to insert key.'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: arr[j](5) > key(2) — Shift 5 Right to Index 1',
+        left: 0, right: 1,
+        leftLabel: 'j', rightLabel: 'i',
+        array: [5, 5, 8, 1, 4],
+        computation: 'arr[j](5) > key(2) ➔ Shift arr[j] right',
+        comparison: 'Shift Required',
+        action: 'Insert key at Index 0',
+        desc: 'j=0. arr[j]=5 > key=2. Shift 5 right to index 1. Array becomes [5, 5, 8, 1, 4].'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Insert key=2 at Index 0 ➔ Sorted Prefix [2, 5]',
+        left: 0, right: 1,
+        leftLabel: 'key inserts here', rightLabel: 'i',
+        array: [2, 5, 8, 1, 4],
+        computation: 'arr[j+1] = key = 2',
+        comparison: 'Sorted Prefix [2, 5] ✅',
+        action: 'Advance i to 2',
+        desc: 'No more elements to compare. Insert key=2 at index 0. Array → [2, 5, 8, 1, 4]. Sorted prefix = [2, 5].'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: i=2 — Key = arr[2] = 8 — 5 < 8 → No Shift',
+        left: 1, right: 2,
+        leftLabel: 'j', rightLabel: 'i',
+        array: [2, 5, 8, 1, 4],
+        computation: 'arr[j](5) < key(8) ➔ No Shift',
+        comparison: 'In Order ✅',
+        action: 'Advance i to 3',
+        desc: 'i=2. key = arr[2] = 8. Compare with arr[j]=arr[1]=5. Since 5 < 8, no shift needed. Sorted prefix = [2, 5, 8].'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: i=3 — Key = arr[3] = 1 — Compare with [2, 5, 8]',
+        left: 0, right: 3,
+        leftLabel: 'j', rightLabel: 'i',
+        array: [2, 5, 8, 1, 4],
+        computation: 'key = arr[3] = 1, Compare 8, 5, 2',
+        comparison: 'All Shift: arr[j] > key',
+        action: 'Shift Elements Right',
+        desc: 'i=3. key = arr[i] = 1. Compare with sorted prefix elements [2, 5, 8]. All > key, all must shift right.'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: Shift Elements 8, 5, 2 Right ➔ [2, 2, 5, 8, 4]',
+        left: 0, right: 3,
+        leftLabel: 'j', rightLabel: 'i',
+        array: [2, 2, 5, 8, 4],
+        computation: 'Shift arr[2]→3, arr[1]→2, arr[0]→1',
+        comparison: 'Index 0 Vacated',
+        action: 'Insert key at Index 0',
+        desc: 'Shift 8→index 3, 5→index 2, 2→index 1. Array becomes [2, 2, 5, 8, 4]. Index 0 is now vacated for key.'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: Insert key=1 at Index 0 ➔ Sorted Prefix [1, 2, 5, 8]',
+        left: 0, right: 3,
+        leftLabel: 'key inserts here', rightLabel: 'i',
+        array: [1, 2, 5, 8, 4],
+        computation: 'arr[j+1] = key = 1',
+        comparison: 'Sorted Prefix [1, 2, 5, 8] ✅',
+        action: 'Advance i to 4',
+        desc: 'Insert key=1 at index 0. Array transforms to [1, 2, 5, 8, 4]. Sorted prefix = [1, 2, 5, 8].'
+      },
+      {
+        stepNum: 8,
+        title: 'Step 8: i=4 — Key = arr[4] = 4 — Compare with 8 and 5',
+        left: 2, right: 4,
+        leftLabel: 'j', rightLabel: 'i',
+        array: [1, 2, 5, 8, 4],
+        computation: 'key = arr[4] = 4, Compare arr[j]=8 & arr[j-1]=5',
+        comparison: 'Shift Required',
+        action: 'Shift 8 & 5 Right',
+        desc: 'i=4. key = arr[4] = 4. Compare with arr[j]=arr[3]=8 and arr[2]=5. Both > 4 → shift right.'
+      },
+      {
+        stepNum: 9,
+        title: 'Step 9: Shift 8 & 5 Right ➔ [1, 2, 5, 5, 8], Insert key=4',
+        left: 2, right: 4,
+        leftLabel: 'j', rightLabel: 'i',
+        array: [1, 2, 5, 5, 8],
+        computation: 'Shift arr[3]→4, arr[2]→3',
+        comparison: 'Index 2 Vacated',
+        action: 'Insert key at Index 2',
+        desc: 'Shift 8 right to index 4 and 5 right to index 3. Array becomes [1, 2, 5, 5, 8]. Index 2 vacated for key.'
+      },
+      {
+        stepNum: 10,
+        title: 'Step 10: Insert key=4 at Index 2 ➔ Array Fully Sorted! 🎉',
+        left: 0, right: 4,
+        leftLabel: 'key inserts here', rightLabel: 'i',
+        array: [1, 2, 4, 5, 8],
+        computation: 'arr[j+1] = key = 4',
+        comparison: 'FULLY SORTED 🎉',
+        action: 'Return Array',
+        isMatch: true,
+        desc: 'Insert key=4 at index 2. Array transforms to [1, 2, 4, 5, 8]. Insertion Sort complete in O(N^2) time! 🎉'
+      }
+    ]
+  },
+
+  'quick-sort': {
+    title: 'Quick Sort O(N log N)',
+    input: 'Array = [5, 2, 8, 1, 4]',
+    goal: 'Partition array around pivot such that elements <= pivot are left and > pivot are right in O(N log N).',
+    terms: {
+      'Pivot': 'Element chosen to partition the array — arr[high]. Placed at its correct sorted index after partitioning.',
+      'i (partition boundary)': 'Tracks the right edge of the "less-than-pivot" region. Starts at low-1.',
+      'j (scan pointer)': 'Scans each element left to right and decides which partition it belongs to.',
+      'Partition Phase': 'Elements <= pivot go left; elements > pivot go right.',
+    },
+    array: [5, 2, 8, 1, 4],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: QuickSort(low=0, high=4) — Select Pivot = arr[4] = 4',
+        left: 0,
+        right: 4,
+        pivot: 4,
+        leftLabel: 'low',
+        rightLabel: 'pivot',
+        array: [5, 2, 8, 1, 4],
+        computation: 'Pivot = arr[4] = 4',
+        comparison: 'Partition Range [0..3]',
+        action: 'Inspect j=0',
+        desc: 'QuickSort(low=0, high=4). Select Pivot = arr[high] = arr[4] = 4. Partition loop: j scans indices [low..high-1].'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Inspect j=0 (val 5) — 5 > Pivot(4) — Keep in Right Partition',
+        left: 0,
+        right: 4,
+        pivot: 4,
+        j: 0,
+        leftLabel: 'i',
+        rightLabel: 'pivot',
+        jLabel: 'j',
+        array: [5, 2, 8, 1, 4],
+        computation: '5 > 4 ➔ No Swap',
+        comparison: 'Right Partition',
+        action: 'Inspect j=1',
+        desc: 'Inspect j=0 (val 5). Since arr[j](5) > pivot(4), keep in right partition. No swap. i stays at -1.'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Inspect j=1 (val 2 <= 4) — i++ → Swap arr[i](5) & arr[j](2)',
+        left: 0,
+        right: 4,
+        pivot: 4,
+        j: 1,
+        leftLabel: 'i',
+        rightLabel: 'pivot',
+        jLabel: 'j',
+        array: [2, 5, 8, 1, 4],
+        computation: 'i++ = 0, Swap 5 ↔ 2',
+        comparison: 'Left Partition ✅',
+        action: 'Inspect j=2',
+        desc: 'Inspect j=1 (val 2). Since arr[j](2) <= pivot(4), i++ = 0. Swap arr[i]=arr[0](5) with arr[j]=arr[1](2). Array → [2, 5, 8, 1, 4].'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Inspect j=2 (val 8) — 8 > Pivot(4) — Keep in Right Partition',
+        left: 0,
+        right: 4,
+        pivot: 4,
+        j: 2,
+        leftLabel: 'i',
+        rightLabel: 'pivot',
+        jLabel: 'j',
+        array: [2, 5, 8, 1, 4],
+        computation: '8 > 4 ➔ No Swap',
+        comparison: 'Right Partition',
+        action: 'Inspect j=3',
+        desc: 'Inspect j=2 (val 8). Since arr[j](8) > pivot(4), keep in right partition. No swap. i stays at 0.'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Inspect j=3 (val 1 <= 4) — i++ → Swap arr[i](5) & arr[j](1)',
+        left: 1,
+        right: 4,
+        pivot: 4,
+        j: 3,
+        leftLabel: 'i',
+        rightLabel: 'pivot',
+        jLabel: 'j',
+        array: [2, 1, 8, 5, 4],
+        computation: 'i++ = 1, Swap 5 ↔ 1',
+        comparison: 'Left Partition ✅',
+        action: 'Finalize Partition',
+        desc: 'Inspect j=3 (val 1). Since arr[j](1) <= pivot(4), i++ = 1. Swap arr[i]=arr[1](5) with arr[j]=arr[3](1). Array → [2, 1, 8, 5, 4].'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: Swap Pivot arr[4](4) with arr[i+1]=arr[2](8) — Pivot Locked at Index 2!',
+        left: 2,
+        right: 4,
+        pivot: 2,
+        leftLabel: 'i+1 (pivot pos)',
+        rightLabel: 'high',
+        array: [2, 1, 4, 5, 8],
+        computation: 'Swap Pivot 4 ↔ 8',
+        comparison: 'Pivot 4 Locked at Index 2 🎯',
+        action: 'Recurse Subarrays',
+        desc: 'Partition loop finished. Swap Pivot arr[high]=arr[4]=4 with arr[i+1]=arr[2]=8. Array → [2, 1, 4, 5, 8]. Pivot 4 is LOCKED at index 2!'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: Recurse Left Subarray [2, 1] — Pivot = arr[1] = 1 → Swap to [1, 2]',
         left: 0,
         right: 1,
-        array: [2, 5, 8, 1, 4],
-        computation: 'Key 2 inserted before 5',
-        comparison: 'Sorted prefix [2, 5]',
-        action: 'Insert Key',
+        pivot: 1,
+        leftLabel: 'low',
+        rightLabel: 'pivot',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Swap 2 ↔ 1',
+        comparison: 'Left Subarray Sorted ✅',
+        action: 'Recurse Right Subarray',
+        desc: 'Recurse QuickSort(0, 1) on Left Subarray [2, 1]. Pick Pivot = arr[1] = 1. Swap arr[0]=2 with arr[1]=1. Left partition → [1, 2].'
+      },
+      {
+        stepNum: 8,
+        title: 'Step 8: Recurse Right Subarray [5, 8] — Pivot = arr[4] = 8 → [5, 8]',
+        left: 3,
+        right: 4,
+        pivot: 4,
+        leftLabel: 'low',
+        rightLabel: 'pivot',
+        array: [1, 2, 4, 5, 8],
+        computation: '5 < 8 ➔ Already Sorted',
+        comparison: 'Right Subarray Sorted ✅',
+        action: 'Check Base Cases',
+        desc: 'Recurse QuickSort(3, 4) on Right Subarray [5, 8]. Pick Pivot = arr[4] = 8. Compare 5 < 8 ➔ Right partition → [5, 8].'
+      },
+      {
+        stepNum: 9,
+        title: 'Step 9: Single Element Base Cases Reached — Recursion Unwinds',
+        left: 0,
+        right: 4,
+        array: [1, 2, 4, 5, 8],
+        computation: 'Base cases hit for all subproblems',
+        comparison: 'Base Cases Return',
+        action: 'Combine Partitions',
+        desc: 'Single element base cases reached for all sub-problems. Recursive calls unwind in order.'
+      },
+      {
+        stepNum: 10,
+        title: 'Step 10: Array [1, 2, 4, 5, 8] Fully Sorted in O(N log N) Time! 🎉',
+        left: 0,
+        right: 4,
+        array: [1, 2, 4, 5, 8],
+        computation: 'Array = [1, 2, 4, 5, 8]',
+        comparison: 'FULLY SORTED 🎉',
+        action: 'Return Array',
         isMatch: true,
-        desc: 'Key=2. Shift 5 right and insert 2 at index 0. Sorted prefix is now [2, 5]! 🎉'
+        desc: 'Array [1, 2, 4, 5, 8] fully sorted via Divide & Conquer Quick Sort O(N log N)! 🎉'
+      }
+    ]
+  },
+
+  'merge-sort': {
+    title: 'Merge Sort O(N log N)',
+    input: 'Array = [5, 2, 8, 1, 4]',
+    goal: 'Divide array into halves, recursively sort halves, and merge sorted lists in O(N log N).',
+    terms: {
+      'low': 'Left boundary index of the current subarray being processed.',
+      'mid': 'Midpoint index — splits subarray into Left [low..mid] and Right [mid+1..high].',
+      'high': 'Right boundary index of the current subarray being processed.',
+      'Divide Phase': 'Halving array into sub-arrays until size 1 base cases.',
+      'Merge Phase': 'Interleaving two sorted sub-lists into a combined sorted list.'
+    },
+    array: [5, 2, 8, 1, 4],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Step 1: MergeSort([5, 2, 8, 1, 4]) — low=0, mid=2, high=4',
+        left: 0,
+        mid: 2,
+        right: 4,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [5, 2, 8, 1, 4],
+        computation: 'Left [5, 2, 8] (0..2), Right [1, 4] (3..4)',
+        comparison: 'mid = (0 + 4) / 2 = 2',
+        action: 'Recurse Left',
+        desc: 'Divide array [5, 2, 8, 1, 4] at mid index 2. Left subarray = [5, 2, 8] (low=0 to mid=2), Right subarray = [1, 4] (mid+1=3 to high=4).'
+      },
+      {
+        stepNum: 2,
+        title: 'Step 2: Recurse Left — mergeSort(arr, low=0, high=2), mid=1',
+        left: 0,
+        mid: 1,
+        right: 2,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [5, 2, 8, 1, 4],
+        computation: 'Sub-left [5, 2] (0..1), Sub-right [8] (2..2)',
+        comparison: 'mid = (0 + 2) / 2 = 1',
+        action: 'Divide [5, 2]',
+        desc: 'Recurse on Left subarray [5, 2, 8] — low=0, mid=1, high=2. Next divide [5, 2] and [8].'
+      },
+      {
+        stepNum: 3,
+        title: 'Step 3: Recurse — mergeSort(arr, low=0, high=1), mid=0',
+        left: 0,
+        mid: 0,
+        right: 1,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [5, 2, 8, 1, 4],
+        computation: 'Base cases [5] (idx 0) & [2] (idx 1)',
+        comparison: 'mid = (0 + 1) / 2 = 0',
+        action: 'Merge [5] and [2]',
+        desc: 'Recurse on [5, 2] — low=0, mid=0, high=1. Divide into single-element base cases [5] and [2].'
+      },
+      {
+        stepNum: 4,
+        title: 'Step 4: Merge [5] and [2] ➔ Sorted Pair [2, 5] (low=0, mid=0, high=1)',
+        left: 0,
+        mid: 0,
+        right: 1,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [2, 5, 8, 1, 4],
+        computation: '2 < 5 ➔ Merged [2, 5]',
+        comparison: 'Pair Merged ✅',
+        action: 'Merge with [8]',
+        desc: 'merge(arr, low=0, mid=0, high=1). Compare 5 vs 2 ➔ Merged sorted pair [2, 5].'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Merge [2, 5] with [8] ➔ Left Sorted [2, 5, 8] (low=0, mid=1, high=2)',
+        left: 0,
+        mid: 1,
+        right: 2,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [2, 5, 8, 1, 4],
+        computation: 'Merged Left = [2, 5, 8]',
+        comparison: 'Left Subarray Sorted ✅',
+        action: 'Process Right Subarray',
+        desc: 'merge(arr, low=0, mid=1, high=2). Merge [2, 5] with [8] ➔ Sorted Left Subarray becomes [2, 5, 8].'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: Recurse Right — mergeSort(arr, low=3, high=4), mid=3',
+        left: 3,
+        mid: 3,
+        right: 4,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [2, 5, 8, 1, 4],
+        computation: 'Base cases [1] (idx 3) & [4] (idx 4)',
+        comparison: 'mid = (3 + 4) / 2 = 3',
+        action: 'Merge [1] and [4]',
+        desc: 'Recurse on Right subarray [1, 4] — low=3, mid=3, high=4. Divide into single elements [1] and [4].'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: Merge [1] and [4] ➔ Right Sorted [1, 4] (low=3, mid=3, high=4)',
+        left: 3,
+        mid: 3,
+        right: 4,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [2, 5, 8, 1, 4],
+        computation: '1 < 4 ➔ Merged [1, 4]',
+        comparison: 'Right Subarray Sorted ✅',
+        action: 'Start Final Merge',
+        desc: 'merge(arr, low=3, mid=3, high=4). Merge [1] and [4] ➔ Sorted Right Subarray becomes [1, 4].'
+      },
+      {
+        stepNum: 8,
+        title: 'Step 8: Final Merge — merge(arr, low=0, mid=2, high=4)',
+        left: 0,
+        mid: 2,
+        right: 4,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Compare 2 vs 1 ➔ Pick 1',
+        comparison: 'Left [2,5,8] merged with Right [1,4]',
+        action: 'Continue Interleaving',
+        desc: 'Final merge(arr, low=0, mid=2, high=4). Compare head elements of Left [2, 5, 8] and Right [1, 4]. Pick 1, then 2, 4, 5, 8.'
+      },
+      {
+        stepNum: 9,
+        title: 'Step 9: Interleave Elements ➔ [1, 2, 4, 5, 8] (low=0, high=4)',
+        left: 0,
+        mid: 2,
+        right: 4,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Merged Array [1, 2, 4, 5, 8]',
+        comparison: 'Interleaving Complete ✅',
+        action: 'Finalize MergeSort',
+        desc: 'All elements merged in sorted order: [1, 2, 4, 5, 8].'
+      },
+      {
+        stepNum: 10,
+        title: 'Step 10: Array [1, 2, 4, 5, 8] Fully Sorted via Stable Merge Sort! 🎉',
+        left: 0,
+        mid: 2,
+        right: 4,
+        leftLabel: 'low',
+        midLabel: 'mid',
+        rightLabel: 'high',
+        array: [1, 2, 4, 5, 8],
+        computation: 'Array = [1, 2, 4, 5, 8]',
+        comparison: 'FULLY SORTED 🎉',
+        action: 'Return Array',
+        isMatch: true,
+        desc: 'Array [1, 2, 4, 5, 8] fully sorted via Stable Merge Sort O(N log N)! 🎉'
       }
     ]
   },
@@ -2717,7 +3463,7 @@ export default function LogicSection({ topicId }) {
       ? hashTableTrack
       : topicId;
 
-  // Resolve track aliases for Array & Searching modules
+  // Resolve track aliases for Array, Sorting, & Searching modules
   const resolvedTrackKey =
     activeTrackKey === 'insert' || activeTrackKey === 'insertion'
       ? 'insertion'
@@ -2727,6 +3473,16 @@ export default function LogicSection({ topicId }) {
       ? 'linear-search'
       : activeTrackKey === 'reverse' || activeTrackKey === 'reverse-array'
       ? 'reverse-array'
+      : activeTrackKey === 'bubble' || activeTrackKey === 'bubble-sort'
+      ? 'bubble-sort'
+      : activeTrackKey === 'selection' || activeTrackKey === 'selection-sort'
+      ? 'selection-sort'
+      : activeTrackKey === 'insertion-sort'
+      ? 'insertion-sort'
+      : activeTrackKey === 'quick' || activeTrackKey === 'quick-sort'
+      ? 'quick-sort'
+      : activeTrackKey === 'merge' || activeTrackKey === 'merge-sort'
+      ? 'merge-sort'
       : activeTrackKey;
 
   // Retrieve exact problem logic or generate dynamic fallback for topicId
@@ -2944,15 +3700,60 @@ export default function LogicSection({ topicId }) {
                     {stepArray.map((val, idx) => {
                       const isLeft = st.left === idx;
                       const isRight = st.right === idx;
-                      const isBoth = isLeft && isRight;
+                      const isMidPoint = st.mid !== undefined && st.mid !== null && st.mid === idx;
+                      const isPivotPoint = st.pivot !== undefined && st.pivot !== null && st.pivot === idx;
+                      const isJPoint = st.j !== undefined && st.j !== null && st.j === idx;
+                      const isBoth = isLeft && isRight && !isMidPoint && !isPivotPoint;
+                      const isBothLeftMid = isLeft && isMidPoint && !isRight;
+                      const isBothMidRight = isMidPoint && isRight && !isLeft;
+                      const isAllThree = isLeft && isMidPoint && isRight;
+                      const isBothLeftPivot = isLeft && isPivotPoint && !isRight && !isMidPoint;
+                      const isBothRightPivot = isRight && isPivotPoint && !isLeft && !isMidPoint;
                       const inWindow = st.left !== null && st.right !== null && idx >= st.left && idx <= st.right;
+
+                      const leftLabel =
+                        st.leftLabel ||
+                        (resolvedTrackKey === 'bubble-sort'
+                          ? 'j'
+                          : resolvedTrackKey === 'selection-sort'
+                          ? 'i'
+                          : resolvedTrackKey === 'insertion-sort'
+                          ? 'j'
+                          : resolvedTrackKey === 'quick-sort'
+                          ? 'i'
+                          : topicId === 'sorting'
+                          ? 'j'
+                          : 'L');
+
+                      const midLabel = st.midLabel || 'mid';
+                      const jLabel = st.jLabel || 'j';
+
+                      const rightLabel =
+                        st.rightLabel ||
+                        (resolvedTrackKey === 'bubble-sort'
+                          ? 'j+1'
+                          : resolvedTrackKey === 'selection-sort'
+                          ? 'min'
+                          : resolvedTrackKey === 'insertion-sort'
+                          ? 'i'
+                          : resolvedTrackKey === 'quick-sort'
+                          ? 'j'
+                          : topicId === 'sorting'
+                          ? 'j+1'
+                          : 'R');
 
                       return (
                         <div key={idx} className="relative flex flex-col items-center">
                           <div
                             className={`sketch-card ${
-                              st.isMatch && (isLeft || isRight)
+                              st.isMatch && (isLeft || isRight || isMidPoint || isPivotPoint)
                                 ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400 text-emerald-200'
+                                : isPivotPoint && !isMidPoint
+                                ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400'
+                                : isJPoint && !isLeft && !isRight
+                                ? '!border-cyan-400 !bg-cyan-500/10 ring-1 ring-cyan-400/60'
+                                : isMidPoint
+                                ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
                                 : inWindow
                                 ? 'active-orange !border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/60'
                                 : ''
@@ -2962,20 +3763,60 @@ export default function LogicSection({ topicId }) {
                             <div className="sketch-card-index">[{idx}]</div>
                           </div>
 
-                          {/* Chalkboard Pointer Badges */}
-                          {isBoth ? (
+                          {/* Chalkboard Pointer Badges — all three overlap */}
+                          {isAllThree ? (
+                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
+                              <div>{leftLabel}/{midLabel}/{rightLabel}</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isBothLeftMid ? (
+                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
+                              <div>{leftLabel}, {midLabel}</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isBothMidRight ? (
+                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
+                              <div>{midLabel}, {rightLabel}</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isBoth ? (
                             <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2.5 py-1 rounded-md border border-purple-400/40 shadow-sm mt-2">
-                              <div className="text-sm font-bold">L, R</div>
+                              <div className="text-sm font-bold">{leftLabel === rightLabel ? leftLabel : `${leftLabel}, ${rightLabel}`}</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isBothLeftPivot ? (
+                            <div className="sketch-pointer text-rose-300 font-bold bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40 shadow-sm mt-2 text-xs">
+                              <div>{leftLabel}, pivot</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isBothRightPivot ? (
+                            <div className="sketch-pointer text-rose-300 font-bold bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40 shadow-sm mt-2 text-xs">
+                              <div>{rightLabel}, pivot</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isMidPoint ? (
+                            <div className="sketch-pointer text-amber-400 font-bold mt-2">
+                              <div className="font-bold">{midLabel}</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isPivotPoint ? (
+                            <div className="sketch-pointer text-rose-400 font-bold mt-2">
+                              <div className="font-bold">pivot</div>
+                              <div className="text-xs leading-none">▲</div>
+                            </div>
+                          ) : isJPoint ? (
+                            <div className="sketch-pointer text-cyan-400 font-bold mt-2">
+                              <div className="font-bold">{jLabel}</div>
                               <div className="text-xs leading-none">▲</div>
                             </div>
                           ) : isLeft ? (
                             <div className="sketch-pointer sketch-pointer-orange mt-2">
-                              <div className="font-bold">L</div>
+                              <div className="font-bold">{leftLabel}</div>
                               <div className="text-xs leading-none">▲</div>
                             </div>
                           ) : isRight ? (
                             <div className="sketch-pointer sketch-pointer-blue mt-2">
-                              <div className="font-bold">R</div>
+                              <div className="font-bold">{rightLabel}</div>
                               <div className="text-xs leading-none">▲</div>
                             </div>
                           ) : null}
