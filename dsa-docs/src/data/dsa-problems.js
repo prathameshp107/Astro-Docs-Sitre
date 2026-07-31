@@ -65,7 +65,6 @@ export const DSA_PROBLEMS = [
     tests: [
       { name: "Returns correct indices", validate: (code) => { try { return JSON.stringify(new Function(`${code}; return twoSum([2,7,11,15], 9);`)()) === JSON.stringify([0, 1]); } catch { return false; } } },
       { name: "Handles unsorted arrays", validate: (code) => { try { return JSON.stringify(new Function(`${code}; return twoSum([3,2,4], 6);`)()) === JSON.stringify([1, 2]); } catch { return false; } } },
-      { name: "Uses hash map", validate: anyTest(testContains("Map("), testContains("{}")) },
     ],
   },
   {
@@ -125,7 +124,6 @@ export const DSA_PROBLEMS = [
       { name: "Valid parentheses", validate: (code) => { try { return new Function(`${code}; return isValid("()");`)() === true; } catch { return false; } } },
       { name: "Valid multiple types", validate: (code) => { try { return new Function(`${code}; return isValid("()[]{}");`)() === true; } catch { return false; } } },
       { name: "Invalid mismatched", validate: (code) => { try { return new Function(`${code}; return isValid("(]");`)() === false; } catch { return false; } } },
-      { name: "Uses stack", validate: testContains("push(") && testContains("pop(") },
     ],
   },
   {
@@ -182,7 +180,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "merge-two-sorted-lists", number: 6, title: "Merge Two Sorted Lists", difficulty: "Easy",
+    id: "merge-two-sorted-lists", number: 7, title: "Merge Two Sorted Lists", difficulty: "Easy",
     topics: ["linked-list", "recursion"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
     acceptance: 65, xp: 15,
@@ -206,7 +204,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "binary-search", number: 26, title: "Binary Search", difficulty: "Easy",
+    id: "binary-search", number: 27, title: "Binary Search", difficulty: "Easy",
     topics: ["binary-search", "arrays"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
     acceptance: 62, xp: 10,
@@ -230,11 +228,10 @@ export const DSA_PROBLEMS = [
     tests: [
       { name: "Finds target", validate: (code) => { try { return new Function(`${code}; return search([-1,0,3,5,9,12], 9);`)() === 4; } catch { return false; } } },
       { name: "Missing target", validate: (code) => { try { return new Function(`${code}; return search([-1,0,3,5,9,12], 2);`)() === -1; } catch { return false; } } },
-      { name: "Uses binary search", validate: testContains("mid") },
     ],
   },
   {
-    id: "search-rotated-array", number: 30, title: "Search in Rotated Sorted Array", difficulty: "Medium",
+    id: "search-rotated-array", number: 35, title: "Search in Rotated Sorted Array", difficulty: "Medium",
     topics: ["binary-search", "arrays"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg", "Uber"],
     acceptance: 40, xp: 25,
@@ -258,11 +255,10 @@ export const DSA_PROBLEMS = [
     tests: [
       { name: "Finds target", validate: (code) => { try { return new Function(`${code}; return search([4,5,6,7,0,1,2], 0);`)() === 4; } catch { return false; } } },
       { name: "Returns -1", validate: (code) => { try { return new Function(`${code}; return search([4,5,6,7,0,1,2], 3);`)() === -1; } catch { return false; } } },
-      { name: "Uses mid", validate: testContains("mid") },
     ],
   },
   {
-    id: "maximum-depth-of-binary-tree", number: 9, title: "Maximum Depth of Binary Tree", difficulty: "Easy",
+    id: "maximum-depth-of-binary-tree", number: 8, title: "Maximum Depth of Binary Tree", difficulty: "Easy",
     topics: ["trees", "recursion"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
     acceptance: 75, xp: 10,
@@ -286,7 +282,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "invert-binary-tree", number: 10, title: "Invert Binary Tree", difficulty: "Easy",
+    id: "invert-binary-tree", number: 9, title: "Invert Binary Tree", difficulty: "Easy",
     topics: ["trees", "recursion"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
     acceptance: 77, xp: 10,
@@ -310,7 +306,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "number-of-islands", number: 11, title: "Number of Islands", difficulty: "Medium",
+    id: "number-of-islands", number: 10, title: "Number of Islands", difficulty: "Medium",
     topics: ["graphs", "recursion"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg", "Uber"],
     acceptance: 54, xp: 25,
@@ -334,7 +330,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "clone-graph", number: 12, title: "Clone Graph", difficulty: "Medium",
+    id: "clone-graph", number: 11, title: "Clone Graph", difficulty: "Medium",
     topics: ["graphs", "hash-map"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Adobe"],
     acceptance: 49, xp: 25,
@@ -355,7 +351,24 @@ export const DSA_PROBLEMS = [
     tests: [
       { name: "Clones single node", validate: (code) => { try { return new Function(`${code}; function Node(v,n){this.val=v;this.neighbors=n||[]} const o=new Node(1); const c=cloneGraph(o); return c!==null && c.val===1 && c!==o;`)() === true; } catch { return false; } } },
       { name: "Returns null", validate: (code) => { try { return new Function(`${code}; return cloneGraph(null);`)() === null; } catch { return false; } } },
-      { name: "Handles cycles", validate: anyTest(testContains("Map"), testContains("visited")) },
+      {
+        name: "Handles cycles",
+        validate: (code) => {
+          try {
+            return new Function(`${code}
+function Node(v,n){this.val=v;this.neighbors=n||[]}
+const n1 = new Node(1);
+const n2 = new Node(2);
+n1.neighbors.push(n2);
+n2.neighbors.push(n1);
+const c1 = cloneGraph(n1);
+return c1 !== null && c1 !== n1 && c1.val === 1 && c1.neighbors.length === 1 &&
+  c1.neighbors[0].val === 2 && c1.neighbors[0] !== n2 &&
+  c1.neighbors[0].neighbors.length === 1 && c1.neighbors[0].neighbors[0] === c1;
+`)() === true;
+          } catch { return false; }
+        },
+      },
     ],
   },
 
@@ -365,7 +378,7 @@ export const DSA_PROBLEMS = [
 
   {
     id: "min-stack",
-    number: 13,
+    number: 12,
     title: "Min Stack",
     difficulty: "Medium",
     topics: ["stack"],
@@ -410,15 +423,35 @@ export const DSA_PROBLEMS = [
         },
       },
       {
-        name: "Uses auxiliary stack pattern",
-        validate: anyTest(testContains("minStack"), testContains("min")),
+        name: "getMin stays correct after popping through duplicate minimums",
+        validate: (code) => {
+          try {
+            const fn = new Function(`${code}
+const ms = new MinStack();
+ms.push(5); ms.push(3); ms.push(3); ms.push(7); ms.push(2);
+const g1 = ms.getMin();
+ms.pop();
+const g2 = ms.getMin();
+ms.pop();
+const g3 = ms.getMin();
+const t1 = ms.top();
+ms.pop();
+const g4 = ms.getMin();
+ms.pop();
+const g5 = ms.getMin();
+const t2 = ms.top();
+return JSON.stringify({ g1, g2, g3, t1, g4, g5, t2 });
+`)();
+            return fn === JSON.stringify({ g1: 2, g2: 3, g3: 3, t1: 3, g4: 3, g5: 5, t2: 5 });
+          } catch { return false; }
+        },
       },
     ],
   },
 
   {
     id: "daily-temperatures",
-    number: 14,
+    number: 13,
     title: "Daily Temperatures",
     difficulty: "Medium",
     topics: ["stack"],
@@ -470,10 +503,6 @@ export const DSA_PROBLEMS = [
           try { return JSON.stringify(new Function(`${code}; return dailyTemperatures([30,40,50,60]);`)()) === JSON.stringify([1,1,1,0]); } catch { return false; }
         },
       },
-      {
-        name: "Uses stack pattern",
-        validate: testContains("push(") && testContains("pop("),
-      },
     ],
   },
 
@@ -483,7 +512,7 @@ export const DSA_PROBLEMS = [
 
   {
     id: "implement-queue-using-stacks",
-    number: 15,
+    number: 14,
     title: "Implement Queue using Stacks",
     difficulty: "Easy",
     topics: ["queue", "stack"],
@@ -528,8 +557,26 @@ export const DSA_PROBLEMS = [
         },
       },
       {
-        name: "Uses two stacks",
-        validate: testContains("input") && testContains("output"),
+        name: "Handles interleaved push/pop across stack transfers",
+        validate: (code) => {
+          try {
+            const fn = new Function(`${code}
+const q = new MyQueue();
+q.push(1); q.push(2); q.push(3);
+const peek1 = q.peek();
+const pop1 = q.pop();
+q.push(4);
+const pop2 = q.pop();
+const pop3 = q.pop();
+const peek2 = q.peek();
+const empty1 = q.empty();
+const pop4 = q.pop();
+const empty2 = q.empty();
+return JSON.stringify({ peek1, pop1, pop2, pop3, peek2, empty1, pop4, empty2 });
+`)();
+            return fn === JSON.stringify({ peek1: 1, pop1: 1, pop2: 2, pop3: 3, peek2: 4, empty1: false, pop4: 4, empty2: true });
+          } catch { return false; }
+        },
       },
     ],
   },
@@ -598,16 +645,12 @@ export const DSA_PROBLEMS = [
           try { return new Function(`${code}; return isPalindrome(" ");`)() === true; } catch { return false; }
         },
       },
-      {
-        name: "Uses two pointers",
-        validate: testContains("left") && testContains("right"),
-      },
     ],
   },
 
   {
     id: "three-sum",
-    number: 17,
+    number: 18,
     title: "3Sum",
     difficulty: "Medium",
     topics: ["two-pointers", "arrays"],
@@ -634,10 +677,10 @@ export const DSA_PROBLEMS = [
       "Skip duplicate values to avoid duplicate triplets in the result.",
     ],
     bruteForceSolution: {
-      code: "function threeSum(nums) {\n  const result = [];\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      for (let k = j + 1; k < nums.length; k++) {\n        if (nums[i] + nums[j] + nums[k] === 0) {\n          result.push([nums[i], nums[j], nums[k]]);\n        }\n      }\n    }\n  }\n  return result;\n}",
+      code: "function threeSum(nums) {\n  const result = [];\n  const seen = new Set();\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      for (let k = j + 1; k < nums.length; k++) {\n        if (nums[i] + nums[j] + nums[k] === 0) {\n          const triplet = [nums[i], nums[j], nums[k]].sort((a, b) => a - b);\n          const key = triplet.join(',');\n          if (!seen.has(key)) {\n            seen.add(key);\n            result.push(triplet);\n          }\n        }\n      }\n    }\n  }\n  return result;\n}",
       timeComplexity: "O(n³)",
       spaceComplexity: "O(n)",
-      explanation: "Check every possible triplet — O(n³) time. Also includes duplicates.",
+      explanation: "Check every possible triplet — O(n³) time. Dedupe via a Set of sorted-triplet keys, since the same value combination can be found through different index triples.",
     },
     optimizedSolution: {
       code: "function threeSum(nums) {\n  nums.sort((a, b) => a - b);\n  const result = [];\n  \n  for (let i = 0; i < nums.length - 2; i++) {\n    if (i > 0 && nums[i] === nums[i - 1]) continue; // skip duplicates\n    \n    let left = i + 1, right = nums.length - 1;\n    \n    while (left < right) {\n      const sum = nums[i] + nums[left] + nums[right];\n      \n      if (sum === 0) {\n        result.push([nums[i], nums[left], nums[right]]);\n        while (left < right && nums[left] === nums[left + 1]) left++;\n        while (left < right && nums[right] === nums[right - 1]) right--;\n        left++;\n        right--;\n      } else if (sum < 0) {\n        left++;\n      } else {\n        right--;\n      }\n    }\n  }\n  \n  return result;\n}",
@@ -668,10 +711,6 @@ export const DSA_PROBLEMS = [
           try { return JSON.stringify(new Function(`${code}; return threeSum([0,0,0]);`)()) === "[[0,0,0]]"; } catch { return false; }
         },
       },
-      {
-        name: "Uses sorting and two pointers",
-        validate: testContains("sort(") && testContains("left") && testContains("right"),
-      },
     ],
   },
 
@@ -681,7 +720,7 @@ export const DSA_PROBLEMS = [
 
   {
     id: "longest-substring-without-repeating",
-    number: 18,
+    number: 19,
     title: "Longest Substring Without Repeating Characters",
     difficulty: "Medium",
     topics: ["sliding-window", "hash-map"],
@@ -740,10 +779,6 @@ export const DSA_PROBLEMS = [
           try { return new Function(`${code}; return lengthOfLongestSubstring("");`)() === 0; } catch { return false; }
         },
       },
-      {
-        name: "Uses sliding window pattern",
-        validate: testContains("left") && testContains("right"),
-      },
     ],
   },
 
@@ -753,7 +788,7 @@ export const DSA_PROBLEMS = [
 
   {
     id: "climbing-stairs",
-    number: 19,
+    number: 20,
     title: "Climbing Stairs",
     difficulty: "Easy",
     topics: ["dp"],
@@ -815,7 +850,7 @@ export const DSA_PROBLEMS = [
 
   {
     id: "coin-change",
-    number: 20,
+    number: 21,
     title: "Coin Change",
     difficulty: "Medium",
     topics: ["dp"],
@@ -872,10 +907,6 @@ export const DSA_PROBLEMS = [
         validate: (code) => {
           try { return new Function(`${code}; return coinChange([1], 0);`)() === 0; } catch { return false; }
         },
-      },
-      {
-        name: "Uses DP array",
-        validate: testContains("dp["),
       },
     ],
   },
@@ -955,7 +986,7 @@ export const DSA_PROBLEMS = [
   },
   {
     id: "valid-sudoku",
-    number: 16,
+    number: 17,
     title: "Valid Sudoku",
     difficulty: "Medium",
     topics: ["arrays", "hash-map"],
@@ -1038,7 +1069,7 @@ export const DSA_PROBLEMS = [
     ]
   },
   {
-    id: "valid-anagram", number: 21, title: "Valid Anagram", difficulty: "Easy",
+    id: "valid-anagram", number: 22, title: "Valid Anagram", difficulty: "Easy",
     topics: ["arrays", "hash-map"],
     companies: ["Amazon", "Bloomberg", "Microsoft", "Google"],
     acceptance: 63, xp: 10,
@@ -1065,7 +1096,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "group-anagrams", number: 22, title: "Group Anagrams", difficulty: "Medium",
+    id: "group-anagrams", number: 23, title: "Group Anagrams", difficulty: "Medium",
     topics: ["arrays", "hash-map", "sorting"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg", "Uber"],
     acceptance: 55, xp: 20,
@@ -1089,7 +1120,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "product-of-array-except-self", number: 23, title: "Product of Array Except Self", difficulty: "Medium",
+    id: "product-of-array-except-self", number: 24, title: "Product of Array Except Self", difficulty: "Medium",
     topics: ["arrays"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg", "Adobe"],
     acceptance: 65, xp: 20,
@@ -1116,7 +1147,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "top-k-frequent-elements", number: 24, title: "Top K Frequent Elements", difficulty: "Medium",
+    id: "top-k-frequent-elements", number: 25, title: "Top K Frequent Elements", difficulty: "Medium",
     compareMode: "unordered",
     topics: ["arrays", "hash-map", "heap", "sorting"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Yahoo"],
@@ -1144,7 +1175,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "longest-consecutive-sequence", number: 25, title: "Longest Consecutive Sequence", difficulty: "Medium",
+    id: "longest-consecutive-sequence", number: 26, title: "Longest Consecutive Sequence", difficulty: "Medium",
     topics: ["arrays", "hash-map"],
     companies: ["Amazon", "Google", "Meta", "Microsoft"],
     acceptance: 48, xp: 25,
@@ -1171,7 +1202,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "two-sum-ii", number: 26, title: "Two Sum II - Input Array Is Sorted", difficulty: "Medium",
+    id: "two-sum-ii", number: 28, title: "Two Sum II - Input Array Is Sorted", difficulty: "Medium",
     topics: ["arrays", "two-pointers"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Adobe"],
     acceptance: 60, xp: 15,
@@ -1198,7 +1229,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "container-with-most-water", number: 27, title: "Container With Most Water", difficulty: "Medium",
+    id: "container-with-most-water", number: 29, title: "Container With Most Water", difficulty: "Medium",
     topics: ["arrays", "two-pointers", "greedy"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg", "Adobe"],
     acceptance: 56, xp: 20,
@@ -1225,7 +1256,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "trapping-rain-water", number: 28, title: "Trapping Rain Water", difficulty: "Hard",
+    id: "trapping-rain-water", number: 31, title: "Trapping Rain Water", difficulty: "Hard",
     topics: ["arrays", "two-pointers"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
     acceptance: 45, xp: 30,
@@ -1252,7 +1283,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "best-time-to-buy-sell-stock", number: 29, title: "Best Time to Buy and Sell Stock", difficulty: "Easy",
+    id: "best-time-to-buy-sell-stock", number: 33, title: "Best Time to Buy and Sell Stock", difficulty: "Easy",
     topics: ["arrays", "sliding-window", "dp"],
     companies: ["Amazon", "Meta", "Apple"],
     acceptance: 54, xp: 15,
@@ -1279,7 +1310,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "longest-repeating-character-replacement", number: 30, title: "Longest Repeating Character Replacement", difficulty: "Medium",
+    id: "longest-repeating-character-replacement", number: 36, title: "Longest Repeating Character Replacement", difficulty: "Medium",
     topics: ["strings", "sliding-window"],
     companies: ["Amazon", "Google", "Meta", "Microsoft"],
     acceptance: 51, xp: 20,
@@ -1306,7 +1337,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "permutation-in-string", number: 31, title: "Permutation in String", difficulty: "Medium",
+    id: "permutation-in-string", number: 37, title: "Permutation in String", difficulty: "Medium",
     topics: ["strings", "sliding-window", "hash-map"],
     companies: ["Amazon", "Microsoft", "Meta"],
     acceptance: 46, xp: 20,
@@ -1333,7 +1364,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "minimum-window-substring", number: 32, title: "Minimum Window Substring", difficulty: "Hard",
+    id: "minimum-window-substring", number: 39, title: "Minimum Window Substring", difficulty: "Hard",
     topics: ["strings", "sliding-window", "hash-map"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
     acceptance: 40, xp: 30,
@@ -1360,7 +1391,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "sliding-window-maximum", number: 33, title: "Sliding Window Maximum", difficulty: "Hard",
+    id: "sliding-window-maximum", number: 41, title: "Sliding Window Maximum", difficulty: "Hard",
     topics: ["arrays", "sliding-window", "heap"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
     acceptance: 43, xp: 30,
@@ -1387,7 +1418,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "evaluate-reverse-polish-notation", number: 34, title: "Evaluate Reverse Polish Notation", difficulty: "Medium",
+    id: "evaluate-reverse-polish-notation", number: 42, title: "Evaluate Reverse Polish Notation", difficulty: "Medium",
     topics: ["stack", "arrays"],
     companies: ["Amazon", "Google", "LinkedIn"],
     acceptance: 47, xp: 20,
@@ -1414,7 +1445,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "generate-parentheses", number: 35, title: "Generate Parentheses", difficulty: "Medium",
+    id: "generate-parentheses", number: 43, title: "Generate Parentheses", difficulty: "Medium",
     topics: ["stack", "backtracking"],
     companies: ["Amazon", "Google", "Meta", "Microsoft"],
     acceptance: 50, xp: 20,
@@ -1441,7 +1472,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "car-fleet", number: 36, title: "Car Fleet", difficulty: "Medium",
+    id: "car-fleet", number: 44, title: "Car Fleet", difficulty: "Medium",
     topics: ["stack", "sorting", "arrays"],
     companies: ["Google", "Amazon"],
     acceptance: 44, xp: 25,
@@ -1468,7 +1499,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "largest-rectangle-in-histogram", number: 37, title: "Largest Rectangle in Histogram", difficulty: "Hard",
+    id: "largest-rectangle-in-histogram", number: 45, title: "Largest Rectangle in Histogram", difficulty: "Hard",
     topics: ["stack", "arrays"],
     companies: ["Amazon", "Google", "Meta", "Microsoft"],
     acceptance: 42, xp: 30,
@@ -1495,7 +1526,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "search-2d-matrix", number: 27, title: "Search a 2D Matrix", difficulty: "Medium",
+    id: "search-2d-matrix", number: 30, title: "Search a 2D Matrix", difficulty: "Medium",
     topics: ["binary-search","arrays"],
     companies: ["Amazon","Google","Meta","Microsoft"],
     acceptance: 49, xp: 20,
@@ -1599,7 +1630,7 @@ export const DSA_PROBLEMS = [
     ]
   },
   {
-    id: "koko-eating-bananas", number: 28, title: "Koko Eating Bananas", difficulty: "Medium",
+    id: "koko-eating-bananas", number: 32, title: "Koko Eating Bananas", difficulty: "Medium",
     topics: ["binary-search","arrays"],
     companies: ["Google","Amazon","Meta","Airbnb"],
     acceptance: 50, xp: 20,
@@ -1675,7 +1706,7 @@ export const DSA_PROBLEMS = [
     ]
   },
   {
-    id: "find-min-rotated", number: 29, title: "Find Minimum in Rotated Sorted Array", difficulty: "Medium",
+    id: "find-min-rotated", number: 34, title: "Find Minimum in Rotated Sorted Array", difficulty: "Medium",
     topics: ["binary-search","arrays"],
     companies: ["Google","Amazon","Meta","Microsoft"],
     acceptance: 49, xp: 20,
@@ -1753,7 +1784,7 @@ export const DSA_PROBLEMS = [
     ]
   },
   {
-    id: "time-based-kv", number: 31, title: "Time Based Key-Value Store", difficulty: "Medium",
+    id: "time-based-kv", number: 38, title: "Time Based Key-Value Store", difficulty: "Medium",
     topics: ["binary-search","hash-map"],
     companies: ["Netflix","Google","Amazon","Stripe"],
     acceptance: 53, xp: 20,
@@ -1799,7 +1830,7 @@ export const DSA_PROBLEMS = [
     ]
   },
   {
-    id: "median-two-sorted", number: 32, title: "Median of Two Sorted Arrays", difficulty: "Hard",
+    id: "median-two-sorted", number: 40, title: "Median of Two Sorted Arrays", difficulty: "Hard",
     topics: ["binary-search","arrays"],
     companies: ["Google","Amazon","Meta","Microsoft"],
     acceptance: 40, xp: 30,
@@ -1877,7 +1908,7 @@ export const DSA_PROBLEMS = [
     ]
   },
   {
-    id: "linked-list-cycle", number: 38, title: "Linked List Cycle", difficulty: "Easy",
+    id: "linked-list-cycle", number: 46, title: "Linked List Cycle", difficulty: "Easy",
     topics: ["linked-list", "two-pointers"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
     acceptance: 48, xp: 15,
@@ -1904,7 +1935,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "reorder-list", number: 39, title: "Reorder List", difficulty: "Medium",
+    id: "reorder-list", number: 47, title: "Reorder List", difficulty: "Medium",
     topics: ["linked-list", "two-pointers"],
     companies: ["Amazon", "Meta", "Microsoft"],
     acceptance: 51, xp: 20,
@@ -1931,7 +1962,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "remove-nth-node-from-end", number: 40, title: "Remove Nth Node From End of List", difficulty: "Medium",
+    id: "remove-nth-node-from-end", number: 49, title: "Remove Nth Node From End of List", difficulty: "Medium",
     topics: ["linked-list", "two-pointers"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
     acceptance: 44, xp: 20,
@@ -1958,7 +1989,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "copy-list-with-random-pointer", number: 41, title: "Copy List with Random Pointer", difficulty: "Medium",
+    id: "copy-list-with-random-pointer", number: 50, title: "Copy List with Random Pointer", difficulty: "Medium",
     topics: ["linked-list", "hash-map"],
     companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
     acceptance: 53, xp: 25,
@@ -1985,7 +2016,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "add-two-numbers", number: 42, title: "Add Two Numbers", difficulty: "Medium",
+    id: "add-two-numbers", number: 51, title: "Add Two Numbers", difficulty: "Medium",
     topics: ["linked-list", "recursion"],
     companies: ["Amazon", "Microsoft", "Meta", "Adobe"],
     acceptance: 43, xp: 20,
@@ -2012,7 +2043,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "merge-k-sorted-lists", number: 43, title: "Merge k Sorted Lists", difficulty: "Hard",
+    id: "merge-k-sorted-lists", number: 52, title: "Merge k Sorted Lists", difficulty: "Hard",
     topics: ["linked-list", "heap", "recursion"],
     companies: ["Amazon", "Google", "Meta", "Microsoft"],
     acceptance: 47, xp: 30,
@@ -2039,7 +2070,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "reverse-nodes-in-k-group", number: 44, title: "Reverse Nodes in k-Group", difficulty: "Hard",
+    id: "reverse-nodes-in-k-group", number: 53, title: "Reverse Nodes in k-Group", difficulty: "Hard",
     topics: ["linked-list"],
     companies: ["Amazon", "Microsoft", "Meta", "Google"],
     acceptance: 46, xp: 30,
@@ -2066,7 +2097,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "diameter-of-binary-tree", number: 45, title: "Diameter of Binary Tree", difficulty: "Easy",
+    id: "diameter-of-binary-tree", number: 54, title: "Diameter of Binary Tree", difficulty: "Easy",
     topics: ["trees"],
     companies: ["Amazon", "Meta", "Microsoft"],
     acceptance: 55, xp: 15,
@@ -2093,7 +2124,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "balanced-binary-tree", number: 46, title: "Balanced Binary Tree", difficulty: "Easy",
+    id: "balanced-binary-tree", number: 55, title: "Balanced Binary Tree", difficulty: "Easy",
     topics: ["trees"],
     companies: ["Amazon", "Google", "Meta"],
     acceptance: 51, xp: 15,
@@ -2120,7 +2151,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "same-tree", number: 47, title: "Same Tree", difficulty: "Easy",
+    id: "same-tree", number: 56, title: "Same Tree", difficulty: "Easy",
     topics: ["trees"],
     companies: ["Amazon", "Microsoft", "Bloomberg"],
     acceptance: 58, xp: 10,
@@ -2147,7 +2178,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "subtree-of-another-tree", number: 48, title: "Subtree of Another Tree", difficulty: "Easy",
+    id: "subtree-of-another-tree", number: 57, title: "Subtree of Another Tree", difficulty: "Easy",
     topics: ["trees"],
     companies: ["Amazon", "Meta", "Microsoft", "Google"],
     acceptance: 46, xp: 15,
@@ -2174,7 +2205,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "lowest-common-ancestor-bst", number: 49, title: "Lowest Common Ancestor of a Binary Search Tree", difficulty: "Medium",
+    id: "lowest-common-ancestor-bst", number: 59, title: "Lowest Common Ancestor of a Binary Search Tree", difficulty: "Medium",
     topics: ["trees", "binary-search"],
     companies: ["Amazon", "Meta", "Microsoft", "Google"],
     acceptance: 61, xp: 20,
@@ -2201,7 +2232,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "binary-tree-level-order-traversal", number: 50, title: "Binary Tree Level Order Traversal", difficulty: "Medium",
+    id: "binary-tree-level-order-traversal", number: 60, title: "Binary Tree Level Order Traversal", difficulty: "Medium",
     topics: ["trees"],
     companies: ["Amazon", "Meta", "Microsoft", "LinkedIn"],
     acceptance: 64, xp: 20,
@@ -2228,7 +2259,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "binary-tree-right-side-view", number: 51, title: "Binary Tree Right Side View", difficulty: "Medium",
+    id: "binary-tree-right-side-view", number: 61, title: "Binary Tree Right Side View", difficulty: "Medium",
     topics: ["trees"],
     companies: ["Amazon", "Meta", "Microsoft", "Google"],
     acceptance: 60, xp: 20,
@@ -2255,7 +2286,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "count-good-nodes-in-binary-tree", number: 52, title: "Count Good Nodes in Binary Tree", difficulty: "Medium",
+    id: "count-good-nodes-in-binary-tree", number: 63, title: "Count Good Nodes in Binary Tree", difficulty: "Medium",
     topics: ["trees"],
     companies: ["Amazon", "Microsoft"],
     acceptance: 68, xp: 20,
@@ -2282,7 +2313,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "validate-binary-search-tree", number: 53, title: "Validate Binary Search Tree", difficulty: "Medium",
+    id: "validate-binary-search-tree", number: 64, title: "Validate Binary Search Tree", difficulty: "Medium",
     topics: ["trees", "binary-search"],
     companies: ["Amazon", "Meta", "Microsoft", "Google", "Bloomberg"],
     acceptance: 52, xp: 25,
@@ -2309,7 +2340,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "kth-smallest-element-bst", number: 54, title: "Kth Smallest Element in a BST", difficulty: "Medium",
+    id: "kth-smallest-element-bst", number: 65, title: "Kth Smallest Element in a BST", difficulty: "Medium",
     topics: ["trees", "binary-search"],
     companies: ["Amazon", "Meta", "Microsoft", "Bloomberg"],
     acceptance: 71, xp: 20,
@@ -2336,7 +2367,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "construct-binary-tree-preorder-inorder", number: 55, title: "Construct Binary Tree from Preorder and Inorder Traversal", difficulty: "Medium",
+    id: "construct-binary-tree-preorder-inorder", number: 67, title: "Construct Binary Tree from Preorder and Inorder Traversal", difficulty: "Medium",
     topics: ["trees"],
     companies: ["Amazon", "Microsoft", "Meta", "Bloomberg"],
     acceptance: 58, xp: 25,
@@ -2363,7 +2394,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "binary-tree-maximum-path-sum", number: 56, title: "Binary Tree Maximum Path Sum", difficulty: "Hard",
+    id: "binary-tree-maximum-path-sum", number: 69, title: "Binary Tree Maximum Path Sum", difficulty: "Hard",
     topics: ["trees"],
     companies: ["Amazon", "Meta", "Microsoft", "Google", "Bloomberg"],
     acceptance: 39, xp: 30,
@@ -2390,7 +2421,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "serialize-deserialize-binary-tree", number: 57, title: "Serialize and Deserialize Binary Tree", difficulty: "Hard",
+    id: "serialize-deserialize-binary-tree", number: 71, title: "Serialize and Deserialize Binary Tree", difficulty: "Hard",
     topics: ["trees"],
     companies: ["Amazon", "Meta", "Microsoft", "Google"],
     acceptance: 57, xp: 30,
@@ -2581,7 +2612,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "combination-sum", number: 39, title: "Combination Sum", difficulty: "Medium",
+    id: "combination-sum", number: 48, title: "Combination Sum", difficulty: "Medium",
     topics: ["backtracking","arrays"], companies: ["Airbnb","Amazon"], acceptance: 70, xp: 15,
     problemStatement: "Given an array of **distinct** integers `candidates` and a target integer `target`, return a list of all **unique combinations** of `candidates` where the chosen numbers sum to `target`.",
     examples: [{"input":"candidates = [2,3,6,7], target = 7","output":"[[2,2,3],[7]]"}],
@@ -2671,7 +2702,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "jump-game", number: 55, title: "Jump Game", difficulty: "Medium",
+    id: "jump-game", number: 68, title: "Jump Game", difficulty: "Medium",
     topics: ["greedy","dp"], companies: ["Amazon","Microsoft"], acceptance: 38, xp: 15,
     problemStatement: "Return `true` if you can reach the last index starting from index 0 with maximum jump lengths given by `nums[i]`.",
     examples: [{"input":"nums = [2,3,1,1,4]","output":"true"}],
@@ -2779,7 +2810,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "insert-interval", number: 57, title: "Insert Interval", difficulty: "Medium",
+    id: "insert-interval", number: 72, title: "Insert Interval", difficulty: "Medium",
     topics: ["arrays"], companies: ["Google","Meta"], acceptance: 40, xp: 15,
     problemStatement: "Insert `newInterval` into `intervals` (sorted non-overlapping) and merge if necessary.",
     examples: [{"input":"intervals = [[1,3],[6,9]], newInterval = [2,5]","output":"[[1,5],[6,9]]"}],
@@ -2797,7 +2828,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "merge-intervals", number: 56, title: "Merge Intervals", difficulty: "Medium",
+    id: "merge-intervals", number: 70, title: "Merge Intervals", difficulty: "Medium",
     topics: ["arrays","sorting"], companies: ["Amazon","Meta","Google"], acceptance: 47, xp: 15,
     problemStatement: "Given an array of `intervals`, merge all overlapping intervals.",
     examples: [{"input":"intervals = [[1,3],[2,6],[8,10],[15,18]]","output":"[[1,6],[8,10],[15,18]]"}],
@@ -2887,7 +2918,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "spiral-matrix", number: 54, title: "Spiral Matrix", difficulty: "Medium",
+    id: "spiral-matrix", number: 66, title: "Spiral Matrix", difficulty: "Medium",
     topics: ["arrays"], companies: ["Microsoft","Amazon"], acceptance: 48, xp: 15,
     problemStatement: "Given an `m x n` matrix, return all elements of the matrix in spiral order.",
     examples: [{"input":"matrix = [[1,2,3],[4,5,6],[7,8,9]]","output":"[1,2,3,6,9,8,7,4,5]"}],
@@ -2905,7 +2936,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "rotate-image", number: 48, title: "Rotate Image", difficulty: "Medium",
+    id: "rotate-image", number: 58, title: "Rotate Image", difficulty: "Medium",
     topics: ["arrays"], companies: ["Amazon","Google","Microsoft"], acceptance: 73, xp: 15,
     problemStatement: "Rotate an `n x n` 2D matrix 90 degrees clockwise **in-place**.",
     examples: [{"input":"matrix = [[1,2,3],[4,5,6],[7,8,9]]","output":"[[7,4,1],[8,5,2],[9,6,3]]"}],
@@ -2941,7 +2972,7 @@ export const DSA_PROBLEMS = [
     ],
   },
   {
-    id: "longest-palindromic-substring", number: 5, title: "Longest Palindromic Substring", difficulty: "Medium",
+    id: "longest-palindromic-substring", number: 6, title: "Longest Palindromic Substring", difficulty: "Medium",
     topics: ["two-pointers","dp"], companies: ["Amazon","Meta","Microsoft"], acceptance: 33, xp: 15,
     problemStatement: "Given a string `s`, return the longest palindromic substring in `s`.",
     examples: [{"input":"s = \"babad\"","output":"\"bab\"","explanation":"\"aba\" is also a valid answer."}],

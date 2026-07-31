@@ -229,10 +229,6 @@ function formatArg(v) {
   try { return JSON.stringify(v); } catch { return String(v); }
 }
 
-function formatConsoleArg(v) {
-  try { return typeof v === "object" && v !== null ? JSON.stringify(v, null, 2) : String(v); } catch { return String(v); }
-}
-
 // ─── PROBLEM VIEW ───
 
 export default function DSAProblemView({ problemId }) {
@@ -530,36 +526,54 @@ export default function DSAProblemView({ problemId }) {
   }, [cleanupWorker, code, functionName, problem]);
 
   // Legacy validate() suite — the source of truth for Accepted/solved.
-  const runLegacySuite = useCallback(() => {
-    try {
-      new Function(code);
-    } catch (e) {
-      return {
-        results: problem.tests.map((test, i) => ({
-          index: i, name: test.name, passed: false,
-          error: `Syntax error: ${e.message}`,
-        })),
-        allPassed: false,
-        syntaxError: e.message,
-      };
-    }
+  // Runs in a sandboxed worker (not the main thread) so a submitted infinite
+  // loop can't freeze the tab; races against a timeout and hard-kills the
+  // worker if it doesn't finish, same TLE pattern as execWorker below.
+  const execLegacyWorker = useCallback((onLog) => {
+    return new Promise((resolve) => {
+      cleanupWorker();
+      const runId = ++runIdRef.current;
 
-    const results = problem.tests.map((test, i) => {
+      let worker;
       try {
-        const startTime = performance.now();
-        const passed = test.validate(code);
-        const endTime = performance.now();
-        return {
-          index: i, name: test.name, passed,
-          error: passed ? null : "Test failed",
-          time: (endTime - startTime).toFixed(2),
-        };
-      } catch (e) {
-        return { index: i, name: test.name, passed: false, error: e?.message || "Test failed" };
+        worker = new Worker(new URL("../../workers/dsa-legacy-judge.worker.js", import.meta.url), { type: "module" });
+      } catch {
+        resolve({ results: [], allPassed: false, syntaxError: null, timedOut: false, workerUnavailable: true });
+        return;
       }
+      workerRef.current = worker;
+
+      worker.onmessage = (event) => {
+        if (event.data.runId !== runId) return;
+        if (event.data.type === "log") {
+          if (onLog) onLog(event.data.logType, event.data.content);
+          return;
+        }
+        if (event.data.type === "done") {
+          clearTimeout(workerTimeoutRef.current);
+          workerRef.current = null;
+          worker.terminate();
+          resolve({ ...event.data, timedOut: false });
+        }
+      };
+
+      worker.onerror = () => {
+        clearTimeout(workerTimeoutRef.current);
+        workerRef.current = null;
+        worker.terminate();
+        resolve({ results: [], allPassed: false, syntaxError: "Worker error", timedOut: false });
+      };
+
+      workerTimeoutRef.current = setTimeout(() => {
+        if (runIdRef.current !== runId) return;
+        worker.terminate();
+        workerRef.current = null;
+        resolve({ results: [], allPassed: false, syntaxError: null, timedOut: true });
+      }, problem?.timeLimitMs || TIME_LIMIT_MS);
+
+      worker.postMessage({ runId, problemId: problem.id, code });
     });
-    return { results, allPassed: results.length > 0 && results.every(r => r.passed), syntaxError: null };
-  }, [code, problem]);
+  }, [cleanupWorker, code, problem]);
 
   // Run — executes visible sample tests in the judge worker (real execution).
   // Console Output shows whatever the user's own console.log/warn/error calls
@@ -643,19 +657,22 @@ export default function DSAProblemView({ problemId }) {
       finalVerdict = "runtime_error";
     } else if (workerData && workerData.verdict === "time_limit_exceeded") {
       finalVerdict = "time_limit_exceeded";
+    } else if (workerData && workerData.verdict === "wrong_answer") {
+      // Failing a REAL executed sample test is authoritative — don't let the
+      // legacy validate() suite (which can be a source-text pattern check,
+      // e.g. testContains("Map(")) override a genuine wrong answer.
+      finalVerdict = "wrong_answer";
     } else {
-      // Capture console.log from the (main-thread, synchronous) hidden-test
-      // suite too, so print-debugging still works when Submit is what runs it.
-      const origLog = console.log, origWarn = console.warn, origErr = console.error;
-      console.log = (...a) => setOutput(prev => [...prev, { type: "log", content: a.map(formatConsoleArg).join(" ") }]);
-      console.warn = (...a) => setOutput(prev => [...prev, { type: "warn", content: a.map(formatConsoleArg).join(" ") }]);
-      console.error = (...a) => setOutput(prev => [...prev, { type: "error", content: a.map(formatConsoleArg).join(" ") }]);
-      try {
-        legacy = runLegacySuite();
-      } finally {
-        console.log = origLog; console.warn = origWarn; console.error = origErr;
+      legacy = await execLegacyWorker((logType, content) => {
+        setOutput(prev => [...prev, { type: logType, content }]);
+      });
+      if (legacy.timedOut) {
+        finalVerdict = "time_limit_exceeded";
+      } else if (legacy.workerUnavailable) {
+        finalVerdict = "runtime_error";
+      } else {
+        finalVerdict = legacy.allPassed ? "accepted" : "wrong_answer";
       }
-      finalVerdict = legacy.allPassed ? "accepted" : "wrong_answer";
     }
 
     const rows = legacy ? legacy.results : [];
@@ -691,7 +708,7 @@ export default function DSAProblemView({ problemId }) {
     setSubmissions(subs[problem.id]);
 
     setIsSubmitting(false);
-  }, [problem, isRunning, isSubmitting, sampleTests, execWorker, runLegacySuite, code]);
+  }, [problem, isRunning, isSubmitting, sampleTests, execWorker, execLegacyWorker, code]);
 
   runActionRef.current = handleRun;
   submitActionRef.current = handleSubmit;
