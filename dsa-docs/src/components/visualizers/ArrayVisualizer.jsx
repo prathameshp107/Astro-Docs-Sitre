@@ -44,19 +44,27 @@ const PREFIX_SUM_CODE = [
 
 const TRACK_TITLES = {
   access: '1. Access by Index',
+  insertion: '2. Insertion at Index',
   insert: '2. Insertion at Index',
+  deletion: '3. Deletion by Index',
   delete: '3. Deletion by Index',
+  'linear-search': '4. Linear Search',
   search: '4. Linear Search',
+  'reverse-array': '5. Reverse Array',
   reverse: '5. Reverse Array',
   'prefix-sum': '6. Prefix Sum Array',
 };
 
 const EXPECTED_OUTPUTS = {
   access: '58 (Direct O(1) Memory Lookup)',
+  insertion: '[10, 20, 99, 30, 40] (99 inserted at index 2)',
   insert: '[10, 20, 99, 30, 40] (99 inserted at index 2)',
-  delete: '[10, 99, 30, 40] (Index 1 deleted)',
-  search: 'Index 3 (Value 23 found)',
-  reverse: '[6, 5, 4, 3, 2, 1]',
+  deletion: '[10, 20, 30, 40] (Index 2 deleted)',
+  delete: '[10, 20, 30, 40] (Index 2 deleted)',
+  'linear-search': 'Index 5 (Target 23 found)',
+  search: 'Index 5 (Target 23 found)',
+  'reverse-array': '[5, 4, 3, 2, 1]',
+  reverse: '[5, 4, 3, 2, 1]',
   'prefix-sum': '[2, 6, 7, 10, 15]',
 };
 
@@ -98,17 +106,17 @@ export default function ArrayVisualizer() {
   }, [isPlaying, currentStep, speed, steps.length, nextStep]);
 
   const activeCode =
-    track === 'access'
-      ? ACCESS_CODE
-      : track === 'insert'
+    track === 'insertion' || track === 'insert'
       ? INSERT_CODE
-      : track === 'delete'
+      : track === 'deletion' || track === 'delete'
       ? DELETE_CODE
-      : track === 'search'
+      : track === 'linear-search' || track === 'search'
       ? SEARCH_CODE
-      : track === 'reverse'
+      : track === 'reverse-array' || track === 'reverse'
       ? REVERSE_CODE
-      : PREFIX_SUM_CODE;
+      : track === 'prefix-sum'
+      ? PREFIX_SUM_CODE
+      : ACCESS_CODE;
 
   const trackLabel = TRACK_TITLES[track] || 'Array Operations';
   const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Output';
@@ -166,18 +174,18 @@ export default function ArrayVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border">
+        <div className="sketch-canvas-box sketch-border overflow-hidden">
           <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
-            Contiguous Memory Array Visualization Canvas
+            Step Execution Canvas
           </div>
 
           {/* Array Cards Container */}
-          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-8 relative pt-6 pb-24 px-4 overflow-x-auto w-full justify-center">
+          <div ref={containerRef} className="flex items-start gap-3 md:gap-5 my-4 relative pt-6 pb-16 min-h-[220px] px-4 overflow-x-auto overflow-y-hidden w-full justify-center">
             {hasSwapArc && (
               <SwapArcConnector containerRef={containerRef} fromIndex={swapFrom} toIndex={swapTo} label="swapping" />
             )}
 
-            {array.map((val, i) => {
+            {(step.array || array).map((val, i) => {
               const isIndex = step.index === i;
               const isLeft = step.left === i;
               const isRight = step.right === i;
@@ -186,9 +194,9 @@ export default function ArrayVisualizer() {
               const isHighlighted = isIndex || isLeft || isRight;
 
               // Action badge triggers
-              const isInserting = track === 'insert' && step.activeLine === 3 && isIndex;
-              const isDeleting = track === 'delete' && step.activeLine === 1 && isIndex;
-              const isFound = track === 'search' && step.activeLine === 3 && isIndex;
+              const isInserting = (track === 'insert' || track === 'insertion') && isIndex && (val === 99 || step.activeLine === 3);
+              const isDeleting = (track === 'delete' || track === 'deletion') && isIndex && (step.activeLine === 1 || step.activeLine === 3);
+              const isFound = (track === 'search' || track === 'linear-search') && isIndex && (step.isMatch || step.activeLine === 3);
               const isSwapping = i === swapFrom || i === swapTo;
 
               return (

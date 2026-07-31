@@ -151,13 +151,13 @@ export default function SlidingWindowVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border">
+        <div className="sketch-canvas-box sketch-border overflow-hidden">
           <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
             Step Execution Canvas
           </div>
 
           {/* Array Cards Container */}
-          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-8 relative pt-6 pb-24 px-4 overflow-x-auto w-full justify-center">
+          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-4 relative pt-4 pb-12 px-4 overflow-x-auto overflow-y-hidden w-full justify-center">
             {array.map((val, i) => {
               const isLeft = step.left === i;
               const isRight = step.right === i;

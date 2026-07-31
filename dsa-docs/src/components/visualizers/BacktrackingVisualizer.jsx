@@ -212,7 +212,7 @@ export default function BacktrackingVisualizer() {
                 <div className="sketch-border bg-[var(--sketch-bg)] p-4 rounded-2xl border border-[var(--sketch-border)] text-center">
                   <span className="text-xs text-[var(--sketch-text-muted)] block mb-1 font-mono">CURRENT SUBSET PATH:</span>
                   <span className="text-xl font-bold font-mono text-amber-400">
-                    [{step.currentPath?.join(', ') || ''}]
+                    [{(step.currentSubset || step.currentPath || []).join(', ')}]
                   </span>
                 </div>
 

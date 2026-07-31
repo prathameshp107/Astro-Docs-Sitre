@@ -177,13 +177,13 @@ export default function SortingVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border">
+        <div className="sketch-canvas-box sketch-border overflow-hidden">
           <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
-            Sorting Step Execution Canvas
+            Step Execution Canvas
           </div>
 
-          {/* Array Cards Container with Swap Arc Connector */}
-          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-8 relative pt-6 pb-24 px-4 overflow-x-auto w-full justify-center">
+          {/* Array Cards Container */}
+          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-4 relative pt-4 pb-12 px-4 overflow-x-auto overflow-y-hidden w-full justify-center">
             {hasSwapArc && (
               <SwapArcConnector containerRef={containerRef} fromIndex={swapFrom} toIndex={swapTo} label="swapping" />
             )}
