@@ -68,6 +68,51 @@ Structure, for reference when modifying an existing one instead of adding a new 
 
 **Important: the DSA Playground and the Visualizer are NOT linked to each other.** Adding a DSA problem does not automatically surface it in any visualizer, and there's no "topics → visualizer" auto-routing — `DSA_PROBLEMS.topics` values (see the fixed vocabulary below) and `VISUALIZER_MAP` keys are two independently-maintained vocabularies that only partially overlap (e.g. `binary-search`, `sliding-window`, `backtracking`, `greedy`, `trie`, `topological-sort`, `bit-manipulation` currently have NO dedicated visualizer at all). If a new DSA problem's topic already has a visualizer, no visualizer work is needed for it — it just won't be automatically featured there, and that's expected/fine. Don't assume adding a problem with topic `"trie"` gives it a visualizer — it doesn't.
 
+### Adding a New Track / Problem to an Existing Visualizer
+
+To add a new problem or track to an existing visualizer (e.g. adding a new DP problem, Hash Table technique, Heap operation, or Sorting algorithm to `/visualizer/<topic>`):
+
+1. **Register Track Metadata in `src/data/visualizers/dsaTopics.js`**:
+   - Find the topic entry in `DSA_TOPICS` (e.g. `dp`, `hash-table`, `heaps`, `two-pointers`).
+   - Add a new object to its `tracks` array: `{ id: 'track-slug', name: 'Human Title', difficulty: 'Medium', description: '...' }`.
+
+2. **Add Step Sequence & Router in `src/store/visualizers/<topic>Store.js`**:
+   - Create a constant `<TRACK_NAME>_STEPS = [...]` array with granular step objects (7–12+ steps).
+   - Each step object must include: `activeLine`, state variables (`dp1D`, `dp2D`, `buckets`, `openBuckets`, `activeCell`, `depCells`, etc.), `state: { ... }`, and `desc`.
+   - Update `setTrack(trackKey)` inside `use<Topic>Store` to handle `if (track === 'track-slug')`.
+
+3. **Add Synchronized Step Logic in `src/components/visualizers/logicData/<topic>Logic.js`**:
+   - Add a key `'track-slug': { title, input, goal, terms, array, steps: [...] }` to the exported logic object.
+   - **Crucial**: The `steps` array MUST match `*Store.js` 1-to-1 in step count, and EVERY step object must include all visual state properties so `LogicSection.jsx` can render the step's structural diagram.
+
+4. **Update Visualizer View Component `src/components/visualizers/<Topic>Visualizer.jsx`**:
+   - Add pseudocode constant `const <TRACK_NAME>_CODE = [...]` for line-by-line code highlighting.
+   - If the visualizer uses track-specific code rendering, update the code block switcher.
+
+5. **Verify Diagram Routing in `src/components/visualizers/LogicSection.jsx`**:
+   - Add `'track-slug'` to the topic condition check (e.g. `isDPTopic`, `isHashTableTopic`, `isHeapTopic`, `isRecursionTopic`).
+   - Ensure the diagram branch handles the track's data structures without falling back to generic containers.
+
+### Visualizer Quality & Logic Section Standards (Store, Logic & Diagrams)
+
+When adding or modifying visualizer tracks (`/visualizer/*`), strictly follow these core standards:
+
+1. **Maximum Step Granularity**:
+   - Stores (`*Store.js`) and logic files (`*Logic.js`) MUST break down operations into as many step-by-step state transitions as possible (e.g. 7–12+ steps per problem/track).
+   - Every step sequence must include: **Problem Setup** (step 1), **Base Case / Allocation**, **Line-by-line transitions**, **Verification / Traceback**, and a **Completion Step** (`* COMPLETE 🎉`).
+
+2. **1-to-1 Step Synchronization & Data Completeness**:
+   - `LogicSection.jsx` reads step data from `*Logic.js` (`SPECIFIC_PROBLEM_LOGIC[track]`).
+   - Every step object in `*Logic.js` MUST contain:
+     - `stepNum`, `title`, `computation`, `comparison`, `action`, `desc`
+     - **All visual state properties** (`dp1D`, `dp2D`, `activeCell`, `depCells`, `buckets`, `openBuckets`, `hashIdx`, `probeIdx`, `collision`, `mapState`, `anagramGroups`, etc.) matching `*Store.js` so that `LogicSection` renders the exact structural diagram for every single step without falling back to blank boxes or generic array placeholders.
+
+3. **Clean Design Standards & UI Polish**:
+   - **No `framer-motion` layout-shifting keyframes**: Use pure CSS/JS transitions (`transition: transform 0.3s ease`) for node/card state animations to ensure instant responsiveness and prevent container height collapses.
+   - **Chalkboard 1D Array Card Aesthetics**: 1D arrays (Two Pointers, Linear Probing, Arrays, Sorting, Searching) must use `sketch-card` styling with clean index badges (`[0]`, `[1]`, `[2]`, `[3]`) and simple, un-boxed pointer badges below (`sketch-pointer` with label text + `▲` arrow), matching the clean Two-Pointers (`two-sum-ii`) design.
+   - **Completion Banner**: Visualizers should render a clear top-right completion badge card (`✔ Operation Complete — ... 🎉`) when `currentStep >= steps.length - 1`.
+   - **No Truncation / Clipping**: Containers for 1D arrays (like `dp[0..11]` in Coin Change) or 2D grids must use generous maximum widths (`max-w-[760px]`) and responsive card sizing (`min-w-[38px] md:min-w-[46px]`) with vertical padding (`pb-8`) so index labels, rightmost slots, and pointer arrows (`curr ▲`) are never cut off.
+
 ---
 
 ## Adding a new DSA problem (`/dsa/problems`)
