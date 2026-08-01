@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useHashTableStore } from '../../store/visualizers/hashTableStore';
 
 const SEPARATE_CHAINING_CODE = [
@@ -133,6 +132,13 @@ export default function HashTableVisualizer() {
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
         <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+          {/* Completion Status Banner */}
+          {currentStep >= steps.length - 1 && (
+            <div className="absolute top-3 right-4 z-20 flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/60 shadow-lg shadow-emerald-500/20">
+              <span className="text-emerald-300 font-header font-bold text-sm">✔ Operation Complete</span>
+              <span className="text-emerald-400 font-mono text-xs">— {step.state?.status || 'Hash Table Complete 🎉'}</span>
+            </div>
+          )}
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
             <span>
               {buckets
@@ -174,18 +180,16 @@ export default function HashTableVisualizer() {
                       ) : (
                         chain.map((node, nIdx) => (
                           <div key={nIdx} className="flex items-center gap-1.5 shrink-0">
-                            <motion.div
-                              layout
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
+                            <div
                               className="px-3 py-1.5 rounded-xl border-2 border-emerald-500/40 bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-bold flex items-center gap-1 shadow-sm"
+                              style={{ transition: 'transform 0.3s ease, opacity 0.3s ease' }}
                             >
                               <span>"{node.key}"</span>
                               <span className="text-amber-500">: {node.val}</span>
-                            </motion.div>
+                            </div>
 
                             {nIdx < chain.length - 1 && (
-                              <span className="text-amber-500 font-bold">➔</span>
+                              <span className="text-amber-500 font-bold">➤</span>
                             )}
                           </div>
                         ))
@@ -206,8 +210,11 @@ export default function HashTableVisualizer() {
 
                 return (
                   <div key={sIdx} className="relative flex flex-col items-center flex-1 min-w-[55px]">
-                    <motion.div
-                      animate={{ scale: isActive ? 1.1 : 1, y: isActive ? -4 : 0 }}
+                    <div
+                      style={{
+                        transform: isActive ? 'scale(1.1) translateY(-4px)' : 'scale(1)',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                      }}
                       className={`w-full h-16 rounded-xl border-2 flex flex-col items-center justify-center font-mono text-xs font-bold ${
                         isActive
                           ? 'border-amber-400 bg-amber-500/25 text-amber-500 ring-2 ring-amber-400/50'
@@ -218,7 +225,7 @@ export default function HashTableVisualizer() {
                     >
                       <span>{val ? `"${val}"` : '∅'}</span>
                       <span className="text-[10px] text-[var(--sketch-text-muted)] mt-0.5">[{sIdx}]</span>
-                    </motion.div>
+                    </div>
                   </div>
                 );
               })}

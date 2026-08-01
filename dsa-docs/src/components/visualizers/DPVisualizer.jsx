@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useDPStore } from '../../store/visualizers/dpStore';
 
 const CLIMBING_STAIRS_CODE = [
@@ -133,6 +132,14 @@ export default function DPVisualizer() {
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
         <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+          {/* Completion Status Banner */}
+          {currentStep >= steps.length - 1 && (
+            <div className="absolute top-3 right-4 z-20 flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/60 shadow-lg shadow-emerald-500/20">
+              <span className="text-emerald-300 font-header font-bold text-sm">✔ Operation Complete</span>
+              <span className="text-emerald-400 font-mono text-xs">— {step.state?.status || 'DP Complete 🎉'}</span>
+            </div>
+          )}
+
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
             <span>{dp2D ? '2D DP Memoization Table Grid Canvas' : '1D DP Memoization Array Canvas'}</span>
             <div className="flex items-center gap-3">
@@ -151,13 +158,12 @@ export default function DPVisualizer() {
 
                   return (
                     <div key={idx} className="relative flex flex-col items-center flex-1">
-                      <motion.div
-                        animate={{
-                          scale: isActive ? 1.1 : isDep ? 1.04 : 1,
-                          y: isActive ? -6 : 0,
+                      <div
+                        style={{
+                          transform: isActive ? 'scale(1.1) translateY(-6px)' : isDep ? 'scale(1.04)' : 'scale(1)',
+                          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                         }}
-                        transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                        className={`w-full h-20 rounded-2xl border-2 flex flex-col items-center justify-center gap-1 transition-shadow ${
+                        className={`w-full h-20 rounded-2xl border-2 flex flex-col items-center justify-center gap-1 ${
                           isActive
                             ? 'border-amber-400 bg-amber-500/25 text-amber-500 ring-2 ring-amber-400/50 shadow-lg shadow-amber-500/30 font-bold'
                             : isDep
@@ -167,22 +173,15 @@ export default function DPVisualizer() {
                       >
                         <span className="text-2xl font-bold font-header">{val !== null ? val : '∅'}</span>
                         <span className="text-[11px] font-mono text-[var(--sketch-text-muted)]">[{idx}]</span>
-                      </motion.div>
+                      </div>
 
                       {/* Active Cell Pointer */}
-                      <AnimatePresence>
-                        {isActive && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 8 }}
-                            className="absolute -bottom-7 flex flex-col items-center text-amber-500 font-bold"
-                          >
-                            <div className="text-[10px] font-mono">curr</div>
-                            <div className="text-[10px] leading-none">▲</div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {isActive && (
+                        <div className="absolute -bottom-7 flex flex-col items-center text-amber-500 font-bold">
+                          <div className="text-[10px] font-mono">curr</div>
+                          <div className="text-[10px] leading-none">▲</div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

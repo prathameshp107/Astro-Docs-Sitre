@@ -226,6 +226,25 @@ export default function LogicSection({ topicId }) {
     resolvedTrackKey === 'subsets' ||
     resolvedTrackKey === 'recursion';
 
+  const isDPTopic =
+    topicId === 'dp' ||
+    resolvedTrackKey === 'climbing-stairs' ||
+    resolvedTrackKey === 'knapsack' ||
+    resolvedTrackKey === 'lcs' ||
+    resolvedTrackKey === 'coin-change' ||
+    resolvedTrackKey === 'dp';
+
+  const isHashTableTopic =
+    topicId === 'hash-table' ||
+    topicId === 'hash-tables' ||
+    resolvedTrackKey === 'separate-chaining' ||
+    resolvedTrackKey === 'linear-probing' ||
+    resolvedTrackKey === 'two-sum-hash' ||
+    resolvedTrackKey === 'group-anagrams' ||
+    resolvedTrackKey === 'hash-table' ||
+    resolvedTrackKey === 'hash-tables';
+
+
   // Retrieve exact problem logic or generate dynamic fallback for topicId
   const problemData =
     SPECIFIC_PROBLEM_LOGIC[resolvedTrackKey] ||
@@ -932,6 +951,335 @@ export default function LogicSection({ topicId }) {
                           <span className="text-emerald-400 font-bold">
                             Phase: {st.state?.phase || (st.isMatch ? 'Complete 🎉' : 'Running')}
                           </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : isDPTopic ? (
+                  /* DP Memoization Table Diagram */
+                  <div className="flex flex-col items-center w-full my-2">
+                    {st.dp2D || (resolvedTrackKey === 'knapsack' || resolvedTrackKey === 'lcs') ? (
+                      /* 2D DP Table Grid */
+                      <div className="w-full max-w-[680px] my-1">
+                        <div className="overflow-x-auto w-full flex justify-center py-2 px-1">
+                          <table className="border-collapse font-mono text-xs text-center select-none">
+                            <thead>
+                              <tr>
+                                <th className="p-2 border border-[var(--sketch-border)] text-[var(--sketch-text-muted)] font-bold">i / j</th>
+                                {(st.dp2D || stepArray || [0,0,0,0,0,0]).length > 0 && (st.dp2D ? st.dp2D[0] : stepArray).map((_, c) => (
+                                  <th key={c} className="p-2 border border-[var(--sketch-border)] text-amber-500 font-bold">{c}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {(st.dp2D || [stepArray]).map((row, r) => (
+                                <tr key={r}>
+                                  <td className="p-2 border border-[var(--sketch-border)] text-amber-500 font-bold">{r}</td>
+                                  {(Array.isArray(row) ? row : [row]).map((val, c) => {
+                                    const isActive = st.activeCell && st.activeCell.r === r && st.activeCell.c === c;
+                                    const isDep = st.depCells?.some((d) => d.r === r && d.c === c);
+
+                                    return (
+                                      <td
+                                        key={c}
+                                        className={`p-2 min-w-[40px] md:min-w-[46px] border border-[var(--sketch-border)] font-bold transition-all ${
+                                          isActive
+                                            ? 'bg-amber-500/30 text-amber-500 border-amber-400 ring-2 ring-amber-400/50 shadow-lg'
+                                            : isDep
+                                            ? 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border-cyan-400'
+                                            : 'bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                                        }`}
+                                      >
+                                        {val !== null && val !== undefined ? val : '∅'}
+                                      </td>
+                                    );
+                                  })}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        {/* DP 2D Status Bar */}
+                        <div className="mt-3 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                          <div className="flex items-center gap-2">
+                            <span className="text-amber-400 font-bold">Active Cell:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-xs">
+                              {st.activeCell ? `dp[${st.activeCell.r}][${st.activeCell.c}]` : 'None'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active</span>
+                            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Dependency</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      /* 1D DP Array Diagram */
+                      <div className="w-full max-w-[760px] my-1">
+                        <div className="flex items-stretch gap-1.5 md:gap-2 w-full pt-3 pb-8 px-2 overflow-x-auto justify-center">
+                          {(st.dp1D || stepArray).map((val, idx) => {
+                            const isActive = st.activeCell === idx;
+                            const isDep = st.depCells?.includes(idx);
+
+                            return (
+                              <div key={idx} className="relative flex flex-col items-center flex-1 min-w-[38px] md:min-w-[46px]">
+                                <div
+                                  style={{
+                                    transform: isActive ? 'scale(1.08) translateY(-4px)' : isDep ? 'scale(1.03)' : 'scale(1)',
+                                    transition: 'transform 0.3s ease',
+                                  }}
+                                  className={`w-full h-14 md:h-16 rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 ${
+                                    isActive
+                                      ? 'border-amber-400 bg-amber-500/25 text-amber-500 ring-2 ring-amber-400/50 shadow-lg shadow-amber-500/30 font-bold'
+                                      : isDep
+                                      ? 'border-cyan-400 bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 shadow-md shadow-cyan-500/20'
+                                      : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                                  }`}
+                                >
+                                  <span className="text-base md:text-lg font-bold font-header">{val !== null && val !== undefined ? val : '∅'}</span>
+                                  <span className="text-[10px] font-mono text-[var(--sketch-text-muted)]">[{idx}]</span>
+                                </div>
+
+                                {isActive && (
+                                  <div className="absolute -bottom-6 flex flex-col items-center text-amber-500 font-bold">
+                                    <div className="text-[9px] font-mono">curr</div>
+                                    <div className="text-[9px] leading-none">▲</div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* DP 1D Formula Bar */}
+                        <div className="mt-2 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                          <div className="flex items-center gap-2">
+                            <span className="text-amber-400 font-bold">Formula:</span>
+                            <span className="text-[var(--sketch-text)] font-bold">
+                              {st.state?.formula ||
+                                st.state?.calculation ||
+                                st.state?.tryCoin5 ||
+                                (resolvedTrackKey === 'coin-change'
+                                  ? 'dp[i] = min(dp[i], dp[i - coin] + 1)'
+                                  : 'dp[i] = dp[i-1] + dp[i-2]')}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active</span>
+                            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Dependency</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : isHashTableTopic ? (
+                  /* Hash Table Bucket & Chain / Probing Diagram */
+                  <div className="flex flex-col items-center w-full my-2">
+                    {st.buckets || resolvedTrackKey === 'separate-chaining' || resolvedTrackKey === 'hash-table' || resolvedTrackKey === 'hash-tables' ? (
+                      /* Separate Chaining Buckets Diagram */
+                      <div className="w-full max-w-[520px] my-1 space-y-2">
+                        {(st.buckets || Array(8).fill(null).map(() => [])).map((chain, bIdx) => {
+                          const isActiveBucket = st.hashIdx === bIdx;
+
+                          return (
+                            <div key={bIdx} className="flex items-center gap-3 font-mono text-xs">
+                              <div
+                                className={`w-14 py-1.5 text-center rounded-lg border font-bold transition-all ${
+                                  isActiveBucket
+                                    ? 'border-amber-400 bg-amber-500/25 text-amber-500 ring-2 ring-amber-400/50 shadow-md'
+                                    : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text-muted)]'
+                                }`}
+                              >
+                                [{bIdx}]
+                              </div>
+
+                              <div className="flex-1 flex items-center gap-1.5 overflow-x-auto sketch-no-scrollbar min-h-[32px]">
+                                {!chain || chain.length === 0 ? (
+                                  <span className="text-[var(--sketch-text-muted)] text-[10px]">∅ Empty</span>
+                                ) : (
+                                  chain.map((node, nIdx) => (
+                                    <div key={nIdx} className="flex items-center gap-1 shrink-0">
+                                      <div className="px-2.5 py-1 rounded-lg border-2 border-emerald-500/40 bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-bold flex items-center gap-1 text-xs shadow-sm">
+                                        <span>"{node.key}"</span>
+                                        <span className="text-amber-500">:{node.val}</span>
+                                      </div>
+                                      {nIdx < chain.length - 1 && (
+                                        <span className="text-amber-500 font-bold text-sm">→</span>
+                                      )}
+                                    </div>
+                                  ))
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+
+                        {/* Chaining Status Bar */}
+                        <div className="mt-3 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                          <div className="flex items-center gap-2">
+                            <span className="text-amber-400 font-bold">Hash Index:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                              {st.hashIdx !== null && st.hashIdx !== undefined ? `Bucket [${st.hashIdx}]` : 'None'}
+                            </span>
+                          </div>
+                          {st.collision && (
+                            <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 font-bold animate-pulse text-[10px]">
+                              ⚠️ Collision!
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ) : st.openBuckets || resolvedTrackKey === 'linear-probing' ? (
+                      /* Linear Probing Open Addressing 1D Array Cards Diagram (Clean Two-Pointers style) */
+                      <div className="flex flex-col items-center w-full my-2">
+                        <div className="flex items-start gap-3 md:gap-5 my-2 overflow-x-auto overflow-y-visible w-full justify-center pt-4 pb-16">
+                          {(st.openBuckets || Array(8).fill(null)).map((val, sIdx) => {
+                            const isHash = st.hashIdx === sIdx;
+                            const isProbe = st.probeIdx === sIdx;
+                            const isBothHashProbe = isHash && isProbe;
+                            const isOccupied = val !== null && val !== undefined && val !== '';
+
+                            return (
+                              <div key={sIdx} className="relative flex flex-col items-center">
+                                <div
+                                  className={`sketch-card ${
+                                    isBothHashProbe
+                                      ? '!border-purple-400 !bg-purple-500/20 shadow-lg shadow-purple-500/40 ring-2 ring-purple-400 text-purple-200 font-bold'
+                                      : st.collision && isHash
+                                      ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400 text-rose-300 font-bold'
+                                      : isHash
+                                      ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-300 font-bold'
+                                      : isProbe
+                                      ? '!border-cyan-400 !bg-cyan-500/20 shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-400 text-cyan-300 font-bold'
+                                      : isOccupied
+                                      ? 'active-orange !border-amber-400/80 !bg-amber-500/10 text-amber-200 font-bold'
+                                      : ''
+                                  }`}
+                                >
+                                  {isOccupied ? `"${val}"` : '∅'}
+                                  <div className="sketch-card-index">[{sIdx}]</div>
+                                </div>
+
+                                {/* Chalkboard Pointer Badges (Clean Two-Pointers Style) */}
+                                {isBothHashProbe ? (
+                                  <div className="sketch-pointer text-purple-300 font-bold mt-2 flex flex-col items-center">
+                                    <div className="font-bold">hash, probe</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isHash ? (
+                                  <div className="sketch-pointer sketch-pointer-orange mt-2 flex flex-col items-center">
+                                    <div className="font-bold">hash</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isProbe ? (
+                                  <div className="sketch-pointer sketch-pointer-blue mt-2 flex flex-col items-center">
+                                    <div className="font-bold">probe</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : null}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : st.anagramGroups || resolvedTrackKey === 'group-anagrams' ? (
+                      /* Anagram Groups Diagram */
+                      <div className="w-full max-w-[480px] mx-auto bg-[var(--sketch-bg-dim)] border border-[var(--sketch-border)] p-4 rounded-2xl font-mono text-xs space-y-3 shadow-lg">
+                        {/* Input Words List */}
+                        <div className="flex items-center justify-between border-b border-[var(--sketch-border)] pb-2">
+                          <span className="text-[var(--sketch-text-muted)] font-bold">Input Words:</span>
+                          <div className="flex items-center gap-1.5">
+                            {(st.words || ['eat', 'tea', 'tan', 'ate']).map((w, i) => (
+                              <span
+                                key={i}
+                                className={`px-2 py-0.5 rounded-lg border text-xs font-bold ${
+                                  st.currWord === w
+                                    ? 'border-amber-400 bg-amber-500/25 text-amber-300 ring-1 ring-amber-400'
+                                    : 'border-white/10 bg-white/5 text-[var(--sketch-text)]'
+                                }`}
+                              >
+                                "{w}"
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="text-amber-500 font-bold flex justify-between items-center">
+                          <span>Canonical Key Anagram Groups Map</span>
+                          <span className="text-[10px] text-[var(--sketch-text-muted)]">
+                            Size: {st.anagramGroups ? Object.keys(st.anagramGroups).length : 0}
+                          </span>
+                        </div>
+
+                        {!st.anagramGroups || Object.keys(st.anagramGroups).length === 0 ? (
+                          <div className="text-[var(--sketch-text-muted)] text-[11px] italic text-center py-3 bg-[var(--sketch-bg)] rounded-lg border border-dashed border-[var(--sketch-border)]">
+                            (Empty Hash Map — No anagram groups formed yet)
+                          </div>
+                        ) : (
+                          Object.entries(st.anagramGroups).map(([k, group]) => (
+                            <div key={k} className="flex items-center justify-between bg-[var(--sketch-bg)] px-3.5 py-2 rounded-xl border border-[var(--sketch-border)] shadow-sm">
+                              <span className="text-amber-400 font-bold flex items-center gap-1.5">
+                                <span className="text-xs text-[var(--sketch-text-muted)]">Key:</span>
+                                "{k}"
+                              </span>
+                              <span className="text-emerald-400 font-bold">
+                                [{group.map((w) => `"${w}"`).join(', ')}]
+                              </span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    ) : (
+                      /* Hash Map State Diagram (Two Sum) */
+                      <div className="w-full max-w-[440px] mx-auto space-y-3">
+                        {/* Array with current pointer */}
+                        <div className="flex items-center gap-2 justify-center">
+                          {(st.numArray || [2, 7, 11, 15]).map((val, idx) => {
+                            const isCurr = st.currIdx === idx;
+                            const isMatch = st.state?.found && (idx === 0 || idx === st.currIdx);
+                            return (
+                              <div key={idx} className="relative flex flex-col items-center">
+                                <div
+                                  className={`w-14 h-14 rounded-xl border-2 flex flex-col items-center justify-center font-header font-bold ${
+                                    isMatch
+                                      ? 'border-emerald-400 bg-emerald-500/20 text-emerald-300 ring-2 ring-emerald-400/50 shadow-lg'
+                                      : isCurr
+                                      ? 'border-amber-400 bg-amber-500/25 text-amber-300 ring-2 ring-amber-400/50'
+                                      : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                                  }`}
+                                >
+                                  <span className="text-lg">{val}</span>
+                                  <span className="text-[9px] font-mono text-[var(--sketch-text-muted)]">[{idx}]</span>
+                                </div>
+                                {isCurr && (
+                                  <div className="absolute -bottom-5 text-amber-500 font-mono text-[9px] font-bold">
+                                    curr ▲
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Map Contents */}
+                        <div className="bg-[var(--sketch-bg-dim)] border border-[var(--sketch-border)] p-3 rounded-xl font-mono text-xs space-y-1.5 shadow-lg">
+                          <div className="text-amber-500 font-bold border-b border-[var(--sketch-border)] pb-1 mb-1 flex justify-between">
+                            <span>Hash Map (num → index)</span>
+                            <span>Size: {st.mapState ? Object.keys(st.mapState).length : 0}</span>
+                          </div>
+                          {!st.mapState || Object.keys(st.mapState).length === 0 ? (
+                            <span className="text-[var(--sketch-text-muted)] text-[10px] italic font-mono block text-center py-1">
+                              (Empty Map — No entries stored)
+                            </span>
+                          ) : (
+                            Object.entries(st.mapState).map(([k, v]) => (
+                              <div key={k} className="flex justify-between items-center bg-[var(--sketch-bg)] px-3 py-1 rounded-lg border border-[var(--sketch-border)]">
+                                <span className="text-emerald-600 dark:text-emerald-300 font-bold">Key: {k}</span>
+                                <span className="text-amber-500 font-bold">→ Index: {v}</span>
+                              </div>
+                            ))
+                          )}
                         </div>
                       </div>
                     )}
