@@ -180,7 +180,8 @@ export default function TreeVisualizer() {
                 if (!parentNode || !childNode) return null;
                 const isEdgeActive =
                   (visitedSet.has(edge.from) && visitedSet.has(edge.to)) ||
-                  (activeNodeId === edge.to && visitedSet.has(edge.from));
+                  activeNodeId === edge.to ||
+                  (activeNodeId === edge.from && (step.state?.action?.includes(String(edge.to)) || step.desc?.includes(String(edge.to))));
 
                 return (
                   <g key={`${edge.from}-${edge.to}`}>

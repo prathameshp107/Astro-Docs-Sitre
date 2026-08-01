@@ -1,5 +1,5 @@
+
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useStackStore } from '../../store/visualizers/stackStore';
 
 const PUSH_CODE = [
@@ -90,6 +90,8 @@ export default function StackVisualizer() {
 
   const topIndex = step.top !== undefined ? step.top : stack.length - 1;
 
+  const isComplete = currentStep >= steps.length - 1;
+
   return (
     <div className="sketch-container font-sketch">
       {/* Top Header */}
@@ -134,9 +136,10 @@ export default function StackVisualizer() {
         {/* Visualization Canvas */}
         <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
-            <span>LIFO Vertical Stack Bucket Canvas</span>
+            <span>LIFO Vertical Stack Canvas</span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Top Pointer</span>
+              {isComplete && <span className="flex items-center gap-1 text-emerald-400 font-bold">✔ Complete</span>}
             </div>
           </div>
 
@@ -144,36 +147,30 @@ export default function StackVisualizer() {
           <div className="my-auto flex flex-col items-center justify-end h-[260px] relative">
             <div className="w-48 border-b-4 border-x-4 border-amber-500/40 rounded-b-2xl bg-black/20 p-3 min-h-[220px] flex flex-col-reverse items-center gap-2 relative shadow-inner">
               {/* Stack Elements (Bottom to Top) */}
-              <AnimatePresence>
-                {stack.map((val, idx) => {
-                  const isTop = idx === topIndex;
+              {stack.map((val, idx) => {
+                const isTop = idx === topIndex;
 
-                  return (
-                    <motion.div
-                      key={`${idx}-${val}`}
-                      initial={{ opacity: 0, y: -20, scale: 0.9 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -30, scale: 0.8 }}
-                      transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                      className={`w-full h-11 rounded-xl flex items-center justify-between px-4 font-header font-bold text-lg border-2 shadow-md relative ${
-                        isTop
-                          ? '!border-amber-400 !bg-amber-500/25 text-amber-300 ring-2 ring-amber-400/50 shadow-amber-500/40'
-                          : 'border-white/20 bg-white/5 text-[var(--sketch-text)]'
-                      }`}
-                    >
-                      <span className="text-xs font-mono text-[var(--sketch-text-muted)]">[{idx}]</span>
-                      <span>{val}</span>
+                return (
+                  <div
+                    key={`${idx}-${val}`}
+                    className={`w-full h-11 rounded-xl flex items-center justify-between px-4 font-header font-bold text-lg border-2 shadow-md relative ${
+                      isTop
+                        ? '!border-amber-400 !bg-amber-500/25 text-amber-300 ring-2 ring-amber-400/50 shadow-amber-500/40'
+                        : 'border-white/20 bg-white/5 text-[var(--sketch-text)]'
+                    }`}
+                  >
+                    <span className="text-xs font-mono text-[var(--sketch-text-muted)]">[{idx}]</span>
+                    <span>{val}</span>
 
-                      {/* Top Pointer Badge */}
-                      {isTop && (
-                        <div className="absolute -right-16 text-amber-400 font-mono text-xs font-bold flex items-center gap-1">
-                          ◀ TOP
-                        </div>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
+                    {/* Top Pointer Badge */}
+                    {isTop && (
+                      <div className="absolute -right-16 text-amber-400 font-mono text-xs font-bold flex items-center gap-1">
+                        ◀ TOP
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
 
               {stack.length === 0 && (
                 <div className="my-auto text-xs font-mono text-[var(--sketch-text-muted)] italic text-center">
@@ -182,6 +179,13 @@ export default function StackVisualizer() {
               )}
             </div>
           </div>
+
+          {/* Completion Banner */}
+          {isComplete && (
+            <div className="mt-2 w-full flex items-center justify-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-xl font-mono text-xs text-emerald-300 font-bold">
+              ✔ Operation Complete — {step.state?.status || 'Done'}
+            </div>
+          )}
 
           {/* Stack Status Summary Bar */}
           <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-black/30 px-4 py-2 rounded-xl border border-white/10">
@@ -218,7 +222,7 @@ export default function StackVisualizer() {
                   return (
                     <div
                       key={c.line}
-                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active !border-amber-400/60 !bg-amber-500/10 font-bold' : ''}`}
                     >
                       <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
                       <span className="whitespace-pre font-mono flex-1">{c.text}</span>
@@ -274,12 +278,11 @@ export default function StackVisualizer() {
             title="Previous step"
           >
             |◀
-          </button>
-          <button
-            onClick={togglePlay}
-            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
-            title={isPlaying ? 'Pause' : 'Play'}
-          >
+          </button>            <button
+              onClick={togglePlay}
+              className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500 text-amber-300"
+              title={isPlaying ? 'Pause' : 'Play'}
+            >
             {isPlaying ? '⏸' : '▶'}
           </button>
           <button
@@ -310,7 +313,7 @@ export default function StackVisualizer() {
             <button
               key={s}
               onClick={() => setSpeed(s)}
-              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold' : ''}`}
             >
               {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
             </button>

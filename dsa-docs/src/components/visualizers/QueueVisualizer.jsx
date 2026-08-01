@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useQueueStore } from '../../store/visualizers/queueStore';
 
 const ENQUEUE_CODE = [
@@ -81,6 +80,8 @@ export default function QueueVisualizer() {
   const trackLabel = TRACK_TITLES[track] || 'Queue Operation';
   const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Result';
 
+  const isComplete = currentStep >= steps.length - 1;
+
   return (
     <div className="sketch-container font-sketch">
       {/* Top Header */}
@@ -125,10 +126,11 @@ export default function QueueVisualizer() {
         {/* Visualization Canvas */}
         <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
-            <span>FIFO Horizontal Queue Container Canvas</span>
+            <span>FIFO Horizontal Queue Canvas</span>
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Front Pointer</span>
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-rose-400"></span> Rear Pointer</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Front</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-rose-400"></span> Rear</span>
+              {isComplete && <span className="text-emerald-400 font-bold">✔ Complete</span>}
             </div>
           </div>
 
@@ -142,12 +144,7 @@ export default function QueueVisualizer() {
 
               return (
                 <div key={idx} className="relative flex flex-col items-center">
-                  <motion.div
-                    animate={{
-                      scale: isHighlighted ? 1.1 : 1,
-                      y: isHighlighted ? -6 : 0,
-                    }}
-                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                  <div
                     className={`sketch-card ${
                       val === null
                         ? 'border-dashed border-white/20 text-white/30'
@@ -159,49 +156,51 @@ export default function QueueVisualizer() {
                         ? 'border-rose-400 shadow-rose-400/20'
                         : 'border-white/20 bg-white/5'
                     }`}
+                    style={{ transform: isHighlighted ? 'translateY(-6px)' : 'none' }}
                   >
                     {val !== null ? val : '∅'}
                     <div className="sketch-card-index">[{idx}]</div>
-                  </motion.div>
+                  </div>
 
                   {/* Combined Front + Rear Pointer */}
-                  <AnimatePresence>
-                    {isBothFrontRear && (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm">
-                        <div className="text-xs">front, rear</div>
-                        <div className="text-xs leading-none">▲</div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {isBothFrontRear && (
+                    <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm">
+                      <div className="text-xs">front, rear</div>
+                      <div className="text-xs leading-none">▲</div>
+                    </div>
+                  )}
 
                   {/* Front Pointer */}
-                  <AnimatePresence>
-                    {isFront && !isBothFrontRear && (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="sketch-pointer text-emerald-400 font-bold">
-                        <div>front</div>
-                        <div className="text-xs leading-none">▲</div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {isFront && !isBothFrontRear && (
+                    <div className="sketch-pointer text-emerald-400 font-bold">
+                      <div>front</div>
+                      <div className="text-xs leading-none">▲</div>
+                    </div>
+                  )}
 
                   {/* Rear Pointer */}
-                  <AnimatePresence>
-                    {isRear && !isBothFrontRear && (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="sketch-pointer text-rose-400 font-bold">
-                        <div>rear</div>
-                        <div className="text-xs leading-none">▲</div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {isRear && !isBothFrontRear && (
+                    <div className="sketch-pointer text-rose-400 font-bold">
+                      <div>rear</div>
+                      <div className="text-xs leading-none">▲</div>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
 
+          {/* Completion Banner */}
+          {isComplete && (
+            <div className="mt-2 w-full flex items-center justify-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-xl font-mono text-xs text-emerald-300 font-bold">
+              ✔ Operation Complete — {step.state?.status || 'Queue Exhausted'}
+            </div>
+          )}
+
           {/* Queue Status Summary Bar */}
           <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-black/30 px-4 py-2 rounded-xl border border-white/10">
             <span className="text-amber-400 font-bold">
-              Queue Contents: [{queue.filter((x) => x !== null).length > 0 ? queue.filter((x) => x !== null).join(', ') : 'Empty Buffer'}]
+              Queue: [{queue.filter((x) => x !== null).length > 0 ? queue.filter((x) => x !== null).join(', ') : 'Empty'}]
             </span>
             <span>Front: {step.front ?? -1} | Rear: {step.rear ?? -1}</span>
           </div>
@@ -235,7 +234,7 @@ export default function QueueVisualizer() {
                   return (
                     <div
                       key={c.line}
-                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active !border-amber-400/60 !bg-amber-500/10 font-bold' : ''}`}
                     >
                       <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
                       <span className="whitespace-pre font-mono flex-1">{c.text}</span>
@@ -291,12 +290,11 @@ export default function QueueVisualizer() {
             title="Previous step"
           >
             |◀
-          </button>
-          <button
-            onClick={togglePlay}
-            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
-            title={isPlaying ? 'Pause' : 'Play'}
-          >
+          </button>            <button
+              onClick={togglePlay}
+              className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500 text-amber-300"
+              title={isPlaying ? 'Pause' : 'Play'}
+            >
             {isPlaying ? '⏸' : '▶'}
           </button>
           <button
@@ -327,7 +325,7 @@ export default function QueueVisualizer() {
             <button
               key={s}
               onClick={() => setSpeed(s)}
-              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold' : ''}`}
             >
               {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
             </button>

@@ -138,7 +138,7 @@ export default function LinkedListVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px] overflow-x-hidden overflow-y-visible">
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
             <span>Dynamic Memory Node Pointer Canvas</span>
             <div className="flex items-center gap-3">
@@ -148,7 +148,17 @@ export default function LinkedListVisualizer() {
           </div>
 
           {/* Linked List Nodes Container */}
-          <div className="flex items-center gap-3 md:gap-5 my-auto relative pt-6 pb-20 px-4 overflow-x-auto sketch-no-scrollbar w-full justify-center">
+          <div className="flex items-center gap-3 md:gap-5 my-auto relative pt-10 pb-20 px-4 overflow-x-auto sketch-no-scrollbar w-full justify-center">
+            {/* Left NULL Badge for Reverse LL when links start reversing */}
+            {track === 'reverse-ll' && (step.reversedCount || 0) > 0 && (
+              <div className="flex flex-col items-center mr-1">
+                <div className="text-[10px] font-mono text-white/40 mb-1 tracking-wider opacity-0">0x000</div>
+                <div className="flex items-center px-3 py-3 rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 font-mono text-xs font-bold shadow-md">
+                  NULL
+                </div>
+              </div>
+            )}
+
             {nodes.map((val, idx) => {
               const isHead = step.head === idx || (idx === 0 && step.head === undefined);
               const isTail = idx === nodes.length - 1;
@@ -166,7 +176,6 @@ export default function LinkedListVisualizer() {
               const isDeleting = track === 'delete-node' && step.activeLine === 3 && val === 20;
 
               const memAddr = MEMORY_ADDRESSES[idx % MEMORY_ADDRESSES.length];
-              const nextMemAddr = idx < nodes.length - 1 ? MEMORY_ADDRESSES[(idx + 1) % MEMORY_ADDRESSES.length] : 'NULL';
 
               return (
                 <div key={idx} className="flex items-center gap-3 md:gap-5">
@@ -205,7 +214,7 @@ export default function LinkedListVisualizer() {
                       )}
                     </AnimatePresence>
 
-                    {/* Clean Node Card (without internal next field) */}
+                    {/* Clean Node Card */}
                     <motion.div
                       animate={{
                         scale: (isReversingPointer || isInsertingHead || isDeleting) ? 1.15 : isHighlighted ? 1.08 : 1,
@@ -282,25 +291,39 @@ export default function LinkedListVisualizer() {
                   </div>
 
                   {/* Next Link Arrow Connector */}
-                  <div className="flex items-center gap-1 text-[var(--sketch-accent-orange)] font-bold text-xl select-none">
-                    <span>{isReversingPointer ? '←' : '→'}</span>
-                  </div>
+                  {idx < nodes.length - 1 && (
+                    <div className="flex items-center gap-1 font-bold text-xl select-none px-1">
+                      {track === 'reverse-ll' && idx < (step.reversedCount || 0) ? (
+                        <span className="text-emerald-400 font-extrabold text-2xl drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]">←</span>
+                      ) : isReversingPointer ? (
+                        <span className="text-rose-400 font-extrabold animate-pulse text-2xl">⇄</span>
+                      ) : (
+                        <span className="text-[var(--sketch-accent-orange)]">→</span>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
 
-            {/* NULL End Badge */}
-            <div className="flex flex-col items-center">
-              <div className="text-[10px] font-mono text-white/40 mb-1 tracking-wider opacity-0">0x000</div>
-              <div className="flex items-center px-3 py-3 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 font-mono text-xs font-bold shadow-sm">
-                NULL
+            {/* Right NULL End Badge (shown when not all links are reversed) */}
+            {!(track === 'reverse-ll' && (step.reversedCount || 0) >= nodes.length) && (
+              <div className="flex flex-col items-center">
+                <div className="text-[10px] font-mono text-white/40 mb-1 tracking-wider opacity-0">0x000</div>
+                <div className="flex items-center px-3 py-3 rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-300 font-mono text-xs font-bold shadow-sm">
+                  NULL
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* List Status Summary Bar */}
           <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-black/30 px-4 py-2 rounded-xl border border-white/10">
-            <span className="text-amber-400 font-bold">Node Sequence: [{nodes.join(' → ')}]</span>
+            <span className="text-amber-400 font-bold">
+              {track === 'reverse-ll' && (step.reversedCount || 0) >= nodes.length
+                ? `Reversed Node Sequence: [${[...nodes].reverse().join(' → ')}]`
+                : `Node Sequence: [${nodes.join(' → ')}]`}
+            </span>
             <span>Length: {nodes.length} nodes</span>
           </div>
         </div>
