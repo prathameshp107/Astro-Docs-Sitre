@@ -90,6 +90,17 @@ const GRAPH_DIAGRAM_EDGES = [
   { from: 4, to: 5, weight: 3 },
 ];
 
+// Heap Tree Canvas Layout Coordinates (up to 7 nodes)
+const HEAP_DIAGRAM_POSITIONS = [
+  { id: 0, x: 240, y: 35 },
+  { id: 1, x: 130, y: 95 },
+  { id: 2, x: 350, y: 95 },
+  { id: 3, x: 70, y: 155 },
+  { id: 4, x: 190, y: 155 },
+  { id: 5, x: 290, y: 155 },
+  { id: 6, x: 410, y: 155 },
+];
+
 export default function LogicSection({ topicId }) {
   // Read active tracks from all stores
   const twoPointerTrack = useTwoPointersStore((s) => s.track);
@@ -195,6 +206,25 @@ export default function LogicSection({ topicId }) {
     resolvedTrackKey === 'dequeue' ||
     resolvedTrackKey === 'circular-queue' ||
     resolvedTrackKey === 'queue';
+
+  const isHeapTopic =
+    topicId === 'heaps' ||
+    topicId === 'heap' ||
+    resolvedTrackKey === 'min-heap-insert' ||
+    resolvedTrackKey === 'min-heap-extract' ||
+    resolvedTrackKey === 'max-heapify' ||
+    resolvedTrackKey === 'heap-sort' ||
+    resolvedTrackKey === 'min-heap' ||
+    resolvedTrackKey === 'max-heap' ||
+    resolvedTrackKey === 'heap';
+
+  const isRecursionTopic =
+    topicId === 'recursion' ||
+    resolvedTrackKey === 'factorial' ||
+    resolvedTrackKey === 'fibonacci' ||
+    resolvedTrackKey === 'tower-of-hanoi' ||
+    resolvedTrackKey === 'subsets' ||
+    resolvedTrackKey === 'recursion';
 
   // Retrieve exact problem logic or generate dynamic fallback for topicId
   const problemData =
@@ -631,6 +661,280 @@ export default function LogicSection({ topicId }) {
                         Active Node: {activeGraphNodeVal !== null ? `Node ${activeGraphNodeVal}` : 'None'}
                       </span>
                     </div>
+                  </div>
+                ) : isHeapTopic ? (
+                  /* 6. Real Binary Heap Tree Diagram */
+                  <div className="flex flex-col items-center w-full my-2">
+                    <div className="relative w-full max-w-[500px] h-[230px] my-1">
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                        {(st.heapArray || stepArray).map((_, idx) => {
+                          if (idx === 0) return null;
+                          const parentIdx = Math.floor((idx - 1) / 2);
+                          const posNode = HEAP_DIAGRAM_POSITIONS[idx];
+                          const posParent = HEAP_DIAGRAM_POSITIONS[parentIdx];
+                          if (!posNode || !posParent) return null;
+
+                          const isSwappingEdge =
+                            st.swapNodes &&
+                            ((st.swapNodes.parent === parentIdx && st.swapNodes.child === idx) ||
+                              (st.swapNodes.parent === idx && st.swapNodes.child === parentIdx));
+
+                          return (
+                            <line
+                              key={`edge-${idx}`}
+                              x1={posParent.x}
+                              y1={posParent.y}
+                              x2={posNode.x}
+                              y2={posNode.y}
+                              stroke={isSwappingEdge ? '#f43f5e' : 'var(--sketch-border)'}
+                              strokeWidth={isSwappingEdge ? '3.5' : '2'}
+                              strokeDasharray={isSwappingEdge ? 'none' : '4 2'}
+                            />
+                          );
+                        })}
+                      </svg>
+
+                      {/* Tree Node Circles */}
+                      {(st.heapArray || stepArray).map((val, idx) => {
+                        const pos = HEAP_DIAGRAM_POSITIONS[idx];
+                        if (!pos) return null;
+
+                        const isActive = st.currNode === idx;
+                        const isSwapping =
+                          st.swapNodes && (st.swapNodes.parent === idx || st.swapNodes.child === idx);
+
+                        return (
+                          <div
+                            key={`node-${idx}`}
+                            style={{ left: `${pos.x - 20}px`, top: `${pos.y - 20}px` }}
+                            className="absolute flex flex-col items-center"
+                          >
+                            {/* Floating Action Badge */}
+                            {isSwapping && (
+                              <div className="absolute -top-6 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap">
+                                🔄 Swap
+                              </div>
+                            )}
+
+                            <div
+                              className={`w-10 h-10 rounded-full flex items-center justify-center font-header font-bold text-base border-2 transition-all relative ${
+                                isSwapping
+                                  ? '!border-rose-400 !bg-rose-500/30 text-rose-300 ring-4 ring-rose-400/50 shadow-rose-500/50'
+                                  : isActive
+                                  ? '!border-amber-400 !bg-amber-500/30 text-amber-300 ring-4 ring-amber-400/40 shadow-amber-500/50'
+                                  : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                              }`}
+                            >
+                              {String(val)}
+                            </div>
+
+                            {/* Node Index Tag */}
+                            <span className="text-[10px] font-mono text-[var(--sketch-text-muted)] mt-0.5">[{idx}]</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Underlying Heap Array Memory Inspector */}
+                    <div className="mt-3 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-400 font-bold">Heap Array:</span>
+                        <div className="flex items-center gap-1.5 font-bold">
+                          {(st.heapArray || stepArray).map((v, i) => (
+                            <span
+                              key={i}
+                              className={`px-2 py-0.5 rounded-md text-xs border ${
+                                st.currNode === i
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50'
+                                  : st.swapNodes && (st.swapNodes.parent === i || st.swapNodes.child === i)
+                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/50'
+                                  : 'bg-white/5 text-[var(--sketch-text)] border-white/10'
+                              }`}
+                            >
+                              {v}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-[10px] text-[var(--sketch-text-muted)] font-mono">
+                        Active Node: {st.currNode !== undefined ? `Index ${st.currNode}` : 'None'}
+                      </span>
+                    </div>
+                  </div>
+                ) : isRecursionTopic ? (
+                  /* 6. Real Call Stack / Tower of Hanoi / Subsets Diagram */
+                  <div className="flex flex-col items-center w-full my-2">
+                    {resolvedTrackKey === 'tower-of-hanoi' ? (
+                      /* Tower of Hanoi Diagram */
+                      <div className="w-full max-w-[500px] flex flex-col items-center gap-3">
+                        {st.move?.disk && (
+                          <div className="px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono font-bold text-xs shadow-md">
+                            🔄 Move #{st.move.stepNum}: Disk {st.move.disk} ({st.move.from} ➔ {st.move.to})
+                          </div>
+                        )}
+                        <div className="w-full flex items-end justify-between px-4 h-[210px] pb-2 bg-slate-950/80 rounded-2xl border border-white/10 p-3 shadow-2xl">
+                          {[
+                            { key: 'A', name: 'Peg A (Src)' },
+                            { key: 'B', name: 'Peg B (Aux)' },
+                            { key: 'C', name: 'Peg C (Dst)' },
+                          ].map(({ key: pegKey, name }) => (
+                            <div key={pegKey} className="relative flex flex-col items-center w-32">
+                              {/* Rod */}
+                              <div className="w-3 h-40 bg-gradient-to-b from-amber-400 via-amber-600 to-amber-700 rounded-t-md absolute bottom-0 z-0 border border-amber-300/30"></div>
+
+                              {/* Stacked Disks */}
+                              <div className="flex flex-col-reverse items-center gap-1.5 z-10 mb-1 w-full">
+                                {st.pegs?.[pegKey]?.map((diskSize) => {
+                                  const diskWidths = { 1: 'w-12', 2: 'w-20', 3: 'w-26' };
+                                  const diskColors = {
+                                    1: 'bg-emerald-500/30 border-emerald-400 text-emerald-300',
+                                    2: 'bg-amber-500/30 border-amber-400 text-amber-300',
+                                    3: 'bg-rose-500/30 border-rose-400 text-rose-300',
+                                  };
+                                  const isMoving = st.move?.disk === diskSize;
+
+                                  return (
+                                    <div
+                                      key={`disk-${diskSize}`}
+                                      className={`h-7 rounded-xl border-2 flex items-center justify-center font-header font-bold text-xs shadow-md ${
+                                        diskWidths[diskSize]
+                                      } ${diskColors[diskSize]} ${
+                                        isMoving ? 'ring-4 ring-rose-400' : ''
+                                      }`}
+                                    >
+                                      Disk {diskSize}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+
+                              {/* Base Label */}
+                              <div className="w-full h-4 bg-[var(--sketch-bg-dim)] border border-[var(--sketch-border)] rounded-md text-center text-[10px] font-mono font-bold text-amber-400">
+                                {name}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Hanoi Status Bar */}
+                        <div className="w-full flex items-center justify-between bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                          <span className="text-amber-400 font-bold">
+                            Total Moves: {st.move?.stepNum || 0} / 7
+                          </span>
+                          <span className="text-emerald-400 font-bold">
+                            Rule: $2^n - 1$ = 7 Optimal Moves
+                          </span>
+                        </div>
+                      </div>
+                    ) : resolvedTrackKey === 'subsets' ? (
+                      /* Subsets Decision Tree & Grid Diagram */
+                      <div className="w-full max-w-[500px] flex flex-col items-center gap-3">
+                        <div className="w-full bg-slate-950/80 border-2 border-amber-500/40 rounded-2xl p-3 flex flex-col gap-2 shadow-2xl">
+                          <div className="flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)]">
+                            <span className="text-amber-400 font-bold uppercase tracking-wider">
+                              Decision Buffer Path:
+                            </span>
+                            <span>Idx: {st.currIdx !== undefined ? st.currIdx : 0} / 2</span>
+                          </div>
+
+                          <div className="flex items-center gap-2 min-h-[38px] bg-black/40 p-2 rounded-xl border border-white/10">
+                            <span className="font-mono text-slate-500 text-sm font-bold">[</span>
+                            {st.currPath && st.currPath.length > 0 ? (
+                              st.currPath.map((val, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/50 font-header font-bold text-xs shadow-sm"
+                                >
+                                  {val}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="text-slate-500 text-xs italic font-mono">
+                                (empty path set [])
+                              </span>
+                            )}
+                            <span className="font-mono text-slate-500 text-sm font-bold">]</span>
+                          </div>
+                        </div>
+
+                        {/* Subsets Collection Grid */}
+                        <div className="w-full bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl p-3 flex flex-col gap-2 font-mono text-xs shadow-md">
+                          <div className="flex items-center justify-between text-[var(--sketch-text-muted)]">
+                            <span className="text-emerald-400 font-bold">
+                              Subsets Collected ({st.subsets ? st.subsets.length : 0} / 4):
+                            </span>
+                            <span className="text-[10px]">Total $2^N$ subsets</span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-2">
+                            {st.subsets?.map((sub, i) => (
+                              <span
+                                key={i}
+                                className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-xs shadow-sm"
+                              >
+                                #{i + 1}: [{sub.join(', ')}]
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Call Stack LIFO Container (Factorial & Fibonacci) */
+                      <div className="w-full max-w-[480px] my-1">
+                        <div className="flex flex-col items-center">
+                          <div className="w-80 border-b-4 border-x-4 border-amber-500/50 rounded-b-2xl bg-slate-950/80 p-4 min-h-[220px] flex flex-col items-center justify-start gap-2 shadow-2xl relative">
+                            <span className="text-[10px] font-mono text-[var(--sketch-text-muted)] tracking-wider font-bold uppercase mb-1">
+                              Execution Call Stack (LIFO)
+                            </span>
+
+                            {(st.callStack && st.callStack.length > 0
+                              ? st.callStack
+                              : [{ fn: `recurse(${st.n || 4})` }]
+                            ).map((frame, idx) => {
+                              const isTop = idx === 0;
+                              return (
+                                <div
+                                  key={idx}
+                                  className={`w-full py-2 px-3 rounded-xl border-2 flex items-center justify-between font-mono text-xs shadow-md relative transition-all ${
+                                    isTop
+                                      ? '!border-amber-400 !bg-amber-500/25 text-amber-300 ring-2 ring-amber-400/50 shadow-amber-500/40 font-bold'
+                                      : 'border-white/10 bg-white/5 text-[var(--sketch-text)]'
+                                  }`}
+                                >
+                                  <span className="text-[10px] text-[var(--sketch-text-muted)]">Frame #{st.callStack ? st.callStack.length - idx : 1}</span>
+                                  <span className="text-sm font-bold">{frame.fn}</span>
+
+                                  {frame.ret && (
+                                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
+                                      ➔ {frame.ret}
+                                    </span>
+                                  )}
+
+                                  {isTop && (
+                                    <span className="absolute -right-14 text-amber-400 font-mono text-[10px] font-bold">
+                                      ◀ TOP
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Stack Depth Inspector */}
+                        <div className="mt-3 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                          <div className="flex items-center gap-2">
+                            <span className="text-amber-400 font-bold">Call Stack Depth:</span>
+                            <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-xs">
+                              {st.callStack ? st.callStack.length : 1} Frame(s)
+                            </span>
+                          </div>
+                          <span className="text-emerald-400 font-bold">
+                            Phase: {st.state?.phase || (st.isMatch ? 'Complete 🎉' : 'Running')}
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : isStackTopic ? (
                   /* 6. Real Vertical Stack Bucket Diagram */

@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useRecursionStore } from '../../store/visualizers/recursionStore';
 
 const FACTORIAL_CODE = [
@@ -91,6 +90,10 @@ export default function RecursionVisualizer() {
   const callStack = step.callStack || [];
   const pegs = step.pegs || { A: [], B: [], C: [] };
   const subsets = step.subsets || [];
+  const moveInfo = step.move;
+  const currPath = step.currPath || [];
+
+  const isComplete = currentStep >= steps.length - 1;
 
   return (
     <div className="sketch-container font-sketch">
@@ -134,53 +137,126 @@ export default function RecursionVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[400px]">
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
-            <span>{track === 'tower-of-hanoi' ? 'Tower of Hanoi Disks Canvas' : 'Call Stack Frame Inspector Canvas'}</span>
+            <span>
+              {track === 'tower-of-hanoi'
+                ? 'Tower of Hanoi Disks & Pegs Canvas'
+                : track === 'subsets'
+                ? 'Subsets Decision Tree & Path Buffer'
+                : 'Call Stack Frame Inspector Canvas'}
+            </span>
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active Top Frame</span>
+              {track === 'tower-of-hanoi' && moveInfo?.disk && (
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold text-xs">
+                  🔄 Move #{moveInfo.stepNum}: Disk {moveInfo.disk} ({moveInfo.from} ➔ {moveInfo.to})
+                </span>
+              )}
+              {isComplete && <span className="text-emerald-400 font-bold">✔ Execution Complete</span>}
             </div>
           </div>
 
           {/* Tower of Hanoi Pegs Canvas */}
           {track === 'tower-of-hanoi' ? (
-            <div className="my-auto w-full max-w-[480px] mx-auto flex items-end justify-between px-4 h-[220px] pb-4">
-              {['A', 'B', 'C'].map((pegKey) => (
-                <div key={pegKey} className="relative flex flex-col items-center w-28">
-                  {/* Vertical Peg Rod */}
-                  <div className="w-2.5 h-36 bg-amber-500/40 rounded-t-md absolute bottom-0 z-0"></div>
+            <div className="my-auto w-full max-w-[500px] mx-auto flex flex-col items-center gap-4 py-2">
+              <div className="w-full flex items-end justify-between px-4 h-[230px] pb-2">
+                {[
+                  { key: 'A', name: 'Peg A (Source)' },
+                  { key: 'B', name: 'Peg B (Aux)' },
+                  { key: 'C', name: 'Peg C (Dest)' },
+                ].map(({ key: pegKey, name }) => (
+                  <div key={pegKey} className="relative flex flex-col items-center w-32">
+                    {/* Vertical Metallic Peg Rod */}
+                    <div className="w-3 h-44 bg-gradient-to-b from-amber-400 via-amber-600 to-amber-700 rounded-t-lg absolute bottom-0 z-0 shadow-lg border border-amber-300/30"></div>
 
-                  {/* Disks Stacked on Peg */}
-                  <div className="flex flex-col-reverse items-center gap-1 z-10 mb-1 w-full">
-                    {pegs[pegKey]?.map((diskSize) => {
-                      const diskWidths = { 1: 'w-12', 2: 'w-20', 3: 'w-24' };
-                      const diskColors = {
-                        1: 'bg-emerald-500/30 border-emerald-500 text-emerald-600 dark:text-emerald-300',
-                        2: 'bg-amber-500/30 border-amber-500 text-amber-600 dark:text-amber-300',
-                        3: 'bg-purple-500/30 border-purple-500 text-purple-600 dark:text-purple-300',
-                      };
+                    {/* Disks Stacked on Peg */}
+                    <div className="flex flex-col-reverse items-center gap-1.5 z-10 mb-1 w-full">
+                      {pegs[pegKey]?.map((diskSize) => {
+                        const diskWidths = { 1: 'w-14', 2: 'w-22', 3: 'w-28' };
+                        const diskColors = {
+                          1: 'bg-emerald-500/30 border-emerald-400 text-emerald-300 shadow-emerald-500/30',
+                          2: 'bg-amber-500/30 border-amber-400 text-amber-300 shadow-amber-500/30',
+                          3: 'bg-rose-500/30 border-rose-400 text-rose-300 shadow-rose-500/30',
+                        };
 
-                      return (
-                        <motion.div
-                          key={`disk-${diskSize}`}
-                          layout
-                          initial={{ opacity: 0, y: -20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                          className={`h-7 rounded-lg border-2 flex items-center justify-center font-mono text-xs font-bold shadow-md ${diskWidths[diskSize]} ${diskColors[diskSize]}`}
-                        >
-                          Disk {diskSize}
-                        </motion.div>
-                      );
-                    })}
+                        const isMovingDisk = moveInfo?.disk === diskSize;
+
+                        return (
+                          <div
+                            key={`disk-${diskSize}`}
+                            className={`h-8 rounded-xl border-2 flex items-center justify-center font-header font-bold text-xs shadow-md transition-all ${
+                              diskWidths[diskSize]
+                            } ${diskColors[diskSize]} ${
+                              isMovingDisk ? 'ring-4 ring-rose-400 animate-pulse' : ''
+                            }`}
+                          >
+                            Disk {diskSize}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Base Wooden Label */}
+                    <div className="w-full h-4 bg-[var(--sketch-bg-dim)] border-2 border-[var(--sketch-border)] rounded-lg text-center text-[11px] font-mono font-bold text-amber-400 shadow-md">
+                      {name}
+                    </div>
                   </div>
-
-                  {/* Base Label */}
-                  <div className="w-full h-3 bg-[var(--sketch-bg-dim)] border border-[var(--sketch-border)] rounded-md text-center text-[10px] font-mono font-bold text-amber-500 mt-1">
-                    Peg {pegKey}
-                  </div>
+                ))}
+              </div>
+            </div>
+          ) : track === 'subsets' ? (
+            /* Subsets Backtracking State Inspector Canvas */
+            <div className="my-auto w-full max-w-[500px] mx-auto flex flex-col items-center gap-4 py-2">
+              {/* Current Decision Path Buffer Box */}
+              <div className="w-full bg-[var(--sketch-bg-dim)] border-2 border-amber-500/40 rounded-2xl p-4 flex flex-col gap-2 shadow-xl">
+                <div className="flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)]">
+                  <span className="text-amber-400 font-bold uppercase tracking-wider">
+                    Current Subset Path Buffer:
+                  </span>
+                  <span>Index Decision: {step.currIdx !== undefined ? step.currIdx : 0} / 2</span>
                 </div>
-              ))}
+
+                <div className="flex items-center gap-2 min-h-[42px] bg-slate-950/80 p-2.5 rounded-xl border border-white/10">
+                  <span className="font-mono text-slate-500 text-sm font-bold">[</span>
+                  {currPath.length > 0 ? (
+                    currPath.map((val, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/50 font-header font-bold text-sm shadow-sm"
+                      >
+                        {val}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-slate-500 text-xs italic font-mono">
+                      (empty path set [])
+                    </span>
+                  )}
+                  <span className="font-mono text-slate-500 text-sm font-bold">]</span>
+                </div>
+              </div>
+
+              {/* Subsets Result Collection Grid */}
+              <div className="w-full bg-[var(--sketch-bg-dim)] border border-[var(--sketch-border)] rounded-2xl p-3 flex flex-col gap-2">
+                <div className="flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)]">
+                  <span className="text-emerald-400 font-bold">
+                    Subsets Collected ({subsets.length} / 4):
+                  </span>
+                  <span className="text-[10px]">Total $2^N$ combinations</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {subsets.map((sub, i) => (
+                    <div
+                      key={i}
+                      className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold shadow-md flex items-center gap-1"
+                    >
+                      <span className="text-emerald-400 text-[10px]">#{i + 1}:</span>
+                      <span>[{sub.join(', ')}]</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : (
             /* Call Stack Frame Container */
@@ -190,64 +266,69 @@ export default function RecursionVisualizer() {
                   Call Stack Memory (LIFO)
                 </span>
 
-                <AnimatePresence>
-                  {callStack.map((frame, idx) => {
-                    const isTop = idx === 0;
+                {callStack.map((frame, idx) => {
+                  const isTop = idx === 0;
 
-                    return (
-                      <motion.div
-                        key={`${idx}-${frame.fn}`}
-                        initial={{ opacity: 0, y: -15, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -25, scale: 0.8 }}
-                        transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                        className={`w-full py-2 px-4 rounded-xl border-2 flex items-center justify-between font-mono text-xs shadow-md relative ${
-                          isTop
-                            ? '!border-amber-400 !bg-amber-500/25 text-amber-500 ring-2 ring-amber-400/50 shadow-amber-500/40 font-bold'
-                            : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
-                        }`}
-                      >
-                        <span className="text-[10px] text-[var(--sketch-text-muted)]">Frame #{callStack.length - idx}</span>
-                        <span className="text-sm font-bold">{frame.fn}</span>
+                  return (
+                    <div
+                      key={`${idx}-${frame.fn}`}
+                      className={`w-full py-2 px-4 rounded-xl border-2 flex items-center justify-between font-mono text-xs shadow-md relative transition-all ${
+                        isTop
+                          ? '!border-amber-400 !bg-amber-500/25 text-amber-500 ring-2 ring-amber-400/50 shadow-amber-500/40 font-bold'
+                          : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                      }`}
+                    >
+                      <span className="text-[10px] text-[var(--sketch-text-muted)]">Frame #{callStack.length - idx}</span>
+                      <span className="text-sm font-bold">{frame.fn}</span>
 
-                        {frame.ret && (
-                          <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
-                            ➔ {frame.ret}
-                          </span>
-                        )}
+                      {frame.ret && (
+                        <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
+                          ➔ {frame.ret}
+                        </span>
+                      )}
 
-                        {isTop && (
-                          <span className="absolute -right-14 text-amber-500 font-mono text-[10px] font-bold">
-                            ◀ TOP
-                          </span>
-                        )}
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+                      {isTop && (
+                        <span className="absolute -right-14 text-amber-500 font-mono text-[10px] font-bold">
+                          ◀ TOP
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* Subsets Collection Bar */}
-          {track === 'subsets' && (
-            <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)]">
-              <span className="text-amber-500 font-bold">Subsets Generated:</span>
-              <div className="flex items-center gap-1.5">
-                {subsets.map((sub, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 font-bold">
-                    [{sub.join(', ')}]
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Bottom Status Bar */}
+          <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)]">
+            {track === 'tower-of-hanoi' ? (
+              <>
+                <span className="text-amber-500 font-bold">
+                  Move Progress: {moveInfo?.stepNum || 0} / 7 Moves
+                </span>
+                <span>Rule: $2^n - 1 = 7$ optimal moves</span>
+              </>
+            ) : track === 'subsets' ? (
+              <>
+                <span className="text-amber-500 font-bold">
+                  Subsets Count: {subsets.length} Subsets
+                </span>
+                <span>Complexity: $O(2^N)$ binary decision tree</span>
+              </>
+            ) : (
+              <>
+                <span className="text-amber-500 font-bold">
+                  Call Stack Depth: {callStack.length} Frames
+                </span>
+                <span>Execution Phase: {step.state?.phase || 'Running'}</span>
+              </>
+            )}
+          </div>
 
-          {/* Stack Frame Count Summary Bar */}
-          {track !== 'subsets' && (
-            <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)]">
-              <span className="text-amber-500 font-bold">Call Stack Depth: {callStack.length} Frames</span>
-              <span>Execution Phase: {step.state?.phase || 'Running'}</span>
+          {/* Completion Banner */}
+          {isComplete && (
+            <div className="mt-3 w-full flex items-center justify-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-xl font-mono text-xs text-emerald-300 font-bold">
+              ✔ Execution Complete — {step.state?.status || 'Recursion Finished'}
             </div>
           )}
         </div>
