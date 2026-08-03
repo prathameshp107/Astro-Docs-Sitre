@@ -1,0 +1,62 @@
+{
+  "id": "ecommerce-order-system",
+  "title": "Design an E-commerce Order System (Amazon)",
+  "subtitle": "Inventory reservations, Saga orchestration pattern, and state-machine checkout pipelines",
+  "stages": [
+    {
+      "title": "Stage 1 — Monolithic Checkout Transaction",
+      "bottleneck": "Single long DB transaction spans payment, inventory, and notification tables — locking DB connection pool.",
+      "nodes": [
+        { "id": "shopper", "type": "client", "label": "Shopper", "position": { "x": 50, "y": 200 } },
+        { "id": "monolith", "type": "server", "label": "Monolith App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Single Database\n(Orders, Stock, Payment)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "shopper", "target": "monolith", "label": "Place Order" },
+        { "id": "e2", "source": "monolith", "target": "db", "label": "BEGIN TRANS -> Update all -> COMMIT" }
+      ],
+      "requestPath": ["shopper", "monolith", "db", "monolith", "shopper"],
+      "narrative": "**Monolithic Checkout.** A single database transaction attempts to reserve inventory, charge payment, and create order records all in one block."
+    },
+    {
+      "title": "Stage 2 — Microservices & Saga Distributed Transactions",
+      "bottleneck": "2PC (Two-Phase Commit) locks microservice databases; failure in payment service leaves inventory locked in inconsistent state.",
+      "nodes": [
+        { "id": "shopper", "type": "client", "label": "Shopper", "position": { "x": 50, "y": 200 } },
+        { "id": "orchestrator", "type": "server", "label": "Order Saga Orchestrator", "position": { "x": 280, "y": 200 } },
+        { "id": "inv", "type": "service", "label": "Inventory Service", "position": { "x": 550, "y": 80 } },
+        { "id": "pay", "type": "service", "label": "Payment Service", "position": { "x": 550, "y": 200 } },
+        { "id": "shipping", "type": "service", "label": "Fulfillment Service", "position": { "x": 550, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "shopper", "target": "orchestrator", "label": "Submit Checkout" },
+        { "id": "e2", "source": "orchestrator", "target": "inv", "label": "1. Reserve Inventory" },
+        { "id": "e3", "source": "orchestrator", "target": "pay", "label": "2. Charge Payment" },
+        { "id": "e4", "source": "orchestrator", "target": "shipping", "label": "3. Dispatch Package" }
+      ],
+      "requestPath": ["shopper", "orchestrator", "inv", "orchestrator", "pay", "orchestrator", "shipping"],
+      "narrative": "**Saga Orchestration Pattern.** Instead of 2PC, use local transactions with compensating actions.\n\nIf step 2 (Payment) fails, the Orchestrator emits a compensating transaction to step 1 (`Release Inventory`)."
+    },
+    {
+      "title": "Stage 3 — Event-Driven Order Processing with Kafka",
+      "bottleneck": "Flash sale inventory overselling.",
+      "nodes": [
+        { "id": "shopper", "type": "client", "label": "Shopper", "position": { "x": 50, "y": 200 } },
+        { "id": "gw", "type": "lb", "label": "API Gateway", "position": { "x": 220, "y": 200 } },
+        { "id": "order-api", "type": "server", "label": "Order Service", "position": { "x": 400, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka Order Events", "position": { "x": 600, "y": 200 } },
+        { "id": "inv-worker", "type": "service", "label": "Inventory Worker", "position": { "x": 800, "y": 100 } },
+        { "id": "pay-worker", "type": "service", "label": "Payment Worker", "position": { "x": 800, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "shopper", "target": "gw", "label": "" },
+        { "id": "e2", "source": "gw", "target": "order-api", "label": "" },
+        { "id": "e3", "source": "order-api", "target": "kafka", "label": "Publish ORDER_PLACED" },
+        { "id": "e4", "source": "kafka", "target": "inv-worker", "label": "Consume" },
+        { "id": "e5", "source": "kafka", "target": "pay-worker", "label": "Consume" }
+      ],
+      "requestPath": ["shopper", "gw", "order-api", "kafka", "inv-worker"],
+      "narrative": "**Event-Driven Choreography with Kafka.** Order status transitions (Pending -> Reserved -> Paid -> Shipped) are published to Kafka topics. Services process events asynchronously without temporal coupling."
+    }
+  ]
+}

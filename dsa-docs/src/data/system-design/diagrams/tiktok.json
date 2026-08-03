@@ -1,0 +1,89 @@
+{
+  "id": "tiktok",
+  "title": "Design Short Video Platform (TikTok / Reels)",
+  "subtitle": "High-throughput video upload, ML recommendation feed, and multi-CDN streaming",
+  "stages": [
+    {
+      "title": "Stage 1 — Basic Upload & Monolithic Storage",
+      "bottleneck": "Uploading giant uncompressed videos over single HTTP connection crashes app servers. Egress bandwidth bottlenecks on single origin storage.",
+      "nodes": [
+        { "id": "creator", "type": "client", "label": "Creator App", "position": { "x": 50, "y": 120 } },
+        { "id": "viewer", "type": "client", "label": "Viewer App", "position": { "x": 50, "y": 280 } },
+        { "id": "server", "type": "server", "label": "App Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "MySQL DB", "position": { "x": 650, "y": 120 } },
+        { "id": "storage", "type": "storage", "label": "Local Video Storage", "position": { "x": 650, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "creator", "target": "server", "label": "POST video" },
+        { "id": "e2", "source": "viewer", "target": "server", "label": "GET feed" },
+        { "id": "e3", "source": "server", "target": "db", "label": "Save metadata" },
+        { "id": "e4", "source": "server", "target": "storage", "label": "Save file" }
+      ],
+      "requestPath": ["creator", "server", "storage", "server", "db"],
+      "narrative": "**Initial MVP.** Creators upload videos to app servers, which write directly to local disk and record metadata in MySQL.\n\n**Bottleneck:** High CPU/bandwidth usage during video uploads starves read requests. Storage quickly runs out of space."
+    },
+    {
+      "title": "Stage 2 — Parallel Chunk Upload & CDN Delivery",
+      "bottleneck": "Unprocessed 4K raw videos consume 100MB+ per file. Slow mobile network connections fail mid-upload.",
+      "nodes": [
+        { "id": "creator", "type": "client", "label": "Creator", "position": { "x": 50, "y": 120 } },
+        { "id": "viewer", "type": "client", "label": "Viewer", "position": { "x": 50, "y": 280 } },
+        { "id": "api", "type": "server", "label": "API Gateway", "position": { "x": 280, "y": 120 } },
+        { "id": "s3", "type": "storage", "label": "Raw S3 Storage", "position": { "x": 500, "y": 120 } },
+        { "id": "transcoder", "type": "service", "label": "Transcoding Workers\n(FFmpeg)", "position": { "x": 720, "y": 120 } },
+        { "id": "cdn", "type": "cdn", "label": "Edge CDN Pool", "position": { "x": 280, "y": 280 } },
+        { "id": "hls-s3", "type": "storage", "label": "HLS S3 Storage", "position": { "x": 720, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "creator", "target": "api", "label": "Get S3 Presigned URL" },
+        { "id": "e2", "source": "creator", "target": "s3", "label": "Direct Multipart Upload", "animated": true },
+        { "id": "e3", "source": "s3", "target": "transcoder", "label": "Trigger job" },
+        { "id": "e4", "source": "transcoder", "target": "hls-s3", "label": "Save HLS (.m3u8)" },
+        { "id": "e5", "source": "viewer", "target": "cdn", "label": "Stream chunks" },
+        { "id": "e6", "source": "cdn", "target": "hls-s3", "label": "Cache miss" }
+      ],
+      "requestPath": ["creator", "s3", "transcoder", "hls-s3", "cdn", "viewer"],
+      "narrative": "**Decoupled Upload & Transcoding Pipeline.**\n1. Creators fetch S3 presigned URLs and upload 5MB chunks in parallel directly to S3.\n2. S3 triggers FFmpeg transcoding workers to generate adaptive bitrate HLS chunks (1080p, 720p, 480p).\n3. Viewers fetch video segments from edge CDNs near them."
+    },
+    {
+      "title": "Stage 3 — Real-Time ML Recommendation Feed Engine",
+      "bottleneck": "Chronological feeds lead to poor user retention. Generating personalized feeds for 100M+ users requires ultra-fast scoring.",
+      "nodes": [
+        { "id": "viewer", "type": "client", "label": "Viewer", "position": { "x": 50, "y": 180 } },
+        { "id": "gw", "type": "server", "label": "API Gateway", "position": { "x": 240, "y": 180 } },
+        { "id": "feed-svc", "type": "service", "label": "Feed Service", "position": { "x": 450, "y": 180 } },
+        { "id": "ranker", "type": "service", "label": "ML Recommendation Engine\n(Deep Learning Ranker)", "position": { "x": 700, "y": 80 } },
+        { "id": "user-[idx]", "type": "cache", "label": "User Feature Store\n(Redis)", "position": { "x": 450, "y": 320 } },
+        { "id": "video-cache", "type": "cache", "label": "Pre-fetched Videos\n(Redis Timelines)", "position": { "x": 700, "y": 280 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "viewer", "target": "gw", "label": "GET /feed" },
+        { "id": "e2", "source": "gw", "target": "feed-svc", "label": "Fetch candidate items" },
+        { "id": "e3", "source": "feed-svc", "target": "user-[idx]", "label": "Get user interests" },
+        { "id": "e4", "source": "feed-svc", "target": "ranker", "label": "Score candidate videos" },
+        { "id": "e5", "source": "feed-svc", "target": "video-cache", "label": "Pop top 10 feeds" }
+      ],
+      "requestPath": ["viewer", "gw", "feed-svc", "user-[idx]", "feed-svc", "ranker", "video-cache", "feed-svc", "gw", "viewer"],
+      "narrative": "**ML Feed Engine.** When a user opens the app, the Feed Service pulls candidate videos from Redis timelines, queries the ML Recommendation Ranker (trained on watch duration, likes, shares), and returns the top 10 scored short videos instantly."
+    },
+    {
+      "title": "Stage 4 — High-Throughput Analytics & Deduplicated View Counts",
+      "bottleneck": "Millions of viewers watching 15s clips concurrently triggers 100K+ view count increments/sec, locking SQL DB.",
+      "nodes": [
+        { "id": "viewer", "type": "client", "label": "100M+ Viewers", "position": { "x": 50, "y": 200 } },
+        { "id": "collector", "type": "server", "label": "Event Collector API", "position": { "x": 260, "y": 200 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka Watch Event Stream", "position": { "x": 480, "y": 200 } },
+        { "id": "flink", "type": "service", "label": "Apache Flink\n(Tumbling 30s Window)", "position": { "x": 700, "y": 120 } },
+        { "id": "clickhouse", "type": "database", "label": "ClickHouse / OLAP DB\n(Analytics)", "position": { "x": 700, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "viewer", "target": "collector", "label": "Stream 5s Watch Ping" },
+        { "id": "e2", "source": "collector", "target": "kafka", "label": "Enqueue event" },
+        { "id": "e3", "source": "kafka", "target": "flink", "label": "Process stream" },
+        { "id": "e4", "source": "flink", "target": "clickhouse", "label": "Bulk write aggregated counts" }
+      ],
+      "requestPath": ["viewer", "collector", "kafka", "flink", "clickhouse"],
+      "narrative": "**Real-Time Streaming Analytics.** Watch duration events are pushed into Kafka. Flink aggregates watch time in 30-second sliding windows to filter out duplicate/bot views, then batch-updates ClickHouse OLAP database."
+    }
+  ]
+}

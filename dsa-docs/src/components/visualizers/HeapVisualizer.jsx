@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useHeapStore } from '../../store/visualizers/heapStore';
 
 const MIN_HEAP_INSERT_CODE = [
@@ -106,6 +105,8 @@ export default function HeapVisualizer() {
   const activeNodeId = step.currNode;
   const swapNodes = step.swapNodes;
 
+  const isComplete = currentStep >= steps.length - 1;
+
   return (
     <div className="sketch-container font-sketch">
       {/* Top Header */}
@@ -154,6 +155,7 @@ export default function HeapVisualizer() {
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active Node</span>
               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-rose-400"></span> Swapping</span>
+              {isComplete && <span className="text-emerald-400 font-bold">✔ Complete</span>}
             </div>
           </div>
 
@@ -203,35 +205,23 @@ export default function HeapVisualizer() {
                   className="absolute flex flex-col items-center"
                 >
                   {/* Floating Action Badge */}
-                  <AnimatePresence>
-                    {isSwapping && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
-                        animate={{ opacity: 1, y: -26, scale: 1 }}
-                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
-                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap animate-bounce"
-                      >
-                        🔄 Swap
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {isSwapping && (
+                    <div className="absolute -top-7 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap">
+                      🔄 Swap
+                    </div>
+                  )}
 
-                  <motion.div
-                    animate={{
-                      scale: isSwapping ? 1.25 : isActive ? 1.15 : 1,
-                      y: isSwapping || isActive ? -4 : 0,
-                    }}
-                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                  <div
                     className={`w-11 h-11 rounded-full flex items-center justify-center font-header font-bold text-xl border-2 shadow-md transition-all relative ${
                       isSwapping
-                        ? '!border-rose-400 !bg-rose-500/30 text-rose-500 ring-4 ring-rose-400/50 shadow-rose-500/50'
+                        ? '!border-rose-400 !bg-rose-500/30 text-rose-300 ring-4 ring-rose-400/50 shadow-rose-500/50'
                         : isActive
-                        ? '!border-amber-400 !bg-amber-500/30 text-amber-500 ring-4 ring-amber-400/40 shadow-amber-500/50'
+                        ? '!border-amber-400 !bg-amber-500/30 text-amber-300 ring-4 ring-amber-400/40 shadow-amber-500/50'
                         : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
                     }`}
                   >
                     {val}
-                  </motion.div>
+                  </div>
 
                   {/* Node Index Tag */}
                   <span className="text-[10px] font-mono text-[var(--sketch-text-muted)] mt-0.5">[{idx}]</span>
@@ -243,7 +233,7 @@ export default function HeapVisualizer() {
           {/* Underlying Flat Array Memory Inspector */}
           <div className="w-full mt-2 pt-3 border-t border-[var(--sketch-border)] flex flex-col items-center gap-1.5">
             <div className="w-full flex items-center justify-between font-mono text-[11px] text-[var(--sketch-text-muted)] px-2">
-              <span className="text-amber-500 font-bold">Underlying Heap Array:</span>
+              <span className="text-amber-400 font-bold">Underlying Heap Array:</span>
               <span className="text-[var(--sketch-text-muted)] opacity-80">parent = ⌊(i-1)/2⌋ | left = 2i+1 | right = 2i+2</span>
             </div>
 
@@ -254,26 +244,30 @@ export default function HeapVisualizer() {
                   swapNodes && (swapNodes.parent === idx || swapNodes.child === idx);
 
                 return (
-                  <motion.div
+                  <div
                     key={`array-${idx}`}
-                    animate={{
-                      scale: isSwapping ? 1.12 : isActive ? 1.06 : 1,
-                    }}
-                    className={`sketch-card min-w-[48px] py-1.5 px-3 flex flex-col items-center ${
+                    className={`sketch-card min-w-[48px] py-1.5 px-3 flex flex-col items-center border-2 rounded-xl transition-all ${
                       isSwapping
-                        ? '!border-rose-400 !bg-rose-500/20 text-rose-500 ring-2 ring-rose-400'
+                        ? '!border-rose-400 !bg-rose-500/20 text-rose-300 ring-2 ring-rose-400'
                         : isActive
-                        ? '!border-amber-400 !bg-amber-500/20 text-amber-500'
+                        ? '!border-amber-400 !bg-amber-500/20 text-amber-300'
                         : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
                     }`}
                   >
                     <span className="text-lg font-bold font-header">{val}</span>
                     <span className="text-[9px] font-mono text-[var(--sketch-text-muted)] mt-0.5">[{idx}]</span>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
           </div>
+
+          {/* Completion Banner */}
+          {isComplete && (
+            <div className="mt-3 w-full flex items-center justify-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2 rounded-xl font-mono text-xs text-emerald-300 font-bold">
+              ✔ Operation Complete — {step.state?.status || 'Heap Property Satisfied'}
+            </div>
+          )}
         </div>
 
         {/* Debug Panel (Code & State) */}

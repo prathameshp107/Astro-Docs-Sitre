@@ -76,6 +76,9 @@ const interviewSubItems = [
 
 const visualizerSubItems = [
   { label: "Visualizers Hub", href: `${base}visualizer`, icon: Sparkles, color: "#8b5cf6" },
+  { label: "Two Pointers Visualizer", href: `${base}visualizer/two-pointers`, icon: ArrowUpDown, color: "#f59e0b" },
+  { label: "Sliding Window Visualizer", href: `${base}visualizer/sliding-window`, icon: LayoutGrid, color: "#10b981" },
+  { label: "Backtracking Visualizer", href: `${base}visualizer/backtracking`, icon: Workflow, color: "#ec4899" },
   { label: "Sorting Visualizer", href: `${base}visualizer/sorting`, icon: ArrowUpDown, color: "#ec4899" },
   { label: "Searching Visualizer", href: `${base}visualizer/searching`, icon: Search, color: "#3b82f6" },
   { label: "Arrays Visualizer", href: `${base}visualizer/arrays`, icon: LayoutGrid, color: "#10b981" },
@@ -89,6 +92,9 @@ const visualizerSubItems = [
 ];
 
 const systemDesignSubItems = [
+  { label: "System Design Hub (HLD)", href: `${base}system-design`, icon: Network, color: "#f59e0b" },
+  { label: "Low-Level Design Hub (LLD)", href: `${base}lld`, icon: Layers, color: "#10b981" },
+  { label: "Object-Oriented Design (OOD)", href: `${base}ood`, icon: Boxes, color: "#06b6d4" },
   { label: "Design URL Shortener (TinyURL)", href: `${base}system-design/url-shortener`, icon: Link, color: "#ec4899" },
   { label: "Design Ride-Sharing (Uber)", href: `${base}system-design/url-shortener?case=uber`, companyId: "uber", color: "#3b82f6" },
   { label: "Design Chat App (WhatsApp)", href: `${base}system-design/url-shortener?case=whatsapp`, companyId: "whatsapp", color: "#25d366" },

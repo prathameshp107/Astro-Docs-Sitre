@@ -1,0 +1,58 @@
+{
+  "id": "distributed-key-value-store",
+  "title": "Design a Distributed Key-Value Store (DynamoDB)",
+  "subtitle": "Consistent hashing, vector clocks, quorum reads/writes (R + W > N), and LSM trees",
+  "stages": [
+    {
+      "title": "Stage 1 — Single-Node LSM Tree Key-Value Engine",
+      "bottleneck": "Memory limits on single server; random write disk I/O bottleneck.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Client App", "position": { "x": 50, "y": 200 } },
+        { "id": "memtable", "type": "cache", "label": "MemTable\n(In-Memory SkipList)", "position": { "x": 350, "y": 100 } },
+        { "id": "wal", "type": "storage", "label": "Write-Ahead Log\n(Sequential WAL)", "position": { "x": 350, "y": 300 } },
+        { "id": "sstable", "type": "database", "label": "SSTables on Disk\n(Sorted String Tables)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "memtable", "label": "PUT key value" },
+        { "id": "e2", "source": "client", "target": "wal", "label": "Append log for durability" },
+        { "id": "e3", "source": "memtable", "target": "sstable", "label": "Flush MemTable to disk when full" }
+      ],
+      "requestPath": ["client", "memtable", "wal"],
+      "narrative": "**LSM Tree Architecture.** High write throughput engine. All writes are appended sequentially to a WAL and stored in an in-memory MemTable (SkipList). When MemTable fills, it flushes to immutable SSTables on disk."
+    },
+    {
+      "title": "Stage 2 — Hash Ring Partitioning & Quorum Consensus (N, R, W)",
+      "bottleneck": "Network partitions across nodes (CAP theorem tradeoff).",
+      "nodes": [
+        { "id": "coord", "type": "server", "label": "Coordinator Node", "position": { "x": 100, "y": 200 } },
+        { "id": "n1", "type": "database", "label": "Node 1 (Primary)", "position": { "x": 450, "y": 80 } },
+        { "id": "n2", "type": "replica", "label": "Node 2 (Replica)", "position": { "x": 450, "y": 200 } },
+        { "id": "n3", "type": "replica", "label": "Node 3 (Replica)", "position": { "x": 450, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "coord", "target": "n1", "label": "Write (W=2)" },
+        { "id": "e2", "source": "coord", "target": "n2", "label": "Write (W=2)" },
+        { "id": "e3", "source": "coord", "target": "n3", "label": "Async Sync" }
+      ],
+      "requestPath": ["coord", "n1", "coord"],
+      "narrative": "**Quorum Reads & Writes (`R + W > N`).**\nWith replication factor `N = 3`, write quorum `W = 2`, read quorum `R = 2`.\n\nSince `R + W = 4 > 3`, at least one node in the read quorum is guaranteed to contain the latest write."
+    },
+    {
+      "title": "Stage 3 — Anti-Entropy Merkle Trees & Vector Clock Conflict Resolution",
+      "bottleneck": "Concurrent conflicting updates from different regions.",
+      "nodes": [
+        { "id": "coord", "type": "server", "label": "Coordinator", "position": { "x": 50, "y": 200 } },
+        { "id": "merkle1", "type": "service", "label": "Node A Merkle Tree", "position": { "x": 350, "y": 100 } },
+        { "id": "merkle2", "type": "service", "label": "Node B Merkle Tree", "position": { "x": 350, "y": 300 } },
+        { "id": "vector", "type": "database", "label": "Vector Clock Store\n([NodeA:1, NodeB:2])", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "coord", "target": "merkle1", "label": "Compare tree root hash" },
+        { "id": "e2", "source": "coord", "target": "merkle2", "label": "Compare tree root hash" },
+        { "id": "e3", "source": "merkle1", "target": "vector", "label": "Resolve causal order" }
+      ],
+      "requestPath": ["coord", "merkle1", "merkle2", "vector"],
+      "narrative": "**Anti-Entropy with Merkle Trees & Vector Clocks.**\n1. **Merkle Trees:** Nodes quickly compare hierarchical hash trees to discover data divergence without comparing raw key ranges.\n2. **Vector Clocks:** Detect causal relationship and concurrent conflicts (`D1([A:1])` vs `D2([A:1, B:1])`)."
+    }
+  ]
+}

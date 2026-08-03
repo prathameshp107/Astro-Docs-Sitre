@@ -1,0 +1,80 @@
+{
+  "id": "rate-limiter",
+  "title": "Design a Distributed Rate Limiter",
+  "subtitle": "From single-node Token Bucket middleware to multi-region Redis sliding logs",
+  "stages": [
+    {
+      "title": "Stage 1 — Local In-Memory Token Bucket",
+      "bottleneck": "Memory limits on single app server & inability to share state across multiple API servers.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "API Client", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "App Server\n(Local Token Bucket)", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Core DB", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "HTTP Request" },
+        { "id": "e2", "source": "app", "target": "db", "label": "Allow → Query DB" }
+      ],
+      "requestPath": ["client", "app", "db", "app", "client"],
+      "narrative": "**In-memory token bucket middleware.** Each incoming API request checks a local hash map on the app server. If tokens exist for the API key, decrement count and forward request to DB. Otherwise, return `429 Too Many Requests`.\n\n**Limitation:** When app servers scale horizontally, a user hitting Server A doesn't update token counts on Server B."
+    },
+    {
+      "title": "Stage 2 — Centralized Redis Counter",
+      "bottleneck": "Race conditions under heavy parallel traffic (two concurrent requests reading & writing token count at once).",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "API Client", "position": { "x": 50, "y": 200 } },
+        { "id": "lb", "type": "lb", "label": "API Gateway / LB", "position": { "x": 250, "y": 200 } },
+        { "id": "app1", "type": "server", "label": "App Server 1", "position": { "x": 450, "y": 120 } },
+        { "id": "app2", "type": "server", "label": "App Server 2", "position": { "x": 450, "y": 280 } },
+        { "id": "redis", "type": "cache", "label": "Redis Store\n(INCR / EXPIRE)", "position": { "x": 700, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "lb", "label": "" },
+        { "id": "e2", "source": "lb", "target": "app1", "label": "" },
+        { "id": "e3", "source": "lb", "target": "app2", "label": "" },
+        { "id": "e4", "source": "app1", "target": "redis", "label": "Check / INCR key" },
+        { "id": "e5", "source": "app2", "target": "redis", "label": "Check / INCR key" }
+      ],
+      "requestPath": ["client", "lb", "app1", "redis", "app1", "client"],
+      "narrative": "**Centralized state in Redis.** All app servers talk to Redis for rate-limiting using fixed window counters (`user_id:minute`).\n\n**Atomic Operations:** Lua scripts or `INCR` + `EXPIRE` ensure atomic reads and writes, eliminating local state skew across app servers."
+    },
+    {
+      "title": "Stage 3 — Sliding Window Log in Redis Cluster",
+      "bottleneck": "Traffic spikes at window boundaries (e.g. 100 requests at 1:00:59 and 100 requests at 1:01:01).",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Clients", "position": { "x": 50, "y": 220 } },
+        { "id": "gateway", "type": "lb", "label": "API Gateway\n(Envoy / Kong)", "position": { "x": 250, "y": 220 } },
+        { "id": "limiter-service", "type": "service", "label": "Rate Limiter\nService", "position": { "x": 450, "y": 220 } },
+        { "id": "redis-cluster", "type": "cache", "label": "Redis Cluster\n(ZSET Sliding Log)", "position": { "x": 700, "y": 140 } },
+        { "id": "rules-db", "type": "database", "label": "Rules Config\n(YAML / DB)", "position": { "x": 700, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "gateway", "label": "" },
+        { "id": "e2", "source": "gateway", "target": "limiter-service", "label": "gRPC filter check" },
+        { "id": "e3", "source": "limiter-service", "target": "redis-cluster", "label": "ZADD timestamp & ZCOUNT" },
+        { "id": "e4", "source": "limiter-service", "target": "rules-db", "label": "Sync tier limits" }
+      ],
+      "requestPath": ["client", "gateway", "limiter-service", "redis-cluster", "limiter-service", "gateway", "client"],
+      "narrative": "**Sliding Window Log with Redis Sorted Sets (ZSET).** Store timestamps of every request as scores in a ZSET. Remove elements older than `now - 60s`, count remaining items. Smooths out boundary spikes completely."
+    },
+    {
+      "title": "Stage 4 — Global Distributed Edge Rate Limiting",
+      "bottleneck": "Cross-region network latency to a central Redis cluster slowing down global API responses.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Global Users", "position": { "x": 50, "y": 200 } },
+        { "id": "cdn", "type": "cdn", "label": "CDN Edge\n(Cloudflare Workers)", "position": { "x": 250, "y": 200 } },
+        { "id": "edge-cache", "type": "cache", "label": "Edge KV / Memory\n(Local Sync)", "position": { "x": 450, "y": 100 } },
+        { "id": "origin-gw", "type": "lb", "label": "Origin Gateway", "position": { "x": 450, "y": 300 } },
+        { "id": "backend", "type": "server", "label": "Microservices", "position": { "x": 700, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "cdn", "label": "GET /api/v1" },
+        { "id": "e2", "source": "cdn", "target": "edge-cache", "label": "Sub-ms local check" },
+        { "id": "e3", "source": "cdn", "target": "origin-gw", "label": "Forward if under limit" },
+        { "id": "e4", "source": "origin-gw", "target": "backend", "label": "Dispatch" }
+      ],
+      "requestPath": ["client", "cdn", "edge-cache", "cdn", "origin-gw", "backend"],
+      "narrative": "**Edge rate limiting.** Requests are evaluated directly at 300+ CDN edge locations worldwide. Rejected requests never reach origin servers, cutting infrastructure costs and protecting backends from DDoS."
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "id": "video-streaming",
+  "title": "Design Video Streaming (YouTube/Netflix)",
+  "subtitle": "From raw upload handling to multi-bitrate HLS transcoding and edge CDN delivery",
+  "stages": [
+    {
+      "title": "Stage 1 — Basic Upload & Monolithic Storage",
+      "bottleneck": "Uploading gigabyte video files blocks app servers; serving video files directly from app disk fails under concurrent streams.",
+      "nodes": [
+        { "id": "creator", "type": "client", "label": "Creator", "position": { "x": 50, "y": 150 } },
+        { "id": "viewer", "type": "client", "label": "Viewer", "position": { "x": 50, "y": 300 } },
+        { "id": "app", "type": "server", "label": "Monolith App Server", "position": { "x": 350, "y": 225 } },
+        { "id": "storage", "type": "storage", "label": "Local Disk / NAS", "position": { "x": 650, "y": 225 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "creator", "target": "app", "label": "POST /upload .mp4" },
+        { "id": "e2", "source": "viewer", "target": "app", "label": "GET /video.mp4" },
+        { "id": "e3", "source": "app", "target": "storage", "label": "Read/Write raw file" }
+      ],
+      "requestPath": ["creator", "app", "storage"],
+      "narrative": "**Monolithic Video Service.** A single server handles incoming MP4 file uploads and serves raw MP4 files directly over HTTP range requests.\n\n**Flaws:** No adaptive resolution (4K stream sent to mobile on 3G network), app server memory crashes on large uploads."
+    },
+    {
+      "title": "Stage 2 — Direct S3 Upload & Async Transcoding Queue",
+      "bottleneck": "Encoding heavy 4K videos takes hours on single servers without parallel chunk processing.",
+      "nodes": [
+        { "id": "creator", "type": "client", "label": "Creator", "position": { "x": 50, "y": 200 } },
+        { "id": "api", "type": "server", "label": "API Server\n(Presigned URL)", "position": { "x": 250, "y": 100 } },
+        { "id": "raw-s3", "type": "storage", "label": "Raw S3 Bucket", "position": { "x": 250, "y": 300 } },
+        { "id": "queue", "type": "queue", "label": "Transcode Queue\n(SQS)", "position": { "x": 500, "y": 300 } },
+        { "id": "encoder", "type": "service", "label": "FFmpeg Worker Pool", "position": { "x": 750, "y": 300 } },
+        { "id": "hls-s3", "type": "storage", "label": "Processed S3\n(HLS/DASH Chunks)", "position": { "x": 750, "y": 100 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "creator", "target": "api", "label": "1. Request presigned URL" },
+        { "id": "e2", "source": "creator", "target": "raw-s3", "label": "2. Direct multipart upload" },
+        { "id": "e3", "source": "raw-s3", "target": "queue", "label": "3. ObjectCreated Event" },
+        { "id": "e4", "source": "queue", "target": "encoder", "label": "4. Poll task" },
+        { "id": "e5", "source": "encoder", "target": "hls-s3", "label": "5. Write .m3u8 & .ts chunks" }
+      ],
+      "requestPath": ["creator", "raw-s3", "queue", "encoder", "hls-s3"],
+      "narrative": "**Decoupled Upload & Transcoding Pipeline.** Creators upload directly to Object Storage via S3 Presigned URLs.\n\n**HLS Transcoding:** Workers slice raw videos into 10-second `.ts` chunks and convert them into multi-bitrate resolutions (1080p, 720p, 480p, 360p) with `.m3u8` master manifest files."
+    },
+    {
+      "title": "Stage 3 — Global Multi-CDN Delivery & Metadata Sharding",
+      "bottleneck": "S3 egress bandwidth costs are prohibitive; origin storage suffers from hot-key throttling under viral video spikes.",
+      "nodes": [
+        { "id": "viewer", "type": "client", "label": "Global Viewers", "position": { "x": 50, "y": 200 } },
+        { "id": "cdn", "type": "cdn", "label": "Multi-CDN Edge\n(Akamai / Cloudflare)", "position": { "x": 280, "y": 200 } },
+        { "id": "meta-api", "type": "server", "label": "Video Meta API", "position": { "x": 500, "y": 100 } },
+        { "id": "meta-db", "type": "database", "label": "Distributed DB\n(Cassandra / Spanner)", "position": { "x": 750, "y": 100 } },
+        { "id": "hls-s3", "type": "storage", "label": "Origin S3 Bucket", "position": { "x": 500, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "viewer", "target": "meta-api", "label": "Fetch manifest URL" },
+        { "id": "e2", "source": "meta-api", "target": "meta-db", "label": "Read video details" },
+        { "id": "e3", "source": "viewer", "target": "cdn", "label": "Stream HLS segments" },
+        { "id": "e4", "source": "cdn", "target": "hls-s3", "label": "Cache miss origin fetch" }
+      ],
+      "requestPath": ["viewer", "cdn", "hls-s3"],
+      "narrative": "**Multi-CDN Edge Delivery.** 99%+ of video chunk requests hit CDN edge caches near the viewer. Adaptive Bitrate (ABR) streaming automatically switches quality based on client network throughput."
+    },
+    {
+      "title": "Stage 4 — Real-Time View Count Counter & Recommendation Engine",
+      "bottleneck": "Updating DB row count on every video heartbeat locks database rows.",
+      "nodes": [
+        { "id": "viewer", "type": "client", "label": "Active Player", "position": { "x": 50, "y": 220 } },
+        { "id": "event-gw", "type": "lb", "label": "Analytics Collector", "position": { "x": 250, "y": 220 } },
+        { "id": "kafka", "type": "queue", "label": "Kafka Stream", "position": { "x": 450, "y": 220 } },
+        { "id": "flink", "type": "service", "label": "Apache Flink\n(Deduplicating Counter)", "position": { "x": 650, "y": 120 } },
+        { "id": "view-cache", "type": "cache", "label": "Redis View Counter", "position": { "x": 850, "y": 120 } },
+        { "id": "recommender", "type": "service", "label": "Vector Search ML\n(Recommendations)", "position": { "x": 650, "y": 320 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "viewer", "target": "event-gw", "label": "Heartbeat event every 30s" },
+        { "id": "e2", "source": "event-gw", "target": "kafka", "label": "Log watch session" },
+        { "id": "e3", "source": "kafka", "target": "flink", "label": "Stream analytics" },
+        { "id": "e4", "source": "flink", "target": "view-cache", "label": "Batch update count" },
+        { "id": "e5", "source": "kafka", "target": "recommender", "label": "Train watch history" }
+      ],
+      "requestPath": ["viewer", "event-gw", "kafka", "flink", "view-cache"],
+      "narrative": "**Async Stream Processing for View Counts.** Heartbeat events stream into Kafka. Flink window aggregators filter duplicate plays (minimum 30s watch time) and update Redis view counters asynchronously."
+    }
+  ]
+}

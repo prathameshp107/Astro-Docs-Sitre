@@ -55,7 +55,7 @@ flowchart TB
 | **08 Reliability & Scale** | SLAs, rate limiting, circuit breakers, observability |
 | **09 Security** | Auth/OAuth2, encryption, common attacks |
 | **10 Interview Guide** | Step-by-step framework, mistakes to avoid, cheat sheet |
-| **11 Case Studies** | URL shortener, chat, video streaming, Uber, and more |
+| **11 Case Studies** | URL shortener, chat, ticket booking, e-commerce orders, key-value stores, proximity search, collaborative editing, job scheduling, ad analytics, distributed locks, and more |
 
 ---
 
@@ -65,3 +65,32 @@ flowchart TB
 - Each page ends with **Trade-offs** and **In Simple Words**.
 - The **Case Studies** section ties everything together — each follows the same template.
 - Jump to the **Interview Guide** for a quick revision before interviews.
+
+---
+
+## Case Study Quick Reference
+
+A fast lookup table across all 20 case studies — use it for last-minute revision or to jog your memory on which technique solves which problem.
+
+| Case Study | Core Challenge | Key Technique |
+| --- | --- | --- |
+| URL Shortener | Read-heavy redirects at scale | Base62 encoding + cache-aside |
+| Rate Limiter | Fair, distributed request limiting | Token bucket in Redis |
+| News Feed | Fan-out of posts to millions of followers | Hybrid fan-out (push + pull) |
+| Chat System | Real-time low-latency messaging at scale | WebSockets + message queues |
+| Video Streaming | Efficient delivery of huge media files | Chunked encoding + CDN + adaptive bitrate |
+| Ride-Sharing | Real-time driver-rider matching by location | Geohashing + quadtrees for proximity matching |
+| Notification System | Multi-channel delivery at massive scale | Async queues + fan-out workers |
+| Web Crawler | Crawling the web without loops or overload | BFS frontier + URL dedup (Bloom filter) |
+| Search Autocomplete | Sub-100ms prefix suggestions | Trie + precomputed top-k rankings |
+| Distributed Cache | Low-latency shared cache across nodes | Consistent hashing + LRU eviction |
+| File Storage | Storing/syncing large files reliably | Chunking + block-level dedup + metadata service |
+| Payment System | Exactly-once, auditable money movement | Idempotency keys + two-phase commit / saga |
+| Ticket Booking System | Preventing double-booking under flash-sale load | Seat-hold locking + queueing |
+| E-commerce Order System | Consistent inventory across order lifecycle | Inventory reservation + order saga |
+| Distributed Key-Value Store | Tunable consistency at high availability | Quorum reads/writes + vector clocks |
+| Proximity Service | Fast "nearby" queries over huge location data | Geohashing + quadtrees |
+| Collaborative Editor | Concurrent edits without conflicts | Operational Transformation vs CRDT |
+| Distributed Job Scheduler | Reliable, non-duplicate job execution | Leader election + exactly-once triggering |
+| Ad Click Aggregation | Real-time counting at massive event volume | Streaming aggregation + HyperLogLog |
+| Distributed Lock Service | Safe mutual exclusion across nodes | ZooKeeper/Redlock + fencing tokens |

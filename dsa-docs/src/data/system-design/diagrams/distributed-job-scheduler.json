@@ -1,0 +1,59 @@
+{
+  "id": "distributed-job-scheduler",
+  "title": "Design a Distributed Job Scheduler",
+  "subtitle": "DAG execution graphs, Leader-Follower ZooKeeper election, and delayed execution queues",
+  "stages": [
+    {
+      "title": "Stage 1 — Cron Job on Single Server",
+      "bottleneck": "SPOF: Server crash stops all scheduled jobs; no job retry mechanisms or execution metrics.",
+      "nodes": [
+        { "id": "cron", "type": "server", "label": "Crontab Server", "position": { "x": 100, "y": 200 } },
+        { "id": "job", "type": "service", "label": "Job Script", "position": { "x": 400, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Target Database", "position": { "x": 700, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "cron", "target": "job", "label": "0 * * * * bash run.sh" },
+        { "id": "e2", "source": "job", "target": "db", "label": "Run ETL" }
+      ],
+      "requestPath": ["cron", "job", "db"],
+      "narrative": "**Single Server Crontab.** Simple OS crontab executing shell scripts periodically."
+    },
+    {
+      "title": "Stage 2 — Distributed Master/Worker Scheduler with Delay Queue",
+      "bottleneck": "Worker heartbeat loss (worker dies mid-execution without triggering retry on another node).",
+      "nodes": [
+        { "id": "master", "type": "server", "label": "Leader Master\n(Raft / ZooKeeper)", "position": { "x": 100, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Job Metadata DB\n(Cron & Status)", "position": { "x": 350, "y": 80 } },
+        { "id": "redis-queue", "type": "queue", "label": "Delayed Task Queue\n(Redis ZSET / Kafka)", "position": { "x": 350, "y": 320 } },
+        { "id": "worker1", "type": "service", "label": "Worker Pool 1", "position": { "x": 650, "y": 150 } },
+        { "id": "worker2", "type": "service", "label": "Worker Pool 2", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "master", "target": "db", "label": "Fetch scheduled triggers" },
+        { "id": "e2", "source": "master", "target": "redis-queue", "label": "Push task (execute_at timestamp)" },
+        { "id": "e3", "source": "redis-queue", "target": "worker1", "label": "Poll due tasks" },
+        { "id": "e4", "source": "redis-queue", "target": "worker2", "label": "Poll due tasks" }
+      ],
+      "requestPath": ["master", "db", "master", "redis-queue", "worker1"],
+      "narrative": "**Master / Worker Architecture with Delay Queues.**\n1. **Leader Election:** Master node elected via Raft/ZooKeeper reads cron expressions from DB.\n2. **Delayed Queue:** Scheduled tasks are pushed into Redis ZSET with score = execution timestamp (`execute_at`). Workers poll tasks where `score <= now()`."
+    },
+    {
+      "title": "Stage 3 — DAG Engine & Exactly-Once Execution Guarantees",
+      "bottleneck": "Cascading failures in dependent jobs.",
+      "nodes": [
+        { "id": "dag-engine", "type": "server", "label": "Airflow / Temporal DAG Coordinator", "position": { "x": 100, "y": 200 } },
+        { "id": "task-a", "type": "service", "label": "Task A: Extract", "position": { "x": 350, "y": 100 } },
+        { "id": "task-b", "type": "service", "label": "Task B: Transform", "position": { "x": 350, "y": 300 } },
+        { "id": "task-c", "type": "service", "label": "Task C: Load Warehouse", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "dag-engine", "target": "task-a", "label": "Trigger A" },
+        { "id": "e2", "source": "dag-engine", "target": "task-b", "label": "Trigger B" },
+        { "id": "e3", "source": "task-a", "target": "task-c", "label": "Success signal" },
+        { "id": "e4", "source": "task-b", "target": "task-c", "label": "Success signal" }
+      ],
+      "requestPath": ["dag-engine", "task-a", "task-c"],
+      "narrative": "**DAG Dependencies & State Machines.** Manages complex directed acyclic graphs. Task C will only execute when both Task A and Task B complete successfully."
+    }
+  ]
+}

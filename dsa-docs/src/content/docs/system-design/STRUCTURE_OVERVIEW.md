@@ -4,7 +4,7 @@ title: "📁 System Design Content Structure Overview"
 # 📁 System Design Content Structure Overview
 
 > **Location:** `dsa-docs/src/content/docs/system-design/`
-> **Total Files:** 52+ files across 11 sections
+> **Total Files:** 60+ files across 11 sections
 
 ## 📂 Directory Tree
 
@@ -76,7 +76,7 @@ system-design/
 │   ├── trade-off-cheat-sheet.md
 │   └── common-mistakes.md
 │
-└── 📂 11-case-studies/             (12 files)
+└── 📂 11-case-studies/             (20 files)
     ├── design-url-shortener.md
     ├── design-rate-limiter.md
     ├── design-chat-system.md
@@ -88,7 +88,15 @@ system-design/
     ├── design-distributed-cache.md
     ├── design-search-autocomplete.md
     ├── design-notification-system.md
-    └── design-web-crawler.md
+    ├── design-web-crawler.md
+    ├── design-ticket-booking-system.md
+    ├── design-ecommerce-order-system.md
+    ├── design-distributed-key-value-store.md
+    ├── design-proximity-service.md
+    ├── design-collaborative-editor.md
+    ├── design-distributed-job-scheduler.md
+    ├── design-ad-click-aggregation.md
+    └── design-distributed-lock-service.md
 ```
 
 ## 📜 Section Summary
@@ -105,8 +113,8 @@ system-design/
 | **08 Reliability & Scale** | 4 | Availability/SLA, rate limiting, circuit breakers, observability |
 | **09 Security** | 3 | Auth/authz, encryption/TLS, common attacks |
 | **10 Interview Guide** | 3 | Framework, trade-off cheat sheet, common mistakes |
-| **11 Case Studies** | 12 | URL shortener, rate limiter, chat, news feed, video streaming, file storage, ride sharing, payment, cache, autocomplete, notifications, web crawler |
+| **11 Case Studies** | 20 | URL shortener, rate limiter, chat, news feed, video streaming, file storage, ride sharing, payment, cache, autocomplete, notifications, web crawler, ticket booking, e-commerce orders, distributed KV store, proximity search, collaborative editing, job scheduling, ad click analytics, distributed locks |
 
 ---
 
-*File Count: 52+ files | Created: July 3, 2026*
+*File Count: 60+ files | Created: July 3, 2026*

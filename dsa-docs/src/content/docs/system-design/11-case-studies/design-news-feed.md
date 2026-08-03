@@ -133,6 +133,25 @@ score = recency_score × 0.5 + affinity_score × 0.3 + engagement_score × 0.2
 
 ---
 
+## Follow-up Questions
+
+**Q: What happens to a regular user who crosses the 5,000-follower threshold overnight?**
+The fan-out strategy needs to flip from push to pull for that author without a service interruption — on crossing the threshold, stop pushing new posts to follower feed caches and start writing to `celebrity_posts`, while leaving already-pushed posts in followers' caches to age out naturally (they're bounded by the `ltrim` to 500 anyway).
+
+**Q: How do you backfill a brand-new user's feed when they haven't followed anyone yet?**
+There's no push history to pull from, so cold-start with a pull-based query against a "trending" or "popular in your region/interests" set (onboarding-suggested accounts, globally popular posts) until they build a follow graph, then transition to the normal push/pull hybrid once they have follows.
+
+**Q: The ranking formula weighs recency, affinity, and engagement — how do you avoid engagement-optimization turning the feed into all viral content and no recent updates from close friends?**
+Cap the engagement term's influence (e.g., diminishing returns via log(likes) instead of raw counts) and consider serving distinct candidate pools — one recency-heavy for close friends/affinity, one engagement-heavy for discovery — then interleave them rather than letting one global score dominate.
+
+**Q: If a celebrity's post is deleted after millions of pull-merge reads have already served it, how do you avoid stale cached copies?**
+Because celebrity posts are merged on read rather than pushed, a delete just needs to remove/tombstone the post_id from `celebrity_posts` and post DB — no fan-out cache invalidation needed. For regular users' push-fanned posts already sitting in follower feed caches, you need an async cleanup job or a soft-delete flag checked at render time.
+
+**Q: How do you keep a user's feed scroll position consistent if they check the feed on phone, then desktop, then phone again?**
+Paginate with a stable cursor (e.g., timestamp or post_id boundary) rather than offset-based pagination, and persist last-seen cursor per user server-side so switching devices resumes from the same point instead of an offset that shifts as new posts arrive.
+
+---
+
 ## In Simple Words
 
 - News feed = blend of posts from people you follow, sorted by relevance.

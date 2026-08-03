@@ -110,6 +110,25 @@ Video is split into **segments** (2-10 seconds each). The player dynamically swi
 
 ---
 
+## Follow-up Questions
+
+**Q: A video suddenly goes viral overnight — how does the CDN keep up?**
+The origin would get hammered if every edge node had a cache miss at once. Use predictive pre-warming (push the video to more edge PoPs as view velocity spikes) and let the CDN's own request-collapsing merge concurrent cache-miss requests into one origin fetch instead of one per viewer.
+
+**Q: How do you pick the adaptive bitrate ladder for mobile vs desktop?**
+Mobile players default to lower rungs (240p-480p) to conserve data and battery, and the manifest can expose a mobile-specific subset of the ladder. Desktop/TV clients get the full ladder up to 4K since bandwidth and screen size justify it — the ladder itself is defined once at transcode time, the player just picks which rungs to advertise.
+
+**Q: What happens if transcoding fails partway through a large upload?**
+Transcoding runs per-resolution as independent jobs, so a failure in the 1080p job shouldn't block 240p/480p from being available. Each job is retried with exponential backoff, and the metadata DB tracks per-resolution status so the video can go "live" with whatever resolutions succeeded while failed ones retry in the background.
+
+**Q: How do you avoid re-transcoding the same content uploaded by multiple users (e.g., reposted clips)?**
+Hash the uploaded file (or use perceptual/content hashing) before transcoding and check against already-processed content. If it matches, just point the new video record at the existing transcoded segments instead of burning transcoder capacity again.
+
+**Q: How do you keep playback smooth when a user's network quality fluctuates mid-stream?**
+The player measures recent segment download throughput and buffer health, then switches to a lower/higher rung on the next segment boundary — never mid-segment. Segments are short (2-10s) specifically so this switch is fast and doesn't require re-buffering from scratch.
+
+---
+
 ## In Simple Words
 
 - Video streaming = upload → transcode (convert to multiple formats) → store → deliver via CDN.

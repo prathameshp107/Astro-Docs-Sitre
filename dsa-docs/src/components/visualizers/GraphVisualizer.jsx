@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useGraphStore } from '../../store/visualizers/graphStore';
 
 const BFS_CODE = [
@@ -49,6 +48,16 @@ const EXPECTED_OUTPUTS = {
   dfs: '[0, 1, 3, 5, 4, 2] (Deep-first Stack Order)',
   'cycle-detection': 'Cycle Found: 1 - 3 - 4 - 1 ⚠️',
   dijkstra: 'Shortest Distances from 0: [0, 4, 2, 7, 5, 8]',
+};
+
+// BFS Tree Levels per Node (from source node 0)
+const NODE_LEVELS = {
+  0: 'L0 (Start)',
+  1: 'L1',
+  2: 'L1',
+  3: 'L2',
+  4: 'L2',
+  5: 'L3',
 };
 
 // 6 Graph Node Coordinates for SVG Canvas
@@ -102,6 +111,7 @@ export default function GraphVisualizer() {
   } = useGraphStore();
 
   const step = steps[currentStep] || steps[0];
+  const isCompleted = currentStep === steps.length - 1;
 
   // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
@@ -130,13 +140,21 @@ export default function GraphVisualizer() {
   const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Output';
 
   const visitedSet = new Set(step.visited || []);
+  const inQueueSet = new Set(step.queue || []);
   const activeNodeId = step.currNode;
   const activeEdge = step.activeEdge;
 
+  // Extract currently inspected neighbor from edge
+  const activeNeighbor = activeEdge
+    ? activeEdge.from === activeNodeId
+      ? activeEdge.to
+      : activeEdge.from
+    : null;
+
   return (
-    <div className="sketch-container font-sketch">
+    <div className="sketch-container font-sketch space-y-5">
       {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4 mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--sketch-border)] pb-4">
         <div>
           <div className="text-xs uppercase tracking-wider text-[var(--sketch-accent-orange)] font-mono mb-1 font-bold">
             ALGORITHM PATTERN
@@ -157,7 +175,7 @@ export default function GraphVisualizer() {
       </div>
 
       {/* Progress Milestone Dots */}
-      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)] mb-5">
+      <div className="flex items-center gap-2 text-xs text-[var(--sketch-text-muted)]">
         <span>Milestones:</span>
         <div className="sketch-milestones">
           {steps.map((_, i) => (
@@ -175,11 +193,15 @@ export default function GraphVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+        <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[420px]">
+          {/* Renamed Canvas Header */}
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
-            <span>Undirected Graph Memory Topology Canvas</span>
-            <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active Node</span>
+            <span className="font-bold text-amber-400">Graph Traversal Canvas</span>
+            {/* Color Legend (Gray: Unvisited, Blue: Queue, Yellow: Active, Green: Visited) */}
+            <div className="flex items-center gap-3 text-[10px]">
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-slate-500"></span> Unvisited</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> In Queue</span>
+              <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span> Active</span>
               <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Visited</span>
             </div>
           </div>
@@ -207,7 +229,7 @@ export default function GraphVisualizer() {
                       x2={nodeB.x}
                       y2={nodeB.y}
                       stroke={isEdgeHighlighted ? '#f43f5e' : isVisitedEdge ? '#f59e0b' : 'var(--sketch-border)'}
-                      strokeWidth={isEdgeHighlighted ? '3.5' : isVisitedEdge ? '2.5' : '1.5'}
+                      strokeWidth={isEdgeHighlighted ? '4' : isVisitedEdge ? '2.5' : '1.5'}
                       strokeDasharray={isEdgeHighlighted ? 'none' : isVisitedEdge ? 'none' : '4 2'}
                     />
                     {/* Edge Weight label for Dijkstra */}
@@ -233,8 +255,8 @@ export default function GraphVisualizer() {
             {GRAPH_NODES.map((node) => {
               const isActive = activeNodeId === node.id;
               const isVisited = visitedSet.has(node.id);
+              const isInQueue = inQueueSet.has(node.id);
               const isCycleFound = track === 'cycle-detection' && step.state?.status?.includes('CYCLE');
-              const isEnqueued = track === 'bfs' && step.activeLine === 7 && activeEdge && activeEdge.to === node.id;
 
               return (
                 <div
@@ -243,91 +265,111 @@ export default function GraphVisualizer() {
                   className="absolute flex flex-col items-center"
                 >
                   {/* Floating Action Badge */}
-                  <AnimatePresence>
-                    {isCycleFound && isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
-                        animate={{ opacity: 1, y: -26, scale: 1 }}
-                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
-                        className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap animate-bounce"
-                      >
-                        ⚠️ Cycle Found!
-                      </motion.div>
-                    )}
-                    {isEnqueued && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
-                        animate={{ opacity: 1, y: -26, scale: 1 }}
-                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
-                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-cyan-500 text-white font-mono text-[10px] font-bold shadow-md shadow-cyan-500/30 whitespace-nowrap animate-pulse"
-                      >
-                        📥 Enqueue
-                      </motion.div>
-                    )}
-                    {isActive && !isCycleFound && !isEnqueued && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -5, scale: 0.8 }}
-                        animate={{ opacity: 1, y: -26, scale: 1 }}
-                        exit={{ opacity: 0, y: -5, scale: 0.8 }}
-                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md shadow-amber-500/30 whitespace-nowrap"
-                      >
-                        🔍 Inspecting
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {isCompleted && isVisited && node.id === activeNodeId && (
+                    <div className="absolute -top-6 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-emerald-500/50 whitespace-nowrap">
+                      ✔ Visited Complete!
+                    </div>
+                  )}
+                  {!isCompleted && isCycleFound && isActive && (
+                    <div className="absolute -top-6 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-lg shadow-rose-500/50 whitespace-nowrap">
+                      ⚠️ Cycle Found!
+                    </div>
+                  )}
+                  {!isCompleted && isActive && activeNeighbor !== null && (
+                    <div className="absolute -top-6 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-black font-mono text-[10px] font-bold shadow-md shadow-amber-500/30 whitespace-nowrap">
+                      🔍 Node {node.id} → Inspecting {activeNeighbor}
+                    </div>
+                  )}
+                  {!isCompleted && isActive && activeNeighbor === null && (
+                    <div className="absolute -top-6 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-black font-mono text-[10px] font-bold shadow-md shadow-amber-500/30 whitespace-nowrap">
+                      🔍 Active Node {node.id}
+                    </div>
+                  )}
+                  {!isCompleted && !isActive && isInQueue && (
+                    <div className="absolute -top-6 z-20 px-2 py-0.5 rounded-full bg-cyan-500 text-white font-mono text-[10px] font-bold shadow-md shadow-cyan-500/30 whitespace-nowrap">
+                      📥 In Queue
+                    </div>
+                  )}
 
-                  <motion.div
-                    animate={{
-                      scale: isActive ? 1.25 : 1,
-                      y: isActive ? -4 : 0,
-                    }}
-                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                  <div
                     className={`w-11 h-11 rounded-full flex items-center justify-center font-header font-bold text-xl border-2 shadow-md transition-all relative ${
                       isCycleFound && isActive
-                        ? '!border-rose-400 !bg-rose-500/30 text-rose-500 ring-4 ring-rose-400/50 shadow-rose-500/50'
+                        ? '!border-rose-400 !bg-rose-500/30 text-rose-400 ring-4 ring-rose-400/50 shadow-rose-500/50'
+                        : isCompleted && isVisited
+                        ? '!border-emerald-400 !bg-emerald-500/30 text-emerald-300 ring-2 ring-emerald-400/50 shadow-emerald-500/40'
                         : isActive
-                        ? '!border-amber-400 !bg-amber-500/30 text-amber-500 ring-4 ring-amber-400/40 shadow-amber-500/50'
+                        ? '!border-amber-400 !bg-amber-500/30 text-amber-300 ring-4 ring-amber-400/50 shadow-amber-500/50'
+                        : isInQueue
+                        ? '!border-cyan-400 !bg-cyan-500/20 text-cyan-300 ring-2 ring-cyan-400/40 shadow-cyan-500/30'
                         : isVisited
-                        ? '!border-emerald-400 !bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-emerald-500/30'
-                        : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-[var(--sketch-text)]'
+                        ? '!border-emerald-400/80 !bg-emerald-500/20 text-emerald-300 shadow-emerald-500/30'
+                        : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-slate-400'
                     }`}
                   >
                     {node.label}
-                  </motion.div>
+                  </div>
 
-                  {/* Active Pointer Arrow */}
-                  <AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 6 }}
-                        className="sketch-pointer sketch-pointer-orange absolute -bottom-7"
-                      >
-                        <div className="text-[10px]">curr</div>
-                        <div className="text-[10px] leading-none">▲</div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {/* Level Tag underneath Node */}
+                  <span className="text-[9px] font-mono font-bold text-amber-400/90 mt-0.5">
+                    {NODE_LEVELS[node.id]}
+                  </span>
                 </div>
               );
             })}
           </div>
 
-          {/* Visited Sequence Bar */}
-          <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)]">
-            <div className="flex items-center gap-2">
-              <span className="text-amber-500 font-bold">Traversal Order:</span>
-              <div className="flex items-center gap-1.5">
-                {step.visited?.map((v, i) => (
-                  <span key={i} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 font-bold">
-                    #{i + 1}: Node {v}
-                  </span>
-                ))}
+          {/* Completion Summary Banner (Shows on Last Step) */}
+          {isCompleted && (
+            <div className="mt-3 p-4 bg-emerald-950/40 border-2 border-emerald-400/60 rounded-2xl shadow-xl space-y-3">
+              <div className="flex items-center justify-between border-b border-emerald-500/30 pb-2">
+                <div className="flex items-center gap-2 text-emerald-300 font-header font-extrabold text-base md:text-lg">
+                  <span>🎉</span>
+                  <span>{trackLabel} Traversal Complete!</span>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-mono text-xs font-bold">
+                  ✔ SUCCESS
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span className="text-slate-400 block text-[10px] font-bold uppercase">VISITED NODES</span>
+                  <span className="text-emerald-300 font-extrabold text-sm">{visitedSet.size} / 6 (100%)</span>
+                </div>
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span className="text-slate-400 block text-[10px] font-bold uppercase">QUEUE STATUS</span>
+                  <span className="text-emerald-300 font-extrabold text-sm">✓ Exhausted</span>
+                </div>
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span className="text-slate-400 block text-[10px] font-bold uppercase">TIME COMPLEXITY</span>
+                  <span className="text-amber-300 font-extrabold text-sm">O(V + E)</span>
+                </div>
+                <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                  <span className="text-slate-400 block text-[10px] font-bold uppercase">SPACE COMPLEXITY</span>
+                  <span className="text-amber-300 font-extrabold text-sm">O(V)</span>
+                </div>
               </div>
             </div>
-            <span className="text-[10px] text-[var(--sketch-text-muted)]">Visited: {step.visited?.length || 0} / 6</span>
-          </div>
+          )}
+
+          {/* Visited Sequence Bar */}
+          {!isCompleted && (
+            <div className="mt-3 w-full flex items-center justify-between font-mono text-xs text-[var(--sketch-text-muted)] bg-[var(--sketch-bg-dim)] px-4 py-2 rounded-xl border border-[var(--sketch-border)]">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-bold">Traversal Order:</span>
+                <div className="flex items-center gap-1.5">
+                  {step.visited?.map((v, i) => (
+                    <span key={i} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold">
+                      #{i + 1}: Node {v}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <span className="text-[10px] text-[var(--sketch-text-muted)] font-mono">
+                Visited: {step.visited?.length || 0} / 6
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Debug Panel (Code & State) */}
@@ -358,7 +400,7 @@ export default function GraphVisualizer() {
                   return (
                     <div
                       key={c.line}
-                      className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
+                      className={`sketch-code-line gap-3 ${isActive ? 'active !border-amber-400/60 !bg-amber-500/10 font-bold' : ''}`}
                     >
                       <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>
                       <span className="whitespace-pre font-mono flex-1">{c.text}</span>
@@ -370,33 +412,35 @@ export default function GraphVisualizer() {
           </div>
 
           {/* Adjacency List & Queue/Stack Inspector */}
-          <div className="sketch-panel-box sketch-border">
-            <div className="font-header font-bold text-lg mb-2 pb-1 border-b border-[var(--sketch-border)] flex items-center justify-between">
+          <div className="sketch-panel-box sketch-border space-y-3">
+            <div className="font-header font-bold text-lg pb-1 border-b border-[var(--sketch-border)] flex items-center justify-between">
               <span>{track === 'bfs' ? 'BFS Queue (FIFO)' : track === 'dijkstra' ? 'Distance Table' : 'DFS Stack (LIFO)'}</span>
             </div>
 
             {/* Queue Data Structure Pill List for BFS */}
             {track === 'bfs' && (
-              <div className="flex items-center gap-1.5 mb-3 bg-black/20 p-2 rounded-lg border border-white/10">
-                <span className="text-[10px] font-mono text-amber-400 font-bold">FRONT →</span>
+              <div className="flex items-center gap-1.5 bg-black/30 p-2.5 rounded-xl border border-white/10">
+                <span className="text-[10px] font-mono text-cyan-400 font-bold">FRONT ↑</span>
                 {step.queue?.length > 0 ? (
                   step.queue.map((node, i) => (
-                    <span key={i} className="px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-mono text-xs border border-amber-500/40 font-bold">
+                    <span key={i} className="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 font-mono text-xs border border-cyan-500/40 font-extrabold shadow-sm">
                       [{node}]
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs font-mono text-[var(--sketch-text-muted)] italic">Queue Empty</span>
+                  <span className="text-xs font-mono text-emerald-400 font-bold italic">
+                    ✓ Queue Exhausted (All Vertices Processed)
+                  </span>
                 )}
-                <span className="text-[10px] font-mono text-amber-400 font-bold ml-auto">← REAR</span>
+                <span className="text-[10px] font-mono text-amber-400 font-bold ml-auto">REAR ↑</span>
               </div>
             )}
 
             {/* DFS Stack Frame List */}
             {track === 'dfs' && (
-              <div className="flex flex-wrap gap-1 mb-3">
+              <div className="flex flex-wrap gap-1.5">
                 {step.stack?.map((fn, idx) => (
-                  <span key={idx} className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">
+                  <span key={idx} className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
                     {fn}
                   </span>
                 ))}
@@ -405,9 +449,9 @@ export default function GraphVisualizer() {
 
             {/* Dijkstra Distance Table */}
             {track === 'dijkstra' && (
-              <div className="grid grid-cols-3 gap-1 mb-3">
+              <div className="grid grid-cols-3 gap-1.5">
                 {Object.entries(step.distances || {}).map(([node, dist]) => (
-                  <div key={node} className="bg-white/5 p-1.5 rounded text-center border border-white/10 font-mono text-xs">
+                  <div key={node} className="bg-white/5 p-1.5 rounded-lg text-center border border-white/10 font-mono text-xs">
                     <div className="text-[10px] text-[var(--sketch-text-muted)]">Node {node}</div>
                     <div className="font-bold text-amber-300">{dist}</div>
                   </div>
@@ -416,19 +460,19 @@ export default function GraphVisualizer() {
             )}
 
             {/* Adjacency List Inspector */}
-            <div className="font-header font-bold text-sm mb-1 pb-1 border-b border-[var(--sketch-border)] flex items-center justify-between">
+            <div className="font-header font-bold text-sm pt-2 pb-1 border-t border-[var(--sketch-border)] flex items-center justify-between">
               <span>Adjacency List</span>
               <span className="text-[10px] font-mono text-white/40">adj[node]</span>
             </div>
-            <div className="grid grid-cols-2 gap-1 mb-2">
+            <div className="grid grid-cols-2 gap-1.5">
               {Object.entries(ADJACENCY_LIST).map(([node, neighbors]) => {
                 const isCurrentRow = Number(node) === activeNodeId;
                 return (
                   <div
                     key={node}
-                    className={`font-mono text-[10px] px-2 py-0.5 rounded border transition-all ${
+                    className={`font-mono text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
                       isCurrentRow
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold'
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold ring-1 ring-amber-400/40'
                         : 'bg-white/5 text-[var(--sketch-text-muted)] border-white/10'
                     }`}
                   >
@@ -438,7 +482,8 @@ export default function GraphVisualizer() {
               })}
             </div>
 
-            <div className="font-header font-bold text-sm mb-1 pb-1 border-b border-[var(--sketch-border)]">
+            {/* State Variables Inspector */}
+            <div className="font-header font-bold text-sm pt-2 pb-1 border-t border-[var(--sketch-border)]">
               State Variables
             </div>
             <div className="space-y-1">
@@ -457,7 +502,7 @@ export default function GraphVisualizer() {
       <div className="sketch-explanation-bar sketch-border">
         <span className="text-xl select-none">✏️</span>
         <div className="flex-1 text-sm md:text-base leading-relaxed">
-          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)]">
+          <span className="font-mono text-xs px-2 py-0.5 rounded sketch-border-soft mr-2 text-[var(--sketch-accent-orange)] font-bold">
             line {step.activeLine}
           </span>
           {step.desc}
@@ -484,7 +529,7 @@ export default function GraphVisualizer() {
           </button>
           <button
             onClick={togglePlay}
-            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500"
+            className="sketch-button px-4 py-1.5 font-bold bg-amber-500/20 border-amber-500 text-amber-300"
             title={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? '⏸' : '▶'}
@@ -517,7 +562,7 @@ export default function GraphVisualizer() {
             <button
               key={s}
               onClick={() => setSpeed(s)}
-              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 font-bold' : ''}`}
+              className={`px-2.5 py-0.5 text-xs sketch-button ${speed === s ? 'bg-amber-500/20 border-amber-500 text-amber-300 font-bold' : ''}`}
             >
               {s === 0.5 ? '0.5x (Slow)' : `${s}x`}
             </button>

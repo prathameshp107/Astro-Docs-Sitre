@@ -144,6 +144,25 @@ CREATE TABLE messages (
 
 ---
 
+## Follow-up Questions
+
+**Q: In a group chat, how do you guarantee message ordering when different senders connect to different WebSocket servers?**
+The per-conversation `redis.incr` sequence number is the source of truth, not arrival order at any given WebSocket server — every message gets its sequence assigned centrally (via the queue/worker path) before persistence, so clients render by `seq`, not by receipt time, even if two members' messages hit different servers milliseconds apart.
+
+**Q: A user reconnects after being offline for a month with 10,000 unread messages — how do you sync without hammering the DB or overwhelming the client?**
+Don't push all 10,000 at once — return the latest N (e.g., last 50) immediately for a responsive UI, plus a total unread count, then let the client paginate backward through history using `last_read_message_id` as a cursor against Cassandra's clustered `(conversation_id, message_id)` index, which is efficient for range scans.
+
+**Q: How do you scale read receipts in large group chats without a write-amplification explosion (every read by every member notifying everyone else)?**
+Per-message-per-member receipts are O(n²) in a large group. Instead, track only a per-user "last read message_id" per conversation (one row updated, not one write per message), batch/debounce receipt broadcasts (e.g., every few seconds instead of per-message), and skip granular read receipts entirely above some group size threshold, falling back to a simple "seen by N" count.
+
+**Q: If a WebSocket server crashes mid-session, how do users avoid losing messages sent during the failover window?**
+Because delivery already goes through the Kafka queue and is persisted before being forwarded to the recipient's WebSocket connection, a crashed WS server just means the client reconnects (to a different server via the load balancer) and replays anything with a `seq` greater than their last-acknowledged one — persistence-before-delivery is what makes this safe.
+
+**Q: How would you add end-to-end encryption without breaking server-side features like search and push notification previews?**
+E2E encryption means the server can only route encrypted blobs, so message search has to move client-side (index on-device) or be dropped, and push notifications can only show generic ("New message") previews instead of the text itself — this is a real trade-off between the "no message loss + persisted history" requirement and encryption, since the server-side DB now stores ciphertext it can't inspect for the deduplication or ordering logic beyond the sequence number.
+
+---
+
 ## In Simple Words
 
 - Chat = persistent WebSocket connections for real-time delivery + database for history.

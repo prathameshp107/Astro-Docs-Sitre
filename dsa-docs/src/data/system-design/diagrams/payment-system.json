@@ -1,0 +1,61 @@
+{
+  "id": "payment-system",
+  "title": "Design a Payment System (Stripe/PayPal)",
+  "subtitle": "Idempotence keys, double-entry bookkeeping ledgers, and 2PC reconciliation loops",
+  "stages": [
+    {
+      "title": "Stage 1 — Direct Payment Gateway Call",
+      "bottleneck": "Network timeout during Stripe call leaves transaction status ambiguous (Did money leave user account? Should order fulfill?).",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "Customer", "position": { "x": 50, "y": 200 } },
+        { "id": "checkout", "type": "server", "label": "Monolithic Checkout", "position": { "x": 350, "y": 200 } },
+        { "id": "stripe", "type": "service", "label": "Stripe Gateway API", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "checkout", "label": "POST /pay $50" },
+        { "id": "e2", "source": "checkout", "target": "stripe", "label": "Charge card" }
+      ],
+      "requestPath": ["user", "checkout", "stripe", "checkout", "user"],
+      "narrative": "**Synchronous Payment Call.** Direct inline call to payment processor without state persistence or transaction boundary."
+    },
+    {
+      "title": "Stage 2 — Idempotent Payment Service & Double-Entry Ledger",
+      "bottleneck": "Single-entry balances (`balance = balance - 50`) suffer from audit discrepancies and corrupted money totals.",
+      "nodes": [
+        { "id": "user", "type": "client", "label": "Customer", "position": { "x": 50, "y": 200 } },
+        { "id": "gw", "type": "lb", "label": "API Gateway\n(Idempotency Key Check)", "position": { "x": 220, "y": 200 } },
+        { "id": "pay-service", "type": "server", "label": "Payment Executor", "position": { "x": 420, "y": 200 } },
+        { "id": "ledger", "type": "database", "label": "Double-Entry Ledger DB\n(Debit/Credit Immutable Log)", "position": { "x": 650, "y": 100 } },
+        { "id": "psp", "type": "service", "label": "Payment Service Provider\n(Stripe / Adyen)", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user", "target": "gw", "label": "Header: Idempotency-Key: uuid-123" },
+        { "id": "e2", "source": "gw", "target": "pay-service", "label": "Pass if key lock acquired" },
+        { "id": "e3", "source": "pay-service", "target": "ledger", "label": "1. Record Pending Debit & Credit" },
+        { "id": "e4", "source": "pay-service", "target": "psp", "label": "2. Charge card" }
+      ],
+      "requestPath": ["user", "gw", "pay-service", "ledger", "pay-service", "psp"],
+      "narrative": "**Idempotency & Double-Entry Ledger.**\n1. **Idempotency Key:** If user double-clicks submit button, Redis lock prevents double charging.\n2. **Double-Entry Bookkeeping:** Every transaction records equal debit and credit entries (`sum(debits) - sum(credits) == 0`). Money is never created or destroyed out of thin air."
+    },
+    {
+      "title": "Stage 3 — Async Settlement & Nightly Reconciliation Loop",
+      "bottleneck": "Gateway webhooks can drop; bank settlement files arrive 24h later with mismatched totals.",
+      "nodes": [
+        { "id": "psp", "type": "service", "label": "PSP Bank Network", "position": { "x": 50, "y": 200 } },
+        { "id": "webhook", "type": "lb", "label": "Webhook Ingestion", "position": { "x": 250, "y": 100 } },
+        { "id": "settle-queue", "type": "queue", "label": "Kafka Settle Events", "position": { "x": 450, "y": 100 } },
+        { "id": "sftp", "type": "storage", "label": "Bank SFTP\n(Settlement CSV Files)", "position": { "x": 250, "y": 300 } },
+        { "id": "reconciler", "type": "service", "label": "Reconciliation Engine\n(Batch Matcher)", "position": { "x": 550, "y": 300 } },
+        { "id": "ledger", "type": "database", "label": "Immutable Ledger DB", "position": { "x": 750, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "psp", "target": "webhook", "label": "Async webhook payload" },
+        { "id": "e2", "source": "webhook", "target": "settle-queue", "label": "Enqueue" },
+        { "id": "e3", "source": "sftp", "target": "reconciler", "label": "Nightly batch pull" },
+        { "id": "e4", "source": "reconciler", "target": "ledger", "label": "Flag discrepancies" }
+      ],
+      "requestPath": ["sftp", "reconciler", "ledger"],
+      "narrative": "**Reconciliation Loop.** Nightly cron jobs download bank settlement files, match line items against the internal double-entry ledger, and alert human operators on mismatch."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "file-storage",
+  "title": "Design Cloud Storage (Google Drive / Dropbox)",
+  "subtitle": "From raw file uploads to block chunking, deduplication, and sync conflict resolution",
+  "stages": [
+    {
+      "title": "Stage 1 — Monolithic File Upload",
+      "bottleneck": "Re-uploading 1GB files on a 1MB edit wastes bandwidth; network drops restart entire upload from 0%.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Desktop Sync App", "position": { "x": 50, "y": 200 } },
+        { "id": "app", "type": "server", "label": "File Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Metadata DB", "position": { "x": 650, "y": 100 } },
+        { "id": "storage", "type": "storage", "label": "Blob Storage", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "app", "label": "Upload file.pdf" },
+        { "id": "e2", "source": "app", "target": "db", "label": "Save path & owner" },
+        { "id": "e3", "source": "app", "target": "storage", "label": "Write whole file" }
+      ],
+      "requestPath": ["client", "app", "storage"],
+      "narrative": "**Monolithic Upload.** Entire files are transmitted in a single HTTP POST request to backend storage."
+    },
+    {
+      "title": "Stage 2 — Block Chunking (4MB) & Content Hash Deduplication",
+      "bottleneck": "Storing duplicate identical popular files across 1M users wastes petabytes of S3 storage.",
+      "nodes": [
+        { "id": "client", "type": "client", "label": "Sync Client\n(4MB Chunker)", "position": { "x": 50, "y": 200 } },
+        { "id": "block-api", "type": "server", "label": "Block Server", "position": { "x": 300, "y": 200 } },
+        { "id": "meta-db", "type": "database", "label": "Metadata DB\n(SHA-256 Hashes)", "position": { "x": 550, "y": 100 } },
+        { "id": "s3", "type": "storage", "label": "S3 Block Storage\n(Immutable Chunks)", "position": { "x": 550, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client", "target": "block-api", "label": "1. Send block SHA-256 hashes" },
+        { "id": "e2", "source": "block-api", "target": "meta-db", "label": "2. Deduplication check" },
+        { "id": "e3", "source": "block-api", "target": "s3", "label": "3. Store ONLY missing blocks" }
+      ],
+      "requestPath": ["client", "block-api", "meta-db", "block-api", "s3"],
+      "narrative": "**Block Chunking & Global Deduplication.**\n1. **4MB Chunks:** Files are split locally into 4MB blocks.\n2. **SHA-256 Hashing:** The client computes the SHA-256 hash of each block.\n3. **Global Dedup:** If block `XYZ` already exists in S3 (uploaded by another user), the server skips uploading block `XYZ` and simply links the metadata record."
+    },
+    {
+      "title": "Stage 3 — Real-Time Notification & Delta Sync",
+      "bottleneck": "Polling metadata DB for file updates drains device battery and causes high server load.",
+      "nodes": [
+        { "id": "client-a", "type": "client", "label": "User Device A", "position": { "x": 50, "y": 120 } },
+        { "id": "client-b", "type": "client", "label": "User Device B", "position": { "x": 50, "y": 320 } },
+        { "id": "meta-service", "type": "server", "label": "Metadata Service", "position": { "x": 300, "y": 120 } },
+        { "id": "notify-service", "type": "service", "label": "Notification Service\n(Long Polling / WS)", "position": { "x": 300, "y": 320 } },
+        { "id": "mq", "type": "queue", "label": "Sync Event Queue", "position": { "x": 550, "y": 220 } },
+        { "id": "meta-db", "type": "database", "label": "Sharded NoSQL Meta DB", "position": { "x": 750, "y": 120 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "client-a", "target": "meta-service", "label": "Update metadata" },
+        { "id": "e2", "source": "meta-service", "target": "meta-db", "label": "Commit version" },
+        { "id": "e3", "source": "meta-service", "target": "mq", "label": "Publish update" },
+        { "id": "e4", "source": "mq", "target": "notify-service", "label": "Trigger sync" },
+        { "id": "e5", "source": "notify-service", "target": "client-b", "label": "WebSocket push delta" }
+      ],
+      "requestPath": ["client-a", "meta-service", "mq", "notify-service", "client-b"],
+      "narrative": "**Delta Sync & WebSocket Notifications.** Only modified 4MB chunks are synced when a file is edited. Long Polling / WebSockets push instant update signals to all connected user devices."
+    }
+  ]
+}

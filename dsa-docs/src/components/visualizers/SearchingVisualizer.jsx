@@ -114,13 +114,13 @@ export default function SearchingVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border">
+        <div className="sketch-canvas-box sketch-border relative p-6 pt-6 pb-20 min-h-[260px] flex flex-col items-center justify-center overflow-x-hidden overflow-y-visible">
           <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
-            Searching Step Execution Canvas
+            Step Execution Canvas
           </div>
 
           {/* Array Cards Container */}
-          <div className="flex items-center gap-3 md:gap-4 my-8 relative pt-6 pb-20 px-4 overflow-x-auto w-full justify-center">
+          <div className="flex items-start gap-3 md:gap-4 my-4 relative pt-14 pb-20 px-4 overflow-x-auto overflow-y-visible w-full justify-center">
             {array.map((val, idx) => {
               const isI = step.i === idx;
               const isLow = step.low === idx;

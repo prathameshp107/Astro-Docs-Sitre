@@ -57,11 +57,11 @@ const TRACK_TITLES = {
 };
 
 const EXPECTED_OUTPUTS = {
-  'bubble-sort': '[10, 14, 14, 29, 37] (Sorted array)',
-  'selection-sort': '[11, 12, 22, 25, 64] (Sorted array)',
-  'insertion-sort': '[5, 6, 11, 12, 13] (Sorted array)',
-  'quick-sort': '[10, 30, 40, 50, 70, 80, 90] (Sorted array)',
-  'merge-sort': '[3, 9, 10, 27, 38, 43, 82] (Sorted array)',
+  'bubble-sort': '[1, 2, 4, 5, 8] (Sorted Array)',
+  'selection-sort': '[1, 2, 4, 5, 8] (Sorted Array)',
+  'insertion-sort': '[1, 2, 4, 5, 8] (Sorted Array)',
+  'quick-sort': '[1, 2, 4, 5, 8] (Sorted Array)',
+  'merge-sort': '[1, 2, 4, 5, 8] (Sorted Array)',
 };
 
 export default function SortingVisualizer() {
@@ -177,39 +177,62 @@ export default function SortingVisualizer() {
       {/* Main Canvas + Debugger Row */}
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
-        <div className="sketch-canvas-box sketch-border">
+        <div className="sketch-canvas-box sketch-border relative p-6 pt-6 pb-20 min-h-[260px] flex flex-col items-center justify-center overflow-x-hidden overflow-y-visible">
           <div className="absolute top-3 left-4 text-xs font-mono text-[var(--sketch-text-muted)]">
-            Sorting Step Execution Canvas
+            Step Execution Canvas
           </div>
 
-          {/* Array Cards Container with Swap Arc Connector */}
-          <div ref={containerRef} className="flex items-center gap-3 md:gap-5 my-8 relative pt-6 pb-24 px-4 overflow-x-auto w-full justify-center">
+          {/* Array Cards Container */}
+          <div ref={containerRef} className="flex items-start gap-3 md:gap-5 my-4 relative pt-14 pb-20 px-4 overflow-x-auto overflow-y-visible w-full justify-center">
             {hasSwapArc && (
               <SwapArcConnector containerRef={containerRef} fromIndex={swapFrom} toIndex={swapTo} label="swapping" />
             )}
 
-            {array.map((val, idx) => {
+            {(step.array || array).map((val, idx) => {
               const isI = step.i === idx;
-              const isJ = step.j === idx;
+              const isJ = step.j !== null && step.j !== undefined && step.j === idx;
               const isJPlus1 = track === 'bubble-sort' && step.j !== null && step.j + 1 === idx;
               const isMinIdx = step.minIdx === idx;
-              const isPivot = step.pivot === idx;
-              const isBothIJ = isI && isJ;
+              const isPivot = track === 'quick-sort' && step.pivot !== null && step.pivot !== undefined && step.pivot === idx;
+              const isBothIJ = isI && isJ && track !== 'insertion-sort';
               const isBothIMin = isI && isMinIdx;
+
+              // Insertion sort: key is always at step.i position (same card as i)
+              const isKeyCard = track === 'insertion-sort' && isI && step.key !== undefined;
+              // Insertion sort: j is the scan pointer, shown separately from i
+              const isInsertionJ = track === 'insertion-sort' && isJ && !isI;
+
+              // Merge sort pointer flags
+              const isLow = track === 'merge-sort' && step.low !== null && step.low !== undefined && step.low === idx;
+              const isMid = track === 'merge-sort' && step.mid !== null && step.mid !== undefined && step.mid === idx;
+              const isHigh = track === 'merge-sort' && step.high !== null && step.high !== undefined && step.high === idx;
+              const inMergeRange = track === 'merge-sort' && step.low !== null && step.high !== null && idx >= step.low && idx <= step.high;
 
               const isSwapping = (idx === swapFrom || idx === swapTo);
 
-              const isShifting = track === 'insertion-sort' && step.activeLine === 5 && isJ;
+              // Insertion sort: shifting is when activeLine=3 (shift phase) and idx is in the shift window
+              const isShifting = track === 'insertion-sort' && step.activeLine === 3 && (isJ || isI);
 
               const isComparing =
                 (track === 'bubble-sort' && step.activeLine === 3 && (isJ || isJPlus1)) ||
-                (track === 'selection-sort' && step.activeLine === 4 && (isJ || isMinIdx)) ||
-                (track === 'insertion-sort' && step.activeLine === 4 && isJ);
+                (track === 'selection-sort' && step.activeLine === 2 && (isMinIdx)) ||
+                (track === 'insertion-sort' && step.activeLine === 2 && (isI || isJ));
 
-              const isHighlighted = isI || isJ || isJPlus1 || isMinIdx || isPivot;
+              const isHighlighted = isI || (isJ && track !== 'bubble-sort') || isJPlus1 || isMinIdx || isPivot || isLow || isMid || isHigh;
 
               return (
                 <div key={idx} className="relative flex flex-col items-center">
+                  {/* Key badge floating ABOVE the card for insertion sort */}
+                  {isKeyCard && step.activeLine !== 4 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-bold text-amber-300 bg-amber-500/20 border border-amber-400/50 px-1.5 py-0.5 rounded-md whitespace-nowrap shadow-sm z-10"
+                    >
+                      key={step.key}
+                    </motion.div>
+                  )}
+
                   <motion.div
                     animate={{
                       scale: isSwapping ? 1.12 : isHighlighted ? 1.08 : 1,
@@ -219,22 +242,32 @@ export default function SortingVisualizer() {
                     className={`sketch-card ${
                       isSwapping
                         ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400'
-                        : isShifting || isComparing
+                        : isShifting
+                        ? '!border-amber-400 !bg-amber-500/20 shadow-md shadow-amber-500/30 ring-1 ring-amber-400'
+                        : isComparing
                         ? '!border-amber-400 !bg-amber-500/15 shadow-md shadow-amber-500/30'
                         : isPivot
-                        ? 'border-rose-500 shadow-rose-500/20'
+                        ? 'border-rose-500 shadow-rose-500/20 !bg-rose-500/15'
                         : isBothIMin
                         ? 'border-purple-400 bg-purple-500/20 ring-1 ring-purple-400'
                         : isMinIdx
                         ? 'border-emerald-400 shadow-emerald-400/20'
                         : isBothIJ
                         ? 'border-purple-400 bg-purple-500/15 ring-1 ring-purple-400'
-                        : isJ
+                        : isInsertionJ
+                        ? '!border-sky-400 !bg-sky-500/15 shadow-md shadow-sky-400/20 ring-1 ring-sky-400'
+                        : isJ && track !== 'insertion-sort'
                         ? 'active-blue'
                         : isJPlus1
                         ? 'border-cyan-400 bg-cyan-500/10'
-                        : isI
+                        : isKeyCard
+                        ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/40 ring-2 ring-amber-400'
+                        : isI && track !== 'insertion-sort'
                         ? 'active-orange'
+                        : isMid
+                        ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
+                        : inMergeRange
+                        ? 'border-sky-400/60 bg-sky-500/10'
                         : ''
                     }`}
                   >
@@ -252,6 +285,96 @@ export default function SortingVisualizer() {
                         className="sketch-pointer text-rose-400 font-bold"
                       >
                         <div>pivot</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Merge Sort — low pointer (orange) */}
+                  <AnimatePresence>
+                    {isLow && !isMid && !isHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange text-xs font-bold"
+                      >
+                        <div>low</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Merge Sort — mid pointer (amber) */}
+                  <AnimatePresence>
+                    {isMid && !isLow && !isHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-amber-400 font-bold"
+                      >
+                        <div>mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Merge Sort — high pointer (blue) */}
+                  <AnimatePresence>
+                    {isHigh && !isLow && !isMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-blue text-xs font-bold"
+                      >
+                        <div>high</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Merge Sort — combined low+mid pointer */}
+                  <AnimatePresence>
+                    {isLow && isMid && !isHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 text-xs"
+                      >
+                        <div>low, mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Merge Sort — combined mid+high pointer */}
+                  <AnimatePresence>
+                    {isMid && isHigh && !isLow && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 text-xs"
+                      >
+                        <div>mid, high</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Merge Sort — combined low+mid+high pointer */}
+                  <AnimatePresence>
+                    {isLow && isMid && isHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 text-xs"
+                      >
+                        <div>l,m,h</div>
                         <div className="text-xs leading-none">▲</div>
                       </motion.div>
                     )}
@@ -287,7 +410,37 @@ export default function SortingVisualizer() {
                     )}
                   </AnimatePresence>
 
-                  {/* Combined i, j Pointer badge when i === j */}
+                  {/* Insertion Sort — i pointer (key position) */}
+                  <AnimatePresence>
+                    {isKeyCard && !isInsertionJ && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-amber-400 font-bold"
+                      >
+                        <div>i</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Insertion Sort — j scan pointer (distinct sky-blue) */}
+                  <AnimatePresence>
+                    {isInsertionJ && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-sky-400 font-bold"
+                      >
+                        <div>j</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Combined i, j Pointer badge when i === j (non-insertion-sort) */}
                   <AnimatePresence>
                     {isBothIJ && !isBothIMin && !isPivot && !isMinIdx && (
                       <motion.div
@@ -302,9 +455,9 @@ export default function SortingVisualizer() {
                     )}
                   </AnimatePresence>
 
-                  {/* i Pointer when i !== j */}
+                  {/* i Pointer when i !== j (non-insertion-sort) */}
                   <AnimatePresence>
-                    {isI && !isBothIJ && !isBothIMin && !isPivot && !isMinIdx && (
+                    {isI && !isBothIJ && !isBothIMin && !isPivot && !isMinIdx && !isKeyCard && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -317,9 +470,9 @@ export default function SortingVisualizer() {
                     )}
                   </AnimatePresence>
 
-                  {/* j Pointer when i !== j */}
+                  {/* j Pointer (non-insertion-sort) */}
                   <AnimatePresence>
-                    {isJ && !isBothIJ && !isBothIMin && !isPivot && !isMinIdx && (
+                    {isJ && !isBothIJ && !isBothIMin && !isPivot && !isMinIdx && track !== 'insertion-sort' && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}

@@ -128,6 +128,25 @@ flowchart LR
 
 ---
 
+## Follow-up Questions
+
+**Q: What happens when base62 encoding of the sequence ID wraps around after 57 billion codes?**
+At 40 QPS that's ~45 years of runway, so it's not urgent, but the fix is to move to 7-character codes (62⁷ ≈ 3.5 trillion) before exhaustion — since codes are derived from a monotonically increasing ID, you just widen the encoding without touching existing rows.
+
+**Q: How do you support custom vanity aliases (e.g., `/promo2026`) without conflicting with auto-generated codes?**
+Vanity aliases go through the same `short_code` unique index but skip the base62 generator — check availability with a `SELECT` before insert (or a unique constraint that rejects on conflict), and reserve a separate character-length band or prefix so generated codes can never collide with a hand-picked alias.
+
+**Q: If Redis goes down, what happens to redirects and click analytics?**
+Redirects fall back to PostgreSQL directly — slower (cache-miss path already handles this) but still correct. Click counts are the bigger risk: if they're incremented synchronously in Redis, an outage silently drops counts, so click tracking should be an async event (queue or log) replayed into an analytics store rather than a direct cache increment.
+
+**Q: How do you generate unique IDs if you have multiple ID-generator servers across regions?**
+A single sequence/Snowflake node is a bottleneck and SPOF. Snowflake's structure (timestamp + machine ID + sequence) solves this by encoding a unique machine ID per node so IDs never collide across regions, at the cost of longer, less "clean" codes than a pure incrementing counter.
+
+**Q: How do you stop someone from scanning all possible short codes to enumerate private URLs?**
+Base62 IDs are sequential and guessable if the underlying counter is exposed, so add rate limiting on the redirect endpoint per-IP, and for sensitive links use a random (non-sequential) suffix or a longer random token instead of a direct base62(id) mapping.
+
+---
+
 ## In Simple Words
 
 - URL shortener = simple write (shorten) + very frequent read (redirect).

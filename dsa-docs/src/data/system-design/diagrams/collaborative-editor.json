@@ -1,0 +1,61 @@
+{
+  "id": "collaborative-editor",
+  "title": "Design a Collaborative Editor (Google Docs)",
+  "subtitle": "Operational Transformation (OT), Conflict-free Replicated Data Types (CRDTs), and WebSocket presence",
+  "stages": [
+    {
+      "title": "Stage 1 — Centralized HTTP Lock & Poll",
+      "bottleneck": "Locking the entire document prevents simultaneous multi-user typing.",
+      "nodes": [
+        { "id": "user1", "type": "client", "label": "User A", "position": { "x": 50, "y": 120 } },
+        { "id": "user2", "type": "client", "label": "User B", "position": { "x": 50, "y": 280 } },
+        { "id": "app", "type": "server", "label": "Doc Server", "position": { "x": 350, "y": 200 } },
+        { "id": "db", "type": "database", "label": "Doc Store", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user1", "target": "app", "label": "Lock doc & POST text" },
+        { "id": "e2", "source": "user2", "target": "app", "label": "Poll /doc every 2s" },
+        { "id": "e3", "source": "app", "target": "db", "label": "Save snapshot" }
+      ],
+      "requestPath": ["user1", "app", "db", "app", "user1"],
+      "narrative": "**Centralized Document Locking.** Users acquire exclusive locks before editing a document."
+    },
+    {
+      "title": "Stage 2 — WebSocket Central Server with Operational Transformation (OT)",
+      "bottleneck": "Central OT server is a single point of serialization; network latency causes character jump lag.",
+      "nodes": [
+        { "id": "user1", "type": "client", "label": "User A Client\n(Local OT State)", "position": { "x": 50, "y": 120 } },
+        { "id": "user2", "type": "client", "label": "User B Client\n(Local OT State)", "position": { "x": 50, "y": 320 } },
+        { "id": "ws-server", "type": "server", "label": "OT Central Server", "position": { "x": 380, "y": 220 } },
+        { "id": "doc-db", "type": "database", "label": "Operation Revision Log", "position": { "x": 700, "y": 220 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user1", "target": "ws-server", "label": "Op: Insert('X', pos=3, rev=12)" },
+        { "id": "e2", "source": "user2", "target": "ws-server", "label": "Op: Delete(pos=3, rev=12)" },
+        { "id": "e3", "source": "ws-server", "target": "doc-db", "label": "Transform ops & append rev 13" },
+        { "id": "e4", "source": "ws-server", "target": "user2", "label": "Broadcast Transformed Op" }
+      ],
+      "requestPath": ["user1", "ws-server", "doc-db", "ws-server", "user2"],
+      "narrative": "**Operational Transformation (OT).** Edits are transmitted as fine-grained operations (e.g. `Insert('A', index=5)`).\n\nWhen concurrent operations arrive at the central server, OT transforms incoming indexes relative to operations already committed (`T(opA, opB)`)."
+    },
+    {
+      "title": "Stage 3 — Peer-to-Peer CRDTs (Yjs / Automerge) & Redis Presence Store",
+      "bottleneck": "Complex offline edits synchronization.",
+      "nodes": [
+        { "id": "user1", "type": "client", "label": "User A (Yjs CRDT)", "position": { "x": 50, "y": 150 } },
+        { "id": "user2", "type": "client", "label": "User B (Yjs CRDT)", "position": { "x": 50, "y": 320 } },
+        { "id": "gw", "type": "lb", "label": "WebSocket Gateway Cluster", "position": { "x": 300, "y": 235 } },
+        { "id": "redis", "type": "cache", "label": "Redis Presence &\nCursor Coordinates", "position": { "x": 550, "y": 120 } },
+        { "id": "crdt-store", "type": "database", "label": "Cassandra Operation Log", "position": { "x": 550, "y": 350 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "user1", "target": "gw", "label": "CRDT state vector" },
+        { "id": "e2", "source": "gw", "target": "redis", "label": "Update cursor location" },
+        { "id": "e3", "source": "gw", "target": "crdt-store", "label": "Persist delta" },
+        { "id": "e4", "source": "gw", "target": "user2", "label": "P2P merge state" }
+      ],
+      "requestPath": ["user1", "gw", "user2"],
+      "narrative": "**CRDTs (Conflict-free Replicated Data Types).** Characters are assigned unique fractional identifiers. Edits can be merged in any mathematical order without central server transformation lock."
+    }
+  ]
+}
