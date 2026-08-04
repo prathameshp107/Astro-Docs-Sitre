@@ -26,6 +26,7 @@ import discordData from '../../data/system-design/diagrams/discord.json';
 import airbnbData from '../../data/system-design/diagrams/airbnb.json';
 import metricsMonitoringData from '../../data/system-design/diagrams/metrics-monitoring.json';
 import distributedMessageQueueData from '../../data/system-design/diagrams/distributed-message-queue.json';
+import upiPaymentSystemData from '../../data/system-design/diagrams/upi-payment-system.json';
 
 import '../../styles/sketch-visualizer.css';
 
@@ -57,6 +58,7 @@ const DIAGRAM_MAP = {
   'airbnb': airbnbData,
   'metrics-monitoring': metricsMonitoringData,
   'distributed-message-queue': distributedMessageQueueData,
+  'upi-payment-system': upiPaymentSystemData,
 };
 
 const ALL_CASE_STUDIES = [
@@ -85,6 +87,7 @@ const ALL_CASE_STUDIES = [
   { slug: 'distributed-message-queue', title: 'Design Distributed Message Queue (Kafka)' },
   { slug: 'ad-click-aggregation', title: 'Design an Ad Click Aggregation System' },
   { slug: 'distributed-lock-service', title: 'Design a Distributed Lock Service' },
+  { slug: 'upi-payment-system', title: 'Design UPI (Unified Payments Interface)' },
 ];
 
 const ARTICLE_SLUG_MAP = {
@@ -115,6 +118,7 @@ const ARTICLE_SLUG_MAP = {
   'distributed-message-queue': 'design-notification-system',
   'ad-click-aggregation': 'design-ad-click-aggregation',
   'distributed-lock-service': 'design-distributed-lock-service',
+  'upi-payment-system': 'design-upi-payment-system',
 };
 
 const CASE_STUDY_EXTRAS = {
@@ -548,6 +552,22 @@ const CASE_STUDY_EXTRAS = {
       { q: 'What is a Fencing Token and why is it mandatory?', a: 'If Process A pauses (GC pause) and loses its lock lease, Process B acquires the lock with Token 102. When Process A wakes up, storage rejects Process A’s Token 101!' },
       { q: 'Why is a single Redis instance insufficient for distributed locking?', a: 'If Redis master grants a lock and crashes before replicating to slave, slave is promoted without the lock, causing 2 nodes to hold the lock.' },
       { q: 'How does ZooKeeper prevent the Thundering Herd problem?', a: 'Each client watches ONLY the znode immediately preceding its own sequence number (`node-002` watches `node-001`), so only 1 client wakes up when a lock releases.' },
+    ]
+  },
+  'upi-payment-system': {
+    targetScale: '10+ Billion Transactions / Month across 500+ Participating Banks',
+    primaryBottleneck: 'Making a transfer feel atomic across two independently-owned bank ledgers with no shared database transaction',
+    keyPattern: 'NPCI Central Switch + VPA Resolution + Debit-First-Then-Credit with Compensating Reversal + Deferred Net Settlement',
+    components: [
+      { name: 'NPCI Switch', desc: 'Central router every bank integrates with exactly once; coordinates the debit and credit legs across two independent banks using a shared `txn_ref`.' },
+      { name: 'VPA Mapper', desc: 'Resolves a human-readable payment address (`name@bank`) to a real account number + IFSC before any money moves.' },
+      { name: 'Remitter / Beneficiary Bank APIs', desc: "Each bank's own core banking system executes its local debit or credit independently and reports success/failure back to the switch." },
+      { name: 'Deferred Net Settlement Ledger', desc: 'Nets out what each bank pair owes each other and settles only the periodic difference, instead of one real interbank wire per transaction.' },
+    ],
+    faqs: [
+      { q: 'What happens if the credit leg fails after the debit already succeeded?', a: 'The switch triggers a compensating reversal on the remitter bank, keyed by the same `txn_ref`, so a retried reversal is never double-applied and the payer is made whole.' },
+      { q: 'Why route through a central switch instead of direct bank-to-bank integration?', a: 'Direct integration is O(N²) — every bank would need its own connection to every other bank. The switch collapses this to O(N): each bank integrates once, with the switch.' },
+      { q: 'Why not settle every transaction between banks immediately?', a: 'Users already get instant, final-feeling confirmation because the switch coordinates both legs in real time — the actual interbank wire only needs to true up the periodic net difference, far cheaper than millions of tiny wires a day.' },
     ]
   }
 };

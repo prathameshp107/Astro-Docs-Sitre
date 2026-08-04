@@ -55,7 +55,7 @@ flowchart TB
 | **08 Reliability & Scale** | SLAs, rate limiting, circuit breakers, observability |
 | **09 Security** | Auth/OAuth2, encryption, common attacks |
 | **10 Interview Guide** | Step-by-step framework, mistakes to avoid, cheat sheet |
-| **11 Case Studies** | URL shortener, chat, ticket booking, e-commerce orders, key-value stores, proximity search, collaborative editing, job scheduling, ad analytics, distributed locks, and more |
+| **11 Case Studies** | URL shortener, chat, ticket booking, e-commerce orders, key-value stores, proximity search, collaborative editing, job scheduling, ad analytics, distributed locks, Twitter/X, Instagram, search engines, API gateways, and more |
 
 ---
 
@@ -70,7 +70,7 @@ flowchart TB
 
 ## Case Study Quick Reference
 
-A fast lookup table across all 20 case studies — use it for last-minute revision or to jog your memory on which technique solves which problem.
+A fast lookup table across all 25 case studies — use it for last-minute revision or to jog your memory on which technique solves which problem.
 
 | Case Study | Core Challenge | Key Technique |
 | --- | --- | --- |
@@ -94,3 +94,8 @@ A fast lookup table across all 20 case studies — use it for last-minute revisi
 | Distributed Job Scheduler | Reliable, non-duplicate job execution | Leader election + exactly-once triggering |
 | Ad Click Aggregation | Real-time counting at massive event volume | Streaming aggregation + HyperLogLog |
 | Distributed Lock Service | Safe mutual exclusion across nodes | ZooKeeper/Redlock + fencing tokens |
+| Twitter/X | Retweet fan-out amplification + real-time trending | Per-retweeter celebrity threshold + Count-Min Sketch heavy-hitters |
+| Instagram | Async media pipeline, ephemeral Stories, non-social-graph discovery | TTL-native storage + embedding nearest-neighbor search |
+| Distributed Search Engine | Full-text search ranked by relevance at billions of documents | Sharded inverted index + BM25 scatter-gather |
+| API Gateway | Uniform edge for auth/routing/aggregation across microservices | Middleware pipeline + per-dependency circuit breakers |
+| UPI Payment System | Interbank transfer with no shared ledger between payer/payee banks | Switch-coordinated debit/credit + deferred net settlement |

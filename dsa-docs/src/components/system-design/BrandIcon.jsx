@@ -88,6 +88,11 @@ const BRAND_ICON_MAP = {
   'distributed-lock-service': { Icon: SiRedis, color: '#DC382D', bg: 'rgba(220, 56, 45, 0.15)' },
   
   'url-shortener': { Icon: SiLinktree, color: '#50E3C2', bg: 'rgba(80, 227, 194, 0.15)' },
+
+  'twitter-timeline': { Icon: SiX, color: '#1DA1F2', bg: 'rgba(29, 161, 242, 0.15)' },
+  'photo-sharing-app': { Icon: SiInstagram, color: '#E4405F', bg: 'rgba(228, 64, 95, 0.15)' },
+  'distributed-search-engine': { Icon: SiElasticsearch, color: '#005555', bg: 'rgba(0, 85, 85, 0.2)' },
+  'api-gateway': { Icon: SiCloudflare, color: '#F38020', bg: 'rgba(243, 128, 32, 0.15)' },
 };
 
 export default function BrandIcon({ slug, size = 24, className = '' }) {

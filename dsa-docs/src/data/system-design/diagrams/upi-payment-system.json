@@ -1,0 +1,64 @@
+{
+  "id": "upi-payment-system",
+  "title": "Design UPI (Unified Payments Interface)",
+  "subtitle": "VPA resolution, switch-coordinated interbank debit/credit, and deferred net settlement",
+  "stages": [
+    {
+      "title": "Stage 1 — Naive Direct Bank-to-Bank Transfer",
+      "bottleneck": "Every bank must integrate directly with every other bank (O(N²) connections at national scale), and paying by raw account number + IFSC is error-prone — a typo sends money to the wrong person irreversibly.",
+      "nodes": [
+        { "id": "payer", "type": "client", "label": "Payer App", "position": { "x": 50, "y": 200 } },
+        { "id": "payer-bank", "type": "service", "label": "Payer's Bank\n(Core Banking System)", "position": { "x": 350, "y": 200 } },
+        { "id": "payee-bank", "type": "service", "label": "Payee's Bank\n(Core Banking System)", "position": { "x": 650, "y": 200 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "payer", "target": "payer-bank", "label": "Pay ₹500 to A/C 1234567, IFSC HDFC0001" },
+        { "id": "e2", "source": "payer-bank", "target": "payee-bank", "label": "Direct interbank transfer request" }
+      ],
+      "requestPath": ["payer", "payer-bank", "payee-bank", "payer-bank", "payer"],
+      "narrative": "**Direct Bank-to-Bank.** Paying anyone means knowing their exact account number and IFSC code, and every bank pair needs its own direct integration to move money — this doesn't scale past a handful of banks, and a mistyped account number is unrecoverable."
+    },
+    {
+      "title": "Stage 2 — NPCI Switch, VPA Resolution & Two-Phase Debit/Credit",
+      "bottleneck": "Debit and credit now happen in two completely independent banks' ledgers — there's no shared database transaction spanning both, so a naive implementation risks debiting the payer and never crediting the payee if the second leg fails.",
+      "nodes": [
+        { "id": "payer", "type": "client", "label": "Payer App", "position": { "x": 30, "y": 220 } },
+        { "id": "switch", "type": "service", "label": "NPCI Switch", "position": { "x": 330, "y": 100 } },
+        { "id": "vpa-mapper", "type": "database", "label": "VPA Mapper\n(name@bank → account)", "position": { "x": 330, "y": 320 } },
+        { "id": "remitter", "type": "service", "label": "Remitter Bank\n(Payer's Bank)", "position": { "x": 630, "y": 30 } },
+        { "id": "beneficiary", "type": "service", "label": "Beneficiary Bank\n(Payee's Bank)", "position": { "x": 630, "y": 220 } },
+        { "id": "payee", "type": "client", "label": "Payee App", "position": { "x": 900, "y": 220 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "payer", "target": "switch", "label": "Pay ravi@okhdfc ₹500 (UPI PIN verified)" },
+        { "id": "e2", "source": "switch", "target": "vpa-mapper", "label": "Resolve VPA → account + IFSC" },
+        { "id": "e3", "source": "switch", "target": "remitter", "label": "1. Debit ₹500, txn_ref=T123" },
+        { "id": "e4", "source": "remitter", "target": "switch", "label": "Debit success" },
+        { "id": "e5", "source": "switch", "target": "beneficiary", "label": "2. Credit ₹500, txn_ref=T123" },
+        { "id": "e6", "source": "beneficiary", "target": "switch", "label": "Credit success" },
+        { "id": "e7", "source": "switch", "target": "payee", "label": "✅ Payment received" }
+      ],
+      "requestPath": ["payer", "switch", "vpa-mapper", "switch", "remitter", "switch", "beneficiary", "switch", "payee"],
+      "narrative": "**Switch-Coordinated Transfer.**\n1. **VPA Resolution:** the switch resolves `ravi@okhdfc` to a real account *before* any money moves, catching typos early.\n2. **Debit-first, confirm-then-credit:** the switch debits the remitter bank, and only on success asks the beneficiary bank to credit. If the credit leg fails, the switch issues a compensating reversal back to the remitter bank — keyed by the same `txn_ref` so a retried reversal is never double-applied.\n3. Every bank integrates once with the switch instead of with every other bank (O(N) instead of O(N²))."
+    },
+    {
+      "title": "Stage 3 — Deferred Net Settlement & Mandates",
+      "bottleneck": "Settling every single transaction as its own interbank wire would flood the settlement rail with millions of tiny transfers a day, and unchecked recurring mandates could let a merchant debit far more than the user actually authorized.",
+      "nodes": [
+        { "id": "switch", "type": "service", "label": "NPCI Switch", "position": { "x": 60, "y": 200 } },
+        { "id": "mandate-store", "type": "database", "label": "Mandate Store\n(Recurring Authorizations)", "position": { "x": 320, "y": 340 } },
+        { "id": "settle-queue", "type": "queue", "label": "Settlement Event Queue", "position": { "x": 380, "y": 80 } },
+        { "id": "settlement-ledger", "type": "database", "label": "Net Settlement Ledger\n(per bank-pair obligations)", "position": { "x": 650, "y": 80 } },
+        { "id": "reconciler", "type": "service", "label": "Reconciliation Engine", "position": { "x": 650, "y": 300 } }
+      ],
+      "edges": [
+        { "id": "e1", "source": "switch", "target": "mandate-store", "label": "Check active mandate before scheduled debit" },
+        { "id": "e2", "source": "switch", "target": "settle-queue", "label": "Emit confirmed txn event" },
+        { "id": "e3", "source": "settle-queue", "target": "settlement-ledger", "label": "Aggregate net obligation per bank pair" },
+        { "id": "e4", "source": "settlement-ledger", "target": "reconciler", "label": "Periodic net settlement + reconcile against bank ledgers" }
+      ],
+      "requestPath": ["switch", "settle-queue", "settlement-ledger", "reconciler"],
+      "narrative": "**Deferred Net Settlement & Mandates.** Users get instant, final-feeling confirmation on every transaction, but the actual money movement between banks is batched: the switch nets out what each bank pair owes each other and settles only the difference periodically, instead of one real wire transfer per transaction. Recurring payments (mandates) pre-authorize future debits up to a capped amount and validity window, checked by the switch before each scheduled execution — the user's PIN authorizes the mandate once, not every cycle."
+    }
+  ]
+}

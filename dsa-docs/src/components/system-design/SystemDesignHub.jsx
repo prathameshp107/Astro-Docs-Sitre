@@ -31,6 +31,11 @@ const CASE_STUDIES = [
   { slug: 'distributed-message-queue', title: 'Design Distributed Message Queue (Kafka)', desc: 'Partitioned commit logs, consumer groups, OS zero-copy (sendfile), and ISR replicas.', interactive: true },
   { slug: 'ad-click-aggregation', title: 'Design an Ad Click Aggregation System', desc: 'Streaming aggregation, HyperLogLog counting, and fraud dedup.', interactive: true },
   { slug: 'distributed-lock-service', title: 'Design a Distributed Lock Service', desc: 'Leases, fencing tokens, and consensus-backed mutual exclusion.', interactive: true },
+  { slug: 'twitter-timeline', title: 'Design Twitter/X', desc: 'Retweet fan-out amplification and real-time trending topics via Count-Min Sketch.', interactive: false },
+  { slug: 'photo-sharing-app', title: 'Design Instagram', desc: 'Async image processing pipeline, TTL-based ephemeral Stories, and embedding-based discovery feed.', interactive: false },
+  { slug: 'distributed-search-engine', title: 'Design a Distributed Search Engine', desc: 'Sharded inverted index, scatter-gather queries, and BM25 relevance ranking.', interactive: false },
+  { slug: 'api-gateway', title: 'Design an API Gateway', desc: 'Routing, auth, request aggregation, and per-dependency circuit breaking.', interactive: false },
+  { slug: 'upi-payment-system', title: 'Design UPI', desc: 'VPA resolution, switch-coordinated interbank debit/credit, and deferred net settlement.', interactive: true },
 ];
 
 const LLD_PROJECTS = [
@@ -119,8 +124,8 @@ export default function SystemDesignHub() {
               defaultValue=""
               className="sketch-button bg-[var(--sketch-bg)] text-[var(--sketch-text)] text-xs md:text-sm font-bold font-sketch border-2 border-[var(--sketch-border)] rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 cursor-pointer shadow-md"
             >
-              <option value="" disabled>Choose a Case Study (25)...</option>
-              {CASE_STUDIES.map((c) => (
+              <option value="" disabled>Choose a Case Study ({CASE_STUDIES.filter((c) => c.interactive).length})...</option>
+              {CASE_STUDIES.filter((c) => c.interactive).map((c) => (
                 <option key={c.slug} value={c.slug} className="bg-slate-900 text-slate-100">
                   {c.title}
                 </option>
