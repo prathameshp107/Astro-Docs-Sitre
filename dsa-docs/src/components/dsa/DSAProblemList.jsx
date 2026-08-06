@@ -3,6 +3,7 @@ import ThemeToggle from "../ThemeToggle.jsx";
 import Skeleton from "../Skeleton.jsx";
 import { DiDatabase } from "react-icons/di";
 import { DSA_PROBLEMS, DSA_TOPICS, DIFFICULTY, getTopicsWithCounts } from "../../data/dsa-problems.js";
+import { CompanyIcon } from "../companies/CompanyIcons.jsx";
 import { FiArrowLeft } from "react-icons/fi";
 
 
@@ -17,23 +18,23 @@ function readSolved() {
 }
 
 function ProblemRow({ problem, index, base, solved }) {
-  const diff = DIFFICULTY[problem.difficulty] || DIFFICULTY.Easy;
-
   return (
     <a
       href={`${base}dsa/problems/${problem.id}`}
       className="dsa-problem-row"
-      style={{ animationDelay: `${index * 0.03}s` }}
+      style={{ animationDelay: `${index * 0.02}s` }}
     >
-      <div className="dsa-problem-status" title={solved ? "Solved" : "Unsolved"}>
+      <div className="dsa-col-status dsa-problem-status" title={solved ? "Solved" : "Unsolved"}>
         <span className={`dsa-problem-status-dot ${solved ? "solved" : ""}`} />
       </div>
-      <span className="dsa-problem-num">{problem.number}.</span>
-      <span className="dsa-problem-name">{problem.title}</span>
-      <span className={`dsa-problem-diff ${problem.difficulty.toLowerCase()}`}>
-        {problem.difficulty}
-      </span>
-      <div className="dsa-problem-topics">
+      <span className="dsa-col-num dsa-problem-num">{problem.number}.</span>
+      <span className="dsa-col-name dsa-problem-name">{problem.title}</span>
+      <div className="dsa-col-diff flex items-center justify-center">
+        <span className={`dsa-problem-diff ${problem.difficulty.toLowerCase()}`}>
+          {problem.difficulty}
+        </span>
+      </div>
+      <div className="dsa-col-topics dsa-problem-topics">
         {problem.topics.slice(0, 2).map(t => {
           const topic = DSA_TOPICS.find(tp => tp.id === t);
           return topic ? (
@@ -41,8 +42,26 @@ function ProblemRow({ problem, index, base, solved }) {
           ) : null;
         })}
       </div>
-      <span className="dsa-problem-acceptance">{problem.acceptance}%</span>
-      <span className="dsa-problem-xp">+{problem.xp} XP</span>
+      <div className="dsa-col-companies dsa-problem-companies">
+        {problem.companies && problem.companies.length > 0 ? (
+          <>
+            {problem.companies.slice(0, 5).map(c => (
+              <span key={c} className="dsa-company-icon-badge" title={`Asked in ${c}`}>
+                <CompanyIcon companyId={c} size={15} />
+              </span>
+            ))}
+            {problem.companies.length > 5 && (
+              <span className="dsa-company-tag-more" title={`+${problem.companies.length - 5} more: ${problem.companies.slice(5).join(', ')}`}>
+                +{problem.companies.length - 5}
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-xs text-muted-foreground">—</span>
+        )}
+      </div>
+      <span className="dsa-col-acceptance dsa-problem-acceptance">{problem.acceptance}%</span>
+      <span className="dsa-col-xp dsa-problem-xp">+{problem.xp} XP</span>
     </a>
   );
 }
@@ -51,6 +70,7 @@ export default function DSAProblemList() {
   const [activeTopic, setActiveTopic] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState(null);
+  const [companyFilter, setCompanyFilter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [solvedIds, setSolvedIds] = useState([]);
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
@@ -63,6 +83,16 @@ export default function DSAProblemList() {
 
   const topicsWithCounts = useMemo(() => getTopicsWithCounts(), []);
 
+  const ALL_COMPANIES = useMemo(() => {
+    const set = new Set();
+    for (const p of DSA_PROBLEMS) {
+      if (Array.isArray(p.companies)) {
+        for (const c of p.companies) set.add(c);
+      }
+    }
+    return Array.from(set).sort();
+  }, []);
+
   const filteredProblems = useMemo(() => {
     let problems = DSA_PROBLEMS;
 
@@ -74,7 +104,8 @@ export default function DSAProblemList() {
       const q = searchQuery.toLowerCase();
       problems = problems.filter(p =>
         p.title.toLowerCase().includes(q) ||
-        p.topics.some(t => t.includes(q))
+        p.topics.some(t => t.includes(q)) ||
+        (p.companies && p.companies.some(c => c.toLowerCase().includes(q)))
       );
     }
 
@@ -82,8 +113,12 @@ export default function DSAProblemList() {
       problems = problems.filter(p => p.difficulty === difficultyFilter);
     }
 
+    if (companyFilter) {
+      problems = problems.filter(p => p.companies && p.companies.includes(companyFilter));
+    }
+
     return problems;
-  }, [activeTopic, searchQuery, difficultyFilter]);
+  }, [activeTopic, searchQuery, difficultyFilter, companyFilter]);
 
   const solvedSet = useMemo(() => new Set(solvedIds), [solvedIds]);
   const solvedCount = useMemo(
@@ -107,7 +142,7 @@ export default function DSAProblemList() {
             <Skeleton variant="text" width="80px" height="16px" />
           </div>
           <div className="dsa-topbar-right">
-            <ThemeToggle />
+            <Skeleton variant="text" width="60px" height="16px" />
           </div>
         </div>
         <div className="dsa-problems-page">
@@ -146,31 +181,36 @@ export default function DSAProblemList() {
 
   return (
     <div className="dsa-platform">
-      {/* Top Navigation */}
+      {/* Sub Navigation Bar */}
       <div className="dsa-topbar">
         <div className="dsa-topbar-left">
           <a href={`${base}labs`} className="dsa-top-back">
-            <FiArrowLeft size={16} />
-            Labs
+            <FiArrowLeft size={15} />
+            <span>Labs</span>
           </a>
           <div className="dsa-top-brand">
-            <DiDatabase size={20} color="#6366f1" />
+            <DiDatabase size={18} color="#6366f1" />
             <span className="dsa-top-title">Problem List</span>
           </div>
         </div>
         <div className="dsa-topbar-center">
-          <span className="dsa-top-progress-text">
-            {solvedCount}/{filteredProblems.length} solved
-          </span>
-        </div>
-        <div className="dsa-topbar-right">
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <span className="dsa-top-progress-text">
+              {solvedCount} of {filteredProblems.length} solved
+            </span>
+            <div className="dsa-top-progress-bar">
+              <div
+                className="dsa-top-progress-fill"
+                style={{ width: `${filteredProblems.length > 0 ? (solvedCount / filteredProblems.length) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Layout */}
       <div className="dsa-problems-page">
-        {/* Sidebar */}
+        {/* Topic Sidebar */}
         <div className="dsa-problems-sidebar">
           <div className="dsa-ps-header">
             <h3>
@@ -217,9 +257,9 @@ export default function DSAProblemList() {
           ))}
         </div>
 
-        {/* Problems List */}
+        {/* Main Problems Area */}
         <div className="dsa-problems-main">
-          {/* Toolbar */}
+          {/* Search & Filter Toolbar */}
           <div className="dsa-problems-toolbar">
             <div className="dsa-search-box">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -228,33 +268,66 @@ export default function DSAProblemList() {
               </svg>
               <input
                 type="text"
-                placeholder="Search problems..."
+                placeholder="Search by title, topic, or company (e.g. Amazon)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            {["Easy", "Medium", "Hard"].map(diff => (
-              <button
-                key={diff}
-                className={`dsa-filter-btn ${difficultyFilter === diff ? "active" : ""}`}
-                onClick={() => setDifficultyFilter(difficultyFilter === diff ? null : diff)}
-              >
-                {diff}
-              </button>
-            ))}
-            {difficultyFilter && (
-              <button className="dsa-btn-secondary" style={{ padding: "0.35rem 0.55rem", fontSize: "0.72rem" }} onClick={() => setDifficultyFilter(null)}>
-                Clear
-              </button>
-            )}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {/* Company Filter Dropdown */}
+              <div className="dsa-company-select-box">
+                <select
+                  value={companyFilter || ''}
+                  onChange={(e) => setCompanyFilter(e.target.value || null)}
+                  className="dsa-company-select"
+                >
+                  <option value="">All Companies</option>
+                  {ALL_COMPANIES.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Difficulty Filters */}
+              {["Easy", "Medium", "Hard"].map(diff => (
+                <button
+                  key={diff}
+                  className={`dsa-filter-btn ${difficultyFilter === diff ? "active" : ""}`}
+                  onClick={() => setDifficultyFilter(difficultyFilter === diff ? null : diff)}
+                >
+                  {diff}
+                </button>
+              ))}
+              {(difficultyFilter || companyFilter || searchQuery) && (
+                <button
+                  className="dsa-btn-secondary"
+                  style={{ padding: "0.3rem 0.5rem", fontSize: "0.7rem" }}
+                  onClick={() => { setDifficultyFilter(null); setCompanyFilter(null); setSearchQuery(""); }}
+                >
+                  Clear All
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* Problem Rows */}
+          {/* Table Header Row */}
+          <div className="dsa-problem-table-head">
+            <span className="dsa-col-status">Status</span>
+            <span className="dsa-col-num">#</span>
+            <span className="dsa-col-name">Title</span>
+            <span className="dsa-col-diff text-center">Difficulty</span>
+            <span className="dsa-col-topics">Topics</span>
+            <span className="dsa-col-companies">Asked In</span>
+            <span className="dsa-col-acceptance text-right">Acceptance</span>
+            <span className="dsa-col-xp text-right">Reward</span>
+          </div>
+
+          {/* Problem Rows List */}
           <div className="dsa-problems-list">
             {filteredProblems.length === 0 ? (
               <div className="dsa-empty">
                 <h2>No problems found</h2>
-                <p>Try adjusting your search or filter criteria.</p>
+                <p>Try adjusting your search, topic, or company filter criteria.</p>
               </div>
             ) : (
               filteredProblems.map((problem, i) => (

@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import '../styles/sketch-visualizer.css';
 
-const REPO_URL = 'https://github.com/prathameshp107/Astro-Docs-Sitre';
-
 export default function ContactPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,17 +10,6 @@ export default function ContactPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-
-    const title = `Message from ${name || 'a visitor'}`;
-    const body = [
-      message.trim(),
-      '',
-      '---',
-      email ? `Reply-to: ${email}` : null,
-    ].filter(Boolean).join('\n');
-
-    const issueUrl = `${REPO_URL}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-    window.open(issueUrl, '_blank', 'noopener,noreferrer');
     setSent(true);
   };
 
@@ -36,8 +23,7 @@ export default function ContactPage() {
           Found a bug? Have a suggestion?
         </h1>
         <p className="text-[var(--sketch-text-muted)] text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-          This is an open-source project — there's no support inbox, but every message below opens directly as a
-          GitHub issue on the repo, so it's tracked and visible instead of disappearing into an inbox.
+          Have feedback, a bug report, or a feature suggestion? Send us a message below.
         </p>
       </section>
 
@@ -45,9 +31,9 @@ export default function ContactPage() {
         {sent ? (
           <div className="text-center py-8">
             <div className="text-4xl mb-3">✅</div>
-            <h2 className="font-header font-bold text-xl text-[var(--sketch-text)] mb-2">Opened in a new tab</h2>
+            <h2 className="font-header font-bold text-xl text-[var(--sketch-text)] mb-2">Message Sent</h2>
             <p className="text-[var(--sketch-text-muted)] text-sm mb-5">
-              Review the pre-filled issue on GitHub and click "Submit new issue" there to send it.
+              Thank you for your feedback! Your message has been recorded.
             </p>
             <button
               type="button"
@@ -100,32 +86,10 @@ export default function ContactPage() {
               type="submit"
               className="sketch-button w-full flex items-center justify-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 px-5 py-3 rounded-xl"
             >
-              🐙 Open as GitHub Issue
+              ✉️ Send Message
             </button>
           </form>
         )}
-      </section>
-
-      <section className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border border-[var(--sketch-border)] text-center">
-        <p className="text-[var(--sketch-text-muted)] text-sm mb-3">Prefer to go straight to GitHub?</p>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <a
-            href={REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sketch-button text-sm font-bold px-5 py-2 rounded-xl"
-          >
-            View Repository
-          </a>
-          <a
-            href={`${REPO_URL}/issues/new`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sketch-button text-sm font-bold px-5 py-2 rounded-xl"
-          >
-            Open a Blank Issue
-          </a>
-        </div>
       </section>
     </div>
   );

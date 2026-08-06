@@ -24,8 +24,6 @@ export default function AboutPage() {
   const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
     ? import.meta.env.BASE_URL.replace(/\/$/, '')
     : '';
-  const repoUrl = 'https://github.com/prathameshp107/Astro-Docs-Sitre';
-
   return (
     <div className="font-sketch max-w-5xl mx-auto px-4 py-10">
       <section className="sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-10 rounded-3xl mb-10 border-2 border-[var(--sketch-border)] shadow-2xl text-center">
@@ -76,23 +74,14 @@ export default function AboutPage() {
       </section>
 
       <section className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl border-2 border-[var(--sketch-border)] shadow-xl text-center">
-        <h2 className="font-header font-bold text-xl text-[var(--sketch-text)] mb-2">Open Source</h2>
+        <h2 className="font-header font-bold text-xl text-[var(--sketch-text)] mb-2">Feedback & Support</h2>
         <p className="text-[var(--sketch-text-muted)] text-sm mb-5 max-w-xl mx-auto leading-relaxed">
-          The whole site — every doc, visualizer, and case study — lives in one public repository. Bug reports,
-          corrections, and suggestions are welcome.
+          Have questions, corrections, or suggestions? Reach out through our contact page to get in touch.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a
-            href={repoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="sketch-button flex items-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 px-5 py-2.5 rounded-xl"
-          >
-            ⭐ View on GitHub
-          </a>
-          <a
             href={`${base}/contact`}
-            className="sketch-button flex items-center gap-2 text-sm font-bold px-5 py-2.5 rounded-xl"
+            className="sketch-button flex items-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 px-5 py-2.5 rounded-xl"
           >
             ✉️ Get in Touch
           </a>

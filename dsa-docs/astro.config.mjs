@@ -62,6 +62,7 @@ export default defineConfig({
     defaultLocale: 'en',
     components: {
       Sidebar: './src/components/Sidebar.astro',
+      Header: './src/components/StarlightHeader.astro',
       Head: './src/components/SEOHead.astro',
     },
     social: [
@@ -75,7 +76,7 @@ export default defineConfig({
       alt: 'DSA Notes',
       src: './src/assets/logo.svg',
     },
-    customCss: ['./src/styles/tokens.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
+    customCss: ['./src/styles/tokens.css', './src/styles/landing.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
     sidebar,
     head: [
       {

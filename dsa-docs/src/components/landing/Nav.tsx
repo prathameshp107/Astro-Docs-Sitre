@@ -39,7 +39,6 @@ import {
   Clock,
   Menu as MenuIcon,
   X,
-  Info,
   Mail,
 } from "lucide-react";
 
@@ -138,7 +137,6 @@ const links = [
   { label: "MCQ Hub", href: `${base}mcq`, icon: ListChecks },
   { label: "Roadmaps", href: `${base}plans`, icon: CalendarCheck, hasDropdown: true, subItems: roadmapSubItems, dropdownTitle: "Study & Prep Roadmaps" },
   { label: "Companies", href: `${base}companies`, icon: Building2, hasDropdown: true, subItems: companiesSubItems, dropdownTitle: "Company Interview Prep" },
-  { label: "About", href: `${base}about`, icon: Info },
   { label: "Contact", href: `${base}contact`, icon: Mail },
 ];
 
