@@ -212,7 +212,7 @@ export default function DSAProblemList() {
       <div className="dsa-problems-page">
         {/* Topic Sidebar */}
         <div className="dsa-problems-sidebar">
-          <div className="dsa-ps-header">
+          <div className="dsa-ps-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
             <h3>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
@@ -220,6 +220,25 @@ export default function DSAProblemList() {
               </svg>
               DSA Roadmap
             </h3>
+            <a
+              href={`${base}dsa/patterns`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                color: '#a5b4fc',
+                background: 'rgba(99, 102, 241, 0.12)',
+                border: '1px solid rgba(99, 102, 241, 0.25)',
+                borderRadius: '6px',
+                padding: '4px 8px',
+                textDecoration: 'none',
+                marginTop: '4px',
+              }}
+            >
+              ⚡ Patterns Cheatsheet
+            </a>
           </div>
 
           {/* All Problems */}

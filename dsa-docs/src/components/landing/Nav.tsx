@@ -63,6 +63,7 @@ const labsSubItems = [
   { label: "JS Interview Lab", href: `${base}labs/js-lab`, icon: DiJavascript1, color: "#f7df1e" },
   { label: "React Practice Lab", href: `${base}labs/react-lab`, icon: DiReact, color: "#61dafb" },
   { label: "DSA Problem Lab", href: `${base}dsa/problems`, icon: DiDatabase, color: "#6366f1" },
+  { label: "DSA Patterns Guide", href: `${base}dsa/patterns`, icon: Zap, color: "#a78bfa" },
   { label: "SQL Query Lab", href: `${base}labs/mysql`, icon: DiMysql, color: "#f59e0b" },
   { label: "Python Labs", href: `${base}labs/python`, icon: DiPython, color: "#3776AB" },
   { label: "MongoDB Lab", href: `${base}labs/mongodb`, icon: DiMongodb, color: "#13aa52" },

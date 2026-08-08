@@ -29,6 +29,7 @@ export const DSA_TOPICS = [
   { id: "greedy", label: "Greedy", icon: "⚡", color: "#fbbf24", count: 0 },
   { id: "bit-manipulation", label: "Bit Manipulation", icon: "💡", color: "#64748b", count: 0 },
   { id: "trie", label: "Trie", icon: "🌲", color: "#2dd4bf", count: 0 },
+  { id: "strings", label: "Strings", icon: "🔤", color: "#ec4899", count: 0 },
 ];
 
 export const DIFFICULTY = {
@@ -3096,8 +3097,951 @@ return JSON.stringify({ peek1, pop1, pop2, pop3, peek2, empty1, pop4, empty2 });
     tests: [
       { name: "Calculates stream median", validate: (code) => { try { return JSON.stringify(new Function(`${code}; return testMedianFinder(['addNum','addNum','findMedian'], [[1],[2],[]]);`)()) === JSON.stringify([null, null, 1.5]); } catch { return false; } } },
     ],
-  }
+  },
+
+  // ═════════════════════════════════════════════════
+  // BACKTRACKING
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "subsets", number: 78, title: "Subsets", difficulty: "Medium",
+    topics: ["backtracking", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
+    acceptance: 74, xp: 20,
+    problemStatement: "Given an integer array `nums` of unique elements, return all possible subsets (the power set).\n\nThe solution set must not contain duplicate subsets. Return the solution in any order.",
+    examples: [
+      { input: "nums = [1,2,3]", output: "[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]" },
+      { input: "nums = [0]", output: "[[],[0]]" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 10", "All elements are unique", "-10 ≤ nums[i] ≤ 10"],
+    conceptOverview: "**Why this problem exists:**\nSubsets is the quintessential backtracking problem. Every subsequence, power set, and combination problem reduces to this pattern.\n\n**What it teaches:**\n• Backtracking with include/exclude choices\n• Generating all 2^n combinations\n• Decision tree thinking",
+    patternRecognition: "**Pattern: Backtracking / Include-Exclude**\n\nAt each index, make two choices: include the element or skip it. Recurse on the remaining elements.",
+    sampleTests: [
+      { name: "Subsets of [1,2,3]", input: [[1,2,3]], expected: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]] },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nfunction subsets(nums) {\n  // Write your solution here\n}",
+    hints: ["Use backtracking with include/exclude choice.", "Add the current subset to results at every node.", "Sort results for comparison."],
+    bruteForceSolution: { code: "function subsets(nums) {\n  const result = [];\n  const n = nums.length;\n  for (let mask = 0; mask < (1 << n); mask++) {\n    const subset = [];\n    for (let i = 0; i < n; i++) {\n      if (mask & (1 << i)) subset.push(nums[i]);\n    }\n    result.push(subset);\n  }\n  return result;\n}", timeComplexity: "O(n × 2^n)", spaceComplexity: "O(n × 2^n)", explanation: "Iterate all bitmasks from 0 to 2^n-1." },
+    optimizedSolution: { code: "function subsets(nums) {\n  const result = [];\n  function backtrack(start, current) {\n    result.push([...current]);\n    for (let i = start; i < nums.length; i++) {\n      current.push(nums[i]);\n      backtrack(i + 1, current);\n      current.pop();\n    }\n  }\n  backtrack(0, []);\n  return result;\n}", timeComplexity: "O(n × 2^n)", spaceComplexity: "O(n × 2^n)", explanation: "Backtracking: at each node, add current subset to results." },
+    interviewExplanation: "1. Draw the decision tree — at each step, include or skip\n2. Every node in the tree is a valid subset\n3. Backtrack by popping after each recursive call\n4. Result has 2^n subsets",
+    tests: [
+      { name: "Returns all 8 subsets", validate: (code) => { try { const r = new Function(`${code}; return subsets([1,2,3]);`)(); return Array.isArray(r) && r.length === 8; } catch { return false; } } },
+      { name: "Single element returns 2 subsets", validate: (code) => { try { const r = new Function(`${code}; return subsets([0]);`)(); return r.length === 2; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "permutations", number: 46, title: "Permutations", difficulty: "Medium",
+    topics: ["backtracking", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Adobe", "Bloomberg"],
+    acceptance: 73, xp: 20,
+    problemStatement: "Given an array `nums` of distinct integers, return all the possible permutations. You can return the answer in any order.",
+    examples: [
+      { input: "nums = [1,2,3]", output: "[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]" },
+      { input: "nums = [0,1]", output: "[[0,1],[1,0]]" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 6", "All integers are unique", "-10 ≤ nums[i] ≤ 10"],
+    conceptOverview: "**Why this problem exists:**\nPermutations is the classic ordering problem. Every arrangement, scheduling, or ordering task reduces to it.\n\n**What it teaches:**\n• Backtracking with used[] tracking\n• n! total permutations\n• Swapping vs used-array approaches",
+    patternRecognition: "**Pattern: Backtracking with Used Array**\n\nTrack which elements are used. At each position, try every unused element. Backtrack by unmarking.",
+    sampleTests: [
+      { name: "Permutations of [1,2,3] — count", input: [[1,2,3]], expected: 6 },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nfunction permute(nums) {\n  // Write your solution here\n}",
+    hints: ["Track which elements are used in the current path.", "When path length equals nums.length, add to result.", "Backtrack by removing the last added element and marking as unused."],
+    bruteForceSolution: { code: "function permute(nums) {\n  const result = [];\n  function bt(path, used) {\n    if (path.length === nums.length) { result.push([...path]); return; }\n    for (let i = 0; i < nums.length; i++) {\n      if (used[i]) continue;\n      used[i] = true;\n      path.push(nums[i]);\n      bt(path, used);\n      path.pop();\n      used[i] = false;\n    }\n  }\n  bt([], new Array(nums.length).fill(false));\n  return result;\n}", timeComplexity: "O(n × n!)", spaceComplexity: "O(n × n!)", explanation: "Backtracking with used array." },
+    optimizedSolution: { code: "function permute(nums) {\n  const result = [];\n  function bt(start) {\n    if (start === nums.length) { result.push([...nums]); return; }\n    for (let i = start; i < nums.length; i++) {\n      [nums[start], nums[i]] = [nums[i], nums[start]];\n      bt(start + 1);\n      [nums[start], nums[i]] = [nums[i], nums[start]];\n    }\n  }\n  bt(0);\n  return result;\n}", timeComplexity: "O(n × n!)", spaceComplexity: "O(n!)", explanation: "In-place swapping avoids the used[] array." },
+    interviewExplanation: "1. At each position, try every remaining element\n2. Mark element as used, recurse, then unmark\n3. When path is full, add to results\n4. O(n!) permutations total",
+    tests: [
+      { name: "Correct count of permutations", validate: (code) => { try { return new Function(`${code}; return permute([1,2,3]).length;`)() === 6; } catch { return false; } } },
+      { name: "Two-element permutations", validate: (code) => { try { return new Function(`${code}; return permute([0,1]).length;`)() === 2; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "letter-combinations-phone", number: 17, title: "Letter Combinations of a Phone Number", difficulty: "Medium",
+    topics: ["backtracking", "hash-map"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 57, xp: 20,
+    problemStatement: "Given a string containing digits from 2-9, return all possible letter combinations that the number could represent (like a telephone keypad). Return empty array for empty input.",
+    examples: [
+      { input: 'digits = "23"', output: '["ad","ae","af","bd","be","bf","cd","ce","cf"]' },
+      { input: 'digits = ""', output: "[]" },
+    ],
+    constraints: ["0 ≤ digits.length ≤ 4", "digits[i] is a digit from '2' to '9'"],
+    conceptOverview: "Models multi-choice decisions at each step — fundamental backtracking with a lookup map.",
+    patternRecognition: "**Pattern: Backtracking over character choices**\n\nFor each digit, try all mapped letters. Recurse on next digit. When path length equals digits.length, record the combination.",
+    sampleTests: [
+      { name: 'Combinations for "23"', input: ["23"], expected: ["ad","ae","af","bd","be","bf","cd","ce","cf"] },
+    ],
+    starterCode: "/**\n * @param {string} digits\n * @return {string[]}\n */\nfunction letterCombinations(digits) {\n  // Write your solution here\n}",
+    hints: ["Map each digit to its letters (2→abc, 3→def, ...).", "Backtrack through digits, trying all letters for the current digit.", "When path length equals digits.length, add to result."],
+    bruteForceSolution: { code: "function letterCombinations(digits) {\n  if (!digits) return [];\n  const map = {2:'abc',3:'def',4:'ghi',5:'jkl',6:'mno',7:'pqrs',8:'tuv',9:'wxyz'};\n  let res = [''];\n  for (const d of digits) {\n    const next = [];\n    for (const r of res) for (const c of map[d]) next.push(r + c);\n    res = next;\n  }\n  return res;\n}", timeComplexity: "O(4^n × n)", spaceComplexity: "O(4^n × n)", explanation: "Iterative expansion." },
+    optimizedSolution: { code: "function letterCombinations(digits) {\n  if (!digits.length) return [];\n  const map = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'};\n  const result = [];\n  function bt(i, path) {\n    if (i === digits.length) { result.push(path); return; }\n    for (const c of map[digits[i]]) bt(i + 1, path + c);\n  }\n  bt(0, '');\n  return result;\n}", timeComplexity: "O(4^n × n)", spaceComplexity: "O(4^n × n)", explanation: "Backtracking with digit map." },
+    interviewExplanation: "1. Map each digit to its phone letters\n2. Backtrack: for each digit position, try all corresponding letters\n3. When path length equals digits.length, record result",
+    tests: [
+      { name: "Returns 9 combinations for '23'", validate: (code) => { try { return new Function(`${code}; return letterCombinations('23').length;`)() === 9; } catch { return false; } } },
+      { name: "Empty digits returns []", validate: (code) => { try { return new Function(`${code}; return JSON.stringify(letterCombinations(''));`)() === '[]'; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "palindrome-partitioning", number: 131, title: "Palindrome Partitioning", difficulty: "Medium",
+    topics: ["backtracking", "dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
+    acceptance: 63, xp: 25,
+    problemStatement: "Given a string `s`, partition `s` such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of `s`.",
+    examples: [
+      { input: 's = "aab"', output: '[["a","a","b"],["aa","b"]]' },
+      { input: 's = "a"', output: '[["a"]]' },
+    ],
+    constraints: ["1 ≤ s.length ≤ 16", "s contains only lowercase English letters"],
+    conceptOverview: "Combines palindrome detection with backtracking to find all valid partitions.",
+    patternRecognition: "**Pattern: Backtracking with Palindrome Check**\n\nTry all prefix lengths. If the prefix is a palindrome, recurse on the remaining string. Backtrack by removing the prefix.",
+    sampleTests: [
+      { name: '"aab" partitions', input: ["aab"], expected: [["a","a","b"],["aa","b"]] },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @return {string[][]}\n */\nfunction partition(s) {\n  // Write your solution here\n}",
+    hints: ["Try every prefix. If it is a palindrome, recurse on the rest.", "Helper: isPalindrome(str) — check s === s reversed.", "Backtrack by popping the last added prefix."],
+    bruteForceSolution: { code: "function partition(s) {\n  const res = [];\n  function isPalin(str) { return str === str.split('').reverse().join(''); }\n  function bt(start, path) {\n    if (start === s.length) { res.push([...path]); return; }\n    for (let end = start + 1; end <= s.length; end++) {\n      const sub = s.slice(start, end);\n      if (isPalin(sub)) { path.push(sub); bt(end, path); path.pop(); }\n    }\n  }\n  bt(0, []);\n  return res;\n}", timeComplexity: "O(n × 2^n)", spaceComplexity: "O(n × 2^n)", explanation: "Backtracking with palindrome check." },
+    optimizedSolution: { code: "function partition(s) {\n  const res = [], n = s.length;\n  const dp = Array.from({length: n}, () => new Array(n).fill(false));\n  for (let i = n - 1; i >= 0; i--)\n    for (let j = i; j < n; j++)\n      dp[i][j] = s[i] === s[j] && (j - i <= 2 || dp[i+1][j-1]);\n  function bt(start, path) {\n    if (start === n) { res.push([...path]); return; }\n    for (let end = start; end < n; end++) {\n      if (dp[start][end]) { path.push(s.slice(start, end+1)); bt(end+1, path); path.pop(); }\n    }\n  }\n  bt(0, []);\n  return res;\n}", timeComplexity: "O(n × 2^n)", spaceComplexity: "O(n²)", explanation: "Precompute palindrome DP table for O(1) palindrome checks." },
+    interviewExplanation: "1. Precompute dp[i][j] = is s[i..j] a palindrome?\n2. Backtrack: for each starting position, try all palindromic prefixes\n3. Recurse on remaining string after each valid prefix",
+    tests: [
+      { name: "Returns 2 partitions for 'aab'", validate: (code) => { try { const r = new Function(`${code}; return partition('aab');`)(); return r.length === 2; } catch { return false; } } },
+      { name: "Single char returns 1 partition", validate: (code) => { try { const r = new Function(`${code}; return partition('a');`)(); return r.length === 1; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // DYNAMIC PROGRAMMING (KEY MISSING)
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "longest-increasing-subsequence", number: 300, title: "Longest Increasing Subsequence", difficulty: "Medium",
+    topics: ["dp", "binary-search"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 53, xp: 25,
+    problemStatement: "Given an integer array `nums`, return the length of the longest strictly increasing subsequence.",
+    examples: [
+      { input: "nums = [10,9,2,5,3,7,101,18]", output: "4", explanation: "LIS is [2,3,7,101]." },
+      { input: "nums = [0,1,0,3,2,3]", output: "4" },
+      { input: "nums = [7,7,7,7]", output: "1" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 2500", "-10⁴ ≤ nums[i] ≤ 10⁴"],
+    conceptOverview: "**Why this problem exists:**\nLIS is one of the most classic DP problems. It appears in stock trading, patience sorting, and scheduling.\n\n**What it teaches:**\n• Classic O(n²) DP with subproblem decomposition\n• Patience sorting O(n log n) binary search optimization",
+    patternRecognition: "**Pattern: DP + Binary Search (Patience Sort)**\n\ndp[i] = LIS length ending at i. Optimized: maintain tails[] = smallest tail of any LIS of each length, using binary search.",
+    sampleTests: [
+      { name: "LIS of [10,9,2,5,3,7,101,18]", input: [[10,9,2,5,3,7,101,18]], expected: 4 },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction lengthOfLIS(nums) {\n  // Write your solution here\n}",
+    hints: ["dp[i] = length of LIS ending at index i.", "For each i, look at all j < i where nums[j] < nums[i].", "O(n log n): maintain tails[] array with binary search insertion."],
+    bruteForceSolution: { code: "function lengthOfLIS(nums) {\n  const dp = new Array(nums.length).fill(1);\n  for (let i = 1; i < nums.length; i++)\n    for (let j = 0; j < i; j++)\n      if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1);\n  return Math.max(...dp);\n}", timeComplexity: "O(n²)", spaceComplexity: "O(n)", explanation: "Classic DP." },
+    optimizedSolution: { code: "function lengthOfLIS(nums) {\n  const tails = [];\n  for (const num of nums) {\n    let lo = 0, hi = tails.length;\n    while (lo < hi) {\n      const mid = (lo + hi) >> 1;\n      if (tails[mid] < num) lo = mid + 1; else hi = mid;\n    }\n    tails[lo] = num;\n  }\n  return tails.length;\n}", timeComplexity: "O(n log n)", spaceComplexity: "O(n)", explanation: "Patience sorting with binary search." },
+    interviewExplanation: "1. O(n²) DP: dp[i] = max LIS ending at index i\n2. O(n log n) optimization: maintain tails[] — smallest tail of LIS of each length\n3. Binary search to find where to place each new element",
+    tests: [
+      { name: "LIS length 4", validate: (code) => { try { return new Function(`${code}; return lengthOfLIS([10,9,2,5,3,7,101,18]);`)() === 4; } catch { return false; } } },
+      { name: "All same returns 1", validate: (code) => { try { return new Function(`${code}; return lengthOfLIS([7,7,7,7]);`)() === 1; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "word-break", number: 139, title: "Word Break", difficulty: "Medium",
+    topics: ["dp", "hash-map"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 44, xp: 25,
+    problemStatement: "Given a string `s` and a dictionary of strings `wordDict`, return `true` if `s` can be segmented into a space-separated sequence of one or more dictionary words.",
+    examples: [
+      { input: 's = "leetcode", wordDict = ["leet","code"]', output: "true" },
+      { input: 's = "applepenapple", wordDict = ["apple","pen"]', output: "true" },
+      { input: 's = "catsandog", wordDict = ["cats","dog","sand","and","cat"]', output: "false" },
+    ],
+    constraints: ["1 ≤ s.length ≤ 300", "1 ≤ wordDict.length ≤ 1000"],
+    conceptOverview: "Classic DP string segmentation. dp[i] = can we segment s[0..i-1] using wordDict.",
+    patternRecognition: "**Pattern: DP String Segmentation**\n\ndp[i] = true if s[0..i-1] can be segmented. For each i, check all j < i where dp[j] is true and s[j..i-1] is in wordDict.",
+    sampleTests: [
+      { name: '"leetcode" segmentable', input: ["leetcode", ["leet","code"]], expected: true },
+      { name: '"catsandog" not segmentable', input: ["catsandog", ["cats","dog","sand","and","cat"]], expected: false },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @param {string[]} wordDict\n * @return {boolean}\n */\nfunction wordBreak(s, wordDict) {\n  // Write your solution here\n}",
+    hints: ["dp[i] = can we segment s[0..i-1]?", "dp[0] = true (empty string).", "For each i, check all j < i: if dp[j] && wordDict contains s[j..i-1], then dp[i] = true."],
+    bruteForceSolution: { code: "function wordBreak(s, wordDict) {\n  const set = new Set(wordDict);\n  function dfs(start, memo) {\n    if (start === s.length) return true;\n    if (memo.has(start)) return memo.get(start);\n    for (let end = start + 1; end <= s.length; end++) {\n      if (set.has(s.slice(start, end)) && dfs(end, memo)) { memo.set(start, true); return true; }\n    }\n    memo.set(start, false); return false;\n  }\n  return dfs(0, new Map());\n}", timeComplexity: "O(n²)", spaceComplexity: "O(n)", explanation: "Top-down DP with memoization." },
+    optimizedSolution: { code: "function wordBreak(s, wordDict) {\n  const set = new Set(wordDict);\n  const dp = new Array(s.length + 1).fill(false);\n  dp[0] = true;\n  for (let i = 1; i <= s.length; i++)\n    for (let j = 0; j < i; j++)\n      if (dp[j] && set.has(s.slice(j, i))) { dp[i] = true; break; }\n  return dp[s.length];\n}", timeComplexity: "O(n²)", spaceComplexity: "O(n)", explanation: "Bottom-up DP." },
+    interviewExplanation: "1. Build dp[0..n], dp[0] = true\n2. For each position i, try all splits j: if dp[j] && s[j..i] in dict → dp[i] = true\n3. Return dp[n]",
+    tests: [
+      { name: '"leetcode" returns true', validate: (code) => { try { return new Function(`${code}; return wordBreak('leetcode', ['leet','code']);`)() === true; } catch { return false; } } },
+      { name: '"catsandog" returns false', validate: (code) => { try { return new Function(`${code}; return wordBreak('catsandog', ['cats','dog','sand','and','cat']);`)() === false; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "decode-ways", number: 91, title: "Decode Ways", difficulty: "Medium",
+    topics: ["dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
+    acceptance: 30, xp: 25,
+    problemStatement: "A message containing letters A-Z can be encoded as '1' to '26'. Given a string `s` of digits, return the number of ways to decode it.",
+    examples: [
+      { input: 's = "12"', output: "2", explanation: "'AB' or 'L'." },
+      { input: 's = "226"', output: "3" },
+      { input: 's = "06"', output: "0" },
+    ],
+    constraints: ["1 ≤ s.length ≤ 100", "s contains only digits and may have leading zeros"],
+    conceptOverview: "Like Climbing Stairs but with validity conditions: single-digit must not be '0', two-digit must be 10-26.",
+    patternRecognition: "**Pattern: DP with Validity Conditions**\n\ndp[i] = ways to decode s[0..i-1]. Add dp[i-1] if single digit valid; add dp[i-2] if two digit valid.",
+    sampleTests: [
+      { name: 'Decode "12"', input: ["12"], expected: 2 },
+      { name: 'Decode "226"', input: ["226"], expected: 3 },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @return {number}\n */\nfunction numDecodings(s) {\n  // Write your solution here\n}",
+    hints: ["dp[i] = ways to decode s[0..i-1].", "Single digit: valid if s[i-1] != '0' → add dp[i-1].", "Two digits: valid if 10 ≤ parseInt(s[i-2..i-1]) ≤ 26 → add dp[i-2]."],
+    bruteForceSolution: { code: "function numDecodings(s) {\n  function dp(i, memo) {\n    if (i === s.length) return 1;\n    if (s[i] === '0') return 0;\n    if (memo[i] !== undefined) return memo[i];\n    let ways = dp(i + 1, memo);\n    if (i + 1 < s.length) { const two = parseInt(s.slice(i, i + 2)); if (two >= 10 && two <= 26) ways += dp(i + 2, memo); }\n    return memo[i] = ways;\n  }\n  return dp(0, {});\n}", timeComplexity: "O(n)", spaceComplexity: "O(n)", explanation: "Top-down memoized DP." },
+    optimizedSolution: { code: "function numDecodings(s) {\n  const n = s.length;\n  let prev2 = 1, prev1 = s[0] !== '0' ? 1 : 0;\n  for (let i = 1; i < n; i++) {\n    let curr = 0;\n    if (s[i] !== '0') curr += prev1;\n    const two = parseInt(s.slice(i - 1, i + 1));\n    if (two >= 10 && two <= 26) curr += prev2;\n    prev2 = prev1; prev1 = curr;\n  }\n  return prev1;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "O(1) space rolling variables." },
+    interviewExplanation: "1. Like Climbing Stairs with validity checks\n2. Single digit valid → add dp[i-1]; two digits valid → add dp[i-2]\n3. Space-optimize to O(1) with two variables",
+    tests: [
+      { name: '"12" returns 2', validate: (code) => { try { return new Function(`${code}; return numDecodings('12');`)() === 2; } catch { return false; } } },
+      { name: '"06" returns 0', validate: (code) => { try { return new Function(`${code}; return numDecodings('06');`)() === 0; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "longest-common-subsequence", number: 1143, title: "Longest Common Subsequence", difficulty: "Medium",
+    topics: ["dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 56, xp: 25,
+    problemStatement: "Given two strings `text1` and `text2`, return the length of their longest common subsequence. If none exists, return 0.",
+    examples: [
+      { input: 'text1 = "abcde", text2 = "ace"', output: "3", explanation: "LCS is 'ace'." },
+      { input: 'text1 = "abc", text2 = "def"', output: "0" },
+    ],
+    constraints: ["1 ≤ text1.length, text2.length ≤ 1000"],
+    conceptOverview: "**Why this problem exists:**\nLCS is the foundation for diff algorithms, version control, and DNA alignment. One of the most important DP problems.\n\n**What it teaches:**\n• 2D DP grid construction\n• Match/skip decisions\n• Space optimization to O(n)",
+    patternRecognition: "**Pattern: 2D DP Grid**\n\ndp[i][j] = LCS of text1[0..i-1] and text2[0..j-1].\nIf chars match: dp[i][j] = dp[i-1][j-1] + 1\nElse: max(dp[i-1][j], dp[i][j-1])",
+    sampleTests: [
+      { name: 'LCS of "abcde" and "ace"', input: ["abcde", "ace"], expected: 3 },
+    ],
+    starterCode: "/**\n * @param {string} text1\n * @param {string} text2\n * @return {number}\n */\nfunction longestCommonSubsequence(text1, text2) {\n  // Write your solution here\n}",
+    hints: ["Build a 2D DP table of size (m+1) × (n+1).", "If chars match: dp[i][j] = dp[i-1][j-1] + 1.", "If chars differ: dp[i][j] = max(dp[i-1][j], dp[i][j-1])."],
+    bruteForceSolution: { code: "function longestCommonSubsequence(text1, text2) {\n  const m = text1.length, n = text2.length;\n  const dp = Array.from({length: m+1}, () => new Array(n+1).fill(0));\n  for (let i = 1; i <= m; i++)\n    for (let j = 1; j <= n; j++)\n      dp[i][j] = text1[i-1] === text2[j-1] ? dp[i-1][j-1]+1 : Math.max(dp[i-1][j], dp[i][j-1]);\n  return dp[m][n];\n}", timeComplexity: "O(m×n)", spaceComplexity: "O(m×n)", explanation: "Full 2D DP table." },
+    optimizedSolution: { code: "function longestCommonSubsequence(text1, text2) {\n  const m = text1.length, n = text2.length;\n  let prev = new Array(n+1).fill(0), curr = new Array(n+1).fill(0);\n  for (let i = 1; i <= m; i++) {\n    for (let j = 1; j <= n; j++)\n      curr[j] = text1[i-1] === text2[j-1] ? prev[j-1]+1 : Math.max(prev[j], curr[j-1]);\n    [prev, curr] = [curr, prev.fill(0)];\n  }\n  return prev[n];\n}", timeComplexity: "O(m×n)", spaceComplexity: "O(n)", explanation: "Space-optimized with two rows." },
+    interviewExplanation: "1. Build 2D DP table\n2. Match → extend diagonal; differ → take max of neighbors\n3. Space-optimize to two rolling rows O(n)",
+    tests: [
+      { name: "LCS length 3", validate: (code) => { try { return new Function(`${code}; return longestCommonSubsequence('abcde','ace');`)() === 3; } catch { return false; } } },
+      { name: "No common returns 0", validate: (code) => { try { return new Function(`${code}; return longestCommonSubsequence('abc','def');`)() === 0; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "partition-equal-subset-sum", number: 416, title: "Partition Equal Subset Sum", difficulty: "Medium",
+    topics: ["dp", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 47, xp: 25,
+    problemStatement: "Given an integer array `nums`, return `true` if you can partition the array into two subsets such that the sum of elements in both subsets is equal.",
+    examples: [
+      { input: "nums = [1,5,11,5]", output: "true", explanation: "[1,5,5] and [11]." },
+      { input: "nums = [1,2,3,5]", output: "false" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 200", "1 ≤ nums[i] ≤ 100"],
+    conceptOverview: "Classic 0/1 knapsack. If total sum is odd → false. Otherwise find a subset summing to total/2.",
+    patternRecognition: "**Pattern: 0/1 Knapsack**\n\ndp[j] = can we form sum j. For each number, iterate j backwards from target to num.",
+    sampleTests: [
+      { name: "[1,5,11,5] can partition", input: [[1,5,11,5]], expected: true },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {boolean}\n */\nfunction canPartition(nums) {\n  // Write your solution here\n}",
+    hints: ["Total sum must be even.", "Reduce to: can we find a subset summing to total/2?", "0/1 knapsack DP: dp[j] = can we form sum j."],
+    bruteForceSolution: { code: "function canPartition(nums) {\n  const sum = nums.reduce((a,b)=>a+b,0);\n  if (sum % 2 !== 0) return false;\n  const target = sum / 2;\n  function dfs(i, rem) {\n    if (rem === 0) return true;\n    if (i >= nums.length || rem < 0) return false;\n    return dfs(i+1, rem-nums[i]) || dfs(i+1, rem);\n  }\n  return dfs(0, target);\n}", timeComplexity: "O(2^n)", spaceComplexity: "O(n)", explanation: "Recursive brute force." },
+    optimizedSolution: { code: "function canPartition(nums) {\n  const sum = nums.reduce((a,b)=>a+b,0);\n  if (sum % 2 !== 0) return false;\n  const target = sum / 2;\n  const dp = new Array(target + 1).fill(false);\n  dp[0] = true;\n  for (const num of nums)\n    for (let j = target; j >= num; j--)\n      dp[j] = dp[j] || dp[j - num];\n  return dp[target];\n}", timeComplexity: "O(n × target)", spaceComplexity: "O(target)", explanation: "0/1 knapsack DP." },
+    interviewExplanation: "1. Odd sum → impossible\n2. Target = sum/2\n3. 0/1 knapsack: dp[j] = reachable sum j\n4. Iterate nums, update dp backwards",
+    tests: [
+      { name: "Equal partition possible", validate: (code) => { try { return new Function(`${code}; return canPartition([1,5,11,5]);`)() === true; } catch { return false; } } },
+      { name: "Impossible partition", validate: (code) => { try { return new Function(`${code}; return canPartition([1,2,3,5]);`)() === false; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // GRAPHS (MISSING)
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "rotting-oranges", number: 994, title: "Rotting Oranges", difficulty: "Medium",
+    topics: ["graphs", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
+    acceptance: 52, xp: 20,
+    problemStatement: "You are given an m×n grid where each cell can have: 0 (empty), 1 (fresh orange), or 2 (rotten orange). Every minute, any fresh orange adjacent (4-connected) to a rotten orange becomes rotten. Return the minimum number of minutes until no fresh orange exists, or -1 if impossible.",
+    examples: [
+      { input: "grid = [[2,1,1],[1,1,0],[0,1,1]]", output: "4" },
+      { input: "grid = [[2,1,1],[0,1,1],[1,0,1]]", output: "-1" },
+      { input: "grid = [[0,2]]", output: "0" },
+    ],
+    constraints: ["1 ≤ m, n ≤ 10", "grid[i][j] is 0, 1, or 2"],
+    conceptOverview: "Multi-source BFS spreading from all rotten oranges simultaneously — classic minimum time BFS.",
+    patternRecognition: "**Pattern: Multi-source BFS**\n\nAdd all rotten oranges to queue at time 0. BFS layer by layer — each layer = 1 minute.",
+    sampleTests: [
+      { name: "Returns 4 minutes", input: [[[2,1,1],[1,1,0],[0,1,1]]], expected: 4 },
+    ],
+    starterCode: "/**\n * @param {number[][]} grid\n * @return {number}\n */\nfunction orangesRotting(grid) {\n  // Write your solution here\n}",
+    hints: ["Add ALL rotten oranges to queue at start.", "BFS level by level — each level = 1 minute.", "Count fresh oranges. If any remain after BFS, return -1."],
+    bruteForceSolution: { code: "function orangesRotting(grid) {\n  const m=grid.length,n=grid[0].length;\n  const q=[],dirs=[[0,1],[0,-1],[1,0],[-1,0]];\n  let fresh=0;\n  for(let r=0;r<m;r++) for(let c=0;c<n;c++){if(grid[r][c]===2)q.push([r,c,0]);if(grid[r][c]===1)fresh++;}\n  if(!fresh) return 0;\n  let maxTime=0,i=0;\n  while(i<q.length){const[r,c,t]=q[i++];for(const[dr,dc] of dirs){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<m&&nc>=0&&nc<n&&grid[nr][nc]===1){grid[nr][nc]=2;fresh--;maxTime=Math.max(maxTime,t+1);q.push([nr,nc,t+1]);}}}\n  return fresh===0?maxTime:-1;\n}", timeComplexity: "O(m×n)", spaceComplexity: "O(m×n)", explanation: "Multi-source BFS." },
+    optimizedSolution: { code: "function orangesRotting(grid) {\n  const m=grid.length,n=grid[0].length;\n  const q=[],dirs=[[0,1],[0,-1],[1,0],[-1,0]];\n  let fresh=0;\n  for(let r=0;r<m;r++) for(let c=0;c<n;c++){if(grid[r][c]===2)q.push([r,c,0]);if(grid[r][c]===1)fresh++;}\n  if(!fresh) return 0;\n  let maxTime=0,i=0;\n  while(i<q.length){const[r,c,t]=q[i++];for(const[dr,dc] of dirs){const nr=r+dr,nc=c+dc;if(nr>=0&&nr<m&&nc>=0&&nc<n&&grid[nr][nc]===1){grid[nr][nc]=2;fresh--;maxTime=Math.max(maxTime,t+1);q.push([nr,nc,t+1]);}}}\n  return fresh===0?maxTime:-1;\n}", timeComplexity: "O(m×n)", spaceComplexity: "O(m×n)", explanation: "Level-by-level BFS from all sources." },
+    interviewExplanation: "1. Seed queue with all rotten oranges at time 0\n2. BFS: each neighbor fresh orange rots at time+1\n3. Track max time and fresh count\n4. If fresh > 0 after BFS → impossible, return -1",
+    tests: [
+      { name: "Returns 4", validate: (code) => { try { return new Function(`${code}; return orangesRotting([[2,1,1],[1,1,0],[0,1,1]]);`)() === 4; } catch { return false; } } },
+      { name: "Impossible returns -1", validate: (code) => { try { return new Function(`${code}; return orangesRotting([[2,1,1],[0,1,1],[1,0,1]]);`)() === -1; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "course-schedule-ii", number: 210, title: "Course Schedule II", difficulty: "Medium",
+    topics: ["graphs"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 48, xp: 25,
+    problemStatement: "There are `numCourses` courses (0 to numCourses-1). `prerequisites[i] = [ai, bi]` means you must take bi before ai. Return the ordering of courses to finish all. If impossible, return an empty array.",
+    examples: [
+      { input: "numCourses = 2, prerequisites = [[1,0]]", output: "[0,1]" },
+      { input: "numCourses = 1, prerequisites = []", output: "[0]" },
+    ],
+    constraints: ["1 ≤ numCourses ≤ 2000", "0 ≤ prerequisites.length ≤ numCourses × (numCourses-1)"],
+    conceptOverview: "Topological sort — extends Course Schedule I by returning the actual order.",
+    patternRecognition: "**Pattern: Topological Sort (Kahn's Algorithm)**\n\nBuild in-degree array. Queue all nodes with in-degree 0. Process queue, reducing neighbors' in-degrees.",
+    sampleTests: [
+      { name: "Order for 2 courses", input: [2, [[1,0]]], expected: [0,1] },
+    ],
+    starterCode: "/**\n * @param {number} numCourses\n * @param {number[][]} prerequisites\n * @return {number[]}\n */\nfunction findOrder(numCourses, prerequisites) {\n  // Write your solution here\n}",
+    hints: ["Build adjacency list and in-degree array.", "Start with courses that have in-degree 0.", "Each time you process a course, decrease neighbors' in-degree. Add those with 0 in-degree to queue."],
+    bruteForceSolution: { code: "function findOrder(n, prereqs) {\n  const graph=Array.from({length:n},()=>[]);\n  const indeg=new Array(n).fill(0);\n  for(const[a,b] of prereqs){graph[b].push(a);indeg[a]++;}\n  const q=[];\n  for(let i=0;i<n;i++) if(indeg[i]===0) q.push(i);\n  const order=[];\n  let i=0;\n  while(i<q.length){const node=q[i++];order.push(node);for(const nb of graph[node]) if(--indeg[nb]===0) q.push(nb);}\n  return order.length===n?order:[];\n}", timeComplexity: "O(V+E)", spaceComplexity: "O(V+E)", explanation: "Kahn's BFS topological sort." },
+    optimizedSolution: { code: "function findOrder(n, prereqs) {\n  const graph=Array.from({length:n},()=>[]);\n  const indeg=new Array(n).fill(0);\n  for(const[a,b] of prereqs){graph[b].push(a);indeg[a]++;}\n  const q=[];\n  for(let i=0;i<n;i++) if(indeg[i]===0) q.push(i);\n  const order=[];\n  let i=0;\n  while(i<q.length){const node=q[i++];order.push(node);for(const nb of graph[node]) if(--indeg[nb]===0) q.push(nb);}\n  return order.length===n?order:[];\n}", timeComplexity: "O(V+E)", spaceComplexity: "O(V+E)", explanation: "Kahn's algorithm." },
+    interviewExplanation: "1. Build adjacency list + in-degree count\n2. Queue all courses with in-degree 0\n3. Process: add to order, decrease neighbor in-degrees, queue new zeros\n4. If order.length == numCourses, valid — else cycle detected",
+    tests: [
+      { name: "Returns 2-course order", validate: (code) => { try { const r = new Function(`${code}; return findOrder(2, [[1,0]]);`)(); return Array.isArray(r) && r.length === 2 && r[0] === 0; } catch { return false; } } },
+      { name: "Cycle returns empty", validate: (code) => { try { const r = new Function(`${code}; return findOrder(2, [[1,0],[0,1]]);`)(); return Array.isArray(r) && r.length === 0; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // GREEDY (MISSING)
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "jump-game-ii", number: 45, title: "Jump Game II", difficulty: "Medium",
+    topics: ["greedy", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 40, xp: 25,
+    problemStatement: "You are initially positioned at index 0 of `nums`. Each element represents your maximum jump length. Return the minimum number of jumps to reach the last index. It is guaranteed you can reach it.",
+    examples: [
+      { input: "nums = [2,3,1,1,4]", output: "2", explanation: "Jump to index 1, then jump 3 steps to last index." },
+      { input: "nums = [2,3,0,1,4]", output: "2" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 10⁴", "0 ≤ nums[i] ≤ 1000"],
+    conceptOverview: "Greedy BFS — treat each jump range as a BFS level. Extend the furthest reachable position per level.",
+    patternRecognition: "**Pattern: Greedy Jump Game**\n\nTrack current boundary and furthest reachable. When reaching boundary, increment jumps and extend to furthest.",
+    sampleTests: [
+      { name: "Minimum 2 jumps", input: [[2,3,1,1,4]], expected: 2 },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction jump(nums) {\n  // Write your solution here\n}",
+    hints: ["Think of it as BFS — each 'level' is the range reachable in k jumps.", "Track furthest reachable from current range.", "Increment jumps when you exhaust the current range."],
+    bruteForceSolution: { code: "function jump(nums) {\n  const dp=new Array(nums.length).fill(Infinity);\n  dp[0]=0;\n  for(let i=1;i<nums.length;i++)\n    for(let j=0;j<i;j++)\n      if(j+nums[j]>=i) dp[i]=Math.min(dp[i],dp[j]+1);\n  return dp[nums.length-1];\n}", timeComplexity: "O(n²)", spaceComplexity: "O(n)", explanation: "DP: min jumps to reach each index." },
+    optimizedSolution: { code: "function jump(nums) {\n  let jumps=0, cur=0, far=0;\n  for(let i=0;i<nums.length-1;i++){far=Math.max(far,i+nums[i]);if(i===cur){jumps++;cur=far;}}\n  return jumps;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Greedy: extend range layer by layer in O(n)." },
+    interviewExplanation: "1. Greedy BFS: each 'level' = range reachable in k jumps\n2. Track furthest from current level\n3. When exhausting current range, jump to furthest (increment jumps)\n4. Single O(n) pass",
+    tests: [
+      { name: "Returns 2 jumps", validate: (code) => { try { return new Function(`${code}; return jump([2,3,1,1,4]);`)() === 2; } catch { return false; } } },
+      { name: "Single element is 0 jumps", validate: (code) => { try { return new Function(`${code}; return jump([0]);`)() === 0; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "gas-station", number: 134, title: "Gas Station", difficulty: "Medium",
+    topics: ["greedy", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
+    acceptance: 44, xp: 25,
+    problemStatement: "There are `n` gas stations in a circle. `gas[i]` is the gas available, `cost[i]` is the gas to travel to the next station. If you can complete the circuit, return the starting index. Otherwise return -1.",
+    examples: [
+      { input: "gas = [1,2,3,4,5], cost = [3,4,5,1,2]", output: "3" },
+      { input: "gas = [2,3,4], cost = [3,4,3]", output: "-1" },
+    ],
+    constraints: ["n == gas.length == cost.length", "1 ≤ n ≤ 10⁵"],
+    conceptOverview: "If total gas >= total cost, a solution exists. The valid start is always after the position where cumulative gas goes most negative.",
+    patternRecognition: "**Pattern: Greedy Single Pass**\n\nWhenever cumulative tank goes negative, reset start to next station. If total gas >= total cost, that start is valid.",
+    sampleTests: [
+      { name: "Start at station 3", input: [[1,2,3,4,5],[3,4,5,1,2]], expected: 3 },
+    ],
+    starterCode: "/**\n * @param {number[]} gas\n * @param {number[]} cost\n * @return {number}\n */\nfunction canCompleteCircuit(gas, cost) {\n  // Write your solution here\n}",
+    hints: ["If total gas < total cost, return -1.", "Whenever tank goes negative, the start must be AFTER the current station.", "Reset tank to 0 and start to i+1 when tank < 0."],
+    bruteForceSolution: { code: "function canCompleteCircuit(gas, cost) {\n  const n=gas.length;\n  for(let s=0;s<n;s++){\n    let tank=0,ok=true;\n    for(let i=0;i<n;i++){const j=(s+i)%n;tank+=gas[j]-cost[j];if(tank<0){ok=false;break;}}\n    if(ok) return s;\n  }\n  return -1;\n}", timeComplexity: "O(n²)", spaceComplexity: "O(1)", explanation: "Try every starting station." },
+    optimizedSolution: { code: "function canCompleteCircuit(gas, cost) {\n  let total=0,tank=0,start=0;\n  for(let i=0;i<gas.length;i++){const d=gas[i]-cost[i];total+=d;tank+=d;if(tank<0){start=i+1;tank=0;}}\n  return total>=0?start:-1;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Greedy: reset start whenever tank goes negative." },
+    interviewExplanation: "1. If total gas < total cost, impossible\n2. Whenever tank < 0, current start fails — reset to i+1\n3. Station after last deficit point is the answer\n4. O(n) single pass",
+    tests: [
+      { name: "Returns station 3", validate: (code) => { try { return new Function(`${code}; return canCompleteCircuit([1,2,3,4,5],[3,4,5,1,2]);`)() === 3; } catch { return false; } } },
+      { name: "Impossible returns -1", validate: (code) => { try { return new Function(`${code}; return canCompleteCircuit([2,3,4],[3,4,3]);`)() === -1; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "task-scheduler", number: 621, title: "Task Scheduler", difficulty: "Medium",
+    topics: ["greedy", "heap", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Bloomberg"],
+    acceptance: 54, xp: 25,
+    problemStatement: "Given CPU tasks (character array) and a cooldown `n`, each same task must wait n intervals before rerunning. Return the minimum number of intervals to finish all tasks.",
+    examples: [
+      { input: 'tasks = ["A","A","A","B","B","B"], n = 2', output: "8", explanation: "A→B→idle→A→B→idle→A→B" },
+      { input: 'tasks = ["A","A","A","B","B","B"], n = 0', output: "6" },
+    ],
+    constraints: ["1 ≤ tasks.length ≤ 10⁴", "n is between 0 and 100"],
+    conceptOverview: "The most frequent task creates fixed frames of size (n+1). Formula: max(tasks.length, (maxFreq-1)*(n+1)+countOfMaxFreq).",
+    patternRecognition: "**Pattern: Greedy Frame Formula**\n\nMost frequent task creates (maxFreq-1) full frames. Fill frames with other tasks. Remaining slots are idle.",
+    sampleTests: [
+      { name: "Returns 8 intervals", input: [["A","A","A","B","B","B"], 2], expected: 8 },
+    ],
+    starterCode: "/**\n * @param {character[]} tasks\n * @param {number} n\n * @return {number}\n */\nfunction leastInterval(tasks, n) {\n  // Write your solution here\n}",
+    hints: ["Count frequency of each task.", "Most frequent task forces (maxFreq-1)*(n+1) minimum slots.", "Answer is max(tasks.length, this formula)."],
+    bruteForceSolution: { code: "function leastInterval(tasks, n) {\n  const freq=new Array(26).fill(0);\n  for(const t of tasks) freq[t.charCodeAt(0)-65]++;\n  freq.sort((a,b)=>b-a);\n  const maxFreq=freq[0];\n  const idle=Math.max(0,(maxFreq-1)*n-freq.slice(1).reduce((s,f)=>s+Math.min(f,maxFreq-1),0));\n  return tasks.length+idle;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Count idle time needed." },
+    optimizedSolution: { code: "function leastInterval(tasks, n) {\n  const freq=new Array(26).fill(0);\n  for(const t of tasks) freq[t.charCodeAt(0)-65]++;\n  const maxFreq=Math.max(...freq);\n  const maxCount=freq.filter(f=>f===maxFreq).length;\n  return Math.max(tasks.length,(maxFreq-1)*(n+1)+maxCount);\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Direct formula: max(tasks.length, (maxFreq-1)*(n+1)+maxCount)." },
+    interviewExplanation: "1. Most frequent task determines structure\n2. (maxFreq-1) full frames of size (n+1)\n3. Add tasks with max frequency for the final partial frame\n4. If enough tasks to fill without idle: answer = tasks.length",
+    tests: [
+      { name: "Returns 8", validate: (code) => { try { return new Function(`${code}; return leastInterval(['A','A','A','B','B','B'],2);`)() === 8; } catch { return false; } } },
+      { name: "No cooldown returns 6", validate: (code) => { try { return new Function(`${code}; return leastInterval(['A','A','A','B','B','B'],0);`)() === 6; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // ADVANCED BACKTRACKING & DP
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "subsets-ii", number: 90, title: "Subsets II", difficulty: "Medium",
+    topics: ["backtracking", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 56, xp: 20,
+    problemStatement: "Given an integer array `nums` that may contain duplicates, return all possible subsets (the power set). The solution set must not contain duplicate subsets.",
+    examples: [
+      { input: "nums = [1,2,2]", output: "[[],[1],[1,2],[1,2,2],[2],[2,2]]" },
+      { input: "nums = [0]", output: "[[],[0]]" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 10", "-10 ≤ nums[i] ≤ 10"],
+    conceptOverview: "Sort array first to place duplicate elements adjacent to each other. Skip duplicates during backtracking loop.",
+    patternRecognition: "**Pattern: Backtracking with Duplicate Pruning**\n\nSort array. In loop, if `i > start` and `nums[i] === nums[i-1]`, skip to avoid duplicate subsets.",
+    sampleTests: [
+      { name: "Subsets of [1,2,2]", input: [[1,2,2]], expected: [[],[1],[1,2],[1,2,2],[2],[2,2]] },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nfunction subsetsWithDup(nums) {\n  // Write your solution here\n}",
+    hints: ["Sort `nums` first.", "Skip duplicates: if i > start && nums[i] === nums[i-1] continue.", "Recurse with start = i + 1."],
+    bruteForceSolution: { code: "function subsetsWithDup(nums) {\n  nums.sort((a,b)=>a-b);\n  const res = [];\n  function bt(start, path) {\n    res.push([...path]);\n    for (let i = start; i < nums.length; i++) {\n      if (i > start && nums[i] === nums[i-1]) continue;\n      path.push(nums[i]);\n      bt(i + 1, path);\n      path.pop();\n    }\n  }\n  bt(0, []);\n  return res;\n}", timeComplexity: "O(n × 2^n)", spaceComplexity: "O(n × 2^n)", explanation: "Backtracking with duplicate pruning." },
+    optimizedSolution: { code: "function subsetsWithDup(nums) {\n  nums.sort((a,b)=>a-b);\n  const res = [];\n  function bt(start, path) {\n    res.push([...path]);\n    for (let i = start; i < nums.length; i++) {\n      if (i > start && nums[i] === nums[i-1]) continue;\n      path.push(nums[i]);\n      bt(i + 1, path);\n      path.pop();\n    }\n  }\n  bt(0, []);\n  return res;\n}", timeComplexity: "O(n × 2^n)", spaceComplexity: "O(n × 2^n)", explanation: "Sort + backtrack with duplicate check." },
+    interviewExplanation: "1. Sort array so duplicates are adjacent\n2. At each tree level, skip nums[i] if nums[i] === nums[i-1]\n3. Generates 6 unique subsets for [1,2,2]",
+    tests: [
+      { name: "Returns 6 subsets for [1,2,2]", validate: (code) => { try { const r = new Function(`${code}; return subsetsWithDup([1,2,2]);`)(); return Array.isArray(r) && r.length === 6; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "n-queens", number: 51, title: "N-Queens", difficulty: "Hard",
+    topics: ["backtracking"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 66, xp: 30,
+    problemStatement: "The n-queens puzzle is the problem of placing n queens on an n×n chessboard such that no two queens attack each other. Return all distinct solutions to the n-queens puzzle.",
+    examples: [
+      { input: "n = 4", output: '[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"],[\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]' },
+      { input: "n = 1", output: '[[\"Q\"]]' },
+    ],
+    constraints: ["1 ≤ n ≤ 9"],
+    conceptOverview: "Place queens row by row. Maintain sets for columns, positive diagonals (r+c), and negative diagonals (r-c).",
+    patternRecognition: "**Pattern: Backtracking with Constraint Sets**\n\nTrack occupied cols, (r+c) diag, and (r-c) diag. Recurse row by row.",
+    sampleTests: [
+      { name: "4-Queens returns 2 solutions", input: [4], expected: 2 },
+    ],
+    starterCode: "/**\n * @param {number} n\n * @return {string[][]}\n */\nfunction solveNQueens(n) {\n  // Write your solution here\n}",
+    hints: ["Place 1 queen per row.", "Use Sets to track occupied cols, r+c diagonals, and r-c diagonals.", "Backtrack when a row has no valid column."],
+    bruteForceSolution: { code: "function solveNQueens(n) {\n  const res = [], cols = new Set(), posDiag = new Set(), negDiag = new Set();\n  const board = Array.from({length: n}, () => new Array(n).fill('.'));\n  function bt(r) {\n    if (r === n) { res.push(board.map(row => row.join(''))); return; }\n    for (let c = 0; c < n; c++) {\n      if (cols.has(c) || posDiag.has(r+c) || negDiag.has(r-c)) continue;\n      cols.add(c); posDiag.add(r+c); negDiag.add(r-c);\n      board[r][c] = 'Q';\n      bt(r + 1);\n      board[r][c] = '.';\n      cols.delete(c); posDiag.delete(r+c); negDiag.delete(r-c);\n    }\n  }\n  bt(0);\n  return res;\n}", timeComplexity: "O(n!)", spaceComplexity: "O(n²)", explanation: "Backtracking row by row with constraint sets." },
+    optimizedSolution: { code: "function solveNQueens(n) {\n  const res = [], cols = new Set(), posDiag = new Set(), negDiag = new Set();\n  const board = Array.from({length: n}, () => new Array(n).fill('.'));\n  function bt(r) {\n    if (r === n) { res.push(board.map(row => row.join(''))); return; }\n    for (let c = 0; c < n; c++) {\n      if (cols.has(c) || posDiag.has(r+c) || negDiag.has(r-c)) continue;\n      cols.add(c); posDiag.add(r+c); negDiag.add(r-c);\n      board[r][c] = 'Q';\n      bt(r + 1);\n      board[r][c] = '.';\n      cols.delete(c); posDiag.delete(r+c); negDiag.delete(r-c);\n    }\n  }\n  bt(0);\n  return res;\n}", timeComplexity: "O(n!)", spaceComplexity: "O(n²)", explanation: "O(n!) backtracking search." },
+    interviewExplanation: "1. Place queens row by row\n2. Diagonals: positive diag = r+c, negative diag = r-c\n3. Use 3 sets (cols, posDiag, negDiag) for O(1) safety checks",
+    tests: [
+      { name: "4-Queens returns 2 solutions", validate: (code) => { try { return new Function(`${code}; return solveNQueens(4).length;`)() === 2; } catch { return false; } } },
+      { name: "1-Queen returns 1 solution", validate: (code) => { try { return new Function(`${code}; return solveNQueens(1).length;`)() === 1; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "coin-change-ii", number: 518, title: "Coin Change II", difficulty: "Medium",
+    topics: ["dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 62, xp: 25,
+    problemStatement: "Given an integer array `coins` representing coins of different denominations and an integer `amount`, return the number of combinations that make up that amount.",
+    examples: [
+      { input: "amount = 5, coins = [1,2,5]", output: "4", explanation: "5=5, 5=2+2+1, 5=2+1+1+1, 5=1+1+1+1+1" },
+      { input: "amount = 3, coins = [2]", output: "0" },
+    ],
+    constraints: ["1 ≤ coins.length ≤ 300", "1 ≤ amount ≤ 5000"],
+    conceptOverview: "Unbounded Knapsack DP. Outer loop over coins prevents duplicate permutations of the same combination.",
+    patternRecognition: "**Pattern: Unbounded Knapsack**\n\nOuter loop over coins, inner loop from `coin` to `amount`: `dp[i] += dp[i - coin]`.",
+    sampleTests: [
+      { name: "5 with [1,2,5] = 4 combinations", input: [5, [1,2,5]], expected: 4 },
+    ],
+    starterCode: "/**\n * @param {number} amount\n * @param {number[]} coins\n * @return {number}\n */\nfunction change(amount, coins) {\n  // Write your solution here\n}",
+    hints: ["dp[i] = combinations to make amount i.", "Outer loop MUST be coins, inner loop MUST be amount.", "dp[i] += dp[i - coin]."],
+    bruteForceSolution: { code: "function change(amount, coins) {\n  const dp = new Array(amount + 1).fill(0);\n  dp[0] = 1;\n  for (const c of coins)\n    for (let i = c; i <= amount; i++)\n      dp[i] += dp[i - c];\n  return dp[amount];\n}", timeComplexity: "O(n × amount)", spaceComplexity: "O(amount)", explanation: "Unbounded knapsack DP." },
+    optimizedSolution: { code: "function change(amount, coins) {\n  const dp = new Array(amount + 1).fill(0);\n  dp[0] = 1;\n  for (const c of coins)\n    for (let i = c; i <= amount; i++)\n      dp[i] += dp[i - c];\n  return dp[amount];\n}", timeComplexity: "O(n × amount)", spaceComplexity: "O(amount)", explanation: "Space-optimized 1D DP array." },
+    interviewExplanation: "1. Unbounded knapsack: outer loop = coins, inner loop = amount\n2. Loop order matters! Outer coin loop ensures combinations, not permutations\n3. dp[i] += dp[i - coin]",
+    tests: [
+      { name: "Returns 4 for amount 5", validate: (code) => { try { return new Function(`${code}; return change(5, [1,2,5]);`)() === 4; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "edit-distance", number: 72, title: "Edit Distance", difficulty: "Hard",
+    topics: ["dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 55, xp: 30,
+    problemStatement: "Given two strings `word1` and `word2`, return the minimum number of operations required to convert `word1` to `word2` (Operations: Insert, Delete, Replace).",
+    examples: [
+      { input: 'word1 = "horse", word2 = "ros"', output: "3", explanation: "horse -> rorse -> rose -> ros" },
+      { input: 'word1 = "intention", word2 = "execution"', output: "5" },
+    ],
+    constraints: ["0 ≤ word1.length, word2.length ≤ 500"],
+    conceptOverview: "Classic Levenshtein distance DP. Grid `dp[i][j]` stores edit distance between prefixes `word1[0..i-1]` and `word2[0..j-1]`.",
+    patternRecognition: "**Pattern: 2D DP String Matching**\n\nIf chars equal: `dp[i][j] = dp[i-1][j-1]`. Else: `1 + min(insert, delete, replace)`.",
+    sampleTests: [
+      { name: '"horse" to "ros"', input: ["horse", "ros"], expected: 3 },
+    ],
+    starterCode: "/**\n * @param {string} word1\n * @param {string} word2\n * @return {number}\n */\nfunction minDistance(word1, word2) {\n  // Write your solution here\n}",
+    hints: ["Build 2D table dp[m+1][n+1].", "dp[i][j] is min operations for word1[0..i-1] to word2[0..j-1].", "If word1[i-1] === word2[j-1], dp[i][j] = dp[i-1][j-1].", "Else dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])."],
+    bruteForceSolution: { code: "function minDistance(w1, w2) {\n  const m = w1.length, n = w2.length;\n  const dp = Array.from({length: m + 1}, () => new Array(n + 1).fill(0));\n  for (let i = 0; i <= m; i++) dp[i][0] = i;\n  for (let j = 0; j <= n; j++) dp[0][j] = j;\n  for (let i = 1; i <= m; i++)\n    for (let j = 1; j <= n; j++)\n      dp[i][j] = w1[i-1] === w2[j-1] ? dp[i-1][j-1] : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);\n  return dp[m][n];\n}", timeComplexity: "O(m×n)", spaceComplexity: "O(m×n)", explanation: "Levenshtein 2D DP matrix." },
+    optimizedSolution: { code: "function minDistance(w1, w2) {\n  const m = w1.length, n = w2.length;\n  let dp = Array.from({length: n + 1}, (_, j) => j);\n  for (let i = 1; i <= m; i++) {\n    let next = [i];\n    for (let j = 1; j <= n; j++)\n      next[j] = w1[i-1] === w2[j-1] ? dp[j-1] : 1 + Math.min(dp[j], next[j-1], dp[j-1]);\n    dp = next;\n  }\n  return dp[n];\n}", timeComplexity: "O(m×n)", spaceComplexity: "O(n)", explanation: "Space-optimized 1D rolling array." },
+    interviewExplanation: "1. 2D DP grid of size (m+1) x (n+1)\n2. Match: no operation needed → diagonal value\n3. Mismatch: 1 + min(delete=dp[i-1][j], insert=dp[i][j-1], replace=dp[i-1][j-1])",
+    tests: [
+      { name: "Returns 3 for 'horse' to 'ros'", validate: (code) => { try { return new Function(`${code}; return minDistance('horse', 'ros');`)() === 3; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // DISJOINT SET UNION (UNION-FIND) & DIJKSTRA
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "redundant-connection", number: 684, title: "Redundant Connection", difficulty: "Medium",
+    topics: ["graphs"],
+    companies: ["Amazon", "Google", "Meta"],
+    acceptance: 63, xp: 25,
+    problemStatement: "Given a graph that started as a tree with n nodes (1 to n) plus one additional edge, find the edge that can be removed so that the resulting graph is a tree of n nodes.",
+    examples: [
+      { input: "edges = [[1,2],[1,3],[2,3]]", output: "[2,3]" },
+      { input: "edges = [[1,2],[2,3],[3,4],[1,4],[1,5]]", output: "[1,4]" },
+    ],
+    constraints: ["n == edges.length", "3 ≤ n ≤ 1000"],
+    conceptOverview: "Union-Find (DSU) data structure detects the first edge that connects two nodes already in the same connected component.",
+    patternRecognition: "**Pattern: Union-Find / DSU**\n\nIterate edges. If `union(u, v)` returns false (already connected), that edge creates a cycle and is redundant.",
+    sampleTests: [
+      { name: "Find redundant edge", input: [[[1,2],[1,3],[2,3]]], expected: [2,3] },
+    ],
+    starterCode: "/**\n * @param {number[][]} edges\n * @return {number[]}\n */\nfunction findRedundantConnection(edges) {\n  // Write your solution here\n}",
+    hints: ["Use Disjoint Set Union (DSU).", "Parent array initialized to parent[i] = i.", "Find with path compression, union by rank.", "First edge connecting already connected nodes is redundant."],
+    bruteForceSolution: { code: "function findRedundantConnection(edges) {\n  const parent = Array.from({length: edges.length + 1}, (_, i) => i);\n  function find(i) { return parent[i] === i ? i : (parent[i] = find(parent[i])); }\n  for (const [u, v] of edges) {\n    const r1 = find(u), r2 = find(v);\n    if (r1 === r2) return [u, v];\n    parent[r1] = r2;\n  }\n  return [];\n}", timeComplexity: "O(n α(n))", spaceComplexity: "O(n)", explanation: "DSU with path compression." },
+    optimizedSolution: { code: "function findRedundantConnection(edges) {\n  const parent = Array.from({length: edges.length + 1}, (_, i) => i);\n  function find(i) { return parent[i] === i ? i : (parent[i] = find(parent[i])); }\n  for (const [u, v] of edges) {\n    const r1 = find(u), r2 = find(v);\n    if (r1 === r2) return [u, v];\n    parent[r1] = r2;\n  }\n  return [];\n}", timeComplexity: "O(n α(n))", spaceComplexity: "O(n)", explanation: "Union-Find single pass." },
+    interviewExplanation: "1. Maintain Disjoint Set Union (DSU) structure\n2. For each edge (u, v), find roots of u and v\n3. If roots match, adding (u, v) creates a cycle — return [u, v]",
+    tests: [
+      { name: "Returns [2,3]", validate: (code) => { try { const r = new Function(`${code}; return findRedundantConnection([[1,2],[1,3],[2,3]]);`)(); return JSON.stringify(r) === '[2,3]'; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "network-delay-time", number: 743, title: "Network Delay Time", difficulty: "Medium",
+    topics: ["graphs"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 54, xp: 25,
+    problemStatement: "Given times[i] = [ui, vi, wi] (source, target, travel time) for n nodes labeled 1 to n, and a starting node k. Return the minimum time for all nodes to receive the signal. If impossible, return -1.",
+    examples: [
+      { input: "times = [[2,1,1],[2,3,1],[3,4,1]], n = 4, k = 2", output: "2" },
+      { input: "times = [[1,2,1]], n = 2, k = 1", output: "1" },
+      { input: "times = [[1,2,1]], n = 2, k = 2", output: "-1" },
+    ],
+    constraints: ["1 ≤ k ≤ n ≤ 100", "1 ≤ times.length ≤ 6000"],
+    conceptOverview: "Dijkstra's Single-Source Shortest Path algorithm. Find shortest distance from k to all nodes, then take maximum.",
+    patternRecognition: "**Pattern: Dijkstra Shortest Path**\n\nMin-heap / Priority Queue or distance array. Relax edges repeatedly until all nodes visited.",
+    sampleTests: [
+      { name: "Signal time = 2", input: [[[2,1,1],[2,3,1],[3,4,1]], 4, 2], expected: 2 },
+    ],
+    starterCode: "/**\n * @param {number[][]} times\n * @param {number} n\n * @param {number} k\n * @return {number}\n */\nfunction networkDelayTime(times, n, k) {\n  // Write your solution here\n}",
+    hints: ["Build adjacency list with weights.", "Distance array dist[] initialized to Infinity, dist[k] = 0.", "Use Dijkstra's algorithm to compute shortest paths.", "Answer is max(dist). If any dist === Infinity, return -1."],
+    bruteForceSolution: { code: "function networkDelayTime(times, n, k) {\n  const graph = Array.from({length: n + 1}, () => []);\n  for (const [u, v, w] of times) graph[u].push([v, w]);\n  const dist = new Array(n + 1).fill(Infinity);\n  dist[k] = 0;\n  const vis = new Array(n + 1).fill(false);\n  for (let i = 0; i < n; i++) {\n    let u = -1;\n    for (let j = 1; j <= n; j++) if (!vis[j] && (u === -1 || dist[j] < dist[u])) u = j;\n    if (dist[u] === Infinity) break;\n    vis[u] = true;\n    for (const [v, w] of graph[u]) if (dist[u] + w < dist[v]) dist[v] = dist[u] + w;\n  }\n  const max = Math.max(...dist.slice(1));\n  return max === Infinity ? -1 : max;\n}", timeComplexity: "O(V² + E)", spaceComplexity: "O(V + E)", explanation: "Dijkstra's SSSP with array min-search." },
+    optimizedSolution: { code: "function networkDelayTime(times, n, k) {\n  const graph = Array.from({length: n + 1}, () => []);\n  for (const [u, v, w] of times) graph[u].push([v, w]);\n  const dist = new Array(n + 1).fill(Infinity);\n  dist[k] = 0;\n  const vis = new Array(n + 1).fill(false);\n  for (let i = 0; i < n; i++) {\n    let u = -1;\n    for (let j = 1; j <= n; j++) if (!vis[j] && (u === -1 || dist[j] < dist[u])) u = j;\n    if (dist[u] === Infinity) break;\n    vis[u] = true;\n    for (const [v, w] of graph[u]) if (dist[u] + w < dist[v]) dist[v] = dist[u] + w;\n  }\n  const max = Math.max(...dist.slice(1));\n  return max === Infinity ? -1 : max;\n}", timeComplexity: "O(E log V)", spaceComplexity: "O(V + E)", explanation: "Dijkstra's shortest path algorithm." },
+    interviewExplanation: "1. Standard Dijkstra algorithm\n2. Compute shortest signal arrival time for every node from k\n3. Time for all nodes to receive signal = max(dist[1..n])\n4. If any node unreachable, return -1",
+    tests: [
+      { name: "Returns 2 for 4 nodes", validate: (code) => { try { return new Function(`${code}; return networkDelayTime([[2,1,1],[2,3,1],[3,4,1]], 4, 2);`)() === 2; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // QUEUE, TRIE, BIT MANIPULATION & SLIDING WINDOW
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "implement-queue-using-stacks", number: 232, title: "Implement Queue using Stacks", difficulty: "Easy",
+    topics: ["queue", "stack"],
+    companies: ["Amazon", "Microsoft", "Google", "Meta", "Bloomberg"],
+    acceptance: 63, xp: 15,
+    problemStatement: "Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (`push`, `peek`, `pop`, and `empty`).",
+    examples: [
+      { input: 'MyQueue q = new MyQueue(); q.push(1); q.push(2); q.peek(); // 1; q.pop(); // 1; q.empty(); // false', output: "[null, null, null, 1, 1, false]" },
+    ],
+    constraints: ["1 ≤ x ≤ 9", "At most 100 calls will be made to push, pop, peek, and empty"],
+    conceptOverview: "Use two stacks: `inStack` for enqueue operations and `outStack` for dequeue operations. When `outStack` is empty, pour all elements from `inStack` into `outStack` to reverse their order.",
+    patternRecognition: "**Pattern: Two Stacks Amortized FIFO**\n\n`inStack` receives elements; `outStack` yields elements. Pouring happens only when `outStack` is empty, giving amortized O(1) time.",
+    sampleTests: [
+      { name: "Queue operations", input: [["push","push","peek","pop","empty"], [[1],[2],[],[],[]]], expected: [null,null,1,1,false] },
+    ],
+    starterCode: "class MyQueue {\n  constructor() {\n    this.inStack = [];\n    this.outStack = [];\n  }\n  push(x) {\n  }\n  pop() {\n  }\n  peek() {\n  }\n  empty() {\n  }\n}\nfunction testQueue(ops, vals) {\n  const q = new MyQueue();\n  return ops.map((op, i) => {\n    if (op === 'push') { q.push(vals[i][0]); return null; }\n    if (op === 'pop') return q.pop();\n    if (op === 'peek') return q.peek();\n    if (op === 'empty') return q.empty();\n  });\n}",
+    hints: ["Use two arrays as stacks (only push and pop).", "When popping or peeking, if outStack is empty, transfer everything from inStack."],
+    bruteForceSolution: { code: "class MyQueue {\n  constructor() { this.inStack = []; this.outStack = []; }\n  push(x) { this.inStack.push(x); }\n  pop() { this.peek(); return this.outStack.pop(); }\n  peek() {\n    if (!this.outStack.length) {\n      while (this.inStack.length) this.outStack.push(this.inStack.pop());\n    }\n    return this.outStack[this.outStack.length - 1];\n  }\n  empty() { return !this.inStack.length && !this.outStack.length; }\n}\nfunction testQueue(ops, vals) {\n  const q = new MyQueue();\n  return ops.map((op, i) => {\n    if (op === 'push') { q.push(vals[i][0]); return null; }\n    if (op === 'pop') return q.pop();\n    if (op === 'peek') return q.peek();\n    if (op === 'empty') return q.empty();\n  });\n}", timeComplexity: "O(1) Amortized", spaceComplexity: "O(n)", explanation: "Two stacks with lazy transfer." },
+    optimizedSolution: { code: "class MyQueue {\n  constructor() { this.inStack = []; this.outStack = []; }\n  push(x) { this.inStack.push(x); }\n  pop() { this.peek(); return this.outStack.pop(); }\n  peek() {\n    if (!this.outStack.length) {\n      while (this.inStack.length) this.outStack.push(this.inStack.pop());\n    }\n    return this.outStack[this.outStack.length - 1];\n  }\n  empty() { return !this.inStack.length && !this.outStack.length; }\n}\nfunction testQueue(ops, vals) {\n  const q = new MyQueue();\n  return ops.map((op, i) => {\n    if (op === 'push') { q.push(vals[i][0]); return null; }\n    if (op === 'pop') return q.pop();\n    if (op === 'peek') return q.peek();\n    if (op === 'empty') return q.empty();\n  });\n}", timeComplexity: "O(1) Amortized", spaceComplexity: "O(n)", explanation: "Amortized O(1) queue using 2 stacks." },
+    interviewExplanation: "1. Push elements into inStack\n2. On pop/peek: if outStack is empty, pop all from inStack and push to outStack\n3. Reverses element order, producing FIFO behavior in O(1) amortized time",
+    tests: [
+      { name: "FIFO behavior", validate: (code) => { try { return JSON.stringify(new Function(`${code}; return testQueue(['push','push','peek','pop','empty'], [[1],[2],[],[],[]]);`)()) === JSON.stringify([null,null,1,1,false]); } catch { return false; } } },
+    ],
+  },
+  {
+    id: "design-circular-queue", number: 622, title: "Design Circular Queue", difficulty: "Medium",
+    topics: ["queue", "arrays"],
+    companies: ["Amazon", "Microsoft", "Meta", "Google"],
+    acceptance: 51, xp: 20,
+    problemStatement: "Design your implementation of the circular queue. A circular queue is a linear data structure in which the operations are performed based on FIFO principle and the last position is connected back to the first position to make a circle.",
+    examples: [
+      { input: "MyCircularQueue q = new MyCircularQueue(3); q.enQueue(1); q.enQueue(2); q.enQueue(3); q.enQueue(4); // false; q.Rear(); // 3; q.isFull(); // true; q.deQueue(); // true; q.enQueue(4); // true; q.Rear(); // 4", output: "Circular Queue operations" },
+    ],
+    constraints: ["1 ≤ k ≤ 1000", "0 ≤ value ≤ 1000"],
+    conceptOverview: "Use a fixed-size array with `head` and `tail` pointers. Use modulo arithmetic `(ptr + 1) % k` for wrap-around.",
+    patternRecognition: "**Pattern: Fixed-size Array + Modulo Pointers**\n\nTrack `head`, `tail`, and `size`. Increment pointers using `(ptr + 1) % capacity`.",
+    sampleTests: [
+      { name: "Circular queue ops", input: [3, ["enQueue","enQueue","enQueue","isFull"], [[1],[2],[3],[]]], expected: [true,true,true,true] },
+    ],
+    starterCode: "class MyCircularQueue {\n  constructor(k) {\n    this.buffer = new Array(k);\n    this.capacity = k;\n    this.head = 0;\n    this.tail = 0;\n    this.size = 0;\n  }\n  enQueue(value) {\n  }\n  deQueue() {\n  }\n  Front() {\n  }\n  Rear() {\n  }\n  isEmpty() {\n  }\n  isFull() {\n  }\n}",
+    hints: ["Use a fixed-size array of length k.", "Use a `size` variable to easily check isEmpty and isFull.", "Update tail: `(tail + 1) % k`, update head: `(head + 1) % k`."],
+    bruteForceSolution: { code: "class MyCircularQueue {\n  constructor(k) { this.buffer = new Array(k); this.cap = k; this.head = 0; this.tail = 0; this.size = 0; }\n  enQueue(val) { if (this.isFull()) return false; this.buffer[this.tail] = val; this.tail = (this.tail + 1) % this.cap; this.size++; return true; }\n  deQueue() { if (this.isEmpty()) return false; this.head = (this.head + 1) % this.cap; this.size--; return true; }\n  Front() { return this.isEmpty() ? -1 : this.buffer[this.head]; }\n  Rear() { return this.isEmpty() ? -1 : this.buffer[(this.tail - 1 + this.cap) % this.cap]; }\n  isEmpty() { return this.size === 0; }\n  isFull() { return this.size === this.cap; }\n}", timeComplexity: "O(1)", spaceComplexity: "O(k)", explanation: "Ring buffer array with modulo arithmetic." },
+    optimizedSolution: { code: "class MyCircularQueue {\n  constructor(k) { this.buffer = new Array(k); this.cap = k; this.head = 0; this.tail = 0; this.size = 0; }\n  enQueue(val) { if (this.isFull()) return false; this.buffer[this.tail] = val; this.tail = (this.tail + 1) % this.cap; this.size++; return true; }\n  deQueue() { if (this.isEmpty()) return false; this.head = (this.head + 1) % this.cap; this.size--; return true; }\n  Front() { return this.isEmpty() ? -1 : this.buffer[this.head]; }\n  Rear() { return this.isEmpty() ? -1 : this.buffer[(this.tail - 1 + this.cap) % this.cap]; }\n  isEmpty() { return this.size === 0; }\n  isFull() { return this.size === this.cap; }\n}", timeComplexity: "O(1)", spaceComplexity: "O(k)", explanation: "O(1) operations with modulo arithmetic." },
+    interviewExplanation: "1. Fixed array avoids dynamic allocation overhead\n2. Modulo arithmetic handles continuous wrap-around\n3. Track `size` for O(1) `isEmpty` and `isFull` checks",
+    tests: [
+      { name: "Enqueues and checks full", validate: (code) => { try { const q = new (new Function(`${code}; return MyCircularQueue;`)())(2); return q.enQueue(1) && q.enQueue(2) && q.isFull(); } catch { return false; } } },
+    ],
+  },
+  {
+    id: "replace-words", number: 648, title: "Replace Words", difficulty: "Medium",
+    topics: ["trie", "hash-map"],
+    companies: ["Uber", "Amazon", "Google"],
+    acceptance: 63, xp: 20,
+    problemStatement: "Given a dictionary consisting of many roots and a sentence consisting of words separated by spaces, replace all the derivatives in the sentence with the root forming it. If a derivative can be replaced by more than one root, replace it with the root that has the shortest length.",
+    examples: [
+      { input: 'dictionary = ["cat","bat","rat"], sentence = "the cattle was meowed by the ratings"', output: '"the cat was meowed by the rat"' },
+      { input: 'dictionary = ["a","b","c"], sentence = "aadsfasf absbs bbab cadsfafs"', output: '"a a b c"' },
+    ],
+    constraints: ["1 ≤ dictionary.length ≤ 1000", "1 ≤ sentence.length ≤ 1000"],
+    conceptOverview: "Insert all dictionary roots into a Trie. For each word in the sentence, walk the Trie from character 0. Stop at the first prefix marked as a root.",
+    patternRecognition: "**Pattern: Trie Shortest Prefix Search**\n\nTrie stores root words. Walking down character by character returns the shortest matching prefix in O(length of word) time.",
+    sampleTests: [
+      { name: "Replace cattle and ratings", input: [["cat","bat","rat"], "the cattle was meowed by the ratings"], expected: "the cat was meowed by the rat" },
+    ],
+    starterCode: "/**\n * @param {string[]} dictionary\n * @param {string} sentence\n * @return {string}\n */\nfunction replaceWords(dictionary, sentence) {\n  // Write your solution here\n}",
+    hints: ["Build a Trie from `dictionary`.", "Mark `isWord = true` at the end of each root.", "For each word in `sentence`, search Trie and return the shortest prefix."],
+    bruteForceSolution: { code: "function replaceWords(dict, sentence) {\n  const roots = dict.sort((a, b) => a.length - b.length);\n  return sentence.split(' ').map(word => {\n    const r = roots.find(root => word.startsWith(root));\n    return r || word;\n  }).join(' ');\n}", timeComplexity: "O(N × M)", spaceComplexity: "O(K)", explanation: "Sort roots by length and check `startsWith`." },
+    optimizedSolution: { code: "function replaceWords(dict, sentence) {\n  class Node { constructor() { this.children = {}; this.word = null; } }\n  const root = new Node();\n  for (const w of dict) {\n    let curr = root;\n    for (const ch of w) {\n      if (!curr.children[ch]) curr.children[ch] = new Node();\n      curr = curr.children[ch];\n    }\n    curr.word = w;\n  }\n  return sentence.split(' ').map(word => {\n    let curr = root;\n    for (const ch of word) {\n      if (!curr.children[ch] || curr.word) break;\n      curr = curr.children[ch];\n    }\n    return curr.word || word;\n  }).join(' ');\n}", timeComplexity: "O(Sum of words)", spaceComplexity: "O(Trie size)", explanation: "Trie prefix lookup." },
+    interviewExplanation: "1. Store all roots in Trie\n2. Traverse Trie for each word: stop immediately when `curr.word` is found (gives shortest prefix)\n3. Rejoin words into sentence",
+    tests: [
+      { name: "Replaces roots correctly", validate: (code) => { try { return new Function(`${code}; return replaceWords(["cat","bat","rat"], "the cattle was meowed by the ratings");`)() === "the cat was meowed by the rat"; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "single-number", number: 136, title: "Single Number", difficulty: "Easy",
+    topics: ["bit-manipulation", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 72, xp: 15,
+    problemStatement: "Given a non-empty array of integers `nums`, every element appears twice except for one. Find that single one. You must implement a solution with a linear runtime complexity and use only constant extra space.",
+    examples: [
+      { input: "nums = [2,2,1]", output: "1" },
+      { input: "nums = [4,1,2,1,2]", output: "4" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 3 * 10⁴", "Every element appears twice except one"],
+    conceptOverview: "Use XOR property: `a ^ a = 0` and `a ^ 0 = a`. XORing all numbers cancels out all duplicate pairs, leaving only the unique number.",
+    patternRecognition: "**Pattern: XOR Cancellation**\n\n`x ^ x = 0`. Accumulate XOR across the entire array in a single variable.",
+    sampleTests: [
+      { name: "Single number 4", input: [[4,1,2,1,2]], expected: 4 },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @return {number}\n */\nfunction singleNumber(nums) {\n  // Write your solution here\n}",
+    hints: ["XOR of a number with itself is 0.", "XOR of a number with 0 is the number.", "XOR is commutative and associative."],
+    bruteForceSolution: { code: "function singleNumber(nums) {\n  const map = new Map();\n  for (const n of nums) map.set(n, (map.get(n) || 0) + 1);\n  for (const [k, v] of map) if (v === 1) return k;\n}", timeComplexity: "O(n)", spaceComplexity: "O(n)", explanation: "Hash map frequency count." },
+    optimizedSolution: { code: "function singleNumber(nums) {\n  return nums.reduce((acc, num) => acc ^ num, 0);\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "XOR accumulation." },
+    interviewExplanation: "1. XORing two equal numbers yields 0\n2. Order of XOR does not matter\n3. All pairs cancel out to 0; single number remains",
+    tests: [
+      { name: "Returns 4 for [4,1,2,1,2]", validate: (code) => { try { return new Function(`${code}; return singleNumber([4,1,2,1,2]);`)() === 4; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "counting-bits", number: 338, title: "Counting Bits", difficulty: "Easy",
+    topics: ["bit-manipulation", "dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 77, xp: 15,
+    problemStatement: "Given an integer `n`, return an array `ans` of length `n + 1` such that for each `i` (`0 ≤ i ≤ n`), `ans[i]` is the number of `1`'s in the binary representation of `i`.",
+    examples: [
+      { input: "n = 2", output: "[0,1,1]" },
+      { input: "n = 5", output: "[0,1,1,2,1,2]" },
+    ],
+    constraints: ["0 ≤ n ≤ 10⁵"],
+    conceptOverview: "Bit DP recurrence: `ans[i] = ans[i >> 1] + (i & 1)`. Right shifting divides by 2, leaving the last bit `(i & 1)` to be added.",
+    patternRecognition: "**Pattern: Bit DP Relation**\n\n`ans[i] = ans[i >> 1] + (i & 1)`. Uses previously computed values in O(1) per number.",
+    sampleTests: [
+      { name: "Bits up to 5", input: [5], expected: [0,1,1,2,1,2] },
+    ],
+    starterCode: "/**\n * @param {number} n\n * @return {number[]}\n */\nfunction countBits(n) {\n  // Write your solution here\n}",
+    hints: ["Use DP: `ans[i] = ans[i >> 1] + (i & 1)`.", "Or `ans[i] = ans[i & (i - 1)] + 1`."],
+    bruteForceSolution: { code: "function countBits(n) {\n  const res = [];\n  for (let i = 0; i <= n; i++) {\n    let count = 0, num = i;\n    while (num > 0) { count += num & 1; num >>= 1; }\n    res.push(count);\n  }\n  return res;\n}", timeComplexity: "O(n log n)", spaceComplexity: "O(n)", explanation: "Count set bits individually per number." },
+    optimizedSolution: { code: "function countBits(n) {\n  const ans = new Array(n + 1).fill(0);\n  for (let i = 1; i <= n; i++) ans[i] = ans[i >> 1] + (i & 1);\n  return ans;\n}", timeComplexity: "O(n)", spaceComplexity: "O(n)", explanation: "Bit DP: `ans[i] = ans[i >> 1] + (i & 1)`." },
+    interviewExplanation: "1. Right shift `i >> 1` removes lowest bit\n2. Number of set bits in `i` equals set bits in `i >> 1` plus the lowest bit `i & 1`\n3. Computes entire array in linear O(n) time",
+    tests: [
+      { name: "Returns [0,1,1,2,1,2] for 5", validate: (code) => { try { return JSON.stringify(new Function(`${code}; return countBits(5);`)()) === '[0,1,1,2,1,2]'; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "max-consecutive-ones-iii", number: 1004, title: "Max Consecutive Ones III", difficulty: "Medium",
+    topics: ["sliding-window", "arrays"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 63, xp: 20,
+    problemStatement: "Given a binary array `nums` and an integer `k`, return the maximum number of consecutive `1`'s in the array if you can flip at most `k` `0`'s.",
+    examples: [
+      { input: "nums = [1,1,1,0,0,0,1,1,1,1,0], k = 2", output: "6", explanation: "[1,1,1,0,0,1,1,1,1,1,1]" },
+      { input: "nums = [0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1], k = 3", output: "10" },
+    ],
+    constraints: ["1 ≤ nums.length ≤ 10⁵", "nums[i] is 0 or 1", "0 ≤ k ≤ nums.length"],
+    conceptOverview: "Sliding window model: find the longest subarray containing at most `k` zeros. Expand right pointer `r`. When zero count > k, shrink left pointer `l`.",
+    patternRecognition: "**Pattern: Variable-Size Sliding Window**\n\nWindow contains at most `k` zeros. Max length = `max(r - l + 1)`.",
+    sampleTests: [
+      { name: "Max 6 ones with k=2", input: [[1,1,1,0,0,0,1,1,1,1,0], 2], expected: 6 },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction longestOnes(nums, k) {\n  // Write your solution here\n}",
+    hints: ["Maintain a sliding window `[l, r]`.", "Count zeros in current window.", "If zeros > k, increment `l` and decrement zero count if `nums[l] === 0`."],
+    bruteForceSolution: { code: "function longestOnes(nums, k) {\n  let maxLen = 0;\n  for (let l = 0; l < nums.length; l++) {\n    let zeros = 0;\n    for (let r = l; r < nums.length; r++) {\n      if (nums[r] === 0) zeros++;\n      if (zeros <= k) maxLen = Math.max(maxLen, r - l + 1);\n      else break;\n    }\n  }\n  return maxLen;\n}", timeComplexity: "O(n²)", spaceComplexity: "O(1)", explanation: "Check all subarrays." },
+    optimizedSolution: { code: "function longestOnes(nums, k) {\n  let l = 0, zeros = 0, maxLen = 0;\n  for (let r = 0; r < nums.length; r++) {\n    if (nums[r] === 0) zeros++;\n    while (zeros > k) {\n      if (nums[l] === 0) zeros--;\n      l++;\n    }\n    maxLen = Math.max(maxLen, r - l + 1);\n  }\n  return maxLen;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Sliding window with two pointers." },
+    interviewExplanation: "1. Equivalent to finding longest subarray with at most k zeros\n2. Expand right pointer `r`\n3. If zero count exceeds k, contract left pointer `l` until valid\n4. Single pass O(n)",
+    tests: [
+      { name: "Returns 6 for sample", validate: (code) => { try { return new Function(`${code}; return longestOnes([1,1,1,0,0,0,1,1,1,1,0], 2);`)() === 6; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "kth-largest-element-in-an-array", number: 215, title: "Kth Largest Element in an Array", difficulty: "Medium",
+    topics: ["heap", "sorting"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 67, xp: 20,
+    problemStatement: "Given an integer array `nums` and an integer `k`, return the `k`th largest element in the array. Note that it is the `k`th largest element in sorted order, not the `k`th distinct element.",
+    examples: [
+      { input: "nums = [3,2,1,5,6,4], k = 2", output: "5" },
+      { input: "nums = [3,2,3,1,2,4,5,5,6], k = 4", output: "4" },
+    ],
+    constraints: ["1 ≤ k ≤ nums.length ≤ 10⁵", "-10⁴ ≤ nums[i] ≤ 10⁴"],
+    conceptOverview: "Use a Min-Heap of size `k` or QuickSelect. Min-Heap keeps the `k` largest elements; root of heap is the `k`th largest.",
+    patternRecognition: "**Pattern: Min-Heap of Size K / QuickSelect**\n\nMin-heap of size `k` holds the top `k` elements seen so far. Root is the `k`th largest.",
+    sampleTests: [
+      { name: "2nd largest in [3,2,1,5,6,4]", input: [[3,2,1,5,6,4], 2], expected: 5 },
+    ],
+    starterCode: "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction findKthLargest(nums, k) {\n  // Write your solution here\n}",
+    hints: ["Sorting takes O(n log n).", "Min-heap of size k takes O(n log k).", "QuickSelect gives O(n) average time complexity."],
+    bruteForceSolution: { code: "function findKthLargest(nums, k) {\n  nums.sort((a, b) => b - a);\n  return nums[k - 1];\n}", timeComplexity: "O(n log n)", spaceComplexity: "O(1)", explanation: "Sort descending and take index k-1." },
+    optimizedSolution: { code: "function findKthLargest(nums, k) {\n  const target = nums.length - k;\n  function quickSelect(l, r) {\n    const pivot = nums[r];\n    let p = l;\n    for (let i = l; i < r; i++) {\n      if (nums[i] <= pivot) { [nums[p], nums[i]] = [nums[i], nums[p]]; p++; }\n    }\n    [nums[p], nums[r]] = [nums[r], nums[p]];\n    if (p === target) return nums[p];\n    return p < target ? quickSelect(p + 1, r) : quickSelect(l, p - 1);\n  }\n  return quickSelect(0, nums.length - 1);\n}", timeComplexity: "O(n) Average", spaceComplexity: "O(1)", explanation: "QuickSelect algorithm." },
+    interviewExplanation: "1. QuickSelect partition strategy finds target position `n - k`\n2. Average O(n) runtime\n3. Alternatively, Min-Heap of size k gives guaranteed O(n log k)",
+    tests: [
+      { name: "Returns 5 for k=2", validate: (code) => { try { return new Function(`${code}; return findKthLargest([3,2,1,5,6,4], 2);`)() === 5; } catch { return false; } } },
+    ],
+  },
+
+  // ═════════════════════════════════════════════════
+  // STRINGS SECTION
+  // ═════════════════════════════════════════════════
+
+  {
+    id: "valid-palindrome", number: 125, title: "Valid Palindrome", difficulty: "Easy",
+    topics: ["strings", "two-pointers"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple", "Bloomberg"],
+    acceptance: 45, xp: 15,
+    problemStatement: "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Given a string `s`, return `true` if it is a palindrome, or `false` otherwise.",
+    examples: [
+      { input: 's = "A man, a plan, a canal: Panama"', output: "true", explanation: '"amanaplanacanalpanama" is a palindrome.' },
+      { input: 's = "race a car"', output: "false" },
+      { input: 's = " "', output: "true" },
+    ],
+    constraints: ["1 ≤ s.length ≤ 2 * 10⁵", "s consists only of printable ASCII characters"],
+    conceptOverview: "Use two pointers starting from left and right. Skip non-alphanumeric characters and compare lowercase versions of characters until pointers meet.",
+    patternRecognition: "**Pattern: Two Pointers Inward Scan**\n\nIncrement `left` and decrement `right`, skipping non-alphanumeric chars. If `s[left].toLowerCase() !== s[right].toLowerCase()`, return false.",
+    sampleTests: [
+      { name: "Valid palindrome phrase", input: ["A man, a plan, a canal: Panama"], expected: true },
+      { name: "Invalid palindrome", input: ["race a car"], expected: false },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @return {boolean}\n */\nfunction isPalindrome(s) {\n  // Write your solution here\n}",
+    hints: ["Clean non-alphanumeric characters using regex or helper method.", "Use two pointers: `left = 0`, `right = s.length - 1`.", "Compare chars in lowercase."],
+    bruteForceSolution: { code: "function isPalindrome(s) {\n  const clean = s.toLowerCase().replace(/[^a-z0-9]/g, '');\n  return clean === clean.split('').reverse().join('');\n}", timeComplexity: "O(n)", spaceComplexity: "O(n)", explanation: "Filter string and check reverse." },
+    optimizedSolution: { code: "function isPalindrome(s) {\n  let l = 0, r = s.length - 1;\n  while (l < r) {\n    while (l < r && !/[a-zA-Z0-9]/.test(s[l])) l++;\n    while (l < r && !/[a-zA-Z0-9]/.test(s[r])) r--;\n    if (s[l].toLowerCase() !== s[r].toLowerCase()) return false;\n    l++; r--;\n  }\n  return true;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Two pointers in-place scan in O(1) extra space." },
+    interviewExplanation: "1. Two pointers from start (`l`) and end (`r`)\n2. Skip non-alphanumeric characters using regex check\n3. Case-insensitive comparison `s[l].toLowerCase() === s[r].toLowerCase()`",
+    tests: [
+      { name: "Valid phrase returns true", validate: (code) => { try { return new Function(`${code}; return isPalindrome("A man, a plan, a canal: Panama");`)() === true; } catch { return false; } } },
+      { name: "'race a car' returns false", validate: (code) => { try { return new Function(`${code}; return isPalindrome("race a car");`)() === false; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "reverse-string", number: 344, title: "Reverse String", difficulty: "Easy",
+    topics: ["strings", "two-pointers"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 77, xp: 15,
+    problemStatement: "Write a function that reverses a string. The input string is given as an array of characters `s`. You must do this by modifying the input array in-place with O(1) extra memory.",
+    examples: [
+      { input: 's = ["h","e","l","l","o"]', output: '["o","l","l","e","h"]' },
+      { input: 's = ["H","a","n","n","a","h"]', output: '["h","a","n","n","a","H"]' },
+    ],
+    constraints: ["1 ≤ s.length ≤ 10⁵", "s[i] is a printable ASCII character"],
+    conceptOverview: "Swap elements at left and right pointers in-place, moving pointers inward until they meet.",
+    patternRecognition: "**Pattern: In-Place Two Pointers Swap**\n\n`[s[l], s[r]] = [s[r], s[l]]`, `l++`, `r--`.",
+    sampleTests: [
+      { name: "Reverse 'hello'", input: [["h","e","l","l","o"]], expected: ["o","l","l","e","h"] },
+    ],
+    starterCode: "/**\n * @param {character[]} s\n * @return {void} Do not return anything, modify s in-place instead.\n */\nfunction reverseString(s) {\n  // Write your solution here\n}",
+    hints: ["Use two pointers at indices 0 and s.length - 1.", "Swap elements and move pointers toward center."],
+    bruteForceSolution: { code: "function reverseString(s) {\n  let l = 0, r = s.length - 1;\n  while (l < r) {\n    const temp = s[l];\n    s[l] = s[r];\n    s[r] = temp;\n    l++; r--;\n  }\n  return s;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Two-pointer swap in-place." },
+    optimizedSolution: { code: "function reverseString(s) {\n  let l = 0, r = s.length - 1;\n  while (l < r) {\n    [s[l], s[r]] = [s[r], s[l]];\n    l++; r--;\n  }\n  return s;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "In-place array element swap." },
+    interviewExplanation: "1. Two pointers `l=0` and `r=s.length-1`\n2. Swap elements at `l` and `r` in place\n3. Increment `l`, decrement `r` until `l >= r`",
+    tests: [
+      { name: "Reverses in-place", validate: (code) => { try { const arr = ["h","e","l","l","o"]; new Function(`const s = arguments[0]; ${code}; reverseString(s);`)(arr); return JSON.stringify(arr) === '["o","l","l","e","h"]'; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "longest-common-prefix", number: 14, title: "Longest Common Prefix", difficulty: "Easy",
+    topics: ["strings"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft", "Apple"],
+    acceptance: 41, xp: 15,
+    problemStatement: "Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an empty string `\"\"`.",
+    examples: [
+      { input: 'strs = ["flower","flow","flight"]', output: '"fl"' },
+      { input: 'strs = ["dog","racecar","car"]', output: '""' },
+    ],
+    constraints: ["1 ≤ strs.length ≤ 200", "0 ≤ strs[i].length ≤ 200"],
+    conceptOverview: "Take the first string as initial prefix. For each subsequent string, shrink prefix while `strs[i]` does not start with prefix.",
+    patternRecognition: "**Pattern: Horizontal / Vertical Scanning**\n\nSet `prefix = strs[0]`. While `strs[i].indexOf(prefix) !== 0`, trim last character of `prefix`.",
+    sampleTests: [
+      { name: "Prefix of flower, flow, flight", input: [["flower","flow","flight"]], expected: "fl" },
+    ],
+    starterCode: "/**\n * @param {string[]} strs\n * @return {string}\n */\nfunction longestCommonPrefix(strs) {\n  // Write your solution here\n}",
+    hints: ["Start with prefix = strs[0].", "Trim prefix character by character until all strings match it at index 0."],
+    bruteForceSolution: { code: "function longestCommonPrefix(strs) {\n  if (!strs.length) return '';\n  let pref = strs[0];\n  for (let i = 1; i < strs.length; i++) {\n    while (strs[i].indexOf(pref) !== 0) {\n      pref = pref.substring(0, pref.length - 1);\n      if (!pref) return '';\n    }\n  }\n  return pref;\n}", timeComplexity: "O(S)", spaceComplexity: "O(1)", explanation: "Horizontal prefix reduction." },
+    optimizedSolution: { code: "function longestCommonPrefix(strs) {\n  if (!strs.length) return '';\n  let pref = strs[0];\n  for (let i = 1; i < strs.length; i++) {\n    while (strs[i].indexOf(pref) !== 0) {\n      pref = pref.slice(0, -1);\n      if (!pref) return '';\n    }\n  }\n  return pref;\n}", timeComplexity: "O(S)", spaceComplexity: "O(1)", explanation: "Prefix trimming." },
+    interviewExplanation: "1. Assume initial prefix is first string `strs[0]`\n2. Iterate through rest of strings, shortening `pref` until `strs[i]` starts with `pref`\n3. If `pref` becomes empty, no common prefix exists",
+    tests: [
+      { name: "Returns 'fl'", validate: (code) => { try { return new Function(`${code}; return longestCommonPrefix(["flower","flow","flight"]);`)() === "fl"; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "is-subsequence", number: 392, title: "Is Subsequence", difficulty: "Easy",
+    topics: ["strings", "two-pointers"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 47, xp: 15,
+    problemStatement: "Given two strings `s` and `t`, return `true` if `s` is a subsequence of `t`, or `false` otherwise. A subsequence is formed by deleting some (or no) characters without changing the relative order of remaining characters.",
+    examples: [
+      { input: 's = "abc", t = "ahbgdc"', output: "true" },
+      { input: 's = "axc", t = "ahbgdc"', output: "false" },
+    ],
+    constraints: ["0 ≤ s.length ≤ 100", "0 ≤ t.length ≤ 10⁴"],
+    conceptOverview: "Use two pointers `i` and `j` for `s` and `t`. Advance `j` through `t`, advancing `i` whenever `s[i] === t[j]`. Return `i === s.length`.",
+    patternRecognition: "**Pattern: Greedy Two Pointers Scan**\n\n`i` points to `s`, `j` points to `t`. When `s[i] === t[j]`, increment `i`. Always increment `j`.",
+    sampleTests: [
+      { name: "'abc' in 'ahbgdc'", input: ["abc", "ahbgdc"], expected: true },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @param {string} t\n * @return {boolean}\n */\nfunction isSubsequence(s, t) {\n  // Write your solution here\n}",
+    hints: ["Use two pointers.", "Move pointer `i` in `s` only when matching character is found in `t`.", "Return `i === s.length` at the end."],
+    bruteForceSolution: { code: "function isSubsequence(s, t) {\n  let i = 0, j = 0;\n  while (i < s.length && j < t.length) {\n    if (s[i] === t[j]) i++;\n    j++;\n  }\n  return i === s.length;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Two pointers linear scan." },
+    optimizedSolution: { code: "function isSubsequence(s, t) {\n  let i = 0, j = 0;\n  while (i < s.length && j < t.length) {\n    if (s[i] === t[j]) i++;\n    j++;\n  }\n  return i === s.length;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Single pass two pointers." },
+    interviewExplanation: "1. Two pointers: `i` for target string `s`, `j` for source string `t`\n2. Advance `i` only when characters match\n3. If `i` reaches `s.length`, all characters matched in order",
+    tests: [
+      { name: "'abc' in 'ahbgdc' returns true", validate: (code) => { try { return new Function(`${code}; return isSubsequence("abc", "ahbgdc");`)() === true; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "palindromic-substrings", number: 647, title: "Palindromic Substrings", difficulty: "Medium",
+    topics: ["strings", "dp"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 68, xp: 20,
+    problemStatement: "Given a string `s`, return the number of palindromic substrings in it. A string is a palindrome when it reads the same backward as forward.",
+    examples: [
+      { input: 's = "abc"', output: "3", explanation: "Three palindromic strings: 'a', 'b', 'c'." },
+      { input: 's = "aaa"', output: "6", explanation: "Six palindromic strings: 'a', 'a', 'a', 'aa', 'aa', 'aaa'." },
+    ],
+    constraints: ["1 ≤ s.length ≤ 1000", "s consists of lowercase English letters"],
+    conceptOverview: "Expand around centers. For each index, expand outward for odd-length palindromes (center at `i`) and even-length palindromes (center between `i` and `i+1`).",
+    patternRecognition: "**Pattern: Expand Around Center**\n\nFor each index `i`, run expansion helper for odd `(i, i)` and even `(i, i+1)` centers.",
+    sampleTests: [
+      { name: "Palindromes in 'aaa'", input: ["aaa"], expected: 6 },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @return {number}\n */\nfunction countSubstrings(s) {\n  // Write your solution here\n}",
+    hints: ["Every single character is a palindrome.", "Expand outward from each character (odd length) and pair of characters (even length)."],
+    bruteForceSolution: { code: "function countSubstrings(s) {\n  let count = 0;\n  function isPal(str) { return str === str.split('').reverse().join(''); }\n  for (let i = 0; i < s.length; i++)\n    for (let j = i + 1; j <= s.length; j++)\n      if (isPal(s.slice(i, j))) count++;\n  return count;\n}", timeComplexity: "O(n³)", spaceComplexity: "O(n)", explanation: "Check every substring with reversal." },
+    optimizedSolution: { code: "function countSubstrings(s) {\n  let count = 0;\n  function expand(l, r) {\n    while (l >= 0 && r < s.length && s[l] === s[r]) {\n      count++; l--; r++;\n    }\n  }\n  for (let i = 0; i < s.length; i++) {\n    expand(i, i);\n    expand(i, i + 1);\n  }\n  return count;\n}", timeComplexity: "O(n²)", spaceComplexity: "O(1)", explanation: "Expand around 2n - 1 centers." },
+    interviewExplanation: "1. There are 2n - 1 potential palindrome centers (n single characters, n - 1 adjacent pairs)\n2. Expand outward while characters match\n3. Increment count for each successful expansion in O(1) space",
+    tests: [
+      { name: "Returns 6 for 'aaa'", validate: (code) => { try { return new Function(`${code}; return countSubstrings("aaa");`)() === 6; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "string-compression", number: 443, title: "String Compression", difficulty: "Medium",
+    topics: ["strings", "two-pointers"],
+    companies: ["Amazon", "Google", "Microsoft", "Meta"],
+    acceptance: 53, xp: 20,
+    problemStatement: "Given an array of characters `chars`, compress it in-place using the following algorithm: Begin with an empty string `s`. For each group of consecutive repeating characters in `chars`: if length is 1, append the char; if length > 1, append char followed by length. Return the new length.",
+    examples: [
+      { input: 'chars = ["a","a","b","b","c","c","c"]', output: '6', explanation: 'Compressed to ["a","2","b","2","c","3"]' },
+      { input: 'chars = ["a"]', output: '1' },
+      { input: 'chars = ["a","b","b","b","b","b","b","b","b","b","b","b","b"]', output: '4', explanation: '["a","b","1","2"]' },
+    ],
+    constraints: ["1 ≤ chars.length ≤ 2000"],
+    conceptOverview: "Use read and write pointers. Count consecutive identical characters with `read` pointer, write character and count digits to `write` pointer in-place.",
+    patternRecognition: "**Pattern: Read / Write Pointers**\n\nTrack consecutive duplicates using `read`. Write char and count digits into `chars[write++]`.",
+    sampleTests: [
+      { name: "Compress ['a','a','b','b','c','c','c']", input: [["a","a","b","b","c","c","c"]], expected: 6 },
+    ],
+    starterCode: "/**\n * @param {character[]} chars\n * @return {number}\n */\nfunction compress(chars) {\n  // Write your solution here\n}",
+    hints: ["Use two pointers: `read` for scanning, `write` for in-place writing.", "Count consecutive duplicates.", "If count > 1, write count digits as characters."],
+    bruteForceSolution: { code: "function compress(chars) {\n  let write = 0, read = 0;\n  while (read < chars.length) {\n    const char = chars[read];\n    let count = 0;\n    while (read < chars.length && chars[read] === char) { read++; count++; }\n    chars[write++] = char;\n    if (count > 1) {\n      for (const c of String(count)) chars[write++] = c;\n    }\n  }\n  return write;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Read/write two pointers." },
+    optimizedSolution: { code: "function compress(chars) {\n  let write = 0, read = 0;\n  while (read < chars.length) {\n    const char = chars[read];\n    let count = 0;\n    while (read < chars.length && chars[read] === char) { read++; count++; }\n    chars[write++] = char;\n    if (count > 1) {\n      for (const digit of String(count)) chars[write++] = digit;\n    }\n  }\n  return write;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "In-place single pass read/write pointers." },
+    interviewExplanation: "1. `read` pointer scans run lengths of consecutive identical characters\n2. Write character to `chars[write++]`\n3. If count > 1, convert count to string and write digits into `chars` array\n4. Return final `write` index",
+    tests: [
+      { name: "Returns compressed length 6", validate: (code) => { try { const c = ["a","a","b","b","c","c","c"]; return new Function(`const chars = arguments[0]; ${code}; return compress(chars);`)(c) === 6; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "find-all-anagrams-in-a-string", number: 438, title: "Find All Anagrams in a String", difficulty: "Medium",
+    topics: ["strings", "sliding-window", "hash-map"],
+    companies: ["Amazon", "Google", "Meta", "Microsoft"],
+    acceptance: 50, xp: 20,
+    problemStatement: "Given two strings `s` and `p`, return an array of all the start indices of `p`'s anagrams in `s`. You may return the answer in any order.",
+    examples: [
+      { input: 's = "cbaebabacd", p = "abc"', output: "[0,6]", explanation: "Anagrams 'cba' at 0 and 'bac' at 6." },
+      { input: 's = "abab", p = "ab"', output: "[0,1,2]" },
+    ],
+    constraints: ["1 ≤ s.length, p.length ≤ 3 * 10⁴"],
+    conceptOverview: "Fixed-size sliding window of length `p.length`. Maintain character frequency counts for `p` and current window in `s`. Compare counts at each step.",
+    patternRecognition: "**Pattern: Fixed-size Sliding Window Frequency Match**\n\nMaintain frequency map of size `p.length`. Slide window right by adding new char and removing left char.",
+    sampleTests: [
+      { name: "Anagram indices for 'abc' in 'cbaebabacd'", input: ["cbaebabacd", "abc"], expected: [0,6] },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @param {string} p\n * @return {number[]}\n */\nfunction findAnagrams(s, p) {\n  // Write your solution here\n}",
+    hints: ["Use fixed window size of p.length.", "Maintain frequency array/map for p and window in s.", "Slide window and update frequency counts in O(1)."],
+    bruteForceSolution: { code: "function findAnagrams(s, p) {\n  const res = [];\n  const pSorted = p.split('').sort().join('');\n  const len = p.length;\n  for (let i = 0; i <= s.length - len; i++) {\n    if (s.slice(i, i + len).split('').sort().join('') === pSorted) res.push(i);\n  }\n  return res;\n}", timeComplexity: "O(n × k log k)", spaceComplexity: "O(k)", explanation: "Sort each substring." },
+    optimizedSolution: { code: "function findAnagrams(s, p) {\n  const res = [];\n  if (s.length < p.length) return res;\n  const pCount = new Array(26).fill(0), sCount = new Array(26).fill(0);\n  const a = 'a'.charCodeAt(0);\n  for (let i = 0; i < p.length; i++) {\n    pCount[p.charCodeAt(i) - a]++;\n    sCount[s.charCodeAt(i) - a]++;\n  }\n  if (pCount.join(',') === sCount.join(',')) res.push(0);\n  for (let i = p.length; i < s.length; i++) {\n    sCount[s.charCodeAt(i) - a]++;\n    sCount[s.charCodeAt(i - p.length) - a]--;\n    if (pCount.join(',') === sCount.join(',')) res.push(i - p.length + 1);\n  }\n  return res;\n}", timeComplexity: "O(n)", spaceComplexity: "O(1)", explanation: "Sliding window with frequency array comparison." },
+    interviewExplanation: "1. Character frequency arrays of size 26 for string `p` and active window in `s`\n2. Slide window of size `p.length` across `s`\n3. Update frequencies in O(1) time per step\n4. Push index whenever frequencies match",
+    tests: [
+      { name: "Returns [0,6]", validate: (code) => { try { return JSON.stringify(new Function(`${code}; return findAnagrams("cbaebabacd", "abc");`)()) === '[0,6]'; } catch { return false; } } },
+    ],
+  },
+  {
+    id: "zigzag-conversion", number: 6, title: "Zigzag Conversion", difficulty: "Medium",
+    topics: ["strings"],
+    companies: ["Amazon", "Google", "Microsoft", "Meta"],
+    acceptance: 46, xp: 20,
+    problemStatement: "The string `\"PAYPALISHIRING\"` is written in a zigzag pattern on a given number of rows like this: \n\nP   A   H   N\nA P L S I I G\nY   I   R\n\nAnd then read line by line: `\"PAHNAPLSIIGYIR\"`. Write the code that will take a string and make this conversion given a number of rows.",
+    examples: [
+      { input: 's = "PAYPALISHIRING", numRows = 3', output: '"PAHNAPLSIIGYIR"' },
+      { input: 's = "PAYPALISHIRING", numRows = 4', output: '"PINALSIGYAHRPI"' },
+    ],
+    constraints: ["1 ≤ s.length ≤ 1000", "1 ≤ numRows ≤ 1000"],
+    conceptOverview: "Simulate writing to rows. Maintain current row index and direction (`+1` down, `-1` up). Reverse direction whenever top or bottom row is reached.",
+    patternRecognition: "**Pattern: Row Simulation with Direction Toggle**\n\nMaintain `rows[]` array. Append char to `rows[currRow]`. Change direction when hitting `row == 0` or `row == numRows - 1`.",
+    sampleTests: [
+      { name: "PAYPALISHIRING with 3 rows", input: ["PAYPALISHIRING", 3], expected: "PAHNAPLSIIGYIR" },
+    ],
+    starterCode: "/**\n * @param {string} s\n * @param {number} numRows\n * @return {string}\n */\nfunction convert(s, numRows) {\n  // Write your solution here\n}",
+    hints: ["If numRows === 1 or numRows >= s.length, return s.", "Create an array of strings of length Math.min(numRows, s.length).", "Use a boolean or direction variable to change direction at top and bottom."],
+    bruteForceSolution: { code: "function convert(s, numRows) {\n  if (numRows === 1 || s.length <= numRows) return s;\n  const rows = Array.from({length: numRows}, () => '');\n  let curRow = 0, goingDown = false;\n  for (const c of s) {\n    rows[curRow] += c;\n    if (curRow === 0 || curRow === numRows - 1) goingDown = !goingDown;\n    curRow += goingDown ? 1 : -1;\n  }\n  return rows.join('');\n}", timeComplexity: "O(n)", spaceComplexity: "O(n)", explanation: "Row-by-row simulation." },
+    optimizedSolution: { code: "function convert(s, numRows) {\n  if (numRows === 1 || s.length <= numRows) return s;\n  const rows = new Array(numRows).fill('');\n  let curRow = 0, dir = -1;\n  for (const c of s) {\n    rows[curRow] += c;\n    if (curRow === 0 || curRow === numRows - 1) dir = -dir;\n    curRow += dir;\n  }\n  return rows.join('');\n}", timeComplexity: "O(n)", spaceComplexity: "O(n)", explanation: "Direction toggle simulation in O(n)." },
+    interviewExplanation: "1. Maintain string for each row\n2. Step down rows until reaching `numRows - 1`, then reverse direction upward to row 0\n3. Concatenate all rows to produce final output",
+    tests: [
+      { name: "Returns PAHNAPLSIIGYIR", validate: (code) => { try { return new Function(`${code}; return convert("PAYPALISHIRING", 3);`)() === "PAHNAPLSIIGYIR"; } catch { return false; } } },
+    ],
+  },
 ];
+
+
+
+
 
 // ─── HELPERS ───
 

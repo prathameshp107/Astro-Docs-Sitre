@@ -10,13 +10,21 @@ import sidebar from './src/config/sidebar.js';
 import { fileURLToPath, URL } from 'node:url';
 
 const isVercel = !!process.env.VERCEL;
+const isCF = !!process.env.CF_PAGES; // Cloudflare Pages sets this automatically
+
+// Vercel: use the deployment URL, Cloudflare: use CF_PAGES_URL, else GitHub Pages
 const site = isVercel && process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : 'https://prathameshp107.github.io';
+  : isCF && process.env.CF_PAGES_URL
+    ? process.env.CF_PAGES_URL
+    : 'https://prathameshp107.github.io';
+
+// Vercel & Cloudflare deploy to root, GitHub Pages needs the /repo-name base
+const needsBase = !isVercel && !isCF;
 
 export default defineConfig({
   site,
-  ...(isVercel ? {} : { base: '/DSA-Notes-Problems' }),
+  ...(needsBase ? { base: '/DSA-Notes-Problems' } : {}),
   server: {
     host: 'localhost',
     port: 4321,
