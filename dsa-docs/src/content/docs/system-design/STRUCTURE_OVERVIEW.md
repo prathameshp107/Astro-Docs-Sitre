@@ -4,7 +4,7 @@ title: "📁 System Design Content Structure Overview"
 # 📁 System Design Content Structure Overview
 
 > **Location:** `dsa-docs/src/content/docs/system-design/`
-> **Total Files:** 65+ files across 11 sections
+> **Total Files:** 70+ files across 11 sections
 
 ## 📂 Directory Tree
 
@@ -76,7 +76,7 @@ system-design/
 │   ├── trade-off-cheat-sheet.md
 │   └── common-mistakes.md
 │
-└── 📂 11-case-studies/             (25 files)
+└── 📂 11-case-studies/             (30 files)
     ├── design-url-shortener.md
     ├── design-rate-limiter.md
     ├── design-chat-system.md
@@ -101,7 +101,12 @@ system-design/
     ├── design-photo-sharing-app.md
     ├── design-distributed-search-engine.md
     ├── design-api-gateway.md
-    └── design-upi-payment-system.md
+    ├── design-upi-payment-system.md
+    ├── design-short-video-platform.md
+    ├── design-realtime-chat-voice.md
+    ├── design-property-booking.md
+    ├── design-metrics-monitoring.md
+    └── design-distributed-message-queue.md
 ```
 
 ## 📜 Section Summary
@@ -118,7 +123,7 @@ system-design/
 | **08 Reliability & Scale** | 4 | Availability/SLA, rate limiting, circuit breakers, observability |
 | **09 Security** | 3 | Auth/authz, encryption/TLS, common attacks |
 | **10 Interview Guide** | 3 | Framework, trade-off cheat sheet, common mistakes |
-| **11 Case Studies** | 25 | URL shortener, rate limiter, chat, news feed, video streaming, file storage, ride sharing, payment, cache, autocomplete, notifications, web crawler, ticket booking, e-commerce orders, distributed KV store, proximity search, collaborative editing, job scheduling, ad click analytics, distributed locks, Twitter/X timeline, Instagram (image pipeline/Stories/Explore), distributed search engine, API gateway, UPI payment system |
+| **11 Case Studies** | 30 | URL shortener, rate limiter, chat, news feed, video streaming, file storage, ride sharing, payment, cache, autocomplete, notifications, web crawler, ticket booking, e-commerce orders, distributed KV store, proximity search, collaborative editing, job scheduling, ad click analytics, distributed locks, Twitter/X timeline, Instagram (image pipeline/Stories/Explore), distributed search engine, API gateway, UPI payment system, short-video platform (TikTok), real-time chat & voice (Discord), property booking (Airbnb), metrics & monitoring, distributed message queue (Kafka) |
 
 ---
 

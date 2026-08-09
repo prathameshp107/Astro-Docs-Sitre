@@ -5,6 +5,7 @@ import CompanyProblemList from '../../components/companies/CompanyProblemList.js
 import PlanDetail from '../../components/plans/PlanDetail.jsx';
 import { getPlans } from '../../data/plans/index.js';
 import { getJudgeManifest } from '../../data/judge/index.js';
+import { CASE_STUDIES } from '../../data/system-design/caseStudies.js';
 
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
@@ -30,6 +31,13 @@ const { company } = Astro.props;
 const plans = getPlans();
 const plan = plans.find((p) => p.id === company.planRef);
 const problems = getJudgeManifest();
+
+// Cross-link relevant system-design case studies whose `companies` tag
+// mentions this company (e.g. Amazon -> distributed-key-value-store via
+// "Amazon DynamoDB") — substring match since tags aren't always exact names.
+const relevantCaseStudies = CASE_STUDIES.filter((c) =>
+  (c.companies || []).some((co) => co.toLowerCase().includes(company.name.toLowerCase()))
+).slice(0, 5);
 
 const lastVerifiedDate = new Date().toLocaleDateString("en-US", {
   year: 'numeric',
@@ -178,13 +186,32 @@ const faqSchema = {
           <div class="track-section sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
             <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Curated Problem Set</h2>
             <p class="text-[var(--sketch-text-muted)] text-sm mb-6 font-sketch">DSA questions reported in {company.name} interviews, ordered by frequency.</p>
-            <CompanyProblemList 
-              problems={problems} 
-              companyId={company.id} 
-              problemFrequency={company.problemFrequency} 
-              client:only="react" 
+            <CompanyProblemList
+              problems={problems}
+              companyId={company.id}
+              problemFrequency={company.problemFrequency}
+              client:only="react"
             />
           </div>
+
+          {/* Section: Relevant System Design Case Studies */}
+          {relevantCaseStudies.length > 0 && (
+            <div class="track-section sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
+              <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">🏗️ Relevant System Design Case Studies</h2>
+              <p class="text-[var(--sketch-text-muted)] text-sm mb-6 font-sketch">Architecture patterns associated with {company.name} — practice designing these before your interview.</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {relevantCaseStudies.map((c) => (
+                  <a
+                    href={c.interactive ? `${base}system-design/case/${c.slug}` : `${base}system-design/11-case-studies/design-${c.slug}`}
+                    class="sketch-panel-box sketch-border p-4 rounded-2xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)] hover:border-amber-500 transition-all"
+                  >
+                    <div class="font-bold text-sm text-[var(--sketch-text)] mb-1">{c.title}</div>
+                    <div class="text-xs text-[var(--sketch-text-muted)] leading-relaxed">{c.desc}</div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Column: Study Plan & Behavioral */}

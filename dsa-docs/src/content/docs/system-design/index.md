@@ -70,7 +70,7 @@ flowchart TB
 
 ## Case Study Quick Reference
 
-A fast lookup table across all 25 case studies — use it for last-minute revision or to jog your memory on which technique solves which problem.
+A fast lookup table across all 30 case studies — use it for last-minute revision or to jog your memory on which technique solves which problem.
 
 | Case Study | Core Challenge | Key Technique |
 | --- | --- | --- |
@@ -99,3 +99,8 @@ A fast lookup table across all 25 case studies — use it for last-minute revisi
 | Distributed Search Engine | Full-text search ranked by relevance at billions of documents | Sharded inverted index + BM25 scatter-gather |
 | API Gateway | Uniform edge for auth/routing/aggregation across microservices | Middleware pipeline + per-dependency circuit breakers |
 | UPI Payment System | Interbank transfer with no shared ledger between payer/payee banks | Switch-coordinated debit/credit + deferred net settlement |
+| Short-Video Platform (TikTok) | Flaky mobile uploads + a follow-graph-free ranking feed | Parallel chunked uploads + streaming engagement ranking |
+| Real-Time Chat & Voice (Discord) | Broadcasting to large channels + live voice | Cluster-wide pub/sub fan-out + WebRTC SFU |
+| Property & Hotel Booking (Airbnb) | Per-listing date-range availability at search scale | 365-day availability bitmaps + geo-first search |
+| Metrics & Monitoring System | Affordable long-retention time-series at high write volume | Gorilla/XOR compression + downsampling rollups |
+| Distributed Message Queue (Kafka) | Durable, ordered, high-throughput event backbone | Partitioned commit log + ISR replication + zero-copy |

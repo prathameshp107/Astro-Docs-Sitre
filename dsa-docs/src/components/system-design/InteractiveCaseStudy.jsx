@@ -1,65 +1,55 @@
 import { useState, useEffect, useMemo } from 'react';
 import StagedArchitectureDiagram from './StagedArchitectureDiagram.jsx';
+import PracticeMode from './PracticeMode.jsx';
 import BrandIcon from './BrandIcon.jsx';
-import urlShortenerData from '../../data/system-design/diagrams/url-shortener.json';
-import uberData from '../../data/system-design/diagrams/uber.json';
-import whatsappData from '../../data/system-design/diagrams/whatsapp.json';
-import rateLimiterData from '../../data/system-design/diagrams/rate-limiter.json';
-import newsFeedData from '../../data/system-design/diagrams/news-feed.json';
-import videoStreamingData from '../../data/system-design/diagrams/video-streaming.json';
-import notificationSystemData from '../../data/system-design/diagrams/notification-system.json';
-import webCrawlerData from '../../data/system-design/diagrams/web-crawler.json';
-import searchAutocompleteData from '../../data/system-design/diagrams/search-autocomplete.json';
-import distributedCacheData from '../../data/system-design/diagrams/distributed-cache.json';
-import fileStorageData from '../../data/system-design/diagrams/file-storage.json';
-import paymentSystemData from '../../data/system-design/diagrams/payment-system.json';
-import ticketBookingSystemData from '../../data/system-design/diagrams/ticket-booking-system.json';
-import ecommerceOrderSystemData from '../../data/system-design/diagrams/ecommerce-order-system.json';
-import distributedKeyValueStoreData from '../../data/system-design/diagrams/distributed-key-value-store.json';
-import proximityServiceData from '../../data/system-design/diagrams/proximity-service.json';
-import collaborativeEditorData from '../../data/system-design/diagrams/collaborative-editor.json';
-import distributedJobSchedulerData from '../../data/system-design/diagrams/distributed-job-scheduler.json';
-import adClickAggregationData from '../../data/system-design/diagrams/ad-click-aggregation.json';
-import distributedLockServiceData from '../../data/system-design/diagrams/distributed-lock-service.json';
-import tiktokData from '../../data/system-design/diagrams/tiktok.json';
-import discordData from '../../data/system-design/diagrams/discord.json';
-import airbnbData from '../../data/system-design/diagrams/airbnb.json';
-import metricsMonitoringData from '../../data/system-design/diagrams/metrics-monitoring.json';
-import distributedMessageQueueData from '../../data/system-design/diagrams/distributed-message-queue.json';
-import upiPaymentSystemData from '../../data/system-design/diagrams/upi-payment-system.json';
+import { CASE_STUDIES } from '../../data/system-design/caseStudies.js';
+
+// Perf: diagram JSON is loaded lazily per-slug via dynamic import() instead of
+// eagerly importing all ~27 files into this component's bundle — previously
+// every single case-study page shipped every OTHER case study's diagram data
+// too, just to render one. Each entry below code-splits into its own chunk.
+const DIAGRAM_LOADERS = {
+  'url-shortener': () => import('../../data/system-design/diagrams/url-shortener.json'),
+  'uber': () => import('../../data/system-design/diagrams/uber.json'),
+  'ride-sharing': () => import('../../data/system-design/diagrams/uber.json'),
+  'whatsapp': () => import('../../data/system-design/diagrams/whatsapp.json'),
+  'chat-system': () => import('../../data/system-design/diagrams/whatsapp.json'),
+  'rate-limiter': () => import('../../data/system-design/diagrams/rate-limiter.json'),
+  'news-feed': () => import('../../data/system-design/diagrams/news-feed.json'),
+  'video-streaming': () => import('../../data/system-design/diagrams/video-streaming.json'),
+  'notification-system': () => import('../../data/system-design/diagrams/notification-system.json'),
+  'web-crawler': () => import('../../data/system-design/diagrams/web-crawler.json'),
+  'search-autocomplete': () => import('../../data/system-design/diagrams/search-autocomplete.json'),
+  'distributed-cache': () => import('../../data/system-design/diagrams/distributed-cache.json'),
+  'file-storage': () => import('../../data/system-design/diagrams/file-storage.json'),
+  'payment-system': () => import('../../data/system-design/diagrams/payment-system.json'),
+  'ticket-booking-system': () => import('../../data/system-design/diagrams/ticket-booking-system.json'),
+  'ecommerce-order-system': () => import('../../data/system-design/diagrams/ecommerce-order-system.json'),
+  'distributed-key-value-store': () => import('../../data/system-design/diagrams/distributed-key-value-store.json'),
+  'proximity-service': () => import('../../data/system-design/diagrams/proximity-service.json'),
+  'collaborative-editor': () => import('../../data/system-design/diagrams/collaborative-editor.json'),
+  'distributed-job-scheduler': () => import('../../data/system-design/diagrams/distributed-job-scheduler.json'),
+  'ad-click-aggregation': () => import('../../data/system-design/diagrams/ad-click-aggregation.json'),
+  'distributed-lock-service': () => import('../../data/system-design/diagrams/distributed-lock-service.json'),
+  'tiktok': () => import('../../data/system-design/diagrams/tiktok.json'),
+  'discord': () => import('../../data/system-design/diagrams/discord.json'),
+  'airbnb': () => import('../../data/system-design/diagrams/airbnb.json'),
+  'metrics-monitoring': () => import('../../data/system-design/diagrams/metrics-monitoring.json'),
+  'distributed-message-queue': () => import('../../data/system-design/diagrams/distributed-message-queue.json'),
+  'upi-payment-system': () => import('../../data/system-design/diagrams/upi-payment-system.json'),
+};
 
 import '../../styles/sketch-visualizer.css';
 
-const DIAGRAM_MAP = {
-  'url-shortener': urlShortenerData,
-  'uber': uberData,
-  'ride-sharing': uberData,
-  'whatsapp': whatsappData,
-  'chat-system': whatsappData,
-  'rate-limiter': rateLimiterData,
-  'news-feed': newsFeedData,
-  'video-streaming': videoStreamingData,
-  'notification-system': notificationSystemData,
-  'web-crawler': webCrawlerData,
-  'search-autocomplete': searchAutocompleteData,
-  'distributed-cache': distributedCacheData,
-  'file-storage': fileStorageData,
-  'payment-system': paymentSystemData,
-  'ticket-booking-system': ticketBookingSystemData,
-  'ecommerce-order-system': ecommerceOrderSystemData,
-  'distributed-key-value-store': distributedKeyValueStoreData,
-  'proximity-service': proximityServiceData,
-  'collaborative-editor': collaborativeEditorData,
-  'distributed-job-scheduler': distributedJobSchedulerData,
-  'ad-click-aggregation': adClickAggregationData,
-  'distributed-lock-service': distributedLockServiceData,
-  'tiktok': tiktokData,
-  'discord': discordData,
-  'airbnb': airbnbData,
-  'metrics-monitoring': metricsMonitoringData,
-  'distributed-message-queue': distributedMessageQueueData,
-  'upi-payment-system': upiPaymentSystemData,
-};
+// This page's slug vocabulary has a couple of legacy aliases (uber/whatsapp)
+// that don't exist as canonical slugs in caseStudies.js — map them so
+// metadata lookups (hasGuide, topics, related links) still resolve.
+const ALIAS_TO_CANONICAL = { uber: 'ride-sharing', whatsapp: 'chat-system' };
+
+function getSlugTitle(s) {
+  const canonical = ALIAS_TO_CANONICAL[s] || s;
+  return CASE_STUDIES.find((c) => c.slug === canonical)?.title || s;
+}
 
 const ALL_CASE_STUDIES = [
   { slug: 'url-shortener', title: 'Design URL Shortener (TinyURL)' },
@@ -99,9 +89,9 @@ const ARTICLE_SLUG_MAP = {
   'rate-limiter': 'design-rate-limiter',
   'news-feed': 'design-news-feed',
   'video-streaming': 'design-video-streaming',
-  'tiktok': 'design-video-streaming',
-  'discord': 'design-chat-system',
-  'airbnb': 'design-ticket-booking-system',
+  'tiktok': 'design-short-video-platform',
+  'discord': 'design-realtime-chat-voice',
+  'airbnb': 'design-property-booking',
   'notification-system': 'design-notification-system',
   'web-crawler': 'design-web-crawler',
   'search-autocomplete': 'design-search-autocomplete',
@@ -114,8 +104,8 @@ const ARTICLE_SLUG_MAP = {
   'proximity-service': 'design-proximity-service',
   'collaborative-editor': 'design-collaborative-editor',
   'distributed-job-scheduler': 'design-distributed-job-scheduler',
-  'metrics-monitoring': 'design-distributed-cache',
-  'distributed-message-queue': 'design-notification-system',
+  'metrics-monitoring': 'design-metrics-monitoring',
+  'distributed-message-queue': 'design-distributed-message-queue',
   'ad-click-aggregation': 'design-ad-click-aggregation',
   'distributed-lock-service': 'design-distributed-lock-service',
   'upi-payment-system': 'design-upi-payment-system',
@@ -578,12 +568,18 @@ const CASE_STUDY_EXTRAS = {
  */
 export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
   const [slug, setSlug] = useState(initialSlug || 'url-shortener');
+  const [practiceMode, setPracticeMode] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    setRevealed(false); // switching case studies always starts a fresh attempt
+  }, [slug]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const caseParam = params.get('case');
-      if (caseParam && DIAGRAM_MAP[caseParam]) {
+      if (caseParam && DIAGRAM_LOADERS[caseParam]) {
         setSlug(caseParam);
       }
     }
@@ -593,18 +589,34 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
     const newSlug = e.target.value;
     setSlug(newSlug);
     if (typeof window !== 'undefined') {
-      const url = new URL(window.location.href);
-      if (newSlug === 'url-shortener') {
-        url.searchParams.delete('case');
+      if (window.location.pathname.includes('/system-design/case/')) {
+        // Clean-URL route: swap the last path segment, e.g. /system-design/case/uber
+        const newPath = window.location.pathname.replace(/\/case\/[^/]+$/, `/case/${newSlug}`);
+        window.history.pushState({}, '', newPath);
+        document.title = `${getSlugTitle(newSlug)} — Interactive Architecture Walkthrough`;
       } else {
-        url.searchParams.set('case', newSlug);
+        // Legacy url-shortener.astro route: keep the ?case= query param scheme
+        const url = new URL(window.location.href);
+        if (newSlug === 'url-shortener') {
+          url.searchParams.delete('case');
+        } else {
+          url.searchParams.set('case', newSlug);
+        }
+        window.history.pushState({}, '', url.toString());
       }
-      window.history.pushState({}, '', url.toString());
     }
   };
 
-  const diagramData = useMemo(() => {
-    return DIAGRAM_MAP[slug] || urlShortenerData;
+  const [diagramData, setDiagramData] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setDiagramData(null); // show the loading skeleton immediately on slug switch
+    const loader = DIAGRAM_LOADERS[slug] || DIAGRAM_LOADERS['url-shortener'];
+    loader().then((mod) => {
+      if (!cancelled) setDiagramData(mod.default || mod);
+    });
+    return () => { cancelled = true; };
   }, [slug]);
 
   const extras = useMemo(() => {
@@ -612,6 +624,23 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
   }, [slug]);
 
   const articleDocSlug = ARTICLE_SLUG_MAP[slug] || (slug.startsWith('design-') ? slug : `design-${slug}`);
+
+  const caseMeta = useMemo(() => {
+    const canonicalSlug = ALIAS_TO_CANONICAL[slug] || slug;
+    return CASE_STUDIES.find((c) => c.slug === canonicalSlug);
+  }, [slug]);
+
+  const relatedCases = useMemo(() => {
+    const canonicalSlug = ALIAS_TO_CANONICAL[slug] || slug;
+    const myTopics = caseMeta?.topics || [];
+    const candidates = CASE_STUDIES.filter((c) => c.interactive && c.slug !== canonicalSlug);
+
+    const scored = candidates
+      .map((c) => ({ c, shared: (c.topics || []).filter((t) => myTopics.includes(t)).length }))
+      .sort((a, b) => b.shared - a.shared);
+
+    return scored.slice(0, 3).map((s) => s.c);
+  }, [slug, caseMeta]);
 
   const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
     ? import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -630,7 +659,16 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
             ← Back to System Design Hub
           </a>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => { setPracticeMode((p) => !p); setRevealed(false); }}
+              aria-pressed={practiceMode}
+              className={`sketch-button text-xs font-bold px-3 py-1.5 rounded-xl transition-all ${
+                practiceMode ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : ''
+              }`}
+            >
+              {practiceMode ? '🎯 Exit Practice Mode' : '🎯 Practice Mode'}
+            </button>
             <label htmlFor="case-study-select" className="text-xs font-mono font-bold text-amber-500 uppercase tracking-wider hidden sm:inline">
               Switch Case Study:
             </label>
@@ -654,17 +692,17 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
           <div className="flex items-center justify-center gap-3 mb-2 flex-wrap">
             <BrandIcon slug={slug} size={32} />
             <h1 className="font-header font-bold text-2xl md:text-3xl text-[var(--sketch-text)]">
-              {diagramData.title}
+              {diagramData?.title || caseMeta?.title || slug}
             </h1>
           </div>
           <p className="text-[var(--sketch-text-muted)] text-xs md:text-sm max-w-2xl mx-auto leading-relaxed mb-3">
-            {diagramData.subtitle}
+            {diagramData?.subtitle || caseMeta?.desc || ''}
           </p>
 
           {/* Quick Badges */}
           <div className="flex items-center justify-center gap-3 text-xs font-mono">
             <span className="sketch-border-soft px-3 py-1 bg-amber-500/10 text-amber-400 border-amber-500/30 rounded-full font-bold">
-              📐 {diagramData.stages?.length || 0} Evolutionary Stages
+              📐 {diagramData ? `${diagramData.stages?.length || 0} Evolutionary Stages` : 'Loading stages…'}
             </span>
             <span className="sketch-border-soft px-3 py-1 bg-emerald-500/10 text-emerald-400 border-emerald-500/30 rounded-full font-bold">
               ⏱️ ~5 Min Walkthrough
@@ -673,9 +711,23 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
         </div>
       </section>
 
+      {practiceMode && !revealed ? (
+        <PracticeMode
+          slug={slug}
+          caseTitle={diagramData?.title || caseMeta?.title || slug}
+          onReveal={() => setRevealed(true)}
+        />
+      ) : (
+      <>
       {/* Diagram Canvas Box */}
       <div className="case-study-diagram-wrap sketch-border bg-[var(--sketch-bg-dim)] p-4 md:p-6 rounded-3xl border-2 border-[var(--sketch-border)] shadow-2xl mb-8">
-        <StagedArchitectureDiagram key={slug} diagramData={diagramData} />
+        {diagramData?.stages?.length > 0 ? (
+          <StagedArchitectureDiagram key={slug} diagramData={diagramData} />
+        ) : (
+          <div className="flex items-center justify-center h-[420px] animate-pulse">
+            <span className="text-sm font-mono text-[var(--sketch-text-muted)]">📐 Loading architecture diagram…</span>
+          </div>
+        )}
       </div>
 
       {/* ── System Design Architecture Spec Sheet & Deep Dive ── */}
@@ -688,7 +740,7 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
               </div>
               <h2 className="font-header font-bold text-2xl md:text-3xl text-[var(--sketch-text)] flex items-center gap-3 flex-wrap">
                 <BrandIcon slug={slug} size={28} />
-                <span>{diagramData.title} — Key Trade-offs & Specs</span>
+                <span>{diagramData?.title || caseMeta?.title || slug} — Key Trade-offs & Specs</span>
               </h2>
             </div>
             <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5">
@@ -781,9 +833,13 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
           href={`${base}/system-design/11-case-studies/${articleDocSlug}`}
           className="sketch-button inline-flex items-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 px-6 py-2.5 rounded-xl shadow-lg"
         >
-          📖 Read Full Written HLD Article →
+          {caseMeta && caseMeta.hasGuide === false
+            ? '📖 Read Closest Written Guide (no dedicated article for this one yet) →'
+            : '📖 Read Full Written HLD Article →'}
         </a>
       </div>
+      </>
+      )}
 
       {/* Sketch Blackboard Footer */}
       <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-2xl font-sketch shadow-xl mt-12 max-w-6xl mx-auto mb-10">
@@ -793,7 +849,7 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">🏗️</span>
               <h3 className="text-xl font-bold font-header text-[var(--sketch-text)]">
-                {diagramData.title} Interactive Walkthrough
+                {diagramData?.title || caseMeta?.title || slug} Interactive Walkthrough
               </h3>
             </div>
             <p className="text-[var(--sketch-text-muted)] text-xs md:text-sm max-w-2xl leading-relaxed font-sketch">
@@ -822,32 +878,19 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
 
         {/* 4-Column Quick Links Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-b border-[var(--sketch-border)]">
-          {/* Column 1: Interactive Case Studies */}
+          {/* Column 1: Related Case Studies — dynamic, based on shared technique tags */}
           <div>
             <h4 className="font-header font-bold text-sm text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
-              <span>📐</span> Case Studies
+              <span>📐</span> Related Case Studies
             </h4>
             <ul className="space-y-2 text-xs text-[var(--sketch-text-muted)] font-sketch">
-              <li>
-                <a href={`${base}/system-design/url-shortener`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> TinyURL Shortener
-                </a>
-              </li>
-              <li>
-                <a href={`${base}/system-design/url-shortener?case=ride-sharing`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> Uber Ride Matching
-                </a>
-              </li>
-              <li>
-                <a href={`${base}/system-design/url-shortener?case=chat-system`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> WhatsApp Chat App
-                </a>
-              </li>
-              <li>
-                <a href={`${base}/system-design/url-shortener?case=rate-limiter`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> Rate Limiter
-                </a>
-              </li>
+              {relatedCases.map((rc) => (
+                <li key={rc.slug}>
+                  <a href={`${base}/system-design/case/${rc.slug}`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                    <span>•</span> {rc.title.replace(/^Design /, '')}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -927,7 +970,7 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1 text-emerald-500 font-bold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              {diagramData.title} Visualizer Active
+              {diagramData?.title || caseMeta?.title || slug} Visualizer Active
             </span>
           </div>
         </div>

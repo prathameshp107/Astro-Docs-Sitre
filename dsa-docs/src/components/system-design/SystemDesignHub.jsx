@@ -1,42 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import EstimationCalculator from './EstimationCalculator';
 import DatabaseAdvisor from './DatabaseAdvisor';
 import BrandIcon from './BrandIcon.jsx';
 import { CategoryIcon } from '../mcq/CategoryIcons.jsx';
+import { CASE_STUDIES, DIFFICULTY_COLORS, WRITTEN_GUIDES_COUNT, TOPICS, DIFFICULTY_XP } from '../../data/system-design/caseStudies.js';
 import '../../styles/sketch-visualizer.css';
 
-const CASE_STUDIES = [
-  { slug: 'url-shortener', title: 'Design URL Shortener (TinyURL)', desc: 'Key generation, redirection, caching, and database scaling.', interactive: true },
-  { slug: 'ride-sharing', title: 'Design Ride-Sharing (Uber)', desc: 'Geospatial indexing (Geohash), WebSocket connections, and matching service.', interactive: true },
-  { slug: 'chat-system', title: 'Design Chat App (WhatsApp)', desc: 'WebSocket servers, message queuing, delivery status checks, and presence store.', interactive: true },
-  { slug: 'rate-limiter', title: 'Design a Rate Limiter', desc: 'Token bucket in Redis for fair, distributed API request limiting.', interactive: true },
-  { slug: 'news-feed', title: 'Design a News Feed (Twitter/Instagram)', desc: 'Fan-out write/read paths, feed caching, media storage, and scaling read paths.', interactive: true },
-  { slug: 'video-streaming', title: 'Design Video Streaming (YouTube/Netflix)', desc: 'Transcoding pipelines, CDN delivery, view counters, and upload flow.', interactive: true },
-  { slug: 'tiktok', title: 'Design Short Video Platform (TikTok/Reels)', desc: 'Parallel chunk uploads, HLS transcoding, recommendation feed ranker, and Flink analytics.', interactive: true },
-  { slug: 'discord', title: 'Design Real-Time Chat & Voice (Discord/Slack)', desc: 'Elixir WS gateway, ScyllaDB channel logs, WebRTC SFUs, and presence aggregation.', interactive: true },
-  { slug: 'airbnb', title: 'Design Property & Hotel Booking (Airbnb)', desc: '365-day availability bitmaps, 15-min SETNX reservation holds, and Quadtree search.', interactive: true },
-  { slug: 'notification-system', title: 'Design a Notification System', desc: 'Batching, delivery, and multi-channel (push, email, SMS) fan-out.', interactive: true },
-  { slug: 'web-crawler', title: 'Design a Web Crawler', desc: 'Frontier, politeness, deduplication, and storage at Googlebot scale.', interactive: true },
-  { slug: 'search-autocomplete', title: 'Design Search Autocomplete', desc: 'Real-time typeahead suggestions like Google Search autocomplete.', interactive: true },
-  { slug: 'distributed-cache', title: 'Design a Distributed Cache', desc: 'Consistent hashing, replication, and failover like Redis or Memcached.', interactive: true },
-  { slug: 'file-storage', title: 'Design Cloud Storage (Google Drive)', desc: 'Chunking uploads, sync conflict resolution, and metadata sharding.', interactive: true },
-  { slug: 'payment-system', title: 'Design a Payment System', desc: 'Idempotent transactions, reconciliation loops, and ledger architecture.', interactive: true },
-  { slug: 'ticket-booking-system', title: 'Design a Ticket Booking System (BookMyShow)', desc: 'Seat-hold locking to prevent double-booking and flash-sale traffic spikes.', interactive: true },
-  { slug: 'ecommerce-order-system', title: 'Design an E-commerce Order System (Amazon)', desc: 'Inventory reservation, order state machine, and saga-coordinated checkout.', interactive: true },
-  { slug: 'distributed-key-value-store', title: 'Design a Distributed Key-Value Store (DynamoDB)', desc: 'Quorum reads/writes, vector clocks, hinted handoff, and LSM-trees.', interactive: true },
-  { slug: 'proximity-service', title: 'Design a Proximity Service (Yelp)', desc: 'Geohashing and quadtrees for fast nearby-places search at scale.', interactive: true },
-  { slug: 'collaborative-editor', title: 'Design a Collaborative Editor (Google Docs)', desc: 'Operational Transformation, CRDTs, and live multi-user presence.', interactive: true },
-  { slug: 'distributed-job-scheduler', title: 'Design a Distributed Job Scheduler', desc: 'Leader election, exactly-once triggers, and DAG dependencies.', interactive: true },
-  { slug: 'metrics-monitoring', title: 'Design Metrics & Monitoring System (Prometheus)', desc: 'Pull metrics scraper, Gorilla XOR TSDB compression, and rollup downsampling.', interactive: true },
-  { slug: 'distributed-message-queue', title: 'Design Distributed Message Queue (Kafka)', desc: 'Partitioned commit logs, consumer groups, OS zero-copy (sendfile), and ISR replicas.', interactive: true },
-  { slug: 'ad-click-aggregation', title: 'Design an Ad Click Aggregation System', desc: 'Streaming aggregation, HyperLogLog counting, and fraud dedup.', interactive: true },
-  { slug: 'distributed-lock-service', title: 'Design a Distributed Lock Service', desc: 'Leases, fencing tokens, and consensus-backed mutual exclusion.', interactive: true },
-  { slug: 'twitter-timeline', title: 'Design Twitter/X', desc: 'Retweet fan-out amplification and real-time trending topics via Count-Min Sketch.', interactive: false },
-  { slug: 'photo-sharing-app', title: 'Design Instagram', desc: 'Async image processing pipeline, TTL-based ephemeral Stories, and embedding-based discovery feed.', interactive: false },
-  { slug: 'distributed-search-engine', title: 'Design a Distributed Search Engine', desc: 'Sharded inverted index, scatter-gather queries, and BM25 relevance ranking.', interactive: false },
-  { slug: 'api-gateway', title: 'Design an API Gateway', desc: 'Routing, auth, request aggregation, and per-dependency circuit breaking.', interactive: false },
-  { slug: 'upi-payment-system', title: 'Design UPI', desc: 'VPA resolution, switch-coordinated interbank debit/credit, and deferred net settlement.', interactive: true },
-];
+const PROGRESS_KEY = 'system-design-progress-v1';
+
+function readProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function caseStudyHref(base, c) {
+  return c.interactive
+    ? `${base}/system-design/case/${c.slug}`
+    : `${base}/system-design/11-case-studies/design-${c.slug}`;
+}
 
 const LLD_PROJECTS = [
   { slug: 'parking-lot', title: 'Parking Lot Design', patterns: 'Singleton, Factory, Command', diagram: true },
@@ -60,6 +44,63 @@ const HLD_TOPICS = [
 
 export default function SystemDesignHub() {
   const [activeTab, setActiveTab] = useState('case-studies');
+  const [search, setSearch] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState('All');
+  const [topicFilter, setTopicFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('path'); // 'path' | 'difficulty' | 'alpha'
+  const [completed, setCompleted] = useState([]);
+
+  useEffect(() => {
+    setCompleted(readProgress());
+  }, []);
+
+  const toggleCompleted = (slug) => {
+    setCompleted((prev) => {
+      const next = prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug];
+      try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+
+  const interactiveCount = useMemo(() => CASE_STUDIES.filter((c) => c.interactive).length, []);
+
+  const totalXP = useMemo(() => {
+    return completed.reduce((sum, slug) => {
+      const c = CASE_STUDIES.find((cs) => cs.slug === slug);
+      return sum + (c ? DIFFICULTY_XP[c.difficulty] || 0 : 0);
+    }, 0);
+  }, [completed]);
+
+  const DIFFICULTY_ORDER = { Easy: 0, Medium: 1, Hard: 2 };
+
+  const filteredCaseStudies = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const filtered = CASE_STUDIES.filter((c) => {
+      const matchesQuery = !q
+        || c.title.toLowerCase().includes(q)
+        || c.desc.toLowerCase().includes(q)
+        || (c.companies || []).some((co) => co.toLowerCase().includes(q));
+      const matchesDifficulty = difficultyFilter === 'All' || c.difficulty === difficultyFilter;
+      const matchesTopic = topicFilter === 'All' || (c.topics || []).includes(topicFilter);
+      return matchesQuery && matchesDifficulty && matchesTopic;
+    });
+
+    const sorted = [...filtered];
+    if (sortBy === 'alpha') {
+      sorted.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === 'difficulty') {
+      sorted.sort((a, b) => DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty] || a.title.localeCompare(b.title));
+    } else {
+      // 'path': curated learning order first, then the rest by difficulty
+      sorted.sort((a, b) => {
+        const ao = a.recommendedOrder ?? Infinity;
+        const bo = b.recommendedOrder ?? Infinity;
+        if (ao !== bo) return ao - bo;
+        return DIFFICULTY_ORDER[a.difficulty] - DIFFICULTY_ORDER[b.difficulty] || a.title.localeCompare(b.title);
+      });
+    }
+    return sorted;
+  }, [search, difficultyFilter, topicFilter, sortBy]);
 
   const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
     ? import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -115,16 +156,13 @@ export default function SystemDesignHub() {
               id="hub-case-select"
               onChange={(e) => {
                 if (e.target.value) {
-                  const targetSlug = e.target.value;
-                  window.location.href = targetSlug === 'url-shortener'
-                    ? `${base}/system-design/url-shortener`
-                    : `${base}/system-design/url-shortener?case=${targetSlug}`;
+                  window.location.href = `${base}/system-design/case/${e.target.value}`;
                 }
               }}
               defaultValue=""
               className="sketch-button bg-[var(--sketch-bg)] text-[var(--sketch-text)] text-xs md:text-sm font-bold font-sketch border-2 border-[var(--sketch-border)] rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 cursor-pointer shadow-md"
             >
-              <option value="" disabled>Choose a Case Study ({CASE_STUDIES.filter((c) => c.interactive).length})...</option>
+              <option value="" disabled>Choose a Case Study ({interactiveCount})...</option>
               {CASE_STUDIES.filter((c) => c.interactive).map((c) => (
                 <option key={c.slug} value={c.slug} className="bg-slate-900 text-slate-100">
                   {c.title}
@@ -151,9 +189,9 @@ export default function SystemDesignHub() {
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2.5 max-w-4xl mx-auto">
             {[
-              { slug: 'whatsapp', name: 'WhatsApp' },
-              { slug: 'youtube', name: 'YouTube' },
-              { slug: 'uber', name: 'Uber' },
+              { slug: 'chat-system', icon: 'whatsapp', name: 'WhatsApp' },
+              { slug: 'video-streaming', icon: 'youtube', name: 'YouTube' },
+              { slug: 'ride-sharing', icon: 'uber', name: 'Uber' },
               { slug: 'tiktok', name: 'TikTok/Reels' },
               { slug: 'discord', name: 'Discord/Slack' },
               { slug: 'airbnb', name: 'Airbnb' },
@@ -164,13 +202,10 @@ export default function SystemDesignHub() {
             ].map((item) => (
               <a
                 key={item.slug}
-                href={item.slug === 'url-shortener'
-                  ? `${base}/system-design/url-shortener`
-                  : `${base}/system-design/url-shortener?case=${item.slug}`
-                }
+                href={`${base}/system-design/case/${item.slug}`}
                 className="sketch-button group inline-flex items-center gap-2 text-xs font-bold text-[var(--sketch-text)] bg-[var(--sketch-bg)] hover:bg-amber-500/10 hover:border-amber-500 px-3 py-1.5 rounded-xl border border-[var(--sketch-border)] transition-all shadow-sm"
               >
-                <BrandIcon slug={item.slug} size={18} />
+                <BrandIcon slug={item.icon || item.slug} size={18} />
                 <span className="group-hover:text-amber-400 font-sketch">{item.name}</span>
               </a>
             ))}
@@ -180,11 +215,11 @@ export default function SystemDesignHub() {
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 border-t border-[var(--sketch-border)] max-w-4xl mx-auto">
           <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
-            <span className="font-header text-2xl md:text-3xl font-bold text-amber-500 block">25</span>
+            <span className="font-header text-2xl md:text-3xl font-bold text-amber-500 block">{interactiveCount}</span>
             <span className="text-[10px] md:text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">Interactive Diagrams</span>
           </div>
           <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
-            <span className="font-header text-2xl md:text-3xl font-bold text-emerald-400 block">20</span>
+            <span className="font-header text-2xl md:text-3xl font-bold text-emerald-400 block">{WRITTEN_GUIDES_COUNT}</span>
             <span className="text-[10px] md:text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider">HLD Written Guides</span>
           </div>
           <div className="sketch-panel-box sketch-border p-3 text-center rounded-xl bg-[var(--sketch-bg)] border border-[var(--sketch-border)]">
@@ -233,54 +268,183 @@ export default function SystemDesignHub() {
       </div>
 
       {/* Tab Panels */}
-      <div className="sys-hub-content mb-16">
+      <div id="case-studies" className="sys-hub-content mb-16">
         {/* PANEL: Case Studies */}
         {activeTab === 'case-studies' && (
           <div className="sys-hub-panel space-y-8">
             <div className="sketch-border bg-[var(--sketch-bg-dim)] p-6 rounded-2xl border-2 border-[var(--sketch-border)]">
-              <h2 className="font-header font-bold text-2xl text-[var(--sketch-text)] mb-1">Architectural Case Studies</h2>
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-1">
+                <h2 className="font-header font-bold text-2xl text-[var(--sketch-text)]">Architectural Case Studies</h2>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-xl">
+                    ✅ {completed.length} / {CASE_STUDIES.length} completed
+                  </span>
+                  <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl">
+                    🏆 {totalXP} XP
+                  </span>
+                </div>
+              </div>
               <p className="text-[var(--sketch-text-muted)] text-sm font-sketch">Step-by-step scaling patterns from real-world products.</p>
             </div>
-            
+
+            {/* Search & Difficulty Filter Bar */}
+            <div className="flex flex-wrap items-center gap-3">
+              <label htmlFor="case-search" className="sr-only">Search case studies</label>
+              <input
+                id="case-search"
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={'🔍 Search by name, technique, or company (e.g. "Uber", "CRDT")...'}
+                className="flex-1 min-w-[220px] sketch-button bg-[var(--sketch-bg)] text-[var(--sketch-text)] text-sm font-sketch border-2 border-[var(--sketch-border)] rounded-xl px-4 py-2.5 focus:outline-none focus:border-amber-500"
+              />
+              <div className="flex items-center gap-2" role="group" aria-label="Filter by difficulty">
+                {['All', 'Easy', 'Medium', 'Hard'].map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDifficultyFilter(d)}
+                    aria-pressed={difficultyFilter === d}
+                    className={`sketch-button text-xs font-bold px-3.5 py-2 rounded-xl transition-all ${
+                      difficultyFilter === d
+                        ? d === 'All'
+                          ? 'bg-amber-500/20 border-amber-500 text-amber-500'
+                          : `${DIFFICULTY_COLORS[d].bg} ${DIFFICULTY_COLORS[d].border} ${DIFFICULTY_COLORS[d].text}`
+                        : ''
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Topic Filter & Sort Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 -mt-2">
+              <div className="flex items-center gap-2">
+                <label htmlFor="topic-filter" className="text-xs font-mono font-bold text-[var(--sketch-text-muted)] uppercase tracking-wider">
+                  Technique:
+                </label>
+                <select
+                  id="topic-filter"
+                  value={topicFilter}
+                  onChange={(e) => setTopicFilter(e.target.value)}
+                  className="sketch-button bg-[var(--sketch-bg)] text-[var(--sketch-text)] text-xs font-bold border-2 border-[var(--sketch-border)] rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 cursor-pointer capitalize"
+                >
+                  <option value="All">All Techniques</option>
+                  {TOPICS.map((t) => (
+                    <option key={t} value={t} className="bg-slate-900 text-slate-100">{t.replace(/-/g, ' ')}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="sort-by" className="text-xs font-mono font-bold text-[var(--sketch-text-muted)] uppercase tracking-wider">
+                  Sort:
+                </label>
+                <select
+                  id="sort-by"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="sketch-button bg-[var(--sketch-bg)] text-[var(--sketch-text)] text-xs font-bold border-2 border-[var(--sketch-border)] rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 cursor-pointer"
+                >
+                  <option value="path">🎓 Suggested Learning Path</option>
+                  <option value="difficulty">Difficulty (Easy → Hard)</option>
+                  <option value="alpha">Alphabetical (A → Z)</option>
+                </select>
+              </div>
+            </div>
+
+            <p className="text-xs font-mono text-[var(--sketch-text-muted)] -mt-4">
+              Showing {filteredCaseStudies.length} of {CASE_STUDIES.length} case studies
+              {sortBy === 'path' && ' — numbered badges below mark the curated 1-12 starter path'}
+            </p>
+
+            {filteredCaseStudies.length === 0 ? (
+              <div className="sketch-border bg-[var(--sketch-bg-dim)] p-10 rounded-2xl border-2 border-[var(--sketch-border)] text-center">
+                <p className="text-[var(--sketch-text-muted)] text-sm">No case studies match "{search}". Try a different search or difficulty filter.</p>
+              </div>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {CASE_STUDIES.map((c) => (
-                <div key={c.slug} className="sketch-panel-box sketch-border group flex flex-col justify-between p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500 hover:shadow-xl bg-[var(--sketch-bg-dim)] cursor-pointer">
+              {filteredCaseStudies.map((c) => {
+                const diff = DIFFICULTY_COLORS[c.difficulty] || DIFFICULTY_COLORS.Medium;
+                const isDone = completed.includes(c.slug);
+                return (
+                <div key={c.slug} className={`sketch-panel-box sketch-border group flex flex-col justify-between p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-amber-500 hover:shadow-xl bg-[var(--sketch-bg-dim)] cursor-pointer relative ${isDone ? 'ring-2 ring-emerald-500/40' : ''}`}>
+                  <button
+                    onClick={() => toggleCompleted(c.slug)}
+                    title={isDone ? 'Mark as unread' : 'Mark as read'}
+                    aria-label={isDone ? `Mark ${c.title} as unread` : `Mark ${c.title} as read`}
+                    aria-pressed={isDone}
+                    className={`absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
+                      isDone
+                        ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
+                        : 'bg-[var(--sketch-bg)] border-[var(--sketch-border)] text-[var(--sketch-text-muted)] hover:border-emerald-500 hover:text-emerald-400'
+                    }`}
+                  >
+                    {isDone ? '✓' : ''}
+                  </button>
                   <div>
-                    {c.interactive && (
-                      <span className="inline-block sketch-border-soft px-3 py-1 text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full mb-3 animate-pulse">
-                        ⚡ Interactive Visualizer
+                    <div className="flex flex-wrap items-center gap-2 mb-3 pr-8">
+                      {c.recommendedOrder && (
+                        <span className="inline-flex items-center justify-center w-6 h-6 text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 rounded-full" title="Suggested learning path step">
+                          {c.recommendedOrder}
+                        </span>
+                      )}
+                      {c.interactive && (
+                        <span className="inline-block sketch-border-soft px-3 py-1 text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border-amber-500/40 rounded-full animate-pulse">
+                          ⚡ Interactive
+                        </span>
+                      )}
+                      <span className={`inline-block sketch-border-soft px-3 py-1 text-[10px] font-mono font-bold rounded-full ${diff.bg} ${diff.border} ${diff.text}`}>
+                        {c.difficulty}
                       </span>
-                    )}
+                    </div>
                     <div className="flex items-center gap-3 mb-3">
                       <BrandIcon slug={c.slug} size={28} />
                       <h3 className="font-header font-bold text-xl text-[var(--sketch-text)] group-hover:text-amber-500 transition-colors">
                         {c.title}
                       </h3>
                     </div>
-                    <p className="text-[var(--sketch-text-muted)] text-sm leading-relaxed mb-6 font-sketch">
+                    <p className="text-[var(--sketch-text-muted)] text-sm leading-relaxed mb-3 font-sketch">
                       {c.desc}
                     </p>
+                    {c.topics && c.topics.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {c.topics.map((t) => (
+                          <button
+                            key={t}
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setTopicFilter(t); }}
+                            className="text-[9px] font-mono font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-[var(--sketch-bg)] border border-[var(--sketch-border)] text-[var(--sketch-text-muted)] hover:border-cyan-500 hover:text-cyan-400 transition-colors capitalize"
+                          >
+                            {t.replace(/-/g, ' ')}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {c.companies && c.companies.length > 0 && (
+                      <p className="text-[10px] font-mono text-[var(--sketch-text-muted)] mb-4">
+                        Real-world parallel: <span className="text-cyan-400">{c.companies.join(', ')}</span>
+                      </p>
+                    )}
                   </div>
                   <div className="pt-4 border-t border-[var(--sketch-border)]">
                     {c.interactive ? (
-                      <a 
-                        href={c.slug === 'url-shortener' 
-                          ? `${base}/system-design/url-shortener` 
-                          : `${base}/system-design/url-shortener?case=${c.slug}`
-                        } 
+                      <a
+                        href={caseStudyHref(base, c)}
                         className="sketch-button flex items-center justify-center gap-2 text-sm font-bold text-amber-500 border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/20 w-full text-center"
                       >
                         Launch Visualizer →
                       </a>
                     ) : (
-                      <a href={`${base}/system-design/11-case-studies/design-${c.slug}`} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold w-full text-center">
+                      <a href={caseStudyHref(base, c)} className="sketch-button flex items-center justify-center gap-2 text-sm font-bold w-full text-center">
                         Read Guide
                       </a>
                     )}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
+            )}
 
             {/* Quick HLD Course Links */}
             <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl border-2 border-[var(--sketch-border)] shadow-xl">
@@ -480,22 +644,22 @@ export default function SystemDesignHub() {
             </h4>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
-                <a href={`${base}/system-design/url-shortener`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}/system-design/case/url-shortener`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> TinyURL Shortener
                 </a>
               </li>
               <li>
-                <a href={`${base}/system-design/url-shortener?case=uber`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}/system-design/case/ride-sharing`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> Uber Ride Matching
                 </a>
               </li>
               <li>
-                <a href={`${base}/system-design/url-shortener?case=whatsapp`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}/system-design/case/chat-system`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> WhatsApp Chat Service
                 </a>
               </li>
               <li>
-                <a href={`${base}/system-design/11-case-studies/design-video-streaming`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}/system-design/case/video-streaming`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> YouTube Streaming
                 </a>
               </li>
