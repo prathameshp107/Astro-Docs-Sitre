@@ -97,7 +97,7 @@ const filterLabels = sidebar.map(entry => entry.label);
     const toggleBtn = document.getElementById('sidebar-toggle');
     if (!toggleBtn) return;
 
-    let restoreBtn = document.getElementById('sidebar-restore-toggle');
+    let restoreBtn = document.getElementById('sidebar-restore-toggle') as HTMLButtonElement | null;
     if (!restoreBtn) {
       restoreBtn = document.createElement('button');
       restoreBtn.id = 'sidebar-restore-toggle';
@@ -117,7 +117,7 @@ const filterLabels = sidebar.map(entry => entry.label);
       document.body.appendChild(restoreBtn);
     }
 
-    const updateRestoreBtn = (collapsed) => {
+    const updateRestoreBtn = (collapsed: boolean) => {
       if (!restoreBtn) return;
       if (collapsed) {
         restoreBtn.innerHTML = `
@@ -142,7 +142,7 @@ const filterLabels = sidebar.map(entry => entry.label);
       }
     };
 
-    const setSidebarCollapsed = (collapsed) => {
+    const setSidebarCollapsed = (collapsed: boolean) => {
       document.body.classList.toggle('sidebar-collapsed', collapsed);
       document.documentElement.classList.toggle('sidebar-collapsed', collapsed);
       toggleBtn.setAttribute('aria-expanded', String(!collapsed));
@@ -170,11 +170,11 @@ const filterLabels = sidebar.map(entry => entry.label);
       restoreBtn.dataset.sidebarToggleReady = 'true';
     }
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
         e.preventDefault();
         toggleSidebar();
-      } else if (e.key === '\\' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+      } else if (e.key === '\\' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName ?? '')) {
         e.preventDefault();
         toggleSidebar();
       } else if (e.key === 'Escape' && document.body.classList.contains('sidebar-collapsed')) {
@@ -191,14 +191,14 @@ const filterLabels = sidebar.map(entry => entry.label);
   function setupSidebarFilter() {
     const toggleBtn = document.getElementById('filter-toggle');
     const dropdown = document.getElementById('filter-dropdown');
-    const checkboxes = document.querySelectorAll('.filter-checkbox');
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('.filter-checkbox');
     const summary = document.getElementById('filter-summary');
     const topLevelItems = document.querySelectorAll('nav.sidebar ul.top-level > li');
 
     if (!toggleBtn || !dropdown) return;
 
     // Extract labels from each top-level item
-    const itemLabels = [];
+    const itemLabels: string[] = [];
     topLevelItems.forEach((li) => {
       const groupLabel = li.querySelector('details > summary .group-label .large');
       const linkLabel = li.querySelector('a > span');
@@ -213,8 +213,8 @@ const filterLabels = sidebar.map(entry => entry.label);
     });
 
     // Close dropdown on outside click
-    document.addEventListener('click', (e) => {
-      if (!toggleBtn.contains(e.target) && !dropdown.contains(e.target)) {
+    document.addEventListener('click', (e: MouseEvent) => {
+      if (!toggleBtn.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
         dropdown.classList.remove('open');
         toggleBtn.classList.remove('active');
       }
@@ -226,10 +226,10 @@ const filterLabels = sidebar.map(entry => entry.label);
       catch { return null; }
     })();
 
-    function getSelectedLabels() {
-      const selected = [];
+    function getSelectedLabels(): string[] {
+      const selected: string[] = [];
       checkboxes.forEach((cb) => {
-        if (cb.checked) selected.push(cb.dataset.label);
+        if (cb.checked) selected.push(cb.dataset.label ?? '');
       });
       return selected;
     }
@@ -239,7 +239,7 @@ const filterLabels = sidebar.map(entry => entry.label);
       const allChecked = selected.includes('all');
 
       // Sync "All Topics" checkbox
-      const allCheckbox = document.querySelector('.filter-checkbox[data-label="all"]');
+      const allCheckbox = document.querySelector<HTMLInputElement>('.filter-checkbox[data-label="all"]');
 
       topLevelItems.forEach((li, i) => {
         const label = itemLabels[i];
@@ -250,9 +250,9 @@ const filterLabels = sidebar.map(entry => entry.label);
       // Update summary text (count selected categories excluding 'all')
       const topicCount = selected.filter(l => l !== 'all').length;
       if (topicCount === 0 || allChecked) {
-        summary.textContent = 'All Topics';
+        summary!.textContent = 'All Topics';
       } else {
-        summary.textContent = `${topicCount} Topic${topicCount > 1 ? 's' : ''}`;
+        summary!.textContent = `${topicCount} Topic${topicCount > 1 ? 's' : ''}`;
       }
 
       // Persist
@@ -269,7 +269,7 @@ const filterLabels = sidebar.map(entry => entry.label);
           checkboxes.forEach((c) => { c.checked = cb.checked; });
         } else {
           // If a specific topic is unchecked, uncheck "All Topics"
-          const allCheck = document.querySelector('.filter-checkbox[data-label="all"]');
+          const allCheck = document.querySelector<HTMLInputElement>('.filter-checkbox[data-label="all"]');
           if (allCheck) {
             const allSelected = [...checkboxes].every(c => c.checked || c.dataset.label === 'all');
             allCheck.checked = allSelected;
@@ -315,8 +315,8 @@ const filterLabels = sidebar.map(entry => entry.label);
 
     function updateIcon() {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      sun.style.display = isLight ? 'none' : 'block';
-      moon.style.display = isLight ? 'block' : 'none';
+      sun!.style.display = isLight ? 'none' : 'block';
+      moon!.style.display = isLight ? 'block' : 'none';
     }
 
     updateIcon();
@@ -360,7 +360,7 @@ const filterLabels = sidebar.map(entry => entry.label);
   ];
 
   function setupCategoryIcons() {
-    const summaries = document.querySelectorAll('nav.sidebar details > summary');
+    const summaries = document.querySelectorAll<HTMLElement>('nav.sidebar details > summary');
     summaries.forEach((summary) => {
       if (summary.dataset.iconAdded === 'true') return;
 

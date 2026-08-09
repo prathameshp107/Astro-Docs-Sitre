@@ -1,6 +1,7 @@
 ---
 import MCQQuiz from '../../../components/mcq/MCQQuiz.jsx';
 import AppNav from '../../../components/AppNav.jsx';
+import GoogleAnalytics from '../../../components/GoogleAnalytics.astro';
 import '../../../styles/mcq-tailwind.css';
 import '../../../styles/landing.css';
 import { MCQ_CATEGORIES } from '../../../components/mcq/MCQData.js';
@@ -19,6 +20,7 @@ const cat = MCQ_CATEGORIES.find(c => c.id === category);
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <GoogleAnalytics />
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz: {cat?.name || 'Loading'} — MCQ Hub</title>

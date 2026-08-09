@@ -1,5 +1,6 @@
 ---
 import LandingPage from '../components/landing/LandingPage.tsx';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import '../styles/dev-ace-landing.css';
 
 const SITE_URL  = 'https://interviewpreprationbuddy.in';
@@ -113,6 +114,7 @@ const faqSchema = {
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
+    <GoogleAnalytics />
     <script is:inline>
       (function() {
         var t = localStorage.getItem('ipd-theme') || localStorage.getItem('starlight-theme');

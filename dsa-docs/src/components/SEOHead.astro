@@ -1,5 +1,6 @@
 ---
 import StarlightHead from '@astrojs/starlight/components/Head.astro';
+import GoogleAnalytics from './GoogleAnalytics.astro';
 
 const route = Astro.locals.starlightRoute;
 const { entry } = route;
@@ -117,6 +118,8 @@ const breadcrumbString    = JSON.stringify(breadcrumbSchema);
 ---
 
 <StarlightHead {...Astro.props} />
+
+<GoogleAnalytics />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalUrl} />

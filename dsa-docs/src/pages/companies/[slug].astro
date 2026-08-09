@@ -1,5 +1,6 @@
 ---
 import AppNav from '../../components/AppNav.jsx';
+import GoogleAnalytics from '../../components/GoogleAnalytics.astro';
 import ProcessMap from '../../components/companies/ProcessMap.jsx';
 import CompanyProblemList from '../../components/companies/CompanyProblemList.jsx';
 import PlanDetail from '../../components/plans/PlanDetail.jsx';
@@ -15,7 +16,7 @@ import '../../styles/companies.css';
 import '../../styles/sketch-visualizer.css';
 
 export async function getStaticPaths() {
-  const companies = import.meta.glob("../../data/companies/*.json", { eager: true });
+  const companies = import.meta.glob<{ default: any }>("../../data/companies/*.json", { eager: true });
   return Object.values(companies).map((module) => {
     const company = module.default ?? module;
     return {
@@ -99,6 +100,7 @@ const faqSchema = {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <GoogleAnalytics />
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{company.name} SDE Interview Process & Questions — Free Prep Track</title>
@@ -141,11 +143,10 @@ const faqSchema = {
 
           <div class="sketch-panel-box sketch-border p-6 text-center min-w-[200px] bg-[var(--sketch-bg)]">
             <span class="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider block mb-2">Difficulty</span>
-            <div className="flex items-center justify-center gap-1.5 mb-4">
+            <div class="flex items-center justify-center gap-1.5 mb-4">
               {Array.from({ length: 5 }).map((_, idx) => (
-                <span 
-                  key={idx} 
-                  className="w-4 h-4 rounded-full border border-[var(--sketch-border)]"
+                <span
+                  class="w-4 h-4 rounded-full border border-[var(--sketch-border)]"
                   style={{ 
                     backgroundColor: idx < company.difficulty ? companyColor : 'transparent'
                   }}
@@ -153,7 +154,7 @@ const faqSchema = {
               ))}
             </div>
             <span class="text-xs font-mono text-[var(--sketch-text-muted)] uppercase tracking-wider block mb-1">Target Regions</span>
-            <span class="font-header text-lg font-bold text-amber-500">{company.region.map(r => r.toUpperCase()).join(", ")}</span>
+            <span class="font-header text-lg font-bold text-amber-500">{company.region.map((r: string) => r.toUpperCase()).join(", ")}</span>
           </div>
         </div>
       </section>
@@ -173,8 +174,8 @@ const faqSchema = {
           <div class="track-section sketch-border bg-[var(--sketch-bg-dim)] p-6 md:p-8 rounded-3xl border-2 border-[var(--sketch-border)] shadow-xl">
             <h2 class="font-header font-bold text-2xl text-[var(--sketch-text)] mb-4">What's Different Here</h2>
             <div class="distinctives-list space-y-3">
-              {company.distinctives.map((d, idx) => (
-                <div key={idx} class="distinctive-item flex items-start gap-3">
+              {company.distinctives.map((d: string) => (
+                <div class="distinctive-item flex items-start gap-3">
                   <span class="text-amber-500 font-bold text-lg">✦</span>
                   <p class="text-[var(--sketch-text)] text-base font-sketch leading-relaxed">{d}</p>
                 </div>
@@ -254,33 +255,33 @@ const faqSchema = {
       </div>
 
       {/* Sketch Blackboard Footer */}
-      <footer className="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16 max-w-6xl mx-auto mb-10">
+      <footer class="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-2xl font-sketch shadow-xl mt-16 max-w-6xl mx-auto mb-10">
         {/* Top Branding & Description */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[var(--sketch-border)]">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-3xl">🏢</span>
-              <h3 className="text-2xl font-bold font-header text-[var(--sketch-text)]">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-3xl">🏢</span>
+              <h3 class="text-2xl font-bold font-header text-[var(--sketch-text)]">
                 {company.name} Interview Studio
               </h3>
             </div>
-            <p className="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
+            <p class="text-[var(--sketch-text-muted)] text-sm max-w-2xl leading-relaxed font-sketch">
               Round-by-round process map, curated problem sets, and study tracks for {company.name}.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div class="flex items-center gap-3">
             <a
               href="https://github.com/prathameshp107/DSA-Notes-Problems"
               target="_blank"
               rel="noopener noreferrer"
-              className="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
+              class="sketch-button flex items-center gap-2 text-sm font-bold bg-amber-500/20 border-amber-500"
             >
               <span>⭐ Star on GitHub</span>
             </a>
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="sketch-button flex items-center gap-1.5 text-sm font-bold"
+              onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+              class="sketch-button flex items-center gap-1.5 text-sm font-bold"
               title="Back to top"
             >
               <span>↑ Top</span>
@@ -289,25 +290,25 @@ const faqSchema = {
         </div>
 
         {/* 4-Column Quick Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
           {/* Column 1: Featured Tracks */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+            <h4 class="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
               <span>🎯</span> Company Tracks
             </h4>
-            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+            <ul class="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
-                <a href={`${base}companies/google`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}companies/google`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> Google SDE Track
                 </a>
               </li>
               <li>
-                <a href={`${base}companies/amazon`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}companies/amazon`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> Amazon SDE Track
                 </a>
               </li>
               <li>
-                <a href={`${base}companies`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}companies`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> All Company Directories
                 </a>
               </li>
@@ -316,17 +317,17 @@ const faqSchema = {
 
           {/* Column 2: Interview Prep */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+            <h4 class="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
               <span>💡</span> Interview Tools
             </h4>
-            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+            <ul class="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
-                <a href={`${base}interview-questions`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}interview-questions`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> Interview Questions Hub
                 </a>
               </li>
               <li>
-                <a href={`${base}labs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}labs`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> Practice Labs Hub
                 </a>
               </li>
@@ -335,17 +336,17 @@ const faqSchema = {
 
           {/* Column 3: Design & DSA */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+            <h4 class="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
               <span>📐</span> Design & DSA
             </h4>
-            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+            <ul class="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
-                <a href={`${base}system-design`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}system-design`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> System Design Hub
                 </a>
               </li>
               <li>
-                <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}visualizer`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> Visualizer Studio
                 </a>
               </li>
@@ -354,17 +355,17 @@ const faqSchema = {
 
           {/* Column 4: Quizzes & Practice */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+            <h4 class="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
               <span>❓</span> MCQ Quizzes
             </h4>
-            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+            <ul class="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
-                <a href={`${base}mcq`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}mcq`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> All MCQ Categories
                 </a>
               </li>
               <li>
-                <a href={`${base}mcq/javascript`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                <a href={`${base}mcq/javascript`} class="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
                   <span>•</span> JavaScript MCQ
                 </a>
               </li>
@@ -373,13 +374,13 @@ const faqSchema = {
         </div>
 
         {/* Bottom Copyright & Design Bar */}
-        <div className="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
+        <div class="pt-6 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--sketch-text-muted)]">
           <div>
             © {new Date().getFullYear()} {company.name} Track · Hand-crafted Blackboard UI.
           </div>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1 text-emerald-500 font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1 text-emerald-500 font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               {company.rounds?.length || 0} Interview Rounds Verified
             </span>
           </div>
