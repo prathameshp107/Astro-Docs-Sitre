@@ -1,44 +1,43 @@
-# DSA Dev Notes
+# Interview Prep Buddy
 
-> A comprehensive developer knowledge base covering DSA, JavaScript, React, Angular, Node.js, Next.js, SQL, MongoDB, Docker, AWS, System Design, and interview preparation. Built by Prathamesh Pawar.
+> Interview Prep Buddy (https://interviewpreprationbuddy.in) is a free, all-in-one technical interview preparation platform for software engineers. It provides DSA pattern cheatsheets, interactive algorithm visualizers, coding labs, 1400+ interview questions, MCQ quizzes, system design guides, and company-specific interview prep — all in one place.
 
-This site contains:
-- 900+ technical documentation pages
-- Interview question banks (easy → hard) for Angular, React, JavaScript, Node.js, TypeScript, SQL, and more
-- DSA problem sets with explanations (arrays, trees, graphs, DP, etc.)
-- Interactive playground and MCQ quiz tools
-- System design (HLD/LLD) notes
+## What is this site?
 
-## Key Interview Question Pages
+Interview Prep Buddy helps developers prepare for technical interviews at Google, Amazon, Meta, Microsoft, Apple, and other top tech companies. Built by Prathamesh Pawar, a full-stack software developer.
 
-- Angular Interview Questions (100+): /angular/interview-questions/
-- JavaScript Interview Questions: /javascript/interview/
-- React Interview Questions: /react/interview/
-- Node.js Interview Questions: /nodejs/interview/
-- DSA Interview Questions: /data-structures/interview-prep/
-- Full-Stack Interview Questions: /interview/fullstack/
+## Key Pages
 
-## Topic Index
+- [Homepage](https://interviewpreprationbuddy.in/) — Overview and navigation to all features
+- [Interview Questions Hub](https://interviewpreprationbuddy.in/interview-questions) — 1400+ curated interview questions across 15+ topics
+- [DSA Patterns Cheatsheet](https://interviewpreprationbuddy.in/dsa/patterns) — 16 core algorithm patterns with code blueprints
+- [DSA Problem List](https://interviewpreprationbuddy.in/dsa/problems) — Problems organized by topic, difficulty, and company
+- [Algorithm Visualizer](https://interviewpreprationbuddy.in/visualizer) — Step-by-step interactive algorithm animations
+- [Interactive Labs](https://interviewpreprationbuddy.in/labs) — Browser-based coding environments for JS, React, DSA
+- [MCQ Quiz Hub](https://interviewpreprationbuddy.in/mcq) — Practice quizzes across 15+ technology categories
+- [System Design](https://interviewpreprationbuddy.in/system-design) — HLD and LLD interview preparation
+- [About](https://interviewpreprationbuddy.in/about) — Platform overview and tech stack
 
-- Angular (fundamentals → enterprise): /angular/
-- React & Hooks: /react/
-- JavaScript (Namaste JS series + advanced): /namaste-js/
-- Node.js: /nodejs/
-- Next.js: /nextjs/
-- TypeScript: /typescript/
-- HTML & CSS: /html-css/
-- Tailwind CSS: /tailwind/
-- SQL / MySQL: /sql/
-- MongoDB: /mongodb/
-- Docker: /docker/
-- AWS: /aws/
-- System Design (HLD): /hld/
-- Low-Level Design (LLD): /lld/
-- Data Structures & Algorithms: /data-structures/
-- Git & GitHub: /git/
-- Computer Networks: /networks/
-- OOP (Object-Oriented Programming): /oops/
-- AI & Machine Learning: /ai/
+## Documentation Topics
+
+- [JavaScript](https://interviewpreprationbuddy.in/javascript/) — Fundamentals, closures, async/await, ES6+, event loop
+- [React](https://interviewpreprationbuddy.in/react/) — Hooks, state management, performance, component patterns
+- [Angular](https://interviewpreprationbuddy.in/angular/) — Components, services, RxJS, dependency injection
+- [Node.js](https://interviewpreprationbuddy.in/nodejs/) — Express, streams, event-driven architecture, REST APIs
+- [Next.js](https://interviewpreprationbuddy.in/nextjs/) — SSR, SSG, App Router, API routes
+- [TypeScript](https://interviewpreprationbuddy.in/typescript/) — Types, generics, decorators, utility types
+- [DSA](https://interviewpreprationbuddy.in/data-structures/) — Arrays, trees, graphs, dynamic programming
+- [System Design HLD](https://interviewpreprationbuddy.in/hld/) — Distributed systems, scalability, CAP theorem
+- [LLD](https://interviewpreprationbuddy.in/lld/) — Object-oriented design, design patterns, SOLID
+- [SQL / MySQL](https://interviewpreprationbuddy.in/sql/) — Joins, indexes, transactions, query optimization
+- [MongoDB](https://interviewpreprationbuddy.in/mongodb/) — Documents, aggregation, indexing, schema design
+- [Docker](https://interviewpreprationbuddy.in/docker/) — Containers, images, compose, networking
+- [OOP](https://interviewpreprationbuddy.in/oops/) — Encapsulation, inheritance, polymorphism, abstraction
+- [Behavioral](https://interviewpreprationbuddy.in/behavioral/) — STAR method, common HR questions
+
+## Full Content (llms-full.txt)
+
+For complete site content in a single file: https://interviewpreprationbuddy.in/llms-full.txt
 
 ## Author
 

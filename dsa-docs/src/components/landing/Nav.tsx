@@ -39,6 +39,7 @@ import {
   Clock,
   Menu as MenuIcon,
   X,
+  Mail,
 } from "lucide-react";
 
 import {
@@ -62,6 +63,7 @@ const labsSubItems = [
   { label: "JS Interview Lab", href: `${base}labs/js-lab`, icon: DiJavascript1, color: "#f7df1e" },
   { label: "React Practice Lab", href: `${base}labs/react-lab`, icon: DiReact, color: "#61dafb" },
   { label: "DSA Problem Lab", href: `${base}dsa/problems`, icon: DiDatabase, color: "#6366f1" },
+  { label: "DSA Patterns Guide", href: `${base}dsa/patterns`, icon: Zap, color: "#a78bfa" },
   { label: "SQL Query Lab", href: `${base}labs/mysql`, icon: DiMysql, color: "#f59e0b" },
   { label: "Python Labs", href: `${base}labs/python`, icon: DiPython, color: "#3776AB" },
   { label: "MongoDB Lab", href: `${base}labs/mongodb`, icon: DiMongodb, color: "#13aa52" },
@@ -84,7 +86,7 @@ const visualizerSubItems = [
   { label: "Arrays Visualizer", href: `${base}visualizer/arrays`, icon: LayoutGrid, color: "#10b981" },
   { label: "Linked List Visualizer", href: `${base}visualizer/linked-list`, icon: Link, color: "#f59e0b" },
   { label: "Stack & Queue", href: `${base}visualizer/stack`, icon: Layers, color: "#6366f1" },
-  { label: "Hash Tables", href: `${base}visualizer/hash-tables`, icon: Hash, color: "#06b6d4" },
+  { label: "Hash Tables", href: `${base}visualizer/hash-table`, icon: Hash, color: "#06b6d4" },
   { label: "Trees Visualizer", href: `${base}visualizer/trees`, icon: GitFork, color: "#84cc16" },
   { label: "Graphs Visualizer", href: `${base}visualizer/graphs`, icon: Workflow, color: "#a855f7" },
   { label: "Heaps Visualizer", href: `${base}visualizer/heaps`, icon: Boxes, color: "#f97316" },
@@ -95,9 +97,9 @@ const systemDesignSubItems = [
   { label: "System Design Hub (HLD)", href: `${base}system-design`, icon: Network, color: "#f59e0b" },
   { label: "Low-Level Design Hub (LLD)", href: `${base}lld`, icon: Layers, color: "#10b981" },
   { label: "Object-Oriented Design (OOD)", href: `${base}ood`, icon: Boxes, color: "#06b6d4" },
-  { label: "Design URL Shortener (TinyURL)", href: `${base}system-design/url-shortener`, icon: Link, color: "#ec4899" },
-  { label: "Design Ride-Sharing (Uber)", href: `${base}system-design/url-shortener?case=uber`, companyId: "uber", color: "#3b82f6" },
-  { label: "Design Chat App (WhatsApp)", href: `${base}system-design/url-shortener?case=whatsapp`, companyId: "whatsapp", color: "#25d366" },
+  { label: "Design URL Shortener (TinyURL)", href: `${base}system-design/case/url-shortener`, icon: Link, color: "#ec4899" },
+  { label: "Design Ride-Sharing (Uber)", href: `${base}system-design/case/ride-sharing`, companyId: "uber", color: "#3b82f6" },
+  { label: "Design Chat App (WhatsApp)", href: `${base}system-design/case/chat-system`, companyId: "whatsapp", color: "#25d366" },
 ];
 
 const roadmapSubItems = [
@@ -136,6 +138,7 @@ const links = [
   { label: "MCQ Hub", href: `${base}mcq`, icon: ListChecks },
   { label: "Roadmaps", href: `${base}plans`, icon: CalendarCheck, hasDropdown: true, subItems: roadmapSubItems, dropdownTitle: "Study & Prep Roadmaps" },
   { label: "Companies", href: `${base}companies`, icon: Building2, hasDropdown: true, subItems: companiesSubItems, dropdownTitle: "Company Interview Prep" },
+  { label: "Contact", href: `${base}contact`, icon: Mail },
 ];
 
 export function Nav() {
@@ -158,21 +161,19 @@ export function Nav() {
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1600px] w-full items-center justify-between px-6 gap-6">
-          <a href={base} className="flex items-center gap-2.5 shrink-0" aria-label="Home">
-            <span className="flex shrink-0">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                <defs>
-                  <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#8b5cf6" />
-                  </linearGradient>
-                </defs>
-                <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
-                <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
-              </svg>
+          <a href={base} className="flex items-center gap-2.5 shrink-0 group" aria-label="Interview Prep Buddy Home">
+            <span className="flex shrink-0 items-center justify-center h-8 w-8 rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-105">
+              <img
+                src={`${base}logo-icon.png`}
+                alt="Interview Prep Buddy Logo"
+                width="32"
+                height="32"
+                className="h-8 w-8 object-contain"
+                loading="eager"
+              />
             </span>
-            <span className="font-display text-[15px] font-semibold tracking-tight">
-              Interview Prep Docs
+            <span className="font-display text-[15px] font-bold tracking-tight text-foreground">
+              Interview Prep <span className="text-primary">Buddy</span>
             </span>
           </a>
           <nav aria-label="Primary" className="hidden flex-1 items-center justify-evenly gap-3 lg:flex mx-2">

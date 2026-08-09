@@ -1,24 +1,123 @@
 ---
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer/trees`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Binary Tree Visualizer — BST Insertion, Deletion & Traversal Animations',
+  description: 'Interactive binary tree and BST visualizer. See insertion, deletion, BFS level-order, DFS inorder/preorder/postorder traversals with step-by-step animations and Big-O analysis.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Interactive Tool',
+  teaches: ['Binary tree traversal', 'BST insertion and deletion', 'BFS level-order traversal', 'DFS inorder preorder postorder', 'Binary search tree properties'],
+  about: [{ '@type': 'Thing', name: 'Binary Trees' }, { '@type': 'Thing', name: 'Binary Search Tree' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Visualize Binary Tree Traversals',
+  description: 'Step-by-step guide to using the binary tree visualizer for interview preparation',
+  url: PAGE_URL,
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Build the Tree', text: 'Insert values by clicking "Insert" and entering a number. The BST property (left < root < right) is maintained automatically.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select a Traversal', text: 'Choose BFS (level-order), DFS Inorder, DFS Preorder, or DFS Postorder from the traversal menu.' },
+    { '@type': 'HowToStep', position: 3, name: 'Run the Animation', text: 'Click "Traverse" to see nodes highlighted in visit order with the traversal path shown step-by-step.' },
+    { '@type': 'HowToStep', position: 4, name: 'Study the Output', text: 'The output array shows the visit order. For Inorder on a BST, this is always sorted ascending — useful for interview problems.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the difference between BFS and DFS for binary trees?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'BFS (Breadth-First Search / Level-order) uses a queue and visits all nodes level by level from left to right. Time: O(n), Space: O(w) where w is max width. DFS uses a stack (or recursion) and goes deep before wide. DFS has 3 variants: Inorder (L→Root→R, gives sorted output for BST), Preorder (Root→L→R, good for copying/serializing), Postorder (L→R→Root, good for deletion). Time: O(n), Space: O(h) where h is height.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is inorder traversal used for?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Inorder traversal (Left → Root → Right) of a Binary Search Tree always produces a sorted sequence in ascending order. This property is used to: validate if a binary tree is a BST, find the Kth smallest element, convert BST to sorted array, and solve problems like "find all nodes in range". Time complexity: O(n). Space: O(h) for the call stack.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the time complexity of BST operations?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'BST operation time complexity: Search O(log n) average, O(n) worst (skewed tree). Insertion O(log n) average, O(n) worst. Deletion O(log n) average, O(n) worst. For a balanced BST (AVL tree or Red-Black tree), all operations are guaranteed O(log n). The height of a balanced BST is O(log n) for n nodes.',
+      },
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tree Visualizer — DSA Visualizer</title>
-    <meta name="description" content="Interactive binary search tree visualizer with traversal animations." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Binary Tree Visualizer — BST Traversal Animations BFS DFS | Interview Prep Buddy"
+      description="Interactive binary tree and BST visualizer. Animate insertion, deletion, BFS level-order, DFS inorder/preorder/postorder traversals step-by-step with Big-O complexity analysis."
+      url={PAGE_URL}
+      keywords="binary tree visualizer, BST visualizer, tree traversal animation, inorder preorder postorder, BFS DFS tree, binary search tree visualization, level order traversal, tree algorithm visualizer"
+      ogType="article"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Binary Tree Visualizer', url: '/visualizer/trees' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   </head>
   <body class="mcq-body">
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>Binary Tree Visualizer — BST Insertion, Deletion, BFS and DFS Traversal Animations</h1>
+      <p>Visualize binary tree and binary search tree operations step by step. See how BST insertion maintains the left-less-than-root-less-than-right property, and how BFS and DFS traversals visit nodes.</p>
+
+      <h2>Binary Tree Traversal Types</h2>
+      <ul>
+        <li>BFS / Level-Order: Visits nodes level by level using a queue. Output: top row, then second row, etc.</li>
+        <li>DFS Inorder (L → Root → R): For BST, always produces a sorted array. O(n) time, O(h) space.</li>
+        <li>DFS Preorder (Root → L → R): Used to copy or serialize a tree. Root is always first in output.</li>
+        <li>DFS Postorder (L → R → Root): Used for deletion (delete children before parent). Root is last in output.</li>
+      </ul>
+
+      <h2>BST Complexity</h2>
+      <ul>
+        <li>Search: O(log n) average, O(n) worst (skewed)</li>
+        <li>Insert: O(log n) average, O(n) worst</li>
+        <li>Delete: O(log n) average, O(n) worst</li>
+      </ul>
+
+      <h2>Related Visualizers</h2>
+      <ul>
+        <li><a href="/visualizer/graphs">Graph BFS and DFS Visualizer</a></li>
+        <li><a href="/visualizer/heaps">Heap and Priority Queue Visualizer</a></li>
+        <li><a href="/visualizer/recursion">Recursion Call Stack Visualizer</a></li>
+        <li><a href="/visualizer">All Algorithm Visualizers</a></li>
+      </ul>
+    </div>
     <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerPage topicId="trees" client:load />
   </body>

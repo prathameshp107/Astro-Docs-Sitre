@@ -1,25 +1,75 @@
 ---
 import BehavioralHub from '../../components/behavioral/BehavioralHub.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 import '../../styles/behavioral.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/behavioral`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Behavioral Interview Preparation — STAR Method Guide',
+  description: '150+ behavioral interview questions tagged by Amazon Leadership Principles, Google, and Meta styles. STAR story builder with live coaching, coverage matrix.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Guide',
+  teaches: ['STAR interview method', 'Amazon Leadership Principles', 'Behavioral interview techniques', 'Conflict resolution answers', 'Leadership and teamwork stories'],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the STAR method for behavioral interviews?',
+      acceptedAnswer: { '@type': 'Answer', text: 'STAR stands for Situation, Task, Action, Result. It is a structured framework for answering behavioral interview questions. First describe the Situation and Task (context), then the Actions you took, and finally the measurable Result. Amazon, Google, and Meta use behavioral interviews based on STAR-format answers.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are Amazon Leadership Principles interview questions?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Amazon interviews heavily test 16 Leadership Principles: Customer Obsession, Ownership, Invent and Simplify, Are Right A Lot, Learn and Be Curious, Hire and Develop the Best, Insist on the Highest Standards, Think Big, Bias for Action, Frugality, Earn Trust, Dive Deep, Have Backbone, Deliver Results, Strive to be Earth\'s Best Employer, and Success and Scale Bring Broad Responsibility.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are common behavioral interview questions?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Common behavioral interview questions: Tell me about a time you failed. Describe a conflict with a coworker and how you resolved it. Tell me about a time you showed leadership. Give an example of a challenging project. Describe a time you had to make a difficult decision with limited information. Tell me about a time you exceeded expectations.' },
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Behavioral Interview Prep — DSA & Dev Notes</title>
-    <meta name="description" content="150+ behavioral interview questions tagged by category and company style (Amazon LPs, Google, Meta), plus a guided STAR story builder with live coaching hints and a coverage matrix so you always know which question types you can answer." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Behavioral Interview Prep — STAR Method & 150+ Questions | Interview Prep Buddy"
+      description="Master behavioral interviews with 150+ questions tagged by Amazon Leadership Principles, Google, and Meta styles. Build STAR stories with live coaching and track your coverage."
+      url={PAGE_URL}
+      keywords="behavioral interview questions, STAR method interview, Amazon leadership principles, behavioral interview prep, tell me about yourself, conflict resolution interview"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Behavioral Interview', url: '/behavioral' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
   </head>
   <body class="mcq-body">
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>Behavioral Interview Prep — STAR Method Guide and 150+ Questions</h1>
+      <p>Prepare for behavioral interviews at Amazon, Google, Meta, and Microsoft. Practice 150+ behavioral questions using the STAR method (Situation, Task, Action, Result) with coverage tracking for all Amazon Leadership Principles.</p>
+    </div>
     <AppNav activeSection="behavioral" client:load />
     <BehavioralHub client:load />
   </body>

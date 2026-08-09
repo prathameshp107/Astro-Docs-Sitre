@@ -13,16 +13,72 @@ export function getStaticPaths() {
 
 const { category } = Astro.params;
 const cat = MCQ_CATEGORIES.find(c => c.id === category);
+
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
+const catName   = cat?.name || 'Programming';
+const PAGE_URL  = `${SITE_URL}/mcq/${category}`;
+const PAGE_TITLE = `${catName} MCQ Quiz — Interview Practice Questions | Interview Prep Buddy`;
+const PAGE_DESC  = `Practice ${catName} multiple-choice questions for technical interviews. Test your knowledge of ${catName} concepts with curated MCQs from real developer interviews.`;
+
+const quizSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Quiz',
+  name: PAGE_TITLE,
+  description: PAGE_DESC,
+  url: PAGE_URL,
+  image: OG_IMAGE,
+  educationalLevel: 'intermediate',
+  about: { '@type': 'Thing', name: catName },
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+    { '@type': 'ListItem', position: 2, name: 'MCQ Hub', item: SITE_URL + '/mcq' },
+    { '@type': 'ListItem', position: 3, name: `${catName} Quiz`, item: PAGE_URL },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{cat?.name || 'Category'} — MCQ Hub</title>
-    <meta name="description" content={`${cat?.name || 'MCQ'} category — test your knowledge with interactive quizzes.`} />
+
+    <title>{PAGE_TITLE}</title>
+    <meta name="description" content={PAGE_DESC} />
+    <link rel="canonical" href={PAGE_URL} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="Prathamesh Pawar" />
+
+    <meta property="og:type"         content="website" />
+    <meta property="og:title"        content={PAGE_TITLE} />
+    <meta property="og:description"  content={PAGE_DESC} />
+    <meta property="og:url"          content={PAGE_URL} />
+    <meta property="og:image"        content={OG_IMAGE} />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name"    content={SITE_NAME} />
+    <meta property="og:locale"       content="en_IN" />
+
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={PAGE_TITLE} />
+    <meta name="twitter:description" content={PAGE_DESC} />
+    <meta name="twitter:image"       content={OG_IMAGE} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(quizSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />

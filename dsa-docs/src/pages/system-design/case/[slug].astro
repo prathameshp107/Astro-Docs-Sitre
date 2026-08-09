@@ -1,0 +1,73 @@
+---
+import InteractiveCaseStudy from '../../../components/system-design/InteractiveCaseStudy.jsx';
+import AppNav from '../../../components/AppNav.jsx';
+import { CASE_STUDIES } from '../../../data/system-design/caseStudies.js';
+import '../../../styles/mcq-tailwind.css';
+import '../../../styles/landing.css';
+import '../../../styles/system-design.css';
+
+export async function getStaticPaths() {
+  return CASE_STUDIES.filter((c) => c.interactive).map((c) => ({
+    params: { slug: c.slug },
+    props: { caseStudy: c },
+  }));
+}
+
+const { caseStudy } = Astro.props;
+const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+
+// No `site` configured in astro.config.mjs, so breadcrumb/article schema
+// below intentionally uses site-relative paths rather than guessing a
+// fully-qualified domain — still valid structured data, just without `@id`.
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'System Design', item: `${base}system-design` },
+    { '@type': 'ListItem', position: 2, name: 'Case Studies', item: `${base}system-design#case-studies` },
+    { '@type': 'ListItem', position: 3, name: caseStudy.title },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: caseStudy.title,
+  description: caseStudy.desc,
+  proficiencyLevel: caseStudy.difficulty,
+  about: (caseStudy.topics || []).join(', '),
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{caseStudy.title} — Interactive Architecture Walkthrough</title>
+    <meta name="description" content={`${caseStudy.desc} Watch the architecture evolve stage by stage with interactive diagrams and request-path tracing.`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="system-design" client:load />
+
+    {/* Server-rendered breadcrumb — visible and crawlable even before the React island hydrates */}
+    <nav aria-label="Breadcrumb" class="max-w-6xl mx-auto px-4 pt-4 text-xs font-mono text-[var(--sketch-text-muted)] font-sketch">
+      <a href={`${base}system-design`} class="hover:text-amber-500 hover:underline">System Design</a>
+      <span class="mx-1.5">›</span>
+      <a href={`${base}system-design`} class="hover:text-amber-500 hover:underline">Case Studies</a>
+      <span class="mx-1.5">›</span>
+      <span class="text-[var(--sketch-text)]">{caseStudy.title}</span>
+    </nav>
+
+    <InteractiveCaseStudy
+      caseStudySlug={caseStudy.slug}
+      client:only="react"
+    />
+  </body>
+</html>

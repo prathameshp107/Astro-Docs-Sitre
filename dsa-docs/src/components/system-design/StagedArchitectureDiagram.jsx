@@ -313,6 +313,7 @@ function StagedArchitectureDiagramInner({ diagramData }) {
               onClick={() => zoomIn({ duration: 300 })}
               className="px-2 py-1 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
               title="Zoom In"
+              aria-label="Zoom in"
             >
               ＋
             </button>
@@ -320,6 +321,7 @@ function StagedArchitectureDiagramInner({ diagramData }) {
               onClick={() => zoomOut({ duration: 300 })}
               className="px-2 py-1 text-xs text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
               title="Zoom Out"
+              aria-label="Zoom out"
             >
               －
             </button>
@@ -327,6 +329,7 @@ function StagedArchitectureDiagramInner({ diagramData }) {
               onClick={() => fitView({ duration: 500, padding: 0.25 })}
               className="px-2 py-1 text-xs text-amber-400 hover:bg-slate-800 rounded-lg font-mono transition-colors"
               title="Reset / Fit View"
+              aria-label="Reset and fit diagram to view"
             >
               ⛶ Fit
             </button>
@@ -336,6 +339,8 @@ function StagedArchitectureDiagramInner({ diagramData }) {
                 showLegend ? 'bg-amber-500/20 text-amber-400 font-bold' : 'text-slate-400 hover:text-slate-200'
               }`}
               title="Toggle Component Legend"
+              aria-label="Toggle component legend"
+              aria-pressed={showLegend}
             >
               ℹ️ Key
             </button>

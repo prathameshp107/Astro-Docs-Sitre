@@ -1,22 +1,44 @@
 ---
 import OODHub from '../../components/system-design/OODHub.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/system-design.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/ood`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Object-Oriented Design (OOD) Interview Preparation Hub',
+  description: 'Master OOD for machine coding and LLD interview rounds. SOLID principles, GoF design patterns, UML class diagrams, and real-world design problems.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'advanced',
+  learningResourceType: 'Guide',
+  teaches: ['Object-Oriented Design', 'SOLID principles', 'Design Patterns', 'UML class diagrams', 'Machine coding interview'],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Object-Oriented Design (OOD) & Design Patterns Hub</title>
-    <meta name="description" content="Master Object-Oriented Design (OOD), SOLID Principles, 23 Gang-of-Four Design Patterns, and UML Class Diagrams for software engineering interviews." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Object-Oriented Design (OOD) Interview Prep — SOLID + Design Patterns | Interview Prep Buddy"
+      description="Master Object-Oriented Design for machine coding and LLD interview rounds. SOLID principles, 23 GoF design patterns, UML class diagrams, and real-world OOD problems with solutions."
+      url={PAGE_URL}
+      keywords="object oriented design interview, OOD machine coding, SOLID principles interview, design patterns OOD, UML class diagram, LLD machine coding round"
+      schema={schema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Object-Oriented Design', url: '/ood' }]}
+    />
   </head>
   <body class="mcq-body">
     <AppNav activeSection="ood" client:load />

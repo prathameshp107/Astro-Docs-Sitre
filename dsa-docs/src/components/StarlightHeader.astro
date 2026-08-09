@@ -1,0 +1,33 @@
+---
+import AppNav from './AppNav.jsx';
+---
+
+<div class="starlight-nav-wrapper">
+  <AppNav activeSection="docs" client:load />
+</div>
+
+<style is:global>
+  /* Reset Starlight's header container so AppNav renders 100% full width with proper Tailwind dropdown z-index */
+  header.header {
+    padding: 0 !important;
+    border-bottom: none !important;
+    background: transparent !important;
+    height: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  .starlight-nav-wrapper {
+    width: 100%;
+    position: relative;
+    z-index: 50;
+  }
+  /* Enforce clean Inter font for navbar on docs pages to match main app pages */
+  .starlight-nav-wrapper,
+  .starlight-nav-wrapper *,
+  .starlight-nav-wrapper a,
+  .starlight-nav-wrapper button,
+  .starlight-nav-wrapper span {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  }
+</style>

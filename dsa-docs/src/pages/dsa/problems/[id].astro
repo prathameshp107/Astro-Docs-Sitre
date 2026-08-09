@@ -1,6 +1,7 @@
 ---
 import DSAProblemView from '../../../components/dsa/DSAProblemView.jsx';
 import AppNav from '../../../components/AppNav.jsx';
+import PageSEO from '../../../components/PageSEO.astro';
 import '../../../styles/dsa-lab.css';
 import '../../../styles/landing.css';
 
@@ -8,10 +9,39 @@ export async function getStaticPaths() {
   const { DSA_PROBLEMS } = await import('../../../data/dsa-problems.js');
   return DSA_PROBLEMS.map((problem) => ({
     params: { id: problem.id },
+    props: { problem },
   }));
 }
 
 const { id } = Astro.params;
+const { problem } = Astro.props;
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/dsa/problems/${id}`;
+
+// Plain-text summary for meta description / crawlable body (strip markdown emphasis/code marks)
+const plainStatement = problem.problemStatement.replace(/[*`_]/g, '').trim();
+const PAGE_TITLE = `${problem.title} — ${problem.difficulty} DSA Interview Problem | Interview Prep Buddy`;
+const rawDesc = `${problem.title} (${problem.difficulty}): ${plainStatement}`;
+const PAGE_DESC = rawDesc.length > 158 ? rawDesc.slice(0, 158).replace(/\s+\S*$/, '') + '…' : rawDesc;
+
+const EDUCATIONAL_LEVEL = { Easy: 'beginner', Medium: 'intermediate', Hard: 'advanced' }[problem.difficulty] ?? 'intermediate';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: `${problem.title} — Solution, Approach & Complexity Analysis`,
+  description: PAGE_DESC,
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: EDUCATIONAL_LEVEL,
+  learningResourceType: 'Coding Problem',
+  teaches: problem.topics,
+  about: problem.topics.map((t) => ({ '@type': 'Thing', name: t })),
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
 ---
 
 <!DOCTYPE html>
@@ -20,13 +50,46 @@ const { id } = Astro.params;
     <meta charset="UTF-8" />
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Problem — DSA Problem Lab</title>
-    <meta name="description" content="Solve DSA problems with interactive code editor and test runner." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title={PAGE_TITLE}
+      description={PAGE_DESC}
+      url={PAGE_URL}
+      keywords={`${problem.title}, ${problem.topics.join(', ')}, ${problem.companies.join(' interview question, ')} interview question, ${problem.difficulty} DSA problem, coding interview practice`}
+      ogType="article"
+      schema={schema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'DSA Problems', url: '/dsa/problems' }, { name: problem.title, url: `/dsa/problems/${id}` }]}
+    />
   </head>
   <body>
+    <!-- Crawlable summary: DSAProblemView renders client:only, so this is the only -->
+    <!-- server-rendered description of the problem search engines and AI crawlers see. -->
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>{problem.title} — {problem.difficulty} Coding Interview Question</h1>
+      <p>{plainStatement}</p>
+
+      <h2>Example</h2>
+      <p>Input: {problem.examples[0]?.input}</p>
+      <p>Output: {problem.examples[0]?.output}</p>
+      {problem.examples[0]?.explanation && <p>Explanation: {problem.examples[0].explanation}</p>}
+
+      <h2>Constraints</h2>
+      <ul>
+        {problem.constraints.map((c) => <li>{c}</li>)}
+      </ul>
+
+      <h2>Topics & Companies</h2>
+      <p>Topics: {problem.topics.join(', ')}</p>
+      <p>Asked by: {problem.companies.join(', ')}</p>
+
+      <h2>Optimal Solution Complexity</h2>
+      <p>Time complexity: {problem.optimizedSolution.timeComplexity}. Space complexity: {problem.optimizedSolution.spaceComplexity}.</p>
+
+      <h2>Practice more</h2>
+      <ul>
+        <li><a href="/dsa/problems">All DSA Problems</a></li>
+        <li><a href="/dsa/patterns">DSA Patterns</a></li>
+      </ul>
+    </div>
     <AppNav activeSection="dsa-problems" client:load />
     <DSAProblemView problemId={id} client:only="react" />
   </body>

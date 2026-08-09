@@ -2,16 +2,79 @@
 import ReactPlayground from '../components/ReactPlayground.jsx';
 import AppNav from '../components/AppNav.jsx';
 import '../styles/landing.css';
+
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
+const PAGE_URL  = `${SITE_URL}/playground`;
+const PAGE_TITLE = 'JavaScript Code Playground — Run & Test Code Online | Interview Prep Buddy';
+const PAGE_DESC  = 'Write, run, and test JavaScript code directly in your browser. A fast, zero-setup online coding environment for practicing DSA solutions, testing JavaScript snippets, and preparing for coding interviews.';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Interview Prep Buddy — JavaScript Code Playground',
+  description: PAGE_DESC,
+  url: PAGE_URL,
+  image: OG_IMAGE,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+  featureList: [
+    'Live JavaScript code execution',
+    'Browser-based code editor',
+    'Zero setup required',
+    'DSA problem testing',
+    'Console output display',
+  ],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Code Playground', item: PAGE_URL },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Playground — DSA & Dev Notes</title>
-    <meta name="description" content="Interactive JavaScript code playground for DSA & Dev Notes." />
+
+    <title>{PAGE_TITLE}</title>
+    <meta name="description" content={PAGE_DESC} />
+    <link rel="canonical" href={PAGE_URL} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="Prathamesh Pawar" />
+    <meta name="keywords" content="JavaScript playground online, run JavaScript browser, online code editor, JavaScript code tester, browser JavaScript REPL, coding playground interview, JavaScript sandbox online" />
+
+    <meta property="og:type"         content="website" />
+    <meta property="og:title"        content={PAGE_TITLE} />
+    <meta property="og:description"  content={PAGE_DESC} />
+    <meta property="og:url"          content={PAGE_URL} />
+    <meta property="og:image"        content={OG_IMAGE} />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name"    content={SITE_NAME} />
+    <meta property="og:locale"       content="en_IN" />
+
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={PAGE_TITLE} />
+    <meta name="twitter:description" content={PAGE_DESC} />
+    <meta name="twitter:image"       content={OG_IMAGE} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />

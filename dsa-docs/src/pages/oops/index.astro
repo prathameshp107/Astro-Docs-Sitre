@@ -1,24 +1,69 @@
 ---
 import OODHub from '../../components/system-design/OODHub.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/system-design.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/oops`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Object-Oriented Programming (OOP) & Design Patterns Interview Guide',
+  description: 'Master OOP concepts, SOLID principles, and all 23 Gang-of-Four design patterns for technical interviews. Includes UML class diagram examples.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Guide',
+  teaches: ['Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction', 'SOLID Principles', 'Creational design patterns', 'Structural design patterns', 'Behavioral design patterns'],
+  about: [{ '@type': 'Thing', name: 'Object-Oriented Programming' }, { '@type': 'Thing', name: 'Design Patterns' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What are the 4 pillars of Object-Oriented Programming?',
+      acceptedAnswer: { '@type': 'Answer', text: 'The 4 pillars of OOP are: (1) Encapsulation — bundling data and methods together and restricting direct access to internal state, (2) Inheritance — a class inheriting properties and behaviors from a parent class, (3) Polymorphism — the ability to treat objects of different types through a common interface (method overriding and overloading), (4) Abstraction — hiding implementation details and exposing only necessary interfaces.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between abstract class and interface?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Abstract class: can have both abstract and concrete methods, can have state (fields), a class can extend only one abstract class. Interface: all methods are abstract by default (Java 8+ allows default methods), no state (only constants), a class can implement multiple interfaces. Use abstract class for "is-a" relationships with shared code; use interface for defining contracts and capability-based typing.' },
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Object-Oriented Programming (OOP) & Design Patterns Hub</title>
-    <meta name="description" content="Master Object-Oriented Programming (OOP), SOLID Principles, 23 Gang-of-Four Design Patterns, and UML Class Diagrams." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="OOP & Design Patterns Interview Guide — SOLID + 23 Patterns | Interview Prep Buddy"
+      description="Master Object-Oriented Programming, SOLID Principles, and all 23 Gang-of-Four Design Patterns for technical interviews. Includes UML class diagrams and interview Q&A."
+      url={PAGE_URL}
+      keywords="OOP interview questions, object oriented programming, SOLID principles, design patterns interview, encapsulation inheritance polymorphism, abstract class vs interface, Singleton pattern"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'OOP & Design Patterns', url: '/oops' }]}
+    />
   </head>
   <body class="mcq-body">
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>Object-Oriented Programming (OOP) and Design Patterns Interview Guide</h1>
+      <p>Master the 4 pillars of OOP (Encapsulation, Inheritance, Polymorphism, Abstraction), SOLID principles, and all 23 Gang-of-Four design patterns for software engineering technical interviews.</p>
+    </div>
     <AppNav activeSection="oops" client:load />
     <OODHub client:load />
   </body>

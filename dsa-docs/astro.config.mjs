@@ -10,13 +10,27 @@ import sidebar from './src/config/sidebar.js';
 import { fileURLToPath, URL } from 'node:url';
 
 const isVercel = !!process.env.VERCEL;
-const site = isVercel && process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : 'https://prathameshp107.github.io';
+const isCF = !!process.env.CF_PAGES; // Cloudflare Pages sets this automatically
+
+// Always use the production domain as the canonical URL.
+// VERCEL_PROJECT_PRODUCTION_URL is the stable custom domain (interviewpreprationbuddy.in)
+// and does NOT change between deployments, unlike VERCEL_URL (which is per-deployment).
+const PRODUCTION_DOMAIN = 'https://interviewpreprationbuddy.in';
+const site = isVercel
+  ? (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : PRODUCTION_DOMAIN)
+  : isCF && process.env.CF_PAGES_URL
+    ? process.env.CF_PAGES_URL
+    : PRODUCTION_DOMAIN;
+
+// Vercel, Cloudflare, and local dev run at root (/); GitHub Pages needs the /repo-name base
+const isGH = !!process.env.GITHUB_ACTIONS || !!process.env.GH_PAGES;
+const needsBase = isGH && !isVercel && !isCF;
 
 export default defineConfig({
   site,
-  ...(isVercel ? {} : { base: '/DSA-Notes-Problems' }),
+  ...(needsBase ? { base: '/DSA-Notes-Problems' } : {}),
   server: {
     host: 'localhost',
     port: 4321,
@@ -57,11 +71,12 @@ export default defineConfig({
     },
   },
   integrations: [starlight({
-    title: 'DSA & Dev Notes',
-    description: 'Personal knowledge base for DSA, JavaScript, React, SQL, MongoDB, Docker and Interview Prep',
+    title: 'Interview Prep Buddy',
+    description: 'Your complete interview preparation platform: DSA, System Design, JavaScript, React, SQL, MongoDB, Docker and more.',
     defaultLocale: 'en',
     components: {
       Sidebar: './src/components/Sidebar.astro',
+      Header: './src/components/StarlightHeader.astro',
       Head: './src/components/SEOHead.astro',
     },
     social: [
@@ -71,18 +86,55 @@ export default defineConfig({
         href: 'https://github.com/prathameshp107/DSA-Notes-Problems',
       },
     ],
+    favicon: '/favicon-32x32.png?v=2',
     logo: {
-      alt: 'DSA Notes',
-      src: './src/assets/logo.svg',
+      alt: 'Interview Prep Buddy',
+      src: './src/assets/logo.png',
+      replacesTitle: false,
     },
-    customCss: ['./src/styles/tokens.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
+    customCss: ['./src/styles/tokens.css', './src/styles/landing.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
     sidebar,
     head: [
+      // Favicon & App Icons (PNG & ICO prioritized for universal browser compatibility)
+      {
+        tag: 'link',
+        attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png?v=2' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png?v=2' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'shortcut icon', href: '/favicon.ico?v=2' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png?v=2' },
+      },
+      // Grant AI Overviews / Google SGE full snippet access
+      {
+        tag: 'meta',
+        attrs: {
+          name: 'robots',
+          content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+        },
+      },
+      // Author signal (E-E-A-T)
+      {
+        tag: 'meta',
+        attrs: { name: 'author', content: 'Prathamesh Pawar' },
+      },
+      // DNS prefetch for fonts performance
+      {
+        tag: 'link',
+        attrs: { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
+      },
       {
         tag: 'meta',
         attrs: {
           name: 'keywords',
-          content: 'DSA, JavaScript, React, MongoDB, SQL, Docker, Interview Prep',
+          content: 'DSA interview prep, data structures algorithms, system design interview, JavaScript interview questions, React interview, coding interview preparation, technical interview guide, LeetCode patterns',
         },
       },
       {

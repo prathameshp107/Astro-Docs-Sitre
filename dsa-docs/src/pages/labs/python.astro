@@ -1,21 +1,24 @@
----
+﻿---
 import PythonLanding from '../../components/labs/PythonLanding.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import '../../styles/landing.css';
 import '../../styles/practice-labs.css';
+import PageSEO from '../../components/PageSEO.astro';
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Labs — Interactive Python Learning Platform</title>
-    <meta name="description" content="Master Python through interactive learning. Write code, build projects, solve challenges, and prepare for interviews." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Python Reference Labs — Interview Prep Buddy"
+      description="Interactive Python reference with code examples covering syntax, data structures, OOP, algorithms, and Python standard library."
+      url="https://interviewpreprationbuddy.in/labs/python"
+      keywords="Python reference interactive, Python code examples, learn Python online"
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Labs', url: '/labs' }, { name: 'Python Reference Labs', url: '/labs/python' }]}
+    />
   </head>
   <body>
     <AppNav activeSection="python" client:load />

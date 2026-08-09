@@ -1,24 +1,111 @@
 ---
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer/graphs`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Graph Algorithm Visualizer — BFS, DFS, Dijkstra Animations',
+  description: 'Visualize graph algorithms with interactive animations: BFS (breadth-first search), DFS (depth-first search), and Dijkstra shortest path on directed and undirected graphs.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Interactive Tool',
+  teaches: ['Graph BFS traversal', 'Graph DFS traversal', 'Dijkstra shortest path', 'Directed graph vs undirected graph', 'Adjacency list representation'],
+  about: [{ '@type': 'Thing', name: 'Graph Algorithms' }, { '@type': 'Thing', name: 'BFS DFS' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Visualize Graph BFS and DFS',
+  url: PAGE_URL,
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Build the Graph', text: 'Add nodes by clicking on the canvas. Connect nodes by clicking two nodes in sequence to create an edge.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select a Start Node', text: 'Click on a node to set it as the starting node for BFS or DFS traversal.' },
+    { '@type': 'HowToStep', position: 3, name: 'Choose BFS or DFS', text: 'Select Breadth-First Search (BFS) to explore level by level, or Depth-First Search (DFS) to explore as deep as possible first.' },
+    { '@type': 'HowToStep', position: 4, name: 'Run the Traversal', text: 'Click "Visualize" to see nodes highlighted in visit order. BFS uses a queue; DFS uses a stack or recursion.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the difference between BFS and DFS in graphs?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'BFS (Breadth-First Search) explores all neighbors of a node before going deeper. It uses a queue and finds the shortest path in unweighted graphs. Time: O(V+E), Space: O(V). DFS (Depth-First Search) explores as deep as possible before backtracking. It uses a stack (or recursion) and is used for cycle detection, topological sort, and finding connected components. Time: O(V+E), Space: O(V).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'When should I use BFS vs DFS?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use BFS when: finding shortest path in unweighted graph, level-order traversal, finding all nodes within k distance, web crawling. Use DFS when: detecting cycles, topological sorting, finding connected components, solving maze/path problems, backtracking problems. BFS guarantees the shortest path; DFS uses less memory for deep/narrow graphs.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is Dijkstra\'s algorithm?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Dijkstra\'s algorithm finds the shortest path from a source node to all other nodes in a weighted graph (non-negative weights only). It uses a min-heap (priority queue) and greedily picks the unvisited node with the smallest known distance. Time: O((V+E) log V) with a heap. It does not work with negative edge weights (use Bellman-Ford instead).',
+      },
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Graph Visualizer — DSA Visualizer</title>
-    <meta name="description" content="Interactive graph visualizer. Run BFS and DFS algorithms on directed and undirected graphs." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Graph Algorithm Visualizer — BFS, DFS, Dijkstra Animated | Interview Prep Buddy"
+      description="Visualize graph algorithms with interactive animations. See BFS (breadth-first search), DFS (depth-first search), and Dijkstra's shortest path algorithm step by step on directed and undirected graphs."
+      url={PAGE_URL}
+      keywords="graph algorithm visualizer, BFS DFS visualizer, Dijkstra visualizer, graph traversal animation, breadth first search animation, depth first search animation, shortest path visualizer"
+      ogType="article"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Graph Algorithms', url: '/visualizer/graphs' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   </head>
   <body class="mcq-body">
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>Graph Algorithm Visualizer — BFS, DFS, and Dijkstra Shortest Path Animations</h1>
+      <p>Visualize how BFS (breadth-first search), DFS (depth-first search), and Dijkstra's algorithm traverse and find shortest paths in directed and undirected graphs. Each step is animated with node visit order highlighted.</p>
+      <h2>BFS vs DFS at a Glance</h2>
+      <ul>
+        <li>BFS: Uses queue, finds shortest path (unweighted), O(V+E) time, O(V) space</li>
+        <li>DFS: Uses stack/recursion, detects cycles, topological sort, O(V+E) time, O(V) space</li>
+        <li>Dijkstra: Uses min-heap, shortest path (weighted, non-negative), O((V+E) log V)</li>
+      </ul>
+      <h2>Related Visualizers</h2>
+      <ul>
+        <li><a href="/visualizer/trees">Binary Tree BFS and DFS Visualizer</a></li>
+        <li><a href="/visualizer/sorting">Sorting Algorithm Visualizer</a></li>
+        <li><a href="/visualizer">All Algorithm Visualizers</a></li>
+      </ul>
+    </div>
     <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerPage topicId="graphs" client:load />
   </body>

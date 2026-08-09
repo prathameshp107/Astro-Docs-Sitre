@@ -66,7 +66,7 @@ export function Community() {
             {[
               [Users, "48,000 active developers", "Reading, solving, and reviewing code every month."],
               [MessageCircle, "12,400 discussion threads", "Alternative solutions, edge-case debates, and follow-ups."],
-              [GithubIcon, "Open source curriculum", "Docs and problem sets continuously refined by community contributions."],
+              [Sparkles, "Comprehensive curriculum", "Docs and problem sets continuously refined for interview prep."],
             ].map(([Icon, t, d], i) => {
               const I = Icon as typeof Users;
               return (
