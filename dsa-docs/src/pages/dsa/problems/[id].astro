@@ -27,6 +27,10 @@ const PAGE_DESC = rawDesc.length > 158 ? rawDesc.slice(0, 158).replace(/\s+\S*$/
 
 const EDUCATIONAL_LEVEL = { Easy: 'beginner', Medium: 'intermediate', Hard: 'advanced' }[problem.difficulty] ?? 'intermediate';
 
+// Cast: DSA_PROBLEMS.examples entries have inconsistent optional fields across
+// 135 problems, which TS infers as an unwieldy union — narrow to what we use here.
+const firstExample = problem.examples[0] as { input?: string; output?: string; explanation?: string } | undefined;
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
@@ -68,9 +72,9 @@ const schema = {
       <p>{plainStatement}</p>
 
       <h2>Example</h2>
-      <p>Input: {problem.examples[0]?.input}</p>
-      <p>Output: {problem.examples[0]?.output}</p>
-      {problem.examples[0]?.explanation && <p>Explanation: {problem.examples[0].explanation}</p>}
+      <p>Input: {firstExample?.input}</p>
+      <p>Output: {firstExample?.output}</p>
+      {firstExample?.explanation && <p>Explanation: {firstExample.explanation}</p>}
 
       <h2>Constraints</h2>
       <ul>

@@ -1,6 +1,7 @@
 ---
 import SystemDesignHub from '../../components/system-design/SystemDesignHub.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import GoogleAnalytics from '../../components/GoogleAnalytics.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/system-design.css';
@@ -88,6 +89,7 @@ const breadcrumbSchema = {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <GoogleAnalytics />
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

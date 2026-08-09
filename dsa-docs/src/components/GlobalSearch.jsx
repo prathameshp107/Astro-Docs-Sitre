@@ -124,13 +124,13 @@ export default function GlobalSearch() {
       <button
         type="button"
         onClick={openSearch}
-        className="app-nav-search-trigger flex flex-row items-center gap-2 px-3 py-1.5 rounded-lg border border-border/80 bg-muted/40 hover:bg-muted/80 hover:border-primary/40 text-xs font-medium text-muted-foreground hover:text-foreground transition-all duration-200 shadow-2xs cursor-pointer"
+        className="app-nav-search-trigger flex items-center justify-center gap-1.5 h-9 px-2.5 sm:px-3 sm:py-1.5 rounded-lg border border-border/80 bg-muted/40 hover:bg-muted/80 hover:border-primary/40 text-xs font-medium text-muted-foreground hover:text-foreground transition-all duration-200 shadow-2xs cursor-pointer shrink-0"
         title="Search (Ctrl+K or ⌘K)"
         aria-label="Open search"
       >
         <SearchIcon size={14} className="app-nav-search-icon shrink-0 opacity-70" />
-        <span className="app-nav-search-text font-normal">Search...</span>
-        <kbd className="app-nav-search-kbd inline-flex items-center justify-center rounded border border-border/60 bg-background/80 px-1.5 py-0.5 text-[10px] font-mono opacity-80 font-semibold ml-1">
+        <span className="app-nav-search-text font-normal hidden sm:inline">Search...</span>
+        <kbd className="app-nav-search-kbd hidden md:inline-flex items-center justify-center rounded border border-border/60 bg-background/80 px-1.5 py-0.5 text-[10px] font-mono opacity-80 font-semibold ml-1">
           ⌘K
         </kbd>
       </button>

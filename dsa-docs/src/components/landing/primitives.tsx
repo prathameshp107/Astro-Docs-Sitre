@@ -100,11 +100,11 @@ export function Code({
   className?: string;
 }) {
   return (
-    <pre className={`overflow-x-auto p-4 font-mono text-[12px] leading-[1.75] ${className}`}>
+    <pre className={`overflow-x-auto max-w-full min-w-0 p-3 sm:p-4 font-mono text-[11px] sm:text-[12px] leading-[1.75] ${className}`}>
       <code>
         {lines.map((line, i) => (
-          <div key={i} className="flex gap-4">
-            <span className="w-5 shrink-0 text-right text-muted-foreground/40 select-none">
+          <div key={i} className="flex gap-3 sm:gap-4 min-w-0">
+            <span className="w-4 sm:w-5 shrink-0 text-right text-muted-foreground/40 select-none">
               {start + i}
             </span>
             <span className="whitespace-pre">

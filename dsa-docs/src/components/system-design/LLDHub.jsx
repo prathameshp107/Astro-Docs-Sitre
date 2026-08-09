@@ -280,7 +280,7 @@ export default function LLDHub() {
           <div className="sketch-border bg-[var(--sketch-bg)] p-3 rounded-2xl border border-[var(--sketch-border)]">
             <span className="font-mono text-xs text-amber-400 font-bold block mb-1">02. Class Model (10m)</span>
             <p className="text-xs text-[var(--sketch-text-muted)] leading-relaxed">
-              Define core entities, attributes, enums, interfaces, and relationships (Composition > Inheritance).
+              Define core entities, attributes, enums, interfaces, and relationships (Composition &gt; Inheritance).
             </p>
           </div>
           <div className="sketch-border bg-[var(--sketch-bg)] p-3 rounded-2xl border border-[var(--sketch-border)]">

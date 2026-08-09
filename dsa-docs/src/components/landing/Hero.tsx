@@ -212,7 +212,7 @@ export function Hero() {
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
               v3.0 — The Developer Learning Operating System
             </p>
-            <h1 className="text-[2.8rem] leading-[1.02] font-bold tracking-[-0.04em] text-balance sm:text-6xl md:text-[4.5rem]">
+            <h1 className="text-[2.2rem] sm:text-5xl md:text-[4.5rem] leading-[1.05] font-bold tracking-[-0.04em] text-balance">
               From code to{" "}
               <span className="relative inline-block whitespace-nowrap">
                 <span className="relative z-10 font-serif italic font-normal text-muted-foreground/75">
@@ -222,49 +222,49 @@ export function Hero() {
               </span>
               .
             </h1>
-            <p className="mt-7 max-w-lg text-base leading-relaxed text-muted-foreground md:text-[17px]">
+            <p className="mt-5 sm:mt-7 max-w-lg text-sm sm:text-base leading-relaxed text-muted-foreground md:text-[17px]">
               Documentation, interactive labs, DSA playground, algorithm visualizers, MCQ
               rounds and company-specific interview prep — unified into one continuous system instead of
               scattered tabs.
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-3">
+            <div className="mt-7 sm:mt-9 flex flex-wrap items-center gap-3">
               <a
                 href={`${base}dsa/problems`}
-                className="group inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-medium text-accent-foreground transition-all duration-200 hover:opacity-90"
+                className="group inline-flex items-center gap-2 rounded-lg bg-accent px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-medium text-accent-foreground transition-all duration-200 hover:opacity-90"
               >
                 <Play className="h-3.5 w-3.5 fill-current transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
                 Start Learning
               </a>
               <a
                 href={`${base}overview/`}
-                className="rounded-lg border border-border bg-card px-5 py-3 text-sm font-medium transition-colors hover:bg-elevated text-foreground"
+                className="rounded-lg border border-border bg-card px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-medium transition-colors hover:bg-elevated text-foreground"
               >
                 Explore Docs
               </a>
             </div>
-            <dl className="mt-12 grid max-w-md grid-cols-3 gap-3 border-t border-border pt-7">
+            <dl className="mt-8 sm:mt-12 grid max-w-md grid-cols-3 gap-2 sm:gap-3 border-t border-border pt-5 sm:pt-7">
               {[
                 ["650+", "Interview questions"],
                 ["150", "DSA problems"],
-                ["48k", "Monthly developers"],
+                ["48k", "Monthly devs"],
               ].map(([n, label]) => (
-                <div key={label} className="rounded-xl border border-border/70 bg-card/60 p-3.5 transition-colors hover:bg-elevated">
-                  <dt className="font-display text-2xl font-bold text-foreground md:text-[26px]">{n}</dt>
-                  <dd className="mt-1 text-[11px] leading-snug text-muted-foreground">{label}</dd>
+                <div key={label} className="rounded-xl border border-border/70 bg-card/60 p-2.5 sm:p-3.5 transition-colors hover:bg-elevated">
+                  <dt className="font-display text-lg sm:text-2xl font-bold text-foreground md:text-[26px]">{n}</dt>
+                  <dd className="mt-0.5 sm:mt-1 text-[10px] sm:text-[11px] leading-tight sm:leading-snug text-muted-foreground">{label}</dd>
                 </div>
               ))}
             </dl>
           </div>
 
           {/* Right Column — Sleek Dark IDE */}
-          <div className="relative lg:col-span-6">
+          <div className="relative lg:col-span-6 w-full max-w-full min-w-0">
             <div
-              className="relative transition-transform duration-500 [transform-style:preserve-3d]"
+              className="relative transition-transform duration-500 w-full max-w-full min-w-0"
               style={{
-                transform: `perspective(1400px) rotateY(${tilt.x * 3}deg) rotateX(${-tilt.y * 3}deg)`,
+                transform: typeof window !== 'undefined' && window.innerWidth < 768 ? 'none' : `perspective(1400px) rotateY(${tilt.x * 3}deg) rotateX(${-tilt.y * 3}deg)`,
               }}
             >
-              <div className="overflow-hidden rounded-2xl border border-border/80 bg-card/95 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+              <div className="overflow-hidden w-full max-w-full rounded-2xl border border-border/80 bg-card/95 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.8)] backdrop-blur-xl">
                 {/* Header Bar */}
                 <div className="flex items-center justify-between border-b border-border/70 bg-surface/70 px-4 py-3">
                   <div className="flex items-center gap-3">

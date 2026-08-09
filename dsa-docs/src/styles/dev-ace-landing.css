@@ -186,11 +186,31 @@
 .text-muted-foreground\/60 { color: color-mix(in srgb, var(--muted-foreground) 60%, transparent) !important; }
 .text-muted-foreground\/70 { color: color-mix(in srgb, var(--muted-foreground) 70%, transparent) !important; }
 
+html,
+body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+}
+
 .landing-wrapper {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+main {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 /* Premium crossfade for theme toggling */

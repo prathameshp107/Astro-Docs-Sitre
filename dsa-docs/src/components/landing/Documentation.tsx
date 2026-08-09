@@ -258,7 +258,7 @@ export function Documentation() {
             >
               <div className="grid grid-cols-12">
                 {/* Sidebar Navigation */}
-                <aside className="col-span-5 border-r border-border/80 bg-surface/70 p-3 sm:col-span-4">
+                <aside className="col-span-12 md:col-span-4 border-b md:border-b-0 md:border-r border-border/80 bg-surface/70 p-3">
                   <div className="mb-3 flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 shadow-inner">
                     <Search className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
                     <input
@@ -309,7 +309,7 @@ export function Documentation() {
                 </aside>
 
                 {/* Reader Pane */}
-                <div className="col-span-7 p-5 sm:col-span-8">
+                <div className="col-span-12 md:col-span-8 p-3.5 sm:p-5">
                   {tabIndex === "Guide" && (
                     <>
                       <p className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground">
