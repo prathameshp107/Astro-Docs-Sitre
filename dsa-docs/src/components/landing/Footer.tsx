@@ -75,10 +75,15 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary font-mono text-[13px] font-bold text-primary-foreground">
-                /
-              </span>
-              <span className="font-display text-[15px] font-semibold">Interview Prep Docs</span>
+              <img
+                src={`${base}logo-icon.png`}
+                alt="Interview Prep Buddy Logo"
+                width="28"
+                height="28"
+                className="h-7 w-7 object-contain"
+                loading="lazy"
+              />
+              <span className="font-display text-[15px] font-bold">Interview Prep <span className="text-primary">Buddy</span></span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               A Developer Learning Operating System — from first line of code to signed offer.
@@ -139,7 +144,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-4 border-t border-border pt-6 font-mono text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Interview Prep Docs</p>
+          <p>© {new Date().getFullYear()} Interview Prep Buddy</p>
           <div className="flex items-center gap-3">
             {socials.map(({ label, icon: Icon }) => (
               <a

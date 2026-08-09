@@ -161,21 +161,19 @@ export function Nav() {
         }`}
       >
         <div className="mx-auto flex h-16 max-w-[1600px] w-full items-center justify-between px-6 gap-6">
-          <a href={base} className="flex items-center gap-2.5 shrink-0" aria-label="Home">
-            <span className="flex shrink-0">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-                <defs>
-                  <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" />
-                    <stop offset="100%" stopColor="#8b5cf6" />
-                  </linearGradient>
-                </defs>
-                <rect width="32" height="32" rx="10" fill="url(#navLogoGrad)" />
-                <text x="16" y="21" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Inter">D</text>
-              </svg>
+          <a href={base} className="flex items-center gap-2.5 shrink-0 group" aria-label="Interview Prep Buddy Home">
+            <span className="flex shrink-0 items-center justify-center h-8 w-8 rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-105">
+              <img
+                src={`${base}logo-icon.png`}
+                alt="Interview Prep Buddy Logo"
+                width="32"
+                height="32"
+                className="h-8 w-8 object-contain"
+                loading="eager"
+              />
             </span>
-            <span className="font-display text-[15px] font-semibold tracking-tight">
-              Interview Prep Docs
+            <span className="font-display text-[15px] font-bold tracking-tight text-foreground">
+              Interview Prep <span className="text-primary">Buddy</span>
             </span>
           </a>
           <nav aria-label="Primary" className="hidden flex-1 items-center justify-evenly gap-3 lg:flex mx-2">

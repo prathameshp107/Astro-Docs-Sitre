@@ -24,8 +24,9 @@ const site = isVercel
     ? process.env.CF_PAGES_URL
     : PRODUCTION_DOMAIN;
 
-// Vercel & Cloudflare deploy to root, GitHub Pages needs the /repo-name base
-const needsBase = !isVercel && !isCF;
+// Vercel, Cloudflare, and local dev run at root (/); GitHub Pages needs the /repo-name base
+const isGH = !!process.env.GITHUB_ACTIONS || !!process.env.GH_PAGES;
+const needsBase = isGH && !isVercel && !isCF;
 
 export default defineConfig({
   site,
@@ -85,13 +86,32 @@ export default defineConfig({
         href: 'https://github.com/prathameshp107/DSA-Notes-Problems',
       },
     ],
+    favicon: '/favicon-32x32.png?v=2',
     logo: {
       alt: 'Interview Prep Buddy',
-      src: './src/assets/logo.svg',
+      src: './src/assets/logo.png',
+      replacesTitle: false,
     },
     customCss: ['./src/styles/tokens.css', './src/styles/landing.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
     sidebar,
     head: [
+      // Favicon & App Icons (PNG & ICO prioritized for universal browser compatibility)
+      {
+        tag: 'link',
+        attrs: { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png?v=2' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png?v=2' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'shortcut icon', href: '/favicon.ico?v=2' },
+      },
+      {
+        tag: 'link',
+        attrs: { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png?v=2' },
+      },
       // Grant AI Overviews / Google SGE full snippet access
       {
         tag: 'meta',

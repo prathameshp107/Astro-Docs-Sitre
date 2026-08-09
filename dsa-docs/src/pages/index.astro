@@ -7,6 +7,7 @@ const SITE_NAME = 'Interview Prep Buddy';
 const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
 const PAGE_TITLE = 'Interview Prep Buddy — DSA, System Design & Interview Preparation';
 const PAGE_DESC  = 'Master DSA patterns, system design, JavaScript, and React with interactive labs, algorithm visualizers, MCQ rounds, and company-specific interview guides — all in one place.';
+const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
 // ── WebSite + SearchAction ─────────────────────────────────────────────────
 const websiteSchema = {
@@ -45,7 +46,7 @@ const orgSchema = {
   '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   url: SITE_URL,
-  logo: { '@type': 'ImageObject', url: `${SITE_URL}/favicon.svg`, width: 512, height: 512 },
+  logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png`, width: 1002, height: 772 },
   image: OG_IMAGE,
   description: 'The all-in-one interview preparation platform for DSA, System Design, JavaScript, React, and company-specific technical interview prep.',
   foundingDate: '2024',
@@ -128,6 +129,13 @@ const faqSchema = {
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="author" content="Prathamesh Pawar" />
     <meta name="keywords" content="DSA interview preparation, data structures algorithms, system design interview, JavaScript interview questions, React interview prep, LeetCode patterns, coding interview, technical interview guide, algorithm visualizer, FAANG interview prep" />
+
+    <!-- Favicon & App Icons (PNG & ICO prioritized for universal browser compatibility) -->
+    <link rel="icon" type="image/png" sizes="32x32" href={`${base}favicon-32x32.png?v=2`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`${base}favicon-16x16.png?v=2`} />
+    <link rel="shortcut icon" href={`${base}favicon.ico?v=2`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png?v=2`} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg?v=2`} />
 
     <!-- Open Graph -->
     <meta property="og:type"        content="website" />
