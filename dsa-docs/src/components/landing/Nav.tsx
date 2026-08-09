@@ -86,7 +86,7 @@ const visualizerSubItems = [
   { label: "Arrays Visualizer", href: `${base}visualizer/arrays`, icon: LayoutGrid, color: "#10b981" },
   { label: "Linked List Visualizer", href: `${base}visualizer/linked-list`, icon: Link, color: "#f59e0b" },
   { label: "Stack & Queue", href: `${base}visualizer/stack`, icon: Layers, color: "#6366f1" },
-  { label: "Hash Tables", href: `${base}visualizer/hash-tables`, icon: Hash, color: "#06b6d4" },
+  { label: "Hash Tables", href: `${base}visualizer/hash-table`, icon: Hash, color: "#06b6d4" },
   { label: "Trees Visualizer", href: `${base}visualizer/trees`, icon: GitFork, color: "#84cc16" },
   { label: "Graphs Visualizer", href: `${base}visualizer/graphs`, icon: Workflow, color: "#a855f7" },
   { label: "Heaps Visualizer", href: `${base}visualizer/heaps`, icon: Boxes, color: "#f97316" },

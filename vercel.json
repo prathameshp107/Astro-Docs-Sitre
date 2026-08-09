@@ -22,5 +22,17 @@
       "source": "/DSA-Notes-Problems/:path*",
       "destination": "/:path*"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/visualizer/heap",
+      "destination": "/visualizer/heaps",
+      "permanent": true
+    },
+    {
+      "source": "/visualizer/hash-tables",
+      "destination": "/visualizer/hash-table",
+      "permanent": true
+    }
   ]
 }
