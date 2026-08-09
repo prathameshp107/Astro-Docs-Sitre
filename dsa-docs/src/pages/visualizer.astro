@@ -1,24 +1,162 @@
 ---
 import DSAVisualizerHub from '../components/DSAVisualizerHub.jsx';
 import AppNav from '../components/AppNav.jsx';
+import PageSEO from '../components/PageSEO.astro';
 import '../styles/mcq-tailwind.css';
 import '../styles/landing.css';
 import '../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'DSA Algorithm Visualizer — Interactive Step-by-Step Animations',
+  description: 'Free interactive algorithm visualizer for data structures and algorithms. Visualize sorting, trees, graphs, binary search, linked lists, stacks, queues, heaps, and more with step-by-step animations.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  applicationCategory: 'EducationalApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+  featureList: [
+    'Sorting algorithm visualizer (Bubble, Merge, Quick, Insertion, Selection)',
+    'Binary tree and BST visualizer',
+    'Graph BFS and DFS visualizer',
+    'Binary search step-by-step animation',
+    'Linked list visualizer',
+    'Stack and Queue visualizer',
+    'Heap and Priority Queue visualizer',
+    'Dynamic programming visualizer',
+    'Recursion call stack visualizer',
+    'Two pointers and Sliding window visualizer',
+    'Backtracking visualizer',
+    'Hash table collision resolution visualizer',
+  ],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the best free algorithm visualizer?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Interview Prep Buddy\'s DSA Visualizer is a free, browser-based algorithm visualizer covering 17+ topics including sorting algorithms (Bubble Sort, Merge Sort, Quick Sort), Binary Trees, Graphs (BFS/DFS), Binary Search, Linked Lists, Stacks, Queues, Heaps, Dynamic Programming, Recursion, Two Pointers, Sliding Window, and Backtracking — all with interactive step-by-step animations.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How does sorting algorithm visualization work?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In a sorting algorithm visualizer, array elements are displayed as bars of varying heights. At each step, the algorithm compares and swaps elements, which is shown as color-highlighted bars moving in real time. You can control the speed and step through the animation manually to understand how algorithms like Bubble Sort, Merge Sort, and Quick Sort work internally.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Which data structures can I visualize?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Interview Prep Buddy visualizes: Arrays, Linked Lists (singly/doubly), Binary Trees, Binary Search Trees, Graphs (directed/undirected), Stacks, Queues, Priority Queues (Heaps), and Hash Tables. Each visualization includes insertion, deletion, and traversal animations.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I use the algorithm visualizer to learn for coding interviews?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. The algorithm visualizer is specifically designed for coding interview preparation. Seeing algorithms animated step-by-step builds deep intuition that helps you implement them from memory during interviews. Each visualizer includes the algorithm\'s time complexity (Big-O notation), space complexity, and best/worst/average case analysis.',
+      },
+    },
+  ],
+};
+
+// Full internal link hub for PageRank distribution and crawlability
+const visualizerTopics = [
+  { id: 'sorting',       name: 'Sorting Algorithms',          desc: 'Bubble, Merge, Quick, Insertion, Selection Sort' },
+  { id: 'trees',         name: 'Binary Trees & BST',          desc: 'BST insertion, deletion, BFS, DFS traversals' },
+  { id: 'graphs',        name: 'Graph Algorithms',            desc: 'BFS, DFS, Dijkstra shortest path' },
+  { id: 'searching',     name: 'Search Algorithms',           desc: 'Binary Search, Linear Search' },
+  { id: 'linked-list',   name: 'Linked Lists',                desc: 'Singly, doubly, reversal, cycle detection' },
+  { id: 'stack',         name: 'Stack',                       desc: 'Push, pop, LIFO operations' },
+  { id: 'queue',         name: 'Queue',                       desc: 'Enqueue, dequeue, circular queue' },
+  { id: 'heaps',         name: 'Heaps & Priority Queues',     desc: 'Min-heap, max-heap, heapify' },
+  { id: 'hash-tables',   name: 'Hash Tables',                 desc: 'Hash function, chaining, open addressing' },
+  { id: 'recursion',     name: 'Recursion',                   desc: 'Call stack, factorial, fibonacci' },
+  { id: 'two-pointers',  name: 'Two Pointers',                desc: 'Pair sum, palindrome, sliding technique' },
+  { id: 'sliding-window','name': 'Sliding Window',            desc: 'Max sum subarray, longest substring' },
+  { id: 'backtracking',  name: 'Backtracking',                desc: 'N-Queens, permutations, Sudoku solver' },
+  { id: 'dp',            name: 'Dynamic Programming',         desc: 'Memoization, tabulation, knapsack' },
+  { id: 'arrays',        name: 'Arrays',                      desc: 'Insertion, deletion, traversal' },
+];
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DSA Visualizer — Interactive DSA Learning Platform</title>
-    <meta name="description" content="Interactive data structures and algorithms visualizer with step-by-step animations. Arrays, Sorting, Trees, Graphs and more." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Patrick+Hand&family=Caveat&family=Architects+Daughter&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="DSA Algorithm Visualizer — Interactive Step-by-Step Animations | Interview Prep Buddy"
+      description="Free interactive visualizer for 17+ data structures and algorithms. Step-by-step animations for sorting, trees, graphs, binary search, linked lists, stacks, queues, heaps, dynamic programming, recursion, and more."
+      url={PAGE_URL}
+      keywords="DSA visualizer, algorithm visualizer, sorting algorithm animation, binary tree visualization, graph BFS DFS visualizer, bubble sort animation, merge sort visualizer, binary search visualizer, data structures animation, interactive algorithm learning, free algorithm visualizer"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Algorithm Visualizer', url: '/visualizer' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Patrick+Hand&family=Caveat&family=Architects+Daughter&display=swap"
+    />
   </head>
   <body class="mcq-body">
+    <!-- ★ CRITICAL: Static crawler content — answers featured snippet queries + distributes PageRank to all sub-pages -->
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>DSA Algorithm Visualizer — Free Interactive Step-by-Step Animations</h1>
+      <p>Interview Prep Buddy's Algorithm Visualizer lets you see exactly how data structures and algorithms work through interactive, step-by-step animations. Built for coding interview preparation, it covers 17+ algorithms with Big-O complexity analysis.</p>
+
+      <h2>What algorithms can you visualize?</h2>
+      <ul>
+        {visualizerTopics.map(t => (
+          <li><a href={`/visualizer/${t.id}`}>{t.name}</a> — {t.desc}</li>
+        ))}
+      </ul>
+
+      <h2>How to use the Algorithm Visualizer</h2>
+      <ol>
+        <li>Select an algorithm or data structure from the menu (e.g., Sorting, Trees, Graphs)</li>
+        <li>Click "Visualize" or "Start" to begin the step-by-step animation</li>
+        <li>Use the speed control to slow down or speed up the animation</li>
+        <li>Click "Step" to advance one operation at a time for deep understanding</li>
+        <li>Read the explanation panel showing the current operation and Big-O complexity</li>
+      </ol>
+
+      <h2>Sorting Algorithms Visualized</h2>
+      <ul>
+        <li><a href="/visualizer/sorting">Bubble Sort</a> — O(n²) time, O(1) space. Compares adjacent elements and swaps them repeatedly.</li>
+        <li><a href="/visualizer/sorting">Merge Sort</a> — O(n log n) time, O(n) space. Divides array in half, sorts recursively, merges.</li>
+        <li><a href="/visualizer/sorting">Quick Sort</a> — O(n log n) average, O(n²) worst. Picks a pivot and partitions around it.</li>
+        <li><a href="/visualizer/sorting">Insertion Sort</a> — O(n²) time, O(1) space. Builds sorted array one element at a time.</li>
+        <li><a href="/visualizer/sorting">Selection Sort</a> — O(n²) time, O(1) space. Repeatedly selects the minimum element.</li>
+      </ul>
+
+      <h2>Tree Traversal Algorithms</h2>
+      <ul>
+        <li><a href="/visualizer/trees">Binary Tree BFS (Level-Order)</a> — Uses a queue, visits nodes level by level</li>
+        <li><a href="/visualizer/trees">Binary Tree DFS (Inorder)</a> — Left → Root → Right, gives sorted output for BST</li>
+        <li><a href="/visualizer/trees">Binary Tree DFS (Preorder)</a> — Root → Left → Right</li>
+        <li><a href="/visualizer/trees">Binary Tree DFS (Postorder)</a> — Left → Right → Root</li>
+      </ul>
+
+      <h2>Why use an Algorithm Visualizer for Interview Prep?</h2>
+      <p>Seeing algorithms animated helps build muscle memory and intuition. When you can visualize how merge sort splits and merges, or how Dijkstra expands its frontier, you can implement these algorithms from scratch in an interview without memorization. Each visualizer in Interview Prep Buddy shows Big-O time and space complexity alongside the animation.</p>
+    </div>
+
     <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerHub client:load />
   </body>

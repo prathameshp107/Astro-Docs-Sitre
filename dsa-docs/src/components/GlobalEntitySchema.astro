@@ -1,0 +1,70 @@
+---
+/**
+ * GlobalEntitySchema.astro
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Outputs two persistent JSON-LD entities that build the site's Knowledge Graph
+ * entry: the Organisation and the primary Author (Person).
+ *
+ * Inject this component in the <head> of EVERY standalone page (non-Starlight).
+ * Starlight pages get it via SEOHead.astro.
+ *
+ * Usage:
+ *   import GlobalEntitySchema from '../components/GlobalEntitySchema.astro';
+ *   <GlobalEntitySchema />
+ */
+
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${SITE_URL}/favicon.svg`,
+    width: 512,
+    height: 512,
+  },
+  image: `${SITE_URL}/assets/og-image.png`,
+  description:
+    'The all-in-one interview preparation platform for DSA, System Design, JavaScript, React, and company-specific technical interview prep. Used by thousands of developers preparing for FAANG and top tech company interviews.',
+  foundingDate: '2024',
+  inLanguage: 'en-IN',
+  sameAs: [
+    'https://github.com/prathameshp107/DSA-Notes-Problems',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'customer support',
+    url: `${SITE_URL}/contact`,
+  },
+};
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${SITE_URL}/#author`,
+  name: 'Prathamesh Pawar',
+  url: `${SITE_URL}/about`,
+  jobTitle: 'Software Developer',
+  description: 'Full-stack developer and creator of Interview Prep Buddy — an interview preparation platform for DSA, System Design, JavaScript, and React.',
+  sameAs: [
+    'https://github.com/prathameshp107',
+  ],
+  worksFor: {
+    '@id': `${SITE_URL}/#organization`,
+  },
+};
+---
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(organizationSchema)}
+/>
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(personSchema)}
+/>

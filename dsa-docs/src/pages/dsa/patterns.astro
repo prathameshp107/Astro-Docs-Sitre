@@ -4,21 +4,173 @@ import AppNav from '../../components/AppNav.jsx';
 import '../../styles/dsa-lab.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
+
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
+const PAGE_URL  = `${SITE_URL}/dsa/patterns`;
+const PAGE_TITLE = 'DSA Patterns Cheatsheet — 16 Core Algorithm Patterns | Interview Prep Buddy';
+const PAGE_DESC  = 'Master 16 essential DSA patterns: Two Pointers, Sliding Window, Fast & Slow Pointers, Merge Intervals, Binary Search, BFS/DFS, Dynamic Programming, Backtracking, Topological Sort, and more. With code blueprints and input signals.';
+
+const learningSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: PAGE_TITLE,
+  description: PAGE_DESC,
+  url: PAGE_URL,
+  image: OG_IMAGE,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Reference Material',
+  teaches: [
+    'Two Pointers pattern',
+    'Sliding Window pattern',
+    'Fast and Slow Pointers',
+    'Merge Intervals',
+    'Cyclic Sort',
+    'Binary Search variations',
+    'Tree BFS and DFS traversal',
+    'Graph BFS and DFS',
+    'Dynamic Programming patterns',
+    'Backtracking',
+    'Topological Sort',
+    'Heap and Priority Queue patterns',
+    'Two Heaps pattern',
+    'Subsets and Combinations',
+    'Bitwise XOR patterns',
+    'K-way Merge',
+  ],
+  about: [
+    { '@type': 'Thing', name: 'Data Structures and Algorithms' },
+    { '@type': 'Thing', name: 'Coding Interview Preparation' },
+    { '@type': 'Thing', name: 'Algorithm Patterns' },
+    { '@type': 'Thing', name: 'LeetCode Patterns' },
+  ],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What are the most important DSA patterns for coding interviews?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The 16 most important DSA patterns for coding interviews are: (1) Two Pointers, (2) Sliding Window, (3) Fast & Slow Pointers, (4) Merge Intervals, (5) Cyclic Sort, (6) In-place Reversal of Linked List, (7) Tree BFS, (8) Tree DFS, (9) Two Heaps, (10) Subsets, (11) Modified Binary Search, (12) Bitwise XOR, (13) Top K Elements, (14) K-way Merge, (15) Dynamic Programming, (16) Topological Sort. These patterns cover approximately 90% of coding interview problems.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the Two Pointers pattern in DSA?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The Two Pointers pattern uses two pointers to traverse an array or linked list simultaneously, reducing time complexity from O(n²) to O(n). It is used for problems like finding pairs that sum to a target, removing duplicates from a sorted array, and palindrome checking. Common signals: sorted array, pair/triplet finding, in-place operations.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'When should I use the Sliding Window pattern?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Use the Sliding Window pattern when: the problem involves a contiguous subarray or substring, you need to find the maximum/minimum/average of a subarray of size K, or you need to find the longest/shortest subarray satisfying a condition. Examples: Maximum Sum Subarray of Size K, Longest Substring with K Distinct Characters, Fruits Into Baskets.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is Dynamic Programming and when is it used in interviews?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Dynamic Programming (DP) solves optimization problems by breaking them into overlapping subproblems and storing results (memoization or tabulation). Use DP when: the problem has optimal substructure, subproblems repeat, and you need to find max/min/count. Common interview DP problems: Fibonacci, Knapsack, Longest Common Subsequence, Coin Change, Climbing Stairs.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I recognize which DSA pattern to use?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Identify the DSA pattern by looking at input signals: sorted array → Binary Search or Two Pointers; top/maximum K elements → Heap; need to process all combinations → Backtracking/Subsets; directed graph with dependencies → Topological Sort; tree traversal → BFS (level-order) or DFS (pre/in/post-order); overlapping subproblems → Dynamic Programming.',
+      },
+    },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+    { '@type': 'ListItem', position: 2, name: 'DSA', item: SITE_URL + '/dsa/' },
+    { '@type': 'ListItem', position: 3, name: 'Patterns', item: PAGE_URL },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DSA Algorithmic Patterns & Cheatsheet — DSA Lab</title>
-    <meta name="description" content="Master 16 core DSA patterns including Two Pointers, Sliding Window, Fast & Slow Pointers, DSU, Topological Sort, and Dynamic Programming with code blueprints and input signals." />
+
+    <title>{PAGE_TITLE}</title>
+    <meta name="description" content={PAGE_DESC} />
+    <link rel="canonical" href={PAGE_URL} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="Prathamesh Pawar" />
+    <meta name="keywords" content="DSA patterns, algorithm patterns, two pointers, sliding window, dynamic programming, binary search, BFS DFS, graph algorithms, coding interview patterns, LeetCode patterns cheatsheet, 16 DSA patterns" />
+
+    <meta property="og:type"         content="article" />
+    <meta property="og:title"        content={PAGE_TITLE} />
+    <meta property="og:description"  content={PAGE_DESC} />
+    <meta property="og:url"          content={PAGE_URL} />
+    <meta property="og:image"        content={OG_IMAGE} />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name"    content={SITE_NAME} />
+    <meta property="og:locale"       content="en_IN" />
+
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={PAGE_TITLE} />
+    <meta name="twitter:description" content={PAGE_DESC} />
+    <meta name="twitter:image"       content={OG_IMAGE} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(learningSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Patrick+Hand&family=Caveat:wght@600&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <!-- AEO: Answer-first crawler content for AI engines -->
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>DSA Patterns Cheatsheet — 16 Core Algorithm Patterns for Coding Interviews</h1>
+      <p>The 16 most important DSA patterns cover approximately 90% of coding interview problems. Learn Two Pointers, Sliding Window, Binary Search, Dynamic Programming, BFS/DFS, and more — each with code blueprints and input signal recognition guides.</p>
+      <h2>What are the 16 DSA patterns?</h2>
+      <ol>
+        <li>Two Pointers — for pair/triplet finding in sorted arrays</li>
+        <li>Sliding Window — for contiguous subarray/substring problems</li>
+        <li>Fast and Slow Pointers — for cycle detection in linked lists</li>
+        <li>Merge Intervals — for overlapping interval problems</li>
+        <li>Cyclic Sort — for finding missing/duplicate numbers</li>
+        <li>In-place Reversal — for reversing linked list subgroups</li>
+        <li>Tree BFS — for level-order tree traversal</li>
+        <li>Tree DFS — for path-based tree problems</li>
+        <li>Two Heaps — for median finding problems</li>
+        <li>Subsets — for permutations and combinations</li>
+        <li>Modified Binary Search — for sorted/rotated array search</li>
+        <li>Bitwise XOR — for finding missing or duplicate numbers</li>
+        <li>Top K Elements — using heaps for K largest/smallest</li>
+        <li>K-way Merge — for merging K sorted arrays/lists</li>
+        <li>Dynamic Programming — for optimization with overlapping subproblems</li>
+        <li>Topological Sort — for DAG ordering problems</li>
+      </ol>
+    </div>
     <AppNav activeSection="dsa-patterns" client:load />
     <DSAPatternsView client:load />
   </body>

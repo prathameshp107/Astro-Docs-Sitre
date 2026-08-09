@@ -1,0 +1,107 @@
+---
+/**
+ * PageSEO.astro — Universal SEO head component for standalone pages
+ * ─────────────────────────────────────────────────────────────────
+ * Drop this into any non-Starlight page's <head> to get:
+ *   - Title + meta description + canonical
+ *   - Robots max-snippet directive
+ *   - Author meta
+ *   - Open Graph (og:*) full set
+ *   - Twitter card (summary_large_image)
+ *   - JSON-LD schema (pass as `schema` prop, or auto-generates WebApplication)
+ *   - BreadcrumbList (auto-generated from breadcrumbs prop)
+ *   - Organization + Person entity references
+ *   - dns-prefetch for Google Fonts
+ *   - Google Fonts link (pass fontUrl prop)
+ *
+ * Usage:
+ *   import PageSEO from '../../components/PageSEO.astro';
+ *   <PageSEO
+ *     title="Page Title"
+ *     description="Page description"
+ *     url="https://interviewpreprationbuddy.in/page"
+ *     keywords="kw1, kw2"
+ *     schema={jsonLdObject}
+ *     faqSchema={faqJsonLdObject}
+ *     breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Page', url: '/page' }]}
+ *     fontUrl="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+ *   />
+ */
+
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  keywords?: string;
+  ogType?: 'website' | 'article';
+  schema?: Record<string, any> | null;
+  faqSchema?: Record<string, any> | null;
+  breadcrumbs?: Array<{ name: string; url: string }>;
+  fontUrl?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  url,
+  keywords = '',
+  ogType = 'website',
+  schema = null,
+  faqSchema = null,
+  breadcrumbs = [],
+  fontUrl = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap",
+  noindex = false,
+} = Astro.props;
+
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
+
+// Auto-generate BreadcrumbList
+const breadcrumbSchema = breadcrumbs.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbs.map((b, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: b.name,
+    item: b.url.startsWith('http') ? b.url : SITE_URL + b.url,
+  })),
+} : null;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={url} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
+<meta name="author" content="Prathamesh Pawar" />
+{keywords && <meta name="keywords" content={keywords} />}
+
+<!-- Open Graph -->
+<meta property="og:type"         content={ogType} />
+<meta property="og:title"        content={title} />
+<meta property="og:description"  content={description} />
+<meta property="og:url"          content={url} />
+<meta property="og:image"        content={OG_IMAGE} />
+<meta property="og:image:width"  content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name"    content={SITE_NAME} />
+<meta property="og:locale"       content="en_IN" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:title"       content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image"       content={OG_IMAGE} />
+
+<!-- Schemas -->
+{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+{faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
+{breadcrumbSchema && <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />}
+
+<!-- Fonts -->
+<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href={fontUrl} rel="stylesheet" />

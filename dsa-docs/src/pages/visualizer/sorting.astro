@@ -1,24 +1,138 @@
 ---
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer/sorting`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Sorting Algorithm Visualizer — Bubble, Merge, Quick Sort Animations',
+  description: 'Visualize Bubble Sort, Merge Sort, Quick Sort, Insertion Sort, and Selection Sort with interactive step-by-step animations. Compare time complexity (Big-O) and see exactly how each sorting algorithm works.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'beginner',
+  learningResourceType: 'Interactive Tool',
+  teaches: ['Bubble Sort', 'Merge Sort', 'Quick Sort', 'Insertion Sort', 'Selection Sort', 'Time complexity Big-O', 'Space complexity analysis'],
+  about: [{ '@type': 'Thing', name: 'Sorting Algorithms' }, { '@type': 'Thing', name: 'Algorithm Visualization' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Use the Sorting Algorithm Visualizer',
+  description: 'Step-by-step guide to visualizing sorting algorithms with interactive animations',
+  url: PAGE_URL,
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Select a Sorting Algorithm', text: 'Choose from Bubble Sort, Merge Sort, Quick Sort, Insertion Sort, or Selection Sort from the dropdown menu.' },
+    { '@type': 'HowToStep', position: 2, name: 'Set the Array Size', text: 'Use the slider to set the number of elements (bars) in the array. More elements show the algorithm at larger scale.' },
+    { '@type': 'HowToStep', position: 3, name: 'Adjust Animation Speed', text: 'Use the speed control to slow down the animation. Slower speeds are better for learning; faster speeds compare algorithms at scale.' },
+    { '@type': 'HowToStep', position: 4, name: 'Start the Visualization', text: 'Click the "Sort" or "Visualize" button to start the step-by-step sorting animation with highlighted comparisons and swaps.' },
+    { '@type': 'HowToStep', position: 5, name: 'Study the Complexity', text: 'Read the time and space complexity panel showing Big-O notation for best, average, and worst case performance of the algorithm.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the time complexity of sorting algorithms?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Time complexity of common sorting algorithms: Bubble Sort O(n²) worst/average, O(n) best (already sorted). Merge Sort O(n log n) all cases (consistent). Quick Sort O(n log n) average, O(n²) worst (bad pivot). Insertion Sort O(n²) worst, O(n) best. Selection Sort O(n²) all cases. Heap Sort O(n log n) all cases.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Which sorting algorithm is fastest?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'In practice, Quick Sort is usually the fastest general-purpose sorting algorithm with O(n log n) average time, which is why most standard library sort functions (like JavaScript\'s Array.sort) use variations of it. Merge Sort is faster when stability is required (preserving equal element order). Heap Sort guarantees O(n log n) worst case without extra space.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How does Merge Sort work?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Merge Sort is a divide-and-conquer algorithm. It: 1) Divides the array in half recursively until each sub-array has 1 element, 2) Merges pairs of sorted sub-arrays by comparing their smallest elements and picking the smaller one, 3) Continues merging until the entire array is sorted. Time: O(n log n) all cases. Space: O(n). It is stable and works well for linked lists.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between Quick Sort and Merge Sort?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Quick Sort vs Merge Sort: Quick Sort picks a pivot and partitions in-place (O(1) extra space), but degrades to O(n²) with a bad pivot. Merge Sort always runs in O(n log n) but needs O(n) extra space for merging. Quick Sort is faster in practice due to cache efficiency. Merge Sort is stable; Quick Sort is usually not. Use Merge Sort when stability matters or for linked lists; Quick Sort for arrays in practice.',
+      },
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sorting Visualizer — DSA Visualizer</title>
-    <meta name="description" content="Interactive sorting algorithm visualizer. Compare Bubble, Selection, Insertion, Merge, and Quick Sort." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Sorting Algorithm Visualizer — Bubble, Merge, Quick Sort Animated | Interview Prep Buddy"
+      description="Visualize Bubble Sort, Merge Sort, Quick Sort, Insertion Sort, and Selection Sort with step-by-step animations. Compare Big-O time complexity and see how each sorting algorithm works internally."
+      url={PAGE_URL}
+      keywords="sorting algorithm visualizer, bubble sort animation, merge sort visualization, quick sort step by step, insertion sort animation, selection sort visualizer, sorting algorithm comparison, algorithm visualizer free, Big O sorting"
+      ogType="article"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Sorting Algorithms', url: '/visualizer/sorting' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   </head>
   <body class="mcq-body">
+    <!-- Featured snippet content + internal links for PageRank -->
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>Sorting Algorithm Visualizer — Step-by-Step Animations with Big-O Complexity</h1>
+      <p>Visualize how sorting algorithms work with interactive, step-by-step animations. See comparisons, swaps, and partitions in real time for Bubble Sort, Merge Sort, Quick Sort, Insertion Sort, and Selection Sort.</p>
+
+      <h2>Sorting Algorithm Time and Space Complexity</h2>
+      <ul>
+        <li>Bubble Sort: Time O(n²) worst/avg, O(n) best. Space O(1). Stable. Simple but slow.</li>
+        <li>Merge Sort: Time O(n log n) all cases. Space O(n). Stable. Best for linked lists.</li>
+        <li>Quick Sort: Time O(n log n) avg, O(n²) worst. Space O(log n). Unstable. Fastest in practice.</li>
+        <li>Insertion Sort: Time O(n²) worst, O(n) best. Space O(1). Stable. Best for nearly-sorted arrays.</li>
+        <li>Selection Sort: Time O(n²) all cases. Space O(1). Unstable. Minimizes swaps.</li>
+        <li>Heap Sort: Time O(n log n) all cases. Space O(1). Unstable. Guaranteed performance.</li>
+      </ul>
+
+      <h2>How to use this Sorting Visualizer</h2>
+      <ol>
+        <li>Select a sorting algorithm (Bubble, Merge, Quick, Insertion, or Selection Sort)</li>
+        <li>Set the array size using the slider</li>
+        <li>Adjust animation speed (slower = better for learning)</li>
+        <li>Click Sort to start the animated visualization</li>
+        <li>Watch highlighted comparisons and swaps with Big-O notation displayed</li>
+      </ol>
+
+      <h2>Related Visualizers</h2>
+      <ul>
+        <li><a href="/visualizer/searching">Binary Search Visualizer</a></li>
+        <li><a href="/visualizer/trees">Binary Tree Visualizer</a></li>
+        <li><a href="/visualizer/graphs">Graph BFS DFS Visualizer</a></li>
+        <li><a href="/visualizer/two-pointers">Two Pointers Visualizer</a></li>
+        <li><a href="/visualizer">All Algorithm Visualizers</a></li>
+      </ul>
+    </div>
     <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerPage topicId="sorting" client:load />
   </body>

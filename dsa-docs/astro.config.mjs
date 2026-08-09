@@ -12,12 +12,17 @@ import { fileURLToPath, URL } from 'node:url';
 const isVercel = !!process.env.VERCEL;
 const isCF = !!process.env.CF_PAGES; // Cloudflare Pages sets this automatically
 
-// Vercel: use the deployment URL, Cloudflare: use CF_PAGES_URL, else GitHub Pages
-const site = isVercel && process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+// Always use the production domain as the canonical URL.
+// VERCEL_PROJECT_PRODUCTION_URL is the stable custom domain (interviewpreprationbuddy.in)
+// and does NOT change between deployments, unlike VERCEL_URL (which is per-deployment).
+const PRODUCTION_DOMAIN = 'https://interviewpreprationbuddy.in';
+const site = isVercel
+  ? (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : PRODUCTION_DOMAIN)
   : isCF && process.env.CF_PAGES_URL
     ? process.env.CF_PAGES_URL
-    : 'https://prathameshp107.github.io';
+    : PRODUCTION_DOMAIN;
 
 // Vercel & Cloudflare deploy to root, GitHub Pages needs the /repo-name base
 const needsBase = !isVercel && !isCF;
@@ -65,8 +70,8 @@ export default defineConfig({
     },
   },
   integrations: [starlight({
-    title: 'DSA & Dev Notes',
-    description: 'Personal knowledge base for DSA, JavaScript, React, SQL, MongoDB, Docker and Interview Prep',
+    title: 'Interview Prep Buddy',
+    description: 'Your complete interview preparation platform: DSA, System Design, JavaScript, React, SQL, MongoDB, Docker and more.',
     defaultLocale: 'en',
     components: {
       Sidebar: './src/components/Sidebar.astro',
@@ -81,17 +86,35 @@ export default defineConfig({
       },
     ],
     logo: {
-      alt: 'DSA Notes',
+      alt: 'Interview Prep Buddy',
       src: './src/assets/logo.svg',
     },
     customCss: ['./src/styles/tokens.css', './src/styles/landing.css', './src/styles/custom.css', './src/styles/docs-overview.css'],
     sidebar,
     head: [
+      // Grant AI Overviews / Google SGE full snippet access
+      {
+        tag: 'meta',
+        attrs: {
+          name: 'robots',
+          content: 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+        },
+      },
+      // Author signal (E-E-A-T)
+      {
+        tag: 'meta',
+        attrs: { name: 'author', content: 'Prathamesh Pawar' },
+      },
+      // DNS prefetch for fonts performance
+      {
+        tag: 'link',
+        attrs: { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
+      },
       {
         tag: 'meta',
         attrs: {
           name: 'keywords',
-          content: 'DSA, JavaScript, React, MongoDB, SQL, Docker, Interview Prep',
+          content: 'DSA interview prep, data structures algorithms, system design interview, JavaScript interview questions, React interview, coding interview preparation, technical interview guide, LeetCode patterns',
         },
       },
       {

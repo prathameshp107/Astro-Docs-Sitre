@@ -4,21 +4,130 @@ import AppNav from '../../components/AppNav.jsx';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/system-design.css';
+
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
+const PAGE_URL  = `${SITE_URL}/system-design`;
+const PAGE_TITLE = 'System Design Interview Prep — HLD & LLD Guide | Interview Prep Buddy';
+const PAGE_DESC  = 'Master System Design for engineering interviews. Learn High-Level Design (HLD) and Low-Level Design (LLD) with real case studies, architecture diagrams, scalability patterns, database design, caching, and microservices.';
+
+const learningSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: PAGE_TITLE,
+  description: PAGE_DESC,
+  url: PAGE_URL,
+  image: OG_IMAGE,
+  educationalLevel: 'advanced',
+  learningResourceType: 'Guide',
+  teaches: [
+    'High-Level System Design',
+    'Low-Level Design and Object-Oriented Design',
+    'Distributed Systems',
+    'Scalability patterns',
+    'Database design and sharding',
+    'Caching strategies',
+    'Microservices architecture',
+    'API design',
+    'Load balancing',
+  ],
+  about: [
+    { '@type': 'Thing', name: 'System Design Interview' },
+    { '@type': 'Thing', name: 'High-Level Design' },
+    { '@type': 'Thing', name: 'Low-Level Design' },
+    { '@type': 'Thing', name: 'Distributed Systems' },
+  ],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is system design in software engineering interviews?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'System design interviews test your ability to architect large-scale distributed systems. They typically cover HLD (High-Level Design) — overall system architecture, components, and data flow — and LLD (Low-Level Design) — detailed class design, APIs, and data models. Topics include scalability, load balancing, caching, databases, and microservices.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How do I prepare for system design interviews?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'To prepare for system design interviews: 1) Understand core concepts like CAP theorem, sharding, replication, and caching. 2) Study HLD patterns: load balancers, CDNs, databases, message queues. 3) Practice LLD with real-world examples (design a parking lot, library management system). 4) Study case studies: design Twitter, URL shortener, Netflix, Uber.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the difference between HLD and LLD?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'HLD (High-Level Design) covers the overall system architecture — components, services, databases, APIs, and how they interact at a macro level. LLD (Low-Level Design) covers the detailed implementation — class diagrams, method signatures, data structures, and algorithms used within individual components.',
+      },
+    },
+  ],
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL + '/' },
+    { '@type': 'ListItem', position: 2, name: 'System Design', item: PAGE_URL },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>System Design Hub — High-Level & Low-Level Design Prep</title>
-    <meta name="description" content="Master System Design (HLD) and Object-Oriented Design (LLD) for engineering interviews. Evolve architectures with interactive calculators and diagram visualizers." />
+
+    <title>{PAGE_TITLE}</title>
+    <meta name="description" content={PAGE_DESC} />
+    <link rel="canonical" href={PAGE_URL} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="Prathamesh Pawar" />
+    <meta name="keywords" content="system design interview, HLD interview prep, LLD design patterns, distributed systems interview, scalability interview questions, microservices design, database design interview, system design guide" />
+
+    <meta property="og:type"         content="website" />
+    <meta property="og:title"        content={PAGE_TITLE} />
+    <meta property="og:description"  content={PAGE_DESC} />
+    <meta property="og:url"          content={PAGE_URL} />
+    <meta property="og:image"        content={OG_IMAGE} />
+    <meta property="og:image:width"  content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name"    content={SITE_NAME} />
+    <meta property="og:locale"       content="en_IN" />
+
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={PAGE_TITLE} />
+    <meta name="twitter:description" content={PAGE_DESC} />
+    <meta name="twitter:image"       content={OG_IMAGE} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(learningSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body class="mcq-body">
+    <!-- Crawler-visible answer content -->
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>System Design Interview Prep — High-Level and Low-Level Design Guide</h1>
+      <p>Master system design for engineering interviews. Learn HLD and LLD with real case studies covering scalability, databases, caching, microservices, and distributed systems architecture.</p>
+    </div>
     <AppNav activeSection="system-design" client:load />
     <SystemDesignHub client:load />
   </body>

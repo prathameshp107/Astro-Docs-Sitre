@@ -1,0 +1,154 @@
+# Interview Prep Buddy — Full Site Content
+
+> Site: https://interviewpreprationbuddy.in  
+> Author: Prathamesh Pawar (https://github.com/prathameshp107)  
+> Purpose: Free, all-in-one technical interview preparation platform for software engineers.
+
+---
+
+## Site Description
+
+Interview Prep Buddy is a comprehensive, free technical interview preparation platform. It provides:
+- 16 core DSA (Data Structures and Algorithms) patterns with code blueprints
+- 1400+ curated interview questions across 15+ topics
+- Interactive algorithm visualizers with step-by-step animations
+- Browser-based coding labs (JavaScript, React, DSA)
+- MCQ practice quizzes with progress tracking
+- System design guides (HLD and LLD)
+- Company-specific interview prep for FAANG and top tech companies
+- Behavioral interview preparation using the STAR method
+
+---
+
+## Frequently Asked Questions
+
+**What is Interview Prep Buddy?**  
+Interview Prep Buddy is a free all-in-one technical interview preparation platform covering DSA, System Design, JavaScript, React, Node.js, and more. It includes interactive labs, algorithm visualizers, MCQ quizzes, 1400+ interview questions, and company-specific guides for FAANG and top tech companies.
+
+**How do I prepare for a coding interview?**  
+To prepare for a coding interview: 1) Master the 16 core DSA patterns (Two Pointers, Sliding Window, Binary Search, Dynamic Programming, etc.), 2) Practice LeetCode problems by topic and difficulty, 3) Study system design concepts (HLD and LLD), 4) Review language-specific questions (JavaScript, React, Python), 5) Practice behavioral questions using STAR method.
+
+**What are the 16 DSA patterns for coding interviews?**  
+The 16 DSA patterns are: (1) Two Pointers, (2) Sliding Window, (3) Fast & Slow Pointers, (4) Merge Intervals, (5) Cyclic Sort, (6) In-place Reversal of Linked List, (7) Tree BFS, (8) Tree DFS, (9) Two Heaps, (10) Subsets, (11) Modified Binary Search, (12) Bitwise XOR, (13) Top K Elements, (14) K-way Merge, (15) Dynamic Programming, (16) Topological Sort.
+
+**What DSA topics should I study for FAANG interviews?**  
+For FAANG interviews, focus on: Arrays & Strings, Linked Lists, Trees & Graphs, Dynamic Programming, Binary Search, Recursion & Backtracking, Sorting algorithms, Heaps/Priority Queues, Hash Maps, and Two Pointers. Master the 16 algorithmic patterns that cover 90% of interview problems.
+
+**What is system design in software engineering interviews?**  
+System design interviews test your ability to architect large-scale distributed systems. They cover HLD (High-Level Design) — overall system architecture, components, and data flow — and LLD (Low-Level Design) — detailed class design, APIs, and data models. Topics include scalability, load balancing, caching, databases, and microservices.
+
+**What is the difference between HLD and LLD?**  
+HLD (High-Level Design) covers the overall system architecture — components, services, databases, APIs, and how they interact at a macro level. LLD (Low-Level Design) covers the detailed implementation — class diagrams, method signatures, data structures, and algorithms used within individual components.
+
+**Is Interview Prep Buddy free?**  
+Yes, Interview Prep Buddy is completely free. It provides DSA pattern cheatsheets, algorithm visualizers, interactive coding labs, MCQ practice rounds, 1400+ interview questions, and system design notes — all at no cost.
+
+**What JavaScript concepts are asked in interviews?**  
+Common JavaScript interview topics: closures, hoisting, event loop and call stack, promises and async/await, prototype chain, this keyword binding, ES6+ features (destructuring, spread/rest, arrow functions), var/let/const differences, higher-order functions, and module systems (CommonJS vs ESM).
+
+**What React concepts are asked in interviews?**  
+Common React interview topics: React hooks (useState, useEffect, useCallback, useMemo, useRef), component lifecycle, state management (Context API, Redux), virtual DOM and reconciliation, React.memo and performance optimization, controlled vs uncontrolled components, and React Router.
+
+**What are common system design interview questions?**  
+Common system design questions: Design a URL shortener, Design Twitter/Instagram, Design a distributed cache, Design a rate limiter, Design a messaging system like WhatsApp, Design Netflix's video streaming service, Design a ride-sharing app like Uber.
+
+---
+
+## DSA Pattern Reference
+
+### Two Pointers
+Use when: sorted array, finding pairs/triplets with a target sum, palindrome checking, removing duplicates.  
+Example problems: Two Sum (sorted), 3Sum, Container with Most Water, Valid Palindrome.
+
+### Sliding Window
+Use when: contiguous subarray/substring, maximum/minimum in a window of size K, longest subarray with condition.  
+Example problems: Maximum Sum Subarray of Size K, Longest Substring Without Repeating Characters, Minimum Window Substring.
+
+### Fast & Slow Pointers (Floyd's Algorithm)
+Use when: linked list cycle detection, finding middle of linked list, finding cycle start.  
+Example problems: Linked List Cycle, Middle of Linked List, Happy Number.
+
+### Binary Search (Modified)
+Use when: sorted/rotated array, finding boundaries (first/last occurrence), finding peak element.  
+Example problems: Binary Search, Search in Rotated Sorted Array, Find First and Last Position, Koko Eating Bananas.
+
+### Dynamic Programming
+Use when: optimization problem, overlapping subproblems, optimal substructure.  
+Example problems: Fibonacci, Climbing Stairs, House Robber, Coin Change, Longest Common Subsequence, 0/1 Knapsack.
+
+### Tree BFS
+Use when: level-order traversal, shortest path in unweighted tree, connecting nodes at same level.  
+Example problems: Binary Tree Level Order Traversal, Minimum Depth of Binary Tree, Connect Level Order Siblings.
+
+### Tree DFS
+Use when: path sum, tree height, all paths from root to leaf.  
+Example problems: Path Sum, All Paths for a Sum, Diameter of Binary Tree.
+
+### Topological Sort
+Use when: directed graph, tasks with dependencies, find ordering.  
+Example problems: Course Schedule, Task Scheduling, Alien Dictionary.
+
+---
+
+## JavaScript Key Concepts
+
+**What is a closure in JavaScript?**  
+A closure is a function that remembers variables from its outer scope even after the outer function has returned. Closures are created every time a function is created inside another function. They are used for data privacy, memoization, and partial application.
+
+**What is the event loop in JavaScript?**  
+The JavaScript event loop allows single-threaded JS to handle asynchronous operations. It monitors the call stack and the callback queue. When the call stack is empty, it dequeues callbacks from the microtask queue (Promise callbacks) first, then from the macrotask queue (setTimeout, setInterval).
+
+**What is the difference between var, let, and const?**  
+var: function-scoped, hoisted with undefined, can be redeclared. let: block-scoped, hoisted but in TDZ (temporal dead zone), cannot be redeclared. const: block-scoped, must be initialized, cannot be reassigned (but object properties can be mutated).
+
+**What is prototypal inheritance in JavaScript?**  
+Every JavaScript object has a [[Prototype]] property linking to another object (its prototype). When a property/method isn't found on an object, JS looks up the prototype chain until null. This is prototypal inheritance — objects inherit from other objects, not classes.
+
+---
+
+## React Key Concepts
+
+**What is the virtual DOM?**  
+React's virtual DOM is an in-memory JavaScript representation of the actual DOM. When state changes, React creates a new virtual DOM tree, diffs it with the previous one (reconciliation), and applies minimal changes to the real DOM. This makes updates efficient.
+
+**What are React hooks?**  
+React hooks are functions that let function components use state and lifecycle features. Key hooks: useState (local state), useEffect (side effects/lifecycle), useCallback (memoize functions), useMemo (memoize values), useRef (DOM references/persistent values), useContext (consume context).
+
+---
+
+## System Design Key Concepts
+
+**What is the CAP theorem?**  
+CAP theorem states that a distributed system can only guarantee two of three properties simultaneously: Consistency (all nodes see the same data), Availability (every request gets a response), and Partition Tolerance (system continues despite network failures). Since partition tolerance is required in real distributed systems, the real choice is between CP and AP.
+
+**What is database sharding?**  
+Database sharding is horizontal partitioning where data is split across multiple databases (shards) based on a shard key. Benefits: horizontal scalability, reduced load per server. Challenges: cross-shard queries, hotspots, rebalancing. Common sharding strategies: range-based, hash-based, directory-based.
+
+**What is caching and when to use it?**  
+Caching stores frequently accessed data in fast storage (memory) to reduce database load and latency. Use caching for: read-heavy workloads, expensive computations, session data, frequently requested API responses. Common tools: Redis, Memcached. Patterns: cache-aside, write-through, write-behind.
+
+---
+
+## Company-Specific Interview Info
+
+### Amazon
+Focus: Leadership Principles (behaviorals), System Design, DSA (medium-hard). Key topics: distributed systems, DynamoDB patterns, SQS/SNS messaging, AWS services.
+
+### Google
+Focus: Algorithms and data structures (hard), System Design, Coding efficiency. Key topics: graph algorithms, dynamic programming, large-scale system design.
+
+### Meta (Facebook)
+Focus: Product-oriented system design, Behavioral (STAR), DSA. Key topics: social graph problems, news feed design, real-time messaging.
+
+### Microsoft
+Focus: Balanced DSA and system design, Behavioral. Key topics: OOP design, Azure services, collaborative coding.
+
+---
+
+## Author Information
+
+**Name:** Prathamesh Pawar  
+**Role:** Full-stack software developer  
+**GitHub:** https://github.com/prathameshp107  
+**Platform:** https://interviewpreprationbuddy.in/about  
+**Focus:** Building developer education tools for interview preparation  

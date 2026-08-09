@@ -5,104 +5,166 @@ const route = Astro.locals.starlightRoute;
 const { entry } = route;
 const fm = entry.data as Record<string, any>;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://prathameshp107.github.io';
-const base = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? '';
-const pathname = Astro.url.pathname;
+const SITE_URL  = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const siteUrl   = Astro.site?.toString().replace(/\/$/, '') ?? SITE_URL;
+const base      = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? '';
+const pathname  = Astro.url.pathname;
 
-// Detect page type
+// ── Page type detection ────────────────────────────────────────────────────
 const seoType: string =
   fm.seoType ??
   (pathname.includes('interview-questions') ? 'faq' :
    (pathname === base + '/' || pathname === base || pathname.match(/^\/[^/]+\/?$/) !== null) ? 'website' :
    'article');
 
-const pageTitle = fm.title ?? 'DSA Dev Notes';
-const pageDescription = fm.description ?? 'Developer knowledge base for DSA, JavaScript, React, Angular, and interview preparation.';
-const canonicalUrl = siteUrl + pathname;
+const pageTitle       = fm.title       ?? 'DSA & System Design Notes';
+const pageDescription = fm.description ?? 'Master DSA, System Design, JavaScript, and interview preparation with interactive labs, algorithm visualizers, MCQ rounds, and company-specific prep guides.';
+const canonicalUrl    = SITE_URL + pathname;
+const ogImage         = fm.ogImage ?? (SITE_URL + '/assets/og-image.png');
 
-// --- Build JSON-LD ---
+// ── BreadcrumbList ─────────────────────────────────────────────────────────
+// Build from pathname, e.g. /javascript/closures → Home > JavaScript > Closures
+const pathSegments = pathname.replace(base, '').split('/').filter(Boolean);
+const breadcrumbItems = [
+  { name: 'Home', url: SITE_URL + '/' },
+  ...pathSegments.map((seg, i) => ({
+    name: seg
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (c: string) => c.toUpperCase()),
+    url: SITE_URL + '/' + pathSegments.slice(0, i + 1).join('/') + '/',
+  })),
+];
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: breadcrumbItems.map((item, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    name: item.name,
+    item: item.url,
+  })),
+};
+
+// ── Main JSON-LD ───────────────────────────────────────────────────────────
 let jsonLd: Record<string, any> | null = null;
+
+const authorRef   = { '@id': `${SITE_URL}/#author` };
+const publisherRef = {
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: { '@type': 'ImageObject', url: SITE_URL + '/favicon.svg' },
+};
 
 if (seoType === 'faq' && Array.isArray(fm.faqItems) && fm.faqItems.length > 0) {
   jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
+    name: pageTitle,
+    description: pageDescription,
+    url: canonicalUrl,
     mainEntity: fm.faqItems.map((item: { q: string; a: string }) => ({
       '@type': 'Question',
       name: item.q,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.a,
-      },
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
     })),
+    author: authorRef,
+    publisher: publisherRef,
   };
 } else if (seoType === 'article') {
   jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
+    '@id': canonicalUrl + '#article',
     headline: pageTitle,
     description: pageDescription,
     url: canonicalUrl,
-    author: {
-      '@type': 'Person',
-      name: 'Prathamesh Pawar',
-      url: 'https://github.com/prathameshp107',
+    image: ogImage,
+    datePublished: fm.pubDate ?? fm.lastUpdated ?? '2024-01-01',
+    dateModified: fm.lastUpdated ?? fm.pubDate ?? new Date().toISOString().split('T')[0],
+    author: authorRef,
+    publisher: publisherRef,
+    isPartOf: { '@type': 'WebSite', '@id': SITE_URL + '/#website', name: SITE_NAME, url: SITE_URL },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.sl-markdown-content p:first-of-type', 'h1', 'h2:first-of-type'],
     },
-    publisher: {
-      '@type': 'Organization',
-      name: 'DSA Dev Notes',
-      url: siteUrl,
-    },
+    educationalLevel: fm.educationalLevel ?? 'intermediate',
+    keywords: fm.keywords ?? 'DSA, interview preparation, coding interview, technical interview',
   };
 } else if (seoType === 'website') {
   jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'DSA Dev Notes',
-    url: siteUrl + base + '/',
-    description: 'Comprehensive developer knowledge base for DSA, JavaScript, React, Angular, Node.js, and interview preparation.',
-    author: {
-      '@type': 'Person',
-      name: 'Prathamesh Pawar',
-      url: 'https://github.com/prathameshp107',
-    },
+    '@id': SITE_URL + '/#website',
+    name: SITE_NAME,
+    url: SITE_URL + '/',
+    description: 'Master DSA, System Design, and interview preparation with interactive labs, algorithm visualizers, MCQ rounds, and company-specific prep guides.',
+    author: authorRef,
+    publisher: publisherRef,
     potentialAction: {
       '@type': 'SearchAction',
-      target: siteUrl + base + '/?q={search_term_string}',
+      target: { '@type': 'EntryPoint', urlTemplate: SITE_URL + '/?q={search_term_string}' },
       'query-input': 'required name=search_term_string',
     },
   };
 }
 
-const jsonLdString = jsonLd ? JSON.stringify(jsonLd) : null;
-
-// --- OG image fallback ---
-const ogImage = fm.ogImage ?? (siteUrl + base + '/favicon.svg');
+const jsonLdString        = jsonLd ? JSON.stringify(jsonLd) : null;
+const breadcrumbString    = JSON.stringify(breadcrumbSchema);
 ---
 
 <StarlightHead {...Astro.props} />
 
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- robots: grant full snippet access for AI Overviews / SGE -->
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta name="author" content="Prathamesh Pawar" />
+
 <script is:inline>
-  // Restore sidebar state from localStorage before render to prevent layout shift (FOUC)
   if (localStorage.getItem('sidebar-collapsed') === 'true') {
     document.documentElement.classList.add('sidebar-collapsed');
   }
 </script>
 
-{jsonLdString && (
-  <script type="application/ld+json" set:html={jsonLdString} />
+<!-- Organisation + Person entities (Knowledge Graph) -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://interviewpreprationbuddy.in/#organization',
+  name: 'Interview Prep Buddy',
+  url: 'https://interviewpreprationbuddy.in',
+  logo: { '@type': 'ImageObject', url: 'https://interviewpreprationbuddy.in/favicon.svg' },
+  image: 'https://interviewpreprationbuddy.in/assets/og-image.png',
+  description: 'The all-in-one interview preparation platform for DSA, System Design, JavaScript, React, and company-specific technical interview prep.',
+  sameAs: ['https://github.com/prathameshp107/DSA-Notes-Problems'],
+})} />
+
+<!-- Main page schema -->
+{jsonLdString && <script type="application/ld+json" set:html={jsonLdString} />}
+
+<!-- BreadcrumbList -->
+{pathSegments.length > 0 && (
+  <script type="application/ld+json" set:html={breadcrumbString} />
 )}
 
-<!-- Enhanced Open Graph -->
-<meta property="og:type" content={seoType === 'article' ? 'article' : 'website'} />
-<meta property="og:title" content={pageTitle} />
+<!-- Open Graph -->
+<meta property="og:type"        content={seoType === 'article' ? 'article' : 'website'} />
+<meta property="og:title"       content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
-<meta property="og:url" content={canonicalUrl} />
-<meta property="og:image" content={ogImage} />
-<meta property="og:site_name" content="DSA Dev Notes" />
+<meta property="og:url"         content={canonicalUrl} />
+<meta property="og:image"       content={ogImage} />
+<meta property="og:image:width"  content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name"   content={SITE_NAME} />
+<meta property="og:locale"      content="en_IN" />
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:title"       content={pageTitle} />
 <meta name="twitter:description" content={pageDescription} />
-<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image"       content={ogImage} />

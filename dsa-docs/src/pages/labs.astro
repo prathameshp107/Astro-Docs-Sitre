@@ -3,16 +3,88 @@ import LabHub from '../components/labs/LabHub.jsx';
 import AppNav from '../components/AppNav.jsx';
 import '../styles/landing.css';
 import '../styles/lab-hub.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE = `${SITE_URL}/assets/og-image.png`;
+const PAGE_URL = `${SITE_URL}/labs`;
+const PAGE_TITLE = 'Interactive Coding Labs — JavaScript, DSA & React Practice | Interview Prep Buddy';
+const PAGE_DESC = 'Practice coding in interactive browser-based labs. JavaScript, React, DSA problem-solving, SQL, and more — with instant feedback and real coding environments for interview preparation.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Interview Prep Buddy — Interactive Coding Labs',
+  description: PAGE_DESC,
+  url: PAGE_URL,
+  image: OG_IMAGE,
+  applicationCategory: 'EducationalApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'INR',
+  },
+  featureList: [
+    'JavaScript coding lab',
+    'React component practice',
+    'DSA problem solving environment',
+    'SQL query practice',
+    'Live code execution',
+  ],
+  author: {
+    '@type': 'Person',
+    name: 'Prathamesh Pawar',
+    url: 'https://github.com/prathameshp107',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
+  isPartOf: {
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Practice Labs — DSA & Dev Notes</title>
-    <meta name="description" content="Choose a practice lab — JavaScript, React, DSA, and more. Interactive coding challenges and interview prep." />
+
+    <!-- Primary SEO -->
+    <title>{PAGE_TITLE}</title>
+    <meta name="description" content={PAGE_DESC} />
+    <link rel="canonical" href={PAGE_URL} />
+    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content="coding practice labs, JavaScript practice online, React coding practice, DSA coding environment, online coding lab, interview coding practice, interactive coding exercises, browser coding playground" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={PAGE_TITLE} />
+    <meta property="og:description" content={PAGE_DESC} />
+    <meta property="og:url" content={PAGE_URL} />
+    <meta property="og:image" content={OG_IMAGE} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={PAGE_TITLE} />
+    <meta name="twitter:description" content={PAGE_DESC} />
+    <meta name="twitter:image" content={OG_IMAGE} />
+
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />

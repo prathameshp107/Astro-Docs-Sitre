@@ -1,24 +1,74 @@
 ---
 import LLDHub from '../../components/system-design/LLDHub.jsx';
 import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/system-design.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/lld`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Low-Level Design (LLD) & Machine Coding Interview Guide',
+  description: 'Master Low-Level Design and machine coding rounds for software engineering interviews. Covers OOP, SOLID principles, 23 design patterns, UML diagrams, and 15+ real-world LLD problems.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'advanced',
+  learningResourceType: 'Guide',
+  teaches: ['Object-Oriented Design', 'SOLID Principles', 'Design Patterns', 'UML Class Diagrams', 'Machine Coding rounds', 'Parking Lot design', 'Library Management System', 'Chess game design'],
+  about: [{ '@type': 'Thing', name: 'Low-Level Design' }, { '@type': 'Thing', name: 'Machine Coding' }, { '@type': 'Thing', name: 'Design Patterns' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is Low-Level Design (LLD) in software engineering interviews?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Low-Level Design (LLD) interviews test your ability to translate system requirements into detailed class-level designs. You design classes, interfaces, relationships, and APIs for real-world systems. Common LLD problems: parking lot, library management, hotel booking, chess game, ATM, ride-sharing app. Key concepts: OOP, SOLID principles, and GoF design patterns.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are the SOLID principles?',
+      acceptedAnswer: { '@type': 'Answer', text: 'SOLID is an acronym for 5 OOP design principles: S - Single Responsibility Principle (a class should have one reason to change), O - Open/Closed Principle (open for extension, closed for modification), L - Liskov Substitution Principle (subclasses must be substitutable for base classes), I - Interface Segregation Principle (no client should depend on unused methods), D - Dependency Inversion Principle (depend on abstractions, not concretions).' },
+    },
+    {
+      '@type': 'Question',
+      name: 'What are the 23 design patterns?',
+      acceptedAnswer: { '@type': 'Answer', text: 'The 23 Gang of Four (GoF) design patterns are grouped into 3 categories: Creational (Singleton, Factory, Abstract Factory, Builder, Prototype), Structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy), and Behavioral (Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor, Interpreter).' },
+    },
+  ],
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Low-Level Design (LLD) & Machine Coding Hub</title>
-    <meta name="description" content="Master Low-Level Design (LLD) and Machine Coding rounds for software engineering interviews. Production class models, concurrency locks, and 15 real-world projects." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title="Low-Level Design (LLD) & Machine Coding Interview Prep | Interview Prep Buddy"
+      description="Master Low-Level Design and machine coding for software engineering interviews. OOP, SOLID principles, 23 design patterns, UML class diagrams, and 15+ real-world LLD problems."
+      url={PAGE_URL}
+      keywords="low level design interview, LLD machine coding, design patterns interview, SOLID principles, object oriented design, parking lot design, library management LLD, system design OOP"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Low-Level Design', url: '/lld' }]}
+    />
   </head>
   <body class="mcq-body">
+    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
+      <h1>Low-Level Design (LLD) and Machine Coding Interview Preparation</h1>
+      <p>Master LLD concepts for technical interviews: OOP fundamentals, SOLID principles, all 23 design patterns, and real-world machine coding problems like parking lot, library management, and chess game design.</p>
+    </div>
     <AppNav activeSection="lld" client:load />
     <LLDHub client:load />
   </body>
