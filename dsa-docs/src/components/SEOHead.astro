@@ -55,7 +55,7 @@ const publisherRef = {
   '@id': `${SITE_URL}/#organization`,
   name: SITE_NAME,
   url: SITE_URL,
-  logo: { '@type': 'ImageObject', url: SITE_URL + '/favicon.svg' },
+  logo: { '@type': 'ImageObject', url: SITE_URL + '/logo.png', width: 1002, height: 772 },
 };
 
 if (seoType === 'faq' && Array.isArray(fm.faqItems) && fm.faqItems.length > 0) {
@@ -138,7 +138,7 @@ const breadcrumbString    = JSON.stringify(breadcrumbSchema);
   '@id': 'https://interviewpreprationbuddy.in/#organization',
   name: 'Interview Prep Buddy',
   url: 'https://interviewpreprationbuddy.in',
-  logo: { '@type': 'ImageObject', url: 'https://interviewpreprationbuddy.in/favicon.svg' },
+  logo: { '@type': 'ImageObject', url: 'https://interviewpreprationbuddy.in/logo.png', width: 1002, height: 772 },
   image: 'https://interviewpreprationbuddy.in/assets/og-image.png',
   description: 'The all-in-one interview preparation platform for DSA, System Design, JavaScript, React, and company-specific technical interview prep.',
   sameAs: ['https://github.com/prathameshp107/DSA-Notes-Problems'],

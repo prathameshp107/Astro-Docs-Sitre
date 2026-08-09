@@ -66,9 +66,10 @@ const breadcrumbSchema = breadcrumbs.length > 0 ? {
     '@type': 'ListItem',
     position: i + 1,
     name: b.name,
-    item: b.url.startsWith('http') ? b.url : SITE_URL + b.url,
   })),
 } : null;
+
+const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 ---
 
 <title>{title}</title>
@@ -77,6 +78,13 @@ const breadcrumbSchema = breadcrumbs.length > 0 ? {
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
 <meta name="author" content="Prathamesh Pawar" />
 {keywords && <meta name="keywords" content={keywords} />}
+
+<!-- Favicon & App Icons (PNG & ICO prioritized for universal browser compatibility) -->
+<link rel="icon" type="image/png" sizes="32x32" href={`${base}favicon-32x32.png?v=2`} />
+<link rel="icon" type="image/png" sizes="16x16" href={`${base}favicon-16x16.png?v=2`} />
+<link rel="shortcut icon" href={`${base}favicon.ico?v=2`} />
+<link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png?v=2`} />
+<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg?v=2`} />
 
 <!-- Open Graph -->
 <meta property="og:type"         content={ogType} />
