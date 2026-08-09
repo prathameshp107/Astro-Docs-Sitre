@@ -287,22 +287,25 @@
 /* ═══════════════════════════════════════════
    TOPICS EXPLORER GRID
    ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   TOPICS EXPLORER GRID & CATEGORIES
+   ═══════════════════════════════════════════ */
 .dl-topics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 0.75rem;
 }
 
 .dl-topic-card {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  gap: 0.85rem;
+  padding: 0.85rem 1.1rem;
   border-radius: 12px;
   border: 1px solid var(--dl-border);
   background: var(--dl-surface);
-  text-decoration: none;
-  transition: all 0.2s ease;
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
 }
@@ -319,9 +322,9 @@
 
 .dl-topic-card:hover {
   border-color: var(--dl-card-hover-border);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  text-decoration: none;
+  text-decoration: none !important;
 }
 .dl-topic-card:hover::before {
   opacity: 1;
@@ -331,19 +334,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
   border: 1px solid var(--dl-border);
-  background: var(--dl-surface);
+  background: color-mix(in srgb, var(--dl-surface) 80%, black 20%);
   flex-shrink: 0;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   position: relative;
   transition: transform 0.2s ease;
 }
 
 .dl-topic-card:hover .dl-topic-icon {
-  transform: scale(1.1) rotate(-3deg);
+  transform: scale(1.08);
 }
 
 .dl-topic-info {
@@ -352,17 +355,20 @@
 }
 
 .dl-topic-name {
-  display: block;
-  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.92rem;
   font-weight: 600;
   color: var(--dl-text);
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.15rem;
 }
 
 .dl-topic-count {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   color: var(--dl-text-secondary);
+  line-height: 1.35;
 }
 
 .dl-topic-arrow {
@@ -378,21 +384,44 @@
   transform: translateX(3px);
 }
 
+/* Category Subheaders inside Overview */
+.dl-category-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dl-text);
+  margin: 1.75rem 0 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dl-category-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  background: var(--dl-accent-glow);
+  color: var(--dl-accent);
+  border: 1px solid color-mix(in srgb, var(--dl-accent) 25%, transparent);
+}
+
 /* ═══════════════════════════════════════════
    LEARNING PATHS
    ═══════════════════════════════════════════ */
 .dl-paths-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
 
 .dl-path-card {
-  padding: 1.5rem;
-  border-radius: 16px;
+  padding: 1.35rem;
+  border-radius: 14px;
   border: 1px solid var(--dl-border);
   background: var(--dl-surface);
-  text-decoration: none;
+  text-decoration: none !important;
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
@@ -402,7 +431,7 @@
   border-color: var(--dl-card-hover-border);
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .dl-path-top {
@@ -416,18 +445,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
   border: 1px solid var(--dl-border);
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--dl-accent);
   transition: transform 0.2s ease;
+  background: var(--dl-surface);
 }
 
 .dl-path-card:hover .dl-path-abbr {
-  transform: scale(1.1) rotate(-3deg);
+  transform: scale(1.08);
 }
 
 .dl-path-arrow {

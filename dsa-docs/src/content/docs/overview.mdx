@@ -1,29 +1,174 @@
 ---
 title: "Overview — Interview Prep Buddy Documentation"
-description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js, Node.js, System Design, MongoDB, MySQL, Docker, Python, Redis, and Interview Preparation on interviewpreprationbuddy.in."
+description: "Complete content hub for DSA Patterns, System Design, Company Tracks, JavaScript, React, Angular, Next.js, Node.js, Python, SQL, MongoDB, Redis, Docker, and Interactive Labs on interviewpreprationbuddy.in."
 ---
 
 <div className="docs-landing">
 
-  <div className="dl-intro" style={{ margin: "24px 0 32px 0" }}>
-    <p style={{ fontSize: "1.1rem", lineHeight: "1.6", color: "var(--sl-color-text-muted)" }}>
-      Welcome to the Dev & DSA Knowledge Base. This content hub includes detailed notes, interview guides, and practice materials spanning 13 technical topics. Use the Topics Explorer below to jump directly to any category.
+  {/* ─── HERO INTRO & STATS ─── */}
+  <div className="dl-hero dl-animate-rise">
+    <div className="dl-hero-badge">
+      <span className="dl-hero-badge-dot"></span>
+      Developer Learning & Interview Operating System
+    </div>
+    <h1>
+      Master Every Layer of the <span className="dl-hero-gradient">Tech Stack</span>
+    </h1>
+    <p>
+      An all-in-one knowledge base combining deep technical notes, 16 core DSA patterns, company-specific tracks, interactive labs, algorithm visualizers, and 1,400+ interview Q&As.
     </p>
+    <div className="dl-hero-actions">
+      <a className="dl-btn dl-btn-primary" href="../dsa/patterns">
+        ⚡ 16 DSA Patterns
+      </a>
+      <a className="dl-btn dl-btn-secondary" href="../companies">
+        🏢 Company Tracks
+      </a>
+      <a className="dl-btn dl-btn-secondary" href="../visualizer/">
+        👁️ Visualizers
+      </a>
+      <a className="dl-btn dl-btn-secondary" href="../labs/">
+        🔬 Practice Labs
+      </a>
+    </div>
   </div>
 
-  {/* ─── TOPICS EXPLORER ─── */}
+  {/* ─── STATS BAR ─── */}
+  <div className="dl-stats dl-animate-rise dl-delay-1">
+    <div className="dl-stat">
+      <span className="dl-stat-value">450+</span>
+      <span className="dl-stat-label">Detailed Notes</span>
+    </div>
+    <div className="dl-stat">
+      <span className="dl-stat-value">16</span>
+      <span className="dl-stat-label">DSA Patterns</span>
+    </div>
+    <div className="dl-stat">
+      <span className="dl-stat-value">1,400+</span>
+      <span className="dl-stat-label">Interview Q&As</span>
+    </div>
+    <div className="dl-stat">
+      <span className="dl-stat-value">17</span>
+      <span className="dl-stat-label">Visualizers & Labs</span>
+    </div>
+  </div>
+
+  {/* ─── CORE PLATFORM HUBS ─── */}
   <section className="dl-section dl-animate-rise dl-delay-2">
     <div className="dl-section-header">
-      <span className="dl-section-tag">Explore</span>
-      <h2>Topics Explorer</h2>
+      <span className="dl-section-tag">Core Hubs</span>
+      <h2>Flagship Prep Hubs</h2>
       <span className="dl-section-line"></span>
     </div>
+    <div className="dl-paths-grid">
+      <a className="dl-path-card" href="../dsa/patterns">
+        <div className="dl-path-top">
+          <div className="dl-path-abbr" style={{ color: "var(--amber-400)" }}>⚡</div>
+          <span className="dl-path-arrow">↗</span>
+        </div>
+        <h3>16 Core DSA Patterns</h3>
+        <p>Two Pointers, Sliding Window, Fast & Slow, Monotonic Stack, Backtracking, and DP blueprints.</p>
+        <div className="dl-path-progress">
+          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '100%' }}></div></div>
+          <span className="dl-path-pct">16 Patterns</span>
+        </div>
+      </a>
+
+      <a className="dl-path-card" href="../companies">
+        <div className="dl-path-top">
+          <div className="dl-path-abbr" style={{ color: "var(--blue-400)" }}>🏢</div>
+          <span className="dl-path-arrow">↗</span>
+        </div>
+        <h3>Company-Specific Tracks</h3>
+        <p>Tailored interview rounds, high-frequency questions, and system design prompts for Google, Amazon, Meta & more.</p>
+        <div className="dl-path-progress">
+          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '100%' }}></div></div>
+          <span className="dl-path-pct">14 Companies</span>
+        </div>
+      </a>
+
+      <a className="dl-path-card" href="../system-design">
+        <div className="dl-path-top">
+          <div className="dl-path-abbr" style={{ color: "var(--indigo-400)" }}>🏗️</div>
+          <span className="dl-path-arrow">↗</span>
+        </div>
+        <h3>System Design & Case Studies</h3>
+        <p>HLD, LLD, OOD, API Rate Limiter, TinyURL, News Feed, Distributed Cache, and Real-Time Chat architectures.</p>
+        <div className="dl-path-progress">
+          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '90%' }}></div></div>
+          <span className="dl-path-pct">10+ Cases</span>
+        </div>
+      </a>
+
+      <a className="dl-path-card" href="../interview-questions">
+        <div className="dl-path-top">
+          <div className="dl-path-abbr" style={{ color: "var(--emerald-400)" }}>🎯</div>
+          <span className="dl-path-arrow">↗</span>
+        </div>
+        <h3>1,400+ Interview Questions</h3>
+        <p>Curated questions by language (JS, React, Node, Python, SQL) and Behavioral STAR framework.</p>
+        <div className="dl-path-progress">
+          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '95%' }}></div></div>
+          <span className="dl-path-pct">1,400+ Qs</span>
+        </div>
+      </a>
+
+      <a className="dl-path-card" href="../visualizer/">
+        <div className="dl-path-top">
+          <div className="dl-path-abbr" style={{ color: "var(--pink-400)" }}>👁️</div>
+          <span className="dl-path-arrow">↗</span>
+        </div>
+        <h3>17 Algorithm Visualizers</h3>
+        <p>Step-by-step animations for sorting, tree traversals, graph BFS/DFS, two pointers, and DP grids.</p>
+        <div className="dl-path-progress">
+          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '100%' }}></div></div>
+          <span className="dl-path-pct">17 Modules</span>
+        </div>
+      </a>
+
+      <a className="dl-path-card" href="../labs/">
+        <div className="dl-path-top">
+          <div className="dl-path-abbr" style={{ color: "var(--cyan-400)" }}>🔬</div>
+          <span className="dl-path-arrow">↗</span>
+        </div>
+        <h3>Interactive Practice Labs</h3>
+        <p>Browser execution sandboxes with instant automated test grading for JavaScript, React, SQL, and Git.</p>
+        <div className="dl-path-progress">
+          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '90%' }}></div></div>
+          <span className="dl-path-pct">11 Labs</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  {/* ─── COMPLETE TOPICS EXPLORER ─── */}
+  <section className="dl-section dl-animate-rise dl-delay-3">
+    <div className="dl-section-header">
+      <span className="dl-section-tag">Library</span>
+      <h2>Complete Documentation Hub</h2>
+      <span className="dl-section-line"></span>
+    </div>
+
+    {/* Frontend Engineering */}
+    <div className="dl-category-title">
+      <span>🌐</span> Frontend Engineering
+      <span className="dl-category-badge">Core UI</span>
+    </div>
     <div className="dl-topics-grid">
+      <a className="dl-topic-card" href="../react/">
+        <div className="dl-topic-icon">⚛️</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">React 18 & 19</span>
+          <span className="dl-topic-count">45 docs · Hooks · Fiber · Server Components · State</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
       <a className="dl-topic-card" href="../typescript/introduction">
         <div className="dl-topic-icon">📘</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">TypeScript</span>
-          <span className="dl-topic-count">31 docs · Types · Generics · React · Node</span>
+          <span className="dl-topic-count">31 docs · Types · Generics · React · Node.js</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -32,7 +177,7 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">⚡</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">JavaScript</span>
-          <span className="dl-topic-count">19 docs · Fundamentals · Async · ES6+</span>
+          <span className="dl-topic-count">19 docs · Event Loop · Closures · Async · ES6+</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -41,16 +186,7 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">🧘</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">Namaste JavaScript</span>
-          <span className="dl-topic-count">20 docs · Deep JS concepts</span>
-        </div>
-        <span className="dl-topic-arrow">→</span>
-      </a>
-
-      <a className="dl-topic-card" href="../react/">
-        <div className="dl-topic-icon">⚛️</div>
-        <div className="dl-topic-info">
-          <span className="dl-topic-name">React</span>
-          <span className="dl-topic-count">45 docs · Hooks · Components · State</span>
+          <span className="dl-topic-count">20 docs · Execution Context · Prototypes · Microtasks</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -59,7 +195,7 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">🅰️</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">Angular</span>
-          <span className="dl-topic-count">30 docs · Phases 1–4 · Enterprise</span>
+          <span className="dl-topic-count">30 docs · Phases 1–4 · RxJS · Dependency Injection</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -68,16 +204,41 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">▲</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">Next.js</span>
-          <span className="dl-topic-count">30 docs · App Router · Auth · Perf</span>
+          <span className="dl-topic-count">30 docs · App Router · SSR · Auth · Optimization</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
 
+      <a className="dl-topic-card" href="../html-css/">
+        <div className="dl-topic-icon">🎨</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">HTML & CSS</span>
+          <span className="dl-topic-count">Semantic HTML5 · Flexbox · CSS Grid · Responsive</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../tailwind/">
+        <div className="dl-topic-icon">🌊</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Tailwind CSS</span>
+          <span className="dl-topic-count">Utility Systems · Responsive Design · Custom Themes</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+    </div>
+
+    {/* Backend, Cloud & DevOps */}
+    <div className="dl-category-title">
+      <span>⚙️</span> Backend, Cloud & DevOps
+      <span className="dl-category-badge">Infrastructure</span>
+    </div>
+    <div className="dl-topics-grid">
       <a className="dl-topic-card" href="../nodejs/">
         <div className="dl-topic-icon">🟢</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">Node.js</span>
-          <span className="dl-topic-count">17 docs · Express · APIs · Deploy</span>
+          <span className="dl-topic-count">17 docs · Express · Event Loop · Streams · Auth</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -86,16 +247,59 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">🐍</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">Python</span>
-          <span className="dl-topic-count">60 docs · OOP · Modules · Testing</span>
+          <span className="dl-topic-count">60 docs · OOP · Modules · Concurrency · Testing</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
 
+      <a className="dl-topic-card" href="../docker/">
+        <div className="dl-topic-icon">🐳</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Docker & Containers</span>
+          <span className="dl-topic-count">41 docs · Compose · Multi-Stage · CI/CD · Deploy</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../aws/">
+        <div className="dl-topic-icon">☁️</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">AWS Cloud</span>
+          <span className="dl-topic-count">EC2 · S3 · Lambda · API Gateway · IAM Security</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../graphql/">
+        <div className="dl-topic-icon">◈</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">GraphQL</span>
+          <span className="dl-topic-count">Queries · Mutations · Subscriptions · Apollo</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../git/">
+        <div className="dl-topic-icon">🌿</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Git & GitHub</span>
+          <span className="dl-topic-count">Branching · Rebase · Cherry-pick · Merge Conflicts</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+    </div>
+
+    {/* Databases & Caching */}
+    <div className="dl-category-title">
+      <span>💾</span> Databases & Caching
+      <span className="dl-category-badge">Storage</span>
+    </div>
+    <div className="dl-topics-grid">
       <a className="dl-topic-card" href="../sql/">
         <div className="dl-topic-icon">🐬</div>
         <div className="dl-topic-info">
-          <span className="dl-topic-name">SQL / MySQL</span>
-          <span className="dl-topic-count">31 docs · Joins · Indexing · Optimize</span>
+          <span className="dl-topic-name">SQL & MySQL</span>
+          <span className="dl-topic-count">31 docs · Complex Joins · Indexing · ACID · Tuning</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -104,7 +308,7 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">🍃</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">MongoDB</span>
-          <span className="dl-topic-count">17 docs · Aggregation · Indexing</span>
+          <span className="dl-topic-count">17 docs · Aggregation Pipeline · Sharding · Indexes</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
@@ -113,124 +317,113 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
         <div className="dl-topic-icon">🔴</div>
         <div className="dl-topic-info">
           <span className="dl-topic-name">Redis</span>
-          <span className="dl-topic-count">23 docs · Data Types · Caching</span>
+          <span className="dl-topic-count">23 docs · Cache Invalidation · Pub/Sub · Streams</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
+    </div>
 
-      <a className="dl-topic-card" href="../docker/">
-        <div className="dl-topic-icon">🐳</div>
+    {/* Architecture & System Design */}
+    <div className="dl-category-title">
+      <span>🏛️</span> Architecture, OOD & Networks
+      <span className="dl-category-badge">Design</span>
+    </div>
+    <div className="dl-topics-grid">
+      <a className="dl-topic-card" href="../system-design/">
+        <div className="dl-topic-icon">🌐</div>
         <div className="dl-topic-info">
-          <span className="dl-topic-name">Docker</span>
-          <span className="dl-topic-count">41 docs · Compose · Deploy · CI/CD</span>
+          <span className="dl-topic-name">High-Level Design (HLD)</span>
+          <span className="dl-topic-count">Load Balancers · Microservices · Message Queues</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
 
+      <a className="dl-topic-card" href="../lld/">
+        <div className="dl-topic-icon">📐</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Low-Level Design (LLD)</span>
+          <span className="dl-topic-count">SOLID Principles · Clean Architecture · UML Blueprints</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../design-patterns/">
+        <div className="dl-topic-icon">🧩</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Design Patterns</span>
+          <span className="dl-topic-count">Creational · Structural · Behavioral Gang of Four Patterns</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../oops/">
+        <div className="dl-topic-icon">📦</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Object-Oriented (OOPS)</span>
+          <span className="dl-topic-count">Encapsulation · Polymorphism · Abstraction · Inheritance</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../networks/">
+        <div className="dl-topic-icon">📡</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Computer Networks</span>
+          <span className="dl-topic-count">OSI Model · TCP/IP · HTTP/1.1 vs 2 vs 3 · WebSockets</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+
+      <a className="dl-topic-card" href="../ai/">
+        <div className="dl-topic-icon">🤖</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">AI & Prompt Engineering</span>
+          <span className="dl-topic-count">LLM Architectures · RAG · Vector DBs · Prompt Tuning</span>
+        </div>
+        <span className="dl-topic-arrow">→</span>
+      </a>
+    </div>
+
+    {/* DSA & Interview Core */}
+    <div className="dl-category-title">
+      <span>📊</span> Data Structures & Algorithms
+      <span className="dl-category-badge">Algorithms</span>
+    </div>
+    <div className="dl-topics-grid">
       <a className="dl-topic-card" href="../data-structures/">
-        <div className="dl-topic-icon">📊</div>
+        <div className="dl-topic-icon">🌲</div>
         <div className="dl-topic-info">
-          <span className="dl-topic-name">DSA</span>
-          <span className="dl-topic-count">158 docs · Trees · Graphs · DP · Sorting</span>
+          <span className="dl-topic-name">DSA Complete Notes</span>
+          <span className="dl-topic-count">158 docs · Arrays · Trees · Graphs · DP · Sorting</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
 
-      <a className="dl-topic-card" href="../interview/">
-        <div className="dl-topic-icon">💼</div>
+      <a className="dl-topic-card" href="../striver-blind-75/">
+        <div className="dl-topic-icon">⭐</div>
         <div className="dl-topic-info">
-          <span className="dl-topic-name">Interview Prep</span>
-          <span className="dl-topic-count">2 docs · Full Stack · System Design</span>
+          <span className="dl-topic-name">Blind 75 Essentials</span>
+          <span className="dl-topic-count">Curated must-solve problems with step-by-step logic</span>
         </div>
         <span className="dl-topic-arrow">→</span>
       </a>
-    </div>
-  </section>
 
-  {/* ─── LEARNING PATHS ─── */}
-  <section className="dl-section dl-animate-rise dl-delay-3">
-    <div className="dl-section-header">
-      <span className="dl-section-tag">Paths</span>
-      <h2>Learning Paths</h2>
-      <span className="dl-section-line"></span>
-    </div>
-    <div className="dl-paths-grid">
-      <a className="dl-path-card" href="../javascript/">
-        <div className="dl-path-top">
-          <div className="dl-path-abbr">JS</div>
-          <span className="dl-path-arrow">↗</span>
+      <a className="dl-topic-card" href="../dsa/problems">
+        <div className="dl-topic-icon">💻</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">DSA Problem Lab (150 Qs)</span>
+          <span className="dl-topic-count">Interactive coding judge with automated test runner</span>
         </div>
-        <h3>Frontend Fundamentals</h3>
-        <p>JavaScript core, DOM, async patterns, closures, and modern ES6+ features.</p>
-        <div className="dl-path-progress">
-          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '85%' }}></div></div>
-          <span className="dl-path-pct">85%</span>
-        </div>
+        <span className="dl-topic-arrow">→</span>
       </a>
 
-      <a className="dl-path-card" href="../react/">
-        <div className="dl-path-top">
-          <div className="dl-path-abbr">RE</div>
-          <span className="dl-path-arrow">↗</span>
+      <a className="dl-topic-card" href="../behavioral">
+        <div className="dl-topic-icon">👥</div>
+        <div className="dl-topic-info">
+          <span className="dl-topic-name">Behavioral & Leadership</span>
+          <span className="dl-topic-count">STAR Method · Conflict Resolution · Amazon LP</span>
         </div>
-        <h3>React Ecosystem</h3>
-        <p>Components, hooks, state management, routing, and performance optimization.</p>
-        <div className="dl-path-progress">
-          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '40%' }}></div></div>
-          <span className="dl-path-pct">40%</span>
-        </div>
-      </a>
-
-      <a className="dl-path-card" href="../nodejs/">
-        <div className="dl-path-top">
-          <div className="dl-path-abbr">ND</div>
-          <span className="dl-path-arrow">↗</span>
-        </div>
-        <h3>Backend & APIs</h3>
-        <p>Node.js runtime, Express, databases, auth, testing, and deployment.</p>
-        <div className="dl-path-progress">
-          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '70%' }}></div></div>
-          <span className="dl-path-pct">70%</span>
-        </div>
-      </a>
-
-      <a className="dl-path-card" href="../data-structures/">
-        <div className="dl-path-top">
-          <div className="dl-path-abbr">DSA</div>
-          <span className="dl-path-arrow">↗</span>
-        </div>
-        <h3>Data Structures & Algorithms</h3>
-        <p>Arrays, trees, graphs, DP, sorting, searching — with visualized examples.</p>
-        <div className="dl-path-progress">
-          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '30%' }}></div></div>
-          <span className="dl-path-pct">30%</span>
-        </div>
-      </a>
-
-      <a className="dl-path-card" href="../docker/">
-        <div className="dl-path-top">
-          <div className="dl-path-abbr">DK</div>
-          <span className="dl-path-arrow">↗</span>
-        </div>
-        <h3>DevOps & Docker</h3>
-        <p>Containers, images, Docker Compose, CI/CD workflows, and deployment.</p>
-        <div className="dl-path-progress">
-          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '65%' }}></div></div>
-          <span className="dl-path-pct">65%</span>
-        </div>
-      </a>
-
-      <a className="dl-path-card" href="../interview/">
-        <div className="dl-path-top">
-          <div className="dl-path-abbr">IV</div>
-          <span className="dl-path-arrow">↗</span>
-        </div>
-        <h3>Interview Preparation</h3>
-        <p>Frontend, backend, full-stack, and system design interview questions.</p>
-        <div className="dl-path-progress">
-          <div className="dl-path-bar"><div className="dl-path-fill" style={{ width: '50%' }}></div></div>
-          <span className="dl-path-pct">50%</span>
-        </div>
+        <span className="dl-topic-arrow">→</span>
       </a>
     </div>
   </section>
@@ -238,124 +431,72 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
   {/* ─── INTERACTIVE TOOLS ─── */}
   <section className="dl-section dl-animate-rise dl-delay-4">
     <div className="dl-section-header">
-      <span className="dl-section-tag">Tools</span>
-      <h2>Interactive Tools</h2>
+      <span className="dl-section-tag">Interactive</span>
+      <h2>Interactive Workspaces & Tools</h2>
       <span className="dl-section-line"></span>
     </div>
     <div className="dl-quick-grid">
       <a className="dl-quick-card" href="../playground">
         <div className="dl-quick-icon">💻</div>
         <h4>Code Playground</h4>
-        <p>Write and test JavaScript, HTML, CSS in an interactive Monaco editor</p>
+        <p>Interactive multi-tab sandbox for JavaScript, HTML, and CSS with live DOM preview.</p>
       </a>
       <a className="dl-quick-card" href="../mcq/">
         <div className="dl-quick-icon">📝</div>
-        <h4>MCQ Hub</h4>
-        <p>Test your knowledge with curated multiple-choice questions</p>
-      </a>
-      <a className="dl-quick-card" href="../mcq/dashboard">
-        <div className="dl-quick-icon">📊</div>
-        <h4>Progress Dashboard</h4>
-        <p>Track your quiz scores, achievements, and learning streaks</p>
+        <h4>MCQ Practice Hub</h4>
+        <p>18 technical categories with timed rounds, instant feedback, and streak XP rewards.</p>
       </a>
       <a className="dl-quick-card" href="../labs/">
         <div className="dl-quick-icon">🔬</div>
-        <h4>Practice Labs</h4>
-        <p>Hands-on labs for JS, HTML, CSS, Git, Python, React, MongoDB, SQL</p>
+        <h4>Interactive Labs</h4>
+        <p>Hands-on coding exercises for JS, React, SQL, HTML, CSS, Git, Python, and MongoDB.</p>
       </a>
       <a className="dl-quick-card" href="../visualizer/">
         <div className="dl-quick-icon">👁️</div>
-        <h4>DSA Visualizer</h4>
-        <p>Interactive visualizations for arrays, trees, graphs, sorting & more</p>
+        <h4>Algorithm Visualizer</h4>
+        <p>Step-through execution of sorting, searching, binary trees, graphs, and dynamic programming.</p>
+      </a>
+      <a className="dl-quick-card" href="../companies">
+        <div className="dl-quick-icon">🏢</div>
+        <h4>Company Explorer</h4>
+        <p>Explore interview rounds, question trends, and design prompts for 14+ top tech firms.</p>
+      </a>
+      <a className="dl-quick-card" href="../interview-questions">
+        <div className="dl-quick-icon">💼</div>
+        <h4>Interview Question Bank</h4>
+        <p>1,400+ categorized questions with difficulty filters and model answers.</p>
       </a>
     </div>
   </section>
 
-  {/* ─── WHAT'S NEW ─── */}
+  {/* ─── TRENDING TOPICS MARQUEE ─── */}
   <section className="dl-section dl-animate-rise dl-delay-5">
     <div className="dl-section-header">
-      <span className="dl-section-tag">Updates</span>
-      <h2>What's New</h2>
-      <span className="dl-section-line"></span>
-    </div>
-    <div className="dl-updates-list">
-      <div className="dl-update-item">
-        <span className="dl-update-dot new"></span>
-        <div className="dl-update-content">
-          <span className="dl-update-tag new">New</span>
-          <span className="dl-update-text">SQL Labs — Interactive SQL learning platform</span>
-          <span className="dl-update-date">Apr 2026</span>
-        </div>
-      </div>
-      <div className="dl-update-item">
-        <span className="dl-update-dot new"></span>
-        <div className="dl-update-content">
-          <span className="dl-update-tag new">New</span>
-          <span className="dl-update-text">Binary Search deep-dive with 5 core patterns</span>
-          <span className="dl-update-date">Apr 2026</span>
-        </div>
-      </div>
-      <div className="dl-update-item">
-        <span className="dl-update-dot update"></span>
-        <div className="dl-update-content">
-          <span className="dl-update-tag update">Updated</span>
-          <span className="dl-update-text">DSA Visualizer — Added DP and Recursion modules</span>
-          <span className="dl-update-date">Mar 2026</span>
-        </div>
-      </div>
-      <div className="dl-update-item">
-        <span className="dl-update-dot update"></span>
-        <div className="dl-update-content">
-          <span className="dl-update-tag update">Updated</span>
-          <span className="dl-update-text">React interview questions expanded to 200+ Q&A</span>
-          <span className="dl-update-date">Mar 2026</span>
-        </div>
-      </div>
-      <div className="dl-update-item">
-        <span className="dl-update-dot new"></span>
-        <div className="dl-update-content">
-          <span className="dl-update-tag new">New</span>
-          <span className="dl-update-text">MCQ Hub — Dashboard with progress tracking</span>
-          <span className="dl-update-date">Feb 2026</span>
-        </div>
-      </div>
-      <div className="dl-update-item">
-        <span className="dl-update-dot new"></span>
-        <div className="dl-update-content">
-          <span className="dl-update-tag new">New</span>
-          <span className="dl-update-text">Python docs — 60+ documents across 19 modules</span>
-          <span className="dl-update-date">Feb 2026</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ─── TRENDING TOPICS ─── */}
-  <section className="dl-section dl-animate-rise dl-delay-6">
-    <div className="dl-section-header">
       <span className="dl-section-tag">Trending</span>
-      <h2>Popular Topics</h2>
+      <h2>High-Yield Interview Topics</h2>
       <span className="dl-section-line"></span>
     </div>
     <div className="dl-marquee-wrap">
       <div className="dl-marquee-inner">
-        <span className="dl-marquee-pill">Closures</span>
+        <span className="dl-marquee-pill">Two Pointers</span>
+        <span className="dl-marquee-pill">Sliding Window</span>
+        <span className="dl-marquee-pill">React Fiber</span>
         <span className="dl-marquee-pill">Event Loop</span>
-        <span className="dl-marquee-pill">Async JavaScript</span>
-        <span className="dl-marquee-pill">React Hooks</span>
-        <span className="dl-marquee-pill">MongoDB Aggregation</span>
-        <span className="dl-marquee-pill">SQL Joins</span>
-        <span className="dl-marquee-pill">DSA Patterns</span>
-        <span className="dl-marquee-pill">Docker Compose</span>
+        <span className="dl-marquee-pill">Closures</span>
+        <span className="dl-marquee-pill">Rate Limiting</span>
+        <span className="dl-marquee-pill">SQL Indexing</span>
         <span className="dl-marquee-pill">Redis Caching</span>
-        <span className="dl-marquee-pill">Closures</span>
-        <span className="dl-marquee-pill">Event Loop</span>
-        <span className="dl-marquee-pill">Async JavaScript</span>
-        <span className="dl-marquee-pill">React Hooks</span>
-        <span className="dl-marquee-pill">MongoDB Aggregation</span>
-        <span className="dl-marquee-pill">SQL Joins</span>
-        <span className="dl-marquee-pill">DSA Patterns</span>
         <span className="dl-marquee-pill">Docker Compose</span>
+        <span className="dl-marquee-pill">Dynamic Programming</span>
+        <span className="dl-marquee-pill">Binary Search</span>
+        <span className="dl-marquee-pill">System Design</span>
+        <span className="dl-marquee-pill">Two Pointers</span>
+        <span className="dl-marquee-pill">Sliding Window</span>
+        <span className="dl-marquee-pill">React Fiber</span>
+        <span className="dl-marquee-pill">Event Loop</span>
+        <span className="dl-marquee-pill">Closures</span>
+        <span className="dl-marquee-pill">Rate Limiting</span>
+        <span className="dl-marquee-pill">SQL Indexing</span>
         <span className="dl-marquee-pill">Redis Caching</span>
       </div>
     </div>
@@ -363,10 +504,13 @@ description: "Complete content hub for DSA, JavaScript, React, Angular, Next.js,
 
   {/* ─── FOOTER ─── */}
   <footer className="dl-footer">
-    <p>Built with <strong>Astro</strong> + <strong>Starlight</strong></p>
+    <p>Interview Prep Buddy — <strong>Open Knowledge Operating System</strong></p>
     <div className="dl-footer-links">
-      <a href="https://github.com/prathameshp107/DSA-Notes-Problems">GitHub</a>
-      <a href="../data-structures/">Docs</a>
+      <a href="../dsa/patterns">16 DSA Patterns</a>
+      <a href="../companies">Companies</a>
+      <a href="../system-design">System Design</a>
+      <a href="../labs/">Labs</a>
+      <a href="../visualizer/">Visualizers</a>
     </div>
   </footer>
 

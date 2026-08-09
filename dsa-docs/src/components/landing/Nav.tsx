@@ -160,8 +160,8 @@ export function Nav() {
           solid ? "border-b border-border bg-background/80 backdrop-blur-xl" : "border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-[1600px] w-full items-center justify-between px-6 gap-6">
-          <a href={base} className="flex items-center gap-2.5 shrink-0 group" aria-label="Interview Prep Buddy Home">
+        <div className="mx-auto flex h-16 max-w-[1600px] w-full items-center justify-between px-3 sm:px-6 gap-2 sm:gap-6">
+          <a href={base} className="flex items-center gap-2 sm:gap-2.5 shrink-0 group min-w-0" aria-label="Interview Prep Buddy Home">
             <span className="flex shrink-0 items-center justify-center h-8 w-8 rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-105">
               <img
                 src={`${base}logo-icon.png`}
@@ -172,7 +172,7 @@ export function Nav() {
                 loading="eager"
               />
             </span>
-            <span className="font-display text-[15px] font-bold tracking-tight text-foreground">
+            <span className="font-display text-[13.5px] sm:text-[15px] font-bold tracking-tight text-foreground truncate">
               Interview Prep <span className="text-primary">Buddy</span>
             </span>
           </a>
@@ -239,15 +239,17 @@ export function Nav() {
               );
             })}
           </nav>
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             <GlobalSearch />
-            <AuthButton />
+            <div className="hidden sm:block">
+              <AuthButton />
+            </div>
             <ThemeToggle />
             <button
               type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle Navigation Menu"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-muted/50 text-foreground transition-colors hover:bg-muted lg:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-muted/50 text-foreground transition-colors hover:bg-muted lg:hidden shrink-0"
             >
               {mobileOpen ? <X size={18} /> : <MenuIcon size={18} />}
             </button>
@@ -256,7 +258,10 @@ export function Nav() {
 
         {/* Mobile Navigation Drawer */}
         {mobileOpen && (
-          <div className="border-b border-border bg-background/98 backdrop-blur-2xl px-6 py-4 lg:hidden max-h-[85vh] overflow-y-auto space-y-2 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="border-b border-border bg-background/98 backdrop-blur-2xl px-4 py-4 lg:hidden max-h-[85vh] overflow-y-auto space-y-2 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+            <div className="pb-3 mb-2 border-b border-border/60 sm:hidden">
+              <AuthButton />
+            </div>
             {links.map((l) => {
               const Icon = l.icon;
               const isExpanded = expandedSection === l.label;
