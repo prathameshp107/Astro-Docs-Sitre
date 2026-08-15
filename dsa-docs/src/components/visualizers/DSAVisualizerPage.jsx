@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import VisualizerArticle from './VisualizerArticle.jsx';
+import RecorderBridge from './RecorderBridge.jsx';
 import '../../styles/sketch-visualizer.css';
 import { DSA_TOPICS } from '../../data/visualizers/dsaTopics';
 import ComplexityTable from '../visualizer-common/ComplexityTable';
@@ -177,6 +178,9 @@ export default function DSAVisualizerPage({ topicId }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--sketch-bg)] font-sketch">
+      {/* Inert unless the URL carries ?record=1 — see RecorderBridge. */}
+      <RecorderBridge topicId={topicId} />
+
       {/* Left Navigation Sidebar */}
       <VisualizerSidebar activeTopicId={topicId} currentBase={base} isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen((prev) => !prev)} />
 
