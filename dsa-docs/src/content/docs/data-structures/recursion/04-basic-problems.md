@@ -3,6 +3,8 @@ title: "Basic Recursion Problems"
 description: "Fundamental recursion problems with step-by-step solutions: factorial, Fibonacci, reverse, subsequences."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Basic Recursion Problems

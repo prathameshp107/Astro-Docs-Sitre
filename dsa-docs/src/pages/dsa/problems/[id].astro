@@ -17,7 +17,7 @@ const { id } = Astro.params;
 const { problem } = Astro.props;
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `${SITE_URL}/dsa/problems/${id}`;
+const PAGE_URL = `${SITE_URL}/dsa/problems/${id}/`;
 
 // Plain-text summary for meta description / crawlable body (strip markdown emphasis/code marks)
 const plainStatement = problem.problemStatement.replace(/[*`_]/g, '').trim();

@@ -3,6 +3,8 @@ title: "Problem-Solving Approach"
 description: "How to approach linked list problems — pattern recognition, pointer manipulation rules, and edge cases."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Problem-Solving Approach

@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/recursion`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/recursion/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('recursion', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Recursion Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Visualize recursive algorithm execution with call stack animations. See factorial, fibonacci, tree traversals, and backtracking recursion unfold step by step.',
+  name: 'Recursion Visualizer — Call Stack, Fibonacci & Towers of Hanoi | Interview Prep Buddy',
+  description: 'Watch stack frames pile up and unwind as recursive calls resolve. Animated factorial, Fibonacci recursion trees and Towers of Hanoi, showing base cases, return values and stack overflow.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Recursion Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Visualize recursive algorithm execution with call stack animations. See factorial, fibonacci, tree traversals, and backtracking recursion unfold step by step."
+      title="Recursion Visualizer — Call Stack, Fibonacci & Towers of Hanoi | Interview Prep Buddy"
+      description="Watch stack frames pile up and unwind as recursive calls resolve. Animated factorial, Fibonacci recursion trees and Towers of Hanoi, showing base cases, return values and stack overflow."
       url={PAGE_URL}
-      keywords="recursion visualizer, call stack animation, recursive function visualization, base case"
+      keywords="recursion visualizer, call stack visualizer, fibonacci recursion tree, towers of hanoi animation, recursive function step by step, base case stack overflow, tail recursion"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Recursion Visualizer', url: `/visualizer/recursion` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

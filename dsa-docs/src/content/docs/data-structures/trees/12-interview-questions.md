@@ -3,6 +3,8 @@ title: "Interview Questions"
 description: "Curated tree interview questions organized by difficulty — easy, medium, and hard LeetCode problems."
 sidebar:
   order: 12
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Must-Do Interview Questions

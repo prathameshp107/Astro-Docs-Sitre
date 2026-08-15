@@ -3,6 +3,8 @@ title: "Types of Linked Lists"
 description: "Singly linked list, doubly linked list, and circular linked list — with diagrams and code."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Types of Linked Lists

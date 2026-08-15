@@ -3,6 +3,8 @@ title: "Tips & Common Mistakes"
 description: "Expert tips, common pitfalls, and the final mental model for mastering linked lists."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Tips and Common Mistakes

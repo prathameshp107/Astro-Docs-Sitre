@@ -3,6 +3,8 @@ title: "Topological Sort"
 description: "Ordering vertices of a DAG so every edge goes from earlier to later — for dependency resolution."
 sidebar:
   order: 15
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Topological Sort

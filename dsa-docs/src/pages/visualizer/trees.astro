@@ -2,12 +2,17 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `${SITE_URL}/visualizer/trees`;
+const PAGE_URL = `${SITE_URL}/visualizer/trees/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('trees', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
@@ -39,36 +44,6 @@ const howToSchema = {
   ],
 };
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What is the difference between BFS and DFS for binary trees?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'BFS (Breadth-First Search / Level-order) uses a queue and visits all nodes level by level from left to right. Time: O(n), Space: O(w) where w is max width. DFS uses a stack (or recursion) and goes deep before wide. DFS has 3 variants: Inorder (L→Root→R, gives sorted output for BST), Preorder (Root→L→R, good for copying/serializing), Postorder (L→R→Root, good for deletion). Time: O(n), Space: O(h) where h is height.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is inorder traversal used for?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Inorder traversal (Left → Root → Right) of a Binary Search Tree always produces a sorted sequence in ascending order. This property is used to: validate if a binary tree is a BST, find the Kth smallest element, convert BST to sorted array, and solve problems like "find all nodes in range". Time complexity: O(n). Space: O(h) for the call stack.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What is the time complexity of BST operations?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'BST operation time complexity: Search O(log n) average, O(n) worst (skewed tree). Insertion O(log n) average, O(n) worst. Deletion O(log n) average, O(n) worst. For a balanced BST (AVL tree or Red-Black tree), all operations are guaranteed O(log n). The height of a balanced BST is O(log n) for n nodes.',
-      },
-    },
-  ],
-};
 ---
 
 <!DOCTYPE html>
@@ -91,33 +66,6 @@ const faqSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
   </head>
   <body class="mcq-body">
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>Binary Tree Visualizer — BST Insertion, Deletion, BFS and DFS Traversal Animations</h1>
-      <p>Visualize binary tree and binary search tree operations step by step. See how BST insertion maintains the left-less-than-root-less-than-right property, and how BFS and DFS traversals visit nodes.</p>
-
-      <h2>Binary Tree Traversal Types</h2>
-      <ul>
-        <li>BFS / Level-Order: Visits nodes level by level using a queue. Output: top row, then second row, etc.</li>
-        <li>DFS Inorder (L → Root → R): For BST, always produces a sorted array. O(n) time, O(h) space.</li>
-        <li>DFS Preorder (Root → L → R): Used to copy or serialize a tree. Root is always first in output.</li>
-        <li>DFS Postorder (L → R → Root): Used for deletion (delete children before parent). Root is last in output.</li>
-      </ul>
-
-      <h2>BST Complexity</h2>
-      <ul>
-        <li>Search: O(log n) average, O(n) worst (skewed)</li>
-        <li>Insert: O(log n) average, O(n) worst</li>
-        <li>Delete: O(log n) average, O(n) worst</li>
-      </ul>
-
-      <h2>Related Visualizers</h2>
-      <ul>
-        <li><a href="/visualizer/graphs">Graph BFS and DFS Visualizer</a></li>
-        <li><a href="/visualizer/heaps">Heap and Priority Queue Visualizer</a></li>
-        <li><a href="/visualizer/recursion">Recursion Call Stack Visualizer</a></li>
-        <li><a href="/visualizer">All Algorithm Visualizers</a></li>
-      </ul>
-    </div>
     <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerPage topicId="trees" client:load />
   </body>

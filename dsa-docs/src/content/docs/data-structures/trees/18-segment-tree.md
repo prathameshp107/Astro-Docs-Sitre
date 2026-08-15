@@ -3,6 +3,8 @@ title: "Segment Tree"
 description: "A tree for answering range queries (sum, min, max) and updating elements — both in O(log N)."
 sidebar:
   order: 18
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Segment Tree

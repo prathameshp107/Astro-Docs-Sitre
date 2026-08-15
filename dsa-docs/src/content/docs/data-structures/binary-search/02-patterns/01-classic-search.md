@@ -3,6 +3,8 @@ title: "Pattern 1 — Classic Binary Search"
 description: "The foundational binary search pattern — find a target in a sorted array with O(log n) time."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Pattern 1 — Classic Binary Search

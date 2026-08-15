@@ -3,6 +3,8 @@ title: "Time & Space Complexity"
 description: "Time and space complexity analysis for tree operations, traversals, BST, balanced trees, and heaps."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Time & Space Complexity

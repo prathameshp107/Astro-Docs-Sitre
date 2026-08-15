@@ -3,6 +3,8 @@ title: "Understanding the Call Stack"
 description: "How recursion uses the call stack, winding and unwinding phases, and stack overflow errors."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Understanding the Call Stack

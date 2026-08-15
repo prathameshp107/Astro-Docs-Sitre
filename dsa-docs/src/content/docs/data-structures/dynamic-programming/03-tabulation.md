@@ -3,6 +3,8 @@ title: "Tabulation (Bottom-Up DP)"
 description: "Bottom-up dynamic programming with tabulation — filling the DP table iteratively, space optimization, and comparison with memoization."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Tabulation (Bottom-Up DP)

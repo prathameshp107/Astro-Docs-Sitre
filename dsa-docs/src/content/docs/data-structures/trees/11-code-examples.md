@@ -3,6 +3,8 @@ title: "Code Examples"
 description: "Complete JavaScript implementations for tree data structures — node class, traversals, BST, LCA, and sample problems."
 sidebar:
   order: 11
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Code Examples (JavaScript)

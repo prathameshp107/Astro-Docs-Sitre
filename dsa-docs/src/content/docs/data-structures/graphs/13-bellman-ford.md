@@ -3,6 +3,8 @@ title: "Bellman-Ford Algorithm"
 description: "Shortest path from a single source — handles negative weights and detects negative cycles."
 sidebar:
   order: 13
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Bellman-Ford Algorithm

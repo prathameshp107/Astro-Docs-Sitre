@@ -3,6 +3,8 @@ title: "Binary Search — Introduction"
 description: "What is binary search, how it works, iterative vs recursive implementations, O(log n) complexity, and common off-by-one bugs."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # 🔍 Binary Search — Introduction

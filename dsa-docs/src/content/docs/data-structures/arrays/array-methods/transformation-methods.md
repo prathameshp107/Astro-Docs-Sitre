@@ -3,6 +3,8 @@ title: "­ Transformation Methods"
 description: "<a id=\"map\"</a map()"
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 # ­ Transformation Methods

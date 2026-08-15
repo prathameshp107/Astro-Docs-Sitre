@@ -3,6 +3,8 @@ title: "Sorting Algorithms — Introduction"
 description: "What is sorting, stable vs unstable sort, in-place vs out-of-place, comparison vs non-comparison sorts, and a full complexity overview table."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Sorting Algorithms — Introduction

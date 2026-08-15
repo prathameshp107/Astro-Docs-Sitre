@@ -3,6 +3,8 @@ title: "Problem 5 — Koko Eating Bananas"
 description: "LeetCode 875 — Find the minimum eating speed for Koko to finish all banana piles within h hours."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 5 — Koko Eating Bananas

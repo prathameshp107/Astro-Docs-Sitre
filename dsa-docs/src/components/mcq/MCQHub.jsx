@@ -40,7 +40,7 @@ function ProgressRing({ value, size = 44, color = '#2563eb' }) {
 
 export default function MCQHub() {
   const [loaded, setLoaded] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [progress, setProgress] = useState(null);
   const [showCmd, setShowCmd] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

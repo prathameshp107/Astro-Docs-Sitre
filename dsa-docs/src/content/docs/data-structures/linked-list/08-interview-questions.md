@@ -3,6 +3,8 @@ title: "Interview Questions"
 description: "Curated linked list interview questions organized by difficulty — easy, medium, and hard."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Must-Do Interview Questions

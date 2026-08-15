@@ -3,6 +3,8 @@ title: "Dynamic Programming — Interview Questions"
 description: "15+ interview questions on dynamic programming covering concepts, pattern recognition, problem-solving, and coding with detailed answers."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Dynamic Programming — Interview Questions

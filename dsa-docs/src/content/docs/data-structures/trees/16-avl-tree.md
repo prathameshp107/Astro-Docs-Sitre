@@ -3,6 +3,8 @@ title: "AVL Tree (Self-Balancing BST)"
 description: "A self-balancing binary search tree where the heights of left and right subtrees differ by at most 1."
 sidebar:
   order: 16
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # AVL Tree

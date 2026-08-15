@@ -3,6 +3,8 @@ title: "Special Trees"
 description: "Trie (Prefix Tree), Heap (Min/Max), and Segment Tree — now each on its own dedicated page."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Special Trees

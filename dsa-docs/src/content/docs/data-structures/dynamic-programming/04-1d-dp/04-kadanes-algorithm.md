@@ -3,6 +3,8 @@ title: "Kadane's Algorithm"
 description: "Detailed walkthrough of Kadane's Algorithm — Maximum Subarray, Maximum Product Subarray, and circular variations."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Kadane's Algorithm

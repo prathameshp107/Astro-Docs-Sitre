@@ -3,6 +3,8 @@ title: "Introduction to Recursion"
 description: "What is recursion, real-life analogies, function structure, and the base case pattern."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Introduction to Recursion

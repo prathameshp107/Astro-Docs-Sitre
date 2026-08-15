@@ -3,6 +3,8 @@ title: "Extract / Copy Methods"
 description: "<a id=\"slice\"</a slice()"
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 #  Extract / Copy Methods

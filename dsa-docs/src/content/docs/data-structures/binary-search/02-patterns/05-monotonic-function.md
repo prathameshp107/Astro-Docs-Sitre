@@ -3,6 +3,8 @@ title: "Pattern 5 — Binary Search on Monotonic Function"
 description: "Binary search pattern for finding the boundary where a monotonic function crosses a threshold — First Bad Version, Find Peak Element."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Pattern 5 — Binary Search on Monotonic Function

@@ -3,6 +3,8 @@ title: "Insertion Sort"
 description: "How Insertion Sort works (playing cards analogy), JavaScript implementation, complexity analysis, and when to use it."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Insertion Sort

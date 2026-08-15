@@ -3,6 +3,8 @@ title: "Problem 6 — Capacity to Ship Packages"
 description: "LeetCode 1011 — Find the minimum ship capacity to transport packages within D days using binary search on answer."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 6 — Capacity to Ship Packages Within D Days

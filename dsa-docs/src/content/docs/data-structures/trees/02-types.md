@@ -3,6 +3,8 @@ title: "Types of Trees"
 description: "Binary Tree, BST, AVL, Red-Black, Full/Complete/Perfect, Skewed, and N-ary trees with diagrams."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Types of Trees

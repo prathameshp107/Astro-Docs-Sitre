@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/heaps`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/heaps/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('heaps', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Heap & Priority Queue Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Visualize min-heap and max-heap operations: insertion, deletion, and heapify. See how priority queues work with animated binary heap diagrams.',
+  name: 'Heap Visualizer — Min Heap, Max Heap & Heapify Animated | Interview Prep Buddy',
+  description: 'Watch sift-up and sift-down run in both the tree and the underlying array. Animated min heap and max heap insertion, extraction, heapify and priority queue operations with Big-O at each step.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Heap & Priority Queue Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Visualize min-heap and max-heap operations: insertion, deletion, and heapify. See how priority queues work with animated binary heap diagrams."
+      title="Heap Visualizer — Min Heap, Max Heap & Heapify Animated | Interview Prep Buddy"
+      description="Watch sift-up and sift-down run in both the tree and the underlying array. Animated min heap and max heap insertion, extraction, heapify and priority queue operations with Big-O at each step."
       url={PAGE_URL}
-      keywords="heap visualizer, min heap max heap animation, priority queue visualization, heapify"
+      keywords="heap visualizer, min heap max heap animation, priority queue visualizer, heapify step by step, sift up sift down, build heap O(n), binary heap array representation"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Heap & Priority Queue Visualizer', url: `/visualizer/heaps` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

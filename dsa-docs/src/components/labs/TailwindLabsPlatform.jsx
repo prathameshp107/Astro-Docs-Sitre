@@ -39,7 +39,7 @@ const getDraftCode = (draftKey, view, id, defaultCode) => {
 
 export default function TailwindLabsPlatform() {
   const DRAFT_KEY = "tw-draft";
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [activeLesson, setActiveLesson] = useState(TW_LESSONS[0]?.id || null);
   const [code, setCode] = useState(() => {
     if (typeof window !== "undefined" && window.location.hash && window.location.hash.startsWith("#code=")) {

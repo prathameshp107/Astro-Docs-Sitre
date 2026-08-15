@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import Skeleton from '../Skeleton.jsx';
+import VisualizerArticle from './VisualizerArticle.jsx';
+import RecorderBridge from './RecorderBridge.jsx';
 import '../../styles/sketch-visualizer.css';
 import { DSA_TOPICS } from '../../data/visualizers/dsaTopics';
 import ComplexityTable from '../visualizer-common/ComplexityTable';
@@ -18,12 +19,14 @@ import SearchingVisualizer from './SearchingVisualizer';
 import TwoPointersVisualizer from './TwoPointersVisualizer';
 import SlidingWindowVisualizer from './SlidingWindowVisualizer';
 import BacktrackingVisualizer from './BacktrackingVisualizer';
+import TrieVisualizer from './TrieVisualizer';
 import HashTableVisualizer from './HashTableVisualizer';
 
 const VISUALIZER_MAP = {
   'two-pointers': TwoPointersVisualizer,
   'sliding-window': SlidingWindowVisualizer,
   'backtracking': BacktrackingVisualizer,
+  trie: TrieVisualizer,
   arrays: ArrayVisualizer,
   sorting: SortingVisualizer,
   searching: SearchingVisualizer,
@@ -127,14 +130,16 @@ export default function DSAVisualizerPage({ topicId }) {
   const topic = DSA_TOPICS[topicId] || DSA_TOPICS[normalizedTopicId];
   const VisualizerComponent = VISUALIZER_MAP[topicId] || VISUALIZER_MAP[normalizedTopicId];
   const [activeSection, setActiveSection] = useState('visualizer');
-  const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 300);
-    return () => clearTimeout(timer);
-  }, []);
+  // NOTE: there was a `loading` state here, initialised to true and cleared by a
+  // 300ms setTimeout inside useEffect. Effects never run during SSR, so the
+  // server-rendered HTML for every /visualizer/* route was the skeleton and
+  // nothing else — no headings, no copy, no internal links for a crawler to
+  // read. Nothing on this component is async (DSA_TOPICS and VISUALIZER_MAP are
+  // static imports), so the skeleton was purely decorative and is now gone.
+  // Do not reintroduce a mount-gated placeholder here without an SSR fallback.
 
   // Keyboard shortcut (Ctrl+B, Cmd+B, or \) to toggle sidebar
   useEffect(() => {
@@ -150,25 +155,6 @@ export default function DSAVisualizerPage({ topicId }) {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
-
-  if (loading) {
-    return (
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div style={{ marginBottom: '32px' }}>
-          <Skeleton variant="text" width="120px" height="14px" style={{ marginBottom: '16px' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <Skeleton variant="avatar" size="36px" />
-            <Skeleton variant="text" width="200px" height="32px" />
-          </div>
-          <Skeleton variant="text" width="60%" height="14px" />
-        </div>
-        <Skeleton variant="text" width="100%" height="40px" style={{ marginBottom: '24px', borderRadius: '12px' }} />
-        <div className="p-5 rounded-xl" style={{ background: 'var(--mcq-surface-20)', border: '1px solid var(--mcq-border)' }}>
-          <Skeleton variant="text" width="100%" height="200px" borderRadius="12px" />
-        </div>
-      </div>
-    );
-  }
 
   if (!topic) {
     return (
@@ -194,6 +180,9 @@ export default function DSAVisualizerPage({ topicId }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[var(--sketch-bg)] font-sketch">
+      {/* Inert unless the URL carries ?record=1 — see RecorderBridge. */}
+      <RecorderBridge topicId={topicId} />
+
       {/* Left Navigation Sidebar */}
       <VisualizerSidebar activeTopicId={topicId} currentBase={base} isOpen={isSidebarOpen} onToggle={() => setIsSidebarOpen((prev) => !prev)} />
 
@@ -252,7 +241,7 @@ export default function DSAVisualizerPage({ topicId }) {
         {/* Visualizer Section */}
         {activeSection === 'visualizer' && (
           <div className="mb-10">
-            {topicId === 'two-pointers' || topicId === 'sliding-window' || topicId === 'backtracking' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' ? (
+            {topicId === 'two-pointers' || topicId === 'sliding-window' || topicId === 'backtracking' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' || topicId === 'trie' ? (
               <VisualizerComponent />
             ) : (
               <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl text-center shadow-xl">
@@ -377,6 +366,21 @@ export default function DSAVisualizerPage({ topicId }) {
             </div>
           </Section>
         )}
+
+        {/*
+          Reference article. Hidden on the 'visualizer' tab so the animation has
+          the screen to itself; shown under every other section.
+
+          Hidden with CSS rather than `activeSection !== 'visualizer' && ...`
+          on purpose: 'visualizer' is the default tab, so it is what renders on
+          the server. Conditional rendering would strip the article from the
+          served HTML and take these pages back to ~200 crawlable words. Kept in
+          the DOM, it stays indexable and the FAQPage schema keeps matching real
+          on-page content, while readers on the visualizer tab don't see it.
+        */}
+        <div className={activeSection === 'visualizer' ? 'hidden' : ''}>
+          <VisualizerArticle topicId={topicId} />
+        </div>
       </div>
     </div>
   );

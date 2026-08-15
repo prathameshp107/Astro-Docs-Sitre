@@ -3,6 +3,8 @@ title: "Selection Sort"
 description: "How Selection Sort works, JavaScript implementation, time and space complexity, and comparison with Bubble Sort."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Selection Sort

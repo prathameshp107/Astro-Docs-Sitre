@@ -3,6 +3,8 @@ title: "Bubble Sort"
 description: "How Bubble Sort works, optimized version with early exit flag, JavaScript implementation, time and space complexity, and when to use it."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Bubble Sort

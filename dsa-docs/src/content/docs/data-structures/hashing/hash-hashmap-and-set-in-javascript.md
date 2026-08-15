@@ -3,6 +3,8 @@ title: "Hash, HashMap, and Set in JavaScript"
 description: "These are core interview data structures used for fast lookup, counting, and uniqueness."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/hash-table
 ---
 
 # Hash, HashMap, and Set in JavaScript

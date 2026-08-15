@@ -3,6 +3,8 @@ title: "What is a Hash?"
 description: "A hash is a technique that converts a key into an index using a hash function."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/hash-table
 ---
 
 # What is a Hash?

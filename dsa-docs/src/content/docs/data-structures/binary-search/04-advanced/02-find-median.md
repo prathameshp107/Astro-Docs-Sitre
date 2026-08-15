@@ -3,6 +3,8 @@ title: "Find Median of Two Sorted Arrays"
 description: "LeetCode 4 — Find the median of two sorted arrays in O(log(min(m,n))) time using binary search."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Find Median of Two Sorted Arrays

@@ -3,6 +3,8 @@ title: "Radix Sort"
 description: "A non-comparison sort that sorts numbers digit by digit — from least significant to most significant."
 sidebar:
   order: 11
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Radix Sort

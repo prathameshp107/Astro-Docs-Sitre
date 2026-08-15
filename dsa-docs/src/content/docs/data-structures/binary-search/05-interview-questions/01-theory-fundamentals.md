@@ -3,6 +3,8 @@ title: "Theory & Fundamentals"
 description: "Core binary search theory — O(log n) complexity, prerequisites, loop invariants, edge cases, and implementation gotchas."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Theory & Fundamentals

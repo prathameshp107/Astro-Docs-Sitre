@@ -3,6 +3,8 @@ title: "Core Operations"
 description: "Step-by-step guide to linked list operations — insertion, deletion, traversal, and searching."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Core Operations (Step by Step)

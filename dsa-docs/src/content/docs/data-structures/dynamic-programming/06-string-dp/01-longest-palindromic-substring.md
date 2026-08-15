@@ -3,6 +3,8 @@ title: "Longest Palindromic Substring"
 description: "Detailed walkthrough of Longest Palindromic Substring — DP table, expand around center, and counting palindromes."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Longest Palindromic Substring

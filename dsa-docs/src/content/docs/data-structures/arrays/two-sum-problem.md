@@ -3,6 +3,8 @@ title: "Two Sum Problem"
 description: "---"
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 # Two Sum Problem

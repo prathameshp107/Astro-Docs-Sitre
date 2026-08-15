@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/backtracking`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/backtracking/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('backtracking', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Backtracking Algorithm Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Visualize backtracking algorithms: N-Queens, Sudoku solver, permutations, and combinations with step-by-step recursive call tree animations.',
+  name: 'Backtracking Visualizer — N-Queens, Sudoku & Permutations Animated | Interview Prep Buddy',
+  description: 'Watch backtracking explore a decision tree and undo choices when constraints fail. Animated N-Queens, Sudoku solving, permutations, subsets and combinations with pruned branches highlighted.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Backtracking Algorithm Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Visualize backtracking algorithms: N-Queens, Sudoku solver, permutations, and combinations with step-by-step recursive call tree animations."
+      title="Backtracking Visualizer — N-Queens, Sudoku & Permutations Animated | Interview Prep Buddy"
+      description="Watch backtracking explore a decision tree and undo choices when constraints fail. Animated N-Queens, Sudoku solving, permutations, subsets and combinations with pruned branches highlighted."
       url={PAGE_URL}
-      keywords="backtracking algorithm visualizer, N-Queens animation, backtracking recursion"
+      keywords="backtracking visualizer, N-Queens visualizer, sudoku solver visualization, permutations backtracking, subsets combinations animation, decision tree pruning, backtracking template"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Backtracking Algorithm Visualizer', url: `/visualizer/backtracking` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

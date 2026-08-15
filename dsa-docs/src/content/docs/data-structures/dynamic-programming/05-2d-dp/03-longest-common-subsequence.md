@@ -3,6 +3,8 @@ title: "Longest Common Subsequence (LCS)"
 description: "Detailed walkthrough of LCS — DP table, backtracking reconstruction, space optimization, and related variations."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Longest Common Subsequence (LCS)

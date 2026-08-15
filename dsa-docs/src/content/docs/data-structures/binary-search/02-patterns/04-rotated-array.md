@@ -3,6 +3,8 @@ title: "Pattern 4 — Rotated Sorted Array"
 description: "Binary search pattern for searching in a sorted array that has been rotated at an unknown pivot point."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Pattern 4 — Rotated Sorted Array Search

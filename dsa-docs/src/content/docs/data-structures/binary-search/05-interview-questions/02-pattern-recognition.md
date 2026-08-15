@@ -3,6 +3,8 @@ title: "Pattern Recognition"
 description: "How to identify which binary search pattern to use for any interview problem."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Pattern Recognition

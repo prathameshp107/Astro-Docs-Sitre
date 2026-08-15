@@ -3,6 +3,8 @@ title: "House Robber"
 description: "Detailed walkthrough of House Robber — including circular houses, tree version, and space-optimized DP."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # House Robber

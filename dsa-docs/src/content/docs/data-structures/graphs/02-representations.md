@@ -3,6 +3,8 @@ title: "Graph Representations"
 description: "Adjacency matrix, adjacency list, and edge list — how to represent graphs in code."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Graph Representations

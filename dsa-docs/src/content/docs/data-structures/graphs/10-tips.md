@@ -3,6 +3,8 @@ title: "Tips & Common Mistakes"
 description: "Expert tips, common pitfalls, optimization tricks, and edge cases for graph problems."
 sidebar:
   order: 10
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Tips & Common Mistakes

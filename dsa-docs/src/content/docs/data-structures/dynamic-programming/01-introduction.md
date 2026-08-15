@@ -3,6 +3,8 @@ title: "Dynamic Programming — Introduction"
 description: "What is DP, overlapping subproblems, optimal substructure, and the 3-step framework for solving any DP problem."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Dynamic Programming — Introduction

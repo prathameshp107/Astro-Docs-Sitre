@@ -2,7 +2,7 @@
 
 A **massive, interactive knowledge base** covering AI Engineering, Data Structures & Algorithms, web development (JavaScript, React, Angular, Next.js, Node.js), databases (SQL, MongoDB, Redis), DevOps (Docker, AWS, Cloud), system design, HLD, LLD, and interview prep — all powered by **Astro + Starlight**.
 
-> **~1,249 documentation files** across **26 sections**, with interactive visualizers, coding playgrounds, MCQ hubs, lab environments, and Mermaid diagrams throughout.
+> **~1,250 documentation files** across **26 sections**, with interactive visualizers, coding playgrounds, MCQ hubs, lab environments, and Mermaid diagrams throughout.
 
 ---
 

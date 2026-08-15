@@ -3,6 +3,8 @@ title: "Code Examples"
 description: "Additional JavaScript implementations: unique permutations, letter combinations, rat in a maze."
 sidebar:
   order: 12
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Code Examples

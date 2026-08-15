@@ -3,6 +3,8 @@ title: "BST Operations"
 description: "Binary Search Tree operations — Search, Insert, Delete with diagrams and code."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # BST Operations

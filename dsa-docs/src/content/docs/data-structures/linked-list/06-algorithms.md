@@ -3,6 +3,8 @@ title: "Key Algorithms"
 description: "Complete code implementations of essential linked list algorithms — reverse, cycle detection, merge."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Key Algorithms

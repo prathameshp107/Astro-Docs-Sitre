@@ -3,6 +3,8 @@ title: "Problem 9 — First Bad Version"
 description: "LeetCode 278 — Find the first bad version using binary search with minimum API calls to isBadVersion()."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 9 — First Bad Version

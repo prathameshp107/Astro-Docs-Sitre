@@ -3,6 +3,8 @@ title: "Important Graph Patterns"
 description: "8 essential graph patterns: shortest path, connected components, cycle detection, topological sort, union-find, bipartite check, and multi-source BFS."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Important Graph Patterns

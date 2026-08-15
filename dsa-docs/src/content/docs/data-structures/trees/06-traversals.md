@@ -3,6 +3,8 @@ title: "Tree Traversals"
 description: "Depth First Search (Inorder, Preorder, Postorder) and Breadth First Search (Level Order) tree traversals."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Tree Traversal Algorithms

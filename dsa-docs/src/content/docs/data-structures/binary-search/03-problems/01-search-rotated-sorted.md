@@ -3,6 +3,8 @@ title: "Problem 1 — Search in Rotated Sorted Array"
 description: "LeetCode 33 — Search for a target in a rotated sorted array using binary search with O(log n) time."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 1 — Search in Rotated Sorted Array

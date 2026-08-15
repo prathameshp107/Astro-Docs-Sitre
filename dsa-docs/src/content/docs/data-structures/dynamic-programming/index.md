@@ -3,6 +3,8 @@ title: "Dynamic Programming"
 description: "Complete guide to Dynamic Programming — from fundamentals to interview-ready patterns with JavaScript examples."
 sidebar:
   order: 0
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Dynamic Programming

@@ -3,6 +3,8 @@ title: "Cycle Detection in Graphs"
 description: "Detecting cycles in directed and undirected graphs using DFS, BFS, and Union-Find."
 sidebar:
   order: 18
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Cycle Detection

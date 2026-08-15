@@ -3,6 +3,8 @@ title: "Tips & Common Mistakes"
 description: "Expert tips, common mistakes, and edge cases for tree data structure problems."
 sidebar:
   order: 13
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Tips and Common Mistakes

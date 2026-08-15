@@ -3,6 +3,8 @@ title: "Binary Search Patterns"
 description: "5 core binary search patterns with JavaScript templates — classic, first/last occurrence, search on answer, rotated array, and monotonic function."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # 🔹 Binary Search Patterns

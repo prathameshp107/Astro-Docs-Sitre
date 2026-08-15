@@ -3,6 +3,8 @@ title: "Recursion & Backtracking"
 description: "Comprehensive guide to recursion, backtracking, and problem-solving patterns with JavaScript examples."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Recursion & Backtracking

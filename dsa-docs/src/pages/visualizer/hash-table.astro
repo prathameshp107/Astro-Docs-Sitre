@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/hash-table`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/hash-table/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('hash-table', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Hash Table & Hash Map Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Visualize hash tables with interactive animations. See hash functions, collision handling, and how HashMap works internally.',
+  name: 'Hash Table Visualizer — Hashing, Collisions & Linear Probing Animated | Interview Prep Buddy',
+  description: 'See keys hashed into buckets and collisions resolved in real time. Compare separate chaining against linear probing, and watch the load factor trigger a resize and rehash.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Hash Table & Hash Map Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Visualize hash tables with interactive animations. See hash functions, collision handling, and how HashMap works internally."
+      title="Hash Table Visualizer — Hashing, Collisions & Linear Probing Animated | Interview Prep Buddy"
+      description="See keys hashed into buckets and collisions resolved in real time. Compare separate chaining against linear probing, and watch the load factor trigger a resize and rehash."
       url={PAGE_URL}
-      keywords="hash table animation, hash map visualizer, hash collision, hash function"
+      keywords="hash table visualizer, hash map visualizer, hash collision resolution, separate chaining animation, linear probing visualizer, load factor rehashing, hash function visualization"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Hash Table & Hash Map Visualizer', url: `/visualizer/hash-table` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

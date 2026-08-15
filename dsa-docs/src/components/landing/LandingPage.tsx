@@ -15,6 +15,7 @@ import { Companies } from "./Companies";
 import { Showcase } from "./Showcase";
 import { ProgressXp } from "./ProgressXp";
 import { Community } from "./Community";
+import { Faq } from "./Faq";
 import { FinalCta } from "./FinalCta";
 import { Footer } from "./Footer";
 
@@ -40,6 +41,7 @@ export default function LandingPage() {
         <Showcase />
         <ProgressXp />
         <Community />
+        <Faq />
         <FinalCta />
       </main>
       <Footer />

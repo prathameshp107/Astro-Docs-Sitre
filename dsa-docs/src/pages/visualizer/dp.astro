@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/dp`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/dp/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('dp', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Dynamic Programming Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Visualize dynamic programming solutions with memoization tables and bottom-up tabulation. See Fibonacci, Knapsack, LCS, and coin change DP step-by-step.',
+  name: 'Dynamic Programming Visualizer — Knapsack, LCS & Coin Change Animated | Interview Prep Buddy',
+  description: 'Watch DP tables fill cell by cell with dependencies highlighted. Animated 0/1 knapsack, longest common subsequence, coin change and Fibonacci, plus memoization versus tabulation compared.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Dynamic Programming Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Visualize dynamic programming solutions with memoization tables and bottom-up tabulation. See Fibonacci, Knapsack, LCS, and coin change DP step-by-step."
+      title="Dynamic Programming Visualizer — Knapsack, LCS & Coin Change Animated | Interview Prep Buddy"
+      description="Watch DP tables fill cell by cell with dependencies highlighted. Animated 0/1 knapsack, longest common subsequence, coin change and Fibonacci, plus memoization versus tabulation compared."
       url={PAGE_URL}
-      keywords="dynamic programming visualizer, DP memoization animation, knapsack visualization, LCS DP"
+      keywords="dynamic programming visualizer, DP table animation, knapsack visualizer, LCS visualizer, coin change DP, memoization vs tabulation, fibonacci dynamic programming, DP interview problems"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Dynamic Programming Visualizer', url: `/visualizer/dp` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

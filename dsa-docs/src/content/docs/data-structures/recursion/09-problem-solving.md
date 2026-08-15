@@ -3,6 +3,8 @@ title: "Problem-Solving Approach"
 description: "How to identify recursion and backtracking problems, build intuition, and apply the step-by-step framework."
 sidebar:
   order: 10
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Problem-Solving Approach

@@ -35,3 +35,6 @@ Thumbs.db
 
 # misc
 *.log
+
+# Reel generator output (MP4s + intermediate frames)
+reels-out/

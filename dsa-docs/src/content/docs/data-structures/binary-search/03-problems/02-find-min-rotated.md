@@ -3,6 +3,8 @@ title: "Problem 2 — Find Minimum in Rotated Array"
 description: "LeetCode 153 — Find the minimum element in a rotated sorted array using binary search."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 2 — Find Minimum in Rotated Sorted Array

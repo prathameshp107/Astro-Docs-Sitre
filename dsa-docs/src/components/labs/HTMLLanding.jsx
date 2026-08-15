@@ -57,7 +57,7 @@ const roadmap = [
 
 export default function HTMLLanding() {
   const [loaded, setLoaded] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
 
   useEffect(() => {
     setLoaded(true);

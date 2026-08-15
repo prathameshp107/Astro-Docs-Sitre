@@ -15,8 +15,18 @@ import { useDPStore } from '../../store/visualizers/dpStore';
 import { useHashTableStore } from '../../store/visualizers/hashTableStore';
 import { useSlidingWindowStore } from '../../store/visualizers/slidingWindowStore';
 import { useBacktrackingStore } from '../../store/visualizers/backtrackingStore';
+import { useTrieStore } from '../../store/visualizers/trieStore';
 
 const TOPIC_TRACKS = {
+  trie: {
+    title: 'Trie (Prefix Tree)',
+    icon: '\u{1F333}',
+    items: [
+      { id: 'insert', label: '1. Insert Words', subtitle: 'Build the tree \u00B7 shared prefixes reused' },
+      { id: 'search', label: '2. Search a Word', subtitle: 'Walk chars \u00B7 isEnd decides the answer' },
+      { id: 'prefix', label: '3. Prefix / Autocomplete', subtitle: 'Collect every word under a prefix' },
+    ],
+  },
   'two-pointers': {
     title: 'Two Pointers',
     icon: '👉👈',
@@ -192,7 +202,10 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
   const { track: activeHashTableTrack, setTrack: setHashTableTrack } = useHashTableStore();
   const { track: activeSlidingWindowTrack, setTrack: setSlidingWindowTrack } = useSlidingWindowStore();
   const { track: activeBacktrackingTrack, setTrack: setBacktrackingTrack } = useBacktrackingStore();
-  const [expandedTopics, setExpandedTopics] = useState({ 'two-pointers': true, 'sliding-window': true, backtracking: true, arrays: true, sorting: true, searching: true, 'linked-list': true, trees: true, graphs: true, stack: true, queue: true, heaps: true, recursion: true, dp: true, 'hash-table': true });
+  const activeTrieTrack = useTrieStore((s) => s.track);
+  const setTrieTrack = useTrieStore((s) => s.setTrack);
+
+  const [expandedTopics, setExpandedTopics] = useState({ trie: true, 'two-pointers': true, 'sliding-window': true, backtracking: true, arrays: true, sorting: true, searching: true, 'linked-list': true, trees: true, graphs: true, stack: true, queue: true, heaps: true, recursion: true, dp: true, 'hash-table': true });
 
   // Save scroll position on user scroll
   const handleScroll = (e) => {
@@ -224,7 +237,8 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
     const initialTrack = params.get('track') || params.get('problem');
     if (!initialTrack) return;
 
-    if (activeTopicId === 'two-pointers') setTwoPointerTrack(initialTrack);
+    if (activeTopicId === 'trie') setTrieTrack(initialTrack);
+    else if (activeTopicId === 'two-pointers') setTwoPointerTrack(initialTrack);
     else if (activeTopicId === 'sliding-window') setSlidingWindowTrack(initialTrack);
     else if (activeTopicId === 'backtracking') setBacktrackingTrack(initialTrack);
     else if (activeTopicId === 'arrays') setArrayTrack(initialTrack);
@@ -246,6 +260,7 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
     if (typeof window === 'undefined') return;
 
     const currentTrack =
+      activeTopicId === 'trie' ? activeTrieTrack :
       activeTopicId === 'two-pointers' ? activeTwoPointerTrack :
       activeTopicId === 'sliding-window' ? activeSlidingWindowTrack :
       activeTopicId === 'backtracking' ? activeBacktrackingTrack :
@@ -337,6 +352,7 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                     const isRecursionTopic = topicId === 'recursion';
                     const isDPTopic = topicId === 'dp';
                     const isHashTableTopic = topicId === 'hash-table';
+                    const isTrieTopic = topicId === 'trie';
 
                     const isSelected =
                       isCurrentTopic &&
@@ -370,6 +386,8 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                         ? activeDPTrack === item.id
                         : isHashTableTopic
                         ? activeHashTableTrack === item.id
+                        : isTrieTopic
+                        ? activeTrieTrack === item.id
                         : true);
 
                     const handleClick = () => {
@@ -394,12 +412,13 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
                         if (isRecursionTopic) setRecursionTrack(item.id);
                         if (isDPTopic) setDPTrack(item.id);
                         if (isHashTableTopic) setHashTableTrack(item.id);
+                        if (isTrieTopic) setTrieTrack(item.id);
                       }
                     };
 
                     return (
                       <li key={item.id} ref={isSelected ? selectedItemRef : null}>
-                        {isTwoPointerTopic || isSlidingWindowTopic || isBacktrackingTopic || isArrayTopic || isSortingTopic || isSearchingTopic || isLinkedListTopic || isTreeTopic || isGraphTopic || isStackTopic || isQueueTopic || isHeapTopic || isRecursionTopic || isDPTopic || isHashTableTopic ? (
+                        {isTwoPointerTopic || isSlidingWindowTopic || isBacktrackingTopic || isArrayTopic || isSortingTopic || isSearchingTopic || isLinkedListTopic || isTreeTopic || isGraphTopic || isStackTopic || isQueueTopic || isHeapTopic || isRecursionTopic || isDPTopic || isHashTableTopic || isTrieTopic ? (
                           <button
                             onClick={handleClick}
                             className={`w-full text-left block px-3 py-1.5 rounded-lg transition-all ${

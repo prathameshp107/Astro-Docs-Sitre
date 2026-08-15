@@ -3,6 +3,8 @@ title: "Floating-Point Binary Search"
 description: "Binary search on continuous value ranges — find square roots, cube roots, and solve equations with precision tolerance."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Floating-Point Binary Search

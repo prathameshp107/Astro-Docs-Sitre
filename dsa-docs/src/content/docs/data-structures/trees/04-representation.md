@@ -3,6 +3,8 @@ title: "Tree Representation"
 description: "Pointer-based and array-based representations of trees with diagrams and code."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Tree Representation

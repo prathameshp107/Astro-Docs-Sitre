@@ -3,6 +3,8 @@ title: "Red-Black Tree (Concept)"
 description: "A self-balancing BST with colored nodes — used in TreeMap, TreeSet, and std::map."
 sidebar:
   order: 17
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Red-Black Tree

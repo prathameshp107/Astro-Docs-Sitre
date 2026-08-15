@@ -3,6 +3,8 @@ title: "Coin Change"
 description: "Detailed walkthrough of Coin Change — minimum coins, number of combinations, number of permutations, and the critical loop-order insight."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Coin Change

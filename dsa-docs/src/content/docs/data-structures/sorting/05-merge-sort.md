@@ -3,6 +3,8 @@ title: "Merge Sort"
 description: "How Merge Sort works (divide & conquer), merge process step by step, JavaScript implementation, complexity analysis, and interview tips."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Merge Sort

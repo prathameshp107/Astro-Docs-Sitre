@@ -3,6 +3,8 @@ title: "Sorting Algorithms — Interview Questions"
 description: "15+ interview questions on sorting algorithms covering concepts, implementation, complexity analysis, and coding problems with detailed answers."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Sorting Algorithms — Interview Questions

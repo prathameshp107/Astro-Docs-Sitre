@@ -3,6 +3,8 @@ title: "Union-Find (Disjoint Set Union)"
 description: "A data structure for tracking elements partitioned into disjoint sets — with path compression and union by rank."
 sidebar:
   order: 16
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Union-Find (Disjoint Set Union)

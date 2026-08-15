@@ -3,6 +3,8 @@ title: "Graphs"
 description: "Complete guide to graph data structures — from fundamentals to advanced algorithms for interview preparation."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # 📊 Graphs

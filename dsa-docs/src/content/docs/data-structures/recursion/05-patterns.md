@@ -3,6 +3,8 @@ title: "Recursion Patterns"
 description: "Core recursion patterns: Pick/Not Pick, Divide and Conquer, and the foundation of backtracking."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Recursion Patterns

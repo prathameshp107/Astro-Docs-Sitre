@@ -3,6 +3,8 @@ title: "Real-World Applications"
 description: "How trees are used in real-world systems — file systems, databases, autocomplete, compilers, and more."
 sidebar:
   order: 14
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Real-World Applications

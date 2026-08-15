@@ -3,6 +3,8 @@ title: "Introduction to Trees"
 description: "Tree data structure — definition, key terminologies, height vs depth, and properties."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # 🌳 Introduction to Trees

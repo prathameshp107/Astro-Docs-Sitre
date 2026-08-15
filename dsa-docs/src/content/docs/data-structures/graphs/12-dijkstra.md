@@ -3,6 +3,8 @@ title: "Dijkstra's Algorithm"
 description: "Shortest path from a single source in weighted graphs — non-negative weights only."
 sidebar:
   order: 12
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Dijkstra's Algorithm

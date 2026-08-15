@@ -124,7 +124,7 @@ function toggleBookmark(id) {
 
 // ─── Main Quiz Component ────────────────────────────────────
 export default function MCQQuiz({ categoryId }) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [progress, setProgress] = useState(null);
   const [allQuestions, setAllQuestions] = useState([]);
 

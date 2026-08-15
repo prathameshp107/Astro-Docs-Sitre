@@ -3,6 +3,8 @@ title: "Problem 7 — Split Array Largest Sum"
 description: "LeetCode 410 — Split the array into k subarrays to minimize the largest subarray sum using binary search."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 7 — Split Array Largest Sum

@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/queue`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/queue/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('queue', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Queue Data Structure Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Interactive queue visualizer. See enqueue, dequeue, circular queue, and priority queue operations with animated diagrams.',
+  name: 'Queue Visualizer — Enqueue, Dequeue, Circular Queue & Deque | Interview Prep Buddy',
+  description: 'Watch head and tail indices move through enqueue and dequeue in FIFO order. Includes circular queue wrap-around, deque operations at both ends, and implementing a queue with two stacks.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Queue Data Structure Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Interactive queue visualizer. See enqueue, dequeue, circular queue, and priority queue operations with animated diagrams."
+      title="Queue Visualizer — Enqueue, Dequeue, Circular Queue & Deque | Interview Prep Buddy"
+      description="Watch head and tail indices move through enqueue and dequeue in FIFO order. Includes circular queue wrap-around, deque operations at both ends, and implementing a queue with two stacks."
       url={PAGE_URL}
-      keywords="queue data structure visualizer, enqueue dequeue animation, circular queue priority queue"
+      keywords="queue visualizer, enqueue dequeue animation, circular queue visualizer, deque visualization, queue using two stacks, FIFO data structure, queue vs stack difference"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Queue Data Structure Visualizer', url: `/visualizer/queue` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

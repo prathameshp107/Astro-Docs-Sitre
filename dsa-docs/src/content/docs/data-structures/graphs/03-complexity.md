@@ -3,6 +3,8 @@ title: "Time & Space Complexity"
 description: "Complexity analysis of graph algorithms and operations by representation."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Time & Space Complexity

@@ -3,6 +3,8 @@ title: "Problem 10 — Time-Based Key-Value Store"
 description: "LeetCode 981 — Design a key-value store with timestamps that supports fetching the value with the largest timestamp ≤ query timestamp."
 sidebar:
   order: 10
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 10 — Time-Based Key-Value Store

@@ -3,6 +3,8 @@ title: "Modify (Mutating) Methods"
 description: "These change the original array (important in interviews)"
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 # Modify (Mutating) Methods

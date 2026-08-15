@@ -3,6 +3,8 @@ title: "Introduction to Backtracking"
 description: "What is backtracking, difference from recursion, decision trees, and the universal template."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Introduction to Backtracking

@@ -1,4 +1,37 @@
 export const DSA_TOPICS = {
+  trie: {
+    title: 'Trie (Prefix Tree)',
+    icon: '\u{1F333}',
+    description: 'A tree where each edge is one character, so every root-to-node path spells a prefix shared by all words below it.',
+    overview: {
+      what: 'A trie stores strings by character rather than whole. Each edge carries one character, so the path from the root to a node spells a prefix, and words sharing that prefix share those nodes. A boolean isEnd flag marks nodes where a complete word finishes.',
+      why: 'Lookup costs O(L) in the length of the query and does not grow with the number of stored words. More importantly, a trie answers prefix questions — "every word starting with ca" — by walking to one node and reading its subtree, which a hash map cannot do without scanning every key.',
+      examples: ['Search box autocomplete and type-ahead suggestions', 'Spell checkers and did-you-mean correction', 'IP routing tables matching the longest address prefix', 'Word games such as Boggle and Scrabble solvers'],
+      advantages: ['O(L) lookup independent of dictionary size', 'Prefix and autocomplete queries are natural, not brute force', 'Shared prefixes are stored once, saving space on related words', 'Keys come out in sorted order from a pre-order walk'],
+      disadvantages: ['Heavy pointer overhead per node when words share few prefixes', 'Usually more memory than a hash set for unrelated strings', 'Cache-unfriendly: nodes are scattered rather than contiguous', 'Only suits sequence-like keys such as strings'],
+    },
+    complexity: [
+      { operation: 'Insert word', time: 'O(L)', space: 'O(L)' },
+      { operation: 'Search word', time: 'O(L)', space: 'O(1)' },
+      { operation: 'Starts with prefix', time: 'O(L)', space: 'O(1)' },
+      { operation: 'Collect prefix matches', time: 'O(L + k)', space: 'O(k)' },
+      { operation: 'Delete word', time: 'O(L)', space: 'O(1)' },
+    ],
+    code: {
+      javascript: `class TrieNode {\n  constructor() {\n    this.children = {};\n    this.isEnd = false;\n  }\n}\n\nclass Trie {\n  constructor() {\n    this.root = new TrieNode();\n  }\n\n  insert(word) {\n    let node = this.root;\n    for (const ch of word) {\n      if (!node.children[ch]) node.children[ch] = new TrieNode();\n      node = node.children[ch];\n    }\n    node.isEnd = true;\n  }\n\n  search(word) {\n    const node = this._walk(word);\n    return !!node && node.isEnd;\n  }\n\n  startsWith(prefix) {\n    return !!this._walk(prefix);\n  }\n\n  _walk(str) {\n    let node = this.root;\n    for (const ch of str) {\n      if (!node.children[ch]) return null;\n      node = node.children[ch];\n    }\n    return node;\n  }\n}`,
+      typescript: `class TrieNode {\n  children: Record<string, TrieNode> = {};\n  isEnd = false;\n}\n\nclass Trie {\n  private root = new TrieNode();\n\n  insert(word: string): void {\n    let node = this.root;\n    for (const ch of word) {\n      if (!node.children[ch]) node.children[ch] = new TrieNode();\n      node = node.children[ch];\n    }\n    node.isEnd = true;\n  }\n\n  search(word: string): boolean {\n    const node = this.walk(word);\n    return !!node && node.isEnd;\n  }\n\n  startsWith(prefix: string): boolean {\n    return !!this.walk(prefix);\n  }\n\n  private walk(str: string): TrieNode | null {\n    let node = this.root;\n    for (const ch of str) {\n      if (!node.children[ch]) return null;\n      node = node.children[ch];\n    }\n    return node;\n  }\n}`,
+      python: `class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n\n    def insert(self, word):\n        node = self.root\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = TrieNode()\n            node = node.children[ch]\n        node.is_end = True\n\n    def search(self, word):\n        node = self._walk(word)\n        return node is not None and node.is_end\n\n    def starts_with(self, prefix):\n        return self._walk(prefix) is not None\n\n    def _walk(self, s):\n        node = self.root\n        for ch in s:\n            if ch not in node.children:\n                return None\n            node = node.children[ch]\n        return node`,
+      java: `class TrieNode {\n    Map<Character, TrieNode> children = new HashMap<>();\n    boolean isEnd = false;\n}\n\nclass Trie {\n    private final TrieNode root = new TrieNode();\n\n    public void insert(String word) {\n        TrieNode node = root;\n        for (char ch : word.toCharArray()) {\n            node = node.children.computeIfAbsent(ch, k -> new TrieNode());\n        }\n        node.isEnd = true;\n    }\n\n    public boolean search(String word) {\n        TrieNode node = walk(word);\n        return node != null && node.isEnd;\n    }\n\n    public boolean startsWith(String prefix) {\n        return walk(prefix) != null;\n    }\n\n    private TrieNode walk(String s) {\n        TrieNode node = root;\n        for (char ch : s.toCharArray()) {\n            node = node.children.get(ch);\n            if (node == null) return null;\n        }\n        return node;\n    }\n}`,
+      cpp: `struct TrieNode {\n    std::unordered_map<char, TrieNode*> children;\n    bool isEnd = false;\n};\n\nclass Trie {\n    TrieNode* root = new TrieNode();\n\n    TrieNode* walk(const std::string& s) {\n        TrieNode* node = root;\n        for (char ch : s) {\n            if (!node->children.count(ch)) return nullptr;\n            node = node->children[ch];\n        }\n        return node;\n    }\n\npublic:\n    void insert(const std::string& word) {\n        TrieNode* node = root;\n        for (char ch : word) {\n            if (!node->children.count(ch)) node->children[ch] = new TrieNode();\n            node = node->children[ch];\n        }\n        node->isEnd = true;\n    }\n\n    bool search(const std::string& word) {\n        TrieNode* node = walk(word);\n        return node && node->isEnd;\n    }\n\n    bool startsWith(const std::string& prefix) {\n        return walk(prefix) != nullptr;\n    }\n};`,
+    },
+    interviewQuestions: [
+      { question: 'Implement a trie with insert, search and startsWith', difficulty: 'Medium', hint: 'One node per character with a children map and an isEnd flag; search and startsWith share the same walk helper and differ only in checking isEnd' },
+      { question: 'Design an autocomplete / search suggestion system', difficulty: 'Medium', hint: 'Walk to the prefix node, then DFS its subtree collecting isEnd nodes; cache the top-k results on each node if suggestions must be instant' },
+      { question: 'Word Search II — find all dictionary words in a grid', difficulty: 'Hard', hint: 'Build a trie of the dictionary, then DFS the grid while walking the trie so impossible prefixes are pruned instead of searching per word' },
+      { question: 'Replace words with their shortest root form', difficulty: 'Medium', hint: 'Insert every root, then for each word walk until you hit an isEnd node and swap in that prefix' },
+      { question: 'Why use a trie instead of a hash set?', difficulty: 'Easy', hint: 'A hash set answers exact membership only; prefix queries would need a full scan. A trie walks the prefix once and reads the subtree' },
+    ],
+  },
   'two-pointers': {
     title: 'Two Pointers',
     icon: '👉👈',
@@ -661,4 +694,5 @@ export const VISUALIZER_LIST = [
   { id: 'searching', title: 'Searching Visualizer', icon: '\u{1F50D}', built: true },
   { id: 'recursion', title: 'Recursion Visualizer', icon: '\u{1F504}', built: true },
   { id: 'dp', title: 'Dynamic Programming Visualizer', icon: '\u{1F9EE}', built: true },
+  { id: 'trie', title: 'Trie Visualizer', icon: '\u{1F333}', built: true },
 ];

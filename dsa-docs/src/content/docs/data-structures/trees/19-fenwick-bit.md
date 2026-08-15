@@ -3,6 +3,8 @@ title: "Fenwick Tree (Binary Indexed Tree)"
 description: "A tree for prefix sums and point updates — simpler and faster than segment tree for range sums."
 sidebar:
   order: 19
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Fenwick Tree (Binary Indexed Tree)

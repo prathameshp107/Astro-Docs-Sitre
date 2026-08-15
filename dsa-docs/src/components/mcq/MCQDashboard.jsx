@@ -100,7 +100,7 @@ function Sparkline({ data, color = '#2563eb', height = 44 }) {
 
 export default function MCQDashboard() {
   const [progress, setProgress] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
 
   useEffect(() => {
     const p = getInitialProgress();

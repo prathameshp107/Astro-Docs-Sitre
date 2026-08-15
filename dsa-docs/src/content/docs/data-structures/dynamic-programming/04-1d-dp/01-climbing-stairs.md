@@ -3,6 +3,8 @@ title: "Climbing Stairs"
 description: "Detailed walkthrough of the Climbing Stairs problem — recursion, memoization, tabulation, space optimization, and variations."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Climbing Stairs

@@ -3,6 +3,8 @@ title: "Floyd-Warshall Algorithm"
 description: "All-pairs shortest path using dynamic programming — O(V³) time."
 sidebar:
   order: 14
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Floyd-Warshall Algorithm

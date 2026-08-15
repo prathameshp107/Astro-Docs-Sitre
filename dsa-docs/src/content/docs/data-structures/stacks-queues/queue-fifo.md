@@ -3,6 +3,8 @@ title: "Queue (FIFO)"
 description: "First In, First Out."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Queue (FIFO)

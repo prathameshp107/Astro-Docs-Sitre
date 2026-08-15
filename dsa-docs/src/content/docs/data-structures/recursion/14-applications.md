@@ -3,6 +3,8 @@ title: "Real-World Applications"
 description: "Real-world uses of recursion: file systems, game AI, compilers, pathfinding, and more."
 sidebar:
   order: 15
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Real-World Applications

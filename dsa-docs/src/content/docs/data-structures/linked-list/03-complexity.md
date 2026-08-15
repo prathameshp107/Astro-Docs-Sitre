@@ -3,6 +3,8 @@ title: "Time & Space Complexity"
 description: "Time and space complexity analysis of linked list operations with comparisons to arrays."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Time & Space Complexity
