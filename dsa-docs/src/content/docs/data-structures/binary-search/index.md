@@ -3,6 +3,8 @@ title: "Binary Search"
 description: "Master binary search — from fundamentals to advanced patterns, classic problems, and interview preparation."
 sidebar:
   order: 0
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # 🔍 Binary Search

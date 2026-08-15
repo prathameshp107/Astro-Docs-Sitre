@@ -3,6 +3,8 @@ title: "Important Tree Patterns"
 description: "Key tree patterns — DFS recursion template, BFS level-order, height/diameter, LCA, path sum, and balanced tree checking."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Important Tree Patterns

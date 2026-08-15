@@ -7,7 +7,7 @@ import '../styles/landing.css';
 import '../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `${SITE_URL}/visualizer`;
+const PAGE_URL = `${SITE_URL}/visualizer/`;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -115,47 +115,6 @@ const visualizerTopics = [
     />
   </head>
   <body class="mcq-body">
-    <!-- ★ CRITICAL: Static crawler content — answers featured snippet queries + distributes PageRank to all sub-pages -->
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>DSA Algorithm Visualizer — Free Interactive Step-by-Step Animations</h1>
-      <p>Interview Prep Buddy's Algorithm Visualizer lets you see exactly how data structures and algorithms work through interactive, step-by-step animations. Built for coding interview preparation, it covers 17+ algorithms with Big-O complexity analysis.</p>
-
-      <h2>What algorithms can you visualize?</h2>
-      <ul>
-        {visualizerTopics.map(t => (
-          <li><a href={`/visualizer/${t.id}`}>{t.name}</a> — {t.desc}</li>
-        ))}
-      </ul>
-
-      <h2>How to use the Algorithm Visualizer</h2>
-      <ol>
-        <li>Select an algorithm or data structure from the menu (e.g., Sorting, Trees, Graphs)</li>
-        <li>Click "Visualize" or "Start" to begin the step-by-step animation</li>
-        <li>Use the speed control to slow down or speed up the animation</li>
-        <li>Click "Step" to advance one operation at a time for deep understanding</li>
-        <li>Read the explanation panel showing the current operation and Big-O complexity</li>
-      </ol>
-
-      <h2>Sorting Algorithms Visualized</h2>
-      <ul>
-        <li><a href="/visualizer/sorting">Bubble Sort</a> — O(n²) time, O(1) space. Compares adjacent elements and swaps them repeatedly.</li>
-        <li><a href="/visualizer/sorting">Merge Sort</a> — O(n log n) time, O(n) space. Divides array in half, sorts recursively, merges.</li>
-        <li><a href="/visualizer/sorting">Quick Sort</a> — O(n log n) average, O(n²) worst. Picks a pivot and partitions around it.</li>
-        <li><a href="/visualizer/sorting">Insertion Sort</a> — O(n²) time, O(1) space. Builds sorted array one element at a time.</li>
-        <li><a href="/visualizer/sorting">Selection Sort</a> — O(n²) time, O(1) space. Repeatedly selects the minimum element.</li>
-      </ul>
-
-      <h2>Tree Traversal Algorithms</h2>
-      <ul>
-        <li><a href="/visualizer/trees">Binary Tree BFS (Level-Order)</a> — Uses a queue, visits nodes level by level</li>
-        <li><a href="/visualizer/trees">Binary Tree DFS (Inorder)</a> — Left → Root → Right, gives sorted output for BST</li>
-        <li><a href="/visualizer/trees">Binary Tree DFS (Preorder)</a> — Root → Left → Right</li>
-        <li><a href="/visualizer/trees">Binary Tree DFS (Postorder)</a> — Left → Right → Root</li>
-      </ul>
-
-      <h2>Why use an Algorithm Visualizer for Interview Prep?</h2>
-      <p>Seeing algorithms animated helps build muscle memory and intuition. When you can visualize how merge sort splits and merges, or how Dijkstra expands its frontier, you can implement these algorithms from scratch in an interview without memorization. Each visualizer in Interview Prep Buddy shows Big-O time and space complexity alongside the animation.</p>
-    </div>
 
     <AppNav activeSection="visualizer" client:load />
     <DSAVisualizerHub client:load />

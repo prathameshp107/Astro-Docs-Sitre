@@ -3,6 +3,8 @@ title: "Minimum Spanning Tree: Kruskal & Prim"
 description: "Kruskal's and Prim's algorithms for finding the minimum spanning tree of a graph."
 sidebar:
   order: 17
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Minimum Spanning Tree

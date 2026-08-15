@@ -71,7 +71,7 @@ export default function DSAProblemList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [difficultyFilter, setDifficultyFilter] = useState(null);
   const [companyFilter, setCompanyFilter] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [solvedIds, setSolvedIds] = useState([]);
   const base = (import.meta.env.BASE_URL || "/").replace(/\/?$/, "/");
 

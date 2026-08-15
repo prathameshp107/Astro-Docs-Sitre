@@ -33,7 +33,7 @@ function ProgressRing({ value, size = 40, color }) {
 
 export default function MCQCategory({ categoryId }) {
   const [progress, setProgress] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [searchTopic, setSearchTopic] = useState('');
   const [selectedMode, setSelectedMode] = useState('practice');
 

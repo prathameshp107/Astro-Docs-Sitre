@@ -3,6 +3,8 @@ title: "Deque (Double-Ended Queue)"
 description: "A deque allows adding and removing from both ends — a hybrid of stack and queue."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Deque (Double-Ended Queue)

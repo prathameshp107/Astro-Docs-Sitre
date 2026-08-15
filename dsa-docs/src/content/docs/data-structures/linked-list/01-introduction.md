@@ -3,6 +3,8 @@ title: "What is a Linked List?"
 description: "Introduction to linked lists — definition, real-life analogy, arrays vs linked lists, and memory model."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # 🔗 What is a Linked List?

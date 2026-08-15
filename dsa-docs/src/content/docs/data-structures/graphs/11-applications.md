@@ -3,6 +3,8 @@ title: "Real-World Applications"
 description: "How graphs are used in computer networks, maps, social networks, game AI, and more."
 sidebar:
   order: 11
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Real-World Applications

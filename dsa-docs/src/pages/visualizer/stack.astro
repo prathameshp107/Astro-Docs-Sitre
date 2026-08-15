@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/stack`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/stack/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('stack', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Stack Data Structure Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Visualize stack operations: push, pop, peek, and overflow. See how the call stack works with interactive step-by-step animation.',
+  name: 'Stack Visualizer — Push, Pop, Balanced Parentheses & Monotonic Stack | Interview Prep Buddy',
+  description: 'Watch push and pop operate on one end in LIFO order. Includes balanced parentheses validation and the monotonic stack pattern behind next greater element and daily temperatures.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Stack Data Structure Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Visualize stack operations: push, pop, peek, and overflow. See how the call stack works with interactive step-by-step animation."
+      title="Stack Visualizer — Push, Pop, Balanced Parentheses & Monotonic Stack | Interview Prep Buddy"
+      description="Watch push and pop operate on one end in LIFO order. Includes balanced parentheses validation and the monotonic stack pattern behind next greater element and daily temperatures."
       url={PAGE_URL}
-      keywords="stack data structure visualizer, push pop animation, LIFO stack visualization"
+      keywords="stack visualizer, push pop animation, balanced parentheses visualizer, monotonic stack, LIFO data structure, next greater element, largest rectangle histogram"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Stack Data Structure Visualizer', url: `/visualizer/stack` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

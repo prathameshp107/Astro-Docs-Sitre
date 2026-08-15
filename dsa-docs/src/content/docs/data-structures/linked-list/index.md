@@ -3,6 +3,8 @@ title: "Linked List"
 description: "Master linked lists — from basics to advanced patterns and interview questions."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # 🔗 Linked Lists

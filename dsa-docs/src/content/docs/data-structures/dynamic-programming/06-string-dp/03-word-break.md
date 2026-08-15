@@ -3,6 +3,8 @@ title: "Word Break"
 description: "Detailed walkthrough of Word Break — DP, BFS, and Word Break II with backtracking to return all sentences."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Word Break

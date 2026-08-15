@@ -3,6 +3,8 @@ title: "Backtracking Patterns"
 description: "Core backtracking patterns: subsets, permutations, combination sum with detailed solutions."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Backtracking Patterns

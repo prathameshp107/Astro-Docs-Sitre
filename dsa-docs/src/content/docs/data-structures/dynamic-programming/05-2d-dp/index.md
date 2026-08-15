@@ -3,6 +3,8 @@ title: "2D DP Problems"
 description: "Two-dimensional dynamic programming problems with the pattern: dp[i][j] depends on previous rows/columns."
 sidebar:
   order: 0
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # 2D DP Problems

@@ -3,6 +3,8 @@ title: "HashMap in JavaScript"
 description: "In JS, a HashMap is implemented using:"
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/hash-table
 ---
 
 # HashMap in JavaScript

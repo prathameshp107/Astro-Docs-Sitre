@@ -3,6 +3,8 @@ title: "Heap Operations"
 description: "Min Heap and Max Heap operations — Insert (sift up), Delete (sift down), and Heapify."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Heap Operations

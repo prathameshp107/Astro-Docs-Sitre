@@ -3,6 +3,8 @@ title: "Search / Check Methods"
 description: "<a id=\"includes\"</a includes()"
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 # Search / Check Methods

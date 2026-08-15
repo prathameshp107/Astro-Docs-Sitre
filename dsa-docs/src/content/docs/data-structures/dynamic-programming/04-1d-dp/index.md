@@ -3,6 +3,8 @@ title: "1D DP Problems"
 description: "One-dimensional dynamic programming problems with the pattern: dp[i] depends on a constant number of previous states."
 sidebar:
   order: 0
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # 1D DP Problems

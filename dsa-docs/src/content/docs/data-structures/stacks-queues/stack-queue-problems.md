@@ -3,6 +3,8 @@ title: "Stack & Queue Problems"
 description: "Valid parentheses, min stack, evaluate expression, and queue using stacks — with step-by-step solutions."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Stack & Queue Problems

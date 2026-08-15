@@ -3,6 +3,8 @@ title: "Trie (Prefix Tree)"
 description: "A tree for storing strings — each node represents a character. Used for autocomplete and spell checking."
 sidebar:
   order: 15
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Trie (Prefix Tree)

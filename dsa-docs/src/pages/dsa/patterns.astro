@@ -9,7 +9,7 @@ import '../../styles/sketch-visualizer.css';
 const SITE_URL  = 'https://interviewpreprationbuddy.in';
 const SITE_NAME = 'Interview Prep Buddy';
 const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
-const PAGE_URL  = `${SITE_URL}/dsa/patterns`;
+const PAGE_URL  = `${SITE_URL}/dsa/patterns/`;
 const PAGE_TITLE = 'DSA Patterns Cheatsheet — 16 Core Algorithm Patterns | Interview Prep Buddy';
 const PAGE_DESC  = 'Master 16 essential DSA patterns: Two Pointers, Sliding Window, Fast & Slow Pointers, Merge Intervals, Binary Search, BFS/DFS, Dynamic Programming, Backtracking, Topological Sort, and more. With code blueprints and input signals.';
 
@@ -149,30 +149,6 @@ const breadcrumbSchema = {
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Patrick+Hand&family=Caveat:wght@600&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <!-- AEO: Answer-first crawler content for AI engines -->
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>DSA Patterns Cheatsheet — 16 Core Algorithm Patterns for Coding Interviews</h1>
-      <p>The 16 most important DSA patterns cover approximately 90% of coding interview problems. Learn Two Pointers, Sliding Window, Binary Search, Dynamic Programming, BFS/DFS, and more — each with code blueprints and input signal recognition guides.</p>
-      <h2>What are the 16 DSA patterns?</h2>
-      <ol>
-        <li>Two Pointers — for pair/triplet finding in sorted arrays</li>
-        <li>Sliding Window — for contiguous subarray/substring problems</li>
-        <li>Fast and Slow Pointers — for cycle detection in linked lists</li>
-        <li>Merge Intervals — for overlapping interval problems</li>
-        <li>Cyclic Sort — for finding missing/duplicate numbers</li>
-        <li>In-place Reversal — for reversing linked list subgroups</li>
-        <li>Tree BFS — for level-order tree traversal</li>
-        <li>Tree DFS — for path-based tree problems</li>
-        <li>Two Heaps — for median finding problems</li>
-        <li>Subsets — for permutations and combinations</li>
-        <li>Modified Binary Search — for sorted/rotated array search</li>
-        <li>Bitwise XOR — for finding missing or duplicate numbers</li>
-        <li>Top K Elements — using heaps for K largest/smallest</li>
-        <li>K-way Merge — for merging K sorted arrays/lists</li>
-        <li>Dynamic Programming — for optimization with overlapping subproblems</li>
-        <li>Topological Sort — for DAG ordering problems</li>
-      </ol>
-    </div>
     <AppNav activeSection="dsa-patterns" client:load />
     <DSAPatternsView client:load />
   </body>

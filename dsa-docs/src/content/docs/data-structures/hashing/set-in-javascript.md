@@ -3,6 +3,8 @@ title: "Set in JavaScript"
 description: "A Set stores unique values only."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/hash-table
 ---
 
 # Set in JavaScript

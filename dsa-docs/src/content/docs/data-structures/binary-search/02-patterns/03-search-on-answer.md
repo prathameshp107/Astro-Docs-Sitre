@@ -3,6 +3,8 @@ title: "Pattern 3 — Binary Search on Answer Space"
 description: "Binary search pattern for finding the minimum or maximum feasible value — used when the answer itself is the search space."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Pattern 3 — Binary Search on Answer Space

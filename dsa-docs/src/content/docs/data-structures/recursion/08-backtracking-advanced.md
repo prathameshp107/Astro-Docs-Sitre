@@ -3,6 +3,8 @@ title: "Advanced Backtracking"
 description: "Advanced backtracking problems: N-Queens, Sudoku, palindrome partitioning, word search with full solutions."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Advanced Backtracking

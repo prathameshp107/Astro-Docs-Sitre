@@ -3,6 +3,8 @@ title: "Sorting Algorithms"
 description: "Complete guide to sorting algorithms — bubble, selection, insertion, merge, quick, and heap sort — with JavaScript implementations and interview prep."
 sidebar:
   order: 0
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Sorting Algorithms

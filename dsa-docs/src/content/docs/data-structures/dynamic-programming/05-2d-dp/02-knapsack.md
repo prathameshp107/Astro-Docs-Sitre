@@ -3,6 +3,8 @@ title: "0/1 Knapsack"
 description: "Detailed walkthrough of 0/1 Knapsack — 2D tabulation, 1D space optimization, Subset Sum, and Partition Equal Subset Sum."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # 0/1 Knapsack

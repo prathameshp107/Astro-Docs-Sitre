@@ -3,6 +3,8 @@ title: "Edit Distance (Levenshtein Distance)"
 description: "Detailed walkthrough of Edit Distance — 2D tabulation, space optimization, operation-by-operation walkthrough, and variations."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Edit Distance (Levenshtein Distance)

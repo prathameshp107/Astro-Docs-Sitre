@@ -3,6 +3,8 @@ title: "Problem 8 — Find Sqrt(x)"
 description: "LeetCode 69 — Find the integer square root of x using binary search without using Math.sqrt()."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 8 — Find Sqrt(x) (Integer Square Root)

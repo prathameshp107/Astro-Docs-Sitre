@@ -8,7 +8,7 @@ import '../../styles/companies.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `${SITE_URL}/companies`;
+const PAGE_URL = `${SITE_URL}/companies/`;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -63,10 +63,6 @@ const faqSchema = {
     />
   </head>
   <body class="mcq-body font-sketch">
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>Company-Specific Interview Tracks — Google, Amazon, Meta, Microsoft and More</h1>
-      <p>Prepare for technical interviews at top tech companies with curated study tracks. Each company track includes the interview process overview, recommended DSA problems, system design topics, and behavioral questions specific to that company's culture.</p>
-    </div>
     <AppNav activeSection="companies" client:load />
     <div class="max-w-6xl mx-auto px-4 py-8">
       <header class="sketch-border bg-[var(--sketch-bg-dim)] p-8 md:p-10 rounded-3xl text-center mb-10 border-2 border-[var(--sketch-border)] shadow-2xl relative font-sketch">

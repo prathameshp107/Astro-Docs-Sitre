@@ -3,6 +3,8 @@ title: "Interview Questions"
 description: "Must-do graph interview questions categorized by difficulty and key concept."
 sidebar:
   order: 9
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Must-Do Interview Questions

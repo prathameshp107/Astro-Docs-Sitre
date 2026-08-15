@@ -9,7 +9,7 @@ import '../../styles/system-design.css';
 const SITE_URL  = 'https://interviewpreprationbuddy.in';
 const SITE_NAME = 'Interview Prep Buddy';
 const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
-const PAGE_URL  = `${SITE_URL}/system-design`;
+const PAGE_URL  = `${SITE_URL}/system-design/`;
 const PAGE_TITLE = 'System Design Interview Prep — HLD & LLD Guide | Interview Prep Buddy';
 const PAGE_DESC  = 'Master System Design for engineering interviews. Learn High-Level Design (HLD) and Low-Level Design (LLD) with real case studies, architecture diagrams, scalability patterns, database design, caching, and microservices.';
 
@@ -125,11 +125,6 @@ const breadcrumbSchema = {
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body class="mcq-body">
-    <!-- Crawler-visible answer content -->
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>System Design Interview Prep — High-Level and Low-Level Design Guide</h1>
-      <p>Master system design for engineering interviews. Learn HLD and LLD with real case studies covering scalability, databases, caching, microservices, and distributed systems architecture.</p>
-    </div>
     <AppNav activeSection="system-design" client:load />
     <SystemDesignHub client:load />
   </body>

@@ -3,6 +3,8 @@ title: "Problem 4 — Find Peak Element"
 description: "LeetCode 162 — Find a peak element (greater than neighbors) using binary search in O(log n) time."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 4 — Find Peak Element

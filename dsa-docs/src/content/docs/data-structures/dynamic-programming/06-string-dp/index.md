@@ -3,6 +3,8 @@ title: "String DP Problems"
 description: "Dynamic programming problems on strings — palindromes, word break, interleaving, and their variants."
 sidebar:
   order: 0
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # String DP Problems

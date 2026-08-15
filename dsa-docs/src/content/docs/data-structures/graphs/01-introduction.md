@@ -3,6 +3,8 @@ title: "Introduction to Graphs"
 description: "What is a graph data structure? Terminologies, types, and properties of graphs."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # 📊 Introduction to Graphs

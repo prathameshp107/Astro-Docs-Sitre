@@ -3,6 +3,8 @@ title: "Important Patterns"
 description: "Key linked list patterns — fast & slow pointer, reversal, cycle detection, merging, palindrome, intersection."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/linked-list
 ---
 
 # Important Patterns (Made Simple)

@@ -3,6 +3,8 @@ title: "Memoization (Top-Down DP)"
 description: "Top-down dynamic programming with memoization — how it works, when to use it, and JavaScript implementation patterns."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Memoization (Top-Down DP)

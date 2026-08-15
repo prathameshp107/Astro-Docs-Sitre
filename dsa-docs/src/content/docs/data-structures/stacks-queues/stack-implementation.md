@@ -3,6 +3,8 @@ title: "Stack Implementation"
 description: "Array-based and linked-list-based stack implementations with code examples."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Stack Implementation

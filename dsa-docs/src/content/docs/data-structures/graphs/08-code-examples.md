@@ -3,6 +3,8 @@ title: "Code Examples"
 description: "Complete JavaScript implementations of BFS, DFS, Dijkstra, Union-Find, Topological Sort, and Cycle Detection."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Code Examples (JavaScript)

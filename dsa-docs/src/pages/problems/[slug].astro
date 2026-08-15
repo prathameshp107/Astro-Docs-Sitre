@@ -10,10 +10,44 @@ export async function getStaticPaths() {
   const { getJudgeProblems } = await import('../../data/judge/index.js');
   return getJudgeProblems().map((problem) => ({
     params: { slug: problem.id },
+    props: { problem },
   }));
 }
 
 const { slug } = Astro.params;
+const { problem } = Astro.props;
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+
+// Human title instead of the raw slug ("two-sum — Online Judge"), which was the
+// literal <title> on all 126 judge pages.
+const difficulty = problem?.difficulty
+  ? problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)
+  : '';
+const pageTitle = problem?.title
+  ? `${problem.title}${difficulty ? ` — ${difficulty}` : ''} | Online Judge`
+  : `${slug} — Online Judge`;
+
+// First sentence of the statement beats the identical boilerplate description
+// that every one of these pages previously shared.
+const rawStatement = (problem?.statement ?? '').replace(/[#*`>\n]/g, ' ').replace(/\s+/g, ' ').trim();
+const pageDescription = rawStatement
+  ? `${rawStatement.slice(0, 155).trim()}${rawStatement.length > 155 ? '…' : ''}`
+  : 'Solve DSA problems with instant, in-browser judging.';
+
+/**
+ * noindex, follow — deliberate.
+ *
+ * These are interactive judge shells: JudgeView is client:only, so the served
+ * HTML contains no problem statement, examples or editorial for a crawler to
+ * read. 62 of these slugs also duplicate /dsa/problems/<slug>, which renders the
+ * same problems through the SEO-optimised content template. Indexing 126 empty
+ * shells split ranking signals and added thin pages to a young site.
+ *
+ * `follow` is kept so link equity still flows through to the linked content.
+ * To index a judge problem, add it to the /dsa/problems content system rather
+ * than removing this tag.
+ */
 ---
 
 <!DOCTYPE html>
@@ -23,8 +57,10 @@ const { slug } = Astro.params;
     <GoogleAnalytics />
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{slug} — Online Judge</title>
-    <meta name="description" content="Solve DSA problems with instant, in-browser judging." />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`${SITE_URL}/problems/${slug}/`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />

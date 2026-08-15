@@ -3,6 +3,8 @@ title: "Unique Paths"
 description: "Detailed walkthrough of Unique Paths — grid DP, 2D tabulation, 1D space optimization, and obstacles variation."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Unique Paths

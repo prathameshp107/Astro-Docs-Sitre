@@ -3,6 +3,8 @@ title: "Counting Sort"
 description: "A non-comparison integer sort that counts frequencies and places elements directly — O(N + K) time."
 sidebar:
   order: 10
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Counting Sort

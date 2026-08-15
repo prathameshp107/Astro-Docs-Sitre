@@ -233,7 +233,7 @@ function formatArg(v) {
 
 export default function DSAProblemView({ problemId }) {
   const problem = useMemo(() => getProblemById(problemId), [problemId]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
 
   const [code, setCode] = useState("");
   const [output, setOutput] = useState([]);

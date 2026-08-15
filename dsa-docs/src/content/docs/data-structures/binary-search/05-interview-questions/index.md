@@ -3,6 +3,8 @@ title: "Binary Search Interview Questions"
 description: "12+ common binary search interview questions with detailed answers, from theory to advanced problem-solving."
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # 🧠 Binary Search Interview Questions

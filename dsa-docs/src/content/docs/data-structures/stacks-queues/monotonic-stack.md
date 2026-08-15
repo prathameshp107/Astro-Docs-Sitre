@@ -3,6 +3,8 @@ title: "Monotonic Stack"
 description: "A stack that maintains elements in increasing or decreasing order — powerful for next-greater-element problems."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Monotonic Stack

@@ -3,6 +3,8 @@ title: "Common Mistakes & Tips"
 description: "Common recursion mistakes, debugging tips, optimization techniques, and cheat sheet."
 sidebar:
   order: 14
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Common Mistakes & Tips

@@ -3,6 +3,8 @@ title: "Tricky Variations"
 description: "Hard binary search edge cases, infinite loop debugging, and real interview scenarios that test your understanding."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Tricky Variations

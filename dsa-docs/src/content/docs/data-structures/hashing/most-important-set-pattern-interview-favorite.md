@@ -3,6 +3,8 @@ title: "Most Important Set Pattern (Interview Favorite)"
 description: "console.log(unique); // [1, 2, 3, 4]"
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/hash-table
 ---
 
 # Most Important Set Pattern (Interview Favorite)

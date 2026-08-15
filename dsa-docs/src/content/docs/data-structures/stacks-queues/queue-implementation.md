@@ -3,6 +3,8 @@ title: "Queue Implementation"
 description: "Array-based, linked-list-based, and circular queue implementations."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Queue Implementation

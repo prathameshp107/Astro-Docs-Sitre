@@ -54,7 +54,7 @@ const getDraftCode = (draftKey, view, id, defaultCode) => {
 // ─── MAIN PLATFORM ───
 
 export default function HTMLLabsPlatform() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [view, setView] = useState("learn");
   const [activeLesson, setActiveLesson] = useState(
     HTML_LESSONS[0]?.id || null

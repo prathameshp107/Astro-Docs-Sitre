@@ -3,6 +3,8 @@ title: "Map vs Set Quick Difference"
 description: "---"
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/hash-table
 ---
 
 #  Map vs Set Quick Difference

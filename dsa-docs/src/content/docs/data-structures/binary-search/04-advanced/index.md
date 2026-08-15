@@ -3,6 +3,8 @@ title: "Advanced Binary Search Applications"
 description: "Advanced binary search topics — floating-point search, median finding, exponential interpolation search, and real-world problems."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # 🚀 Advanced Binary Search Applications

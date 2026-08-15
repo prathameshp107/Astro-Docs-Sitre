@@ -3,6 +3,8 @@ title: "Utility Methods"
 description: "<a id=\"join\"</a join()"
 sidebar:
   order: 5
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 # Utility Methods

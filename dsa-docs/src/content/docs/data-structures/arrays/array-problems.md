@@ -3,6 +3,8 @@ title: "Array Problems"
 description: "Array problem-solving practice questions and solutions for coding interviews."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/arrays
 ---
 
 # Array Problems - Complete Index

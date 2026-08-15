@@ -3,6 +3,8 @@ title: "Real-World Binary Search Problems"
 description: "Advanced binary search problems — Painter's Partition, Aggressive Cows, Magnetic Force Between Balls, Minimum Time to Complete Trips."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Real-World Binary Search Problems

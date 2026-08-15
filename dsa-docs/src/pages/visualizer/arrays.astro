@@ -2,18 +2,23 @@
 import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
 import AppNav from '../../components/AppNav.jsx';
 import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
 import '../../styles/mcq-tailwind.css';
 import '../../styles/landing.css';
 import '../../styles/sketch-visualizer.css';
 
 const SITE_URL = 'https://interviewpreprationbuddy.in';
-const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/arrays`;
+const PAGE_URL = `https://interviewpreprationbuddy.in/visualizer/arrays/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('arrays', PAGE_URL);
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'LearningResource',
-  name: 'Array Data Structure Visualizer — Interactive DSA Learning | Interview Prep Buddy',
-  description: 'Interactive array visualizer. See array operations: insertion, deletion, searching, sorting, and two-pointer techniques with animated step-by-step execution.',
+  name: 'Array Visualizer — Insert, Delete, Search & Rotation Animated | Interview Prep Buddy',
+  description: 'Visualize array operations step by step: indexing, insertion, deletion, traversal and rotation. See why access is O(1) while inserting in the middle shifts every following element.',
   url: PAGE_URL,
   image: `https://interviewpreprationbuddy.in/assets/og-image.png`,
   educationalLevel: 'intermediate',
@@ -32,11 +37,12 @@ const schema = {
     <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <PageSEO
-      title="Array Data Structure Visualizer — Interactive DSA Learning | Interview Prep Buddy"
-      description="Interactive array visualizer. See array operations: insertion, deletion, searching, sorting, and two-pointer techniques with animated step-by-step execution."
+      title="Array Visualizer — Insert, Delete, Search & Rotation Animated | Interview Prep Buddy"
+      description="Visualize array operations step by step: indexing, insertion, deletion, traversal and rotation. See why access is O(1) while inserting in the middle shifts every following element."
       url={PAGE_URL}
-      keywords="array visualizer, array operations animation, array searching sorting visualization"
+      keywords="array visualizer, array insertion deletion animation, array rotation visualizer, array traversal step by step, dynamic array resizing, array time complexity, contiguous memory"
       schema={schema}
+      faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Array Data Structure Visualizer', url: `/visualizer/arrays` }]}
       fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
     />

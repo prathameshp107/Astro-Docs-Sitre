@@ -3,6 +3,8 @@ title: "Exponential & Interpolation Search"
 description: "Variations of binary search — exponential search for unbounded data and interpolation search for uniformly distributed data."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Exponential & Interpolation Search

@@ -3,6 +3,8 @@ title: "Graph Traversals — BFS & DFS"
 description: "Breadth-First Search and Depth-First Search traversal algorithms with visuals and code."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Graph Traversal Algorithms

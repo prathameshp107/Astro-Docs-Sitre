@@ -3,6 +3,8 @@ title: "Key Graph Algorithms"
 description: "Dijkstra, Bellman-Ford, Floyd-Warshall, Kruskal, and Prim algorithms — now each on their own dedicated page."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Key Algorithms on Graphs

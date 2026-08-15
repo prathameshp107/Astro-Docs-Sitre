@@ -3,6 +3,8 @@ title: "Bucket Sort"
 description: "A distribution sort that scatters elements into buckets, sorts each bucket, then gathers them."
 sidebar:
   order: 12
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Bucket Sort

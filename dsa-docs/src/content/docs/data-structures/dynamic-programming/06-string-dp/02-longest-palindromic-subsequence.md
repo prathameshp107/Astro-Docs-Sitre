@@ -3,6 +3,8 @@ title: "Longest Palindromic Subsequence (LPS)"
 description: "Detailed walkthrough of LPS — interval DP, comparison with substring, and space optimization."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Longest Palindromic Subsequence (LPS)

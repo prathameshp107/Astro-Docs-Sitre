@@ -3,6 +3,8 @@ title: "Time & Space Complexity"
 description: "How to analyze time and space complexity of recursive algorithms with common patterns."
 sidebar:
   order: 11
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Time & Space Complexity

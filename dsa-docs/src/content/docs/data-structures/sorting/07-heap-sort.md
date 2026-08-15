@@ -3,6 +3,8 @@ title: "Heap Sort"
 description: "How Heap Sort works (build max-heap, extract), heapify process, JavaScript implementation, complexity analysis, and comparison with other O(n log n) sorts."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Heap Sort

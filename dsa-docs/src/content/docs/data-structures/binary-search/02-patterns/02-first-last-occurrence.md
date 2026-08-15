@@ -3,6 +3,8 @@ title: "Pattern 2 — First / Last Occurrence"
 description: "Binary search pattern for finding the leftmost or rightmost occurrence of a target in a sorted array with duplicates."
 sidebar:
   order: 2
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Pattern 2 — Find First / Last Occurrence

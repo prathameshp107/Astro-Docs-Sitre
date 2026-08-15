@@ -1,5 +1,6 @@
 ---
 import LandingPage from '../components/landing/LandingPage.tsx';
+import { HOMEPAGE_FAQS } from '../components/landing/Faq.tsx';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 import '../styles/dev-ace-landing.css';
 
@@ -70,43 +71,18 @@ const personSchema = {
 };
 
 // ── FAQPage for AEO citations ─────────────────────────────────────────────
+// Generated from HOMEPAGE_FAQS so the markup and the rendered <details> list can
+// never drift apart. Google requires FAQPage answers to be visible on the page;
+// deriving both from one array is what guarantees that.
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'What is Interview Prep Buddy?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Interview Prep Buddy is a free all-in-one technical interview preparation platform covering DSA, System Design, JavaScript, React, Node.js, and more. It includes interactive labs, algorithm visualizers, MCQ quizzes, 1400+ interview questions, and company-specific guides for FAANG and top tech companies.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'How do I prepare for a coding interview?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'To prepare for a coding interview: 1) Master the 16 core DSA patterns (Two Pointers, Sliding Window, Binary Search, Dynamic Programming, etc.), 2) Practice LeetCode problems by topic and difficulty, 3) Study system design concepts (HLD and LLD), 4) Review language-specific questions (JavaScript, React, Python), 5) Practice behavioral questions using STAR method.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'What DSA topics should I study for FAANG interviews?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'For FAANG interviews, focus on: Arrays & Strings, Linked Lists, Trees & Graphs, Dynamic Programming, Binary Search, Recursion & Backtracking, Sorting algorithms, Heaps/Priority Queues, Hash Maps, and Two Pointers. Master the 16 algorithmic patterns that cover 90% of interview problems.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Is Interview Prep Buddy free?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes, Interview Prep Buddy is completely free. It provides DSA pattern cheatsheets, algorithm visualizers, interactive coding labs, MCQ practice rounds, 1400+ interview questions, and system design notes — all at no cost.',
-      },
-    },
-  ],
+  '@id': `${SITE_URL}/#faq`,
+  mainEntity: HOMEPAGE_FAQS.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
 };
 ---
 
@@ -174,26 +150,14 @@ const faqSchema = {
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
   </head>
   <body class="bg-background text-foreground w-full max-w-full overflow-x-hidden min-h-screen">
-    <!-- Static content for crawlers: hidden visually, indexed by Googlebot & AI engines -->
-    <div style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;" aria-hidden="true">
-      <h1>Interview Prep Buddy — Complete Interview Preparation Platform</h1>
-      <p>Interview Prep Buddy is a free, all-in-one technical interview preparation platform for software engineers. It covers DSA patterns, system design, JavaScript, React, and company-specific guides for FAANG and top tech companies.</p>
-      <h2>What is Interview Prep Buddy?</h2>
-      <p>Interview Prep Buddy helps developers prepare for technical interviews at Google, Amazon, Meta, Microsoft, Apple and other top tech companies. It provides structured learning paths, interactive tools, and comprehensive question banks across all key interview topics.</p>
-      <h2>Features</h2>
-      <ul>
-        <li>16 Core DSA Patterns with code blueprints (Two Pointers, Sliding Window, Binary Search, Dynamic Programming)</li>
-        <li>Interactive Algorithm Visualizer for sorting algorithms, trees, graphs, and binary search</li>
-        <li>1400+ Interview Questions covering JavaScript, React, Node.js, Python, CSS, HTML, SQL, MongoDB</li>
-        <li>Interactive Coding Labs with live code execution for JavaScript, React, and DSA problems</li>
-        <li>MCQ Practice Rounds for self-assessment across 15+ topics</li>
-        <li>System Design Guide covering HLD, LLD, databases, caching, and microservices</li>
-        <li>Company-Specific Interview Prep for FAANG and product companies</li>
-        <li>Behavioral Interview Preparation using STAR method</li>
-      </ul>
-      <h2>How to prepare for a coding interview?</h2>
-      <p>Master the 16 core DSA patterns, practice problems by topic and company, study system design concepts, and review language-specific interview questions. Interview Prep Buddy provides all of these resources in one integrated platform.</p>
-    </div>
-    <LandingPage client:only="react" />
+    <!--
+      client:load (not client:only) so the full landing page is pre-rendered to
+      static HTML at build time. Under client:only the homepage shipped ~1 word
+      of crawlable body text — every heading, feature description and internal
+      link existed only after React booted, which is why the page had no
+      keyword surface for Google to rank. All browser access in this tree is
+      inside useEffect (or typeof-window guarded in Hero), so it SSRs cleanly.
+    -->
+    <LandingPage client:load />
   </body>
 </html>

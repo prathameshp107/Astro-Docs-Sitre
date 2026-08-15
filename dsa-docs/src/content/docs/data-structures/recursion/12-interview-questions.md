@@ -3,6 +3,8 @@ title: "Interview Questions"
 description: "Categorized recursion and backtracking interview questions by difficulty with key concepts."
 sidebar:
   order: 13
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Interview Questions

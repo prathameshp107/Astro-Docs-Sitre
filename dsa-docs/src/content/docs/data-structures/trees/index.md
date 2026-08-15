@@ -3,6 +3,8 @@ title: "Trees"
 description: "Master tree data structures — from basic concepts to advanced algorithms and interview questions."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # 🌳 Trees

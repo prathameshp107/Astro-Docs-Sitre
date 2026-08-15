@@ -3,6 +3,8 @@ title: "Stack (LIFO)"
 description: "Last In, First Out."
 sidebar:
   order: 1
+practice:
+  visualizer: /visualizer/stack
 ---
 
 #  Stack (LIFO)

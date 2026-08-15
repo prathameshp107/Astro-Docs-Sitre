@@ -3,6 +3,8 @@ title: "Types of Recursion"
 description: "Direct, indirect, tail, head, and tree recursion — with examples and comparison table."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/recursion
 ---
 
 # Types of Recursion

@@ -3,6 +3,8 @@ title: "Stability & When to Use Each Sort"
 description: "Stable vs unstable sorting and choosing the right algorithm for your data and constraints."
 sidebar:
   order: 13
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Stability & When to Use Each Sort

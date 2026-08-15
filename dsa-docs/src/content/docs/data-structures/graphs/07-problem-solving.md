@@ -3,6 +3,8 @@ title: "Problem-Solving Approach"
 description: "How to identify graph problems, decision framework, and BFS vs DFS cheat sheet."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/graphs
 ---
 
 # Problem-Solving Approach

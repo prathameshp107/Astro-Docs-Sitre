@@ -3,6 +3,8 @@ title: "Interleaving String"
 description: "Detailed walkthrough of Interleaving String — 2D DP, 1D space optimization, and string interleaving intuition."
 sidebar:
   order: 4
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # Interleaving String

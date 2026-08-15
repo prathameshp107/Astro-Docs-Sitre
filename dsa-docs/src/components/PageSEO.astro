@@ -59,7 +59,21 @@ const SITE_URL  = 'https://interviewpreprationbuddy.in';
 const SITE_NAME = 'Interview Prep Buddy';
 const OG_IMAGE  = `${SITE_URL}/assets/og-image.png`;
 
+// Astro builds these pages in `directory` format (/visualizer/sorting/index.html),
+// and @astrojs/sitemap emits the trailing-slash form. Callers pass `url` without
+// the slash, which made canonical, sitemap, and served URL disagree on every
+// standalone page — both variants return 200, so Google saw duplicates with a
+// self-conflicting canonical. Normalise to the trailing-slash form here so all
+// three signals agree. Query/hash-bearing URLs are left alone.
+const canonicalUrl = /[?#]/.test(url) ? url : url.replace(/\/?$/, '/');
+
 // Auto-generate BreadcrumbList
+// `item` MUST be an absolute URL or Google drops the breadcrumb rich result
+// entirely. Relative hrefs passed in via the `breadcrumbs` prop are resolved
+// against SITE_URL here; already-absolute ones are passed through untouched.
+const toAbsolute = (u: string) =>
+  /^https?:\/\//.test(u) ? u : SITE_URL + '/' + u.replace(/^\//, '');
+
 const breadcrumbSchema = breadcrumbs.length > 0 ? {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -67,6 +81,7 @@ const breadcrumbSchema = breadcrumbs.length > 0 ? {
     '@type': 'ListItem',
     position: i + 1,
     name: b.name,
+    item: toAbsolute(b.url),
   })),
 } : null;
 
@@ -77,7 +92,7 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={url} />
+<link rel="canonical" href={canonicalUrl} />
 <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'} />
 <meta name="author" content="Prathamesh Pawar" />
 {keywords && <meta name="keywords" content={keywords} />}
@@ -93,7 +108,7 @@ const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 <meta property="og:type"         content={ogType} />
 <meta property="og:title"        content={title} />
 <meta property="og:description"  content={description} />
-<meta property="og:url"          content={url} />
+<meta property="og:url"          content={canonicalUrl} />
 <meta property="og:image"        content={OG_IMAGE} />
 <meta property="og:image:width"  content="1200" />
 <meta property="og:image:height" content="630" />

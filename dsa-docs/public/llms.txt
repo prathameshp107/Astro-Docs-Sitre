@@ -18,6 +18,27 @@ Interview Prep Buddy helps developers prepare for technical interviews at Google
 - [System Design](https://interviewpreprationbuddy.in/system-design) — HLD and LLD interview preparation
 - [About](https://interviewpreprationbuddy.in/about) — Platform overview and tech stack
 
+## Algorithm Visualizers
+
+Free, interactive, no sign-up required. Each page animates the algorithm step by step
+with synchronized pseudocode, a complexity table, and answers to common questions.
+
+- [Sorting Visualizer](https://interviewpreprationbuddy.in/visualizer/sorting/) — Bubble, insertion, selection, merge, quick and heap sort animations with Big-O comparison
+- [Binary Search Visualizer](https://interviewpreprationbuddy.in/visualizer/searching/) — Low/high/mid pointer convergence, O(log n) explained
+- [Binary Tree Visualizer](https://interviewpreprationbuddy.in/visualizer/trees/) — BST insertion and deletion, in-order, pre-order, post-order and level-order traversal
+- [Graph Visualizer](https://interviewpreprationbuddy.in/visualizer/graphs/) — BFS, DFS, Dijkstra shortest path, cycle detection
+- [Dynamic Programming Visualizer](https://interviewpreprationbuddy.in/visualizer/dp/) — Memoization vs tabulation, knapsack, LCS, coin change tables
+- [Recursion Visualizer](https://interviewpreprationbuddy.in/visualizer/recursion/) — Call stack frames building and unwinding
+- [Backtracking Visualizer](https://interviewpreprationbuddy.in/visualizer/backtracking/) — Decision trees, pruning, N-Queens and permutations
+- [Heap Visualizer](https://interviewpreprationbuddy.in/visualizer/heaps/) — Sift-up and sift-down in both tree and array views
+- [Hash Table Visualizer](https://interviewpreprationbuddy.in/visualizer/hash-table/) — Hashing, collisions, separate chaining and linear probing
+- [Linked List Visualizer](https://interviewpreprationbuddy.in/visualizer/linked-list/) — Insertion, deletion, reversal, cycle detection
+- [Stack Visualizer](https://interviewpreprationbuddy.in/visualizer/stack/) — LIFO operations, balanced parentheses, monotonic stack
+- [Queue Visualizer](https://interviewpreprationbuddy.in/visualizer/queue/) — FIFO operations, circular queue, deque
+- [Array Visualizer](https://interviewpreprationbuddy.in/visualizer/arrays/) — Indexing, insertion, deletion and the cost of shifting
+- [Two Pointers Visualizer](https://interviewpreprationbuddy.in/visualizer/two-pointers/) — Converging, fast/slow and same-direction pointer patterns
+- [Sliding Window Visualizer](https://interviewpreprationbuddy.in/visualizer/sliding-window/) — Fixed and variable windows, incremental aggregates
+
 ## Documentation Topics
 
 - [JavaScript](https://interviewpreprationbuddy.in/javascript/) — Fundamentals, closures, async/await, ES6+, event loop

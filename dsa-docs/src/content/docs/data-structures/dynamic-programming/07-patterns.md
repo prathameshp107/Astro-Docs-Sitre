@@ -3,6 +3,8 @@ title: "DP Patterns Guide"
 description: "How to recognize and categorize any DP problem — pattern recognition guide with decision trees and recurrence templates."
 sidebar:
   order: 7
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # DP Patterns Guide

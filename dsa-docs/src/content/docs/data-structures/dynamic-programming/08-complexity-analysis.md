@@ -3,6 +3,8 @@ title: "DP — Complexity Analysis"
 description: "Time and space complexity analysis for all DP problems, state-space analysis, space optimization techniques, and comparing DP vs alternative approaches."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/dp
 ---
 
 # DP — Complexity Analysis

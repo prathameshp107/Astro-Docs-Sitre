@@ -3,6 +3,8 @@ title: "Sorting Algorithms — Complexity Comparison"
 description: "Side-by-side comparison of all 6 sorting algorithms with complexity tables, decision flowcharts, real-world recommendations, and performance benchmarks."
 sidebar:
   order: 8
+practice:
+  visualizer: /visualizer/sorting
 ---
 
 # Sorting Algorithms — Complexity Comparison

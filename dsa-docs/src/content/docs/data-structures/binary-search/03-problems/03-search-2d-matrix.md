@@ -3,6 +3,8 @@ title: "Problem 3 — Search a 2D Matrix"
 description: "LeetCode 74 — Search for a target in a row-wise sorted matrix by treating it as a flattened 1D array."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # Problem 3 — Search a 2D Matrix

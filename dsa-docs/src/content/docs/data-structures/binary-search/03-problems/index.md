@@ -3,6 +3,8 @@ title: "Binary Search Problems"
 description: "10 classic binary search problems with full JavaScript solutions — from easy to hard, covering all 5 patterns."
 sidebar:
   order: 3
+practice:
+  visualizer: /visualizer/searching
 ---
 
 # 💻 Binary Search Problems

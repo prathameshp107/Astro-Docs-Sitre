@@ -3,6 +3,8 @@ title: "Problem-Solving Approach"
 description: "How to approach tree problems — DFS vs BFS decisions, recursive thinking patterns, and edge cases."
 sidebar:
   order: 10
+practice:
+  visualizer: /visualizer/trees
 ---
 
 # Problem-Solving Approach

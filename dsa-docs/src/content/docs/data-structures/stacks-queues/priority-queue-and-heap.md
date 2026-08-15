@@ -3,6 +3,8 @@ title: "Priority Queue & Heap"
 description: "Priority queue concept, heap structure, and implementation — with the heap as both tree and array."
 sidebar:
   order: 6
+practice:
+  visualizer: /visualizer/stack
 ---
 
 # Priority Queue & Heap
