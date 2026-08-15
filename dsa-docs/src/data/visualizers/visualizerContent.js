@@ -19,6 +19,47 @@
 const V = (slug, label) => ({ href: `/visualizer/${slug}/`, label });
 
 export const VISUALIZER_CONTENT = {
+  trie: {
+    heading: 'Tries and prefix search',
+    intro: [
+      'A trie stores strings by character instead of whole. Each edge carries one letter, so the path from the root to any node spells a prefix, and every word sharing that prefix shares those nodes. Watch the animation insert "car" after "cat" — the c and a are reused, and only the r is new.',
+      'That structure is what makes lookup cost O(L) in the length of the query rather than the size of the dictionary, and it is why autocomplete is natural here: walk to the prefix node once, and every word beneath it is a match. A hash map would have to scan every key to answer the same question.',
+    ],
+    complexityHead: ['Operation', 'Time', 'Space', 'Notes'],
+    complexity: [
+      ['Insert word', 'O(L)', 'O(L)', 'L = word length; new nodes only where the branch is missing'],
+      ['Search word', 'O(L)', 'O(1)', 'Returns the isEnd flag of the final node'],
+      ['Starts with prefix', 'O(L)', 'O(1)', 'Same walk, without the isEnd check'],
+      ['Collect prefix matches', 'O(L + k)', 'O(k)', 'k = total length of the matches returned'],
+      ['Delete word', 'O(L)', 'O(1)', 'Unset isEnd, then prune childless nodes upward'],
+    ],
+    howTo: [
+      'Pick a track: Insert to build the tree, Search to query it, or Prefix for autocomplete.',
+      'Type your own words in the input and press Rebuild — the whole trace is regenerated.',
+      'Step through insert and watch which characters create nodes and which reuse an existing branch.',
+      'On Search, compare a word that exists against one that is only a prefix — the isEnd flag is the difference.',
+    ],
+    faqs: [
+      {
+        q: 'What is a trie and when should I use one?',
+        a: 'A trie, or prefix tree, is a tree where each edge represents one character, so a root-to-node path spells a prefix. Use it when you need prefix queries — autocomplete, type-ahead, spell check, longest-prefix IP routing, or word games. For plain exact-match membership a hash set is usually smaller and faster.',
+      },
+      {
+        q: 'Why does a trie need an isEnd flag?',
+        a: 'Because reaching a node only proves that a path of characters exists, not that a word ends there. After inserting "cat", walking "ca" lands on a real node, but "ca" was never inserted. The isEnd boolean marks nodes where a complete word finishes, which is what lets search return false for a prefix while startsWith returns true.',
+      },
+      {
+        q: 'What is the time complexity of a trie?',
+        a: 'Insert, search and prefix checks are all O(L), where L is the length of the word or prefix — independent of how many words are stored. Collecting every match under a prefix costs O(L + k) for k characters of output. Space is O(total characters), reduced wherever words share prefixes.',
+      },
+      {
+        q: 'Trie vs hash map — which is better?',
+        a: 'A hash map gives O(1) average exact lookup and usually uses less memory, but it cannot answer prefix questions without scanning every key. A trie gives O(L) lookup regardless of dictionary size, natural prefix and autocomplete queries, sorted iteration, and shared storage for common prefixes — at the cost of pointer overhead and worse cache locality.',
+      },
+    ],
+    related: [V('trees', 'Binary Tree Visualizer'), V('hash-table', 'Hash Table Visualizer'), V('backtracking', 'Backtracking Visualizer'), V('graphs', 'Graph Visualizer')],
+  },
+
   sorting: {
     heading: 'Sorting algorithms, step by step',
     intro: [

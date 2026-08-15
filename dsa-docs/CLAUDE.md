@@ -49,70 +49,80 @@ Personal knowledge base + interactive learning platform: DSA notes/problems, sys
 
 ## Adding a new Visualizer (`/visualizer/*`)
 
-This is a **fixed set of ~14 topic-level pages**, not one visualizer per problem or per doc page. To add a new one (e.g. for `trie` or `backtracking`), you need all five of:
+**Full reference: `VISUALIZERS.md`** — architecture, authoring standards, and the
+roadmap of which topics to build next. This section is the short version.
 
-1. New component `src/components/visualizers/<Topic>Visualizer.jsx` (model an existing one, e.g. `StackVisualizer.jsx` for a simple one, `GraphVisualizer.jsx` for a complex one).
-2. Register it in `VISUALIZER_MAP` in `src/components/visualizers/DSAVisualizerPage.jsx`.
-3. Add its metadata to `DSA_TOPICS` in `src/data/visualizers/dsaTopics.js`.
-4. New page `src/pages/visualizer/<topic>.astro` (copy `sorting.astro`, change `topicId` and the `<title>`/meta description).
-5. Add a link in `src/components/visualizers/VisualizerSidebar.jsx`.
+Currently 16 topic-level pages: arrays, sorting, searching, trees, graphs, stack,
+queue, linked-list, hash-table, heaps, recursion, dp, two-pointers,
+sliding-window, backtracking, trie. This is a fixed set of topic pages, not one
+visualizer per problem or per doc page.
 
-This is a real feature addition (a new animated component), not a config toggle or a content-only change — don't attempt it as a quick add unless a visualizer is actually what's being asked for.
+**A visualizer is a slideshow, not a running algorithm.** Nothing executes — each
+track is an array of pre-computed state snapshots, and playback is an index into
+it. Adding one is therefore mostly *authoring* 8–12 precise states per track, not
+writing an algorithm. Budget accordingly.
 
-Structure, for reference when modifying an existing one instead of adding a new one:
+**Prefer generating the steps over hand-writing them.** `trieStore.js` is the
+reference: generators walk a real trie and yield step objects. That makes the
+steps correct by construction, lets the user supply their own input (the older
+hardcoded stores are locked to fixed data), and lets `logicData` derive from the
+same trace instead of keeping a second copy in sync by hand.
 
-- `src/pages/visualizer/<topic>.astro` — thin page, renders `<DSAVisualizerPage topicId="..." client:load />`.
-- `src/components/visualizers/DSAVisualizerPage.jsx` — looks up `topicId` in `VISUALIZER_MAP` (top of the file) and `DSA_TOPICS` (`src/data/visualizers/dsaTopics.js`).
-- `src/components/visualizers/<Topic>Visualizer.jsx` — the actual animated component.
-- `src/components/visualizers/VisualizerSidebar.jsx` — nav between topic pages.
+### The 12 touch points
 
-**Important: the DSA Playground and the Visualizer are NOT linked to each other.** Adding a DSA problem does not automatically surface it in any visualizer, and there's no "topics → visualizer" auto-routing — `DSA_PROBLEMS.topics` values (see the fixed vocabulary below) and `VISUALIZER_MAP` keys are two independently-maintained vocabularies that only partially overlap (e.g. `binary-search`, `sliding-window`, `backtracking`, `greedy`, `trie`, `topological-sort`, `bit-manipulation` currently have NO dedicated visualizer at all). If a new DSA problem's topic already has a visualizer, no visualizer work is needed for it — it just won't be automatically featured there, and that's expected/fine. Don't assume adding a problem with topic `"trie"` gives it a visualizer — it doesn't.
+Miss one and it fails silently — the two marked ⚠ are the usual culprits.
 
-### Adding a New Track / Problem to an Existing Visualizer
+1. `src/store/visualizers/<topic>Store.js` — `<TRACK>_STEPS` (or a generator) plus a `setTrack(key)` router.
+2. `src/components/visualizers/<Topic>Visualizer.jsx` — the animated view. Model `StackVisualizer.jsx` (simple), `GraphVisualizer.jsx` (complex), or `TrieVisualizer.jsx` (generator-backed).
+3. `src/components/visualizers/logicData/<topic>Logic.js` — diagram data, keyed by track, **1-to-1 with the store's steps**.
+4. ⚠ `src/components/visualizers/LogicSection.jsx` — import the logic object, spread it into `SPECIFIC_PROBLEM_LOGIC`, and add the topic to the `activeTrackKey` chain. Miss this and the Logic tab renders blank boxes.
+5. ⚠ `src/components/visualizers/DSAVisualizerPage.jsx` — **two** edits: add to `VISUALIZER_MAP`, *and* add `topicId === '<topic>'` to the long render condition (~line 244). Miss the second and the page shows "Visualizer Coming Soon" even though the component exists.
+6. `src/data/visualizers/dsaTopics.js` — `DSA_TOPICS` entry: `title`, `icon`, `description`, `overview { what, why, examples, advantages, disadvantages }`, `complexity`, `code` (js/ts/python/java/cpp), `interviewQuestions`. Also add to `VISUALIZER_LIST` at the bottom of the same file.
+7. ⚠ `src/components/visualizers/VisualizerSidebar.jsx` — the worst offender: a `TOPIC_TRACKS` entry, the store's selector/setter, **and the topic listed in FIVE separate chains** — the `?track=` read effect, the `?track=` write effect, `isSelected`, `handleClick`, and the button/link switch. Each fails differently and silently: miss `isSelected` and every track shows as active (the chain ends `: true`); miss `handleClick` and clicks do nothing; miss the button/link switch and items render as `<a>` pointing at the topic root **without `?track=`**, so every track opens the default.
+8. `src/pages/visualizer/<topic>.astro` — copy `sorting.astro`. Keep the **trailing slash** on `PAGE_URL`, and wire `faqSchema` via `getVisualizerFaqSchema`.
+9. `src/components/DSAVisualizerHub.jsx` — hub card.
+10. `src/pages/visualizer.astro` — hub listing.
+11. `src/data/visualizers/visualizerContent.js` — `heading`, `intro`, `complexityHead`/`complexity`, `howTo`, `faqs`, `related`. Renders the on-page article *and* generates the FAQPage JSON-LD, so schema and visible copy cannot drift.
+12. `src/components/visualizers/RecorderBridge.jsx` — add to `STORES`, or reel recording fails with `no store registered for topic "..."`. Optionally add entries to `scripts/reels.config.mjs`.
 
-To add a new problem or track to an existing visualizer (e.g. adding a new DP problem, Hash Table technique, Heap operation, or Sorting algorithm to `/visualizer/<topic>`):
+### Track-name collisions — read before naming tracks
 
-1. **Register Track Metadata in `src/data/visualizers/dsaTopics.js`**:
-   - Find the topic entry in `DSA_TOPICS` (e.g. `dp`, `hash-table`, `heaps`, `two-pointers`).
-   - Add a new object to its `tracks` array: `{ id: 'track-slug', name: 'Human Title', difficulty: 'Medium', description: '...' }`.
+`SPECIFIC_PROBLEM_LOGIC` merges **every** topic's logic object into one flat map,
+and `LogicSection` also rewrites raw track names (`insert` → `insertion`,
+`search` → `linear-search`). A track called `search` therefore resolves to
+`searchingLogic`'s entry and renders the wrong diagram.
 
-2. **Add Step Sequence & Router in `src/store/visualizers/<topic>Store.js`**:
-   - Create a constant `<TRACK_NAME>_STEPS = [...]` array with granular step objects (7–12+ steps).
-   - Each step object must include: `activeLine`, state variables (`dp1D`, `dp2D`, `buckets`, `openBuckets`, `activeCell`, `depCells`, etc.), `state: { ... }`, and `desc`.
-   - Update `setTrack(trackKey)` inside `use<Topic>Store` to handle `if (track === 'track-slug')`.
+Namespace the keys. Trie uses `trie-insert` / `trie-search` / `trie-prefix`, with
+`topicId === 'trie' ? \`trie-${trieTrack}\`` resolved *before* the alias table.
 
-3. **Add Synchronized Step Logic in `src/components/visualizers/logicData/<topic>Logic.js`**:
-   - Add a key `'track-slug': { title, input, goal, terms, array, steps: [...] }` to the exported logic object.
-   - **Crucial**: The `steps` array MUST match `*Store.js` 1-to-1 in step count, and EVERY step object must include all visual state properties so `LogicSection.jsx` can render the step's structural diagram.
+### Adding a new track to an existing visualizer
 
-4. **Update Visualizer View Component `src/components/visualizers/<Topic>Visualizer.jsx`**:
-   - Add pseudocode constant `const <TRACK_NAME>_CODE = [...]` for line-by-line code highlighting.
-   - If the visualizer uses track-specific code rendering, update the code block switcher.
+1. **`src/components/visualizers/VisualizerSidebar.jsx`** — add `{ id, label, subtitle }` to that topic's `TOPIC_TRACKS.items`. (Tracks live here, **not** in `DSA_TOPICS` — that object has no `tracks` key.)
+2. **`src/store/visualizers/<topic>Store.js`** — add `<TRACK>_STEPS` and a branch in `setTrack`. Each step needs `activeLine`, the topic's visual state (`dp1D`, `dp2D`, `buckets`, `activeCell`, `depCells`, …), `state: {}`, and `desc`.
+3. **`src/components/visualizers/logicData/<topic>Logic.js`** — add the matching key. **Must match the store 1-to-1 in count**, with every visual property present or the diagram falls back to blank boxes.
+4. **`src/components/visualizers/<Topic>Visualizer.jsx`** — add the pseudocode constant for line highlighting.
+5. **`src/components/visualizers/LogicSection.jsx`** — ensure the track routes to a diagram branch that handles its data structures.
 
-5. **Verify Diagram Routing in `src/components/visualizers/LogicSection.jsx`**:
-   - Add `'track-slug'` to the topic condition check (e.g. `isDPTopic`, `isHashTableTopic`, `isHeapTopic`, `isRecursionTopic`).
-   - Ensure the diagram branch handles the track's data structures without falling back to generic containers.
+### Verifying without a build
 
-### Visualizer Quality & Logic Section Standards (Store, Logic & Diagrams)
+A production build is 10–40 minutes. Check statically instead:
 
-When adding or modifying visualizer tracks (`/visualizer/*`), strictly follow these core standards:
+```bash
+grep -A30 "setTrack:" src/store/visualizers/<topic>Store.js          # real track slugs
+node -e "require('esbuild').transformSync(require('fs').readFileSync('<file>','utf8'),{loader:'jsx'})"
+```
 
-1. **Maximum Step Granularity**:
-   - Stores (`*Store.js`) and logic files (`*Logic.js`) MUST break down operations into as many step-by-step state transitions as possible (e.g. 7–12+ steps per problem/track).
-   - Every step sequence must include: **Problem Setup** (step 1), **Base Case / Allocation**, **Line-by-line transitions**, **Verification / Traceback**, and a **Completion Step** (`* COMPLETE 🎉`).
+Then `npm run dev` and load the route directly.
 
-2. **1-to-1 Step Synchronization & Data Completeness**:
-   - `LogicSection.jsx` reads step data from `*Logic.js` (`SPECIFIC_PROBLEM_LOGIC[track]`).
-   - Every step object in `*Logic.js` MUST contain:
-     - `stepNum`, `title`, `computation`, `comparison`, `action`, `desc`
-     - **All visual state properties** (`dp1D`, `dp2D`, `activeCell`, `depCells`, `buckets`, `openBuckets`, `hashIdx`, `probeIdx`, `collision`, `mapState`, `anagramGroups`, etc.) matching `*Store.js` so that `LogicSection` renders the exact structural diagram for every single step without falling back to blank boxes or generic array placeholders.
+### Quality standards
 
-3. **Clean Design Standards & UI Polish**:
-   - **No `framer-motion` layout-shifting keyframes**: Use pure CSS/JS transitions (`transition: transform 0.3s ease`) for node/card state animations to ensure instant responsiveness and prevent container height collapses.
-   - **Chalkboard 1D Array Card Aesthetics**: 1D arrays (Two Pointers, Linear Probing, Arrays, Sorting, Searching) must use `sketch-card` styling with clean index badges (`[0]`, `[1]`, `[2]`, `[3]`) and simple, un-boxed pointer badges below (`sketch-pointer` with label text + `▲` arrow), matching the clean Two-Pointers (`two-sum-ii`) design.
-   - **Completion Banner**: Visualizers should render a clear top-right completion badge card (`✔ Operation Complete — ... 🎉`) when `currentStep >= steps.length - 1`.
-   - **No Truncation / Clipping**: Containers for 1D arrays (like `dp[0..11]` in Coin Change) or 2D grids must use generous maximum widths (`max-w-[760px]`) and responsive card sizing (`min-w-[38px] md:min-w-[46px]`) with vertical padding (`pb-8`) so index labels, rightmost slots, and pointer arrows (`curr ▲`) are never cut off.
+1. **Step granularity** — 7–12+ steps per track: problem setup, base case / allocation, line-by-line transitions, verification / traceback, and a completion step (`* COMPLETE 🎉`).
+2. **1-to-1 sync & data completeness** — every `*Logic.js` step needs `stepNum`, `title`, `computation`, `comparison`, `action`, `desc`, **plus all visual state properties** matching the store.
+3. **Design** — no `framer-motion` layout-shifting keyframes (pure CSS transitions, so containers don't collapse); 1D arrays use `sketch-card` with `[0]` index badges and un-boxed `sketch-pointer` badges below; completion badge at `currentStep >= steps.length - 1`; generous widths (`max-w-[760px]`, `min-w-[38px] md:min-w-[46px]`, `pb-8`) so labels and pointer arrows never clip.
+4. **Concept Code is read-only** — the editable Practice textarea was removed; it never executed, checked or persisted anything, and it hid the animation-synced line highlight.
+5. **No mount-gated placeholders** — never gate render behind a `loading` state cleared in `useEffect`. Effects don't run during SSR, so the page would ship a skeleton with no crawlable content. This was fixed across 18 components; don't reintroduce it.
 
+**Important: the DSA Playground and the Visualizer are NOT linked.** `DSA_PROBLEMS.topics` and `VISUALIZER_MAP` are independently maintained vocabularies. Adding a problem with topic `greedy` does not create or surface a visualizer. Topics with problems but still no visualizer: `strings`, `bit-manipulation`, `greedy`, `topological-sort` (see the roadmap in `VISUALIZERS.md`).
 ---
 
 

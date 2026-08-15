@@ -14,6 +14,7 @@ import { useSlidingWindowStore } from '../../store/visualizers/slidingWindowStor
 import { useSortingStore } from '../../store/visualizers/sortingStore';
 import { useStackStore } from '../../store/visualizers/stackStore';
 import { useTreeStore } from '../../store/visualizers/treeStore';
+import { useTrieStore } from '../../store/visualizers/trieStore';
 import { useTwoPointersStore } from '../../store/visualizers/twoPointersStore';
 
 /**
@@ -47,6 +48,7 @@ const STORES = {
   sorting: useSortingStore,
   stack: useStackStore,
   trees: useTreeStore,
+  trie: useTrieStore,
   'two-pointers': useTwoPointersStore,
 };
 

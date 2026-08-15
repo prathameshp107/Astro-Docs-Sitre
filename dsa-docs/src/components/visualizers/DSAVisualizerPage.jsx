@@ -19,12 +19,14 @@ import SearchingVisualizer from './SearchingVisualizer';
 import TwoPointersVisualizer from './TwoPointersVisualizer';
 import SlidingWindowVisualizer from './SlidingWindowVisualizer';
 import BacktrackingVisualizer from './BacktrackingVisualizer';
+import TrieVisualizer from './TrieVisualizer';
 import HashTableVisualizer from './HashTableVisualizer';
 
 const VISUALIZER_MAP = {
   'two-pointers': TwoPointersVisualizer,
   'sliding-window': SlidingWindowVisualizer,
   'backtracking': BacktrackingVisualizer,
+  trie: TrieVisualizer,
   arrays: ArrayVisualizer,
   sorting: SortingVisualizer,
   searching: SearchingVisualizer,
@@ -239,7 +241,7 @@ export default function DSAVisualizerPage({ topicId }) {
         {/* Visualizer Section */}
         {activeSection === 'visualizer' && (
           <div className="mb-10">
-            {topicId === 'two-pointers' || topicId === 'sliding-window' || topicId === 'backtracking' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' ? (
+            {topicId === 'two-pointers' || topicId === 'sliding-window' || topicId === 'backtracking' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' || topicId === 'trie' ? (
               <VisualizerComponent />
             ) : (
               <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl text-center shadow-xl">

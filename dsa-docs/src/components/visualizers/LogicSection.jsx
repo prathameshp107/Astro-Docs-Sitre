@@ -14,6 +14,7 @@ import { useHeapStore } from '../../store/visualizers/heapStore';
 import { useRecursionStore } from '../../store/visualizers/recursionStore';
 import { useDPStore } from '../../store/visualizers/dpStore';
 import { useHashTableStore } from '../../store/visualizers/hashTableStore';
+import { useTrieStore } from '../../store/visualizers/trieStore';
 
 import { twoPointersLogic } from './logicData/twoPointersLogic';
 import { slidingWindowLogic } from './logicData/slidingWindowLogic';
@@ -30,6 +31,7 @@ import { heapLogic } from './logicData/heapLogic';
 import { recursionLogic } from './logicData/recursionLogic';
 import { dpLogic } from './logicData/dpLogic';
 import { hashTableLogic } from './logicData/hashTableLogic';
+import { trieLogic } from './logicData/trieLogic';
 
 // ALL DSA TOPIC LOGIC CURATED EXPLICITLY WITH CHALKBOARD THEMED KEY TERMINOLOGY DEFINITIONS
 const SPECIFIC_PROBLEM_LOGIC = {
@@ -48,7 +50,52 @@ const SPECIFIC_PROBLEM_LOGIC = {
   ...recursionLogic,
   ...dpLogic,
   ...hashTableLogic,
+  ...trieLogic,
 };
+
+// Trie Canvas Diagram Layout — computed rather than a fixed coordinate table
+// like TREE_DIAGRAM_NODES, because the trie grows as words are inserted and the
+// user can supply their own word list. Leaves pack left-to-right; each parent
+// centres over its children, which is the same shape the tree diagram hardcodes.
+const TRIE_NODE = 40;
+const TRIE_GAP_X = 14;
+const TRIE_GAP_Y = 58;
+
+function layoutTrieNodes(nodes) {
+  const kidsOf = new Map();
+  for (const n of nodes) {
+    if (!kidsOf.has(n.parentId)) kidsOf.set(n.parentId, []);
+    kidsOf.get(n.parentId).push(n);
+  }
+
+  const pos = new Map();
+  let cursor = 0;
+
+  const place = (node) => {
+    const kids = kidsOf.get(node.id) ?? [];
+    let x;
+    if (!kids.length) {
+      x = cursor * (TRIE_NODE + TRIE_GAP_X);
+      cursor += 1;
+    } else {
+      const xs = kids.map(place);
+      x = (Math.min(...xs) + Math.max(...xs)) / 2;
+    }
+    pos.set(node.id, { x, y: node.depth * TRIE_GAP_Y });
+    return x;
+  };
+
+  const root = nodes.find((n) => n.parentId === null);
+  if (root) place(root);
+
+  const xs = [...pos.values()].map((v) => v.x);
+  const ys = [...pos.values()].map((v) => v.y);
+  return {
+    pos,
+    width: (xs.length ? Math.max(...xs) : 0) + TRIE_NODE,
+    height: (ys.length ? Math.max(...ys) : 0) + TRIE_NODE,
+  };
+}
 
 // Tree Canvas Diagram Layout Coordinates
 const TREE_DIAGRAM_NODES = [
@@ -118,10 +165,13 @@ export default function LogicSection({ topicId }) {
   const recursionTrack = useRecursionStore((s) => s.track);
   const dpTrack = useDPStore((s) => s.track);
   const hashTableTrack = useHashTableStore((s) => s.track);
+  const trieTrack = useTrieStore((s) => s.track);
 
   // Pick active track key based on topicId
   const activeTrackKey =
-    topicId === 'two-pointers'
+    topicId === 'trie'
+      ? `trie-${trieTrack}`
+      : topicId === 'two-pointers'
       ? twoPointerTrack
       : topicId === 'sliding-window'
       ? slidingWindowTrack
@@ -401,7 +451,112 @@ export default function LogicSection({ topicId }) {
                   Step Visual Canvas Diagram (State at Step #{st.stepNum})
                 </div>
 
-                {st.grid ? (
+                {st.nodes ? (
+                  /* 0. Trie Canvas Diagram — mirrors the binary-tree branch
+                     below: no tinted panel, dashed SVG edges that light amber
+                     along the active path, and absolutely positioned nodes. */
+                  (() => {
+                    const { pos, width, height } = layoutTrieNodes(st.nodes);
+                    const pathIds = new Set(st.pathIds || []);
+                    const subtreeIds = new Set(st.subtreeIds || []);
+                    return (
+                      <div className="flex flex-col items-center w-full my-2">
+                        {st.word ? (
+                          <div className="flex items-center gap-1.5 mb-3">
+                            {[...st.word].map((ch, i) => (
+                              <span
+                                key={i}
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono text-sm border-2 transition-all ${
+                                  i === st.charIndex
+                                    ? '!border-amber-400 !bg-amber-500/30 text-amber-300 font-bold'
+                                    : i < st.charIndex
+                                    ? '!border-emerald-400/80 !bg-emerald-500/20 text-emerald-300'
+                                    : 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-slate-400'
+                                }`}
+                              >
+                                {ch}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+
+                        <div className="relative my-1" style={{ width, height, minWidth: width }}>
+                          <svg className="absolute inset-0 pointer-events-none" width={width} height={height}>
+                            {st.nodes.map((n) => {
+                              if (!n.parentId) return null;
+                              const a = pos.get(n.parentId);
+                              const b = pos.get(n.id);
+                              if (!a || !b) return null;
+                              const isEdgeActive = pathIds.has(n.id) && pathIds.has(n.parentId);
+                              const isEdgeMatch = subtreeIds.has(n.id) && subtreeIds.has(n.parentId);
+                              return (
+                                <line
+                                  key={`te-${n.id}`}
+                                  x1={a.x + TRIE_NODE / 2}
+                                  y1={a.y + TRIE_NODE - 2}
+                                  x2={b.x + TRIE_NODE / 2}
+                                  y2={b.y + 2}
+                                  stroke={isEdgeMatch ? '#10b981' : isEdgeActive ? '#f59e0b' : 'var(--sketch-border)'}
+                                  strokeWidth={isEdgeActive || isEdgeMatch ? '3' : '2'}
+                                  strokeDasharray={isEdgeActive || isEdgeMatch ? 'none' : '3 3'}
+                                />
+                              );
+                            })}
+                          </svg>
+
+                          {st.nodes.map((n) => {
+                            const pt = pos.get(n.id);
+                            if (!pt) return null;
+                            const isActive = st.activeId === n.id;
+                            const isCreated = st.createdId === n.id;
+                            const inSubtree = subtreeIds.has(n.id);
+                            const onPath = pathIds.has(n.id);
+
+                            let tone = 'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-slate-300';
+                            if (inSubtree) tone = '!border-emerald-400/80 !bg-emerald-500/20 text-emerald-300';
+                            else if (onPath) tone = '!border-amber-400/50 bg-[var(--sketch-bg-dim)] text-slate-200';
+                            if (isCreated) tone = '!border-sky-400 !bg-sky-500/30 text-sky-300 ring-4 ring-sky-400/40 shadow-lg shadow-sky-500/40';
+                            else if (isActive) tone = '!border-amber-400 !bg-amber-500/30 text-amber-300 ring-4 ring-amber-400/40 shadow-lg shadow-amber-500/40';
+
+                            return (
+                              <div
+                                key={n.id}
+                                style={{ left: `${pt.x}px`, top: `${pt.y}px`, width: TRIE_NODE, height: TRIE_NODE }}
+                                className="absolute flex flex-col items-center"
+                              >
+                                <div
+                                  className={`w-10 h-10 rounded-full flex items-center justify-center font-header font-extrabold text-base border-2 transition-all ${tone}`}
+                                >
+                                  {n.parentId === null ? <span className="text-[9px] font-mono">root</span> : n.char}
+                                </div>
+                                {n.isEnd ? (
+                                  <span className="absolute -bottom-3.5 text-[8px] font-mono font-bold text-emerald-400">
+                                    END
+                                  </span>
+                                ) : null}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        <div className="mt-4 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                          <div className="flex items-center gap-3">
+                            <span className="text-amber-400 font-bold">Trie State:</span>
+                            <span className="text-slate-400">{st.nodes.length} nodes</span>
+                            <span className="text-emerald-300">
+                              {st.nodes.filter((n) => n.isEnd).length} word{st.nodes.filter((n) => n.isEnd).length === 1 ? '' : 's'} stored
+                            </span>
+                          </div>
+                          {st.missingChar ? (
+                            <span className="text-rose-400">no child &apos;{st.missingChar}&apos; → dead end</span>
+                          ) : (
+                            <span className="text-slate-500">{st.comparison}</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : st.grid ? (
                   /* 1. 4x4 Sudoku Grid Diagram */
                   <div className="grid grid-cols-4 gap-2.5 my-3 bg-slate-950/90 p-4 rounded-2xl border-2 border-[var(--sketch-border)] shadow-2xl">
                     {st.grid.map((rowArr, rIdx) =>

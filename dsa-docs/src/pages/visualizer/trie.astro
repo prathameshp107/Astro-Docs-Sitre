@@ -1,0 +1,56 @@
+---
+import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
+import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
+import { getVisualizerFaqSchema } from '../../data/visualizers/visualizerContent.js';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import '../../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer/trie/`;
+
+// FAQ structured data generated from the same VISUALIZER_CONTENT entry that
+// VisualizerArticle renders on-page, so schema and visible copy stay in sync.
+const faqSchema = getVisualizerFaqSchema('trie', PAGE_URL);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: 'Trie Visualizer — Insert, Search & Autocomplete Animated',
+  description: 'Watch a trie build character by character, reuse shared prefixes, and answer autocomplete queries. Step-by-step animation with pseudocode and Big-O at every step.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Interactive Tool',
+  teaches: ['Trie data structure', 'Prefix tree insertion', 'Trie search and isEnd flag', 'Autocomplete with prefix search', 'O(L) lookup complexity'],
+  about: [{ '@type': 'Thing', name: 'Trie' }, { '@type': 'Thing', name: 'Prefix Tree' }, { '@type': 'Thing', name: 'Algorithm Visualization' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <PageSEO
+      title="Trie Visualizer — Insert, Search & Autocomplete Animated | Interview Prep Buddy"
+      description="Watch a trie build character by character and reuse shared prefixes. Animated insert, search and autocomplete with synced pseudocode, plus your own words as input."
+      url={PAGE_URL}
+      keywords="trie visualizer, prefix tree visualizer, trie data structure animation, autocomplete trie, trie insert search, trie interview question, prefix tree step by step, word search trie"
+      ogType="article"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: 'Trie Visualizer', url: '/visualizer/trie' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="visualizer" client:load />
+    <DSAVisualizerPage topicId="trie" client:load />
+  </body>
+</html>

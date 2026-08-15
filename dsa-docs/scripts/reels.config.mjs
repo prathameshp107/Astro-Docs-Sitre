@@ -54,5 +54,7 @@ export const REELS = [
   { topic: 'heaps', track: 'min-heap-insert', title: 'Heap Insert', subtitle: 'O(log n) — sift up' },
   { topic: 'linked-list', track: 'reverse-ll', title: 'Reverse a Linked List', subtitle: 'Three pointers, one pass' },
   { topic: 'graphs', track: 'dijkstra', title: "Dijkstra's Algorithm", subtitle: 'Shortest path, weighted' },
+  { topic: 'trie', track: 'insert', title: 'Trie / Prefix Tree', subtitle: 'Shared prefixes stored once' },
+  { topic: 'trie', track: 'prefix', title: 'Trie Autocomplete', subtitle: 'How search suggestions work' },
   { topic: 'two-pointers', track: 'three-sum', title: 'Three Sum', subtitle: 'Sort, then two pointers' },
 ];

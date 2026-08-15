@@ -1,8 +1,17 @@
 ---
 /**
- * GoogleAnalytics.astro — site-wide GA4 (Google tag) loader.
+ * GoogleAnalytics.astro — site-wide analytics loader (GA4 + Vercel).
  * ────────────────────────────────────────────────────────────────
- * Drop this into any page's <head>. Renders nothing if
+ * Despite the filename this now loads BOTH GA4 and Vercel Web Analytics.
+ * It is the single component every page reaches — PageSEO (40 standalone
+ * pages), SEOHead (all Starlight docs) and 26 hand-rolled heads all import
+ * it — so it is the one place that guarantees site-wide coverage.
+ *
+ * Vercel's <Analytics /> sits OUTSIDE the gaId gate on purpose: the two are
+ * independent, and a missing GA id must not silently disable Vercel too.
+ * It self-disables off-Vercel, so local dev is unaffected.
+ *
+ * Drop this into any page's <head>. The GA half renders nothing if
  * PUBLIC_GA_MEASUREMENT_ID isn't set, so local dev / forks without
  * an ID work normally.
  *
@@ -14,8 +23,15 @@
  * lastTrackedPath guard prevents it from double-counting the initial
  * page when it also fires there.
  */
+import Analytics from '@vercel/analytics/astro';
+
 const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 ---
+
+<!-- Vercel Web Analytics. Same-origin (/_vercel/insights/*), so the
+     existing CSP `script-src 'self'` / `connect-src 'self'` already
+     permit it — no vercel.json change needed. -->
+<Analytics />
 
 {gaId && (
   <>
