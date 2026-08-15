@@ -56,16 +56,12 @@ export default function LinkedListVisualizer() {
     currentStep,
     isPlaying,
     speed,
-    practiceMode,
-    userCode,
     setCurrentStep,
     nextStep,
     prevStep,
     restart,
     togglePlay,
     setSpeed,
-    togglePracticeMode,
-    setUserCode,
   } = useLinkedListStore();
 
   const step = steps[currentStep] || steps[0];
@@ -334,23 +330,9 @@ export default function LinkedListVisualizer() {
           <div className="sketch-panel-box sketch-border">
             <div className="flex items-center justify-between mb-3 pb-2 border-b border-[var(--sketch-border)]">
               <span className="font-header font-bold text-lg">Concept Code</span>
-              <button
-                onClick={togglePracticeMode}
-                className="px-2.5 py-1 text-xs sketch-button"
-              >
-                {practiceMode ? '👁️ View' : '✏️ Practice'}
-              </button>
             </div>
 
-            {practiceMode ? (
-              <textarea
-                value={userCode}
-                onChange={(e) => setUserCode(e.target.value)}
-                rows={8}
-                className="w-full bg-transparent p-2 font-mono text-xs text-[var(--sketch-text)] border border-[var(--sketch-border)] rounded focus:outline-none"
-              />
-            ) : (
-              <div className="space-y-0.5">
+            <div className="space-y-0.5">
                 {activeCode.map((c) => {
                   const isActive = step.activeLine === c.line;
                   return (
@@ -364,7 +346,6 @@ export default function LinkedListVisualizer() {
                   );
                 })}
               </div>
-            )}
           </div>
 
           {/* State Variable Box */}
