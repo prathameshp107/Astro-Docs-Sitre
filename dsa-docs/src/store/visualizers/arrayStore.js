@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 // 1. ARRAY ACCESS STEPS (Exhaustive 8-Step Trace)
-const ACCESS_STEPS = [
+export const ACCESS_STEPS = [
   {
     activeLine: 1,
     index: 0,
@@ -62,7 +62,7 @@ const ACCESS_STEPS = [
 ];
 
 // 2. ARRAY INSERTION STEPS (Exhaustive 9-Step Trace)
-const INSERT_STEPS = [
+export const INSERT_STEPS = [
   {
     activeLine: 1,
     index: null,
@@ -130,7 +130,7 @@ const INSERT_STEPS = [
 ];
 
 // 3. ARRAY DELETION STEPS (Exhaustive 9-Step Trace)
-const DELETE_STEPS = [
+export const DELETE_STEPS = [
   {
     activeLine: 1,
     index: 2,
@@ -198,7 +198,7 @@ const DELETE_STEPS = [
 ];
 
 // 4. LINEAR SEARCH STEPS (Exhaustive 9-Step Trace)
-const SEARCH_STEPS = [
+export const SEARCH_STEPS = [
   {
     activeLine: 1,
     index: 0,

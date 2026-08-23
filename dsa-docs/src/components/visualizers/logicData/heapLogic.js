@@ -113,7 +113,7 @@ export const heapLogic = {
     ]
   },
 
-  'min-heap-insert': {
+  'heaps-min-heap-insert': {
     title: 'Min-Heap Insertion (Heapify Up) O(log N)',
     input: 'Min-Heap = [10, 25, 15, 40, 35], Insert 5',
     goal: 'Insert element at array end and bubble up until parent <= child.',
@@ -224,7 +224,7 @@ export const heapLogic = {
     ]
   },
 
-  'min-heap-extract': {
+  'heaps-min-heap-extract': {
     title: 'Extract Minimum (Heapify Down) O(log N)',
     input: 'Heap = [5, 25, 10, 40, 35, 15], Extract Root (5)',
     goal: 'Remove minimum root (5), replace with last element (15), and bubble down to restore Min-Heap property.',
@@ -336,7 +336,7 @@ export const heapLogic = {
     ]
   },
 
-  'max-heapify': {
+  'heaps-max-heapify': {
     title: 'Max-Heapify Property O(log N)',
     input: 'Heap Array = [4, 10, 3, 5, 1]',
     goal: 'Restore Max-Heap property where parent.val >= child.val.',
@@ -434,7 +434,7 @@ export const heapLogic = {
     ]
   },
 
-  'heap-sort': {
+  'heaps-heap-sort': {
     title: 'Heap Sort Algorithm O(N log N)',
     input: 'Unsorted Array = [4, 10, 3, 5, 1]',
     goal: 'Build Max-Heap, repeatedly extract maximum to array end, and shrink heap size.',

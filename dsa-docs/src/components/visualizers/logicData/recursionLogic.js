@@ -1,4 +1,7 @@
+
+
 export const recursionLogic = {
+
   'recursion': {
     title: 'Recursion & Call Stack Mechanics',
     input: 'Call fact(4) to compute 4!',
@@ -89,7 +92,7 @@ export const recursionLogic = {
     ]
   },
 
-  'factorial': {
+  'recursion-factorial': {
     title: 'Factorial N! Recursive Winding & Unwinding O(N)',
     input: 'n = 4',
     goal: 'Compute 4! = 4 * 3 * 2 * 1 = 24 using recursive function call stack frames.',
@@ -208,7 +211,7 @@ export const recursionLogic = {
     ]
   },
 
-  'fibonacci': {
+  'recursion-fibonacci': {
     title: 'Fibonacci Call Tree & Subproblem Overlap O(2^N)',
     input: 'n = 4',
     goal: 'Demonstrate tree of recursive calls fib(N) = fib(N-1) + fib(N-2).',
@@ -326,7 +329,7 @@ export const recursionLogic = {
     ]
   },
 
-  'tower-of-hanoi': {
+  'recursion-tower-of-hanoi': {
     title: 'Tower of Hanoi (Divide & Conquer)',
     input: 'n = 3 Disks, Transfer Peg A → Peg C',
     goal: 'Move 3 disks from Peg A to Peg C using Peg B in minimal 7 moves.',
@@ -453,7 +456,7 @@ export const recursionLogic = {
     ]
   },
 
-  'subsets': {
+  'recursion-subsets': {
     title: 'Subsets / Backtracking Recursive Generation',
     input: 'Set = [1, 2]',
     goal: 'Generate all 2^N subsets using inclusion/exclusion recursion tree.',

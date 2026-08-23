@@ -80,7 +80,7 @@ export const stackLogic = {
     ]
   },
 
-  'push': {
+  'stack-push': {
     title: 'Stack Push Operation O(1)',
     input: 'Push elements [10, 20, 30, 40] into Stack',
     goal: 'Demonstrate pointer-based push operation and overflow checking.',
@@ -173,7 +173,7 @@ export const stackLogic = {
     ]
   },
 
-  'pop': {
+  'stack-pop': {
     title: 'Stack Pop Operation O(1)',
     input: 'Stack = [10, 20, 30, 40], Pop Top Element',
     goal: 'Demonstrate LIFO deletion and underflow checking.',
@@ -239,7 +239,7 @@ export const stackLogic = {
     ]
   },
 
-  'peek': {
+  'stack-peek': {
     title: 'Stack Peek / Top Operation O(1)',
     input: 'Stack = [10, 20, 30, 40], Peek Top',
     goal: 'Return topmost element without modifying stack or pointers in O(1) time.',
@@ -278,7 +278,7 @@ export const stackLogic = {
     ]
   },
 
-  'valid-parentheses': {
+  'stack-valid-parentheses': {
     title: 'Valid Parentheses String Matching O(N)',
     input: 'String s = "{[()]}", Check Bracket Matching',
     goal: 'Use stack to verify matching pairs of opening and closing brackets.',
@@ -383,7 +383,7 @@ export const stackLogic = {
     ]
   },
 
-  'min-stack': {
+  'stack-min-stack': {
     title: 'Min Stack O(1) Minimum Tracking',
     input: 'Push [5, 2, 8, 1], getMin()',
     goal: 'Track current minimum element in O(1) time using an auxiliary minStack.',

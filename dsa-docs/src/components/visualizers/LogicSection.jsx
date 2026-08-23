@@ -167,63 +167,37 @@ export default function LogicSection({ topicId }) {
   const hashTableTrack = useHashTableStore((s) => s.track);
   const trieTrack = useTrieStore((s) => s.track);
 
-  // Pick active track key based on topicId
-  const activeTrackKey =
-    topicId === 'trie'
-      ? `trie-${trieTrack}`
-      : topicId === 'two-pointers'
-      ? twoPointerTrack
-      : topicId === 'sliding-window'
-      ? slidingWindowTrack
-      : topicId === 'backtracking'
-      ? backtrackingTrack
-      : topicId === 'recursion'
-      ? recursionTrack
-      : topicId === 'arrays'
-      ? arrayTrack
-      : topicId === 'sorting'
-      ? sortingTrack
-      : topicId === 'searching'
-      ? searchingTrack
-      : topicId === 'linked-list'
-      ? linkedListTrack
-      : topicId === 'trees'
-      ? treeTrack
-      : topicId === 'graphs'
-      ? graphTrack
-      : topicId === 'stack'
-      ? stackTrack
-      : topicId === 'queue'
-      ? queueTrack
-      : topicId === 'heaps' || topicId === 'heap'
-      ? heapTrack
-      : topicId === 'dp'
-      ? dpTrack
-      : topicId === 'hash-table' || topicId === 'hash-tables'
-      ? hashTableTrack
-      : topicId;
+  // Pick the active track for this topic.
+  const activeTrack =
+    topicId === 'trie' ? trieTrack
+    : topicId === 'two-pointers' ? twoPointerTrack
+    : topicId === 'sliding-window' ? slidingWindowTrack
+    : topicId === 'backtracking' ? backtrackingTrack
+    : topicId === 'recursion' ? recursionTrack
+    : topicId === 'arrays' ? arrayTrack
+    : topicId === 'sorting' ? sortingTrack
+    : topicId === 'searching' ? searchingTrack
+    : topicId === 'linked-list' ? linkedListTrack
+    : topicId === 'trees' ? treeTrack
+    : topicId === 'graphs' ? graphTrack
+    : topicId === 'stack' ? stackTrack
+    : topicId === 'queue' ? queueTrack
+    : (topicId === 'heaps' || topicId === 'heap') ? heapTrack
+    : topicId === 'dp' ? dpTrack
+    : (topicId === 'hash-table' || topicId === 'hash-tables') ? hashTableTrack
+    : null;
 
-  // Resolve track aliases for Array, Sorting, & Searching modules
-  const resolvedTrackKey =
-    activeTrackKey === 'insert' || activeTrackKey === 'insertion'
-      ? 'insertion'
-      : activeTrackKey === 'delete' || activeTrackKey === 'deletion'
-      ? 'deletion'
-      : activeTrackKey === 'search' || activeTrackKey === 'linear-search' || activeTrackKey === 'linear' || activeTrackKey === 'linear-scan'
-      ? 'linear-search'
-      : activeTrackKey === 'reverse' || activeTrackKey === 'reverse-array'
-      ? 'reverse-array'
-      : activeTrackKey === 'bubble' || activeTrackKey === 'bubble-sort'
-      ? 'bubble-sort'
-      : activeTrackKey === 'selection' || activeTrackKey === 'selection-sort'
-      ? 'selection-sort'
-      : activeTrackKey === 'insertion-sort'
-      ? 'insertion-sort'
-      : activeTrackKey === 'quick' || activeTrackKey === 'quick-sort'
-      ? 'quick-sort'
-      : activeTrackKey === 'merge' || activeTrackKey === 'merge-sort'
-      ? 'merge-sort'
-      : activeTrackKey;
+  // Every logicData key is namespaced `<topic>-<track>`, so resolution is one
+  // deterministic join. This replaced a flat-merge lookup plus an alias table
+  // that rewrote raw track names — a combination which silently resolved
+  // arrays:search to SEARCHING's entry, recursion:subsets to BACKTRACKING's,
+  // and sliding-window:intro to TWO-POINTERS' introduction. A namespaced miss
+  // now falls back to the topic-level entry rather than another topic's.
+  // Track keys use the sidebar's topic id verbatim ('heaps-min-heap-insert').
+  // Only the topic-level fallback entry uses the legacy singular ('heap').
+  const trackPrefix = topicId === 'hash-tables' ? 'hash-table' : topicId;
+  const topicKey = topicId === 'heaps' ? 'heap' : topicId === 'hash-tables' ? 'hash-table' : topicId;
+  const resolvedTrackKey = activeTrack ? `${trackPrefix}-${activeTrack}` : topicKey;
 
   const isTreeTopic =
     topicId === 'trees' ||
@@ -298,8 +272,7 @@ export default function LogicSection({ topicId }) {
   // Retrieve exact problem logic or generate dynamic fallback for topicId
   const problemData =
     SPECIFIC_PROBLEM_LOGIC[resolvedTrackKey] ||
-    SPECIFIC_PROBLEM_LOGIC[activeTrackKey] ||
-    SPECIFIC_PROBLEM_LOGIC[topicId] || {
+    SPECIFIC_PROBLEM_LOGIC[topicKey] || {
       title: `${topicId?.toUpperCase()} Algorithm Execution Logic`,
       input: `Topic Module: ${topicId}`,
       goal: `Step-by-step state transition breakdown for ${topicId}.`,

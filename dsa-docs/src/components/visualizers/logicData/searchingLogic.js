@@ -34,7 +34,7 @@ export const searchingLogic = {
     ]
   },
 
-  'binary-search': {
+  'searching-binary-search': {
     title: 'Binary Search O(log N)',
     input: 'Sorted Array = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91], Target = 23',
     goal: 'Find target index in logarithmic O(log N) time by halving search space at each iteration.',
@@ -94,7 +94,7 @@ export const searchingLogic = {
     ]
   },
 
-  'linear-search': {
+  'searching-linear-search': {
     title: 'Linear Search O(N)',
     input: 'Unsorted Array = [12, 45, 67, 23, 89, 34], Target = 23',
     goal: 'Scan unsorted elements sequentially until target is found in O(N) time.',

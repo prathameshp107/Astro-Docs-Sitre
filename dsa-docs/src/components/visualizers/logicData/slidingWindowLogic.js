@@ -1,5 +1,5 @@
 export const slidingWindowLogic = {
-  'sliding-window': {
+  'sliding-window-intro': {
     title: '1. Sliding Window Concept - Introduction',
     input: 'Array = [2, 1, 5, 1, 3, 2], K = 3',
     goal: 'Find maximum sum contiguous subarray of fixed size K=3 in O(N) time.',
@@ -105,7 +105,7 @@ export const slidingWindowLogic = {
     ]
   },
 
-  'max-sum-subarray': {
+  'sliding-window-max-sum-subarray': {
     title: '2. Max Sum Subarray of Size K',
     input: 'Array = [2, 1, 5, 1, 3, 2], K = 3',
     goal: 'Find maximum sum of contiguous subarray of size K=3.',
@@ -211,7 +211,7 @@ export const slidingWindowLogic = {
     ]
   },
 
-  'longest-substring': {
+  'sliding-window-longest-substring': {
     title: '3. Longest Substring Without Repeating Characters',
     input: 'String = "abcabcbb"',
     goal: 'Find length of longest substring with zero duplicate characters.',
@@ -326,7 +326,7 @@ export const slidingWindowLogic = {
     ]
   },
 
-  'min-subarray-sum': {
+  'sliding-window-min-subarray-sum': {
     title: '4. Minimum Size Subarray Sum (Target = 7)',
     input: 'Array = [2, 3, 1, 2, 4, 3], Target = 7',
     goal: 'Find minimal length of contiguous subarray whose sum is >= target 7.',
@@ -477,7 +477,7 @@ export const slidingWindowLogic = {
     ]
   },
 
-  'fruit-into-baskets': {
+  'sliding-window-fruit-into-baskets': {
     title: '5. Fruit Into Baskets (At Most 2 Fruit Types)',
     input: 'Fruits = [1, 2, 2, 3, 2, 2]',
     goal: 'Find longest contiguous subarray containing at most 2 distinct fruit types.',

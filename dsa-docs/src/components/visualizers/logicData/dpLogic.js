@@ -111,7 +111,7 @@ export const dpLogic = {
     ]
   },
 
-  'climbing-stairs': {
+  'dp-climbing-stairs': {
     title: 'Climbing Stairs 1D DP Tabulation O(N)',
     input: 'N = 5 stairs',
     goal: 'Calculate total distinct ways to climb N stairs taking 1 or 2 steps at a time.',
@@ -235,7 +235,7 @@ export const dpLogic = {
     ]
   },
 
-  'knapsack': {
+  'dp-knapsack': {
     title: '0/1 Knapsack Problem 2D DP O(N×W)',
     input: 'Items = [{w:2,v:3}, {w:3,v:4}, {w:4,v:5}], Capacity W = 5',
     goal: 'Maximize total value of items selected without exceeding weight capacity W=5.',
@@ -431,7 +431,7 @@ export const dpLogic = {
     ]
   },
 
-  'lcs': {
+  'dp-lcs': {
     title: 'Longest Common Subsequence 2D DP O(M×N)',
     input: 'text1 = "abcde", text2 = "ace"',
     goal: 'Find length and content of the longest common subsequence between two strings.',
@@ -647,7 +647,7 @@ export const dpLogic = {
     ]
   },
 
-  'coin-change': {
+  'dp-coin-change': {
     title: 'Coin Change Minimum Coins DP O(Amount × Coins)',
     input: 'Coins = [1, 2, 5], Amount = 11',
     goal: 'Find fewest number of coins needed to make up target amount 11.',

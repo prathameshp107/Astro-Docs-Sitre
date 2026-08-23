@@ -135,7 +135,7 @@ export const sortingLogic = {
     ]
   },
 
-  'bubble-sort': {
+  'sorting-bubble-sort': {
     title: 'Bubble Sort O(N^2)',
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Bubble largest elements to end via adjacent swaps in O(N^2) time.',
@@ -216,7 +216,7 @@ export const sortingLogic = {
     ]
   },
 
-  'selection-sort': {
+  'sorting-selection-sort': {
     title: 'Selection Sort O(N^2)',
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Repeatedly find minimum element from unsorted portion and swap it into position.',
@@ -275,7 +275,7 @@ export const sortingLogic = {
     ]
   },
 
-  'insertion-sort': {
+  'sorting-insertion-sort': {
     title: 'Insertion Sort O(N^2)',
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Build sorted array one element at a time by inserting key into correct position in sorted prefix.',
@@ -323,7 +323,7 @@ export const sortingLogic = {
     ]
   },
 
-  'merge-sort': {
+  'sorting-merge-sort': {
     title: 'Merge Sort O(N log N)',
     input: 'Array = [5, 2, 8, 1, 4]',
     goal: 'Divide array into halves recursively, then merge sorted halves in O(N log N) time.',
@@ -360,7 +360,7 @@ export const sortingLogic = {
     ]
   },
 
-  'quick-sort': {
+  'sorting-quick-sort': {
     title: 'Quick Sort O(N log N)',
     input: 'Array = [5, 2, 8, 1, 4], Pivot = 4',
     goal: 'Partition array around a pivot element such that left <= pivot and right >= pivot.',

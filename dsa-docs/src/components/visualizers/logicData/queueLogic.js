@@ -84,7 +84,7 @@ export const queueLogic = {
     ]
   },
 
-  'enqueue': {
+  'queue-enqueue': {
     title: 'Queue Enqueue Operation O(1)',
     input: 'Enqueue elements [10, 20, 30, 40] into Queue',
     goal: 'Demonstrate pointer-based FIFO queue insertions at the rear.',
@@ -183,7 +183,7 @@ export const queueLogic = {
     ]
   },
 
-  'dequeue': {
+  'queue-dequeue': {
     title: 'Queue Dequeue Operation O(1)',
     input: 'Queue = [10, 20, 30, 40], Dequeue Front Element',
     goal: 'Demonstrate FIFO deletion at front pointer and underflow checking.',
@@ -253,7 +253,7 @@ export const queueLogic = {
     ]
   },
 
-  'circular-queue': {
+  'queue-circular-queue': {
     title: 'Circular Queue (Ring Buffer) O(1)',
     input: 'Queue Capacity = 5, Wraparound Pointers',
     goal: 'Reuse empty spaces created by dequeued elements using modulo arithmetic rear = (rear + 1) % MAX.',

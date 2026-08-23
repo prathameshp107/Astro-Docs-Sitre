@@ -26,13 +26,14 @@
  */
 
 import { createServer } from 'node:http';
-import { readFile, mkdir, rm, writeFile, readdir } from 'node:fs/promises';
+import { readFile, mkdir, rm, writeFile, readdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { REELS, RENDER } from './reels.config.mjs';
+import { captionMarkdown } from './reel-captions.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
@@ -351,6 +352,11 @@ async function recordOne(browser, reel, keepFrames, origin) {
 
   if (!keepFrames) await rm(frameDir, { recursive: true, force: true });
 
+  // Post copy alongside the video, so the reel is ready to publish without a
+  // second command. reel-captions.mjs is import-safe (it only writes when run
+  // as a CLI), and it needs no browser or ffmpeg.
+  await writeFile(path.join(OUT, `${id}.md`), captionMarkdown(reel), 'utf8');
+
   const secs = durations.reduce((a, b) => a + b, 0);
   return { id, outFile, count, total, secs };
 }
@@ -446,6 +452,13 @@ async function main() {
       const capped = r.count < r.total ? ` (capped ${r.count}/${r.total} steps)` : '';
       const over = r.secs > RENDER.warnOverSeconds ? '  ** over Reels 90s limit **' : '';
       console.log(`${r.secs.toFixed(1)}s, ${r.count} steps${capped}${over}`);
+
+      // Confirm both artifacts landed. Cheap, and it turns a single-reel run
+      // into a self-verifying smoke test.
+      const mp4 = await stat(r.outFile).catch(() => null);
+      const cap = await stat(path.join(OUT, `${r.id}.md`)).catch(() => null);
+      console.log(`         video   ${mp4 ? `${(mp4.size / 1048576).toFixed(2)} MB` : 'MISSING'}  ${path.basename(r.outFile)}`);
+      console.log(`         caption ${cap ? `${cap.size} bytes` : 'MISSING'}  ${r.id}.md`);
       done.push(r);
     } catch (e) {
       console.log('FAILED');

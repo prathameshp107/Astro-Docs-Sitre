@@ -1,4 +1,92 @@
+import {
+  ACCESS_STEPS,
+  INSERT_STEPS,
+  DELETE_STEPS,
+  SEARCH_STEPS,
+} from '../../../store/visualizers/arrayStore.js';
+
+/**
+ * Derive logic-tab steps from a store's step array.
+ *
+ * The alternative is a second, hand-written copy of every step that must stay
+ * 1-to-1 with the store by discipline alone — the exact drift that left
+ * arrays:access / insert / delete with a blank Core Logic diagram and pointed
+ * arrays:search at SEARCHING's linear-search entry instead.
+ *
+ * Deriving makes the counts identical by construction. Narration fields the
+ * store doesn't carry (title / computation / comparison / action) are built from
+ * the fields it does.
+ */
+function fromStoreSteps(steps, { verb }) {
+  return steps.map((s, i) => {
+    const entries = Object.entries(s.state || {});
+    const firstLine = String(s.desc || '').split(/(?<=[.:])\s/)[0].trim();
+    return {
+      ...s,
+      stepNum: i + 1,
+      title: firstLine || `Step ${i + 1}`,
+      computation: entries.length
+        ? entries.slice(0, 2).map(([k, v]) => `${k} = ${v}`).join(', ')
+        : `${verb} step ${i + 1}`,
+      comparison: entries.length > 2 ? `${entries[2][0]}: ${entries[2][1]}` : '—',
+      action: i === steps.length - 1 ? `${verb} complete` : verb,
+    };
+  });
+}
+
 export const arrayLogic = {
+
+  'arrays-access': {
+    title: 'Array — Access by Index',
+    input: 'arr = [10, 25, 42, 58, 73, 89], target index = 3',
+    goal: 'Show why indexing is O(1): the address is computed from base + index x elementSize, with no traversal.',
+    terms: {
+      'Contiguous memory': 'Array elements sit in one unbroken block, so an index maps to an address by arithmetic rather than traversal.',
+      'O(1) access': 'Address = base + index x elementSize, so element lookup costs the same regardless of array length.',
+      'Shift cascade': 'Inserting or deleting anywhere but the end moves every following element, which is the O(n) in those operations.',
+    },
+    array: [10, 25, 42, 58, 73, 89],
+    steps: fromStoreSteps(ACCESS_STEPS, { verb: 'Access' }),
+  },
+
+  'arrays-insert': {
+    title: 'Array — Insertion at Index',
+    input: 'arr = [10, 25, 42, 58, 73], insert 99 at index 2',
+    goal: 'Show the shift cascade: every element from the insertion point rightwards moves one slot, making this O(n).',
+    terms: {
+      'Contiguous memory': 'Array elements sit in one unbroken block, so an index maps to an address by arithmetic rather than traversal.',
+      'O(1) access': 'Address = base + index x elementSize, so element lookup costs the same regardless of array length.',
+      'Shift cascade': 'Inserting or deleting anywhere but the end moves every following element, which is the O(n) in those operations.',
+    },
+    array: [10, 25, 42, 58, 73],
+    steps: fromStoreSteps(INSERT_STEPS, { verb: 'Insert' }),
+  },
+
+  'arrays-delete': {
+    title: 'Array — Deletion by Index',
+    input: 'arr = [10, 25, 42, 58, 73], delete index 1',
+    goal: 'Show the reverse cascade: removing an element pulls every following element left to close the gap.',
+    terms: {
+      'Contiguous memory': 'Array elements sit in one unbroken block, so an index maps to an address by arithmetic rather than traversal.',
+      'O(1) access': 'Address = base + index x elementSize, so element lookup costs the same regardless of array length.',
+      'Shift cascade': 'Inserting or deleting anywhere but the end moves every following element, which is the O(n) in those operations.',
+    },
+    array: [10, 25, 42, 58, 73],
+    steps: fromStoreSteps(DELETE_STEPS, { verb: 'Delete' }),
+  },
+
+  'arrays-search': {
+    title: 'Array — Linear Search',
+    input: 'arr = [10, 25, 42, 58, 73], find 58',
+    goal: 'Scan each index until the target is found. O(n) because an unsorted array offers nothing to skip ahead on.',
+    terms: {
+      'Contiguous memory': 'Array elements sit in one unbroken block, so an index maps to an address by arithmetic rather than traversal.',
+      'O(1) access': 'Address = base + index x elementSize, so element lookup costs the same regardless of array length.',
+      'Shift cascade': 'Inserting or deleting anywhere but the end moves every following element, which is the O(n) in those operations.',
+    },
+    array: [10, 25, 42, 58, 73],
+    steps: fromStoreSteps(SEARCH_STEPS, { verb: 'Scan' }),
+  },
   'arrays': {
     title: '1. Array Operations & Memory Layout',
     input: 'Array = [10, 25, 42, 58, 73, 89]',
@@ -69,7 +157,7 @@ export const arrayLogic = {
     ]
   },
 
-  'prefix-sum': {
+  'arrays-prefix-sum': {
     title: 'Prefix Sum Array & Range Query O(1)',
     input: 'Array = [2, 4, 1, 3, 5], Range [1..3]',
     goal: 'Precompute running totals to answer any range sum query L..R in O(1) time.',
@@ -173,7 +261,7 @@ export const arrayLogic = {
     ]
   },
 
-  'reverse-array': {
+  'arrays-reverse': {
     title: 'In-Place Array Reversal O(N)',
     input: 'Array = [1, 2, 3, 4, 5]',
     goal: 'Reverse array in-place by swapping opposite elements with two converging pointers.',

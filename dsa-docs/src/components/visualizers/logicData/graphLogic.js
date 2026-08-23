@@ -1,5 +1,5 @@
 export const graphLogic = {
-  'graph': {
+  'graphs': {
     title: 'Graph Traversals & Algorithms Overview',
     input: 'Graph = 6 Vertices (0 to 5), Edges = [(0-1, 4), (0-2, 2), (1-3, 3), (1-4, 1), (2-4, 3), (3-5, 2), (4-5, 3)]',
     goal: 'Demonstrate Breadth-First Search (level-order), Depth-First Search (deep path traversal), Cycle Detection, and Dijkstra Shortest Path.',
@@ -78,7 +78,7 @@ export const graphLogic = {
     ]
   },
 
-  'bfs': {
+  'graphs-bfs': {
     title: 'Breadth-First Search (BFS) O(V + E)',
     input: 'Graph with 6 Vertices (0, 1, 2, 3, 4, 5), Start Node = 0',
     goal: 'Explore all immediate neighbors level-by-level using a FIFO Queue.',
@@ -327,7 +327,7 @@ export const graphLogic = {
     ]
   },
 
-  'dfs': {
+  'graphs-dfs': {
     title: 'Depth-First Search (DFS) O(V + E)',
     input: 'Graph with 6 Vertices (0, 1, 2, 3, 4, 5), Start Node = 0',
     goal: 'Explore as far as possible along each branch before backtracking using recursion / LIFO Stack.',
@@ -445,7 +445,7 @@ export const graphLogic = {
     ]
   },
 
-  'cycle-detection': {
+  'graphs-cycle-detection': {
     title: 'Cycle Detection in Undirected Graph O(V + E)',
     input: 'Undirected Graph with Edges = [(0-1), (1-3), (3-4), (4-1)]',
     goal: 'Detect if a cycle exists by checking if a neighbor is already visited AND neighbor != parent.',
@@ -537,7 +537,7 @@ export const graphLogic = {
     ]
   },
 
-  'dijkstra': {
+  'graphs-dijkstra': {
     title: 'Dijkstra\'s Shortest Path Algorithm O((V + E) log V)',
     input: 'Weighted Graph with 6 Vertices (0 to 5), Source Node = 0',
     goal: 'Find the minimum distance from source node 0 to all other vertices using a Priority Queue.',

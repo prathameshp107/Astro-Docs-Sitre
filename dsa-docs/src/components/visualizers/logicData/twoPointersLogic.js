@@ -1,6 +1,6 @@
 export const twoPointersLogic = {
   // === 1. TWO POINTERS TRACKS ===
-  'intro': {
+  'two-pointers-intro': {
     title: '1. Two Pointers Concept - Introduction',
     input: 'Array = [1, 2, 4, 6, 8, 10], Target = 10',
     goal: 'Demonstrate opposite-ends converging pointers in O(N) linear time.',
@@ -48,7 +48,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'two-sum-ii': {
+  'two-pointers-two-sum-ii': {
     title: '2. Two Sum II - Input Array Is Sorted',
     input: 'Array = [2, 7, 11, 15], Target = 9',
     goal: 'Find two numbers in sorted array that add up to target 9.',
@@ -96,7 +96,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'valid-palindrome': {
+  'two-pointers-valid-palindrome': {
     title: '3. Valid Palindrome (Converging Character Pointers)',
     input: 'String = "racecar"',
     goal: 'Verify character symmetry from both ends towards center.',
@@ -155,7 +155,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'three-sum': {
+  'two-pointers-three-sum': {
     title: '4. 3Sum - Zero Sum Triplets',
     input: 'Array = [-4, -1, -1, 0, 1, 2], Target = 0',
     goal: 'Find all unique triplets [a, b, c] such that a + b + c = 0.',
@@ -205,7 +205,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'container-water': {
+  'two-pointers-container-water': {
     title: '5. Container With Most Water',
     input: 'Heights = [1, 8, 6, 2, 5, 4, 8, 3]',
     goal: 'Find two lines that contain the maximum area of water.',
@@ -254,7 +254,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'move-zeroes': {
+  'two-pointers-move-zeroes': {
     title: '6. Move Zeroes In-Place (Fast & Slow Pointers)',
     input: 'Array = [0, 1, 0, 3, 12]',
     goal: 'Move all zeroes to end while maintaining relative order of non-zero elements.',
@@ -314,7 +314,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'remove-duplicates': {
+  'two-pointers-remove-duplicates': {
     title: '7. Remove Duplicates from Sorted Array',
     input: 'Array = [1, 1, 2, 2, 3, 4]',
     goal: 'Overwrite duplicate elements in-place and return total unique element count K=4.',
@@ -375,7 +375,7 @@ export const twoPointersLogic = {
     ]
   },
 
-  'sort-colors': {
+  'two-pointers-sort-colors': {
     title: '8. Sort Colors (Dutch National Flag 3-Pointer Partition)',
     input: 'Array = [2, 0, 2, 1, 1, 0] (0=Red, 1=White, 2=Blue)',
     goal: 'Sort array of 0s, 1s, 2s in-place in single pass using low, mid, high pointers.',

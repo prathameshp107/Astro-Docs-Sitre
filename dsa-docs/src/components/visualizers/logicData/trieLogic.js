@@ -1,4 +1,4 @@
-import { buildTrieSteps, TRIE_DEFAULTS } from '../../../store/visualizers/trieStore';
+import { buildTrieSteps, TRIE_DEFAULTS } from '../../../store/visualizers/trieStore.js';
 
 /**
  * Logic-tab data for the Trie visualizer.

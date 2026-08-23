@@ -301,7 +301,10 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
     <aside
       ref={sidebarRef}
       onScroll={handleScroll}
-      className="w-64 md:w-72 shrink-0 h-full overflow-y-auto border-r border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] px-4 py-6 flex flex-col font-sketch select-none text-[var(--sketch-text)] transition-all duration-300"
+      /* Below md the sidebar floats over the canvas instead of taking a
+         flex column from it — on a 375px screen it otherwise left ~119px
+         for the animation. Above md it behaves exactly as before. */
+      className="max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:shadow-2xl w-64 md:w-72 shrink-0 h-full overflow-y-auto border-r border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] px-4 py-6 flex flex-col font-sketch select-none text-[var(--sketch-text)] transition-all duration-300"
     >
       {/* Brand Header */}
       <div className="mb-6">

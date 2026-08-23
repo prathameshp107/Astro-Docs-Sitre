@@ -10,6 +10,22 @@ of sync with the product: fix a visualizer, re-run, and every reel is current.
 
 Output: `dsa-docs/reels-out/<topic>-<track>.mp4`, 1080×1920, H.264.
 
+## Coverage
+
+**65 reels — one per visualizer problem track.** The catalogue is generated from
+the same 16 sections / 67 tracks the site ships; the 2 `intro` concept pages are
+excluded because they have no animation to record.
+
+Titles and subtitles for the auto-added entries come from the sidebar's own
+`label` / `subtitle` text, so reel copy matches what the site displays. All 65
+carry a hand-checked complexity line (36 via an explicit `cx`, the rest matched
+from the topic's complexity table).
+
+Rendering the full set takes roughly **1.5–3 minutes per reel** — about 2–3
+hours for all 65, producing ~50 minutes of footage. Use
+`npm run reels:resume` to work through it in sessions; it skips whatever is
+already rendered.
+
 ---
 
 ## Files
@@ -18,8 +34,10 @@ Output: `dsa-docs/reels-out/<topic>-<track>.mp4`, 1080×1920, H.264.
 |---|---|
 | `scripts/record-reel.mjs` | Driver: serves the site, drives the browser, calls ffmpeg |
 | `scripts/reels.config.mjs` | Which reels to render + all timing/render settings |
+| `scripts/reel-captions.mjs` | Generates ready-to-paste post copy per reel |
 | `src/components/visualizers/RecorderBridge.jsx` | In-app hook exposing `window.__viz` (only under `?record=1`) |
-| `reels-out/` | Rendered MP4s (git-ignored) |
+| `reels-out/` | Rendered MP4s + per-reel caption `.md` (git-ignored) |
+| `reels-out/captions/` | Caption files, plus `ALL-CAPTIONS.md` |
 | `reels-out/.frames/` | Intermediate PNGs, deleted unless `--keep-frames` |
 
 ---
@@ -43,6 +61,7 @@ that one is used instead.
 ## Running
 
 ```bash
+npm run reels:captions  # post copy for every reel (fast, no browser needed)
 npm run reels:list      # show the queue and what's already rendered
 npm run reels:dev       # render all, from the dev server
 npm run reels:resume    # render only what's missing
@@ -89,6 +108,84 @@ node scripts/record-reel.mjs sorting:bubble-sort --dev --keep-frames
 # inspect reels-out/.frames/sorting-bubble-sort/*.png, then:
 npm run reels:dev
 ```
+
+---
+
+## Captions
+
+Every reel needs post copy, so it is generated from the same content the site
+renders rather than written by hand per platform.
+
+```bash
+npm run reels:captions                            # all reels
+node scripts/reel-captions.mjs sorting            # one topic
+node scripts/reel-captions.mjs trie:insert        # one reel
+node scripts/reel-captions.mjs trie --stdout      # print, don't write files
+```
+
+Output: `reels-out/captions/<topic>-<track>.md`, plus `ALL-CAPTIONS.md`
+containing all of them. **Recording a reel also writes its caption file**, so
+`npm run reels:dev` leaves every reel publish-ready — no second command needed.
+
+Captions need no browser and no ffmpeg, so regenerating all 21 takes about a
+second. Re-run after editing `visualizerContent.js` or `dsaTopics.js` and the
+copy follows.
+
+### Three variants per reel
+
+The same text does not work everywhere, so each file carries three blocks:
+
+| Block | Shape |
+|---|---|
+| **Instagram / TikTok** | Hook, two sentences, complexity, interview framing, CTA, 9–14 hashtags. Length is reported per reel and warned about over IG's 2,200 limit |
+| **YouTube Shorts** | Title with a live character count against the 100 limit, description carrying the full FAQ answer and both links |
+| **LinkedIn** | No hashtag spam, leads with the insight, first-person build note |
+
+### Where the copy comes from
+
+Nothing is invented. Each field is pulled from a real source, so a caption
+cannot claim something the site contradicts:
+
+| Caption part | Source |
+|---|---|
+| hook | `reels.config.mjs` — `title` + `subtitle` |
+| explanation | `DSA_TOPICS[topic].overview.what` / `.why` |
+| complexity | the matching row of `VISUALIZER_CONTENT[topic].complexity`, or the reel's `cx` |
+| "gets asked as" | `DSA_TOPICS[topic].interviewQuestions[0]` |
+| YouTube long description | `VISUALIZER_CONTENT[topic].faqs[0]` |
+| hashtags | `CORE_TAGS` + `TOPIC_TAGS` in `reel-captions.mjs` |
+
+`DSA_TOPICS.overview` is preferred over the article intro because the on-page
+copy is page-relative — it says things like "the visualizer above", which is
+meaningless in a caption. Any sentence containing that phrasing is filtered out.
+
+### Complexity matching, and the `cx` override
+
+Complexity is looked up by matching the reel title against the topic's
+complexity table: exact match, then prefix, then a ranked distinctive-token
+match. **If no clear winner exists it prints nothing rather than guessing** — an
+early version matched "Merge Sort" to the *Bubble Sort* row (both labels contain
+"sort") and published O(n²) for merge sort.
+
+Reel titles are written for humans ("Breadth-First Search") while tables use the
+short form ("BFS"), which lexical matching cannot bridge. For those, set `cx`
+explicitly on the reel and it wins over any lookup:
+
+```js
+{ topic: 'graphs', track: 'bfs', cx: 'Time: O(V + E) · Space: O(V)',
+  title: 'Breadth-First Search', subtitle: 'O(V+E) — shortest path, unweighted' },
+```
+
+36 of the 65 reels use `cx`; all 65 carry a correct complexity line. When adding
+a reel, check with `node scripts/reel-captions.mjs <topic>:<track> --stdout` and
+add `cx` if the complexity line is missing.
+
+### Tune the voice
+
+The hashtag sets and CTA wording are defaults, not gospel. They live at the top
+of `reel-captions.mjs` (`CORE_TAGS`, `TOPIC_TAGS`) and in the three template
+strings inside `build()`. Worth a pass in your own voice — that copy reads as
+you, not as a tool.
 
 ---
 
@@ -226,6 +323,12 @@ All knobs live in `scripts/reels.config.mjs`.
 ---
 
 ## Adding a reel
+
+Captions come along automatically — a new entry in `REELS` is picked up by
+`reel-captions.mjs` with no extra work. Add `cx` if the title will not match a
+complexity row (check with `node scripts/reel-captions.mjs <topic>:<track>
+--stdout`).
+
 
 1. Find a valid track slug in the relevant `src/store/visualizers/*Store.js`.
 2. Append an entry to `REELS`.

@@ -67,7 +67,7 @@ export const hashTableLogic = {
     ]
   },
 
-  'separate-chaining': {
+  'hash-table-separate-chaining': {
     title: 'Collision Resolution via Separate Chaining',
     input: 'Insert "apple"(3), "banana"(5), "cherry"(3) → collision at bucket 3',
     goal: 'Handle hash collisions by maintaining a linked list of entries at each bucket index.',
@@ -200,7 +200,7 @@ export const hashTableLogic = {
     ]
   },
 
-  'linear-probing': {
+  'hash-table-linear-probing': {
     title: 'Open Addressing — Linear Probing',
     input: 'Insert "keyA"(slot 2), "keyB"(slot 2) → collision, probe to slot 3',
     goal: 'Resolve hash collision by probing linearly to the next empty slot.',
@@ -320,7 +320,7 @@ export const hashTableLogic = {
     ]
   },
 
-  'two-sum-hash': {
+  'hash-table-two-sum-hash': {
     title: 'Two Sum via Hash Map O(N)',
     input: 'Array = [2, 7, 11, 15], Target = 9',
     goal: 'Find two numbers that add to target 9 using hash map for O(1) complement lookup.',
@@ -408,7 +408,7 @@ export const hashTableLogic = {
     ]
   },
 
-  'group-anagrams': {
+  'hash-table-group-anagrams': {
     title: 'Group Anagrams via Canonical Hash Keys O(N × K log K)',
     input: 'Words = ["eat", "tea", "tan", "ate"]',
     goal: 'Group strings that are anagrams by using sorted characters as canonical hash map keys.',

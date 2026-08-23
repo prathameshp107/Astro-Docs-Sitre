@@ -60,7 +60,7 @@ export const treeLogic = {
     ]
   },
 
-  'inorder': {
+  'trees-inorder': {
     title: 'Inorder Traversal (Left ➔ Root ➔ Right) O(N)',
     input: 'Binary Search Tree Root = 4',
     goal: 'Recursively traverse left subtree, visit current node, then traverse right subtree (yields sorted BST sequence).',
@@ -273,7 +273,7 @@ export const treeLogic = {
     ]
   },
 
-  'preorder': {
+  'trees-preorder': {
     title: 'Preorder Traversal (Root ➔ Left ➔ Right) O(N)',
     input: 'Binary Search Tree Root = 4',
     goal: 'Visit root node immediately before children, then recursively traverse left and right subtrees (used for tree copying & serialization).',
@@ -441,7 +441,7 @@ export const treeLogic = {
     ]
   },
 
-  'postorder': {
+  'trees-postorder': {
     title: 'Postorder Traversal (Left ➔ Right ➔ Root) O(N)',
     input: 'Binary Search Tree Root = 4',
     goal: 'Traverse left and right subtrees before visiting the parent node (used for tree deletion & bottom-up calculations).',
@@ -609,7 +609,7 @@ export const treeLogic = {
     ]
   },
 
-  'bst-search': {
+  'trees-bst-search': {
     title: 'BST Search O(log N)',
     input: 'Binary Search Tree Root = 4, Target = 5',
     goal: 'Exploit binary search tree ordering property (left < node < right) to search in logarithmic time.',
