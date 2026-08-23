@@ -354,6 +354,147 @@ const DIJKSTRA_STEPS = [
   },
 ];
 
+// ── Number of Islands ──────────────────────────────────────────────────────
+// Generated rather than hand-authored. See VISUALIZERS.md -> "Or generate the
+// steps instead"; trieStore.js is the reference for the pattern.
+
+const ISLAND_GRID = [
+  ['1', '1', '0', '0', '0'],
+  ['1', '1', '0', '0', '0'],
+  ['0', '0', '1', '0', '0'],
+  ['0', '0', '0', '1', '1'],
+];
+
+const ISLANDS_CODE = [
+  { line: 1, text: 'count = 0' },
+  { line: 2, text: 'for each cell (r, c):' },
+  { line: 3, text: '  if grid[r][c] == "1":' },
+  { line: 4, text: '    count += 1' },
+  { line: 5, text: '    flood(r, c)   // sink the whole island' },
+  { line: 6, text: 'return count' },
+];
+
+/**
+ * Cell states used by the grid renderer:
+ *   water   '0'
+ *   land    unvisited '1'
+ *   cursor  the scan position
+ *   filling currently being sunk by the flood
+ *   sunk    already counted
+ */
+function* traceNumberOfIslands(grid) {
+  const rows = grid.length, cols = grid[0].length;
+  const cell = grid.map((r) => [...r]);            // mutable working copy
+  const state = grid.map((r) => r.map((v) => (v === '1' ? 'land' : 'water')));
+  let count = 0;
+
+  const snap = (cursor, extra = {}) => ({
+    cellGrid: state.map((row, r) => row.map((s, c) => ({ v: cell[r][c], s }))),
+    cursor,
+    islands: count,
+    ...extra,
+  });
+
+  yield {
+    activeLine: 1,
+    ...snap(null),
+    status: 'init',
+    state: { grid: `${rows} x ${cols}`, count: 0 },
+    title: 'Start with count = 0',
+    computation: 'count = 0',
+    comparison: 'nothing scanned yet',
+    action: 'Init',
+    desc: `A ${rows} x ${cols} grid where "1" is land and "0" is water. Scan every cell; each time an unvisited piece of land turns up, that is a new island — then sink all of its connected land so it is never counted twice.`,
+  };
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (state[r][c] !== 'land') continue;        // water, or already sunk
+
+      count += 1;
+      state[r][c] = 'filling';
+
+      yield {
+        activeLine: 4,
+        ...snap([r, c]),
+        status: 'found',
+        state: { cell: `(${r}, ${c})`, value: '1', count },
+        title: `New island #${count} found at (${r}, ${c})`,
+        computation: `count = ${count}`,
+        comparison: 'grid[r][c] == "1" ✅',
+        action: `Island #${count}`,
+        desc: `(${r}, ${c}) is land that has not been visited, so it belongs to an island nothing has counted yet. Increment the count to ${count}, then flood outwards to sink every cell connected to it.`,
+      };
+
+      // Iterative flood fill so the trace shows the frontier explicitly.
+      const stack = [[r, c]];
+      let sunk = 0;
+      while (stack.length) {
+        const [cr, cc] = stack.pop();
+        if (cr < 0 || cc < 0 || cr >= rows || cc >= cols) continue;
+        if (state[cr][cc] === 'water' || state[cr][cc] === 'sunk') continue;
+
+        state[cr][cc] = 'sunk';
+        cell[cr][cc] = '0';                        // sunk land becomes water
+        sunk += 1;
+
+        for (const [dr, dc] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nr = cr + dr, nc = cc + dc;
+          if (nr >= 0 && nc >= 0 && nr < rows && nc < cols && state[nr][nc] === 'land') {
+            state[nr][nc] = 'filling';
+            stack.push([nr, nc]);
+          }
+        }
+
+        yield {
+          activeLine: 5,
+          ...snap([cr, cc]),
+          status: 'flood',
+          state: { sinking: `(${cr}, ${cc})`, 'island size': sunk, count },
+          title: `Sink (${cr}, ${cc}) — island #${count}, cell ${sunk}`,
+          computation: `grid[${cr}][${cc}] = "0"`,
+          comparison: `${stack.length} cell${stack.length === 1 ? '' : 's'} queued`,
+          action: 'Flood',
+          desc: `Mark (${cr}, ${cc}) as water so it cannot be revisited, then queue its four neighbours that are still land. Sinking as you go is what stops the same island being counted again — no separate visited set is needed.`,
+        };
+      }
+
+      yield {
+        activeLine: 2,
+        ...snap(null),
+        status: 'island-done',
+        state: { 'island #': count, size: sunk, count },
+        title: `Island #${count} fully sunk (${sunk} cell${sunk === 1 ? '' : 's'})`,
+        computation: `island #${count} = ${sunk} cells`,
+        comparison: 'flood complete',
+        action: 'Resume scan',
+        desc: `Island #${count} is entirely water now, so the scan can continue from where it left off without ever seeing this island again.`,
+      };
+    }
+  }
+
+  yield {
+    activeLine: 6,
+    ...snap(null),
+    status: 'done',
+    state: { result: count, cells: rows * cols },
+    title: `NUMBER OF ISLANDS COMPLETE 🎉 — ${count}`,
+    computation: `return ${count}`,
+    comparison: `${count} islands found`,
+    action: 'Done',
+    desc: `Every cell has been visited once, so the answer is ${count}. Time is O(rows x cols) — each cell is scanned once and sunk at most once — and space is O(rows x cols) for the flood stack in the worst case.`,
+  };
+}
+
+/** Exported so graphLogic can derive its steps from the same trace. */
+export function buildIslandsSteps() {
+  return [...traceNumberOfIslands(ISLAND_GRID)];
+}
+
+export { ISLANDS_CODE, ISLAND_GRID };
+
+const NUMBER_OF_ISLANDS_STEPS = buildIslandsSteps();
+
 export const useGraphStore = create((set, get) => ({
   track: 'bfs',
   steps: BFS_STEPS,
@@ -372,6 +513,8 @@ export const useGraphStore = create((set, get) => ({
       set({ track: 'cycle-detection', steps: CYCLE_STEPS, currentStep: 0, isPlaying: false });
     } else if (track === 'dijkstra') {
       set({ track: 'dijkstra', steps: DIJKSTRA_STEPS, currentStep: 0, isPlaying: false });
+    } else if (track === 'number-of-islands') {
+      set({ track: 'number-of-islands', steps: NUMBER_OF_ISLANDS_STEPS, currentStep: 0, isPlaying: false });
     }
   },
 

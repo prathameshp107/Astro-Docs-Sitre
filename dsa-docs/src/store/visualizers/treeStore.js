@@ -436,6 +436,153 @@ const BST_SEARCH_STEPS = [
   },
 ];
 
+// ── Level Order & Invert ───────────────────────────────────────────────────
+// Generated traces over the same 7-node tree the diagram draws:
+//        4
+//     2     6
+//   1  3  5  7
+
+const TREE_SHAPE = {
+  4: [2, 6], 2: [1, 3], 6: [5, 7], 1: [], 3: [], 5: [], 7: [],
+};
+
+export const LEVEL_ORDER_CODE = [
+  { line: 1, text: 'queue = [root]' },
+  { line: 2, text: 'while queue not empty:' },
+  { line: 3, text: '  node = queue.shift()' },
+  { line: 4, text: '  visit(node)' },
+  { line: 5, text: '  queue.push(node.left, node.right)' },
+];
+
+export const INVERT_CODE = [
+  { line: 1, text: 'if node == null: return' },
+  { line: 2, text: 'swap(node.left, node.right)' },
+  { line: 3, text: 'invert(node.left)' },
+  { line: 4, text: 'invert(node.right)' },
+];
+
+function* traceLevelOrder() {
+  const queue = [4];
+  const visited = [];
+
+  yield {
+    activeLine: 1,
+    activeNode: 4, visited: [], stack: ['queue: [4]'],
+    state: { queue: '[4]', visited: '[]' },
+    title: 'Seed the queue with the root',
+    computation: 'queue = [4]',
+    comparison: 'queue not empty',
+    action: 'Init',
+    desc: 'Level-order traversal is breadth-first search on a tree. A queue is what makes it level by level: nodes come out in the order they went in, so a whole level is emitted before any of its children.',
+  };
+
+  while (queue.length) {
+    const node = queue.shift();
+    visited.push(node);
+    const kids = TREE_SHAPE[node] ?? [];
+    queue.push(...kids);
+
+    yield {
+      activeLine: kids.length ? 5 : 4,
+      activeNode: node,
+      visited: [...visited],
+      stack: [`queue: [${queue.join(', ')}]`],
+      state: { visiting: node, queue: `[${queue.join(', ')}]`, output: `[${visited.join(', ')}]` },
+      title: `Visit ${node}${kids.length ? ` — enqueue ${kids.join(' and ')}` : ' (leaf)'}`,
+      computation: `visit(${node})${kids.length ? `, push ${kids.join(', ')}` : ''}`,
+      comparison: `${queue.length} node${queue.length === 1 ? '' : 's'} queued`,
+      action: `Visit ${node}`,
+      desc: kids.length
+        ? `Take ${node} off the front and record it, then push its children ${kids.join(' and ')} to the back. Because they go behind everything already queued, this level finishes before they are reached.`
+        : `${node} is a leaf, so nothing is enqueued. Output so far: [${visited.join(', ')}].`,
+    };
+  }
+
+  yield {
+    activeLine: 2,
+    activeNode: null,
+    visited: [...visited],
+    stack: ['queue: [] (empty)'],
+    state: { output: `[${visited.join(', ')}]`, result: 'level by level' },
+    title: 'LEVEL ORDER COMPLETE 🎉',
+    computation: `[${visited.join(', ')}]`,
+    comparison: 'queue empty',
+    action: 'Done',
+    desc: `The queue is empty, so every node has been visited: [${visited.join(', ')}]. Read it back and the levels are intact — 4, then 2 6, then 1 3 5 7. Swapping the queue for a stack would turn this into a depth-first traversal.`,
+  };
+}
+
+function* traceInvert() {
+  // children[node] mutates as the swap happens, so the trace shows real state.
+  const children = Object.fromEntries(Object.entries(TREE_SHAPE).map(([k, v]) => [k, [...v]]));
+  const done = [];
+
+  yield {
+    activeLine: 1,
+    activeNode: 4, visited: [], stack: ['invert(4)'],
+    state: { root: 4, swapped: 0 },
+    title: 'Invert the tree by swapping children',
+    computation: 'invert(root)',
+    comparison: 'node != null',
+    action: 'Init',
+    desc: 'Inverting a binary tree means mirroring it: every node swaps its left and right child, all the way down. The whole algorithm is one swap plus two recursive calls — which is why it is a classic warm-up question.',
+  };
+
+  const order = [4, 2, 1, 3, 6, 5, 7];         // pre-order, matching the code
+  for (const node of order) {
+    const kids = children[node];
+    if (kids.length === 2) {
+      children[node] = [kids[1], kids[0]];
+      done.push(node);
+      yield {
+        activeLine: 2,
+        activeNode: node,
+        visited: [...done],
+        stack: [`invert(${node})`],
+        state: { node, before: `[${kids.join(', ')}]`, after: `[${children[node].join(', ')}]` },
+        title: `Swap children of ${node}: ${kids.join(' / ')} → ${children[node].join(' / ')}`,
+        computation: `swap(${kids[0]}, ${kids[1]})`,
+        comparison: 'two children',
+        action: `Swap at ${node}`,
+        desc: `Node ${node} had ${kids[0]} on the left and ${kids[1]} on the right; after the swap they are reversed. Recursion then repeats this at every descendant, so one local swap per node mirrors the entire tree.`,
+      };
+    } else {
+      done.push(node);
+      yield {
+        activeLine: 1,
+        activeNode: node,
+        visited: [...done],
+        stack: [`invert(${node})`],
+        state: { node, children: 'none' },
+        title: `${node} is a leaf — nothing to swap`,
+        computation: 'return',
+        comparison: 'no children',
+        action: `Base case ${node}`,
+        desc: `${node} has no children, so the recursion hits its base case and returns immediately. Leaves are where the recursion stops.`,
+      };
+    }
+  }
+
+  yield {
+    activeLine: 4,
+    activeNode: null,
+    visited: [...done],
+    stack: ['done'],
+    state: { swaps: 3, result: 'mirrored' },
+    title: 'INVERT COMPLETE 🎉',
+    computation: '3 swaps, 7 nodes visited',
+    comparison: 'tree mirrored',
+    action: 'Done',
+    desc: 'Every node has been visited once, so the cost is O(n) time and O(h) stack space. Only the three internal nodes needed a swap; the four leaves were base cases. An in-order traversal of the result now reads descending rather than ascending.',
+  };
+}
+
+export function buildLevelOrderSteps() { return [...traceLevelOrder()]; }
+export function buildInvertSteps() { return [...traceInvert()]; }
+
+const LEVEL_ORDER_STEPS = buildLevelOrderSteps();
+const INVERT_STEPS = buildInvertSteps();
+
 export const useTreeStore = create((set, get) => ({
   track: 'inorder',
   steps: INORDER_STEPS,
@@ -454,6 +601,10 @@ export const useTreeStore = create((set, get) => ({
       set({ track: 'postorder', steps: POSTORDER_STEPS, currentStep: 0, isPlaying: false });
     } else if (track === 'bst-search') {
       set({ track: 'bst-search', steps: BST_SEARCH_STEPS, currentStep: 0, isPlaying: false });
+    } else if (track === 'level-order') {
+      set({ track: 'level-order', steps: LEVEL_ORDER_STEPS, currentStep: 0, isPlaying: false });
+    } else if (track === 'invert') {
+      set({ track: 'invert', steps: INVERT_STEPS, currentStep: 0, isPlaying: false });
     }
   },
 

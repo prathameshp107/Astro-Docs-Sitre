@@ -110,6 +110,8 @@ const TOPIC_TRACKS = {
       { id: 'preorder', label: '2. Preorder Traversal', subtitle: 'Root → Left → Right · O(n)' },
       { id: 'postorder', label: '3. Postorder Traversal', subtitle: 'Left → Right → Root · O(n)' },
       { id: 'bst-search', label: '4. BST Search', subtitle: 'Subtree halving lookup · O(log n)' },
+      { id: 'level-order', label: '5. Level Order (BFS)', subtitle: 'Queue · level by level output' },
+      { id: 'invert', label: '6. Invert Binary Tree', subtitle: 'Swap children · mirror the tree' },
     ],
   },
   graphs: {
@@ -120,6 +122,7 @@ const TOPIC_TRACKS = {
       { id: 'dfs', label: '2. DFS Traversal', subtitle: 'Recursion stack deep search · O(V + E)' },
       { id: 'cycle-detection', label: '3. Cycle Detection', subtitle: 'Undirected back-edge scan' },
       { id: 'dijkstra', label: '4. Dijkstra Shortest Path', subtitle: 'Greedy min-distance relaxation' },
+      { id: 'number-of-islands', label: '5. Number of Islands', subtitle: 'Grid flood fill · count connected land' },
     ],
   },
   stack: {
@@ -169,6 +172,7 @@ const TOPIC_TRACKS = {
       { id: 'knapsack', label: '2. 0/1 Knapsack', subtitle: '2D DP table grid optimization' },
       { id: 'lcs', label: '3. LCS Subsequence', subtitle: '2D grid character matching' },
       { id: 'coin-change', label: '4. Coin Change', subtitle: '1D minimum coins memoization' },
+      { id: 'unique-paths', label: '5. Unique Paths', subtitle: 'Grid DP · above + left' },
     ],
   },
   'hash-table': {

@@ -53,6 +53,20 @@ const SPECIFIC_PROBLEM_LOGIC = {
   ...trieLogic,
 };
 
+// Grid cell states for the generic cellGrid renderer.
+//
+// Reused by any grid track — islands, Unique Paths, Rotting Oranges, Word
+// Search — so states are named by role rather than by problem. A track only
+// needs to emit { v, s } cells; unknown states fall back to the neutral style.
+const CELL_STYLE = {
+  water:   'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-slate-600',
+  land:    'border-emerald-500/50 bg-emerald-500/10 text-emerald-300',
+  filling: 'border-amber-400 bg-amber-500/25 text-amber-200 font-bold',
+  sunk:    'border-slate-700 bg-slate-800/40 text-slate-500',
+  filled:  'border-sky-400/60 bg-sky-500/15 text-sky-200',
+  target:  'border-rose-400 bg-rose-500/20 text-rose-200 font-bold',
+};
+
 // Trie Canvas Diagram Layout — computed rather than a fixed coordinate table
 // like TREE_DIAGRAM_NODES, because the trie grows as words are inserted and the
 // user can supply their own word list. Leaves pack left-to-right; each parent
@@ -424,7 +438,54 @@ export default function LogicSection({ topicId }) {
                   Step Visual Canvas Diagram (State at Step #{st.stepNum})
                 </div>
 
-                {st.nodes ? (
+                {st.cellGrid ? (
+                  /* Generic grid renderer — see CELL_STYLE. Keyed on cellGrid so
+                     any grid-based track reuses it without a new branch. */
+                  <div className="flex flex-col items-center w-full my-2">
+                    <div className="inline-block sketch-border rounded-2xl p-3 bg-[var(--sketch-bg)]">
+                      {st.cellGrid.map((row, r) => (
+                        <div key={r} className="flex">
+                          {row.map((cellObj, c) => {
+                            const isCursor = st.cursor && st.cursor[0] === r && st.cursor[1] === c;
+                            const tone = CELL_STYLE[cellObj.s] ?? CELL_STYLE.water;
+                            return (
+                              <div
+                                key={`${r}-${c}`}
+                                className={`w-14 h-14 md:w-16 md:h-16 m-0.5 rounded-xl border-2 flex items-center justify-center font-mono text-lg md:text-xl transition-all ${tone} ${
+                                  isCursor ? 'ring-4 ring-amber-400/60 scale-105 z-10' : ''
+                                }`}
+                              >
+                                {cellObj.v}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 w-full flex flex-wrap items-center justify-between gap-2 bg-[var(--sketch-bg)] px-4 py-2 rounded-xl border border-[var(--sketch-border)] font-mono text-xs shadow-md">
+                      <div className="flex items-center gap-4">
+                        {st.islands !== undefined && (
+                          <span className="text-amber-400 font-bold">
+                            islands: <span className="text-emerald-300">{st.islands}</span>
+                          </span>
+                        )}
+                        {st.cursor && (
+                          <span className="text-slate-400">
+                            at ({st.cursor[0]}, {st.cursor[1]})
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-slate-500">{st.comparison}</span>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-4 mt-3 text-[11px] font-mono text-slate-400">
+                      <span><span className="text-emerald-300">\u25A0</span> land</span>
+                      <span><span className="text-amber-300">\u25A0</span> flooding</span>
+                      <span><span className="text-slate-500">\u25A0</span> sunk / water</span>
+                    </div>
+                  </div>
+                ) : st.nodes ? (
                   /* 0. Trie Canvas Diagram — mirrors the binary-tree branch
                      below: no tinted panel, dashed SVG edges that light amber
                      along the active path, and absolutely positioned nodes. */

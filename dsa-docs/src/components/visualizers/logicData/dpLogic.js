@@ -1,4 +1,19 @@
+import { buildUniquePathsSteps } from '../../../store/visualizers/dpStore.js';
 export const dpLogic = {
+  'dp-unique-paths': {
+    title: 'DP — Unique Paths on a Grid',
+    input: 'grid = 3 x 4, moves = right or down',
+    goal: 'Fill each cell with the number of ways to reach it, so the answer accumulates in the bottom-right.',
+    terms: {
+      'Grid DP': 'Each cell is a subproblem answered from its neighbours, so one pass over the grid solves everything.',
+      'above + left': 'The only legal moves are right and down, so a cell can only be entered from above or from the left.',
+      'Base edges': 'The first row and column are all 1 — there is exactly one way to travel along an edge.',
+      'Rolling row': 'Only the previous row is ever read, so O(m x n) space collapses to O(n).',
+    },
+    array: [],
+    steps: buildUniquePathsSteps().map((x, i) => ({ ...x, stepNum: i + 1, array: [] })),
+  },
+
   'dp': {
     title: 'Dynamic Programming (Memoization vs Tabulation)',
     input: 'Climbing Stairs N = 5',

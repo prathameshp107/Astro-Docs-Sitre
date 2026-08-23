@@ -23,6 +23,21 @@ const POSTORDER_CODE = [
   { line: 4, text: 'visit(node.val)' },
 ];
 
+const LEVEL_ORDER_CODE = [
+  { line: 1, text: 'queue = [root]' },
+  { line: 2, text: 'while queue not empty:' },
+  { line: 3, text: '  node = queue.shift()' },
+  { line: 4, text: '  visit(node)' },
+  { line: 5, text: '  queue.push(node.left, node.right)' },
+];
+
+const INVERT_CODE = [
+  { line: 1, text: 'if node == null: return' },
+  { line: 2, text: 'swap(node.left, node.right)' },
+  { line: 3, text: 'invert(node.left)' },
+  { line: 4, text: 'invert(node.right)' },
+];
+
 const BST_SEARCH_CODE = [
   { line: 1, text: 'if node == null or node.val == target: return node' },
   { line: 2, text: 'if target < node.val: return search(node.left, target)' },
@@ -101,6 +116,10 @@ export default function TreeVisualizer() {
       ? PREORDER_CODE
       : track === 'postorder'
       ? POSTORDER_CODE
+      : track === 'level-order'
+      ? LEVEL_ORDER_CODE
+      : track === 'invert'
+      ? INVERT_CODE
       : BST_SEARCH_CODE;
 
   const trackLabel = TRACK_TITLES[track] || 'Tree Algorithm';

@@ -1,4 +1,21 @@
+import { buildIslandsSteps, ISLAND_GRID } from '../../../store/visualizers/graphStore.js';
+
 export const graphLogic = {
+  'graphs-number-of-islands': {
+    title: 'Graphs — Number of Islands (Flood Fill)',
+    input: `grid = ${JSON.stringify(ISLAND_GRID.map((r) => r.join('')))}`,
+    goal: 'Count connected groups of land by scanning every cell and sinking each island the moment it is found, so no island is counted twice.',
+    terms: {
+      'Flood fill': 'Spreading from one cell to its connected neighbours until the whole region is covered — the grid equivalent of a graph traversal.',
+      'Sinking': 'Overwriting visited land with water. It replaces a separate visited set: a sunk cell simply fails the land check later.',
+      '4-directional': 'Only up, down, left and right count as connected here. Allowing diagonals would merge some of these islands.',
+      'O(rows x cols)': 'Every cell is scanned once and sunk at most once, so the total work is linear in the number of cells.',
+    },
+    array: [],
+    // Derived from the store's generator, so the step counts cannot drift.
+    steps: buildIslandsSteps().map((s, i) => ({ ...s, stepNum: i + 1, array: [] })),
+  },
+
   'graphs': {
     title: 'Graph Traversals & Algorithms Overview',
     input: 'Graph = 6 Vertices (0 to 5), Edges = [(0-1, 4), (0-2, 2), (1-3, 3), (1-4, 1), (2-4, 3), (3-5, 2), (4-5, 3)]',

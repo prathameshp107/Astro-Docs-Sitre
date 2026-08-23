@@ -1,4 +1,31 @@
+import { buildLevelOrderSteps, buildInvertSteps } from '../../../store/visualizers/treeStore.js';
 export const treeLogic = {
+  'trees-level-order': {
+    title: 'Trees — Level Order Traversal (BFS)',
+    input: 'tree = [4, 2, 6, 1, 3, 5, 7]',
+    goal: 'Emit nodes level by level using a queue, completing each level before descending.',
+    terms: {
+      'Level order': 'Breadth-first traversal — every node of a level is visited before any node of the next.',
+      'Queue': 'FIFO ordering is what produces level-by-level output. A stack in its place gives depth-first instead.',
+      'Frontier': 'The set of nodes discovered but not yet visited — the queue contents at any moment.',
+    },
+    array: [],
+    steps: buildLevelOrderSteps().map((x, i) => ({ ...x, stepNum: i + 1, array: [] })),
+  },
+
+  'trees-invert': {
+    title: 'Trees — Invert Binary Tree',
+    input: 'tree = [4, 2, 6, 1, 3, 5, 7]',
+    goal: 'Mirror the tree by swapping the children of every node, recursing to the leaves.',
+    terms: {
+      'Mirror': 'Every node exchanges its left and right child, so the whole tree is reflected.',
+      'Base case': 'A leaf (or null) has nothing to swap, which is where the recursion stops.',
+      'O(n) / O(h)': 'Each node is visited once; the stack holds at most the height of the tree.',
+    },
+    array: [],
+    steps: buildInvertSteps().map((x, i) => ({ ...x, stepNum: i + 1, array: [] })),
+  },
+
   'trees': {
     title: 'Binary Tree & BST Operations',
     input: 'Binary Search Tree = Root 4 [Left: 2 (1, 3), Right: 6 (5, 7)]',
