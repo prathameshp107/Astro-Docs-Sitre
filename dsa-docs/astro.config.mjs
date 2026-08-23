@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
@@ -706,5 +707,37 @@ export default defineConfig({
         `,
       },
     ],
-  }), mdx(), react()],
+  }), mdx(), react(), sitemap({
+    // Exclude private/auth pages from sitemap
+    filter: (page) =>
+      !page.includes('/auth/') &&
+      !page.includes('/u/') &&
+      !page.includes('/review/') &&
+      !page.includes('/plans/'),
+    // Serialize pages with priority/changefreq hints for Google
+    serialize(item) {
+      // Home and visualizer hub get highest priority
+      if (item.url === 'https://interviewpreprationbuddy.in/' ||
+          item.url === 'https://interviewpreprationbuddy.in/visualizer/') {
+        return { ...item, priority: 1.0, changefreq: 'weekly' };
+      }
+      // Visualizer pages — high traffic, high priority
+      if (item.url.includes('/visualizer/')) {
+        return { ...item, priority: 0.9, changefreq: 'weekly' };
+      }
+      // DSA, system-design, LLD content pages
+      if (item.url.includes('/DSA-Notes-Problems/') ||
+          item.url.includes('/system-design/') ||
+          item.url.includes('/lld/') ||
+          item.url.includes('/ai/')) {
+        return { ...item, priority: 0.8, changefreq: 'monthly' };
+      }
+      // Striver / interview pages
+      if (item.url.includes('/striver-') ||
+          item.url.includes('/interview-')) {
+        return { ...item, priority: 0.85, changefreq: 'monthly' };
+      }
+      return { ...item, priority: 0.7, changefreq: 'monthly' };
+    },
+  })],
 });
