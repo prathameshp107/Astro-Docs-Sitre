@@ -151,7 +151,12 @@ function build(reel) {
   const tags = [...(TOPIC_TAGS[topic] ?? []), ...CORE_TAGS].slice(0, 14).join(' ');
 
   // ── Instagram / TikTok: hook, payoff, CTA, tags ────────────────────────
+  // The site URL leads every caption: Instagram does not linkify caption text,
+  // so putting it first maximises the chance it is read and remembered rather
+  // than buried under a "more" fold.
   const igLines = [
+    SITE + '/',
+    '',
     hook,
     '',
     explain,
@@ -173,6 +178,8 @@ function build(reel) {
     ytTitle,
     '',
     'DESCRIPTION:',
+    SITE + '/',
+    '',
     explain,
     '',
     cx ? `Complexity — ${cx}` : null,
@@ -187,6 +194,8 @@ function build(reel) {
 
   // ── LinkedIn: no hashtag spam, lead with the insight ──────────────────
   const linkedin = [
+    SITE + '/',
+    '',
     `${title}: ${subtitle}`,
     '',
     explain,

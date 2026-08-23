@@ -40,7 +40,7 @@ export default [
     id: 'react-3',
     technology: 'react',
     topic: 'Custom Hooks',
-    difficulty: 'intermediate',
+    difficulty: 'medium',
     question: 'What must a custom hook start with?',
     codeSnippet: `// Which is a valid custom hook name?`,
     options: ['useFetch', 'fetchData', 'use_fetch', 'UseData'],
