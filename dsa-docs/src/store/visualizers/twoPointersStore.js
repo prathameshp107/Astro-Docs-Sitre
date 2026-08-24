@@ -587,6 +587,208 @@ const SORT_COLORS_STEPS = [
   },
 ];
 
+// ─── 9. TRAPPING RAIN WATER ─────────────────────────────────────────────────
+const TRAP_WATER_STEPS = [
+  {
+    activeLine: 1,
+    left: 0, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { keyInsight: 'Water at any bar = min(maxLeft, maxRight) - height. Two pointers track running maxes from each end.', leftMax: 0, rightMax: 1, water: 0 },
+    desc: '💡 Key insight: Water trapped at index i = min(maxLeft, maxRight) - height[i]. Use two pointers: process the shorter side first.',
+  },
+  {
+    activeLine: 2,
+    left: 0, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 0, right: 11, leftMax: 0, rightMax: 1, decision: 'leftMax(0) < rightMax(1) → process left' },
+    desc: 'Step 2: leftMax(0) < rightMax(1). Process left side. height[0]=0, leftMax stays 0. Water += max(0,0-0)=0.',
+  },
+  {
+    activeLine: 3,
+    left: 1, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 1, right: 11, leftMax: 1, decision: 'h[1]=1 → update leftMax=1' },
+    desc: 'Step 3: left=1, height=1. leftMax updated to 1. Water += 0. left++ → left=2.',
+  },
+  {
+    activeLine: 3,
+    left: 2, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 2, leftMax: 1, rightMax: 1, 'water added': 1, totalWater: 1 },
+    desc: 'Step 4: left=2, height=0. Water += leftMax(1) - height(0) = 1. totalWater=1. left++.',
+  },
+  {
+    activeLine: 2,
+    left: 3, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 3, leftMax: 2, 'water added': 0, totalWater: 1 },
+    desc: 'Step 5: left=3, height=2. leftMax updated to 2. Water += 0. left++.',
+  },
+  {
+    activeLine: 3,
+    left: 4, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 4, leftMax: 2, 'water added': 1, totalWater: 2 },
+    desc: 'Step 6: left=4, height=1. Water += leftMax(2)-height(1)=1. totalWater=2.',
+  },
+  {
+    activeLine: 3,
+    left: 5, right: 11,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 5, leftMax: 2, 'water added': 2, totalWater: 4 },
+    desc: 'Step 7: left=5, height=0. Water += leftMax(2)-0=2. totalWater=4!',
+  },
+  {
+    activeLine: 3,
+    left: 6, right: 10,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 6, right: 10, rightMax: 2, 'right side': 'right shrinking...', totalWater: 5 },
+    desc: 'Step 8: Continuing... right side processed similarly. totalWater accumulates.',
+  },
+  {
+    activeLine: 4,
+    left: 6, right: 6,
+    isMatch: true,
+    array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+    state: { left: 6, right: 6, totalWater: 6, status: 'DONE 🎉' },
+    desc: 'Step 9: Pointers meet. Total trapped water = 6 units! Solved in O(n) time, O(1) space with two-pointer technique. 🎉',
+  },
+];
+
+// ─── 10. 4SUM ────────────────────────────────────────────────────────────────
+const FOUR_SUM_STEPS = [
+  {
+    activeLine: 1,
+    left: 2, right: 5,
+    array: [1, 0, -1, 0, -2, 2],
+    state: { keyInsight: '4Sum = Sort + Two outer loops + inner two-pointer. Skip duplicates at every level.', target: 0, step: 'Sort array' },
+    desc: '💡 Key insight: Sort first. Fix i and j, then use two pointers (left, right) for the inner pair. Skip duplicates at i, j, and pointer levels.',
+  },
+  {
+    activeLine: 2,
+    left: 2, right: 5,
+    array: [-2, -1, 0, 0, 1, 2],
+    state: { step: 'Sorted', array: '[-2,-1,0,0,1,2]', i: 0, j: 1, left: 2, right: 5 },
+    desc: 'Step 2: Sorted: [-2,-1,0,0,1,2]. Fix i=0(-2), j=1(-1), left=2(0), right=5(2). Sum = -2-1+0+2 = -1 < 0 → left++.',
+  },
+  {
+    activeLine: 3,
+    left: 3, right: 5,
+    array: [-2, -1, 0, 0, 1, 2],
+    state: { i: 0, j: 1, left: 3, right: 5, sum: '-2-1+0+2=−1', decision: 'left++' },
+    desc: 'Step 3: left=3(0), right=5(2). Sum = -2-1+0+2 = -1 < 0 → left++.',
+  },
+  {
+    activeLine: 3,
+    left: 4, right: 5,
+    array: [-2, -1, 0, 0, 1, 2],
+    state: { i: 0, j: 1, left: 4, right: 5, sum: '-2-1+1+2=0 ✅', quad: '[-2,-1,1,2]' },
+    desc: 'Step 4: left=4(1), right=5(2). Sum = -2-1+1+2 = 0 ✅ FOUND! Quadruplet: [-2,-1,1,2]. left++, right--.',
+  },
+  {
+    activeLine: 3,
+    left: 2, right: 5,
+    array: [-2, -1, 0, 0, 1, 2],
+    state: { i: 0, j: 2, left: 3, right: 5, sum: '-2+0+0+2=0 ✅', quad: '[-2,0,0,2]' },
+    desc: 'Step 5: j=2(0), left=3(0), right=5(2). Sum = -2+0+0+2 = 0 ✅ Quadruplet: [-2,0,0,2].',
+  },
+  {
+    activeLine: 4,
+    left: 3, right: 5,
+    isMatch: true,
+    array: [-2, -1, 0, 0, 1, 2],
+    state: { result: '[[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]', count: 3, status: 'DONE 🎉' },
+    desc: 'Step 6: Continue (dedup). Final quadruplets: [[-2,-1,1,2], [-2,0,0,2], [-1,0,0,1]]. O(n³) time, O(1) space. 🎉',
+  },
+];
+
+// ─── 11. SQUARING A SORTED ARRAY ─────────────────────────────────────────────
+const SQUARE_SORTED_STEPS = [
+  {
+    activeLine: 1,
+    left: 0, right: 6,
+    array: [-4, -1, 0, 3, 10],
+    state: { keyInsight: 'Largest squares come from ends (most negative or most positive). Fill result from right to left using two pointers.', left: 0, right: 4, pos: 4 },
+    desc: '💡 Key insight: After squaring, largest values are at the ends. Two pointers fill result[] from right (largest) to left. Array: [-4,-1,0,3,10].',
+  },
+  {
+    activeLine: 2,
+    left: 0, right: 4,
+    array: [-4, -1, 0, 3, 10],
+    state: { left: 0, right: 4, 'sq[left]=(-4)²': 16, 'sq[right]=(10)²': 100, decision: '100>16 → place 100, right--', result: '[?,?,?,?,100]' },
+    desc: 'Step 2: sq(-4)=16 vs sq(10)=100. 100 is larger. result[4]=100. right-- → right=3.',
+  },
+  {
+    activeLine: 2,
+    left: 0, right: 3,
+    array: [-4, -1, 0, 3, 10],
+    state: { left: 0, right: 3, 'sq[left]': 16, 'sq[right]=(3)²': 9, decision: '16>9 → place 16, left++', result: '[?,?,?,16,100]' },
+    desc: 'Step 3: sq(-4)=16 vs sq(3)=9. 16 is larger. result[3]=16. left++ → left=1.',
+  },
+  {
+    activeLine: 2,
+    left: 1, right: 3,
+    array: [-4, -1, 0, 3, 10],
+    state: { left: 1, right: 3, 'sq[left]=(-1)²': 1, 'sq[right]': 9, decision: '9>1 → place 9, right--', result: '[?,?,9,16,100]' },
+    desc: 'Step 4: sq(-1)=1 vs sq(3)=9. 9 is larger. result[2]=9. right-- → right=2.',
+  },
+  {
+    activeLine: 2,
+    left: 1, right: 2,
+    array: [-4, -1, 0, 3, 10],
+    state: { left: 1, right: 2, 'sq[left]': 1, 'sq[right]=(0)²': 0, decision: '1>0 → place 1, left++', result: '[?,1,9,16,100]' },
+    desc: 'Step 5: sq(-1)=1 vs sq(0)=0. 1 is larger. result[1]=1. left++ → left=2.',
+  },
+  {
+    activeLine: 3,
+    left: 2, right: 2,
+    isMatch: true,
+    array: [-4, -1, 0, 3, 10],
+    state: { result: '[0,1,9,16,100]', status: 'DONE 🎉' },
+    desc: 'Step 6: Pointers meet. Place last element: sq(0)=0, result[0]=0. Final: [0,1,9,16,100] in O(n) time! 🎉',
+  },
+];
+
+// ─── 12. FLOYD'S CYCLE DETECTION ─────────────────────────────────────────────
+const FLOYD_CYCLE_STEPS = [
+  {
+    activeLine: 1,
+    slow: 0, fast: 0,
+    array: [3, 1, 4, 0, 2],
+    state: { keyInsight: 'Slow moves 1 step, fast moves 2 steps. In a cycle, fast laps slow — they must meet inside the loop.', slow: 0, fast: 0, step: 'Init' },
+    desc: '💡 Key insight: Floyd\'s algorithm — slow moves +1, fast moves +2. If a cycle exists, fast will eventually catch slow inside the loop. Array simulates: 3→1→4→0→3 (cycle at index 3).',
+  },
+  {
+    activeLine: 2,
+    slow: 1, fast: 4,
+    array: [3, 1, 4, 0, 2],
+    state: { slow: 'idx 1 (val 1)', fast: 'idx 4 (val 2)', 'slow≠fast': 'continue' },
+    desc: 'Step 2: slow follows arr[0]=3→idx3... fast moves arr[arr[0]]=2→idx2→... After 1 round: slow=idx1, fast=idx4. Not equal, continue.',
+  },
+  {
+    activeLine: 2,
+    slow: 4, fast: 4,
+    array: [3, 1, 4, 0, 2],
+    state: { slow: 'idx 4 (val 2)', fast: 'idx 4 (val 2)', 'slow==fast': 'CYCLE DETECTED ✅' },
+    desc: 'Step 3: slow=idx4, fast=idx4. Pointers MEET → cycle confirmed! The linked list has a cycle.',
+  },
+  {
+    activeLine: 3,
+    slow: 0, fast: 4,
+    array: [3, 1, 4, 0, 2],
+    state: { slow: 'reset to head (idx 0)', fast: 'stays at meeting point (idx 4)', phase: 'Phase 2: find cycle start' },
+    desc: 'Step 4 (Phase 2): Reset slow to head. Move both at speed 1. When they meet again, that\'s the cycle start node.',
+  },
+  {
+    activeLine: 4,
+    slow: 3, fast: 3,
+    isMatch: true,
+    array: [3, 1, 4, 0, 2],
+    state: { cycleStart: 'idx 3 (value 0)', status: 'FOUND 🎉', complexity: 'O(n) time, O(1) space' },
+    desc: 'Step 5: slow and fast meet at idx 3 (value=0). Cycle starts at index 3! O(n) time, O(1) space — no extra set/hash needed. 🎉',
+  },
+];
+
 const TRACK_ARRAYS = {
   intro: [3, 8, 12, 17, 21, 26, 30],
   'two-sum-ii': [2, 7, 11, 15],
@@ -596,6 +798,10 @@ const TRACK_ARRAYS = {
   'move-zeroes': [0, 1, 0, 3, 12],
   'remove-duplicates': [1, 1, 2, 2, 3, 4],
   'sort-colors': [2, 0, 2, 1, 1, 0],
+  'trap-rain-water': [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+  'four-sum': [-2, -1, 0, 0, 1, 2],
+  'square-sorted': [-4, -1, 0, 3, 10],
+  'floyd-cycle': [3, 1, 4, 0, 2],
 };
 
 export const useTwoPointersStore = create((set, get) => ({
@@ -633,6 +839,18 @@ export const useTwoPointersStore = create((set, get) => ({
     } else if (trackKey === 'sort-colors') {
       steps = SORT_COLORS_STEPS;
       array = TRACK_ARRAYS['sort-colors'];
+    } else if (trackKey === 'trap-rain-water') {
+      steps = TRAP_WATER_STEPS;
+      array = TRACK_ARRAYS['trap-rain-water'];
+    } else if (trackKey === 'four-sum') {
+      steps = FOUR_SUM_STEPS;
+      array = TRACK_ARRAYS['four-sum'];
+    } else if (trackKey === 'square-sorted') {
+      steps = SQUARE_SORTED_STEPS;
+      array = TRACK_ARRAYS['square-sorted'];
+    } else if (trackKey === 'floyd-cycle') {
+      steps = FLOYD_CYCLE_STEPS;
+      array = TRACK_ARRAYS['floyd-cycle'];
     }
 
     set({ track: trackKey, array, steps, currentStep: 0, isPlaying: false });
