@@ -644,69 +644,132 @@ export const twoPointersLogic = {
 
   'two-pointers-trap-rain-water': {
     title: '9. Trapping Rain Water',
-    input: 'height = [0,1,0,2,1,0,1,3,2,1,2,1]',
+    input: 'height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]',
     goal: 'Calculate total units of water trapped between bars using two-pointer max tracking — O(n) time, O(1) space.',
     terms: {
-      'leftMax': 'Maximum bar height seen so far from the left side. Water above left pointer = leftMax - height[left].',
-      'rightMax': 'Maximum bar height seen so far from the right side. Water above right pointer = rightMax - height[right].',
-      'Shorter side rule': 'Process the side with the smaller max — its water is bounded by that max, regardless of what lies on the other side.',
+      'leftMax': 'Maximum bar height seen so far from the left side. Water above left pointer = max(0, leftMax - height[left]).',
+      'rightMax': 'Maximum bar height seen so far from the right side. Water above right pointer = max(0, rightMax - height[right]).',
+      'Shorter side rule': 'Process the side with smaller max. Its trapped water is guaranteed by its boundary max regardless of the opposite side.',
     },
     array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
     steps: [
       {
-        stepNum: 1, title: 'Step 1: Init left=0, right=11, leftMax=0, rightMax=0, water=0',
+        stepNum: 1, title: 'Step 1: Init left=0, right=11, leftMax=0, rightMax=0, totalWater=0',
         left: 0, right: 11,
         array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
-        computation: 'left=0, right=11, leftMax=0, rightMax=0',
-        comparison: 'Pointers set at both ends',
-        action: 'Start two-pointer loop',
-        desc: 'Initialize two pointers at both ends. leftMax and rightMax track the tallest bars seen from each side.'
+        computation: 'left=0, right=11, leftMax=0, rightMax=0, totalWater=0',
+        comparison: 'Pointers set at both array ends',
+        action: 'Initialize boundaries and start loop',
+        desc: 'Place left pointer at 0 and right pointer at n-1 (11). leftMax and rightMax track the highest elevation walls encountered from each side.'
       },
       {
-        stepNum: 2, title: 'Step 2: leftMax(0) < rightMax(1) → process left, water += 0',
+        stepNum: 2, title: 'Step 2: leftMax(0) <= rightMax(0) → Process left[0]=0',
         left: 0, right: 11,
         array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
-        computation: 'water += max(0, leftMax-h[0]) = max(0, 0-0) = 0',
-        comparison: 'leftMax(0) < rightMax(1) → left side is safe to process',
-        action: 'water += 0, left++',
-        desc: 'leftMax < rightMax means leftMax is the true bottleneck. Water at left = leftMax - h[left] = 0. Move left pointer right.'
+        computation: 'leftMax=max(0,0)=0 | water += max(0, 0-0) = 0 | totalWater=0',
+        comparison: 'leftMax(0) <= rightMax(0) → Left side is the bottleneck',
+        action: 'water += 0, advance left: 0 → 1',
+        desc: 'leftMax <= rightMax means leftMax governs this column. h[0]=0 >= leftMax(0), so leftMax stays 0. Trapped water = 0. Move left to index 1.'
       },
       {
-        stepNum: 3, title: 'Step 3: left=1, h=1 → update leftMax=1, water += 0',
+        stepNum: 3, title: 'Step 3: leftMax(0) <= rightMax(0) → Process left[1]=1 → update leftMax=1',
         left: 1, right: 11,
         array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
-        computation: 'leftMax = max(1,1) = 1; water += max(0, 1-1) = 0',
-        comparison: 'New leftMax bar found — no water here',
-        action: 'leftMax=1, left++',
-        desc: 'h[1]=1 is taller than previous leftMax. Update leftMax=1. No water trapped here since leftMax-h=0.'
+        computation: 'leftMax=max(0,1)=1 | water += max(0, 1-1) = 0 | totalWater=0',
+        comparison: 'h[1]=1 > leftMax(0) → New left elevation barrier found',
+        action: 'leftMax=1, advance left: 1 → 2',
+        desc: 'h[1]=1 is taller than previous leftMax. Update leftMax=1. Since this bar is a boundary peak, 0 water is trapped. Move left to index 2.'
       },
       {
-        stepNum: 4, title: 'Step 4: left=2, h=0 → water += 1 (totalWater=1)',
+        stepNum: 4, title: 'Step 4: leftMax(1) > rightMax(0) → Process right[11]=1 → update rightMax=1',
         left: 2, right: 11,
         array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
-        computation: 'water += max(0, leftMax(1) - h[2](0)) = 1. totalWater=1',
-        comparison: 'leftMax(1) > h[2](0) → traps water',
-        action: 'water += 1, left++',
-        desc: 'h[2]=0, leftMax=1. This cell traps leftMax-h = 1 unit of water. totalWater=1.'
+        computation: 'rightMax=max(0,1)=1 | water += max(0, 1-1) = 0 | totalWater=0',
+        comparison: 'leftMax(1) > rightMax(0) → Right side is now the bottleneck',
+        action: 'rightMax=1, advance right: 11 → 10',
+        desc: 'leftMax(1) > rightMax(0), so we process right. h[11]=1 > rightMax(0), so update rightMax=1. No water trapped on boundary wall. Move right to index 10.'
       },
       {
-        stepNum: 5, title: 'Step 5: Continuing... totalWater accumulates to 6',
-        left: 5, right: 10,
+        stepNum: 5, title: 'Step 5: leftMax(1) <= rightMax(1) → Process left[2]=0 → traps 1 unit 💧',
+        left: 2, right: 10,
         array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
-        computation: 'Cells 3–11 processed: +0+1+2+1+0+0+1+0 = 5 more units',
-        comparison: 'Pointers converging toward center',
-        action: 'Continue loop',
-        desc: 'Each cell below its local max traps water. The two-pointer approach processes every cell exactly once.'
+        computation: 'water += leftMax(1) - h[2](0) = 1 unit | totalWater = 1',
+        comparison: 'h[2]=0 < leftMax(1) → Valley dips below left boundary',
+        action: 'totalWater += 1, advance left: 2 → 3',
+        desc: 'h[2]=0 is lower than leftMax(1). The water trapped above index 2 is leftMax - h[2] = 1 - 0 = 1 unit of rain water! totalWater = 1. Advance left to 3.'
       },
       {
-        stepNum: 6, title: 'Step 6: Pointers meet → Total water = 6 🎉',
-        left: 6, right: 6,
+        stepNum: 6, title: 'Step 6: leftMax(1) <= rightMax(1) → Process left[3]=2 → update leftMax=2',
+        left: 3, right: 10,
         array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
-        computation: 'totalWater = 6 units',
+        computation: 'leftMax=max(1,2)=2 | water += max(0, 2-2) = 0 | totalWater=1',
+        comparison: 'h[3]=2 > leftMax(1) → New taller left barrier established',
+        action: 'leftMax=2, advance left: 3 → 4',
+        desc: 'h[3]=2 exceeds leftMax(1). Update leftMax=2. Bar forms a higher container wall so 0 water sits on it. Move left to index 4.'
+      },
+      {
+        stepNum: 7, title: 'Step 7: leftMax(2) > rightMax(1) → Process right[10]=2 → update rightMax=2',
+        left: 4, right: 10,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'rightMax=max(1,2)=2 | water += max(0, 2-2) = 0 | totalWater=1',
+        comparison: 'leftMax(2) > rightMax(1) → Right is bottleneck, new right barrier',
+        action: 'rightMax=2, advance right: 10 → 9',
+        desc: 'leftMax(2) > rightMax(1) triggers right processing. h[10]=2 > rightMax(1), updating rightMax=2. No water trapped on wall. Move right to index 9.'
+      },
+      {
+        stepNum: 8, title: 'Step 8: leftMax(2) <= rightMax(2) → Process left[4]=1 → traps 1 unit 💧',
+        left: 4, right: 9,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'water += leftMax(2) - h[4](1) = 1 unit | totalWater = 2',
+        comparison: 'h[4]=1 < leftMax(2) → Valley traps water below barrier height 2',
+        action: 'totalWater += 1, advance left: 4 → 5',
+        desc: 'leftMax(2) <= rightMax(2). Water trapped at index 4 is leftMax(2) - h[4](1) = 1 unit. Running totalWater reaches 2. Advance left to 5.'
+      },
+      {
+        stepNum: 9, title: 'Step 9: leftMax(2) <= rightMax(2) → Process left[5]=0 → traps 2 units 💧💧',
+        left: 5, right: 9,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'water += leftMax(2) - h[5](0) = 2 units | totalWater = 4',
+        comparison: 'h[5]=0 < leftMax(2) → Deep basin traps 2 vertical water units',
+        action: 'totalWater += 2, advance left: 5 → 6',
+        desc: 'Deep basin at index 5 with height 0! Trapped water = leftMax(2) - h[5](0) = 2 units of water. Running totalWater jumps to 4. Advance left to 6.'
+      },
+      {
+        stepNum: 10, title: 'Step 10: leftMax(2) <= rightMax(2) → Process left[6]=1 → traps 1 unit 💧',
+        left: 6, right: 9,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'water += leftMax(2) - h[6](1) = 1 unit | totalWater = 5',
+        comparison: 'h[6]=1 < leftMax(2) → Traps water below barrier height 2',
+        action: 'totalWater += 1, advance left: 6 → 7',
+        desc: 'h[6]=1 is lower than leftMax(2). Water trapped = 2 - 1 = 1 unit. Running totalWater reaches 5. Advance left to 7.'
+      },
+      {
+        stepNum: 11, title: 'Step 11: leftMax(2) <= rightMax(2) → Process left[7]=3 → update leftMax=3',
+        left: 7, right: 9,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'leftMax=max(2,3)=3 | water += max(0, 3-3) = 0 | totalWater=5',
+        comparison: 'h[7]=3 > leftMax(2) → Global peak barrier discovered (height 3)',
+        action: 'leftMax=3, advance left: 7 → 8',
+        desc: 'h[7]=3 is the tallest peak in the entire array! leftMax updates to 3. No water sits on the peak. Advance left to 8.'
+      },
+      {
+        stepNum: 12, title: 'Step 12: leftMax(3) > rightMax(2) → Process right[9]=1 → traps 1 unit 💧',
+        left: 8, right: 9,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'water += rightMax(2) - h[9](1) = 1 unit | totalWater = 6',
+        comparison: 'leftMax(3) > rightMax(2) → Right side is bottleneck',
+        action: 'totalWater += 1, advance right: 9 → 8',
+        desc: 'leftMax(3) > rightMax(2) switches control to the right pointer. h[9]=1 < rightMax(2), trapping rightMax(2) - h[9](1) = 1 unit. totalWater reaches 6! Advance right to 8.'
+      },
+      {
+        stepNum: 13, title: 'Step 13: Pointers meet at index 8 (left=8, right=8) → Total Water = 6 🎉',
+        left: 8, right: 8,
+        array: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1],
+        computation: 'left == right == 8 | totalWater = 6 units | Time: O(n), Space: O(1)',
         comparison: 'TRAPPING RAIN WATER COMPLETE 🎉',
-        action: 'Return 6',
+        action: 'Return totalWater = 6',
         isMatch: true,
-        desc: 'All 6 units of water accounted for. O(n) time, O(1) space — no prefix/suffix arrays needed. Pointers meet and loop exits.'
+        desc: 'Pointers meet at index 8! Every cell has been accounted for with O(1) extra space and single O(n) pass. Total trapped rain water is 6 units. 🎉'
       }
     ]
   },
@@ -723,52 +786,85 @@ export const twoPointersLogic = {
     array: [-2, -1, 0, 0, 1, 2],
     steps: [
       {
-        stepNum: 1, title: 'Step 1: Sort → [-2,-1,0,0,1,2], fix i=0(-2)',
-        left: 2, right: 5,
+        stepNum: 1,
+        title: 'Step 1: Sort → [-2,-1,0,0,1,2], fix i=0(-2), j=1(-1)',
+        left: 2,
+        right: 5,
         array: [-2, -1, 0, 0, 1, 2],
-        computation: 'Sort nums. Fix i=0 (val -2). j will iterate from i+1.',
-        comparison: 'Sorted input enables two-pointer on subarray',
-        action: 'Fix i=0, start j=1',
-        desc: 'Sort the array first. Fix i=0 (-2). j starts at i+1=1. Inner left/right pointers will scan j+1 to end.'
-      },
-      {
-        stepNum: 2, title: 'Step 2: i=0,j=1(-1), left=2(0), right=5(2) → sum=-1 < 0',
-        left: 2, right: 5,
-        array: [-2, -1, 0, 0, 1, 2],
-        computation: '-2+(-1)+0+2 = -1 < 0 → left++',
-        comparison: 'Sum too small → move left pointer right',
+        computation: 'Sort nums. Fix i=0 (val -2), j=1 (val -1). left=2 (val 0), right=5 (val 2).',
+        comparison: '-2 + (-1) + 0 + 2 = -1 < target 0',
         action: 'left++ (2→3)',
-        desc: 'Sum = -2-1+0+2 = -1. Less than target 0. Increment left to find a larger 3rd element.'
+        desc: 'Sort the array first. Fix i=0 (-2) and j=1 (-1). Inner two pointers initialize at left=2 (0) and right=5 (2). Sum = -2-1+0+2 = -1 < 0. Advance left to index 3.'
       },
       {
-        stepNum: 3, title: 'Step 3: left=3(0), right=5(2) → sum=0 ✅ FOUND!',
-        left: 3, right: 5,
+        stepNum: 2,
+        title: 'Step 2: i=0, j=1, left=3(0), right=5(2) → sum=-1 < 0',
+        left: 3,
+        right: 5,
         array: [-2, -1, 0, 0, 1, 2],
-        computation: '-2+(-1)+0+2 = 0 ✅ Quadruplet: [-2,-1,0,2]',
-        comparison: 'Sum == target → record quadruplet',
-        action: 'Record [-2,-1,0,2], left++, right--',
-        isMatch: true,
-        desc: 'Sum = -2-1+0+2 = 0. Found quadruplet [-2,-1,0,2]. Advance both pointers and skip duplicates.'
+        computation: '-2 + (-1) + 0 + 2 = -1 < 0',
+        comparison: 'Sum too small → move left pointer right',
+        action: 'left++ (3→4)',
+        desc: 'At left=3 (0) and right=5 (2), sum is still -2 + (-1) + 0 + 2 = -1 < 0. Increment left pointer to index 4 to find a larger value.'
       },
       {
-        stepNum: 4, title: 'Step 4: left=4(1), right=5(2) → sum=0 ✅ [-2,-1,1,2]',
-        left: 4, right: 5,
+        stepNum: 3,
+        title: 'Step 3: i=0, j=1, left=4(1), right=5(2) → sum=0 ✅ MATCH 1',
+        left: 4,
+        right: 5,
         array: [-2, -1, 0, 0, 1, 2],
-        computation: '-2+(-1)+1+2 = 0 ✅ Quadruplet: [-2,-1,1,2]',
-        comparison: 'Sum == target → 2nd quadruplet found',
+        computation: '-2 + (-1) + 1 + 2 = 0 ✅ Quadruplet 1: [-2,-1,1,2]',
+        comparison: 'Sum == target (0 == 0) ✅',
         action: 'Record [-2,-1,1,2], left++, right--',
         isMatch: true,
-        desc: '-2+(-1)+1+2 = 0. 2nd quadruplet found. Continue scanning other (i,j) pairs.'
+        desc: 'Sum = -2 + (-1) + 1 + 2 = 0! Found 1st unique quadruplet: [-2, -1, 1, 2]. Advance both pointers (left=5, right=4). Inner loop finishes for (i=0, j=1).'
       },
       {
-        stepNum: 5, title: 'Step 5: Continue j=2, find [-2,0,0,2] and [-1,0,0,1]',
-        left: 3, right: 5,
+        stepNum: 4,
+        title: 'Step 4: Advance j=2(0), left=3(0), right=5(2) → sum=0 ✅ MATCH 2',
+        left: 3,
+        right: 5,
         array: [-2, -1, 0, 0, 1, 2],
-        computation: 'Result: [[-2,-1,0,2],[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]',
-        comparison: 'All unique quadruplets found',
-        action: 'Return result',
+        computation: '-2 + 0 + 0 + 2 = 0 ✅ Quadruplet 2: [-2,0,0,2]',
+        comparison: 'Sum == target (0 == 0) ✅',
+        action: 'Record [-2,0,0,2], left++, right--',
         isMatch: true,
-        desc: 'All unique quadruplets summing to 0: [[-2,-1,0,2], [-2,-1,1,2], [-2,0,0,2], [-1,0,0,1]]. O(n³) time.'
+        desc: 'Advance outer loop j to index 2 (val 0). Set left=3 (0) and right=5 (2). Sum = -2 + 0 + 0 + 2 = 0! Found 2nd unique quadruplet: [-2, 0, 0, 2]. Skip duplicate j=3.'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Advance i=1(-1), j=2(0), left=3(0), right=5(2) → sum=1 > 0',
+        left: 3,
+        right: 5,
+        array: [-2, -1, 0, 0, 1, 2],
+        computation: '-1 + 0 + 0 + 2 = 1 > 0',
+        comparison: 'Sum too large → move right pointer left',
+        action: 'right-- (5→4)',
+        desc: 'Advance outer loop i to 1 (-1), j to 2 (0). Inner pointers set to left=3 (0) and right=5 (2). Sum = -1 + 0 + 0 + 2 = 1 > 0. Sum is too large, decrement right to index 4.'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: i=1, j=2, left=3(0), right=4(1) → sum=0 ✅ MATCH 3',
+        left: 3,
+        right: 4,
+        array: [-2, -1, 0, 0, 1, 2],
+        computation: '-1 + 0 + 0 + 1 = 0 ✅ Quadruplet 3: [-1,0,0,1]',
+        comparison: 'Sum == target (0 == 0) ✅',
+        action: 'Record [-1,0,0,1], left++, right--',
+        isMatch: true,
+        desc: 'At left=3 (0) and right=4 (1), sum = -1 + 0 + 0 + 1 = 0! Found 3rd unique quadruplet: [-1, 0, 0, 1]. All remaining pairs checked or skipped as duplicates.'
+      },
+      {
+        stepNum: 7,
+        title: 'Step 7: All Unique Quadruplets Found! 🎉',
+        left: 3,
+        right: 4,
+        array: [-2, -1, 0, 0, 1, 2],
+        computation: 'Result: [[-2,-1,1,2], [-2,0,0,2], [-1,0,0,1]] (Total 3)',
+        comparison: '4SUM SEARCH COMPLETE 🎉',
+        action: 'Return 3 unique quadruplets',
+        isMatch: true,
+        desc: 'All 3 unique quadruplets summing to 0 found: [[-2, -1, 1, 2], [-2, 0, 0, 2], [-1, 0, 0, 1]]. Time complexity: O(n³), Space complexity: O(1) auxiliary space. 🎉'
       }
     ]
   },
@@ -835,66 +931,82 @@ export const twoPointersLogic = {
 
   'two-pointers-floyd-cycle': {
     title: "12. Floyd's Cycle Detection",
-    input: 'Linked list with values following: 3→1→4→0→2→(cycle back to index 0)',
-    goal: "Detect a cycle in O(n) time, O(1) space. Phase 2 finds the exact cycle start node.",
+    input: 'Linked list: 3 → 1 → [4 → 0 → 2 → (loops back to 4)]',
+    goal: "Detect cycle and find the exact cycle start node using Floyd's Tortoise and Hare algorithm — O(n) time, O(1) space.",
     terms: {
-      'slow pointer': 'Moves one node at a time (slow = slow.next). Enters cycle after n/2 steps.',
-      'fast pointer': 'Moves two nodes at a time (fast = fast.next.next). Laps slow inside the cycle.',
-      'Phase 2': 'After slow==fast, reset slow to head. Both advance by 1. Their meeting point is the cycle entry node.',
+      'slow pointer': 'Moves 1 step at a time (slow = slow.next). Enters the cycle after L steps.',
+      'fast pointer': 'Moves 2 steps at a time (fast = fast.next.next). Laps slow inside the cycle.',
+      'Phase 2': 'After slow == fast, reset slow to head. Move both 1 step at a time. They will meet at the cycle entry.',
     },
     array: [3, 1, 4, 0, 2],
     steps: [
       {
-        stepNum: 1, title: 'Step 1: Init slow=head, fast=head',
+        stepNum: 1,
+        title: 'Step 1: Init slow=head(idx 0), fast=head(idx 0)',
         slow: 0, fast: 0,
         left: 0, right: 0,
         array: [3, 1, 4, 0, 2],
-        computation: 'slow=idx0(val3), fast=idx0(val3)',
-        comparison: 'Both pointers at head',
-        action: 'Start Phase 1 — cycle detection',
-        desc: 'Initialize both slow and fast at the head. Slow will move +1 per step, fast +2 per step.'
+        computation: 'slow = idx 0 (val 3), fast = idx 0 (val 3)',
+        comparison: 'Both pointers start at head',
+        action: 'Start Phase 1 — Cycle Detection',
+        desc: 'Initialize both slow (tortoise) and fast (hare) at the list head (index 0). Slow will advance 1 step/round, fast 2 steps/round.'
       },
       {
-        stepNum: 2, title: 'Step 2: slow=idx1, fast=idx4 → not equal',
-        slow: 1, fast: 4,
-        left: 1, right: 4,
+        stepNum: 2,
+        title: 'Step 2: slow moves to idx 1, fast moves to idx 2',
+        slow: 1, fast: 2,
+        left: 1, right: 2,
         array: [3, 1, 4, 0, 2],
-        computation: 'slow=idx1(val1), fast=idx4(val2)',
-        comparison: 'slow ≠ fast → continue',
-        action: 'Advance both pointers',
-        desc: 'After 1 round: slow moved to idx1, fast moved 2 steps to idx4. Not equal — keep going.'
+        computation: 'slow: 0→1 (val 1) | fast: 0→1→2 (val 4)',
+        comparison: 'slow (1) ≠ fast (2) → continue',
+        action: 'Advance slow +1, fast +2',
+        desc: 'Round 1: slow moves 1 step to index 1 (val 1). fast moves 2 steps to index 2 (val 4). Pointers do not match; continue search.'
       },
       {
-        stepNum: 3, title: 'Step 3: slow=idx4, fast=idx4 → CYCLE DETECTED! ✅',
-        slow: 4, fast: 4,
-        left: 4, right: 4,
+        stepNum: 3,
+        title: 'Step 3: slow moves to idx 2, fast moves to idx 4',
+        slow: 2, fast: 4,
+        left: 2, right: 4,
         array: [3, 1, 4, 0, 2],
-        computation: 'slow=idx4, fast=idx4 → slow==fast',
-        comparison: 'CYCLE CONFIRMED ✅',
-        action: 'Begin Phase 2 — find cycle start',
-        isMatch: true,
-        desc: 'slow and fast meet at idx4. A cycle exists! Start Phase 2: reset slow to head, keep fast at meeting point.'
+        computation: 'slow: 1→2 (val 4) | fast: 2→3→4 (val 2)',
+        comparison: 'slow (2) ≠ fast (4) → continue',
+        action: 'Advance slow +1, fast +2',
+        desc: 'Round 2: slow enters cycle at index 2 (val 4). fast moves 2 steps to index 4 (val 2). Fast is now closing in on slow.'
       },
       {
-        stepNum: 4, title: 'Step 4: Reset slow=head, advance both at speed 1',
-        slow: 0, fast: 4,
-        left: 0, right: 4,
-        array: [3, 1, 4, 0, 2],
-        computation: 'slow=idx0(head), fast=idx4(meeting point)',
-        comparison: 'Phase 2 started — find cycle entry',
-        action: 'Move slow and fast +1 each step',
-        desc: 'Reset slow to head. Both now move at speed 1. They will meet at the cycle entry node.'
-      },
-      {
-        stepNum: 5, title: 'Step 5: slow==fast at idx3 → Cycle starts at idx3! 🎉',
+        stepNum: 4,
+        title: 'Step 4: slow=idx 3, fast=idx 3 ➔ CYCLE DETECTED! ✅',
         slow: 3, fast: 3,
         left: 3, right: 3,
         array: [3, 1, 4, 0, 2],
-        computation: 'slow=fast=idx3 (val 0) — cycle entry found',
-        comparison: 'CYCLE START = index 3 🎉',
-        action: 'Return cycle start node (idx 3)',
+        computation: 'slow: 2→3 (val 0) | fast: 4→2→3 (val 0)',
+        comparison: 'slow == fast == index 3 ✅',
+        action: 'Meeting Point Found — Start Phase 2',
         isMatch: true,
-        desc: 'Slow and fast meet again at idx3. The cycle begins at index 3 (value 0). O(n) time, O(1) space — no HashSet needed! 🎉'
+        desc: 'Round 3: fast laps slow and they meet at index 3 (val 0)! Cycle presence is confirmed. Begin Phase 2: reset slow to head.'
+      },
+      {
+        stepNum: 5,
+        title: 'Step 5: Reset slow=head(idx 0), advance both +1 step',
+        slow: 1, fast: 4,
+        left: 1, right: 4,
+        array: [3, 1, 4, 0, 2],
+        computation: 'slow: 0→1 (val 1) | fast: 3→4 (val 2)',
+        comparison: 'slow (1) ≠ fast (4) → continue',
+        action: 'Phase 2: Advance both at speed 1',
+        desc: 'Phase 2: Reset slow to head (0) and keep fast at meeting point (3). Advance both by 1 step: slow moves to index 1, fast to index 4.'
+      },
+      {
+        stepNum: 6,
+        title: 'Step 6: slow == fast at idx 2 ➔ Cycle Entry Found! 🎉',
+        slow: 2, fast: 2,
+        left: 2, right: 2,
+        array: [3, 1, 4, 0, 2],
+        computation: 'slow: 1→2 (val 4) | fast: 4→2 (val 4)',
+        comparison: 'CYCLE START = index 2 (val 4) 🎉',
+        action: 'Return cycle start node (index 2)',
+        isMatch: true,
+        desc: 'Both pointers meet at index 2 (value 4)! The cycle begins at index 2. Solved in O(n) time and O(1) space with no HashSet! 🎉'
       }
     ]
   }

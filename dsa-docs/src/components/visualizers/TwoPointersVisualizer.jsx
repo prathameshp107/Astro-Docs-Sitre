@@ -96,36 +96,36 @@ const FOUR_SUM_CODE = [
   { line: 1, text: 'sort(nums)' },
   { line: 2, text: 'for i from 0 to n - 4:' },
   { line: 3, text: '    for j from i + 1 to n - 3:' },
-  { line: 3, text: '        left ← j + 1, right ← n - 1' },
-  { line: 3, text: '        while left < right:' },
-  { line: 3, text: '            sum ← nums[i]+nums[j]+nums[left]+nums[right]' },
-  { line: 3, text: '            if sum == target: record, left++, right--' },
-  { line: 3, text: '            else if sum < target: left++' },
-  { line: 3, text: '            else: right--' },
-  { line: 4, text: 'return result' },
+  { line: 4, text: '        left ← j + 1, right ← n - 1' },
+  { line: 5, text: '        while left < right:' },
+  { line: 6, text: '            sum ← nums[i]+nums[j]+nums[left]+nums[right]' },
+  { line: 7, text: '            if sum == target: record, left++, right--' },
+  { line: 8, text: '            else if sum < target: left++' },
+  { line: 9, text: '            else: right--' },
+  { line: 10, text: 'return result' },
 ];
 
 const SQUARE_SORTED_CODE = [
   { line: 1, text: 'left ← 0, right ← n - 1, pos ← n - 1' },
   { line: 2, text: 'while left <= right:' },
-  { line: 2, text: '    if |arr[left]| > |arr[right]|:' },
-  { line: 2, text: '        result[pos--] ← arr[left] * arr[left], left++' },
-  { line: 2, text: '    else:' },
-  { line: 2, text: '        result[pos--] ← arr[right] * arr[right], right--' },
-  { line: 3, text: 'return result' },
+  { line: 3, text: '    if |arr[left]| > |arr[right]|:' },
+  { line: 4, text: '        result[pos--] ← arr[left] * arr[left], left++' },
+  { line: 5, text: '    else:' },
+  { line: 6, text: '        result[pos--] ← arr[right] * arr[right], right--' },
+  { line: 7, text: 'return result' },
 ];
 
 const FLOYD_CYCLE_CODE = [
   { line: 1, text: 'slow ← head, fast ← head' },
   { line: 2, text: 'while fast && fast.next:' },
-  { line: 2, text: '    slow ← slow.next' },
-  { line: 2, text: '    fast ← fast.next.next' },
-  { line: 2, text: '    if slow == fast: CYCLE FOUND' },
-  { line: 3, text: 'slow ← head (reset for phase 2)' },
-  { line: 3, text: 'while slow != fast:' },
   { line: 3, text: '    slow ← slow.next' },
-  { line: 3, text: '    fast ← fast.next' },
-  { line: 4, text: 'return slow  // cycle start' },
+  { line: 4, text: '    fast ← fast.next.next' },
+  { line: 5, text: '    if slow == fast: CYCLE FOUND' },
+  { line: 6, text: 'slow ← head (reset for phase 2)' },
+  { line: 7, text: 'while slow != fast:' },
+  { line: 8, text: '    slow ← slow.next' },
+  { line: 9, text: '    fast ← fast.next' },
+  { line: 10, text: 'return slow  // cycle start' },
 ];
 
 const TRACK_TITLES = {
@@ -155,7 +155,7 @@ const EXPECTED_OUTPUTS = {
   'trap-rain-water': '6 (Total units of water trapped)',
   'four-sum': '[[-2,-1,1,2], [-2,0,0,2], [-1,0,0,1]]',
   'square-sorted': '[0, 1, 9, 16, 100]',
-  'floyd-cycle': 'Cycle start at index 3 (value 0)',
+  'floyd-cycle': 'Cycle start at index 2 (value 4)',
 };
 
 export default function TwoPointersVisualizer() {
