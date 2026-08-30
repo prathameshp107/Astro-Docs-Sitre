@@ -211,7 +211,10 @@ export default function ArrayVisualizer() {
   let swapFrom = null;
   let swapTo = null;
 
-  if (track === 'reverse' && step.activeLine === 3 && step.left !== null && step.right !== null) {
+  if (step.swapFrom !== undefined && step.swapTo !== undefined && step.swapFrom !== null && step.swapTo !== null) {
+    swapFrom = step.swapFrom;
+    swapTo = step.swapTo;
+  } else if ((track === 'reverse-array' || track === 'reverse') && step.activeLine === 3 && step.left !== null && step.right !== null) {
     swapFrom = step.left;
     swapTo = step.right;
   }
@@ -278,65 +281,51 @@ export default function ArrayVisualizer() {
                   {step.currentSum !== undefined ? step.currentSum : (step.state?.currentSum ?? 0)}
                 </span>
                 <span className="text-[var(--sketch-text-muted)] text-[11px] hidden sm:inline">
-                  (window: [{step.subStart ?? 0}..{step.subEnd ?? step.index ?? 0}])
+                  (contiguous subarray sum)
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-extrabold">🏆 maxSum:</span>
-                <span className="px-2.5 py-1 rounded-md font-extrabold text-sm bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm">
+                <span className="text-emerald-400 font-extrabold">maxSum:</span>
+                <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-extrabold text-sm">
                   {step.maxSum !== undefined ? step.maxSum : (step.state?.maxSum ?? 0)}
                 </span>
                 <span className="text-[var(--sketch-text-muted)] text-[11px] hidden sm:inline">
-                  (best: [{step.maxStart ?? 0}..{step.maxEnd ?? 0}])
+                  (best subarray sum seen)
                 </span>
               </div>
-
-              {step.decision && (
-                <div className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${
-                  step.decision === 'reset_and_max' || step.decision === 'reset'
-                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                    : step.decision === 'peak_max' || step.decision === 'new_max' || step.decision === 'final'
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                    : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
-                }`}>
-                  {step.decision === 'reset_and_max' ? '🔄 Discard Prefix & Reset'
-                   : step.decision === 'peak_max' ? '🌟 Peak Global Max (6)!'
-                   : step.decision === 'new_max' ? '🚀 New Max Sum!'
-                   : step.decision === 'final' ? '🏆 Optimal Result [4,-1,2,1]'
-                   : '➕ Extend Window'}
-                </div>
-              )}
             </div>
           )}
 
-          {/* Buy & Sell Stock HUD */}
+          {/* Buy/Sell Stock HUD Panel */}
           {track === 'buy-sell-stock' && (
-            <div className="w-full max-w-xl mx-auto my-2 p-2.5 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex items-center justify-around gap-2 text-xs font-mono">
-              <div>
-                <span className="text-amber-400 font-bold">🛒 minPrice: </span>
-                <span className="font-extrabold text-amber-300 text-sm">{step.state?.minPrice ?? 0}</span>
+            <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-sky-400 font-extrabold">minPrice (buy):</span>
+                <span className="px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-extrabold text-sm">
+                  ${step.state?.minPrice ?? 7}
+                </span>
               </div>
-              <div>
-                <span className="text-sky-400 font-bold">💰 profit: </span>
-                <span className="font-extrabold text-sky-300 text-sm">{step.state?.['profit today'] ?? 0}</span>
-              </div>
-              <div>
-                <span className="text-emerald-400 font-bold">🏆 maxProfit: </span>
-                <span className="font-extrabold text-emerald-300 text-sm">{step.state?.maxProfit ?? 0}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-400 font-extrabold">maxProfit:</span>
+                <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-extrabold text-sm">
+                  ${step.state?.maxProfit ?? 0}
+                </span>
               </div>
             </div>
           )}
 
-          {/* Majority Element HUD */}
+          {/* Boyer-Moore Majority Element HUD Panel */}
           {track === 'majority-element' && (
-            <div className="w-full max-w-lg mx-auto my-2 p-2.5 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex items-center justify-around gap-2 text-xs font-mono">
-              <div>
-                <span className="text-amber-400 font-bold">🗳️ candidate: </span>
-                <span className="font-extrabold text-amber-300 text-sm">{step.state?.candidate ?? '—'}</span>
+            <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">candidate:</span>
+                <span className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-extrabold text-sm">
+                  {step.state?.candidate ?? 'None'}
+                </span>
               </div>
-              <div>
-                <span className="text-emerald-400 font-bold">⚖️ count: </span>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-400 font-extrabold">count:</span>
                 <span className="font-extrabold text-emerald-300 text-sm">{step.state?.count ?? 0}</span>
               </div>
             </div>
@@ -375,6 +364,11 @@ export default function ArrayVisualizer() {
                 <div key={i} className="relative flex flex-col items-center">
                   {/* Floating Action Badge */}
                   <AnimatePresence>
+                    {isSwapping && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
+                        🔄 Swap
+                      </motion.div>
+                    )}
                     {isInserting && (
                       <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
                         + Inserting

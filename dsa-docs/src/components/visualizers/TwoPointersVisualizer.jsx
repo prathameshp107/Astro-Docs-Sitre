@@ -223,12 +223,12 @@ export default function TwoPointersVisualizer() {
   let swapFrom = null;
   let swapTo = null;
 
-  if (track === 'move-zeroes' && step.activeLine === 4 && step.slow !== null && step.fast !== null) {
+  if (step.swapFrom !== undefined && step.swapTo !== undefined && step.swapFrom !== null && step.swapTo !== null) {
+    swapFrom = step.swapFrom;
+    swapTo = step.swapTo;
+  } else if (track === 'move-zeroes' && step.activeLine === 4 && step.slow !== null && step.fast !== null) {
     swapFrom = step.slow;
     swapTo = step.fast;
-  } else if (track === 'sort-colors' && (step.activeLine === 3 || step.activeLine === 5)) {
-    swapFrom = step.mid;
-    swapTo = step.activeLine === 3 ? step.low : step.high;
   }
 
   const hasSwapArc = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
@@ -299,6 +299,8 @@ export default function TwoPointersVisualizer() {
               const isBothLeftRight = isLeft && isRight;
               const isBothSlowFast = isSlow && isFast;
 
+              const isSwapping = i === swapFrom || i === swapTo;
+
               const isHighlighted =
                 isLeft || isRight || isIPtr || isLow || isMid || isHigh || isSlow || isFast;
 
@@ -309,14 +311,30 @@ export default function TwoPointersVisualizer() {
 
               return (
                 <div key={i} className="relative flex flex-col items-center">
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isSwapping && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: -26 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap"
+                      >
+                        🔄 Swap
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   <motion.div
                     animate={{
-                      scale: isMatchStep && (isLeft || isRight) ? 1.15 : isHighlighted ? 1.08 : 1,
-                      y: isMatchStep && (isLeft || isRight) ? -10 : isHighlighted ? -6 : 0,
+                      scale: isSwapping ? 1.15 : isMatchStep && (isLeft || isRight) ? 1.15 : isHighlighted ? 1.08 : 1,
+                      y: isSwapping ? -10 : isMatchStep && (isLeft || isRight) ? -10 : isHighlighted ? -6 : 0,
                     }}
                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                     className={`sketch-card ${
-                      isMatchStep && (isLeft || isRight)
+                      isSwapping
+                        ? '!border-rose-400 !bg-rose-500/20 shadow-lg ring-2 ring-rose-400'
+                        : isMatchStep && (isLeft || isRight)
                         ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400'
                         : val === null
                         ? 'border-dashed border-white/20 text-white/30'
@@ -420,6 +438,63 @@ export default function TwoPointersVisualizer() {
                         className="sketch-pointer text-cyan-400 font-bold"
                       >
                         <div>fast</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Dutch National Flag Pointers (low, mid, high) */}
+                  <AnimatePresence>
+                    {isLow && isMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">low, mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {isLow && !isMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange font-bold"
+                      >
+                        <div>low</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {isMid && !isLow && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-amber-400 font-bold"
+                      >
+                        <div>mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {isHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-blue font-bold"
+                      >
+                        <div>high</div>
                         <div className="text-xs leading-none">▲</div>
                       </motion.div>
                     )}

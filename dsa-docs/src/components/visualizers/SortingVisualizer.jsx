@@ -112,12 +112,13 @@ export default function SortingVisualizer() {
   const expectedOutput = EXPECTED_OUTPUTS[track] || 'Sorted Array';
 
   // Calculate swap pair for connector arc
+  // Calculate swap pair
   let swapFrom = null;
   let swapTo = null;
 
-  if (track === 'bubble-sort' && step.activeLine === 4 && step.j !== null && step.j !== undefined) {
-    swapFrom = step.j;
-    swapTo = step.j + 1;
+  if (step.swapFrom !== undefined && step.swapTo !== undefined && step.swapFrom !== null && step.swapTo !== null) {
+    swapFrom = step.swapFrom;
+    swapTo = step.swapTo;
   } else if (track === 'selection-sort' && step.activeLine === 6 && step.i !== null && step.minIdx !== null) {
     swapFrom = step.i;
     swapTo = step.minIdx;
@@ -211,13 +212,27 @@ export default function SortingVisualizer() {
 
               const isComparing =
                 (track === 'bubble-sort' && step.activeLine === 3 && (isJ || isJPlus1)) ||
-                (track === 'selection-sort' && step.activeLine === 2 && (isMinIdx)) ||
+                (track === 'selection-sort' && (step.activeLine === 4 || step.activeLine === 5) && (isJ || isMinIdx)) ||
                 (track === 'insertion-sort' && step.activeLine === 2 && (isI || isJ));
 
               const isHighlighted = isI || (isJ && track !== 'bubble-sort') || isJPlus1 || isMinIdx || isPivot || isLow || isMid || isHigh;
 
               return (
                 <div key={idx} className="relative flex flex-col items-center">
+                  {/* Floating Action Badge for Swapping */}
+                  <AnimatePresence>
+                    {isSwapping && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: -26 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap"
+                      >
+                        🔄 Swap
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   {/* Key badge floating ABOVE the card for insertion sort */}
                   {isKeyCard && step.activeLine !== 4 && (
                     <motion.div
@@ -231,8 +246,8 @@ export default function SortingVisualizer() {
 
                   <motion.div
                     animate={{
-                      scale: isSwapping ? 1.12 : isHighlighted ? 1.08 : 1,
-                      y: isSwapping ? -8 : isHighlighted ? -6 : 0,
+                      scale: isSwapping ? 1.15 : isHighlighted ? 1.08 : 1,
+                      y: isSwapping ? -10 : isHighlighted ? -6 : 0,
                     }}
                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                     className={`sketch-card ${
@@ -268,8 +283,10 @@ export default function SortingVisualizer() {
                     }`}
                   >
                     {val}
-                    <div className="sketch-card-index">[{idx}]</div>
                   </motion.div>
+
+                  {/* Array Index Below */}
+                  <div className="sketch-index">[{idx}]</div>
 
                   {/* Pivot Pointer */}
                   <AnimatePresence>
@@ -391,9 +408,24 @@ export default function SortingVisualizer() {
                     )}
                   </AnimatePresence>
 
+                  {/* Combined minIdx, j Pointer badge for Selection Sort when minIdx === j */}
+                  <AnimatePresence>
+                    {isMinIdx && isJ && !isBothIMin && !isPivot && track === 'selection-sort' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-md border border-emerald-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">min, j</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   {/* Single minIdx Pointer */}
                   <AnimatePresence>
-                    {isMinIdx && !isBothIMin && !isPivot && (
+                    {isMinIdx && !isBothIMin && !isPivot && (!isJ || track !== 'selection-sort') && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}

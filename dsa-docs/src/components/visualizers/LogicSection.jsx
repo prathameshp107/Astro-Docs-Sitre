@@ -1533,138 +1533,179 @@ export default function LogicSection({ topicId }) {
                   </div>
                 ) : (
                   /* 7. 1D Array Cards Diagram (used for Two Pointers, Queue, Arrays, Sorting, Searching) */
-                  <div className="flex items-start gap-3 md:gap-5 my-2 overflow-x-auto overflow-y-visible w-full justify-center pt-4 pb-16">
-                    {stepArray.map((val, idx) => {
-                      const isLeft = (st.left !== undefined && st.left === idx) || (st.front !== undefined && st.front === idx && st.front !== -1);
-                      const isRight = (st.right !== undefined && st.right === idx) || (st.rear !== undefined && st.rear === idx && st.rear !== -1);
-                      const isMidPoint = st.mid !== undefined && st.mid !== null && st.mid === idx;
-                      const isPivotPoint = st.pivot !== undefined && st.pivot !== null && st.pivot === idx;
-                      const isJPoint = st.j !== undefined && st.j !== null && st.j === idx;
-                      const isBoth = isLeft && isRight && !isMidPoint && !isPivotPoint;
-                      const isBothLeftMid = isLeft && isMidPoint && !isRight;
-                      const isBothMidRight = isMidPoint && isRight && !isLeft;
-                      const isAllThree = isLeft && isMidPoint && isRight;
-                      const isBothLeftPivot = isLeft && isPivotPoint && !isRight && !isMidPoint;
-                      const isBothRightPivot = isRight && isPivotPoint && !isLeft && !isMidPoint;
-                      const inWindow = st.left !== null && st.left !== undefined && st.right !== null && st.right !== undefined && idx >= st.left && idx <= st.right;
+                  (() => {
+                    const isMoveZeroes = resolvedTrackKey === 'two-pointers-move-zeroes' || resolvedTrackKey === 'move-zeroes';
+                    const isSortColors = resolvedTrackKey === 'two-pointers-sort-colors' || resolvedTrackKey === 'sort-colors';
+                    const isBubbleSort = resolvedTrackKey === 'sorting-bubble-sort' || resolvedTrackKey === 'bubble-sort';
+                    const swapFrom = st.swapFrom !== undefined ? st.swapFrom : null;
+                    const swapTo = st.swapTo !== undefined ? st.swapTo : null;
+                    const isStepSwapping = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
 
-                      const leftLabel =
-                        st.leftLabel ||
-                        (isQueueTopic
-                          ? 'front'
-                          : resolvedTrackKey === 'bubble-sort'
-                          ? 'j'
-                          : resolvedTrackKey === 'selection-sort'
-                          ? 'i'
-                          : resolvedTrackKey === 'insertion-sort'
-                          ? 'j'
-                          : resolvedTrackKey === 'quick-sort'
-                          ? 'i'
-                          : topicId === 'sorting'
-                          ? 'j'
-                          : 'L');
-
-                      const midLabel = st.midLabel || 'mid';
-                      const jLabel = st.jLabel || 'j';
-
-                      const rightLabel =
-                        st.rightLabel ||
-                        (isQueueTopic
-                          ? 'rear'
-                          : resolvedTrackKey === 'bubble-sort'
-                          ? 'j+1'
-                          : resolvedTrackKey === 'selection-sort'
-                          ? 'min'
-                          : resolvedTrackKey === 'insertion-sort'
-                          ? 'i'
-                          : resolvedTrackKey === 'quick-sort'
-                          ? 'j'
-                          : topicId === 'sorting'
-                          ? 'j+1'
-                          : 'R');
-
-                      return (
-                        <div key={idx} className="relative flex flex-col items-center">
-                          <div
-                            className={`sketch-card ${
-                              st.isMatch && (isLeft || isRight || isMidPoint || isPivotPoint)
-                                ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400 text-emerald-200'
-                                : isPivotPoint && !isMidPoint
-                                ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400'
-                                : isJPoint && !isLeft && !isRight
-                                ? '!border-cyan-400 !bg-cyan-500/10 ring-1 ring-cyan-400/60'
-                                : isMidPoint
-                                ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
-                                : inWindow
-                                ? 'active-orange !border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/60'
-                                : ''
-                            }`}
-                          >
-                            {val}
-                            <div className="sketch-card-index">[{idx}]</div>
+                    return (
+                      <div className="flex flex-col items-center w-full my-2">
+                        {isStepSwapping && (
+                          <div className="mb-2 px-3.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono font-bold text-xs shadow-md flex items-center gap-2">
+                            <span>🔄 Swapping indices [{swapFrom}] ↔ [{swapTo}]:</span>
+                            <span className="text-white font-extrabold">{stepArray[swapFrom]}</span>
+                            <span>↔</span>
+                            <span className="text-white font-extrabold">{stepArray[swapTo]}</span>
                           </div>
+                        )}
 
-                          {/* Chalkboard Pointer Badges */}
-                          {isAllThree ? (
-                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
-                              <div>{leftLabel}/{midLabel}/{rightLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isBothLeftMid ? (
-                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
-                              <div>{leftLabel}, {midLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isBothMidRight ? (
-                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
-                              <div>{midLabel}, {rightLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isBoth ? (
-                            <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2.5 py-1 rounded-md border border-purple-400/40 shadow-sm mt-2">
-                              <div className="text-sm font-bold">{leftLabel === rightLabel ? leftLabel : `${leftLabel}, ${rightLabel}`}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isBothLeftPivot ? (
-                            <div className="sketch-pointer text-rose-300 font-bold bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40 shadow-sm mt-2 text-xs">
-                              <div>{leftLabel}, pivot</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isBothRightPivot ? (
-                            <div className="sketch-pointer text-rose-300 font-bold bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40 shadow-sm mt-2 text-xs">
-                              <div>{rightLabel}, pivot</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isMidPoint ? (
-                            <div className="sketch-pointer text-amber-400 font-bold mt-2">
-                              <div className="font-bold">{midLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isPivotPoint ? (
-                            <div className="sketch-pointer text-rose-400 font-bold mt-2">
-                              <div className="font-bold">pivot</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isJPoint ? (
-                            <div className="sketch-pointer text-cyan-400 font-bold mt-2">
-                              <div className="font-bold">{jLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isLeft ? (
-                            <div className="sketch-pointer sketch-pointer-orange mt-2">
-                              <div className="font-bold">{leftLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : isRight ? (
-                            <div className="sketch-pointer sketch-pointer-blue mt-2">
-                              <div className="font-bold">{rightLabel}</div>
-                              <div className="text-xs leading-none">▲</div>
-                            </div>
-                          ) : null}
+                        <div className="flex items-start gap-3 md:gap-5 my-2 overflow-x-auto overflow-y-visible w-full justify-center pt-4 pb-16">
+                          {stepArray.map((val, idx) => {
+                            const isLeft = (st.left !== undefined && st.left === idx) || (st.front !== undefined && st.front === idx && st.front !== -1) || (st.low !== undefined && st.low === idx);
+                            const isRight = (st.right !== undefined && st.right === idx) || (st.rear !== undefined && st.rear === idx && st.rear !== -1) || (st.high !== undefined && st.high === idx);
+                            const isMidPoint = st.mid !== undefined && st.mid !== null && st.mid === idx;
+                            const isPivotPoint = st.pivot !== undefined && st.pivot !== null && st.pivot === idx;
+                            const isJPoint = st.j !== undefined && st.j !== null && st.j === idx;
+                            const isBoth = isLeft && isRight && !isMidPoint && !isPivotPoint;
+                            const isBothLeftMid = isLeft && isMidPoint && !isRight;
+                            const isBothMidRight = isMidPoint && isRight && !isLeft;
+                            const isAllThree = isLeft && isMidPoint && isRight;
+                            const isBothLeftPivot = isLeft && isPivotPoint && !isRight && !isMidPoint;
+                            const isBothRightPivot = isRight && isPivotPoint && !isLeft && !isMidPoint;
+                            const inWindow = st.left !== null && st.left !== undefined && st.right !== null && st.right !== undefined && idx >= st.left && idx <= st.right;
+
+                            const isSwappingCard = isStepSwapping && (idx === swapFrom || idx === swapTo);
+
+                            const leftLabel =
+                              st.leftLabel ||
+                              (isQueueTopic
+                                ? 'front'
+                                : isMoveZeroes || resolvedTrackKey === 'two-pointers-remove-duplicates'
+                                ? 'slow'
+                                : isSortColors
+                                ? 'low'
+                                : isBubbleSort
+                                ? 'j'
+                                : resolvedTrackKey === 'selection-sort' || resolvedTrackKey === 'sorting-selection-sort'
+                                ? 'i'
+                                : resolvedTrackKey === 'insertion-sort' || resolvedTrackKey === 'sorting-insertion-sort'
+                                ? 'j'
+                                : resolvedTrackKey === 'quick-sort' || resolvedTrackKey === 'sorting-quick-sort'
+                                ? 'i'
+                                : topicId === 'sorting'
+                                ? 'j'
+                                : 'L');
+
+                            const midLabel = st.midLabel || 'mid';
+                            const jLabel = st.jLabel || 'j';
+
+                            const rightLabel =
+                              st.rightLabel ||
+                              (isQueueTopic
+                                ? 'rear'
+                                : isMoveZeroes || resolvedTrackKey === 'two-pointers-remove-duplicates'
+                                ? 'fast'
+                                : isSortColors
+                                ? 'high'
+                                : isBubbleSort
+                                ? 'j+1'
+                                : resolvedTrackKey === 'selection-sort' || resolvedTrackKey === 'sorting-selection-sort'
+                                ? 'min'
+                                : resolvedTrackKey === 'insertion-sort' || resolvedTrackKey === 'sorting-insertion-sort'
+                                ? 'i'
+                                : resolvedTrackKey === 'quick-sort' || resolvedTrackKey === 'sorting-quick-sort'
+                                ? 'j'
+                                : topicId === 'sorting'
+                                ? 'j+1'
+                                : 'R');
+
+                            return (
+                              <div key={idx} className="relative flex flex-col items-center">
+                                {/* Floating Action Badge for Swapping */}
+                                {isSwappingCard && (
+                                  <div className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                                    🔄 Swap
+                                  </div>
+                                )}
+
+                                <div
+                                  className={`sketch-card ${
+                                    isSwappingCard
+                                      ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400 text-rose-200 font-bold scale-105'
+                                      : st.isMatch && (isLeft || isRight || isMidPoint || isPivotPoint)
+                                      ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400 text-emerald-200'
+                                      : isPivotPoint && !isMidPoint
+                                      ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400'
+                                      : isJPoint && !isLeft && !isRight
+                                      ? '!border-cyan-400 !bg-cyan-500/10 ring-1 ring-cyan-400/60'
+                                      : isMidPoint
+                                      ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
+                                      : inWindow
+                                      ? 'active-orange !border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/60'
+                                      : ''
+                                  }`}
+                                >
+                                  {val}
+                                  <div className="sketch-card-index">[{idx}]</div>
+                                </div>
+
+                                {/* Chalkboard Pointer Badges */}
+                                {isAllThree ? (
+                                  <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
+                                    <div>{leftLabel}/{midLabel}/{rightLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isBothLeftMid ? (
+                                  <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
+                                    <div>{leftLabel}, {midLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isBothMidRight ? (
+                                  <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm mt-2 text-xs">
+                                    <div>{midLabel}, {rightLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isBoth ? (
+                                  <div className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2.5 py-1 rounded-md border border-purple-400/40 shadow-sm mt-2">
+                                    <div className="text-sm font-bold">{leftLabel === rightLabel ? leftLabel : `${leftLabel}, ${rightLabel}`}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isBothLeftPivot ? (
+                                  <div className="sketch-pointer text-rose-300 font-bold bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40 shadow-sm mt-2 text-xs">
+                                    <div>{leftLabel}, pivot</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isBothRightPivot ? (
+                                  <div className="sketch-pointer text-rose-300 font-bold bg-rose-500/20 px-2 py-0.5 rounded-md border border-rose-400/40 shadow-sm mt-2 text-xs">
+                                    <div>{rightLabel}, pivot</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isMidPoint ? (
+                                  <div className="sketch-pointer text-amber-400 font-bold mt-2">
+                                    <div className="font-bold">{midLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isPivotPoint ? (
+                                  <div className="sketch-pointer text-rose-400 font-bold mt-2">
+                                    <div className="font-bold">pivot</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isJPoint ? (
+                                  <div className="sketch-pointer text-cyan-400 font-bold mt-2">
+                                    <div className="font-bold">{jLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isLeft ? (
+                                  <div className="sketch-pointer sketch-pointer-orange mt-2">
+                                    <div className="font-bold">{leftLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : isRight ? (
+                                  <div className="sketch-pointer sketch-pointer-blue mt-2">
+                                    <div className="font-bold">{rightLabel}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                ) : null}
+                              </div>
+                            );
+                          })}
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    );
+                  })()
                 )}
               </div>
 

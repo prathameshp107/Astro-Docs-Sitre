@@ -637,48 +637,164 @@ export const arrayLogic = {
     goal: 'Rotate array right by k positions in-place in O(n) time and O(1) extra memory using the 3-reversal algorithm.',
     terms: {
       'k = k % n': 'Effective rotation steps (handles k >= array length).',
-      'Step 1: Reverse all': 'Reverses entire array [0..n-1].',
-      'Step 2: Reverse first k': 'Reverses [0..k-1] to restore order of rotated prefix.',
-      'Step 3: Reverse remaining': 'Reverses [k..n-1] to restore order of suffix.',
+      'Stage 1 (Reverse All)': 'Reverses entire array [0..n-1] to invert global order.',
+      'Stage 2 (Reverse first k)': 'Reverses [0..k-1] to restore correct order of rotated prefix.',
+      'Stage 3 (Reverse rest)': 'Reverses [k..n-1] to restore correct order of suffix.',
     },
     array: [1, 2, 3, 4, 5, 6, 7],
     steps: [
       {
-        stepNum: 1, title: 'Step 1: Normalize k = 3 % 7 = 3',
+        stepNum: 1, title: 'Step 1: Init ➔ 3-Step Reversal Algorithm (k = 3 % 7 = 3)',
         left: 0, right: 6,
+        leftLabel: 'start=0', rightLabel: 'end=6',
         array: [1, 2, 3, 4, 5, 6, 7],
         computation: 'k = 3 % 7 = 3, n = 7',
         comparison: 'Input array ready',
         action: 'Begin 3-step reversal',
-        desc: 'Input array [1, 2, 3, 4, 5, 6, 7] with k=3. 3-step reversal achieves in-place rotation with O(1) space.'
+        desc: 'Rotating right by K=3 in-place: (1) Reverse all [0..6] → (2) Reverse first K=3 [0..2] → (3) Reverse rest [3..6].'
       },
       {
-        stepNum: 2, title: 'Step 2: Reverse ALL elements [0..6] ➔ [7, 6, 5, 4, 3, 2, 1]',
+        stepNum: 2, title: 'Step 2: Stage 1 (Reverse All) ➔ About to swap arr[0]=1 ↔ arr[6]=7',
         left: 0, right: 6,
+        swapFrom: 0, swapTo: 6,
+        leftLabel: 'L=0 (val 1)', rightLabel: 'R=6 (val 7)',
+        array: [1, 2, 3, 4, 5, 6, 7],
+        computation: 'L=0, R=6 — Stage 1 Reversal',
+        comparison: 'About to swap outer pair',
+        action: 'Executing arr[0] ↔ arr[6]',
+        desc: 'Stage 1 (Reverse All): Left=0 (val 1) and Right=6 (val 7). About to swap arr[0] and arr[6].'
+      },
+      {
+        stepNum: 3, title: 'Step 3: Stage 1 ➔ Swap complete ➔ [7, 2, 3, 4, 5, 6, 1]',
+        left: 0, right: 6,
+        leftLabel: 'L=0 (val 7)', rightLabel: 'R=6 (val 1)',
+        array: [7, 2, 3, 4, 5, 6, 1],
+        computation: 'Swap arr[0] ↔ arr[6] ✅',
+        comparison: 'Outer elements swapped',
+        action: 'Advance L++ to 1, R-- to 5',
+        isMatch: true,
+        desc: 'Swap complete! Array becomes [7, 2, 3, 4, 5, 6, 1]. Advance L++ and R--.'
+      },
+      {
+        stepNum: 4, title: 'Step 4: Stage 1 ➔ About to swap arr[1]=2 ↔ arr[5]=6',
+        left: 1, right: 5,
+        swapFrom: 1, swapTo: 5,
+        leftLabel: 'L=1 (val 2)', rightLabel: 'R=5 (val 6)',
+        array: [7, 2, 3, 4, 5, 6, 1],
+        computation: 'L=1, R=5 — Stage 1 Reversal',
+        comparison: 'About to swap pair [1] ↔ [5]',
+        action: 'Executing arr[1] ↔ arr[5]',
+        desc: 'Stage 1 (Reverse All): Left=1 (val 2) and Right=5 (val 6). About to swap arr[1] and arr[5].'
+      },
+      {
+        stepNum: 5, title: 'Step 5: Stage 1 ➔ Swap complete ➔ [7, 6, 3, 4, 5, 2, 1]',
+        left: 1, right: 5,
+        leftLabel: 'L=1 (val 6)', rightLabel: 'R=5 (val 2)',
+        array: [7, 6, 3, 4, 5, 2, 1],
+        computation: 'Swap arr[1] ↔ arr[5] ✅',
+        comparison: 'Elements 2 and 6 swapped',
+        action: 'Advance L++ to 2, R-- to 4',
+        isMatch: true,
+        desc: 'Swap complete! Array becomes [7, 6, 3, 4, 5, 2, 1]. Advance L++ and R--.'
+      },
+      {
+        stepNum: 6, title: 'Step 6: Stage 1 ➔ About to swap arr[2]=3 ↔ arr[4]=5',
+        left: 2, right: 4,
+        swapFrom: 2, swapTo: 4,
+        leftLabel: 'L=2 (val 3)', rightLabel: 'R=4 (val 5)',
+        array: [7, 6, 3, 4, 5, 2, 1],
+        computation: 'L=2, R=4 — Stage 1 Reversal',
+        comparison: 'About to swap pair [2] ↔ [4]',
+        action: 'Executing arr[2] ↔ arr[4]',
+        desc: 'Stage 1 (Reverse All): Left=2 (val 3) and Right=4 (val 5). About to swap arr[2] and arr[4].'
+      },
+      {
+        stepNum: 7, title: 'Step 7: Stage 1 Complete ➔ Array is [7, 6, 5, 4, 3, 2, 1]',
+        left: 3, right: 3,
+        leftLabel: 'center', rightLabel: 'center',
         array: [7, 6, 5, 4, 3, 2, 1],
-        computation: 'reverse(arr, 0, 6)',
+        computation: 'reverse(arr, 0, 6) Complete ✅',
         comparison: 'All elements inverted',
-        action: 'Reverse first k=3 elements',
-        desc: 'Reverse whole array [0..6]. Array becomes [7, 6, 5, 4, 3, 2, 1].'
+        action: 'Start Stage 2: Reverse first K=3',
+        isMatch: true,
+        desc: 'Pointers meet at center index 3. Stage 1 Complete! Array is [7, 6, 5, 4, 3, 2, 1]. Now reverse first K=3 elements [0..2].'
       },
       {
-        stepNum: 3, title: 'Step 3: Reverse first k=3 elements [0..2] ➔ [5, 6, 7, 4, 3, 2, 1]',
+        stepNum: 8, title: 'Step 8: Stage 2 (Reverse first K=3 [0..2]) ➔ About to swap arr[0]=7 ↔ arr[2]=5',
         left: 0, right: 2,
-        array: [5, 6, 7, 4, 3, 2, 1],
-        computation: 'reverse(arr, 0, 2): [7, 6, 5] ➔ [5, 6, 7]',
-        comparison: 'Rotated prefix restored in correct order',
-        action: 'Reverse rest [3..6]',
-        desc: 'Reverse first 3 elements [0..2]: [7, 6, 5] becomes [5, 6, 7]. Array is now [5, 6, 7, 4, 3, 2, 1].'
+        swapFrom: 0, swapTo: 2,
+        leftLabel: 'L=0 (val 7)', rightLabel: 'R=2 (val 5)',
+        array: [7, 6, 5, 4, 3, 2, 1],
+        computation: 'reverse(arr, 0, 2)',
+        comparison: 'About to restore rotated prefix',
+        action: 'Executing arr[0] ↔ arr[2]',
+        desc: 'Stage 2 (Reverse first K=3): Left=0 (val 7) and Right=2 (val 5). About to swap arr[0] and arr[2].'
       },
       {
-        stepNum: 4, title: 'Step 4: Reverse rest [3..6] ➔ [5, 6, 7, 1, 2, 3, 4] 🎉',
+        stepNum: 9, title: 'Step 9: Stage 2 Complete ➔ Rotated Prefix Restored: [5, 6, 7, 4, 3, 2, 1]',
+        left: 1, right: 1,
+        leftLabel: 'prefix [5, 6, 7]', rightLabel: 'prefix [5, 6, 7]',
+        array: [5, 6, 7, 4, 3, 2, 1],
+        computation: 'reverse(arr, 0, 2) Complete ✅',
+        comparison: 'Prefix [5, 6, 7] placed correctly',
+        action: 'Start Stage 3: Reverse rest [3..6]',
+        isMatch: true,
+        desc: 'Swap complete! First 3 elements [0..2] reversed to [5, 6, 7]. Rotated prefix is now in correct order! Now reverse remaining elements [3..6].'
+      },
+      {
+        stepNum: 10, title: 'Step 10: Stage 3 (Reverse rest [3..6]) ➔ About to swap arr[3]=4 ↔ arr[6]=1',
         left: 3, right: 6,
+        swapFrom: 3, swapTo: 6,
+        leftLabel: 'L=3 (val 4)', rightLabel: 'R=6 (val 1)',
+        array: [5, 6, 7, 4, 3, 2, 1],
+        computation: 'reverse(arr, 3, 6)',
+        comparison: 'About to swap pair [3] ↔ [6]',
+        action: 'Executing arr[3] ↔ arr[6]',
+        desc: 'Stage 3 (Reverse remaining elements [3..6]): Left=3 (val 4) and Right=6 (val 1). About to swap arr[3] and arr[6].'
+      },
+      {
+        stepNum: 11, title: 'Step 11: Stage 3 ➔ Swap complete ➔ [5, 6, 7, 1, 3, 2, 4]',
+        left: 3, right: 6,
+        leftLabel: 'L=3 (val 1)', rightLabel: 'R=6 (val 4)',
+        array: [5, 6, 7, 1, 3, 2, 4],
+        computation: 'Swap arr[3] ↔ arr[6] ✅',
+        comparison: 'Elements 4 and 1 swapped',
+        action: 'Advance L++ to 4, R-- to 5',
+        isMatch: true,
+        desc: 'Swap complete! Array becomes [5, 6, 7, 1, 3, 2, 4]. Advance L++ to 4, decrement R-- to 5.'
+      },
+      {
+        stepNum: 12, title: 'Step 12: Stage 3 ➔ About to swap arr[4]=3 ↔ arr[5]=2',
+        left: 4, right: 5,
+        swapFrom: 4, swapTo: 5,
+        leftLabel: 'L=4 (val 3)', rightLabel: 'R=5 (val 2)',
+        array: [5, 6, 7, 1, 3, 2, 4],
+        computation: 'reverse(arr, 3, 6)',
+        comparison: 'About to swap pair [4] ↔ [5]',
+        action: 'Executing arr[4] ↔ arr[5]',
+        desc: 'Stage 3 (Reverse remaining elements [3..6]): Left=4 (val 3) and Right=5 (val 2). About to swap arr[4] and arr[5].'
+      },
+      {
+        stepNum: 13, title: 'Step 13: Stage 3 Complete ➔ Suffix Restored: [5, 6, 7, 1, 2, 3, 4]',
+        left: 4, right: 5,
+        leftLabel: 'suffix [1, 2, 3, 4]', rightLabel: 'suffix [1, 2, 3, 4]',
         array: [5, 6, 7, 1, 2, 3, 4],
-        computation: 'reverse(arr, 3, 6): [4, 3, 2, 1] ➔ [1, 2, 3, 4]',
-        comparison: 'ROTATION COMPLETE 🎉',
+        computation: 'reverse(arr, 3, 6) Complete ✅',
+        comparison: 'Suffix [1, 2, 3, 4] placed correctly',
+        action: 'Complete Rotation',
+        isMatch: true,
+        desc: 'Swap complete! Suffix [3..6] reversed to [1, 2, 3, 4]. Array is now [5, 6, 7, 1, 2, 3, 4].'
+      },
+      {
+        stepNum: 14, title: 'Step 14: Rotation Complete ➔ [5, 6, 7, 1, 2, 3, 4] 🎉',
+        left: 0, right: 6,
+        leftLabel: 'start', rightLabel: 'end',
+        array: [5, 6, 7, 1, 2, 3, 4],
+        computation: 'Array = [5, 6, 7, 1, 2, 3, 4]',
+        comparison: 'ROTATION COMPLETE IN O(N) TIME 🎉',
         action: 'Return [5, 6, 7, 1, 2, 3, 4]',
         isMatch: true,
-        desc: 'Reverse remaining elements [3..6]: [4, 3, 2, 1] becomes [1, 2, 3, 4]. Final array: [5, 6, 7, 1, 2, 3, 4]! 🎉'
+        desc: 'Rotate Array by K=3 complete in O(n) time and O(1) space! Final array: [5, 6, 7, 1, 2, 3, 4]! 🎉'
       }
     ]
   },

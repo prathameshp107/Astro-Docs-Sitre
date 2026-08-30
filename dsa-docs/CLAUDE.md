@@ -103,6 +103,25 @@ Namespace the keys. Trie uses `trie-insert` / `trie-search` / `trie-prefix`, wit
 4. **`src/components/visualizers/<Topic>Visualizer.jsx`** — add the pseudocode constant for line highlighting.
 5. **`src/components/visualizers/LogicSection.jsx`** — ensure the track routes to a diagram branch that handles its data structures.
 
+### Visualizer Swapping Standards (Overview Canvas & Logic Section)
+
+Whenever implementing or updating any track or algorithm that performs element swapping (e.g. `reverse`, `move-zeroes`, `sort-colors`, `bubble-sort`, `selection-sort`, `quick-sort`):
+1. **Always use a 2-Phase Swap Sequence**:
+   - **Phase A (Pre-Swap / About to Swap)**:
+     - Keep the pre-swap array state so the user sees which two elements are being exchanged.
+     - Provide `swapFrom` and `swapTo` index properties on the step.
+     - Highlight the `swap(...)` line in concept pseudocode.
+     - `<SwapArcConnector>` renders the animated curved connection arc labeled `"swapping"`.
+     - Cards at `swapFrom` and `swapTo` receive the `🔄 Swap` floating badge, elevation scale, and glowing rose border (`!border-rose-400 !bg-rose-500/20 ring-2 ring-rose-400`).
+   - **Phase B (Swap Complete)**:
+     - Update the array with the new swapped element positions.
+     - Advance pointer(s) and highlight the next statement.
+     - Display state summary (e.g., `swap: 'arr[x] ↔ arr[y] ✅'`).
+2. **Logic Section Parity**:
+   - In `logicData/<topic>Logic.js`, define explicit `swapFrom` & `swapTo` properties on swap steps only.
+   - Use meaningful pointer labels (`low`, `mid`, `high`, `slow`, `fast`, etc.) rather than generic `L` / `R`.
+   - Do NOT mark inspection/comparison steps as swapping (avoid redundant duplicate visuals).
+
 ### Verifying without a build
 
 A production build is 10–40 minutes. Check statically instead:
