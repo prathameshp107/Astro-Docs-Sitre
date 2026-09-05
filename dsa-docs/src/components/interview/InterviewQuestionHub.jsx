@@ -283,8 +283,6 @@ export default function InterviewQuestionHub() {
     });
   }
 
-  if (!mounted) return null;
-
   const pct = progress[activeTab];
 
   return (
@@ -941,7 +939,7 @@ export default function InterviewQuestionHub() {
               🎯 Tech Interview Prep & Mastery Studio
             </h1>
             <p className="text-[var(--sketch-text-muted)] text-base md:text-lg max-w-2xl leading-relaxed font-sketch">
-              Master 1,400+ high-frequency interview questions across 15 technologies with instant progress tracking, detailed explanations, and flashcard practice mode.
+              Master {TOTAL_QUESTIONS}+ high-frequency interview questions across {TABS.length} technologies with instant progress tracking, detailed explanations, and flashcard practice mode.
             </p>
           </div>
 
@@ -991,12 +989,12 @@ export default function InterviewQuestionHub() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.4 }}
       >
-        <button className="iq-overview-toggle" onClick={() => setShowOverview(v => !v)}>
+        <button className="iq-overview-toggle" onClick={() => setShowOverview(v => !v)} aria-expanded={showOverview}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
             style={{ transform: `rotate(${showOverview ? 90 : 0}deg)`, transition: 'transform 0.2s' }}>
             <path d="m9 18 6-6-6-6" />
           </svg>
-          Category Overview
+          <span className="font-bold">Category Overview ({TABS.length} Tech Stacks)</span>
         </button>
         <AnimatePresence>
           {showOverview && (
@@ -1039,6 +1037,8 @@ export default function InterviewQuestionHub() {
       <div className="iq-nav-wrap">
         <motion.div
           className="iq-nav-tabs"
+          role="tablist"
+          aria-label="Interview Technology Topics"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -1049,6 +1049,8 @@ export default function InterviewQuestionHub() {
             return (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={isActive}
                 className={`iq-nav-tab${isActive ? ' active' : ''}`}
                 style={{ '--iq-tab-accent': tab.accent }}
                 onClick={() => { setActiveTab(tab.id); setSearch(''); setDifficultyFilter('all'); setSelectedCard(null); }}
@@ -1159,12 +1161,12 @@ export default function InterviewQuestionHub() {
                   <TechIcon id={activeConfig.id} size={30} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-header font-bold text-[var(--sketch-text)] flex items-center gap-2">
-                    {activeConfig.label}
+                  <h2 className="text-2xl font-header font-bold text-[var(--sketch-text)] flex items-center gap-2">
+                    {activeConfig.label} Interview Questions &amp; Answers
                     <span className="text-sm font-mono text-amber-500 font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30">
                       {filtered.length} {filtered.length === 1 ? 'Question' : 'Questions'}
                     </span>
-                  </h3>
+                  </h2>
                   <p className="text-xs font-mono text-[var(--sketch-text-muted)] mt-0.5">
                     {pct.count} of {pct.total} Mastered · ({pct.pct.toFixed(0)}% Completion)
                   </p>
@@ -1214,7 +1216,7 @@ export default function InterviewQuestionHub() {
                   >
                     <div className="iq-card-row">
                       <span className="iq-num">{String(i + 1).padStart(2, '0')}</span>
-                      <div className="iq-text">{formatQuestion(qText)}</div>
+                      <h3 className="iq-text m-0">{formatQuestion(qText)}</h3>
                       <span className={diffClass(d)}>{diffLabel(d)}</span>
                       <div className="iq-check" onClick={(e) => toggleDone(id, e)}>
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -1491,9 +1493,9 @@ export default function InterviewQuestionHub() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 py-8 border-b border-[var(--sketch-border)]">
           {/* Column 1: Frontend Stack */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+            <h3 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
               <TechIcon id="react" size={18} /> Frontend Stack
-            </h4>
+            </h3>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
                 <a href={`${base}interview-questions?tab=js`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
@@ -1525,9 +1527,9 @@ export default function InterviewQuestionHub() {
 
           {/* Column 2: AI & GenAI */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
-              <TechIcon id="ai" size={18} /> AI & GenAI
-            </h4>
+            <h3 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="ai" size={18} /> AI &amp; GenAI
+            </h3>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
                 <a href={`${base}interview-questions?tab=ai`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
@@ -1547,11 +1549,11 @@ export default function InterviewQuestionHub() {
             </ul>
           </div>
 
-          {/* Column 2: Backend & Languages */}
+          {/* Column 3: Backend & Languages */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
-              <TechIcon id="python" size={18} /> Backend & Core
-            </h4>
+            <h3 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="python" size={18} /> Backend &amp; Core
+            </h3>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
                 <a href={`${base}interview-questions?tab=nodejs`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
@@ -1576,11 +1578,11 @@ export default function InterviewQuestionHub() {
             </ul>
           </div>
 
-          {/* Column 3: Databases & DevOps */}
+          {/* Column 4: Databases & DevOps */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
-              <TechIcon id="docker" size={18} /> DB & DevOps
-            </h4>
+            <h3 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="docker" size={18} /> DB &amp; DevOps
+            </h3>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
                 <a href={`${base}interview-questions?tab=mongodb`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
@@ -1605,11 +1607,11 @@ export default function InterviewQuestionHub() {
             </ul>
           </div>
 
-          {/* Column 4: Platform Navigation */}
+          {/* Column 5: Platform Navigation */}
           <div>
-            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
-              <span>🚀</span> Visualizers & Docs
-            </h4>
+            <h3 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <span>🚀</span> Visualizers &amp; Docs
+            </h3>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
                 <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">

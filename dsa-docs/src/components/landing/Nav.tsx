@@ -72,7 +72,9 @@ const labsSubItems = [
 ];
 
 const interviewSubItems = [
-  { label: "Language wise Interview Questions", href: `${base}interview-questions`, icon: Lightbulb, color: "#eab308" },
+  { label: "3,100+ Tech Interview Questions", href: `${base}interview-questions`, icon: Lightbulb, color: "#eab308" },
+  { label: "AI, LLM & RAG Interview Prep", href: `${base}interview-questions?tab=ai`, icon: Sparkles, color: "#10b981" },
+  { label: "Tricky JavaScript Outputs", href: `${base}interview-questions?tab=js-tricky`, icon: Code, color: "#f59e0b" },
   { label: "Behavioural Questions", href: `${base}behavioral`, icon: Users, color: "#3b82f6" },
 ];
 
