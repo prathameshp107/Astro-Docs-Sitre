@@ -1607,25 +1607,40 @@ export default function InterviewQuestionHub() {
             </ul>
           </div>
 
-          {/* Column 5: Platform Navigation */}
+          {/* Column 5: Platform Navigation & Visualizers */}
           <div>
             <h3 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
-              <span>🚀</span> Visualizers &amp; Docs
+              <span>🚀</span> Visualizers &amp; Hub
             </h3>
             <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
               <li>
-                <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> Visualizer Studio
+                <a href={`${base}visualizer`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5 font-bold text-amber-400">
+                  <span>▶</span> Visualizer Studio (16 Topics)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}visualizer/trie`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>🌲</span> Trie (Prefix Tree) <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30">New</span>
+                </a>
+              </li>
+              <li>
+                <a href={`${base}visualizer/two-pointers`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>👉</span> Two Pointers &amp; Window
+                </a>
+              </li>
+              <li>
+                <a href={`${base}visualizer/dp`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>⚡</span> Dynamic Programming
+                </a>
+              </li>
+              <li>
+                <a href={`${base}visualizer/trees`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>🌳</span> Trees &amp; Graph BFS/DFS
                 </a>
               </li>
               <li>
                 <a href={`${base}overview`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> Docs & Practice Notes
-                </a>
-              </li>
-              <li>
-                <a href={base} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> Home Page
+                  <span>📚</span> Docs &amp; Practice Notes
                 </a>
               </li>
             </ul>
