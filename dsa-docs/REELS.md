@@ -12,17 +12,17 @@ Output: `dsa-docs/reels-out/<topic>-<track>.mp4`, 1080×1920, H.264.
 
 ## Coverage
 
-**65 reels — one per visualizer problem track.** The catalogue is generated from
-the same 16 sections / 67 tracks the site ships; the 2 `intro` concept pages are
+**80 reels — one per visualizer problem track.** The catalogue is generated from
+the same 16 sections / 82 tracks the site ships; the 2 `intro` concept pages are
 excluded because they have no animation to record.
 
 Titles and subtitles for the auto-added entries come from the sidebar's own
-`label` / `subtitle` text, so reel copy matches what the site displays. All 65
-carry a hand-checked complexity line (36 via an explicit `cx`, the rest matched
+`label` / `subtitle` text, so reel copy matches what the site displays. All 80
+carry a hand-checked complexity line (51 via an explicit `cx`, the rest matched
 from the topic's complexity table).
 
-Rendering the full set takes roughly **1.5–3 minutes per reel** — about 2–3
-hours for all 65, producing ~50 minutes of footage. Use
+Rendering the full set takes roughly **1.5–3 minutes per reel** — about 2–3.5
+hours for all 80, producing ~65 minutes of footage. Use
 `npm run reels:resume` to work through it in sessions; it skips whatever is
 already rendered.
 
@@ -176,7 +176,7 @@ explicitly on the reel and it wins over any lookup:
   title: 'Breadth-First Search', subtitle: 'O(V+E) — shortest path, unweighted' },
 ```
 
-36 of the 65 reels use `cx`; all 65 carry a correct complexity line. When adding
+51 of the 80 reels use `cx`; all 80 carry a correct complexity line. When adding
 a reel, check with `node scripts/reel-captions.mjs <topic>:<track> --stdout` and
 add `cx` if the complexity line is missing.
 

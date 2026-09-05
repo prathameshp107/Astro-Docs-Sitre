@@ -107,4 +107,24 @@ export const REELS = [
   { topic: 'hash-table', track: 'linear-probing', cx: 'Avg: O(1) · Worst: O(n) · Space: O(n)', title: 'Open Addressing', subtitle: 'Linear probing slot search' },
   { topic: 'hash-table', track: 'two-sum-hash', title: 'Two Sum Hash Map', subtitle: 'Complement index lookup · O(1)' },
   { topic: 'hash-table', track: 'group-anagrams', cx: 'Time: O(n × k log k) · Space: O(n × k)', title: 'Group Anagrams', subtitle: 'Canonical key grouping' },
+  // ── Two Pointers (Recently added tracks) ──────────────────────────────────
+  { topic: 'two-pointers', track: 'trap-rain-water', cx: 'Time: O(n) · Space: O(1)', title: 'Trapping Rain Water', subtitle: 'Two-pointer water height tracking · Hard' },
+  { topic: 'two-pointers', track: 'four-sum', cx: 'Time: O(n³) · Space: O(1)', title: '4Sum Problem', subtitle: 'Quadruplets summing to target · O(n³)' },
+  { topic: 'two-pointers', track: 'square-sorted', cx: 'Time: O(n) · Space: O(n)', title: 'Squares of Sorted Array', subtitle: 'Both-ends pointer merge · O(n)' },
+  { topic: 'two-pointers', track: 'floyd-cycle', cx: 'Time: O(n) · Space: O(1)', title: "Floyd's Cycle Detection", subtitle: 'Fast & slow pointer cycle finding' },
+  // ── Arrays (Recently added tracks) ────────────────────────────────────────
+  { topic: 'arrays', track: 'kadane', cx: 'Time: O(n) · Space: O(1)', title: "Kadane's Algorithm", subtitle: 'Max subarray sum · O(n) DP' },
+  { topic: 'arrays', track: 'buy-sell-stock', cx: 'Time: O(n) · Space: O(1)', title: 'Best Time to Buy & Sell Stock', subtitle: 'Min price tracking · greedy O(n)' },
+  { topic: 'arrays', track: 'product-except-self', cx: 'Time: O(n) · Space: O(1) auxiliary', title: 'Product of Array Except Self', subtitle: 'Prefix × suffix · no division' },
+  { topic: 'arrays', track: 'rotate-array', cx: 'Time: O(n) · Space: O(1) in-place', title: 'Rotate Array by K', subtitle: 'Triple reverse trick · O(n)' },
+  { topic: 'arrays', track: 'majority-element', cx: 'Time: O(n) · Space: O(1)', title: 'Majority Element', subtitle: 'Boyer-Moore voting algorithm · O(n)' },
+  { topic: 'arrays', track: 'merge-intervals', cx: 'Time: O(n log n) · Space: O(n)', title: 'Merge Intervals', subtitle: 'Sort + expand overlap · O(n log n)' },
+  { topic: 'arrays', track: 'find-missing', cx: 'Time: O(n) · Space: O(1)', title: 'Find Missing Number', subtitle: 'XOR cancellation trick · O(n)' },
+  // ── Trees (Recently added tracks) ─────────────────────────────────────────
+  { topic: 'trees', track: 'level-order', cx: 'Time: O(n) · Space: O(n)', title: 'Level Order Traversal', subtitle: 'Queue BFS · level by level output' },
+  { topic: 'trees', track: 'invert', cx: 'Time: O(n) · Space: O(h)', title: 'Invert Binary Tree', subtitle: 'Swap children · mirror the tree' },
+  // ── Graphs (Recently added tracks) ────────────────────────────────────────
+  { topic: 'graphs', track: 'number-of-islands', cx: 'Time: O(M × N) · Space: O(M × N)', title: 'Number of Islands', subtitle: 'Grid flood fill · count connected land' },
+  // ── DP (Recently added tracks) ────────────────────────────────────────────
+  { topic: 'dp', track: 'unique-paths', cx: 'Time: O(m × n) · Space: O(m × n)', title: 'Unique Paths', subtitle: 'Grid DP · paths from above + left' },
 ];
