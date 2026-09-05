@@ -43,65 +43,64 @@ const PREFIX_SUM_CODE = [
 ];
 
 const KADANE_CODE = [
-  { line: 1, text: 'currentSum ← maxSum ← arr[0]' },
+  { line: 1, text: 'currentSum ← arr[0], maxSum ← arr[0]' },
   { line: 2, text: 'for i from 1 to n - 1:' },
-  { line: 2, text: '    currentSum ← max(currentSum + arr[i], arr[i])' },
-  { line: 2, text: '    maxSum ← max(maxSum, currentSum)' },
-  { line: 3, text: 'return maxSum' },
+  { line: 3, text: '    currentSum ← max(arr[i], currentSum + arr[i])' },
+  { line: 4, text: '    if currentSum > maxSum: maxSum ← currentSum' },
+  { line: 5, text: 'return maxSum' },
 ];
 
 const BUY_SELL_CODE = [
   { line: 1, text: 'minPrice ← arr[0], maxProfit ← 0' },
   { line: 2, text: 'for i from 1 to n - 1:' },
-  { line: 2, text: '    profit ← arr[i] - minPrice' },
-  { line: 2, text: '    maxProfit ← max(maxProfit, profit)' },
-  { line: 2, text: '    minPrice ← min(minPrice, arr[i])' },
-  { line: 3, text: 'return maxProfit' },
+  { line: 3, text: '    if arr[i] < minPrice: minPrice ← arr[i]' },
+  { line: 4, text: '    profit ← arr[i] - minPrice' },
+  { line: 5, text: '    if profit > maxProfit: maxProfit ← profit' },
+  { line: 6, text: 'return maxProfit' },
 ];
 
 const PRODUCT_SELF_CODE = [
-  { line: 1, text: 'answer[0] ← 1, prefixProd ← 1' },
-  { line: 2, text: 'for i from 1 to n - 1:' },
-  { line: 2, text: '    answer[i] ← prefixProd' },
-  { line: 2, text: '    prefixProd *= arr[i - 1]' },
-  { line: 3, text: 'suffix ← 1' },
-  { line: 3, text: 'for i from n - 1 down to 0:' },
-  { line: 3, text: '    answer[i] *= suffix' },
-  { line: 3, text: '    suffix *= arr[i]' },
-  { line: 4, text: 'return answer' },
+  { line: 1, text: 'answer ← [1, 1, ..., 1], prefix ← 1' },
+  { line: 2, text: 'for i from 0 to n - 1:' },
+  { line: 3, text: '    answer[i] ← prefix; prefix *= nums[i]' },
+  { line: 4, text: 'suffix ← 1' },
+  { line: 5, text: 'for i from n - 1 down to 0:' },
+  { line: 6, text: '    answer[i] *= suffix; suffix *= nums[i]' },
+  { line: 7, text: 'return answer' },
 ];
 
 const ROTATE_CODE = [
   { line: 1, text: 'k ← k % n' },
-  { line: 1, text: 'reverse(arr, 0, n - 1)   // Reverse all' },
-  { line: 2, text: 'reverse(arr, 0, k - 1)   // Reverse first k' },
-  { line: 3, text: 'reverse(arr, k, n - 1)   // Reverse rest' },
+  { line: 2, text: 'reverse(arr, 0, n - 1)   // Stage 1: Reverse whole array' },
+  { line: 3, text: 'reverse(arr, 0, k - 1)   // Stage 2: Reverse first k elements' },
+  { line: 4, text: 'reverse(arr, k, n - 1)   // Stage 3: Reverse remaining elements' },
+  { line: 5, text: 'return arr              // Rotated in-place O(1) space' },
 ];
 
 const MAJORITY_CODE = [
-  { line: 1, text: 'candidate ← arr[0], count ← 1' },
-  { line: 2, text: 'for i from 1 to n - 1:' },
-  { line: 2, text: '    if count == 0: candidate ← arr[i], count ← 1' },
-  { line: 2, text: '    else if arr[i] == candidate: count++' },
-  { line: 2, text: '    else: count--' },
-  { line: 3, text: 'return candidate' },
+  { line: 1, text: 'candidate ← null, count ← 0' },
+  { line: 2, text: 'for each num in nums:' },
+  { line: 3, text: '    if count == 0: candidate ← num, count ← 1' },
+  { line: 4, text: '    count += (num == candidate) ? 1 : -1' },
+  { line: 5, text: 'return candidate // Guaranteed majority (> n/2)' },
 ];
 
 const MERGE_INTERVALS_CODE = [
-  { line: 1, text: 'sort intervals by start time' },
-  { line: 2, text: 'for each interval after first:' },
-  { line: 2, text: '    if interval.start <= result.last.end:' },
-  { line: 2, text: '        result.last.end = max(last.end, interval.end)' },
-  { line: 2, text: '    else: result.push(interval)' },
-  { line: 3, text: 'return result' },
+  { line: 1, text: 'intervals.sort((a, b) => a.start - b.start) // Step 1: Sort by start time' },
+  { line: 2, text: 'current ← intervals[0], merged ← []            // Step 2: Initialize active interval' },
+  { line: 3, text: 'for next in intervals[1..]:                    // Step 3: Compare adjacent intervals' },
+  { line: 4, text: '    if next.start <= current.end:             // Overlap! Extend current.end' },
+  { line: 4, text: '        current.end ← max(current.end, next.end)' },
+  { line: 5, text: '    else: merged.push(current); current ← next // Disjoint! Commit and advance' },
+  { line: 6, text: 'merged.push(current); return merged          // Push final interval & return' },
 ];
 
 const FIND_MISSING_CODE = [
-  { line: 1, text: 'xor ← 0' },
-  { line: 2, text: 'for i from 0 to n - 1:' },
-  { line: 2, text: '    xor ^= i ^ arr[i]' },
-  { line: 3, text: 'xor ^= n' },
-  { line: 4, text: 'return xor   // Only missing number remains' },
+  { line: 1, text: 'xor ← 0                                   // Step 1: Initialize XOR accumulator' },
+  { line: 2, text: 'for i from 0 to n - 1:                    // Loop through all array indices' },
+  { line: 3, text: '    xor ^= i ^ arr[i]                     // XOR index i and value arr[i]' },
+  { line: 4, text: 'xor ^= n                                  // XOR final boundary value n' },
+  { line: 5, text: 'return xor                                // Only missing number survives!' },
 ];
 
 const TRACK_TITLES = {
@@ -207,7 +206,7 @@ export default function ArrayVisualizer() {
   const trackLabel = TRACK_TITLES[track] || 'Array Operations';
   const expectedOutput = EXPECTED_OUTPUTS[track] || 'Expected Output';
 
-  // Calculate swap pair for connector arc
+  // Calculate swap pair or transaction pair for connector arc
   let swapFrom = null;
   let swapTo = null;
 
@@ -217,6 +216,9 @@ export default function ArrayVisualizer() {
   } else if ((track === 'reverse-array' || track === 'reverse') && step.activeLine === 3 && step.left !== null && step.right !== null) {
     swapFrom = step.left;
     swapTo = step.right;
+  } else if (track === 'buy-sell-stock' && step.buyIndex !== undefined && step.sellIndex !== undefined && step.buyIndex !== null && step.sellIndex !== null && step.buyIndex !== step.sellIndex && (step.decision === 'new_max' || step.decision === 'peak_max' || step.isMatch)) {
+    swapFrom = step.buyIndex;
+    swapTo = step.sellIndex;
   }
 
   const hasSwapArc = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
@@ -303,14 +305,96 @@ export default function ArrayVisualizer() {
               <div className="flex items-center gap-2">
                 <span className="text-sky-400 font-extrabold">minPrice (buy):</span>
                 <span className="px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-extrabold text-sm">
-                  ${step.state?.minPrice ?? 7}
+                  ${step.minPrice !== undefined ? step.minPrice : (step.state?.minPrice ?? 7)}
+                </span>
+                <span className="text-[var(--sketch-text-muted)] text-[11px] hidden sm:inline">
+                  (Day {step.buyIndex ?? 0})
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">profit today:</span>
+                <span className={`px-2.5 py-1 rounded-md font-extrabold text-sm border ${
+                  (step.profit ?? step.state?.['profit today'] ?? 0) > 0
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                }`}>
+                  +${step.profit !== undefined ? step.profit : (step.state?.['profit today'] ?? 0)}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-emerald-400 font-extrabold">maxProfit:</span>
                 <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-extrabold text-sm">
-                  ${step.state?.maxProfit ?? 0}
+                  +${step.maxProfit !== undefined ? step.maxProfit : (step.state?.maxProfit ?? 0)}
                 </span>
+              </div>
+            </div>
+          )}
+
+          {/* Product of Array Except Self HUD Panel */}
+          {track === 'product-except-self' && (
+            <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">Pass:</span>
+                <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                  step.pass === 'suffix' || step.pass === 'suffix_init'
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                    : step.pass === 'complete'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                }`}>
+                  {step.pass === 'suffix' || step.pass === 'suffix_init'
+                    ? '➡️ Pass 2: Suffix (Right ➔ Left)'
+                    : step.pass === 'complete'
+                    ? '✅ Complete (No Division)'
+                    : '⬅️ Pass 1: Prefix (Left ➔ Right)'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sky-400 font-extrabold">prefixProd:</span>
+                <span className="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">
+                  {step.prefixProd ?? 1}
+                </span>
+                <span className="text-purple-400 font-extrabold ml-2">suffix:</span>
+                <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold">
+                  {step.suffixProd ?? 1}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Rotate Array by K Steps HUD Panel */}
+          {track === 'rotate-array' && (
+            <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">Stage:</span>
+                <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                  step.stage === 1
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : step.stage === 2
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                    : step.stage === 3
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                }`}>
+                  {step.stage === 1
+                    ? '🔄 Stage 1: Reverse ALL [0..n-1]'
+                    : step.stage === 2
+                    ? '⏪ Stage 2: Reverse First K=3 [0..k-1]'
+                    : step.stage === 3
+                    ? '⏩ Stage 3: Reverse Rest [k..n-1]'
+                    : '🎉 Rotation Complete (k=3)'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">k:</span>
+                <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                  3 (k % 7 = 3)
+                </span>
+                {step.left !== null && step.left !== undefined && (
+                  <span className="text-sky-300 font-bold ml-2">
+                    L={step.left}, R={step.right}
+                  </span>
+                )}
               </div>
             </div>
           )}
@@ -319,22 +403,168 @@ export default function ArrayVisualizer() {
           {track === 'majority-element' && (
             <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
               <div className="flex items-center gap-2">
-                <span className="text-amber-400 font-extrabold">candidate:</span>
-                <span className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-extrabold text-sm">
-                  {step.state?.candidate ?? 'None'}
+                <span className="text-amber-400 font-extrabold">👑 Candidate:</span>
+                <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                  step.candidate !== null && step.candidate !== undefined
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                }`}>
+                  {step.candidate !== null && step.candidate !== undefined ? `Element ${step.candidate}` : 'None (Open)'}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-extrabold">count:</span>
-                <span className="font-extrabold text-emerald-300 text-sm">{step.state?.count ?? 0}</span>
+                <span className="text-emerald-400 font-extrabold">🗳️ Vote Count:</span>
+                <span className={`px-2.5 py-0.5 rounded-md font-extrabold text-xs border ${
+                  (step.count ?? 0) > 0
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                }`}>
+                  {step.count ?? 0}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sky-400 font-extrabold">🎯 Threshold:</span>
+                <span className="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">
+                  &gt; 3.5 (≥ 4 / 7)
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 text-[11px] font-bold">
+                <span className={`px-2 py-0.5 rounded-md border ${
+                  step.decision === 'elect'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : step.decision === 'cancel'
+                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                    : step.decision === 'inspect'
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                    : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                }`}>
+                  {step.decision === 'elect'
+                    ? '👑 Elected (+1)'
+                    : step.decision === 'cancel'
+                    ? '⚡ Mismatch (-1 ➔ 0)'
+                    : step.decision === 'inspect'
+                    ? `🔍 Inspecting arr[${step.index}]`
+                    : '🏆 Winner: 3 (4/7)'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Merge Intervals HUD Panel */}
+          {track === 'merge-intervals' && (
+            <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">👑 Active [curr]:</span>
+                <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                  step.currentInterval
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                }`}>
+                  {step.currentInterval ? `[${step.currentInterval.join(', ')}]` : 'None'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sky-400 font-extrabold">🔍 Candidate [next]:</span>
+                <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                  step.nextInterval
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                    : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                }`}>
+                  {step.nextInterval ? `[${step.nextInterval.join(', ')}]` : 'None'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-400 font-extrabold">📦 Merged List:</span>
+                <div className="flex items-center gap-1">
+                  {step.mergedList && step.mergedList.length > 0 ? (
+                    step.mergedList.map((intv, k) => (
+                      <span key={k} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-xs">
+                        [{intv.join(', ')}]
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-slate-500 text-xs italic">[ Empty ]</span>
+                  )}
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-between pt-1 border-t border-[var(--sketch-border)] text-[11px]">
+                <span className="text-[var(--sketch-text-muted)] font-bold">Action / Check:</span>
+                <span className={`px-2 py-0.5 rounded-md border font-bold ${
+                  step.decision === 'compare_overlap' || step.decision === 'merge'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : step.decision === 'compare_no_overlap'
+                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                    : step.decision === 'commit' || step.decision === 'push_final' || step.decision === 'complete'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                }`}>
+                  {step.state?.check || step.state?.formula || step.state?.action || step.state?.keyInsight || 'Processing'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Find Missing Number HUD Panel */}
+          {track === 'find-missing' && (
+            <div className="w-full max-w-2xl mx-auto my-2 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-extrabold">🔢 XOR Accumulator:</span>
+                <span className="px-2.5 py-1 rounded-md font-extrabold text-xs border bg-amber-500/20 text-amber-300 border-amber-500/40">
+                  {step.xorAcc !== undefined ? `${step.xorAcc} (bin: ${step.binary || '000'})` : '0'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sky-400 font-extrabold">🎯 Boundary (n):</span>
+                <span className="px-2.5 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold text-xs">
+                  n = 3 [0..3]
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-400 font-extrabold">⚡ Canceled:</span>
+                <div className="flex items-center gap-1">
+                  {step.cancelledPairs && step.cancelledPairs.length > 0 ? (
+                    step.cancelledPairs.map((pair, k) => (
+                      <span key={k} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-xs">
+                        {pair}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-slate-500 text-xs italic">[ None yet ]</span>
+                  )}
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-between pt-1 border-t border-[var(--sketch-border)] text-[11px]">
+                <span className="text-[var(--sketch-text-muted)] font-bold">Current Calculation:</span>
+                <span className={`px-2 py-0.5 rounded-md border font-bold ${
+                  step.decision === 'cancel_pair' || step.decision === 'cancel_final'
+                    ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                    : step.decision === 'xor_accumulate'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : step.decision === 'complete' || step.isMatch
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                    : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                }`}>
+                  {step.formula || step.state?.calculation || step.state?.keyInsight || 'Processing'}
+                </span>
               </div>
             </div>
           )}
 
           {/* Array Cards Container */}
-          <div ref={containerRef} className="flex items-start gap-3 md:gap-5 my-4 relative pt-8 pb-16 min-h-[220px] px-4 overflow-x-auto overflow-y-hidden w-full justify-center">
+          <div ref={containerRef} className="flex items-start gap-3 md:gap-5 my-4 relative pt-10 pb-16 min-h-[200px] px-4 overflow-x-auto overflow-y-visible w-full justify-center">
             {hasSwapArc && (
-              <SwapArcConnector containerRef={containerRef} fromIndex={swapFrom} toIndex={swapTo} label="swapping" />
+              <SwapArcConnector
+                containerRef={containerRef}
+                fromIndex={swapFrom}
+                toIndex={swapTo}
+                label={
+                  track === 'buy-sell-stock'
+                    ? `+$${step.profit || step.maxProfit} profit (Buy @ Day ${swapFrom} ➔ Sell @ Day ${swapTo})`
+                    : track === 'rotate-array'
+                    ? `swap arr[${swapFrom}] ↔ arr[${swapTo}]`
+                    : 'swapping'
+                }
+              />
             )}
 
             {(step.array || array).map((val, i) => {
@@ -347,7 +577,53 @@ export default function ArrayVisualizer() {
               const isInKadaneWindow = track === 'kadane' && step.subStart !== undefined && i >= step.subStart && i <= step.subEnd;
               const isKadaneBest = track === 'kadane' && step.maxStart !== undefined && i >= step.maxStart && i <= step.maxEnd && (step.decision === 'peak_max' || step.isMatch);
 
-              const isHighlighted = isIndex || isLeft || isRight || isInKadaneWindow;
+              // Buy/Sell stock highlight & indicators
+              const isStockBuyDay = track === 'buy-sell-stock' && i === step.buyIndex;
+              const isStockSellDay = track === 'buy-sell-stock' && (i === step.sellIndex || (step.decision === 'peak_max' && i === step.index));
+              const isStockMatch = track === 'buy-sell-stock' && step.isMatch && (i === step.buyIndex || i === step.sellIndex);
+
+              // Product except self highlight
+              const isProductPrefix = track === 'product-except-self' && isIndex && step.pass === 'prefix';
+              const isProductSuffix = track === 'product-except-self' && isIndex && step.pass === 'suffix';
+              const isProductDone = track === 'product-except-self' && (step.pass === 'complete' || step.isMatch);
+
+              // Rotate array highlight & window
+              const isInRotateWindow = track === 'rotate-array' && step.stageWindow && i >= step.stageWindow[0] && i <= step.stageWindow[1];
+              const isRotateDone = track === 'rotate-array' && (step.stage === 'complete' || step.isMatch);
+
+              // Majority element highlight & actions
+              const isMajorityElect = track === 'majority-element' && isIndex && step.decision === 'elect';
+              const isMajorityCancel = track === 'majority-element' && isIndex && step.decision === 'cancel';
+              const isMajorityInspect = track === 'majority-element' && isIndex && step.decision === 'inspect';
+              const isMajorityDone = track === 'majority-element' && (step.decision === 'complete' || step.isMatch);
+
+              // Merge intervals highlight & actions
+              const isMergeOverlap = track === 'merge-intervals' && step.decision === 'compare_overlap' && i === 2;
+              const isMergeMerged = track === 'merge-intervals' && step.decision === 'merge' && i === 0;
+              const isMergeDisjoint = track === 'merge-intervals' && step.decision === 'compare_no_overlap' && (i === 4 || i === 6) && i === step.index;
+              const isMergeCommitted = track === 'merge-intervals' && step.decision === 'commit' && (i === 4 || i === 6) && i === step.index;
+              const isMergePushFinal = track === 'merge-intervals' && step.decision === 'push_final' && i === 6;
+              const isMergeComplete = track === 'merge-intervals' && (step.decision === 'complete' || step.isMatch) && (i === 0 || i === 4 || i === 6);
+
+              const isMergeCurrentCard = track === 'merge-intervals' && (
+                ((i === 0 || i === 1) && step.currentInterval?.[0] === 1) ||
+                ((i === 4 || i === 5) && step.currentInterval?.[0] === 8) ||
+                ((i === 6 || i === 7) && step.currentInterval?.[0] === 15)
+              );
+              const isMergeNextCard = track === 'merge-intervals' && (
+                ((i === 2 || i === 3) && step.nextInterval?.[0] === 2) ||
+                ((i === 4 || i === 5) && step.nextInterval?.[0] === 8) ||
+                ((i === 6 || i === 7) && step.nextInterval?.[0] === 15)
+              );
+
+              // Find missing number highlight & actions
+              const isMissingInspect = track === 'find-missing' && step.decision === 'inspect' && i === step.index;
+              const isMissingAccumulate = track === 'find-missing' && step.decision === 'xor_accumulate' && i === step.index;
+              const isMissingCancel = track === 'find-missing' && step.decision === 'cancel_pair' && i === step.index;
+              const isMissingFinalCancel = track === 'find-missing' && step.decision === 'cancel_final' && i === 0;
+              const isMissingDone = track === 'find-missing' && (step.decision === 'complete' || step.isMatch);
+
+              const isHighlighted = isIndex || isLeft || isRight || isInKadaneWindow || isStockBuyDay || isStockSellDay || isProductPrefix || isProductSuffix || isInRotateWindow || isMajorityInspect || isMajorityElect || isMajorityCancel || isMergeCurrentCard || isMergeNextCard || isMissingInspect || isMissingAccumulate || isMissingCancel || isMissingFinalCancel;
 
               // Action badge triggers
               const isInserting = (track === 'insert' || track === 'insertion') && isIndex && (val === 99 || step.activeLine === 3);
@@ -357,69 +633,260 @@ export default function ArrayVisualizer() {
 
               // Kadane specific badges on current index
               const isKadaneReset = track === 'kadane' && isIndex && (step.decision === 'reset_and_max' || step.decision === 'reset');
-              const isKadaneNewMax = track === 'kadane' && isIndex && (step.decision === 'peak_max' || step.decision === 'new_max');
+              const isKadaneNewMax = track === 'kadane' && isIndex && (step.decision === 'peak_max' || step.new_max);
               const isKadaneExtend = track === 'kadane' && isIndex && step.decision === 'extend';
+
+              // Stock action badges
+              const isStockNewMin = track === 'buy-sell-stock' && isIndex && step.decision === 'new_min';
+              const isStockNewMax = track === 'buy-sell-stock' && isIndex && step.decision === 'new_max';
+              const isStockPeakMax = track === 'buy-sell-stock' && isIndex && step.decision === 'peak_max';
+              const isStockHold = track === 'buy-sell-stock' && isIndex && step.decision === 'hold';
+
+              // Rotate action badges
+              const isRotateSwapped = track === 'rotate-array' && (i === step.swapFrom || i === step.swapTo) && step.decision === 'swapped';
+              const isRotateStage1Done = track === 'rotate-array' && i === 3 && step.decision === 'stage1_done';
+              const isRotateStage2Done = track === 'rotate-array' && i === 1 && step.decision === 'stage2_done';
+              const isRotateStage3Done = track === 'rotate-array' && (i === 4 || i === 5) && step.decision === 'stage3_done';
+              const isRotateComplete = track === 'rotate-array' && i === 3 && (step.decision === 'complete' || step.isMatch);
 
               return (
                 <div key={i} className="relative flex flex-col items-center">
                   {/* Floating Action Badge */}
                   <AnimatePresence>
-                    {isSwapping && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
+                    {isSwapping && track !== 'buy-sell-stock' && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
                         🔄 Swap
                       </motion.div>
                     )}
+                    {isRotateSwapped && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ✅ Swapped!
+                      </motion.div>
+                    )}
+                    {isMajorityElect && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold animate-pulse shadow-md whitespace-nowrap">
+                        👑 Elect {val}
+                      </motion.div>
+                    )}
+                    {isMajorityCancel && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        ⚡ Mismatch (-1)
+                      </motion.div>
+                    )}
+                    {isMajorityInspect && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        🔍 Inspect
+                      </motion.div>
+                    )}
+                    {isMajorityDone && val === 3 && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                        🏆 Majority!
+                      </motion.div>
+                    )}
+                    {isMergeOverlap && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ⚡ 2 ≤ 3 (Overlap!)
+                      </motion.div>
+                    )}
+                    {isMergeMerged && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ✨ Merged ➔ [1, 6]
+                      </motion.div>
+                    )}
+                    {isMergeDisjoint && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        ⏹️ Gap / Disjoint
+                      </motion.div>
+                    )}
+                    {isMergeCommitted && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        📦 Committed
+                      </motion.div>
+                    )}
+                    {isMergePushFinal && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        🏁 Final Push
+                      </motion.div>
+                    )}
+                    {isMergeComplete && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                        🏆 Merged List (3)
+                      </motion.div>
+                    )}
+                    {isMissingInspect && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        🔍 i={i}, val={val}
+                      </motion.div>
+                    )}
+                    {isMissingAccumulate && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        🧮 xor = {step.xorAcc}
+                      </motion.div>
+                    )}
+                    {isMissingCancel && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ⚡ Cancel ({val} ⊕ {val} = 0)
+                      </motion.div>
+                    )}
+                    {isMissingFinalCancel && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ⚡ Cancel (3 ⊕ 3 = 0)
+                      </motion.div>
+                    )}
+                    {isMissingDone && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                        🏆 Missing = 2!
+                      </motion.div>
+                    )}
                     {isInserting && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
                         + Inserting
                       </motion.div>
                     )}
                     {isDeleting && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
                         - Deleting
                       </motion.div>
                     )}
                     {isFound && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md">
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
                         🔍 Found!
                       </motion.div>
                     )}
                     {isKadaneReset && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
                         🔄 Reset!
                       </motion.div>
                     )}
                     {isKadaneNewMax && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-pulse shadow-md whitespace-nowrap">
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-pulse shadow-md whitespace-nowrap">
                         🏆 Max: {step.maxSum}
                       </motion.div>
                     )}
                     {isKadaneExtend && (
-                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -26 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
                         ➕ Extend
+                      </motion.div>
+                    )}
+                    {isStockNewMin && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        🏷️ Buy @ ${val}
+                      </motion.div>
+                    )}
+                    {isStockNewMax && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-pulse shadow-md whitespace-nowrap">
+                        📈 Profit: +${step.profit}
+                      </motion.div>
+                    )}
+                    {isStockPeakMax && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap">
+                        🏆 Max Profit: +${step.maxProfit}!
+                      </motion.div>
+                    )}
+                    {isStockHold && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-slate-600 text-slate-200 font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        📉 +${step.profit} (&lt; ${step.maxProfit})
+                      </motion.div>
+                    )}
+                    {isProductPrefix && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                        ⬅️ ans[{i}] = {step.ansArray?.[i]}
+                      </motion.div>
+                    )}
+                    {isProductSuffix && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-purple-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ✨ ans[{i}] = {step.ansArray?.[i]}
+                      </motion.div>
+                    )}
+                    {isRotateStage1Done && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ✅ Inverted [0..6]
+                      </motion.div>
+                    )}
+                    {isRotateStage2Done && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ✨ Prefix [0..2] = [5,6,7]
+                      </motion.div>
+                    )}
+                    {isRotateStage3Done && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-purple-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                        ✨ Suffix [3..6] = [1,2,3,4]
+                      </motion.div>
+                    )}
+                    {isRotateComplete && (
+                      <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: -24 }} exit={{ opacity: 0 }} className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                        🏆 Rotated by k=3!
                       </motion.div>
                     )}
                   </AnimatePresence>
 
                   <motion.div
                     animate={{
-                      scale: (isInserting || isDeleting || isFound || isSwapping || isKadaneNewMax) ? 1.15 : isHighlighted ? 1.08 : 1,
-                      y: (isInserting || isDeleting || isFound || isSwapping || isKadaneNewMax) ? -10 : isHighlighted ? -6 : 0,
+                      scale: (isInserting || isDeleting || isFound || isSwapping || isRotateSwapped || isKadaneNewMax || isStockPeakMax || isProductSuffix || isRotateDone || (isMajorityDone && val === 3) || isMajorityElect || isMajorityCancel || isMergeOverlap || isMergeMerged || isMergeCommitted || (isMergeComplete && (i === 0 || i === 4 || i === 6)) || isMissingCancel || isMissingFinalCancel || isMissingAccumulate || isMissingDone) ? 1.12 : isHighlighted ? 1.05 : 1,
+                      y: (isInserting || isDeleting || isFound || isSwapping || isRotateSwapped || isKadaneNewMax || isStockPeakMax || isProductSuffix || isRotateDone || (isMajorityDone && val === 3) || isMajorityElect || isMajorityCancel || isMergeOverlap || isMergeMerged || isMergeCommitted || (isMergeComplete && (i === 0 || i === 4 || i === 6)) || isMissingCancel || isMissingFinalCancel || isMissingAccumulate || isMissingDone) ? -8 : isHighlighted ? -4 : 0,
                     }}
                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                     className={`sketch-card ${
-                      isKadaneBest
+                      isStockMatch
+                        ? (i === step.buyIndex
+                            ? '!border-sky-400 !bg-sky-500/25 shadow-lg shadow-sky-500/30 ring-2 ring-sky-400'
+                            : '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400')
+                        : isKadaneBest
                         ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400'
                         : isInKadaneWindow
                         ? '!border-amber-400 !bg-amber-500/20 shadow-md ring-1 ring-amber-400/60'
+                        : isProductSuffix
+                        ? '!border-purple-400 !bg-purple-500/25 shadow-lg ring-2 ring-purple-400'
+                        : isProductPrefix
+                        ? '!border-sky-400 !bg-sky-500/25 shadow-lg ring-2 ring-sky-400'
+                        : isProductDone
+                        ? '!border-emerald-400 !bg-emerald-500/20 shadow-md ring-1 ring-emerald-400 text-emerald-300'
+                        : isRotateDone
+                        ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold'
+                        : isMajorityDone && val === 3
+                        ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                        : isMajorityElect
+                        ? '!border-amber-400 !bg-amber-500/25 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-200 font-bold scale-105'
+                        : isMajorityCancel
+                        ? '!border-rose-400 !bg-rose-500/25 shadow-lg shadow-rose-500/30 ring-2 ring-rose-400 text-rose-200 font-bold scale-105'
+                        : isMajorityInspect
+                        ? '!border-sky-400 !bg-sky-500/20 ring-1 ring-sky-400/60 text-sky-200 font-bold'
+                        : track === 'merge-intervals' && (step.decision === 'complete' || step.isMatch)
+                        ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                        : isMergeCurrentCard
+                        ? '!border-amber-400 !bg-amber-500/25 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-200 font-bold scale-105'
+                        : isMergeNextCard
+                        ? '!border-sky-400 !bg-sky-500/25 shadow-lg shadow-sky-500/30 ring-2 ring-sky-400 text-sky-200 font-bold scale-105'
+                        : track === 'find-missing' && (step.decision === 'complete' || step.isMatch)
+                        ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                        : isMissingCancel || isMissingFinalCancel
+                        ? '!border-rose-400 !bg-rose-500/25 shadow-lg shadow-rose-500/30 ring-2 ring-rose-400 text-rose-200 font-bold scale-105'
+                        : isMissingAccumulate
+                        ? '!border-amber-400 !bg-amber-500/25 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-200 font-bold scale-105'
+                        : isMissingInspect
+                        ? '!border-sky-400 !bg-sky-500/20 ring-1 ring-sky-400/60 text-sky-200 font-bold'
+                        : isSwapping && track === 'rotate-array'
+                        ? '!border-rose-400 !bg-rose-500/25 shadow-lg shadow-rose-500/30 ring-2 ring-rose-400 text-rose-200 font-bold scale-105'
+                        : isRotateSwapped
+                        ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                        : isInRotateWindow && step.stage === 2
+                        ? '!border-sky-400/80 !bg-sky-500/15 ring-1 ring-sky-400/50'
+                        : isInRotateWindow && step.stage === 3
+                        ? '!border-purple-400/80 !bg-purple-500/15 ring-1 ring-purple-400/50'
+                        : isInRotateWindow && step.stage === 1
+                        ? '!border-amber-400/80 !bg-amber-500/15 ring-1 ring-amber-400/50'
                         : isInserting || isFound
                         ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg ring-2 ring-emerald-400'
-                        : isDeleting || isSwapping
+                        : isDeleting || (isSwapping && track !== 'buy-sell-stock')
                         ? '!border-rose-400 !bg-rose-500/20 shadow-lg ring-2 ring-rose-400'
                         : val === null
                         ? 'border-dashed border-white/20 text-white/30'
                         : isBothLeftRight
                         ? 'border-purple-400 bg-purple-500/20 ring-1 ring-purple-400'
+                        : isStockBuyDay && !isIndex
+                        ? '!border-sky-400 !bg-sky-500/20 shadow-md ring-1 ring-sky-400/60'
+                        : isStockSellDay && !isIndex
+                        ? '!border-emerald-400 !bg-emerald-500/20 shadow-md ring-1 ring-emerald-400/60'
                         : isIndex || isLeft
                         ? 'active-orange'
                         : isRight
@@ -427,9 +894,30 @@ export default function ArrayVisualizer() {
                         : ''
                     }`}
                   >
-                    {val !== null ? val : '∅'}
-                    <div className="sketch-card-index">[{i}]</div>
+                    {val !== null ? (track === 'buy-sell-stock' ? `$${val}` : val) : '∅'}
+                    <div className="sketch-card-index">
+                      {track === 'buy-sell-stock'
+                        ? `Day ${i}`
+                        : track === 'merge-intervals'
+                        ? `Intv ${Math.floor(i / 2)} [${i}]`
+                        : `[${i}]`}
+                    </div>
                   </motion.div>
+
+                  {/* Stock Buy Day Marker */}
+                  <AnimatePresence>
+                    {track === 'buy-sell-stock' && isStockBuyDay && !isIndex && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-sky-300 font-bold bg-sky-500/20 px-2 py-0.5 rounded-md border border-sky-400/40 shadow-sm"
+                      >
+                        <div className="text-[10px]">min buy</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* Combined Left + Right Pointer */}
                   <AnimatePresence>
@@ -455,7 +943,7 @@ export default function ArrayVisualizer() {
                         exit={{ opacity: 0, y: 10 }}
                         className="sketch-pointer sketch-pointer-orange"
                       >
-                        <div>i = {i}</div>
+                        <div>{track === 'buy-sell-stock' ? `Day ${i}` : `i = ${i}`}</div>
                         <div className="text-xs leading-none">▲</div>
                       </motion.div>
                     )}
@@ -494,6 +982,37 @@ export default function ArrayVisualizer() {
               );
             })}
           </div>
+
+          {/* Live Output Array for Product Except Self */}
+          {track === 'product-except-self' && (
+            <div className="w-full max-w-xl mx-auto flex flex-col items-center mt-1 mb-4 pt-3 pb-2 border-t border-[var(--sketch-border)]">
+              <div className="text-xs font-mono text-amber-400 font-bold mb-2 flex items-center gap-2">
+                <span>📤 Output Array: <code className="text-white">answer</code></span>
+                <span className="text-[10px] text-[var(--sketch-text-muted)] font-normal">(stores prefix × suffix at each position)</span>
+              </div>
+              <div className="flex items-center gap-2.5 sm:gap-4">
+                {(step.ansArray || [1, 1, 2, 6]).map((ansVal, aIdx) => {
+                  const isCurrentAns = step.index === aIdx;
+                  return (
+                    <div key={aIdx} className="flex flex-col items-center">
+                      <div className={`w-12 h-11 sm:w-14 sm:h-12 rounded-xl flex items-center justify-center font-mono font-extrabold text-sm sm:text-base border transition-all duration-300 ${
+                        isCurrentAns
+                          ? 'bg-amber-500/25 border-amber-400 text-amber-300 scale-110 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
+                          : step.isMatch || step.pass === 'complete'
+                          ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
+                          : ansVal !== '?'
+                          ? 'bg-sky-500/15 border-sky-400/50 text-sky-200'
+                          : 'bg-white/5 border-dashed border-white/20 text-white/30'
+                      }`}>
+                        {ansVal}
+                      </div>
+                      <span className="text-[10px] font-mono text-[var(--sketch-text-muted)] mt-1">ans[{aIdx}]</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Debug Panel (Code & State) */}
@@ -505,11 +1024,11 @@ export default function ArrayVisualizer() {
             </div>
 
             <div className="space-y-0.5">
-                {activeCode.map((c) => {
+                {activeCode.map((c, idx) => {
                   const isActive = step.activeLine === c.line;
                   return (
                     <div
-                      key={c.line}
+                      key={`${c.line}-${idx}`}
                       className={`sketch-code-line gap-3 ${isActive ? 'active' : ''}`}
                     >
                       <span className="w-6 shrink-0 text-[var(--sketch-text-muted)] select-none font-mono">{c.line}</span>

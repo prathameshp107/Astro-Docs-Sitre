@@ -1537,12 +1537,296 @@ export default function LogicSection({ topicId }) {
                     const isMoveZeroes = resolvedTrackKey === 'two-pointers-move-zeroes' || resolvedTrackKey === 'move-zeroes';
                     const isSortColors = resolvedTrackKey === 'two-pointers-sort-colors' || resolvedTrackKey === 'sort-colors';
                     const isBubbleSort = resolvedTrackKey === 'sorting-bubble-sort' || resolvedTrackKey === 'bubble-sort';
+                    const isStockTrack = resolvedTrackKey === 'arrays-buy-sell-stock' || resolvedTrackKey === 'buy-sell-stock' || activeTrack === 'buy-sell-stock';
+                    const isKadaneTrack = resolvedTrackKey === 'arrays-kadane' || resolvedTrackKey === 'kadane' || activeTrack === 'kadane';
+                    const isProductTrack = resolvedTrackKey === 'arrays-product-except-self' || resolvedTrackKey === 'product-except-self' || activeTrack === 'product-except-self';
+                    const isRotateTrack = resolvedTrackKey === 'arrays-rotate-array' || resolvedTrackKey === 'rotate-array' || activeTrack === 'rotate-array';
+                    const isMajorityTrack = resolvedTrackKey === 'arrays-majority-element' || resolvedTrackKey === 'majority-element' || activeTrack === 'majority-element';
+                    const isMergeTrack = resolvedTrackKey === 'arrays-merge-intervals' || resolvedTrackKey === 'merge-intervals' || activeTrack === 'merge-intervals';
+                    const isMissingTrack = resolvedTrackKey === 'arrays-find-missing' || resolvedTrackKey === 'find-missing' || activeTrack === 'find-missing';
+
                     const swapFrom = st.swapFrom !== undefined ? st.swapFrom : null;
                     const swapTo = st.swapTo !== undefined ? st.swapTo : null;
                     const isStepSwapping = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
 
                     return (
                       <div className="flex flex-col items-center w-full my-2">
+                        {/* Buy/Sell Stock Step HUD */}
+                        {isStockTrack && (
+                          <div className="w-full max-w-xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sky-400 font-extrabold">minPrice (buy):</span>
+                              <span className="px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-extrabold text-sm">
+                                ${st.minPrice !== undefined ? st.minPrice : (st.state?.minPrice ?? 7)}
+                              </span>
+                              <span className="text-[var(--sketch-text-muted)] text-[11px]">
+                                (Day {st.buyIndex ?? 0})
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">profit today:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-sm border ${
+                                (st.profit ?? st.state?.['profit today'] ?? 0) > 0
+                                   ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                   : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                              }`}>
+                                +${st.profit !== undefined ? st.profit : (st.state?.['profit today'] ?? 0)}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-emerald-400 font-extrabold">maxProfit:</span>
+                              <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-extrabold text-sm">
+                                +${st.maxProfit !== undefined ? st.maxProfit : (st.state?.maxProfit ?? 0)}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Kadane Algorithm Step HUD */}
+                        {isKadaneTrack && (
+                          <div className="w-full max-w-xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">currentSum:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-sm border ${
+                                (st.currentSum ?? 0) < 0
+                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                              }`}>
+                                {st.currentSum !== undefined ? st.currentSum : (st.state?.currentSum ?? 0)}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-emerald-400 font-extrabold">maxSum:</span>
+                              <span className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-extrabold text-sm">
+                                {st.maxSum !== undefined ? st.maxSum : (st.state?.maxSum ?? 0)}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Product of Array Except Self Step HUD */}
+                        {isProductTrack && (
+                          <div className="w-full max-w-xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">Pass:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                                st.pass === 'suffix' || st.pass === 'suffix_init'
+                                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                                  : st.pass === 'complete' || st.isMatch
+                                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                  : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                              }`}>
+                                {st.pass === 'suffix' || st.pass === 'suffix_init'
+                                  ? '➡️ Pass 2: Suffix (Right ➔ Left)'
+                                  : st.pass === 'complete' || st.isMatch
+                                  ? '✅ Complete (No Division)'
+                                  : '⬅️ Pass 1: Prefix (Left ➔ Right)'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sky-400 font-extrabold">prefixProd:</span>
+                              <span className="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">
+                                {st.prefixProd ?? 1}
+                              </span>
+                              <span className="text-purple-400 font-extrabold ml-2">suffix:</span>
+                              <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold">
+                                {st.suffixProd ?? 1}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Rotate Array by K Steps HUD */}
+                        {isRotateTrack && (
+                          <div className="w-full max-w-xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">Stage:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                                st.stage === 1
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : st.stage === 2
+                                  ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                                  : st.stage === 3
+                                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/40'
+                                  : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                              }`}>
+                                {st.stage === 1
+                                  ? '🔄 Stage 1: Reverse ALL [0..n-1]'
+                                  : st.stage === 2
+                                  ? '⏪ Stage 2: Reverse First K=3 [0..k-1]'
+                                  : st.stage === 3
+                                  ? '⏩ Stage 3: Reverse Rest [k..n-1]'
+                                  : '🎉 Rotation Complete (k=3)'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">k:</span>
+                              <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                                3 (k % 7 = 3)
+                              </span>
+                              {st.left !== null && st.left !== undefined && (
+                                <span className="text-sky-300 font-bold ml-2">
+                                  L={st.left}, R={st.right}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Boyer-Moore Majority Element Step HUD */}
+                        {isMajorityTrack && (
+                          <div className="w-full max-w-xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">👑 Candidate:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                                st.candidate !== null && st.candidate !== undefined
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                              }`}>
+                                {st.candidate !== null && st.candidate !== undefined ? `Element ${st.candidate}` : 'None (Open)'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-emerald-400 font-extrabold">🗳️ Vote Count:</span>
+                              <span className={`px-2.5 py-0.5 rounded-md font-extrabold text-xs border ${
+                                (st.count ?? 0) > 0
+                                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                  : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                              }`}>
+                                {st.count ?? 0}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sky-400 font-extrabold">🎯 Threshold:</span>
+                              <span className="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">
+                                &gt; 3.5 (≥ 4 / 7)
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5 text-[11px] font-bold">
+                              <span className={`px-2 py-0.5 rounded-md border ${
+                                st.decision === 'elect'
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : st.decision === 'cancel'
+                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                                  : st.decision === 'inspect'
+                                  ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                                  : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                              }`}>
+                                {st.decision === 'elect'
+                                  ? '👑 Elected (+1)'
+                                  : st.decision === 'cancel'
+                                  ? '⚡ Mismatch (-1 ➔ 0)'
+                                  : st.decision === 'inspect'
+                                  ? `🔍 Inspecting arr[${st.index}]`
+                                  : '🏆 Winner: 3 (4/7)'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Merge Intervals Step HUD */}
+                        {isMergeTrack && (
+                          <div className="w-full max-w-2xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                              <span className="text-amber-400 font-extrabold">👑 Active [curr]:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                                st.currentInterval
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                              }`}>
+                                {st.currentInterval ? `[${st.currentInterval.join(', ')}]` : 'None'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sky-400 font-extrabold">🔍 Candidate [next]:</span>
+                              <span className={`px-2.5 py-1 rounded-md font-extrabold text-xs border ${
+                                st.nextInterval
+                                  ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                                  : 'bg-slate-500/20 text-slate-300 border-slate-500/40'
+                              }`}>
+                                {st.nextInterval ? `[${st.nextInterval.join(', ')}]` : 'None'}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-emerald-400 font-extrabold">📦 Merged List:</span>
+                              <div className="flex items-center gap-1">
+                                {st.mergedList && st.mergedList.length > 0 ? (
+                                  st.mergedList.map((intv, k) => (
+                                    <span key={k} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-xs">
+                                      [{intv.join(', ')}]
+                                    </span>
+                                  ))
+                                ) : (
+                                  <span className="text-slate-500 text-xs italic">[ Empty ]</span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="w-full flex items-center justify-between pt-1 border-t border-[var(--sketch-border)] text-[11px]">
+                              <span className="text-[var(--sketch-text-muted)] font-bold">Action / Check:</span>
+                              <span className={`px-2 py-0.5 rounded-md border font-bold ${
+                                st.decision === 'compare_overlap' || st.decision === 'merge'
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : st.decision === 'compare_no_overlap'
+                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                                  : st.decision === 'commit' || st.decision === 'push_final' || st.decision === 'complete'
+                                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                  : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                              }`}>
+                                {st.state?.check || st.state?.formula || st.state?.action || st.comparison || 'Processing'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Find Missing Number Step HUD */}
+                        {isMissingTrack && (
+                          <div className="w-full max-w-xl mx-auto mb-4 p-3 bg-[var(--sketch-bg)] border border-[var(--sketch-border)] rounded-xl shadow-md flex flex-col gap-2.5 text-xs font-mono">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-amber-400 font-extrabold">🧮 XOR Accumulator:</span>
+                                <span className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-extrabold text-sm">
+                                  {st.xorAcc !== undefined ? st.xorAcc : (st.state?.xorAcc ?? 0)}
+                                </span>
+                                <span className="px-2 py-0.5 rounded-md bg-slate-500/20 text-slate-300 border border-slate-500/40 text-[11px] font-bold">
+                                  {st.binary || st.state?.binary || '000'}₂
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sky-400 font-extrabold">📏 Array Size (n):</span>
+                                <span className="px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40 font-extrabold text-xs">
+                                  n = {st.n ?? 3} ([0..{st.n ?? 3}])
+                                </span>
+                              </div>
+                            </div>
+
+                            {st.cancelledPairs && st.cancelledPairs.length > 0 && (
+                              <div className="flex items-center gap-2 pt-1 border-t border-[var(--sketch-border)]">
+                                <span className="text-emerald-400 font-extrabold">⚡ Canceled Pairs (a ⊕ a = 0):</span>
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  {st.cancelledPairs.map((pair, k) => (
+                                    <span key={k} className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-[11px]">
+                                      {pair}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            <div className="w-full flex items-center justify-between pt-1 border-t border-[var(--sketch-border)] text-[11px]">
+                              <span className="text-[var(--sketch-text-muted)] font-bold">Formula / Step:</span>
+                              <span className={`px-2 py-0.5 rounded-md border font-bold ${
+                                st.decision === 'cancel_pair' || st.decision === 'cancel_final' || st.decision === 'complete'
+                                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                  : st.decision === 'xor_accumulate'
+                                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                                  : 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                              }`}>
+                                {st.formula || st.state?.formula || st.state?.action || st.computation || 'XOR computation'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
                         {isStepSwapping && (
                           <div className="mb-2 px-3.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono font-bold text-xs shadow-md flex items-center gap-2">
                             <span>🔄 Swapping indices [{swapFrom}] ↔ [{swapTo}]:</span>
@@ -1554,6 +1838,7 @@ export default function LogicSection({ topicId }) {
 
                         <div className="flex items-start gap-3 md:gap-5 my-2 overflow-x-auto overflow-y-visible w-full justify-center pt-4 pb-16">
                           {stepArray.map((val, idx) => {
+                            const isIndex = st.index !== undefined && st.index !== null && st.index === idx;
                             const isLeft = (st.left !== undefined && st.left === idx) || (st.front !== undefined && st.front === idx && st.front !== -1) || (st.low !== undefined && st.low === idx);
                             const isRight = (st.right !== undefined && st.right === idx) || (st.rear !== undefined && st.rear === idx && st.rear !== -1) || (st.high !== undefined && st.high === idx);
                             const isMidPoint = st.mid !== undefined && st.mid !== null && st.mid === idx;
@@ -1566,6 +1851,72 @@ export default function LogicSection({ topicId }) {
                             const isBothLeftPivot = isLeft && isPivotPoint && !isRight && !isMidPoint;
                             const isBothRightPivot = isRight && isPivotPoint && !isLeft && !isMidPoint;
                             const inWindow = st.left !== null && st.left !== undefined && st.right !== null && st.right !== undefined && idx >= st.left && idx <= st.right;
+
+                            // Stock highlights
+                            const isStockBuyDay = isStockTrack && st.buyIndex !== undefined && st.buyIndex === idx;
+                            const isStockSellDay = isStockTrack && ((st.sellIndex !== undefined && st.sellIndex === idx) || (st.decision === 'peak_max' && st.index === idx));
+                            const isStockMatch = isStockTrack && st.isMatch && (idx === st.buyIndex || idx === st.sellIndex);
+
+                            // Kadane highlights
+                            const isInKadaneWindow = isKadaneTrack && st.subStart !== undefined && idx >= st.subStart && idx <= st.subEnd;
+                            const isKadaneBest = isKadaneTrack && st.maxStart !== undefined && idx >= st.maxStart && idx <= st.maxEnd && (st.decision === 'peak_max' || st.isMatch);
+
+                            // Stock action badges
+                            const isStockNewMin = isStockTrack && isIndex && st.decision === 'new_min';
+                            const isStockNewMax = isStockTrack && isIndex && st.decision === 'new_max';
+                            const isStockPeakMax = isStockTrack && isIndex && st.decision === 'peak_max';
+                            const isStockHold = isStockTrack && isIndex && st.decision === 'hold';
+
+                            // Kadane action badges
+                            const isKadaneReset = isKadaneTrack && isIndex && (st.decision === 'reset_and_max' || st.decision === 'reset');
+                            const isKadaneNewMax = isKadaneTrack && isIndex && (st.decision === 'peak_max' || st.decision === 'new_max');
+                            const isKadaneExtend = isKadaneTrack && isIndex && st.decision === 'extend';
+
+                            // Product action badges
+                            const isProductPrefix = isProductTrack && isIndex && st.pass === 'prefix';
+                            const isProductSuffix = isProductTrack && isIndex && st.pass === 'suffix';
+                            const isProductDone = isProductTrack && (st.pass === 'complete' || st.isMatch);
+
+                            // Rotate action badges & window
+                            const isInRotateWindow = isRotateTrack && st.stageWindow && idx >= st.stageWindow[0] && idx <= st.stageWindow[1];
+                            const isRotateSwapped = isRotateTrack && (idx === st.swapFrom || idx === st.swapTo) && st.decision === 'swapped';
+                            const isRotateDone = isRotateTrack && (st.stage === 'complete' || st.isMatch);
+                            const isRotateStage1Done = isRotateTrack && idx === 3 && st.decision === 'stage1_done';
+                            const isRotateStage2Done = isRotateTrack && idx === 1 && st.decision === 'stage2_done';
+                            const isRotateStage3Done = isRotateTrack && (idx === 4 || idx === 5) && st.decision === 'stage3_done';
+                            const isRotateComplete = isRotateTrack && idx === 3 && (st.decision === 'complete' || st.isMatch);
+
+                            // Majority action badges
+                            const isMajorityElect = isMajorityTrack && isIndex && st.decision === 'elect';
+                            const isMajorityCancel = isMajorityTrack && isIndex && st.decision === 'cancel';
+                            const isMajorityInspect = isMajorityTrack && isIndex && st.decision === 'inspect';
+                            const isMajorityDone = isMajorityTrack && (st.decision === 'complete' || st.isMatch);
+
+                            // Merge intervals action badges
+                            const isMergeOverlap = isMergeTrack && st.decision === 'compare_overlap' && idx === 2;
+                            const isMergeMerged = isMergeTrack && st.decision === 'merge' && idx === 0;
+                            const isMergeDisjoint = isMergeTrack && st.decision === 'compare_no_overlap' && (idx === 4 || idx === 6) && idx === st.index;
+                            const isMergeCommitted = isMergeTrack && st.decision === 'commit' && (idx === 4 || idx === 6) && idx === st.index;
+                            const isMergePushFinal = isMergeTrack && st.decision === 'push_final' && idx === 6;
+                            const isMergeComplete = isMergeTrack && (st.decision === 'complete' || st.isMatch) && (idx === 0 || idx === 4 || idx === 6);
+
+                            const isMergeCurrentCard = isMergeTrack && (
+                              ((idx === 0 || idx === 1) && st.currentInterval?.[0] === 1) ||
+                              ((idx === 4 || idx === 5) && st.currentInterval?.[0] === 8) ||
+                              ((idx === 6 || idx === 7) && st.currentInterval?.[0] === 15)
+                            );
+                            const isMergeNextCard = isMergeTrack && (
+                              ((idx === 2 || idx === 3) && st.nextInterval?.[0] === 2) ||
+                              ((idx === 4 || idx === 5) && st.nextInterval?.[0] === 8) ||
+                              ((idx === 6 || idx === 7) && st.nextInterval?.[0] === 15)
+                            );
+
+                            // Find missing action badges
+                            const isMissingInspect = isMissingTrack && isIndex && st.decision === 'inspect';
+                            const isMissingAccumulate = isMissingTrack && isIndex && st.decision === 'xor_accumulate';
+                            const isMissingCancel = isMissingTrack && isIndex && st.decision === 'cancel_pair';
+                            const isMissingFinalCancel = isMissingTrack && (st.decision === 'cancel_final' || st.action === 'cancel_final');
+                            const isMissingDone = isMissingTrack && (st.decision === 'complete' || st.isMatch);
 
                             const isSwappingCard = isStepSwapping && (idx === swapFrom || idx === swapTo);
 
@@ -1614,16 +1965,209 @@ export default function LogicSection({ topicId }) {
 
                             return (
                               <div key={idx} className="relative flex flex-col items-center">
-                                {/* Floating Action Badge for Swapping */}
-                                {isSwappingCard && (
+                                {/* Floating Action Badges */}
+                                {isSwappingCard && !isStockTrack && (
                                   <div className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
                                     🔄 Swap
+                                  </div>
+                                )}
+                                {isRotateSwapped && (
+                                  <div className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ✅ Swapped!
+                                  </div>
+                                )}
+                                {isMajorityElect && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    👑 Elect {val}
+                                  </div>
+                                )}
+                                {isMajorityCancel && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    ⚡ Mismatch (-1)
+                                  </div>
+                                )}
+                                {isMajorityInspect && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    🔍 Inspect
+                                  </div>
+                                )}
+                                {isMajorityDone && val === 3 && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    🏆 Majority!
+                                  </div>
+                                )}
+                                {isMergeOverlap && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ⚡ 2 ≤ 3 (Overlap!)
+                                  </div>
+                                )}
+                                {isMergeMerged && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ✨ Merged ➔ [1, 6]
+                                  </div>
+                                )}
+                                {isMergeDisjoint && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    ⏹️ Gap / Disjoint
+                                  </div>
+                                )}
+                                {isMergeCommitted && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    📦 Committed
+                                  </div>
+                                )}
+                                {isMergePushFinal && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    🏁 Final Push
+                                  </div>
+                                )}
+                                {isMergeComplete && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                                    🏆 Merged List (3)
+                                  </div>
+                                )}
+                                {isStockNewMin && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    🏷️ Buy @ ${val}
+                                  </div>
+                                )}
+                                {isStockNewMax && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    📈 Profit: +${st.profit}
+                                  </div>
+                                )}
+                                {isStockPeakMax && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    🏆 Max Profit: +${st.maxProfit}!
+                                  </div>
+                                )}
+                                {isStockHold && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-slate-600 text-slate-200 font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    📉 +${st.profit} (&lt; ${st.maxProfit})
+                                  </div>
+                                )}
+                                {isKadaneReset && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    🔄 Reset!
+                                  </div>
+                                )}
+                                {isKadaneNewMax && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    🏆 Max: {st.maxSum}
+                                  </div>
+                                )}
+                                {isKadaneExtend && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    ➕ Extend
+                                  </div>
+                                )}
+                                {isProductPrefix && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    ⬅️ ans[{idx}] = {st.ansArray?.[idx]}
+                                  </div>
+                                )}
+                                {isProductSuffix && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-purple-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ✨ ans[{idx}] = {st.ansArray?.[idx]}
+                                  </div>
+                                )}
+                                {isRotateStage1Done && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ✅ Inverted [0..6]
+                                  </div>
+                                )}
+                                {isRotateStage2Done && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ✨ Prefix [0..2] = [5,6,7]
+                                  </div>
+                                )}
+                                {isRotateStage3Done && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-purple-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ✨ Suffix [3..6] = [1,2,3,4]
+                                  </div>
+                                )}
+                                {isRotateComplete && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    🏆 Rotated by k=3!
+                                  </div>
+                                )}
+                                {isMissingInspect && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-sky-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap">
+                                    🔍 arr[{idx}] = {val}
+                                  </div>
+                                )}
+                                {isMissingAccumulate && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    🧮 xor = {st.xorAcc}
+                                  </div>
+                                )}
+                                {isMissingCancel && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ⚡ {val} ⊕ {val} = 0
+                                  </div>
+                                )}
+                                {isMissingFinalCancel && idx === stepArray.length - 1 && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-indigo-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-pulse">
+                                    ⚡ 3 ⊕ 3 = 0 (n={st.n ?? 3})
+                                  </div>
+                                )}
+                                {isMissingDone && (
+                                  <div className="absolute -top-3 z-20 px-2.5 py-0.5 rounded-full bg-emerald-500 text-white font-mono text-[10px] font-bold shadow-md whitespace-nowrap animate-bounce">
+                                    🏆 Missing = {st.missing ?? 2}!
                                   </div>
                                 )}
 
                                 <div
                                   className={`sketch-card ${
-                                    isSwappingCard
+                                    isStockMatch
+                                      ? (idx === st.buyIndex
+                                          ? '!border-sky-400 !bg-sky-500/25 shadow-lg shadow-sky-500/30 ring-2 ring-sky-400 text-sky-200 font-bold scale-105'
+                                          : '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105')
+                                      : isKadaneBest
+                                      ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold'
+                                      : isInKadaneWindow
+                                      ? '!border-amber-400 !bg-amber-500/20 shadow-md ring-1 ring-amber-400/60 font-bold'
+                                      : isProductSuffix
+                                      ? '!border-purple-400 !bg-purple-500/25 ring-2 ring-purple-400 font-bold text-purple-200 scale-105 shadow-md shadow-purple-500/30'
+                                      : isProductPrefix
+                                      ? '!border-sky-400 !bg-sky-500/25 ring-2 ring-sky-400 font-bold text-sky-200 scale-105 shadow-md shadow-sky-500/30'
+                                      : isProductDone
+                                      ? '!border-emerald-400 !bg-emerald-500/20 ring-1 ring-emerald-400 text-emerald-300'
+                                      : isRotateDone
+                                      ? '!border-emerald-400 !bg-emerald-500/25 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                                      : isMissingDone
+                                      ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                                      : isMissingCancel
+                                      ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                                      : isMissingAccumulate
+                                      ? '!border-amber-400 !bg-amber-500/25 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-200 font-bold scale-105'
+                                      : isMissingInspect
+                                      ? '!border-sky-400 !bg-sky-500/20 ring-1 ring-sky-400/60 text-sky-200 font-bold'
+                                      : isMajorityDone && val === 3
+                                      ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                                      : isMajorityElect
+                                      ? '!border-amber-400 !bg-amber-500/25 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-200 font-bold scale-105'
+                                      : isMajorityCancel
+                                      ? '!border-rose-400 !bg-rose-500/25 shadow-lg shadow-rose-500/30 ring-2 ring-rose-400 text-rose-200 font-bold scale-105'
+                                      : isMajorityInspect
+                                      ? '!border-sky-400 !bg-sky-500/20 ring-1 ring-sky-400/60 text-sky-200 font-bold'
+                                      : isMergeTrack && (st.decision === 'complete' || st.isMatch)
+                                      ? '!border-emerald-400 !bg-emerald-500/25 shadow-lg shadow-emerald-500/30 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105'
+                                      : isMergeCurrentCard
+                                      ? '!border-amber-400 !bg-amber-500/25 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400 text-amber-200 font-bold scale-105'
+                                      : isMergeNextCard
+                                      ? '!border-sky-400 !bg-sky-500/25 shadow-lg shadow-sky-500/30 ring-2 ring-sky-400 text-sky-200 font-bold scale-105'
+                                      : isSwappingCard && isRotateTrack
+                                      ? '!border-rose-400 !bg-rose-500/25 ring-2 ring-rose-400 text-rose-200 font-bold scale-105 shadow-md shadow-rose-500/30'
+                                      : isRotateSwapped
+                                      ? '!border-emerald-400 !bg-emerald-500/25 ring-2 ring-emerald-400 text-emerald-200 font-bold scale-105 shadow-md shadow-emerald-500/30'
+                                      : isInRotateWindow && st.stage === 2
+                                      ? '!border-sky-400/80 !bg-sky-500/15 ring-1 ring-sky-400/50'
+                                      : isInRotateWindow && st.stage === 3
+                                      ? '!border-purple-400/80 !bg-purple-500/15 ring-1 ring-purple-400/50'
+                                      : isInRotateWindow && st.stage === 1
+                                      ? '!border-amber-400/80 !bg-amber-500/15 ring-1 ring-amber-400/50'
+                                      : isSwappingCard && !isStockTrack
                                       ? '!border-rose-400 !bg-rose-500/20 shadow-lg shadow-rose-500/40 ring-2 ring-rose-400 text-rose-200 font-bold scale-105'
                                       : st.isMatch && (isLeft || isRight || isMidPoint || isPivotPoint)
                                       ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400 text-emerald-200'
@@ -1633,14 +2177,36 @@ export default function LogicSection({ topicId }) {
                                       ? '!border-cyan-400 !bg-cyan-500/10 ring-1 ring-cyan-400/60'
                                       : isMidPoint
                                       ? '!border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
+                                      : isStockBuyDay && !isIndex
+                                      ? '!border-sky-400 !bg-sky-500/20 shadow-md ring-1 ring-sky-400/60'
+                                      : isStockSellDay && !isIndex
+                                      ? '!border-emerald-400 !bg-emerald-500/20 shadow-md ring-1 ring-emerald-400/60'
+                                      : isIndex
+                                      ? 'active-orange !border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/60 font-bold'
                                       : inWindow
                                       ? 'active-orange !border-amber-400 !bg-amber-500/20 shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/60'
                                       : ''
                                   }`}
                                 >
-                                  {val}
-                                  <div className="sketch-card-index">[{idx}]</div>
+                                  {isStockTrack
+                                    ? (val !== null ? `$${val}` : '∅')
+                                    : (val !== null ? val : '∅')}
+                                  <div className="sketch-card-index">
+                                    {isStockTrack
+                                      ? `Day ${idx}`
+                                      : isMergeTrack
+                                      ? `Intv ${Math.floor(idx / 2)} [${idx}]`
+                                      : `[${idx}]`}
+                                  </div>
                                 </div>
+
+                                {/* Stock Buy Marker Under Card */}
+                                {isStockTrack && isStockBuyDay && !isIndex && (
+                                  <div className="sketch-pointer text-sky-300 font-bold bg-sky-500/20 px-2 py-0.5 rounded-md border border-sky-400/40 shadow-sm mt-2 text-xs">
+                                    <div>min buy</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
+                                )}
 
                                 {/* Chalkboard Pointer Badges */}
                                 {isAllThree ? (
@@ -1698,11 +2264,47 @@ export default function LogicSection({ topicId }) {
                                     <div className="font-bold">{rightLabel}</div>
                                     <div className="text-xs leading-none">▲</div>
                                   </div>
+                                ) : isIndex && !isLeft && !isRight ? (
+                                  <div className="sketch-pointer sketch-pointer-orange mt-2">
+                                    <div className="font-bold">{isStockTrack ? `Day ${idx}` : `i = ${idx}`}</div>
+                                    <div className="text-xs leading-none">▲</div>
+                                  </div>
                                 ) : null}
                               </div>
                             );
                           })}
                         </div>
+
+                        {/* Live Output Array for Product Except Self */}
+                        {isProductTrack && (
+                          <div className="w-full max-w-xl mx-auto flex flex-col items-center mt-1 mb-2 pt-3 pb-2 border-t border-[var(--sketch-border)]">
+                            <div className="text-xs font-mono text-amber-400 font-bold mb-2 flex items-center gap-2">
+                              <span>📤 Output Array: <code className="text-white">answer</code></span>
+                              <span className="text-[10px] text-[var(--sketch-text-muted)] font-normal">(stores prefix × suffix at each position)</span>
+                            </div>
+                            <div className="flex items-center gap-2.5 sm:gap-4">
+                              {(st.ansArray || [1, 1, 2, 6]).map((ansVal, aIdx) => {
+                                const isCurrentAns = st.index === aIdx;
+                                return (
+                                  <div key={aIdx} className="flex flex-col items-center">
+                                    <div className={`w-12 h-11 sm:w-14 sm:h-12 rounded-xl flex items-center justify-center font-mono font-extrabold text-sm sm:text-base border transition-all duration-300 ${
+                                      isCurrentAns
+                                        ? 'bg-amber-500/25 border-amber-400 text-amber-300 scale-110 shadow-lg shadow-amber-500/30 ring-2 ring-amber-400'
+                                        : st.isMatch || st.pass === 'complete'
+                                        ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
+                                        : ansVal !== '?'
+                                        ? 'bg-sky-500/15 border-sky-400/50 text-sky-200'
+                                        : 'bg-white/5 border-dashed border-white/20 text-white/30'
+                                    }`}>
+                                      {ansVal}
+                                    </div>
+                                    <span className="text-[10px] font-mono text-[var(--sketch-text-muted)] mt-1">ans[{aIdx}]</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })()
