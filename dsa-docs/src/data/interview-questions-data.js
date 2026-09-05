@@ -1,5 +1,6 @@
 // ─── Barrel export — re-exports from per-technology files ──────────────
 import { JS_QUESTIONS } from './interview-questions/js.js';
+import { JS_TRICKY_QUESTIONS } from './interview-questions/js-tricky.js';
 import { REACT_QUESTIONS } from './interview-questions/react.js';
 import { NEXT_QUESTIONS } from './interview-questions/next.js';
 import { ANGULAR_QUESTIONS } from './interview-questions/angular.js';
@@ -14,22 +15,28 @@ import { OOPS_QUESTIONS } from './interview-questions/oops.js';
 import { PYTHON_QUESTIONS } from './interview-questions/python.js';
 import { REDIS_QUESTIONS } from './interview-questions/redis.js';
 import { AI_QUESTIONS } from './interview-questions/ai.js';
+import { LLM_QUESTIONS } from './interview-questions/llm.js';
+import { RAG_QUESTIONS } from './interview-questions/rag.js';
 
 export {
-  JS_QUESTIONS, REACT_QUESTIONS, NEXT_QUESTIONS,
+  JS_QUESTIONS, JS_TRICKY_QUESTIONS, REACT_QUESTIONS, NEXT_QUESTIONS,
   ANGULAR_QUESTIONS, CSS_QUESTIONS, DOCKER_QUESTIONS, DSA_QUESTIONS,
   HTML_QUESTIONS, MONGODB_QUESTIONS, MYSQL_QUESTIONS, NODEJS_QUESTIONS,
-  OOPS_QUESTIONS, PYTHON_QUESTIONS, REDIS_QUESTIONS, AI_QUESTIONS
+  OOPS_QUESTIONS, PYTHON_QUESTIONS, REDIS_QUESTIONS, AI_QUESTIONS,
+  LLM_QUESTIONS, RAG_QUESTIONS
 };
 
 export const TABS = [
   { id: "js", label: "JavaScript", accent: "#f7df1e", dim: "#3a3308", questions: JS_QUESTIONS },
+  { id: "js-tricky", label: "Tricky JS", accent: "#f59e0b", dim: "#3a2505", questions: JS_TRICKY_QUESTIONS },
   { id: "react", label: "React", accent: "#61dafb", dim: "#0b2f3a", questions: REACT_QUESTIONS },
   { id: "next", label: "Next.js", accent: "#ffffff", dim: "#1e2030", questions: NEXT_QUESTIONS },
   { id: "angular", label: "Angular", accent: "#dd0031", dim: "#2d000a", questions: ANGULAR_QUESTIONS },
   { id: "nodejs", label: "Node.js", accent: "#68a063", dim: "#0d2b0a", questions: NODEJS_QUESTIONS },
   { id: "python", label: "Python", accent: "#306998", dim: "#091a33", questions: PYTHON_QUESTIONS },
   { id: "ai", label: "AI / ML", accent: "#ff6b35", dim: "#2d1407", questions: AI_QUESTIONS },
+  { id: "llm", label: "LLM", accent: "#10a37f", dim: "#092e22", questions: LLM_QUESTIONS },
+  { id: "rag", label: "RAG", accent: "#06b6d4", dim: "#082930", questions: RAG_QUESTIONS },
   { id: "css", label: "CSS", accent: "#1572b6", dim: "#08233a", questions: CSS_QUESTIONS },
   { id: "html", label: "HTML", accent: "#e34f26", dim: "#2d0f05", questions: HTML_QUESTIONS },
   { id: "dsa", label: "DSA", accent: "#8b5cf6", dim: "#1f0d3f", questions: DSA_QUESTIONS },

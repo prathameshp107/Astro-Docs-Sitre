@@ -13,16 +13,16 @@ import {
   SiMysql,
   SiRedis,
   SiDocker,
-  SiOpenai,
 } from 'react-icons/si';
-import { LuBinary, LuBoxes } from 'react-icons/lu';
+import { LuBinary, LuBoxes, LuBrain, LuSparkles, LuLayers } from 'react-icons/lu';
 import { TABS, STORAGE_KEY, TOTAL_QUESTIONS } from '../../data/interview-questions-data.js';
 import '../../styles/sketch-visualizer.css';
 
 /* ─── Accent colors per tab ─── */
 const ACCENT = {
-  js: '#f7df1e', react: '#61dafb', next: '#ffffff', angular: '#dd0031',
-  nodejs: '#68a063', python: '#306998', ai: '#ff6b35', css: '#1572b6', html: '#e34f26',
+  js: '#f7df1e', 'js-tricky': '#f59e0b', react: '#61dafb', next: '#ffffff', angular: '#dd0031',
+  nodejs: '#68a063', python: '#306998', ai: '#ff6b35', llm: '#10a37f', rag: '#06b6d4',
+  css: '#1572b6', html: '#e34f26',
   dsa: '#8b5cf6', mongodb: '#47a248', mysql: '#4479a1', redis: '#dc382d',
   docker: '#2496ed', oops: '#ec4899',
 };
@@ -30,12 +30,15 @@ const ACCENT = {
 /* ─── Real Official Brand Icons per tab ─── */
 const TECH_ICON_MAP = {
   js: { Icon: SiJavascript, color: '#F7DF1E' },
+  'js-tricky': { Icon: SiJavascript, color: '#F59E0B' },
   react: { Icon: SiReact, color: '#61DAFB' },
   next: { Icon: SiNextdotjs, color: 'var(--sketch-text)' },
   angular: { Icon: SiAngular, color: '#DD0031' },
   nodejs: { Icon: SiNodedotjs, color: '#68A063' },
   python: { Icon: SiPython, color: '#3776AB' },
-  ai: { Icon: SiOpenai, color: '#10A37F' },
+  ai: { Icon: LuBrain, color: '#FF6B35' },
+  llm: { Icon: LuSparkles, color: '#10A37F' },
+  rag: { Icon: LuLayers, color: '#06B6D4' },
   css: { Icon: SiCss, color: '#1572B6' },
   html: { Icon: SiHtml5, color: '#E34F26' },
   dsa: { Icon: LuBinary, color: '#A78BFA' },
@@ -239,6 +242,44 @@ export default function InterviewQuestionHub() {
         });
         return <p key={`${i}-${j}`} className="iq-answer-para">{formatted}</p>;
       });
+    });
+  }
+
+  /* ─── Format question text with code snippet blocks & inline code ─── */
+  function formatQuestion(text) {
+    if (!text) return null;
+    if (!text.includes('```') && !text.includes('`') && !text.includes('\n')) {
+      return text;
+    }
+    const segments = text.split(/(```[\s\S]*?```)/g);
+    return segments.map((segment, i) => {
+      if (segment.startsWith('```') && segment.endsWith('```')) {
+        const code = segment.slice(3, -3).replace(/^[a-zA-Z]+\n/, '');
+        return (
+          <pre key={i} className="iq-question-code-block" onClick={(e) => e.stopPropagation()}>
+            <code>{code}</code>
+          </pre>
+        );
+      }
+      const inlineParts = segment.split(/(`[^`]+`)/g);
+      return (
+        <span key={i}>
+          {inlineParts.map((part, k) => {
+            if (part.startsWith('`') && part.endsWith('`')) {
+              return <code key={k} className="iq-inline-code">{part.slice(1, -1)}</code>;
+            }
+            if (part.includes('\n')) {
+              return part.split('\n').map((line, li) => (
+                <Fragment key={li}>
+                  {li > 0 && <br />}
+                  {line}
+                </Fragment>
+              ));
+            }
+            return part;
+          })}
+        </span>
+      );
     });
   }
 
@@ -667,7 +708,7 @@ export default function InterviewQuestionHub() {
         }
         .iq-card-row {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 14px;
           width: 100%;
         }
@@ -678,6 +719,7 @@ export default function InterviewQuestionHub() {
           min-width: 32px;
           color: var(--sketch-accent-orange);
           flex-shrink: 0;
+          margin-top: 3px;
         }
         .iq-card.done .iq-num { color: #22c55e; }
         .iq-text {
@@ -687,8 +729,34 @@ export default function InterviewQuestionHub() {
           color: var(--sketch-text);
           flex: 1;
           line-height: 1.4;
+          min-width: 0;
         }
         .iq-card.done .iq-text { text-decoration: line-through; text-decoration-color: rgba(34,197,94,0.5); }
+        .iq-card.done .iq-question-code-block { text-decoration: none; opacity: 0.75; }
+        .iq-question-code-block {
+          margin: 10px 0 4px;
+          padding: 12px 14px;
+          background: #121110;
+          border: 2px solid var(--sketch-border);
+          border-radius: 12px;
+          overflow-x: auto;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.84rem;
+          line-height: 1.6;
+          color: #fde68a;
+          white-space: pre;
+          tab-size: 2;
+          font-weight: 500;
+          text-decoration: none !important;
+          cursor: text;
+        }
+        .iq-question-code-block code {
+          font-family: inherit;
+          color: inherit;
+          background: none;
+          padding: 0;
+          border: none;
+        }
 
         .iq-check {
           width: 26px; height: 26px;
@@ -698,6 +766,7 @@ export default function InterviewQuestionHub() {
           display: flex; align-items: center; justify-content: center;
           transition: all 0.2s;
           cursor: pointer;
+          margin-top: 3px;
         }
         .iq-card:hover .iq-check { border-color: var(--sketch-accent-orange); }
         .iq-card.done .iq-check {
@@ -716,6 +785,7 @@ export default function InterviewQuestionHub() {
           color: var(--sketch-text-muted);
           transition: transform 0.3s ease, color 0.2s;
           display: flex; align-items: center; justify-content: center;
+          margin-top: 3px;
         }
         .iq-card.expanded .iq-expand-icon { transform: rotate(180deg); color: var(--sketch-accent-orange); }
 
@@ -810,6 +880,7 @@ export default function InterviewQuestionHub() {
           font-weight: 700;
           flex-shrink: 0;
           text-transform: uppercase;
+          margin-top: 2px;
         }
         .iq-diff-hard  { background: rgba(244,63,94,0.2); color: #f43f5e; border: 1px solid rgba(244,63,94,0.4); }
         .iq-diff-med   { background: rgba(251,146,60,0.2); color: #fb923c; border: 1px solid rgba(251,146,60,0.4); }
@@ -1143,7 +1214,7 @@ export default function InterviewQuestionHub() {
                   >
                     <div className="iq-card-row">
                       <span className="iq-num">{String(i + 1).padStart(2, '0')}</span>
-                      <span className="iq-text">{qText}</span>
+                      <div className="iq-text">{formatQuestion(qText)}</div>
                       <span className={diffClass(d)}>{diffLabel(d)}</span>
                       <div className="iq-check" onClick={(e) => toggleDone(id, e)}>
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -1309,7 +1380,7 @@ export default function InterviewQuestionHub() {
                     Question <span>{quizIndex + 1}</span> of {quizQueue.length}
                   </div>
                   <div className="iq-quiz-question-text">
-                    {quizQueue[quizIndex].q[0]}
+                    {formatQuestion(quizQueue[quizIndex].q[0])}
                   </div>
                   <div className={`iq-quiz-diff ${diffClass(quizQueue[quizIndex].q[1])}`}>
                     {diffLabel(quizQueue[quizIndex].q[1])}
@@ -1416,8 +1487,8 @@ export default function InterviewQuestionHub() {
           </div>
         </div>
 
-        {/* 4-Column Quick Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-b border-[var(--sketch-border)]">
+        {/* 5-Column Quick Links Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 py-8 border-b border-[var(--sketch-border)]">
           {/* Column 1: Frontend Stack */}
           <div>
             <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
@@ -1427,6 +1498,11 @@ export default function InterviewQuestionHub() {
               <li>
                 <a href={`${base}interview-questions?tab=js`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
                   <TechIcon id="js" size={15} /> JavaScript (200 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=js-tricky`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="js-tricky" size={15} /> Tricky JS (164 Questions)
                 </a>
               </li>
               <li>
@@ -1442,6 +1518,30 @@ export default function InterviewQuestionHub() {
               <li>
                 <a href={`${base}interview-questions?tab=angular`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
                   <TechIcon id="angular" size={15} /> Angular (200 Questions)
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 2: AI & GenAI */}
+          <div>
+            <h4 className="font-header font-bold text-base text-[var(--sketch-accent-orange)] mb-3 flex items-center gap-2">
+              <TechIcon id="ai" size={18} /> AI & GenAI
+            </h4>
+            <ul className="space-y-2 text-sm text-[var(--sketch-text-muted)] font-sketch">
+              <li>
+                <a href={`${base}interview-questions?tab=ai`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="ai" size={15} /> AI / ML (233 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=llm`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="llm" size={15} /> LLM Models (75 Questions)
+                </a>
+              </li>
+              <li>
+                <a href={`${base}interview-questions?tab=rag`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-2">
+                  <TechIcon id="rag" size={15} /> RAG Systems (58 Questions)
                 </a>
               </li>
             </ul>
