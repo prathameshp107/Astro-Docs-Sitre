@@ -38,3 +38,6 @@ Thumbs.db
 
 # Reel generator output (MP4s + intermediate frames)
 reels-out/
+
+# MCQ image-post output (PNGs + captions)
+mcq-posts/

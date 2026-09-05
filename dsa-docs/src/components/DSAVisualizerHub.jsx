@@ -18,6 +18,7 @@ const DSA_TOPICS = [
   { id: 'recursion', icon: '🔄', label: 'Recursion & Call Stack', desc: 'Call stack winding/unwinding (Factorial, Fibonacci, Tower of Hanoi, Subsets)', color: '#e11d48', trackCount: 4 },
   { id: 'dp', icon: '⚡', label: 'Dynamic Programming', desc: '1D & 2D memoization grids (Climbing Stairs, Knapsack, LCS, Coin Change)', color: '#3b82f6', trackCount: 4 },
   { id: 'hash-table', icon: '🔑', label: 'Hash Tables', desc: 'Separate chaining linked lists, open addressing linear probing, Two Sum, Anagrams', color: '#6366f1', trackCount: 4 },
+  { id: 'trie', icon: '🌲', label: 'Trie (Prefix Tree)', desc: 'Character-by-character tree insertion, word lookup, prefix search, and autocomplete', color: '#10b981', trackCount: 5 },
 ];
 
 export default function DSAVisualizerHub() {

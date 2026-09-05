@@ -39,6 +39,10 @@ const TOPIC_TRACKS = {
       { id: 'move-zeroes', label: '6. Move Zeroes', subtitle: 'Fast & slow pointers in-place swap' },
       { id: 'remove-duplicates', label: '7. Remove Duplicates', subtitle: 'In-place array overwrite · O(n)' },
       { id: 'sort-colors', label: '8. Sort Colors', subtitle: 'Dutch National Flag 3-pointer partition' },
+      { id: 'trap-rain-water', label: '9. Trapping Rain Water', subtitle: 'Two-pointer water height tracking · Hard' },
+      { id: 'four-sum', label: '10. 4Sum', subtitle: 'Quadruplets summing to target · O(n³)' },
+      { id: 'square-sorted', label: '11. Squares of Sorted Array', subtitle: 'Both-ends pointer merge · O(n)' },
+      { id: 'floyd-cycle', label: '12. Floyd\'s Cycle Detection', subtitle: 'Fast & slow pointer cycle finding' },
     ],
   },
   'sliding-window': {
@@ -71,6 +75,13 @@ const TOPIC_TRACKS = {
       { id: 'search', label: '4. Linear Search', subtitle: 'Iterative index scan · O(n)' },
       { id: 'reverse', label: '5. Reverse Array', subtitle: 'In-place two pointers swap · O(n)' },
       { id: 'prefix-sum', label: '6. Prefix Sum Array', subtitle: 'Cumulative sum precomputation' },
+      { id: 'kadane', label: '7. Kadane\'s Algorithm', subtitle: 'Max subarray sum · O(n) DP' },
+      { id: 'buy-sell-stock', label: '8. Buy & Sell Stock', subtitle: 'Min price tracking · greedy O(n)' },
+      { id: 'product-except-self', label: '9. Product Except Self', subtitle: 'Prefix × suffix · no division' },
+      { id: 'rotate-array', label: '10. Rotate Array by K', subtitle: 'Triple reverse trick · O(n)' },
+      { id: 'majority-element', label: '11. Majority Element', subtitle: 'Boyer-Moore voting · O(n) O(1)' },
+      { id: 'merge-intervals', label: '12. Merge Intervals', subtitle: 'Sort + expand overlap · O(n log n)' },
+      { id: 'find-missing', label: '13. Find Missing Number', subtitle: 'XOR cancellation trick · O(n)' },
     ],
   },
   sorting: {
@@ -110,6 +121,8 @@ const TOPIC_TRACKS = {
       { id: 'preorder', label: '2. Preorder Traversal', subtitle: 'Root → Left → Right · O(n)' },
       { id: 'postorder', label: '3. Postorder Traversal', subtitle: 'Left → Right → Root · O(n)' },
       { id: 'bst-search', label: '4. BST Search', subtitle: 'Subtree halving lookup · O(log n)' },
+      { id: 'level-order', label: '5. Level Order (BFS)', subtitle: 'Queue · level by level output' },
+      { id: 'invert', label: '6. Invert Binary Tree', subtitle: 'Swap children · mirror the tree' },
     ],
   },
   graphs: {
@@ -120,6 +133,7 @@ const TOPIC_TRACKS = {
       { id: 'dfs', label: '2. DFS Traversal', subtitle: 'Recursion stack deep search · O(V + E)' },
       { id: 'cycle-detection', label: '3. Cycle Detection', subtitle: 'Undirected back-edge scan' },
       { id: 'dijkstra', label: '4. Dijkstra Shortest Path', subtitle: 'Greedy min-distance relaxation' },
+      { id: 'number-of-islands', label: '5. Number of Islands', subtitle: 'Grid flood fill · count connected land' },
     ],
   },
   stack: {
@@ -169,6 +183,7 @@ const TOPIC_TRACKS = {
       { id: 'knapsack', label: '2. 0/1 Knapsack', subtitle: '2D DP table grid optimization' },
       { id: 'lcs', label: '3. LCS Subsequence', subtitle: '2D grid character matching' },
       { id: 'coin-change', label: '4. Coin Change', subtitle: '1D minimum coins memoization' },
+      { id: 'unique-paths', label: '5. Unique Paths', subtitle: 'Grid DP · above + left' },
     ],
   },
   'hash-table': {
@@ -301,7 +316,10 @@ export default function VisualizerSidebar({ activeTopicId, currentBase, isOpen =
     <aside
       ref={sidebarRef}
       onScroll={handleScroll}
-      className="w-64 md:w-72 shrink-0 h-full overflow-y-auto border-r border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] px-4 py-6 flex flex-col font-sketch select-none text-[var(--sketch-text)] transition-all duration-300"
+      /* Below md the sidebar floats over the canvas instead of taking a
+         flex column from it — on a 375px screen it otherwise left ~119px
+         for the animation. Above md it behaves exactly as before. */
+      className="max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40 max-md:shadow-2xl w-64 md:w-72 shrink-0 h-full overflow-y-auto border-r border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] px-4 py-6 flex flex-col font-sketch select-none text-[var(--sketch-text)] transition-all duration-300"
     >
       {/* Brand Header */}
       <div className="mb-6">

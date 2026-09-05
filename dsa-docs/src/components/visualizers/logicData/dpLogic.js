@@ -1,4 +1,19 @@
+import { buildUniquePathsSteps } from '../../../store/visualizers/dpStore.js';
 export const dpLogic = {
+  'dp-unique-paths': {
+    title: 'DP — Unique Paths on a Grid',
+    input: 'grid = 3 x 4, moves = right or down',
+    goal: 'Fill each cell with the number of ways to reach it, so the answer accumulates in the bottom-right.',
+    terms: {
+      'Grid DP': 'Each cell is a subproblem answered from its neighbours, so one pass over the grid solves everything.',
+      'above + left': 'The only legal moves are right and down, so a cell can only be entered from above or from the left.',
+      'Base edges': 'The first row and column are all 1 — there is exactly one way to travel along an edge.',
+      'Rolling row': 'Only the previous row is ever read, so O(m x n) space collapses to O(n).',
+    },
+    array: [],
+    steps: buildUniquePathsSteps().map((x, i) => ({ ...x, stepNum: i + 1, array: [] })),
+  },
+
   'dp': {
     title: 'Dynamic Programming (Memoization vs Tabulation)',
     input: 'Climbing Stairs N = 5',
@@ -111,7 +126,7 @@ export const dpLogic = {
     ]
   },
 
-  'climbing-stairs': {
+  'dp-climbing-stairs': {
     title: 'Climbing Stairs 1D DP Tabulation O(N)',
     input: 'N = 5 stairs',
     goal: 'Calculate total distinct ways to climb N stairs taking 1 or 2 steps at a time.',
@@ -235,7 +250,7 @@ export const dpLogic = {
     ]
   },
 
-  'knapsack': {
+  'dp-knapsack': {
     title: '0/1 Knapsack Problem 2D DP O(N×W)',
     input: 'Items = [{w:2,v:3}, {w:3,v:4}, {w:4,v:5}], Capacity W = 5',
     goal: 'Maximize total value of items selected without exceeding weight capacity W=5.',
@@ -431,7 +446,7 @@ export const dpLogic = {
     ]
   },
 
-  'lcs': {
+  'dp-lcs': {
     title: 'Longest Common Subsequence 2D DP O(M×N)',
     input: 'text1 = "abcde", text2 = "ace"',
     goal: 'Find length and content of the longest common subsequence between two strings.',
@@ -647,7 +662,7 @@ export const dpLogic = {
     ]
   },
 
-  'coin-change': {
+  'dp-coin-change': {
     title: 'Coin Change Minimum Coins DP O(Amount × Coins)',
     input: 'Coins = [1, 2, 5], Amount = 11',
     goal: 'Find fewest number of coins needed to make up target amount 11.',

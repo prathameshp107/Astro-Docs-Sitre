@@ -1,4 +1,31 @@
+import { buildLevelOrderSteps, buildInvertSteps } from '../../../store/visualizers/treeStore.js';
 export const treeLogic = {
+  'trees-level-order': {
+    title: 'Trees — Level Order Traversal (BFS)',
+    input: 'tree = [4, 2, 6, 1, 3, 5, 7]',
+    goal: 'Emit nodes level by level using a queue, completing each level before descending.',
+    terms: {
+      'Level order': 'Breadth-first traversal — every node of a level is visited before any node of the next.',
+      'Queue': 'FIFO ordering is what produces level-by-level output. A stack in its place gives depth-first instead.',
+      'Frontier': 'The set of nodes discovered but not yet visited — the queue contents at any moment.',
+    },
+    array: [],
+    steps: buildLevelOrderSteps().map((x, i) => ({ ...x, stepNum: i + 1, array: [] })),
+  },
+
+  'trees-invert': {
+    title: 'Trees — Invert Binary Tree',
+    input: 'tree = [4, 2, 6, 1, 3, 5, 7]',
+    goal: 'Mirror the tree by swapping the children of every node, recursing to the leaves.',
+    terms: {
+      'Mirror': 'Every node exchanges its left and right child, so the whole tree is reflected.',
+      'Base case': 'A leaf (or null) has nothing to swap, which is where the recursion stops.',
+      'O(n) / O(h)': 'Each node is visited once; the stack holds at most the height of the tree.',
+    },
+    array: [],
+    steps: buildInvertSteps().map((x, i) => ({ ...x, stepNum: i + 1, array: [] })),
+  },
+
   'trees': {
     title: 'Binary Tree & BST Operations',
     input: 'Binary Search Tree = Root 4 [Left: 2 (1, 3), Right: 6 (5, 7)]',
@@ -60,7 +87,7 @@ export const treeLogic = {
     ]
   },
 
-  'inorder': {
+  'trees-inorder': {
     title: 'Inorder Traversal (Left ➔ Root ➔ Right) O(N)',
     input: 'Binary Search Tree Root = 4',
     goal: 'Recursively traverse left subtree, visit current node, then traverse right subtree (yields sorted BST sequence).',
@@ -273,7 +300,7 @@ export const treeLogic = {
     ]
   },
 
-  'preorder': {
+  'trees-preorder': {
     title: 'Preorder Traversal (Root ➔ Left ➔ Right) O(N)',
     input: 'Binary Search Tree Root = 4',
     goal: 'Visit root node immediately before children, then recursively traverse left and right subtrees (used for tree copying & serialization).',
@@ -441,7 +468,7 @@ export const treeLogic = {
     ]
   },
 
-  'postorder': {
+  'trees-postorder': {
     title: 'Postorder Traversal (Left ➔ Right ➔ Root) O(N)',
     input: 'Binary Search Tree Root = 4',
     goal: 'Traverse left and right subtrees before visiting the parent node (used for tree deletion & bottom-up calculations).',
@@ -609,7 +636,7 @@ export const treeLogic = {
     ]
   },
 
-  'bst-search': {
+  'trees-bst-search': {
     title: 'BST Search O(log N)',
     input: 'Binary Search Tree Root = 4, Target = 5',
     goal: 'Exploit binary search tree ordering property (left < node < right) to search in logarithmic time.',

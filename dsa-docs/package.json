@@ -13,7 +13,11 @@
     "reels": "node scripts/record-reel.mjs",
     "reels:dev": "node scripts/record-reel.mjs --dev",
     "reels:resume": "node scripts/record-reel.mjs --dev --skip-existing",
-    "reels:list": "node scripts/record-reel.mjs --list"
+    "reels:list": "node scripts/record-reel.mjs --list",
+    "reels:captions": "node scripts/reel-captions.mjs",
+    "reels:one": "node scripts/record-reel.mjs --dev --keep-frames",
+    "mcq:posts": "node scripts/generate-mcq-posts.mjs",
+    "mcq:list": "node scripts/generate-mcq-posts.mjs --list"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.3",

@@ -17,6 +17,35 @@ function shuffle(arr) {
   return a;
 }
 
+/**
+ * Deterministic shuffle, seeded from a string.
+ *
+ * Used to reorder each question's OPTIONS. The bank has a severe answer-position
+ * bias — 82% of correct answers sat at index 0, so always picking A scored 82%
+ * and the quiz measured nothing. Options are now reordered per question.
+ *
+ * Seeded rather than random so a question keeps the same option order across
+ * re-renders, submit, and review — a fresh Math.random() on every render would
+ * move the options under the user's cursor.
+ */
+function seededShuffle(arr, seed) {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    h ^= seed.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  const rand = () => {
+    h ^= h << 13; h ^= h >>> 17; h ^= h << 5;
+    return ((h >>> 0) % 100000) / 100000;
+  };
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // ─── Progress Dot Mini-map ─────────────────────────────────
 function ProgressMinimap({ results, total, current }) {
   return (
@@ -215,7 +244,25 @@ export default function MCQQuiz({ categoryId }) {
 
   const currentQuestion = shuffledQuestions[currentIndex];
   const totalQ = shuffledQuestions.length;
-  const isMultiSelect = currentQuestion?.correctAnswer?.length > 1;
+
+  /**
+   * Per-question option order, plus the correct indices remapped into it.
+   * Everything downstream must use `view.options` / `view.correct` rather than
+   * the raw question, or the answer check compares across two index spaces.
+   */
+  const view = useMemo(() => {
+    if (!currentQuestion) return null;
+    const order = seededShuffle(
+      currentQuestion.options.map((_, i) => i),
+      String(currentQuestion.id ?? currentQuestion.question),
+    );
+    return {
+      options: order.map((i) => currentQuestion.options[i]),
+      correct: (currentQuestion.correctAnswer ?? []).map((ci) => order.indexOf(ci)),
+    };
+  }, [currentQuestion]);
+
+  const isMultiSelect = view?.correct?.length > 1;
 
   // ── Handlers ──────────────────────────────────────────────
   const handleOptionClick = useCallback((idx) => {
@@ -229,7 +276,7 @@ export default function MCQQuiz({ categoryId }) {
   const handleSubmit = useCallback(() => {
     if (!currentQuestion || selectedAnswers.length === 0) return;
     setSubmitted(true);
-    const correct = arraysEqual([...selectedAnswers].sort(), [...currentQuestion.correctAnswer].sort());
+    const correct = arraysEqual([...selectedAnswers].sort(), [...view.correct].sort());
     setIsCorrect(correct);
     if (correct) {
       setStreakCount(p => p + 1);
@@ -245,7 +292,7 @@ export default function MCQQuiz({ categoryId }) {
         id: `mcq-wrong-${currentQuestion.id}`,
         type: 'mcq-replay',
         front: `Replay MCQ: **${currentQuestion.question}**`,
-        back: `Correct answer: **${currentQuestion.options[currentQuestion.correctAnswer[0]]}**\n\nExplanation: ${currentQuestion.explanation}`,
+        back: `Correct answer: **${view.options[view.correct[0]]}**\n\nExplanation: ${currentQuestion.explanation}`,
         categoryId: categoryId,
         mcqRef: currentQuestion.id
       });
@@ -657,9 +704,9 @@ export default function MCQQuiz({ categoryId }) {
             {/* Options */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '20px' }}
               role="group" aria-label="Answer options">
-              {currentQuestion.options.map((opt, i) => {
+              {view.options.map((opt, i) => {
                 const isSelected = selectedAnswers.includes(i);
-                const isCorrectOpt = submitted && currentQuestion.correctAnswer.includes(i);
+                const isCorrectOpt = submitted && view.correct.includes(i);
                 const isWrongSelected = submitted && isSelected && !isCorrectOpt;
                 const isDimmed = submitted && !isCorrectOpt && !isSelected;
 

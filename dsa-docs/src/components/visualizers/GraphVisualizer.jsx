@@ -27,6 +27,23 @@ const CYCLE_CODE = [
   { line: 5, text: 'return false' },
 ];
 
+const ISLANDS_CODE = [
+  { line: 1, text: 'count = 0' },
+  { line: 2, text: 'for each cell (r, c):' },
+  { line: 3, text: '  if grid[r][c] == "1":' },
+  { line: 4, text: '    count += 1' },
+  { line: 5, text: '    flood(r, c)' },
+  { line: 6, text: 'return count' },
+];
+
+// Mirrors CELL_STYLE in LogicSection so the canvas and the Logic tab agree.
+const GRID_CELL = {
+  water:   'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-slate-600',
+  land:    'border-emerald-500/50 bg-emerald-500/10 text-emerald-300',
+  filling: 'border-amber-400 bg-amber-500/25 text-amber-200 font-bold',
+  sunk:    'border-slate-700 bg-slate-800/40 text-slate-500',
+};
+
 const DIJKSTRA_CODE = [
   { line: 1, text: 'dist[start] ← 0, dist[others] ← ∞' },
   { line: 2, text: 'while unvisited nodes exist:' },
@@ -130,6 +147,8 @@ export default function GraphVisualizer() {
       ? DFS_CODE
       : track === 'cycle-detection'
       ? CYCLE_CODE
+      : track === 'number-of-islands'
+      ? ISLANDS_CODE
       : DIJKSTRA_CODE;
 
   const trackLabel = TRACK_TITLES[track] || 'Graph Algorithm';
@@ -190,6 +209,53 @@ export default function GraphVisualizer() {
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
         <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[420px]">
+          {step?.cellGrid ? (
+            /* Grid tracks (Number of Islands, and later Unique Paths / Rotting
+               Oranges) render a matrix rather than nodes and edges. */
+            <div className="w-full flex flex-col items-center">
+              <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-4">
+                <span className="font-bold text-amber-400">Grid Flood Fill Canvas</span>
+                <div className="flex items-center gap-3 text-[10px]">
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-500/60"></span> land</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-400"></span> flooding</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-slate-600"></span> sunk</span>
+                </div>
+              </div>
+
+              <div className="inline-block my-2">
+                {step.cellGrid.map((row, r) => (
+                  <div key={r} className="flex">
+                    {row.map((cellObj, c) => {
+                      const isCursor = step.cursor && step.cursor[0] === r && step.cursor[1] === c;
+                      return (
+                        <div
+                          key={`${r}-${c}`}
+                          className={`w-12 h-12 md:w-14 md:h-14 m-1 rounded-xl border-2 flex items-center justify-center font-mono text-lg transition-all duration-200 ${
+                            GRID_CELL[cellObj.s] ?? GRID_CELL.water
+                          } ${isCursor ? 'ring-4 ring-amber-400/60 scale-110 z-10' : ''}`}
+                        >
+                          {cellObj.v}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4 flex items-center gap-5 font-mono text-sm">
+                <span className="text-[var(--sketch-text-muted)]">
+                  islands found:{' '}
+                  <span className="text-emerald-400 font-bold text-lg">{step.islands ?? 0}</span>
+                </span>
+                {step.cursor && (
+                  <span className="text-[var(--sketch-text-muted)]">
+                    cursor: <span className="text-amber-300">({step.cursor[0]}, {step.cursor[1]})</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+          <>
           {/* Renamed Canvas Header */}
           <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-2">
             <span className="font-bold text-amber-400">Graph Traversal Canvas</span>
@@ -365,6 +431,8 @@ export default function GraphVisualizer() {
                 Visited: {step.visited?.length || 0} / 6
               </span>
             </div>
+          )}
+          </>
           )}
         </div>
 

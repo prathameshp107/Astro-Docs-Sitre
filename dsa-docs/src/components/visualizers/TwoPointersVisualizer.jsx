@@ -80,6 +80,54 @@ const SORT_COLORS_CODE = [
   { line: 5, text: '    else: swap(arr[mid], arr[high]), high--' },
 ];
 
+const TRAP_WATER_CODE = [
+  { line: 1, text: 'left ← 0, right ← n - 1, leftMax ← 0, rightMax ← 0' },
+  { line: 2, text: 'while left < right:' },
+  { line: 2, text: '    if leftMax < rightMax:' },
+  { line: 3, text: '        water += max(0, leftMax - h[left])' },
+  { line: 3, text: '        leftMax ← max(leftMax, h[left++])' },
+  { line: 4, text: '    else:' },
+  { line: 4, text: '        water += max(0, rightMax - h[right])' },
+  { line: 4, text: '        rightMax ← max(rightMax, h[right--])' },
+  { line: 5, text: 'return water' },
+];
+
+const FOUR_SUM_CODE = [
+  { line: 1, text: 'sort(nums)' },
+  { line: 2, text: 'for i from 0 to n - 4:' },
+  { line: 3, text: '    for j from i + 1 to n - 3:' },
+  { line: 4, text: '        left ← j + 1, right ← n - 1' },
+  { line: 5, text: '        while left < right:' },
+  { line: 6, text: '            sum ← nums[i]+nums[j]+nums[left]+nums[right]' },
+  { line: 7, text: '            if sum == target: record, left++, right--' },
+  { line: 8, text: '            else if sum < target: left++' },
+  { line: 9, text: '            else: right--' },
+  { line: 10, text: 'return result' },
+];
+
+const SQUARE_SORTED_CODE = [
+  { line: 1, text: 'left ← 0, right ← n - 1, pos ← n - 1' },
+  { line: 2, text: 'while left <= right:' },
+  { line: 3, text: '    if |arr[left]| > |arr[right]|:' },
+  { line: 4, text: '        result[pos--] ← arr[left] * arr[left], left++' },
+  { line: 5, text: '    else:' },
+  { line: 6, text: '        result[pos--] ← arr[right] * arr[right], right--' },
+  { line: 7, text: 'return result' },
+];
+
+const FLOYD_CYCLE_CODE = [
+  { line: 1, text: 'slow ← head, fast ← head' },
+  { line: 2, text: 'while fast && fast.next:' },
+  { line: 3, text: '    slow ← slow.next' },
+  { line: 4, text: '    fast ← fast.next.next' },
+  { line: 5, text: '    if slow == fast: CYCLE FOUND' },
+  { line: 6, text: 'slow ← head (reset for phase 2)' },
+  { line: 7, text: 'while slow != fast:' },
+  { line: 8, text: '    slow ← slow.next' },
+  { line: 9, text: '    fast ← fast.next' },
+  { line: 10, text: 'return slow  // cycle start' },
+];
+
 const TRACK_TITLES = {
   intro: '1. Introduction Walk',
   'two-sum-ii': '2. Two Sum II',
@@ -89,6 +137,10 @@ const TRACK_TITLES = {
   'move-zeroes': '6. Move Zeroes',
   'remove-duplicates': '7. Remove Duplicates',
   'sort-colors': '8. Sort Colors',
+  'trap-rain-water': '9. Trapping Rain Water',
+  'four-sum': '10. 4Sum',
+  'square-sorted': '11. Squares of Sorted Array',
+  'floyd-cycle': '12. Floyd\'s Cycle Detection',
 };
 
 const EXPECTED_OUTPUTS = {
@@ -100,6 +152,10 @@ const EXPECTED_OUTPUTS = {
   'move-zeroes': '[1, 3, 12, 0, 0] (In-place swapped)',
   'remove-duplicates': 'k = 5 ([1, 2, 3, 4, 5])',
   'sort-colors': '[0, 0, 1, 1, 2, 2] (3-way partitioned)',
+  'trap-rain-water': '6 (Total units of water trapped)',
+  'four-sum': '[[-2,-1,1,2], [-2,0,0,2], [-1,0,0,1]]',
+  'square-sorted': '[0, 1, 9, 16, 100]',
+  'floyd-cycle': 'Cycle start at index 2 (value 4)',
 };
 
 export default function TwoPointersVisualizer() {
@@ -150,6 +206,14 @@ export default function TwoPointersVisualizer() {
       ? MOVE_ZEROES_CODE
       : track === 'remove-duplicates'
       ? REMOVE_DUPLICATES_CODE
+      : track === 'trap-rain-water'
+      ? TRAP_WATER_CODE
+      : track === 'four-sum'
+      ? FOUR_SUM_CODE
+      : track === 'square-sorted'
+      ? SQUARE_SORTED_CODE
+      : track === 'floyd-cycle'
+      ? FLOYD_CYCLE_CODE
       : SORT_COLORS_CODE;
 
   const trackLabel = TRACK_TITLES[track] || 'Two Pointers Pattern';
@@ -159,12 +223,12 @@ export default function TwoPointersVisualizer() {
   let swapFrom = null;
   let swapTo = null;
 
-  if (track === 'move-zeroes' && step.activeLine === 4 && step.slow !== null && step.fast !== null) {
+  if (step.swapFrom !== undefined && step.swapTo !== undefined && step.swapFrom !== null && step.swapTo !== null) {
+    swapFrom = step.swapFrom;
+    swapTo = step.swapTo;
+  } else if (track === 'move-zeroes' && step.activeLine === 4 && step.slow !== null && step.fast !== null) {
     swapFrom = step.slow;
     swapTo = step.fast;
-  } else if (track === 'sort-colors' && (step.activeLine === 3 || step.activeLine === 5)) {
-    swapFrom = step.mid;
-    swapTo = step.activeLine === 3 ? step.low : step.high;
   }
 
   const hasSwapArc = swapFrom !== null && swapTo !== null && swapFrom !== swapTo;
@@ -235,6 +299,8 @@ export default function TwoPointersVisualizer() {
               const isBothLeftRight = isLeft && isRight;
               const isBothSlowFast = isSlow && isFast;
 
+              const isSwapping = i === swapFrom || i === swapTo;
+
               const isHighlighted =
                 isLeft || isRight || isIPtr || isLow || isMid || isHigh || isSlow || isFast;
 
@@ -245,14 +311,30 @@ export default function TwoPointersVisualizer() {
 
               return (
                 <div key={i} className="relative flex flex-col items-center">
+                  {/* Floating Action Badge */}
+                  <AnimatePresence>
+                    {isSwapping && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: -26 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute -top-3 z-20 px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-bold animate-bounce shadow-md whitespace-nowrap"
+                      >
+                        🔄 Swap
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   <motion.div
                     animate={{
-                      scale: isMatchStep && (isLeft || isRight) ? 1.15 : isHighlighted ? 1.08 : 1,
-                      y: isMatchStep && (isLeft || isRight) ? -10 : isHighlighted ? -6 : 0,
+                      scale: isSwapping ? 1.15 : isMatchStep && (isLeft || isRight) ? 1.15 : isHighlighted ? 1.08 : 1,
+                      y: isSwapping ? -10 : isMatchStep && (isLeft || isRight) ? -10 : isHighlighted ? -6 : 0,
                     }}
                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                     className={`sketch-card ${
-                      isMatchStep && (isLeft || isRight)
+                      isSwapping
+                        ? '!border-rose-400 !bg-rose-500/20 shadow-lg ring-2 ring-rose-400'
+                        : isMatchStep && (isLeft || isRight)
                         ? '!border-emerald-400 !bg-emerald-500/20 shadow-lg shadow-emerald-500/40 ring-2 ring-emerald-400'
                         : val === null
                         ? 'border-dashed border-white/20 text-white/30'
@@ -356,6 +438,63 @@ export default function TwoPointersVisualizer() {
                         className="sketch-pointer text-cyan-400 font-bold"
                       >
                         <div>fast</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Dutch National Flag Pointers (low, mid, high) */}
+                  <AnimatePresence>
+                    {isLow && isMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-purple-300 font-bold bg-purple-500/20 px-2 py-0.5 rounded-md border border-purple-400/40 shadow-sm"
+                      >
+                        <div className="text-xs">low, mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {isLow && !isMid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-orange font-bold"
+                      >
+                        <div>low</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {isMid && !isLow && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer text-amber-400 font-bold"
+                      >
+                        <div>mid</div>
+                        <div className="text-xs leading-none">▲</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence>
+                    {isHigh && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="sketch-pointer sketch-pointer-blue font-bold"
+                      >
+                        <div>high</div>
                         <div className="text-xs leading-none">▲</div>
                       </motion.div>
                     )}

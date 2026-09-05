@@ -509,6 +509,90 @@ const COIN_CHANGE_STEPS = [
   },
 ];
 
+// ── Unique Paths ───────────────────────────────────────────────────────────
+// Emits the same `cellGrid` contract as Number of Islands, so it reuses the grid
+// renderer rather than needing a new diagram branch.
+
+export const UNIQUE_PATHS_CODE = [
+  { line: 1, text: 'dp[0][*] = 1;  dp[*][0] = 1' },
+  { line: 2, text: 'for r in 1..m-1:' },
+  { line: 3, text: '  for c in 1..n-1:' },
+  { line: 4, text: '    dp[r][c] = dp[r-1][c] + dp[r][c-1]' },
+  { line: 5, text: 'return dp[m-1][n-1]' },
+];
+
+function* traceUniquePaths(rows = 3, cols = 4) {
+  const dp = Array.from({ length: rows }, () => Array(cols).fill(null));
+
+  const snap = (cursor, deps = []) => ({
+    cellGrid: dp.map((row, r) => row.map((v, c) => ({
+      v: v === null ? '·' : String(v),
+      s: cursor && cursor[0] === r && cursor[1] === c ? 'filling'
+        : deps.some(([dr, dc]) => dr === r && dc === c) ? 'target'
+        : v === null ? 'water' : 'filled',
+    }))),
+    cursor,
+  });
+
+  yield {
+    activeLine: 1,
+    ...snap(null),
+    state: { grid: `${rows} x ${cols}`, moves: 'right or down only' },
+    title: 'Only right and down moves are allowed',
+    computation: `dp = ${rows} x ${cols}`,
+    comparison: 'table empty',
+    action: 'Init',
+    desc: `Count the distinct paths from the top-left to the bottom-right of a ${rows} x ${cols} grid, moving only right or down. Each cell will hold the number of ways to reach it, so the answer ends up in the last cell.`,
+  };
+
+  // Seed row 0 and column 0: exactly one path along an edge.
+  for (let c = 0; c < cols; c++) dp[0][c] = 1;
+  for (let r = 0; r < rows; r++) dp[r][0] = 1;
+
+  yield {
+    activeLine: 1,
+    ...snap(null),
+    state: { 'row 0': 'all 1', 'col 0': 'all 1' },
+    title: 'Seed the first row and column with 1',
+    computation: 'dp[0][*] = dp[*][0] = 1',
+    comparison: 'base cases set',
+    action: 'Seed edges',
+    desc: 'There is exactly one way to reach any cell in the top row — keep moving right — and one way to reach any cell in the first column, by moving down. Those edges are the base cases every other cell builds on.',
+  };
+
+  for (let r = 1; r < rows; r++) {
+    for (let c = 1; c < cols; c++) {
+      const up = dp[r - 1][c], left = dp[r][c - 1];
+      dp[r][c] = up + left;
+      yield {
+        activeLine: 4,
+        ...snap([r, c], [[r - 1, c], [r, c - 1]]),
+        state: { cell: `(${r}, ${c})`, above: up, left, value: dp[r][c] },
+        title: `dp[${r}][${c}] = ${up} + ${left} = ${dp[r][c]}`,
+        computation: `${up} + ${left} = ${dp[r][c]}`,
+        comparison: 'above + left',
+        action: `Fill (${r}, ${c})`,
+        desc: `Any path arriving at (${r}, ${c}) came from directly above or directly from the left — there is no other legal move. So the count is simply the sum of those two cells: ${up} + ${left} = ${dp[r][c]}.`,
+      };
+    }
+  }
+
+  const answer = dp[rows - 1][cols - 1];
+  yield {
+    activeLine: 5,
+    ...snap([rows - 1, cols - 1]),
+    state: { result: answer, complexity: 'O(m x n)' },
+    title: `UNIQUE PATHS COMPLETE 🎉 — ${answer}`,
+    computation: `return dp[${rows - 1}][${cols - 1}] = ${answer}`,
+    comparison: `${answer} distinct paths`,
+    action: 'Done',
+    desc: `The bottom-right cell holds ${answer}, so there are ${answer} distinct paths. Time and space are both O(m x n) — though only the previous row is ever read, so a single rolling row reduces space to O(n).`,
+  };
+}
+
+export function buildUniquePathsSteps() { return [...traceUniquePaths()]; }
+const UNIQUE_PATHS_STEPS = buildUniquePathsSteps();
+
 export const useDPStore = create((set, get) => ({
   track: 'climbing-stairs',
   steps: CLIMBING_STAIRS_STEPS,
@@ -527,6 +611,8 @@ export const useDPStore = create((set, get) => ({
       set({ track: 'lcs', steps: LCS_STEPS, currentStep: 0, isPlaying: false });
     } else if (track === 'coin-change') {
       set({ track: 'coin-change', steps: COIN_CHANGE_STEPS, currentStep: 0, isPlaying: false });
+    } else if (track === 'unique-paths') {
+      set({ track: 'unique-paths', steps: UNIQUE_PATHS_STEPS, currentStep: 0, isPlaying: false });
     }
   },
 

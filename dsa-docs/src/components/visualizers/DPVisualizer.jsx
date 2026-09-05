@@ -19,6 +19,23 @@ const LCS_CODE = [
   { line: 3, text: 'else: dp[i][j] ← max(dp[i-1][j], dp[i][j-1])' },
 ];
 
+// Mirrors CELL_STYLE in LogicSection and GRID_CELL in GraphVisualizer, so all
+// three grid surfaces agree on what a cell state looks like.
+const GRID_CELL = {
+  water:   'border-[var(--sketch-border)] bg-[var(--sketch-bg-dim)] text-slate-600',
+  filled:  'border-sky-400/60 bg-sky-500/15 text-sky-200',
+  filling: 'border-amber-400 bg-amber-500/25 text-amber-200 font-bold',
+  target:  'border-emerald-400/70 bg-emerald-500/15 text-emerald-200',
+};
+
+const UNIQUE_PATHS_CODE = [
+  { line: 1, text: 'dp[0][*] = 1;  dp[*][0] = 1' },
+  { line: 2, text: 'for r in 1..m-1:' },
+  { line: 3, text: '  for c in 1..n-1:' },
+  { line: 4, text: '    dp[r][c] = dp[r-1][c] + dp[r][c-1]' },
+  { line: 5, text: 'return dp[m-1][n-1]' },
+];
+
 const COIN_CHANGE_CODE = [
   { line: 1, text: 'dp[i] ← min(dp[i], 1 + dp[i - coin])' },
   { line: 2, text: 'return dp[amount] == ∞ ? -1 : dp[amount]' },
@@ -76,6 +93,8 @@ export default function DPVisualizer() {
       ? KNAPSACK_CODE
       : track === 'lcs'
       ? LCS_CODE
+      : track === 'unique-paths'
+      ? UNIQUE_PATHS_CODE
       : COIN_CHANGE_CODE;
 
   const trackLabel = TRACK_TITLES[track] || 'Dynamic Programming Algorithm';
@@ -128,6 +147,44 @@ export default function DPVisualizer() {
       <div className="sketch-canvas-row">
         {/* Visualization Canvas */}
         <div className="sketch-canvas-box sketch-border relative flex flex-col justify-between p-4 min-h-[380px]">
+          {step?.cellGrid ? (
+            /* Grid DP tracks reuse the cellGrid contract introduced for Number
+               of Islands, so no bespoke table markup is needed here. */
+            <div className="w-full flex flex-col items-center py-4">
+              <div className="w-full flex items-center justify-between text-xs font-mono text-[var(--sketch-text-muted)] border-b border-white/10 pb-2 mb-5">
+                <span className="font-bold text-amber-400">Grid DP Canvas</span>
+                <div className="flex items-center gap-3 text-[10px]">
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-emerald-400/70"></span> dependency</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-amber-400"></span> computing</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded bg-sky-400/70"></span> solved</span>
+                </div>
+              </div>
+
+              <div className="inline-block">
+                {step.cellGrid.map((row, r) => (
+                  <div key={r} className="flex">
+                    {row.map((cellObj, c) => (
+                      <div
+                        key={`${r}-${c}`}
+                        className={`w-14 h-14 md:w-16 md:h-16 m-1 rounded-xl border-2 flex items-center justify-center font-mono text-xl transition-all duration-200 ${
+                          GRID_CELL[cellObj.s] ?? GRID_CELL.water
+                        }`}
+                      >
+                        {cellObj.v}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+
+              {step.cursor && (
+                <div className="mt-5 font-mono text-sm text-[var(--sketch-text-muted)]">
+                  filling <span className="text-amber-300">({step.cursor[0]}, {step.cursor[1]})</span>
+                </div>
+              )}
+            </div>
+          ) : (
+          <>
           {/* Completion Status Banner */}
           {currentStep >= steps.length - 1 && (
             <div className="absolute top-3 right-4 z-20 flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/60 shadow-lg shadow-emerald-500/20">
@@ -234,6 +291,8 @@ export default function DPVisualizer() {
             <span className="text-amber-500 font-bold">Cell Transition: {step.state?.formula || step.state?.active || 'DP State'}</span>
             <span>Status: {step.state?.status || 'Calculating Table...'}</span>
           </div>
+          </>
+          )}
         </div>
 
         {/* Debug Panel (Code & State) */}

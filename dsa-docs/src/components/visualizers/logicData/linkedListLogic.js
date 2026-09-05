@@ -69,7 +69,7 @@ export const linkedListLogic = {
     ]
   },
 
-  'singly-ll': {
+  'linked-list-singly-ll': {
     title: 'Singly Linked List Traversal O(N)',
     input: 'List = [10 → 20 → 30 → 40 → NULL]',
     goal: 'Traverse list sequentially from head to NULL using next pointer.',
@@ -139,7 +139,7 @@ export const linkedListLogic = {
     ]
   },
 
-  'insert-head': {
+  'linked-list-insert-head': {
     title: 'Linked List — Insertion at Head O(1)',
     input: 'List = [10 → 20 → 30 → NULL], Value to Insert = 5',
     goal: 'Prepend new node at beginning of list in O(1) constant time without shifting elements.',
@@ -198,7 +198,7 @@ export const linkedListLogic = {
     ]
   },
 
-  'delete-node': {
+  'linked-list-delete-node': {
     title: 'Linked List — Deletion by Value O(N)',
     input: 'List = [10 → 20 → 30 → 40 → NULL], Target Value = 20',
     goal: 'Traverse list to find target value, then bypass target node by re-linking prev.next = curr.next.',
@@ -257,7 +257,7 @@ export const linkedListLogic = {
     ]
   },
 
-  'reverse-ll': {
+  'linked-list-reverse-ll': {
     title: 'Reverse Linked List O(N)',
     input: 'List = [10 → 20 → 30 → 40 → NULL]',
     goal: 'Reverse direction of all next pointers in-place using three pointers (prev, curr, next).',

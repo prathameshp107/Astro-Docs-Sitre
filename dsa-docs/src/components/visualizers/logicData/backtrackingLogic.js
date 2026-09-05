@@ -177,7 +177,7 @@ export const backtrackingLogic = {
     ]
   },
 
-  'n-queens': {
+  'backtracking-n-queens': {
     title: 'N-Queens Solver (4x4 Chessboard)',
     input: 'Board = 4x4 Chessboard, N = 4 Queens',
     goal: 'Find all non-attacking queen configurations on N x N chessboard.',
@@ -290,7 +290,7 @@ export const backtrackingLogic = {
     ]
   },
 
-  'sudoku': {
+  'backtracking-sudoku': {
     title: 'Sudoku Solver (4x4 Mini Grid)',
     input: 'Grid = 4x4 Mini Sudoku Grid',
     goal: 'Fill empty cells with digits 1..4 such that each row, col, and 2x2 box is unique.',
@@ -442,7 +442,7 @@ export const backtrackingLogic = {
     ]
   },
 
-  'subsets': {
+  'backtracking-subsets': {
     title: 'Subsets & Power Set Generator',
     input: 'Array = [1, 2, 3]',
     goal: 'Generate all 2^N possible subsets using binary decision tree.',

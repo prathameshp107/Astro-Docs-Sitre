@@ -109,10 +109,11 @@ survives a refresh.
 2. **`src/components/visualizers/<Topic>Visualizer.jsx`** — the view. Model on
    `StackVisualizer.jsx` (simple) or `GraphVisualizer.jsx` (complex).
 3. **`src/components/visualizers/logicData/<topic>Logic.js`** — diagram data,
-   keyed by track. **Must match the store's step count 1-to-1.**
+   keyed **`<topic>-<track>`** (namespaced — see Track-name collisions).
+   **Must match the store's step count 1-to-1.**
 4. ⚠ **`src/components/visualizers/LogicSection.jsx`** — three edits: import and
    spread the logic object into `SPECIFIC_PROBLEM_LOGIC`, add the topic to the
-   `activeTrackKey` chain, **and add a diagram branch**. The diagram is a ternary
+   `activeTrack` chain, **and add a diagram branch**. The diagram is a ternary
    keyed on step properties (`st.grid`, `st.nodes`, …); a step matching none of
    them renders an empty canvas rather than erroring.
 5. ⚠ **`src/components/visualizers/DSAVisualizerPage.jsx`** — two edits:
@@ -148,15 +149,26 @@ survives a refresh.
 
 Optionally add entries to `scripts/reels.config.mjs` to generate social videos.
 
-### Track-name collisions
+### Track-name collisions — solved, keep it that way
 
-`SPECIFIC_PROBLEM_LOGIC` merges every topic's logic object into one flat map, and
-`LogicSection` also rewrites raw track names (`insert` → `insertion`, `search` →
-`linear-search`). A track named `search` therefore resolves to `searchingLogic`'s
-entry and renders the wrong diagram.
+Historically `SPECIFIC_PROBLEM_LOGIC` merged every topic's logic into one flat
+map **and** `LogicSection` rewrote raw track names (`insert` → `insertion`,
+`search` → `linear-search`). A track named `search` therefore resolved to
+`searchingLogic`'s entry and rendered the wrong diagram. Three real bugs came
+from this: `arrays:search`, `recursion:subsets`, `sliding-window:intro`.
 
-Namespace the keys: trie uses `trie-insert` / `trie-search` / `trie-prefix`, with
-``topicId === 'trie' ? `trie-${trieTrack}` `` resolved *before* the alias table.
+**All 81 logic keys are now namespaced `<topic>-<track>`** and the alias table is
+retired. Resolution is one join:
+
+```js
+const trackPrefix = topicId === 'hash-tables' ? 'hash-table' : topicId;
+const topicKey = topicId === 'heaps' ? 'heap' : topicId;
+const resolvedTrackKey = activeTrack ? `${trackPrefix}-${activeTrack}` : topicKey;
+```
+
+**So: name every new logic key `<topic>-<track>`.** An un-namespaced key is
+unreachable now, and re-introducing a bare one risks colliding again. A miss
+falls back to the topic's own overview entry, never another topic's.
 
 ### Verifying without a full build
 
@@ -227,9 +239,15 @@ Beyond the current topic vocabulary, three worth adding for differentiation:
 - **LRU Cache** — hashmap and doubly-linked list moving in sync. Extremely
   common question, rarely visualized well.
 
-**Trie is done.** Next is **Strings** — the largest content gap at 11 problems,
-and its pointer-walk animations reuse patterns the two-pointers visualizer
-already proves.
+**Trie is done.**
+
+**See `VISUALIZER-ROADMAP.md`** for the full picture: the four missing sections,
+a reviewed shortlist of ~30 new tracks for existing sections (measured against
+the problems already written up in `dsa-problems.js`), and a 10-step build order.
+
+Short version: build **graphs: Number of Islands** first — best visual payoff on
+the site, high search demand, and it creates the grid renderer that Unique Paths,
+Rotting Oranges and Word Search all reuse. Then the **Strings** section.
 
 ---
 
@@ -240,6 +258,11 @@ already proves.
   `LogicSection`'s diagram is a ternary keyed on step properties (`st.grid`,
   `st.nodes`, …) — a step carrying none of them renders an empty canvas rather
   than an error. Both bit the Trie build.
+- **Parse checks are not enough.** `esbuild` accepts a reference to an
+  identifier that no longer exists — undeclared identifiers only fail at
+  runtime. After any rename, grep for the old name.
+- **`stackLogic` has an authored `stack-min-stack` entry with no track.**
+  Finished content nothing links to; wiring it up is a small job.
 
 - **`DSA_PROBLEMS.topics` and `VISUALIZER_MAP` are separate vocabularies.**
   Adding a problem with topic `trie` does not surface it in any visualizer, and

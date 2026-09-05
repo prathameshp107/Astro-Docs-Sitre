@@ -141,6 +141,21 @@ export default function DSAVisualizerPage({ topicId }) {
   // static imports), so the skeleton was purely decorative and is now gone.
   // Do not reintroduce a mount-gated placeholder here without an SSR fallback.
 
+  // Collapse the sidebar on phones.
+  //
+  // It stays `true` initially on purpose: the sidebar carries 67 internal track
+  // links, and returning null during SSR would strip them from the served HTML.
+  // So render it server-side, then close it on mount below the md breakpoint —
+  // where a 256px sidebar inside an h-screen shell left ~119px for the canvas.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 767px)');
+    const apply = () => setIsSidebarOpen(!mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
   // Keyboard shortcut (Ctrl+B, Cmd+B, or \) to toggle sidebar
   useEffect(() => {
     const handleKeyDown = (e) => {

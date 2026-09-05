@@ -11,11 +11,16 @@ import {
   Search,
   Repeat,
   Zap,
-  KeyRound
+  KeyRound,
+  Network,
+  Workflow
 } from 'lucide-react';
 
 const ICON_MAP = {
   'two-pointers': { Icon: ArrowLeftRight, color: '#f59e0b' },
+  'sliding-window': { Icon: LayoutGrid, color: '#10b981' },
+  'backtracking': { Icon: Workflow, color: '#ec4899' },
+  'trie': { Icon: Network, color: '#10b981' },
   'arrays': { Icon: LayoutGrid, color: '#7c3aed' },
   'sorting': { Icon: ArrowUpDown, color: '#c026d3' },
   'trees': { Icon: GitBranch, color: '#10b981' },

@@ -72,7 +72,9 @@ const labsSubItems = [
 ];
 
 const interviewSubItems = [
-  { label: "Language wise Interview Questions", href: `${base}interview-questions`, icon: Lightbulb, color: "#eab308" },
+  { label: "3,100+ Tech Interview Questions", href: `${base}interview-questions`, icon: Lightbulb, color: "#eab308" },
+  { label: "AI, LLM & RAG Interview Prep", href: `${base}interview-questions?tab=ai`, icon: Sparkles, color: "#10b981" },
+  { label: "Tricky JavaScript Outputs", href: `${base}interview-questions?tab=js-tricky`, icon: Code, color: "#f59e0b" },
   { label: "Behavioural Questions", href: `${base}behavioral`, icon: Users, color: "#3b82f6" },
 ];
 
@@ -88,6 +90,7 @@ const visualizerSubItems = [
   { label: "Stack & Queue", href: `${base}visualizer/stack`, icon: Layers, color: "#6366f1" },
   { label: "Hash Tables", href: `${base}visualizer/hash-table`, icon: Hash, color: "#06b6d4" },
   { label: "Trees Visualizer", href: `${base}visualizer/trees`, icon: GitFork, color: "#84cc16" },
+  { label: "Trie (Prefix Tree)", href: `${base}visualizer/trie`, icon: Network, color: "#10b981" },
   { label: "Graphs Visualizer", href: `${base}visualizer/graphs`, icon: Workflow, color: "#a855f7" },
   { label: "Heaps Visualizer", href: `${base}visualizer/heaps`, icon: Boxes, color: "#f97316" },
   { label: "Dynamic Programming", href: `${base}visualizer/dp`, icon: Cpu, color: "#ef4444" },
