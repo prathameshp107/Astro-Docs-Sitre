@@ -172,25 +172,33 @@ function build(reel) {
   const instagram = igLines.join('\n');
 
   // ── YouTube Shorts: title under 100 chars, description carries the links ──
-  const ytTitle = `${title} Visualized Step by Step${cx && cx.length < 30 ? ` (${cx.split(' · ')[0]})` : ''}`;
+  const ytTitle = `${title} Visualized Step by Step #Shorts`;
+  const ytDescriptionLines = [
+    SITE + '/',
+    '',
+    hook,
+    '',
+    explain,
+    '',
+    cx ? `⚡ Complexity: ${cx}` : null,
+    '',
+    faq ? `❓ ${faq.q}\n${faq.a}` : null,
+    firstQ ? `\n💬 Interview Question: "${firstQ}"` : null,
+    '',
+    `▶ Interactive Visualizer (Free, no sign-up): ${url}`,
+    `▶ All DSA Visualizers: ${SITE}/visualizer/`,
+    '',
+    tags,
+  ].filter((l) => l !== null);
+  const ytDescription = ytDescriptionLines.join('\n');
+
   const youtube = [
     `TITLE (${ytTitle.length}/100 chars):`,
     ytTitle,
     '',
     'DESCRIPTION:',
-    SITE + '/',
-    '',
-    explain,
-    '',
-    cx ? `Complexity — ${cx}` : null,
-    '',
-    faq ? `${faq.q}\n${faq.a}` : null,
-    '',
-    `Interactive version (free): ${url}`,
-    `All visualizers: ${SITE}/visualizer/`,
-    '',
-    tags.replace(/#/g, '#'),
-  ].filter((l) => l !== null).join('\n');
+    ytDescription,
+  ].join('\n');
 
   // ── LinkedIn: no hashtag spam, lead with the insight ──────────────────
   const linkedin = [
@@ -208,13 +216,32 @@ function build(reel) {
     (TOPIC_TAGS[topic] ?? []).slice(0, 3).join(' ') + ' #softwareengineering',
   ].filter((l) => l !== null).join('\n');
 
-  return { id: `${topic}-${track}`, title, url, instagram, youtube, linkedin };
+  return {
+    id: `${topic}-${track}`,
+    topic,
+    track,
+    title,
+    subtitle,
+    url,
+    instagram,
+    youtube,
+    ytTitle,
+    ytDescription,
+    linkedin,
+  };
+}
+
+function slugify(text) {
+  return String(text)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 }
 
 function toMarkdown(c) {
   return `# ${c.title}
 
-Reel: \`${c.id}.mp4\` · Page: ${c.url}
+Reel: \`${c.topic}/${c.track}.mp4\` · Page: ${c.url}
 
 ---
 
@@ -226,8 +253,14 @@ ${c.instagram}
 
 ## YouTube Shorts
 
+### Title (${c.ytTitle.length}/100 chars)
 \`\`\`
-${c.youtube}
+${c.ytTitle}
+\`\`\`
+
+### Description
+\`\`\`
+${c.ytDescription}
 \`\`\`
 
 ## LinkedIn
@@ -238,6 +271,141 @@ ${c.linkedin}
 `;
 }
 
+/**
+ * Generate a single dedicated Instagram & TikTok markdown file for all reels in a section.
+ */
+export function toSectionInstagramMarkdown(topic, items) {
+  const lines = [
+    `# Instagram & TikTok Captions — ${topic.toUpperCase()} (${items.length} Reels)`,
+    '',
+    `Folder: \`reels-out/${topic}/\``,
+    `All captions are optimized for Instagram Reels & TikTok with hooks, emojis, web links, and algorithmic hashtags.`,
+    '',
+    '## Quick Links',
+    ...items.map((item, idx) => `- [${idx + 1}. ${item.title} (\`${item.track}.mp4\`)](#${idx + 1}-${slugify(item.title)})`),
+    '',
+    '---',
+    '',
+  ];
+
+  for (let idx = 0; idx < items.length; idx++) {
+    const c = items[idx];
+    lines.push(
+      `## ${idx + 1}. ${c.title}`,
+      `**Video File**: \`reels-out/${c.topic}/${c.track}.mp4\`  `,
+      `**Interactive Page**: ${c.url}  `,
+      `**Length**: ${c.instagram.length} / 2200 characters  `,
+      '',
+      `### 📋 Instagram Caption (Copy below):`,
+      '```',
+      c.instagram,
+      '```',
+      '',
+      '---',
+      ''
+    );
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * Generate a single dedicated YouTube Shorts markdown file for all reels in a section.
+ */
+export function toSectionYouTubeMarkdown(topic, items) {
+  const lines = [
+    `# YouTube Shorts Captions — ${topic.toUpperCase()} (${items.length} Reels)`,
+    '',
+    `Folder: \`reels-out/${topic}/\``,
+    `All items include an exact YouTube Title (<100 chars) and formatted Description with clickable links.`,
+    '',
+    '## Quick Links',
+    ...items.map((item, idx) => `- [${idx + 1}. ${item.title} (\`${item.track}.mp4\`)](#${idx + 1}-${slugify(item.title)})`),
+    '',
+    '---',
+    '',
+  ];
+
+  for (let idx = 0; idx < items.length; idx++) {
+    const c = items[idx];
+    lines.push(
+      `## ${idx + 1}. ${c.title}`,
+      `**Video File**: \`reels-out/${c.topic}/${c.track}.mp4\`  `,
+      `**Interactive Page**: ${c.url}  `,
+      '',
+      `### 📌 Title (${c.ytTitle.length}/100 chars):`,
+      '```',
+      c.ytTitle,
+      '```',
+      '',
+      `### 📋 Description:`,
+      '```',
+      c.ytDescription,
+      '```',
+      '',
+      '---',
+      ''
+    );
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * Generate a combined master markdown file for all reels in a section.
+ */
+export function toSectionMasterMarkdown(topic, items) {
+  const lines = [
+    `# ${topic.toUpperCase()} — Complete Reel Captions (${items.length} Reels)`,
+    '',
+    `Folder: \`reels-out/${topic}/\`  `,
+    '',
+    '**Dedicated platform files:**',
+    `- [INSTAGRAM-CAPTIONS.md](./INSTAGRAM-CAPTIONS.md) — All Instagram & TikTok captions`,
+    `- [YOUTUBE-CAPTIONS.md](./YOUTUBE-CAPTIONS.md) — All YouTube Shorts titles & descriptions`,
+    '',
+    '## Table of Contents',
+    ...items.map((item, idx) => `- [${idx + 1}. ${item.title} (\`${item.track}.mp4\`)](#${idx + 1}-${slugify(item.title)})`),
+    '',
+    '---',
+    '',
+  ];
+
+  for (let idx = 0; idx < items.length; idx++) {
+    const c = items[idx];
+    lines.push(
+      `## ${idx + 1}. ${c.title}`,
+      `**Video File**: \`reels-out/${c.topic}/${c.track}.mp4\`  `,
+      `**Interactive Page**: ${c.url}  `,
+      '',
+      `### 📸 Instagram / TikTok:`,
+      '```',
+      c.instagram,
+      '```',
+      '',
+      `### 🔴 YouTube Shorts:`,
+      `**Title (${c.ytTitle.length}/100 chars)**:`,
+      '```',
+      c.ytTitle,
+      '```',
+      `**Description**:`,
+      '```',
+      c.ytDescription,
+      '```',
+      '',
+      `### 💼 LinkedIn:`,
+      '```',
+      c.linkedin,
+      '```',
+      '',
+      '---',
+      ''
+    );
+  }
+
+  return lines.join('\n');
+}
+
 /** Exported so record-reel.mjs can emit a caption next to each MP4. */
 export function captionFor(reel) {
   return build(reel);
@@ -245,6 +413,16 @@ export function captionFor(reel) {
 
 export function captionMarkdown(reel) {
   return toMarkdown(build(reel));
+}
+
+/** Helper to write all section-level markdown caption files for a topic */
+export async function writeSectionCaptions(topic, reels) {
+  const topicDir = path.join(ROOT, 'reels-out', topic);
+  await mkdir(topicDir, { recursive: true });
+  const items = reels.map(build);
+  await writeFile(path.join(topicDir, 'INSTAGRAM-CAPTIONS.md'), toSectionInstagramMarkdown(topic, items), 'utf8');
+  await writeFile(path.join(topicDir, 'YOUTUBE-CAPTIONS.md'), toSectionYouTubeMarkdown(topic, items), 'utf8');
+  await writeFile(path.join(topicDir, 'CAPTIONS.md'), toSectionMasterMarkdown(topic, items), 'utf8');
 }
 
 async function main() {
@@ -272,27 +450,70 @@ async function main() {
   }
 
   await mkdir(OUT, { recursive: true });
+
+  // Group by topic
+  const byTopic = {};
   for (const c of built) {
-    await writeFile(path.join(OUT, `${c.id}.md`), toMarkdown(c), 'utf8');
+    if (!byTopic[c.topic]) byTopic[c.topic] = [];
+    byTopic[c.topic].push(c);
   }
 
+  // 1. Write per-track and per-section files
+  for (const [topic, items] of Object.entries(byTopic)) {
+    const topicDir = path.join(ROOT, 'reels-out', topic);
+    await mkdir(topicDir, { recursive: true });
+
+    // Individual track captions
+    for (const c of items) {
+      await writeFile(path.join(topicDir, `${c.track}.md`), toMarkdown(c), 'utf8');
+      await writeFile(path.join(OUT, `${c.id}.md`), toMarkdown(c), 'utf8');
+    }
+
+    // Section-level consolidated files
+    await writeFile(path.join(topicDir, 'INSTAGRAM-CAPTIONS.md'), toSectionInstagramMarkdown(topic, items), 'utf8');
+    await writeFile(path.join(topicDir, 'YOUTUBE-CAPTIONS.md'), toSectionYouTubeMarkdown(topic, items), 'utf8');
+    await writeFile(path.join(topicDir, 'CAPTIONS.md'), toSectionMasterMarkdown(topic, items), 'utf8');
+  }
+
+  // 2. Write global archives in reels-out/captions/
   const combined = [
-    '# Reel captions',
+    '# Reel Captions — Master Archive',
     '',
-    `${built.length} reels. Copy the block for the platform you are posting to.`,
+    `${built.length} reels across ${Object.keys(byTopic).length} sections. Copy the block for the platform you are posting to.`,
     'Regenerate with `npm run reels:captions` after editing visualizerContent.js.',
     '',
     ...built.map((c) => toMarkdown(c)),
   ].join('\n');
   await writeFile(path.join(OUT, 'ALL-CAPTIONS.md'), combined, 'utf8');
 
-  console.log(`${built.length} captions -> ${path.relative(ROOT, OUT)}/`);
-  for (const c of built) {
-    const igLen = c.instagram.length;
-    const warn = igLen > 2200 ? '  ** over IG 2200 limit **' : '';
-    console.log(`  ${c.id.padEnd(30)} ${String(igLen).padStart(4)} chars${warn}`);
+  const allIg = [
+    `# All Instagram & TikTok Captions (${built.length} Reels across ${Object.keys(byTopic).length} Sections)`,
+    '',
+    'Ready-to-paste captions with hooks, emojis, web links, and algorithmic hashtags.',
+    'Regenerate with `npm run reels:captions`.',
+    '',
+    ...Object.entries(byTopic).map(([t, items]) => toSectionInstagramMarkdown(t, items)),
+  ].join('\n\n---\n\n');
+  await writeFile(path.join(OUT, 'ALL-INSTAGRAM-CAPTIONS.md'), allIg, 'utf8');
+
+  const allYt = [
+    `# All YouTube Shorts Captions (${built.length} Reels across ${Object.keys(byTopic).length} Sections)`,
+    '',
+    'Ready-to-paste Titles (<100 chars) and Descriptions for YouTube Studio upload.',
+    'Regenerate with `npm run reels:captions`.',
+    '',
+    ...Object.entries(byTopic).map(([t, items]) => toSectionYouTubeMarkdown(t, items)),
+  ].join('\n\n---\n\n');
+  await writeFile(path.join(OUT, 'ALL-YOUTUBE-CAPTIONS.md'), allYt, 'utf8');
+
+  console.log(`Generated captions for ${built.length} reels across ${Object.keys(byTopic).length} section folders:`);
+  for (const [topic, items] of Object.entries(byTopic)) {
+    console.log(`  ✓ reels-out/${topic}/ (INSTAGRAM-CAPTIONS.md, YOUTUBE-CAPTIONS.md, CAPTIONS.md) [${items.length} reels]`);
   }
-  console.log(`\ncombined: ${path.relative(ROOT, path.join(OUT, 'ALL-CAPTIONS.md'))}`);
+  console.log(`\nGlobal Archives in reels-out/captions/:`);
+  console.log(`  ✓ reels-out/captions/ALL-INSTAGRAM-CAPTIONS.md`);
+  console.log(`  ✓ reels-out/captions/ALL-YOUTUBE-CAPTIONS.md`);
+  console.log(`  ✓ reels-out/captions/ALL-CAPTIONS.md`);
 }
 
 // Only run as a CLI; importing it (from record-reel.mjs) must not write files.

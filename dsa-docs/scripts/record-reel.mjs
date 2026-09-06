@@ -27,18 +27,31 @@
 
 import { createServer } from 'node:http';
 import { readFile, mkdir, rm, writeFile, readdir, stat } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { REELS, RENDER } from './reels.config.mjs';
-import { captionMarkdown } from './reel-captions.mjs';
+import { captionMarkdown, writeSectionCaptions } from './reel-captions.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const OUT = path.join(ROOT, 'reels-out');
+const AUDIO_DIR = path.join(ROOT, 'scripts', 'audio');
 const PORT = 4399;
+
+async function getAvailableAudioTracks() {
+  try {
+    if (!existsSync(AUDIO_DIR)) return [];
+    const files = await readdir(AUDIO_DIR);
+    return files
+      .filter((f) => /\.(mp3|wav|ogg|m4a|aac)$/i.test(f))
+      .map((f) => path.join(AUDIO_DIR, f));
+  } catch {
+    return [];
+  }
+}
 
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript',
@@ -241,7 +254,7 @@ function run(cmd, args) {
   });
 }
 
-async function recordOne(browser, reel, keepFrames, origin) {
+async function recordOne(browser, reel, keepFrames, origin, preset = 'veryfast', audioTracks = []) {
   const id = `${reel.topic}-${reel.track}`;
   const frameDir = path.join(OUT, '.frames', id);
   await rm(frameDir, { recursive: true, force: true });
@@ -253,7 +266,7 @@ async function recordOne(browser, reel, keepFrames, origin) {
   });
 
   const url = `${origin}/visualizer/${reel.topic}/?track=${reel.track}&record=1`;
-  await page.goto(url, { waitUntil: 'networkidle' });
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
 
   await page.waitForFunction(() => window.__viz?.ready === true, { timeout: 30000 })
     .catch(() => {
@@ -297,19 +310,18 @@ async function recordOne(browser, reel, keepFrames, origin) {
     }, { caption, pct: Math.round(((i + 1) / count) * 100) });
 
     // Let CSS transitions in the visualizer settle before capturing.
-    await page.waitForTimeout(220);
+    await page.waitForTimeout(160);
 
     const f = path.join(frameDir, `f-${String(i).padStart(4, '0')}.png`);
     await page.screenshot({ path: f });
     // Time this step by how much there is to read, not a flat constant.
     const words = String(caption).trim().split(/\s+/).filter(Boolean).length;
     const read = words / RENDER.readingWordsPerSecond + RENDER.stepPadSeconds;
-    const clamped = Math.min(Math.max(read, RENDER.minStepSeconds), RENDER.maxStepSeconds);
-    durations.push(
-      clamped
-      + (i === 0 ? RENDER.holdFirst : 0)
-      + (i === count - 1 ? RENDER.holdLast : 0),
-    );
+    const stepDuration = Math.min(Math.max(read, RENDER.minStepSeconds), RENDER.maxStepSeconds);
+    const hold = (i === 0 ? RENDER.holdFirst : 0) + (i === count - 1 ? RENDER.holdLast : 0);
+    // Strict cap: ensure each step is at most RENDER.maxStepSeconds (2.0s)
+    const finalDuration = Math.min(stepDuration + hold, RENDER.maxStepSeconds);
+    durations.push(finalDuration);
   }
 
   await page.close();
@@ -326,6 +338,8 @@ async function recordOne(browser, reel, keepFrames, origin) {
     }
   }
 
+  const secs = durations.reduce((a, b) => a + b, 0);
+
   // concat demuxer: per-frame durations, last entry repeated (demuxer drops the
   // final duration otherwise, cutting the closing frame short).
   const frames = (await readdir(frameDir)).filter((f) => f.endsWith('.png')).sort();
@@ -335,30 +349,59 @@ async function recordOne(browser, reel, keepFrames, origin) {
     .join('\n');
   await writeFile(path.join(frameDir, 'list.txt'), list);
 
-  const outFile = path.join(OUT, `${id}.mp4`);
-  await run(FFMPEG, [
+  const topicDir = path.join(OUT, reel.topic);
+  await mkdir(topicDir, { recursive: true });
+  const outFile = path.join(topicDir, `${reel.track}.mp4`);
+
+  const chosenAudio = audioTracks.length
+    ? audioTracks[Math.floor(Math.random() * audioTracks.length)]
+    : null;
+
+  const ffmpegArgs = [
     '-y', '-f', 'concat', '-safe', '0',
     '-i', path.join(frameDir, 'list.txt'),
-    // `-r` alone resamples the variable per-frame durations from the concat
-    // demuxer into constant frame rate, which is what Instagram expects.
-    // Do not add -vsync/-fps_mode here: ffmpeg 7+ errors with "One of
-    // -r/-fpsmax was specified together a non-CFR -vsync/-fps_mode".
+  ];
+
+  if (chosenAudio) {
+    const fadeStart = Math.max(0, secs - 1.5).toFixed(2);
+    ffmpegArgs.push(
+      '-stream_loop', '-1',
+      '-i', chosenAudio,
+      '-map', '0:v',
+      '-map', '1:a',
+      '-c:a', 'aac',
+      '-b:a', '192k',
+      '-af', `volume=0.35,afade=t=out:st=${fadeStart}:d=1.5`,
+      '-shortest'
+    );
+  }
+
+  ffmpegArgs.push(
     '-r', String(RENDER.fps),
-    '-c:v', 'libx264', '-preset', 'slow', '-crf', String(RENDER.crf),
+    '-c:v', 'libx264', '-preset', preset, '-crf', String(RENDER.crf),
     '-pix_fmt', 'yuv420p',            // required for Instagram/QuickTime playback
     '-movflags', '+faststart',
     outFile,
-  ]);
+  );
+
+  await run(FFMPEG, ffmpegArgs);
 
   if (!keepFrames) await rm(frameDir, { recursive: true, force: true });
 
-  // Post copy alongside the video, so the reel is ready to publish without a
-  // second command. reel-captions.mjs is import-safe (it only writes when run
-  // as a CLI), and it needs no browser or ffmpeg.
-  await writeFile(path.join(OUT, `${id}.md`), captionMarkdown(reel), 'utf8');
+  // Post copy alongside the video in the section folder, so the reel is ready
+  // to publish without a second command.
+  await writeFile(path.join(topicDir, `${reel.track}.md`), captionMarkdown(reel), 'utf8');
+  const topicReels = REELS.filter((r) => r.topic === reel.topic);
+  await writeSectionCaptions(reel.topic, topicReels).catch(() => {});
 
-  const secs = durations.reduce((a, b) => a + b, 0);
-  return { id, outFile, count, total, secs };
+  return {
+    id,
+    outFile,
+    count,
+    total,
+    secs,
+    audio: chosenAudio ? path.basename(chosenAudio) : null,
+  };
 }
 
 async function main() {
@@ -368,10 +411,14 @@ async function main() {
   const skipExisting = args.includes('--skip-existing');
   const listOnly = args.includes('--list');
   const serverArg = args.find((a) => a.startsWith('--server='));
+  const concurrencyArg = args.find((a) => a.startsWith('--concurrency=') || a.startsWith('--workers='));
+  const concurrency = concurrencyArg ? Math.max(1, parseInt(concurrencyArg.split('=')[1], 10)) : 6;
+  const presetArg = args.find((a) => a.startsWith('--preset='));
+  const preset = presetArg ? presetArg.split('=')[1] : 'veryfast';
   const filters = args.filter((a) => !a.startsWith('--'));
 
   // Where pages are fetched from: an already-running server, or dist/ served here.
-  const origin = serverArg ? serverArg.slice('--server='.length).replace(/\/$/, '')
+  let origin = serverArg ? serverArg.slice('--server='.length).replace(/\/$/, '')
     : devMode ? 'http://localhost:4321'
       : `http://localhost:${PORT}`;
 
@@ -382,10 +429,20 @@ async function main() {
       }))
     : REELS;
 
+  const isRendered = (r) => {
+    const sectionFile = path.join(OUT, r.topic, `${r.track}.mp4`);
+    const legacyFile = path.join(OUT, `${r.topic}-${r.track}.mp4`);
+    try {
+      if (existsSync(sectionFile) && statSync(sectionFile).size > 1000) return true;
+      if (existsSync(legacyFile) && statSync(legacyFile).size > 1000) return true;
+    } catch { /* ignore */ }
+    return false;
+  };
+
   if (listOnly) {
     console.log(`${selected.length} reels queued:`);
     for (const r of selected) {
-      const done = existsSync(path.join(OUT, `${r.topic}-${r.track}.mp4`));
+      const done = isRendered(r);
       console.log(`  ${done ? '[done]' : '[    ]'} ${r.topic}:${r.track}  — ${r.title}`);
     }
     return;
@@ -393,7 +450,7 @@ async function main() {
 
   if (skipExisting) {
     const before = selected.length;
-    selected = selected.filter((r) => !existsSync(path.join(OUT, `${r.topic}-${r.track}.mp4`)));
+    selected = selected.filter((r) => !isRendered(r));
     const skipped = before - selected.length;
     if (skipped) console.log(`skipping ${skipped} already rendered (--skip-existing)`);
     if (!selected.length) { console.log('nothing left to record.'); return; }
@@ -413,7 +470,11 @@ async function main() {
   }
 
   if (!selfServe) {
-    const reachable = await fetch(origin, { method: 'HEAD' }).then(() => true).catch(() => false);
+    let reachable = await fetch(origin).then(() => true).catch(() => false);
+    if (!reachable && devMode && origin === 'http://localhost:4321') {
+      reachable = await fetch('http://[::1]:4321').then(() => true).catch(() => false);
+      if (reachable) origin = 'http://[::1]:4321';
+    }
     if (!reachable) {
       console.error(`no server at ${origin} — start it first (\`npm run dev\`) or drop --dev.`);
       process.exit(1);
@@ -428,6 +489,7 @@ async function main() {
     process.exit(1);
   }
 
+  const noAudio = args.includes('--no-audio');
   const ffSource = await resolveFfmpeg();
   if (!ffSource) {
     console.error('ffmpeg not found. Either:');
@@ -437,40 +499,58 @@ async function main() {
   }
   console.log(`using ${ffSource}`);
 
+  const audioTracks = noAudio ? [] : await getAvailableAudioTracks();
+  if (audioTracks.length) {
+    console.log(`audio: ${audioTracks.length} royalty-free background tracks loaded from scripts/audio/`);
+  } else if (!noAudio) {
+    console.log(`audio: none found in scripts/audio/ (video-only)`);
+  }
+
   await mkdir(OUT, { recursive: true });
   const server = selfServe ? await serveDist() : null;
   console.log(`source: ${origin}${selfServe ? ' (dist/)' : ''}`);
+  console.log(`workers: ${Math.min(concurrency, selected.length)} parallel | preset: ${preset}`);
+
+  const startTime = Date.now();
   const browser = await chromium.launch();
 
   const done = [];
   const failed = [];
-  for (const [i, reel] of selected.entries()) {
-    const id = `${reel.topic}-${reel.track}`;
-    process.stdout.write(`[${String(i + 1).padStart(2)}/${selected.length}] ${id.padEnd(28)} `);
-    try {
-      const r = await recordOne(browser, reel, keepFrames, origin);
-      const capped = r.count < r.total ? ` (capped ${r.count}/${r.total} steps)` : '';
-      const over = r.secs > RENDER.warnOverSeconds ? '  ** over Reels 90s limit **' : '';
-      console.log(`${r.secs.toFixed(1)}s, ${r.count} steps${capped}${over}`);
+  let nextIdx = 0;
+  const totalItems = selected.length;
 
-      // Confirm both artifacts landed. Cheap, and it turns a single-reel run
-      // into a self-verifying smoke test.
-      const mp4 = await stat(r.outFile).catch(() => null);
-      const cap = await stat(path.join(OUT, `${r.id}.md`)).catch(() => null);
-      console.log(`         video   ${mp4 ? `${(mp4.size / 1048576).toFixed(2)} MB` : 'MISSING'}  ${path.basename(r.outFile)}`);
-      console.log(`         caption ${cap ? `${cap.size} bytes` : 'MISSING'}  ${r.id}.md`);
-      done.push(r);
-    } catch (e) {
-      console.log('FAILED');
-      console.log(`  ${e.message}`);
-      failed.push({ id, message: e.message });
+  async function worker(workerId) {
+    while (nextIdx < totalItems) {
+      const i = nextIdx++;
+      const reel = selected[i];
+      const id = `${reel.topic}-${reel.track}`;
+      const prefix = `[W${workerId}][${String(i + 1).padStart(2)}/${totalItems}] ${id.padEnd(28)}`;
+      try {
+        const r = await recordOne(browser, reel, keepFrames, origin, preset, audioTracks);
+        const capped = r.count < r.total ? ` (capped ${r.count}/${r.total} steps)` : '';
+        const over = r.secs > RENDER.warnOverSeconds ? '  ** over Reels 90s limit **' : '';
+        const audioTag = r.audio ? ` [♫ ${r.audio}]` : '';
+        const mp4 = await stat(r.outFile).catch(() => null);
+        const mb = mp4 ? ` (${(mp4.size / 1048576).toFixed(2)} MB)` : '';
+        console.log(`${prefix} ${r.secs.toFixed(1)}s, ${r.count} steps${capped}${over}${audioTag}${mb}`);
+        done.push(r);
+      } catch (e) {
+        console.log(`${prefix} FAILED: ${e.message.split('\n')[0]}`);
+        failed.push({ id, message: e.message });
+      }
     }
   }
+
+  const workerCount = Math.min(concurrency, totalItems);
+  await Promise.all(Array.from({ length: workerCount }, (_, idx) => worker(idx + 1)));
 
   await browser.close();
   server?.close();
 
-  console.log(`\n${done.length}/${selected.length} reels -> ${path.relative(ROOT, OUT)}/`);
+  const elapsedSec = ((Date.now() - startTime) / 1000).toFixed(1);
+  const elapsedMin = (elapsedSec / 60).toFixed(1);
+  console.log(`\nFinished in ${elapsedSec}s (~${elapsedMin} mins)`);
+  console.log(`${done.length}/${selected.length} reels -> ${path.relative(ROOT, OUT)}/`);
   if (failed.length) {
     console.log(`${failed.length} failed:`);
     for (const f of failed) console.log(`  ${f.id}: ${f.message.split('\n')[0]}`);
@@ -479,3 +559,4 @@ async function main() {
 }
 
 main();
+
