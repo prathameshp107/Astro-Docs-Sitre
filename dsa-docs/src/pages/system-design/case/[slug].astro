@@ -1,7 +1,7 @@
 ---
 import InteractiveCaseStudy from '../../../components/system-design/InteractiveCaseStudy.jsx';
 import AppNav from '../../../components/AppNav.jsx';
-import GoogleAnalytics from '../../../components/GoogleAnalytics.astro';
+import PageSEO from '../../../components/PageSEO.astro';
 import { CASE_STUDIES } from '../../../data/system-design/caseStudies.js';
 import '../../../styles/mcq-tailwind.css';
 import '../../../styles/landing.css';
@@ -17,22 +17,22 @@ export async function getStaticPaths() {
 const { caseStudy } = Astro.props;
 const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
-// No `site` configured in astro.config.mjs, so breadcrumb/article schema
-// below intentionally uses site-relative paths rather than guessing a
-// fully-qualified domain — still valid structured data, just without `@id`.
+const pageUrl = `https://interviewpreprationbuddy.in/system-design/case/${caseStudy.slug}/`;
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'System Design', item: `${base}system-design` },
-    { '@type': 'ListItem', position: 2, name: 'Case Studies', item: `${base}system-design#case-studies` },
-    { '@type': 'ListItem', position: 3, name: caseStudy.title },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://interviewpreprationbuddy.in/' },
+    { '@type': 'ListItem', position: 2, name: 'System Design', item: 'https://interviewpreprationbuddy.in/system-design/' },
+    { '@type': 'ListItem', position: 3, name: caseStudy.title, item: pageUrl },
   ],
 };
 
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
+  '@id': `${pageUrl}#article`,
+  url: pageUrl,
   headline: caseStudy.title,
   description: caseStudy.desc,
   proficiencyLevel: caseStudy.difficulty,
@@ -44,16 +44,16 @@ const articleSchema = {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <GoogleAnalytics />
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{caseStudy.title} — Interactive Architecture Walkthrough</title>
-    <meta name="description" content={`${caseStudy.desc} Watch the architecture evolve stage by stage with interactive diagrams and request-path tracing.`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title={`${caseStudy.title} — Interactive Architecture Walkthrough`}
+      description={`${caseStudy.desc} Watch the architecture evolve stage by stage with interactive diagrams and request-path tracing.`}
+      url={pageUrl}
+      schema={articleSchema}
+      fontUrl="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   </head>
   <body class="mcq-body">
     <AppNav activeSection="system-design" client:load />
@@ -69,7 +69,7 @@ const articleSchema = {
 
     <InteractiveCaseStudy
       caseStudySlug={caseStudy.slug}
-      client:only="react"
+      client:load
     />
   </body>
 </html>

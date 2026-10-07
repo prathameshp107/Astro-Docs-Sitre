@@ -1,7 +1,7 @@
 ---
 import MCQQuiz from '../../../components/mcq/MCQQuiz.jsx';
 import AppNav from '../../../components/AppNav.jsx';
-import GoogleAnalytics from '../../../components/GoogleAnalytics.astro';
+import PageSEO from '../../../components/PageSEO.astro';
 import '../../../styles/mcq-tailwind.css';
 import '../../../styles/landing.css';
 import { MCQ_CATEGORIES } from '../../../components/mcq/MCQData.js';
@@ -14,20 +14,36 @@ export function getStaticPaths() {
 
 const { category } = Astro.params;
 const cat = MCQ_CATEGORIES.find(c => c.id === category);
+const siteUrl = 'https://interviewpreprationbuddy.in';
+const pageUrl = `${siteUrl}/mcq/quiz/${category}/`;
+const pageTitle = `${cat.name} MCQ Quiz — Practice Interview Questions | Interview Prep Buddy`;
+const pageDescription = `Practice ${cat.name} interview questions in a free interactive MCQ quiz. Get instant explanations, review your answers, and track your progress.`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: `${cat.name} MCQ Quiz`,
+  description: pageDescription,
+  url: pageUrl,
+  applicationCategory: 'EducationalApplication',
+  operatingSystem: 'Any',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+};
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <GoogleAnalytics />
     <script>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz: {cat?.name || 'Loading'} — MCQ Hub</title>
-    <meta name="description" content={`${cat?.name || 'Quiz'} — Interactive quiz with instant feedback, keyboard shortcuts, XP rewards.`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <PageSEO
+      title={pageTitle}
+      description={pageDescription}
+      url={pageUrl}
+      schema={schema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'MCQ quizzes', url: '/mcq/' }, { name: `${cat.name} quiz`, url: `/mcq/quiz/${category}/` }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
   </head>
   <body class="mcq-body">
     <AppNav activeSection="mcq" client:load />

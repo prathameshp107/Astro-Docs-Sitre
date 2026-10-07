@@ -3,6 +3,8 @@ title: "The System Design Interview Framework"
 description: "A step-by-step template to answer any system design interview question — with a worked example."
 sidebar:
   order: 1
+practice:
+  mcq: /mcq/quiz/system-design
 ---
 
 # The System Design Interview Framework

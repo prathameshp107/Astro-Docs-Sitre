@@ -159,9 +159,7 @@ export default function LLDHub() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
-    ? import.meta.env.BASE_URL.replace(/\/$/, '')
-    : '/DSA-Notes-Problems';
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
   const categories = ['All', 'Machine Coding', 'Infrastructure LLD', 'Game Systems', 'Financial/Booking'];
 

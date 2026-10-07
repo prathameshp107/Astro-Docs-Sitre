@@ -177,137 +177,64 @@ const NQUEENS_STEPS = [
   }
 ];
 
-// 2. SUDOKU SOLVER (4x4 MINI GRID) EXHAUSTIVE STEP TRACE
-const SUDOKU_STEPS = [
-  {
-    activeLine: 1,
-    row: 0,
-    col: 0,
-    num: null,
-    grid: [
-      [1, 0, 3, 0],
-      [0, 0, 0, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    state: { keyInsight: 'Try digits 1..4. Validate row, col, 2x2 box. Backtrack on dead end.', row: 0, col: 1 },
-    desc: '💡 Key insight: For each empty cell, try digits 1..4. Validate row, column, and 2x2 subgrid. If no digit fits, backtrack to previous cell.'
-  },
-  {
-    activeLine: 2,
-    row: 0,
-    col: 1,
-    num: 1,
-    grid: [
-      [1, 0, 3, 0],
-      [0, 0, 0, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    conflictCell: [0, 0],
-    state: { row: 0, col: 1, tryNum: 1, isValid: 'FALSE ❌ (Row Conflict with arr[0][0])' },
-    desc: 'Step 2: Cell (0, 1) is empty. Try num = 1. Row 0 already has digit 1! CONFLICT ❌.'
-  },
-  {
-    activeLine: 2,
-    row: 0,
-    col: 1,
-    num: 2,
-    grid: [
-      [1, 2, 3, 0],
-      [0, 0, 0, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    state: { row: 0, col: 1, tryNum: 2, isValid: 'TRUE ✅' },
-    desc: 'Step 3: Try num = 2. Row, Col, and 2x2 Box valid! Place 2 at (0, 1).'
-  },
-  {
-    activeLine: 2,
-    row: 0,
-    col: 3,
-    num: 4,
-    grid: [
-      [1, 2, 3, 4],
-      [0, 0, 0, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    state: { row: 0, col: 3, tryNum: 4, isValid: 'TRUE ✅' },
-    desc: 'Step 4: Cell (0, 3) is empty. Try num = 4. Valid! Row 1 completed: [1, 2, 3, 4].'
-  },
-  {
-    activeLine: 2,
-    row: 1,
-    col: 0,
-    num: 3,
-    grid: [
-      [1, 2, 3, 4],
-      [3, 0, 0, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    state: { row: 1, col: 0, tryNum: 3, isValid: 'TRUE ✅' },
-    desc: 'Step 5: Cell (1, 0) is empty. Try num = 3. Valid! Place 3.'
-  },
-  {
-    activeLine: 2,
-    row: 1,
-    col: 1,
-    num: 4,
-    grid: [
-      [1, 2, 3, 4],
-      [3, 4, 0, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    state: { row: 1, col: 1, tryNum: 4, isValid: 'TRUE ✅' },
-    desc: 'Step 6: Cell (1, 1) is empty. Try num = 4. Valid! Place 4.'
-  },
-  {
-    activeLine: 2,
-    row: 1,
-    col: 2,
-    num: 1,
-    grid: [
-      [1, 2, 3, 4],
-      [3, 4, 1, 2],
-      [0, 1, 0, 0],
-      [4, 0, 0, 3]
-    ],
-    state: { row: 1, col: 2, tryNum: 1, isValid: 'TRUE ✅' },
-    desc: 'Step 7: Cell (1, 2) is empty. Try num = 1. Valid! Row 2 completed: [3, 4, 1, 2].'
-  },
-  {
-    activeLine: 2,
-    row: 2,
-    col: 0,
-    num: 2,
-    grid: [
-      [1, 2, 3, 4],
-      [3, 4, 1, 2],
-      [2, 1, 4, 3],
-      [4, 0, 0, 3]
-    ],
-    state: { row: 2, col: 0, tryNum: 2, isValid: 'TRUE ✅' },
-    desc: 'Step 8: Solve Row 3 cells: (2, 0)=2, (2, 2)=4, (2, 3)=3. Row 3 completed: [2, 1, 4, 3].'
-  },
-  {
-    activeLine: 5,
-    row: 3,
-    col: 3,
-    num: 1,
-    isMatch: true,
-    grid: [
-      [1, 2, 3, 4],
-      [3, 4, 1, 2],
-      [2, 1, 4, 3],
-      [4, 3, 2, 1]
-    ],
-    state: { status: 'SUDOKU SOLVED 🎉' },
-    desc: 'Step 9: All empty cells filled without conflict! SUDOKU PUZZLE SOLVED 🎉'
-  }
+// A real solver produces every state; givens are never overwritten.
+export const SUDOKU_INITIAL_GRID = [
+  [1, 0, 3, 0],
+  [0, 0, 0, 2],
+  [0, 1, 0, 0],
+  [4, 0, 0, 1],
 ];
+
+export function buildSudokuSteps(initialGrid = SUDOKU_INITIAL_GRID) {
+  const grid = initialGrid.map(row => [...row]);
+  const steps = [];
+  function record(activeLine, row, col, num, action, desc, extra = {}) {
+    steps.push({ activeLine, row, col, num, grid: grid.map(r => [...r]),
+      state: { row, col, candidate: num ?? 'None', action }, desc, ...extra });
+  }
+  function conflict(row, col, num) {
+    for (let i = 0; i < 4; i++) {
+      if (grid[row][i] === num) return [row, i];
+      if (grid[i][col] === num) return [i, col];
+    }
+    const r0 = Math.floor(row / 2) * 2, c0 = Math.floor(col / 2) * 2;
+    for (let r = r0; r < r0 + 2; r++) {
+      for (let c = c0; c < c0 + 2; c++) if (grid[r][c] === num) return [r, c];
+    }
+    return null;
+  }
+  function solve() {
+    let row = -1, col = -1;
+    for (let r = 0; r < 4 && row < 0; r++) {
+      for (let c = 0; c < 4; c++) {
+        if (grid[r][c] === 0) { row = r; col = c; break; }
+      }
+    }
+    if (row < 0) return true;
+    record(2, row, col, null, 'Find empty cell', `Inspect empty cell (${row}, ${col}). Try digits 1 through 4.`);
+    for (let num = 1; num <= 4; num++) {
+      const conflictCell = conflict(row, col, num);
+      if (conflictCell) {
+        record(4, row, col, num, 'Reject candidate', `Reject ${num} at (${row}, ${col}): conflicts with (${conflictCell[0]}, ${conflictCell[1]}) in its row, column, or box.`, { conflictCell });
+        continue;
+      }
+      grid[row][col] = num;
+      record(5, row, col, num, 'Place digit', `Place ${num} at (${row}, ${col}). Row, column, and 2×2 box remain valid.`);
+      if (solve()) return true;
+      grid[row][col] = 0;
+      record(7, row, col, num, 'Backtrack', `No solution follows this choice. Remove ${num} from (${row}, ${col}) and try the next candidate.`);
+    }
+    return false;
+  }
+  record(1, 0, 1, null, 'Setup', 'Solve this 4×4 Sudoku using digits 1–4. Preserve the original clues and reject conflicts before placing a digit.');
+  const solved = solve();
+  record(6, null, null, null, solved ? 'Solved' : 'No solution', solved
+    ? 'SUDOKU SOLVED: every row, column, and 2×2 box contains digits 1–4, and all original clues are preserved.'
+    : 'No solution exists for these clues. All attempted choices have been undone.', { isMatch: solved });
+  return steps;
+}
+
+const SUDOKU_STEPS = buildSudokuSteps();
 
 // 3. SUBSETS / POWER SET STEP TRACE (Exhaustive 9-Step Backtracking Execution)
 const SUBSETS_STEPS = [

@@ -28,6 +28,20 @@ const META = {
 // Render order, independent of the order keys appear in frontmatter.
 const ORDER = ['visualizer', 'mcq', 'lab', 'playground'];
 
+const TOPIC_NAMES = {
+  dp: 'dynamic programming',
+  mcq: 'MCQ',
+  oops: 'OOP',
+};
+
+const linkLabel = (key, href) => {
+  const slug = href.split(/[?#]/, 1)[0].replace(/\/$/, '').split('/').pop();
+  const topic = TOPIC_NAMES[slug] || slug.replace(/-/g, ' ');
+  if (key === 'visualizer') return `Explore the ${topic} visualizer`;
+  if (key === 'mcq') return `Take the ${topic} quiz`;
+  return META[key].label;
+};
+
 const escapeAttr = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
@@ -46,7 +60,7 @@ export default function remarkPracticeLinks(options = {}) {
         return `<a class="practice-link practice-link--${key}" href="${escapeAttr(href)}">` +
           `<span class="practice-link__icon" aria-hidden="true">${meta.icon}</span>` +
           `<span class="practice-link__text">` +
-          `<span class="practice-link__label">${meta.label}</span>` +
+          `<span class="practice-link__label">${escapeAttr(linkLabel(key, String(practice[key])))}</span>` +
           `<span class="practice-link__sub">${meta.sub}</span>` +
           `</span>` +
           `<span class="practice-link__arrow" aria-hidden="true">→</span>` +

@@ -1,6 +1,9 @@
 ---
 title: "Two Sum"
-description: "Detailed guide, approach, Mermaid diagram, brute force, and optimized solution for Two Sum."
+description: "Solve Two Sum with a hash map in O(n) time. Compare the brute force approach, trace an example, and review the interview explanation."
+practice:
+  visualizer: /visualizer/hash-table
+  mcq: /mcq/algorithms
 ---
 
 # Two Sum

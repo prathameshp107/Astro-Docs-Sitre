@@ -642,9 +642,7 @@ export default function InteractiveCaseStudy({ caseStudySlug: initialSlug }) {
     return scored.slice(0, 3).map((s) => s.c);
   }, [slug, caseMeta]);
 
-  const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
-    ? import.meta.env.BASE_URL.replace(/\/$/, '')
-    : '/DSA-Notes-Problems';
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
   return (
     <div className="case-study-interactive-page font-sketch max-w-6xl mx-auto px-4 py-6">

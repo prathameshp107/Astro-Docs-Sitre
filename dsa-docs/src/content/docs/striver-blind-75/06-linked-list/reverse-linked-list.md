@@ -1,6 +1,9 @@
 ---
 title: "Reverse Linked List"
-description: "Detailed guide, approach, Mermaid diagram, brute force, and optimized solution for Reverse Linked List."
+description: "Reverse a linked list with three pointers. Follow the pointer changes step by step and compare iterative and recursive solutions."
+practice:
+  visualizer: /visualizer/linked-list
+  mcq: /mcq/data-structures
 ---
 
 # Reverse Linked List

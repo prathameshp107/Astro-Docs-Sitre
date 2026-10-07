@@ -1,6 +1,9 @@
 ---
 title: "Number of Islands"
-description: "Detailed guide, approach, Mermaid diagram, brute force, and optimized solution for Number of Islands."
+description: "Count islands in a grid with DFS or BFS. See how visited cells are tracked, walk through an example, and review complexity."
+practice:
+  visualizer: /visualizer/graphs
+  mcq: /mcq/algorithms
 ---
 
 # Number of Islands

@@ -3,47 +3,8 @@ Allow: /
 Disallow: /auth/
 Disallow: /u/
 Disallow: /review/
+
 Sitemap: https://interviewpreprationbuddy.in/sitemap-index.xml
 
-# AI Search Crawlers — explicitly allowed to index all content
-User-agent: GPTBot
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Anthropic-ai
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: YandexBot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: meta-externalagent
-Allow: /
-
-User-agent: cohere-ai
-Allow: /
+# All crawlers, including Googlebot, Bingbot, and AI search crawlers, inherit
+# this single group. Separate Allow-only groups would override the exclusions.

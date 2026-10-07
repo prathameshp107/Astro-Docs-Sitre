@@ -1,6 +1,9 @@
 ---
 title: "Climbing Stairs"
-description: "Detailed guide, approach, Mermaid diagram, brute force, and optimized solution for Climbing Stairs."
+description: "Understand the Climbing Stairs dynamic programming pattern, from recursion to an O(n) time and O(1) space solution."
+practice:
+  visualizer: /visualizer/dp
+  mcq: /mcq/algorithms
 ---
 
 # Climbing Stairs
