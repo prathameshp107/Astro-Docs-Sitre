@@ -393,13 +393,67 @@ The slug isn't in that store's `setTrack()`. The driver warns
 
 ---
 
+## Bulk Uploader & Social Media Scheduler
+
+Automates uploading and scheduling all 80 videos directly to **YouTube Shorts** and **Instagram Reels** using Playwright and your real browser profile.
+
+### Why this avoids Meta & YouTube API issues:
+- **Meta Business Suite**: Fails on bulk Reels upload and requires complex Facebook App review.
+- **YouTube API**: Has strict 10,000 units/day quota (only ~6 uploads/day).
+- **Playwright Bot**: Runs directly inside your browser window, uses your genuine Google Chrome, requires **zero API keys**, and lets you schedule 80 videos over weeks at custom daily times (e.g. 10 AM and 6 PM).
+
+### Quick Workflow:
+
+1. **Log in once:**
+   ```bash
+   npm run upload:login
+   ```
+   Opens Chrome with tabs for YouTube Studio and Instagram. Log into your accounts once. Cookies and credentials remain securely saved in `.browser-session/` (ignored by git).
+
+2. **Check upload status:**
+   ```bash
+   npm run upload:status
+   ```
+   Displays which videos are rendered and which are posted/scheduled on YouTube and Instagram.
+
+3. **Schedule to YouTube Shorts:**
+   ```bash
+   # Test upload 1 video as Unlisted first:
+   npm run upload:yt:test
+
+   # Bulk schedule all reels (2 per day spread across days):
+   npm run upload:yt
+
+   # Save all as drafts in YouTube Studio:
+   npm run upload:yt:draft
+   ```
+
+4. **Upload to Instagram Reels:**
+   ```bash
+   # Test run 1 video (dry-run, won't click final Share):
+   npm run upload:ig:test
+
+   # Bulk upload reels to Instagram:
+   npm run upload:ig
+   ```
+
+### Custom Options:
+```bash
+# Upload only sorting reels:
+node scripts/bulk-uploader.mjs --platform=youtube --topic=sorting
+
+# Upload only next 5 reels:
+node scripts/bulk-uploader.mjs --platform=youtube --limit=5
+
+# Run in background without browser window:
+node scripts/bulk-uploader.mjs --platform=youtube --headless
+```
+
+---
+
 ## Constraints
 
 - **90s hard limit** on Reels. The budget pass enforces 84s.
-- **Width-bound.** A row of array cards is wide and short; it already scales to
-  the full 1080px frame. Making it visually larger means fewer array elements in
-  the store's default data, not a recorder change.
-- **Sequential by design.** Parallel pages contend for CPU during screenshot and
-  encode, and interleaved failures are unreadable.
-- **No audio.** Add music in the Instagram composer — platform-native audio gets
-  better reach than a baked-in track.
+- **Max step duration $\le$ 2.0s**. Keeps animation snappy and dynamic.
+- **Royalty-free audio**. Randomly mixed from `scripts/audio/` with automatic volume normalization and 1.5s fade-out.
+

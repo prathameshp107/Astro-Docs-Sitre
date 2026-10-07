@@ -268,7 +268,7 @@ async function recordOne(browser, reel, keepFrames, origin, preset = 'veryfast',
   const url = `${origin}/visualizer/${reel.topic}/?track=${reel.track}&record=1`;
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  await page.waitForFunction(() => window.__viz?.ready === true, { timeout: 30000 })
+  await page.waitForFunction(() => window.__viz?.ready === true, { timeout: 60000 })
     .catch(() => {
       throw new Error(
         `window.__viz never appeared at ${url}\n` +
@@ -392,7 +392,7 @@ async function recordOne(browser, reel, keepFrames, origin, preset = 'veryfast',
   // to publish without a second command.
   await writeFile(path.join(topicDir, `${reel.track}.md`), captionMarkdown(reel), 'utf8');
   const topicReels = REELS.filter((r) => r.topic === reel.topic);
-  await writeSectionCaptions(reel.topic, topicReels).catch(() => {});
+  await writeSectionCaptions(reel.topic, topicReels).catch(() => { });
 
   return {
     id,
@@ -424,9 +424,9 @@ async function main() {
 
   let selected = filters.length
     ? REELS.filter((r) => filters.some((f) => {
-        const [t, tr] = f.split(':');
-        return r.topic === t && (!tr || r.track === tr);
-      }))
+      const [t, tr] = f.split(':');
+      return r.topic === t && (!tr || r.track === tr);
+    }))
     : REELS;
 
   const isRendered = (r) => {
