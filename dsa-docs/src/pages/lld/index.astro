@@ -44,7 +44,50 @@ const faqSchema = {
       name: 'What are the 23 design patterns?',
       acceptedAnswer: { '@type': 'Answer', text: 'The 23 Gang of Four (GoF) design patterns are grouped into 3 categories: Creational (Singleton, Factory, Abstract Factory, Builder, Prototype), Structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy), and Behavioral (Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor, Interpreter).' },
     },
+    {
+      '@type': 'Question',
+      name: 'How do you approach a machine coding interview in 45 minutes?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Follow this 5-step framework: (1) Clarify requirements and scope in 5 minutes — identify entities, operations, and constraints. (2) Design the class model in 10 minutes — entities, attributes, enums, and relationships. (3) Apply design patterns in 10 minutes — Strategy for algorithms, Factory for creation, State for lifecycles. (4) Implement core logic in 15 minutes — clean methods with clear signatures. (5) Add thread safety in 5 minutes — ReentrantLock, ConcurrentHashMap, or AtomicInteger where needed.' },
+    },
   ],
+};
+
+// Static project list mirroring LLDHub.jsx — used for SSR HTML and ItemList schema.
+// Both arrays must stay in sync. The React island handles search/filter interactivity
+// at runtime; this static list is what Google indexes at build time.
+const LLD_PROJECTS_STATIC = [
+  { slug: 'parking-lot',         title: 'Design a Parking Lot System',             category: 'Infrastructure LLD', difficulty: 'Medium', patterns: ['Singleton', 'Factory', 'Strategy', 'Observer'],           desc: 'Multi-floor parking lot supporting different vehicle types (Compact, SUV, EV, Motorcycle), automated billing, and spot allocation strategies.',       keyEntities: ['ParkingLot', 'ParkingFloor', 'ParkingSpot', 'Vehicle', 'Ticket', 'PaymentGate'] },
+  { slug: 'cache-system',        title: 'Design an In-Memory Cache (LRU/LFU)',     category: 'Infrastructure LLD', difficulty: 'Hard',   patterns: ['Strategy', 'Doubly LinkedList', 'HashMap', 'ReadWriteLock'], desc: 'High-concurrency in-memory Key-Value cache with configurable eviction policies (LRU, LFU, FIFO) and thread-safe operations.',                        keyEntities: ['Cache', 'EvictionPolicy', 'DoublyLinkedList', 'Node', 'ConcurrentHashMap'] },
+  { slug: 'rate-limiter',        title: 'Design a Distributed Rate Limiter',       category: 'Infrastructure LLD', difficulty: 'Hard',   patterns: ['Token Bucket', 'Sliding Window Log', 'Decorator'],          desc: 'Rate limiting library for API endpoints supporting Token Bucket and Leaky Bucket algorithms with sub-millisecond thread safety.',                    keyEntities: ['RateLimiter', 'TokenBucket', 'SlidingWindow', 'RequestRules'] },
+  { slug: 'elevator-system',     title: 'Design an Elevator Control System',       category: 'Machine Coding',     difficulty: 'Medium', patterns: ['State', 'Strategy', 'Dispatcher', 'Observer'],              desc: 'Multi-elevator scheduling algorithm handling internal/external requests, floor direction states, and dispatching strategies (LOOK/SCAN).',           keyEntities: ['ElevatorController', 'ElevatorCar', 'InternalButton', 'ExternalButton', 'DispatchStrategy'] },
+  { slug: 'splitwise',           title: 'Design Expense Sharing (Splitwise)',      category: 'Financial/Booking',  difficulty: 'Medium', patterns: ['Composite', 'Observer', 'Min-Cost Graph Flow'],             desc: 'Group expense tracking system supporting exact amounts, percentages, and bill simplification algorithms to minimize net transactions.',                keyEntities: ['User', 'Group', 'Expense', 'Split', 'BalanceSheet', 'SimplificationEngine'] },
+  { slug: 'bookmyshow',          title: 'Design Movie Ticket Booking (BookMyShow)',category: 'Financial/Booking',  difficulty: 'Hard',   patterns: ['Command', 'Concurrency Locks', 'Factory', 'State'],         desc: 'Cinema ticketing platform supporting theater layouts, seat reservation holds, concurrent booking locks, and payment timeouts.',                      keyEntities: ['Cinema', 'Screen', 'Seat', 'Show', 'Booking', 'PaymentProcessor'] },
+  { slug: 'snake-and-ladder',    title: 'Design Snake and Ladder Game',            category: 'Game Systems',       difficulty: 'Easy',   patterns: ['Command', 'Singleton', 'Strategy'],                          desc: 'Multiplayer board game supporting customizable board sizes, multiple dice, snakes, ladders, and win condition evaluation.',                          keyEntities: ['Board', 'Cell', 'Snake', 'Ladder', 'Dice', 'Player', 'GameEngine'] },
+  { slug: 'tic-tac-toe',         title: 'Design Tic-Tac-Toe Game (N x N)',         category: 'Game Systems',       difficulty: 'Easy',   patterns: ['Strategy', 'Observer', 'State'],                             desc: 'Scalable N x N Tic-Tac-Toe supporting dynamic board size, win evaluation in O(1) time per move, and bot players.',                                  keyEntities: ['Board', 'Piece (X/O)', 'Player', 'Game', 'WinConditionChecker'] },
+  { slug: 'vending-machine',     title: 'Design a Vending Machine',                category: 'Machine Coding',     difficulty: 'Medium', patterns: ['State Pattern', 'Chain of Responsibility', 'Inventory'],    desc: 'State-driven vending machine handling Ready, Idle, CoinInserted, Dispensing, and OutOfStock state transitions cleanly.',                            keyEntities: ['VendingMachine', 'State', 'Inventory', 'Item', 'Coin', 'ChangeCalculator'] },
+  { slug: 'atm',                 title: 'Design an ATM System',                    category: 'Financial/Booking',  difficulty: 'Medium', patterns: ['State', 'Chain of Responsibility', 'Decorator'],            desc: 'ATM banking interface with cash dispenser chain of responsibility ($100, $50, $20 notes), PIN authentication, and card reader.',                    keyEntities: ['ATM', 'Card', 'Account', 'CashDispenser', 'Transaction', 'BankServer'] },
+  { slug: 'chess-game',          title: 'Design a Chess Game',                     category: 'Game Systems',       difficulty: 'Hard',   patterns: ['Command', 'Factory', 'Strategy', 'Observer'],               desc: 'Object-oriented Chess game with Piece movement validation (Pawn, Knight, Rook, Queen, King), Check/Checkmate logic, and move undo history.',         keyEntities: ['ChessBoard', 'Piece', 'Move', 'Player', 'GameStatus', 'MoveHistory'] },
+  { slug: 'hotel-management',    title: 'Design Hotel Room Management System',     category: 'Financial/Booking',  difficulty: 'Medium', patterns: ['Factory', 'State', 'Strategy'],                              desc: 'Hotel booking platform managing room types (Deluxe, Suite), housekeeping status, guest reservations, and checkout invoicing.',                      keyEntities: ['Hotel', 'Room', 'Guest', 'Reservation', 'Invoice', 'HousekeepingState'] },
+  { slug: 'library-management',  title: 'Design Library Management System',        category: 'Infrastructure LLD', difficulty: 'Easy',   patterns: ['Observer', 'Factory', 'Strategy'],                           desc: 'Book inventory management supporting barcode scanning, member reservations, fine calculations, and overdue notifications.',                          keyEntities: ['Library', 'Book', 'BookItem', 'Member', 'Librarian', 'FineCalculator'] },
+  { slug: 'logging-framework',   title: 'Design a Custom Logging Framework',       category: 'Infrastructure LLD', difficulty: 'Medium', patterns: ['Chain of Responsibility', 'Singleton', 'Adapter'],          desc: 'Logger framework supporting log levels (DEBUG, INFO, ERROR), chain of handlers (Console, File, Cloud), and async buffer flushes.',                  keyEntities: ['Logger', 'LogLevel', 'LogHandler', 'ConsoleAppender', 'FileAppender', 'LogMessage'] },
+  { slug: 'notification-service',title: 'Design a Low-Level Notification Library', category: 'Infrastructure LLD', difficulty: 'Medium', patterns: ['Observer', 'Factory', 'Strategy', 'Decorator'],             desc: 'Notification engine delivering messages via Push, SMS, and Email with template interpolation, retry mechanisms, and rate limits.',                   keyEntities: ['NotificationService', 'ChannelStrategy', 'TemplateEngine', 'UserPreference', 'DeliveryStatus'] },
+];
+
+// ItemList schema — lets Google surface individual LLD projects in rich results
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Low-Level Design Machine Coding Projects',
+  description: 'Complete list of LLD machine coding projects with design patterns, key entities, and interview guides.',
+  url: PAGE_URL,
+  numberOfItems: LLD_PROJECTS_STATIC.length,
+  itemListElement: LLD_PROJECTS_STATIC.map((p, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: p.title,
+    description: p.desc,
+    url: `${SITE_URL}/lld/projects/design-${p.slug}/`,
+  })),
 };
 ---
 
@@ -58,14 +101,83 @@ const faqSchema = {
       title="Low-Level Design (LLD) & Machine Coding Interview Prep | Interview Prep Buddy"
       description="Master Low-Level Design and machine coding for software engineering interviews. OOP, SOLID principles, 23 design patterns, UML class diagrams, and 15+ real-world LLD problems."
       url={PAGE_URL}
-      keywords="low level design interview, LLD machine coding, design patterns interview, SOLID principles, object oriented design, parking lot design, library management LLD, system design OOP"
+      keywords="low level design interview, LLD machine coding, design patterns interview, SOLID principles, object oriented design, parking lot design, library management LLD, system design OOP, LRU cache design, rate limiter design, elevator system design, chess game design"
       schema={schema}
       faqSchema={faqSchema}
       breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Low-Level Design', url: '/lld' }]}
     />
+    <!-- ItemList schema for LLD projects rich results -->
+    <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
   </head>
   <body class="mcq-body">
     <AppNav activeSection="lld" client:load />
+
+    <!--
+      SSR-rendered static HTML list of all LLD projects.
+      This section is the primary crawl surface for Google: it ships as real HTML
+      at build time so every project title, description, patterns, and key entities
+      are indexed without JavaScript execution.
+      The React island (LLDHub client:load) below provides the interactive
+      search/filter experience at runtime.
+      We use the CSS clip/position technique (identical to .sr-only) so that
+      screen readers and crawlers see the content but sighted users see the
+      interactive React version instead.
+    -->
+    <section
+      aria-label="LLD Machine Coding Projects Index"
+      style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0"
+    >
+      <h1>Low-Level Design & Machine Coding Hub — {LLD_PROJECTS_STATIC.length} Projects</h1>
+      <p>
+        Master machine coding interview rounds with production-grade class designs, SOLID principles,
+        GoF design patterns, and step-by-step implementation guides for {LLD_PROJECTS_STATIC.length} real-world systems.
+      </p>
+
+      <h2>Machine Coding Framework — 45-Minute Interview Playbook</h2>
+      <p>
+        Step 1: Clarify requirements (5 min) — functional scope, edge cases, constraints.
+        Step 2: Design class model (10 min) — entities, attributes, enums, relationships.
+        Step 3: Apply design patterns (10 min) — Strategy, Factory, State, Observer.
+        Step 4: Implement core logic (15 min) — clean, modular, extensible code.
+        Step 5: Add concurrency (5 min) — ReentrantLock, ConcurrentHashMap, AtomicInteger.
+      </p>
+
+      <ul>
+        {LLD_PROJECTS_STATIC.map((p) => (
+          <li>
+            <article>
+              <h3><a href={`/lld/projects/design-${p.slug}/`}>{p.title}</a></h3>
+              <p>{p.desc}</p>
+              <p>
+                <strong>Category:</strong> {p.category} |
+                <strong> Difficulty:</strong> {p.difficulty}
+              </p>
+              <p><strong>Design Patterns:</strong> {p.patterns.join(', ')}</p>
+              <p><strong>Key Class Entities:</strong> {p.keyEntities.join(', ')}</p>
+              <p><strong>UML Architecture Flow:</strong> {p.keyEntities.join(' ──▶ ')}</p>
+            </article>
+          </li>
+        ))}
+      </ul>
+
+      <h2>Design Patterns Covered</h2>
+      <p>
+        Creational: Singleton, Factory, Abstract Factory, Builder, Prototype.
+        Structural: Adapter, Decorator, Facade, Proxy, Composite.
+        Behavioral: Strategy, Observer, State, Command, Chain of Responsibility, Template Method.
+      </p>
+
+      <h2>SOLID Principles</h2>
+      <p>
+        Single Responsibility: one class, one reason to change.
+        Open/Closed: open for extension, closed for modification.
+        Liskov Substitution: subclasses substitutable for base classes.
+        Interface Segregation: no client depends on unused methods.
+        Dependency Inversion: depend on abstractions, not concretions.
+      </p>
+    </section>
+
+    <!-- Interactive React hub — search, filter, and rich card UI -->
     <LLDHub client:load />
   </body>
 </html>

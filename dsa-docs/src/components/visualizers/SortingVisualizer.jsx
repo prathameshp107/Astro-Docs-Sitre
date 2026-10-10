@@ -64,7 +64,7 @@ const EXPECTED_OUTPUTS = {
   'merge-sort': '[1, 2, 4, 5, 8] (Sorted Array)',
 };
 
-export default function SortingVisualizer() {
+export default function SortingVisualizer({ initialTrack } = {}) {
   const containerRef = useRef(null);
   const {
     track,
@@ -82,6 +82,17 @@ export default function SortingVisualizer() {
   } = useSortingStore();
 
   const step = steps[currentStep] || steps[0];
+
+  // Check initialTrack or URL parameters on mount to allow direct links to specific algorithms (e.g. ?track=merge-sort)
+  useEffect(() => {
+    const trackToSet = initialTrack || (typeof window !== 'undefined' ? (new URLSearchParams(window.location.search).get('track') || new URLSearchParams(window.location.search).get('algo')) : null);
+    if (trackToSet) {
+      const normalized = trackToSet.includes('sort') ? trackToSet : `${trackToSet}-sort`;
+      if (TRACK_TITLES[normalized]) {
+        useSortingStore.getState().setTrack(normalized);
+      }
+    }
+  }, [initialTrack]);
 
   // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {

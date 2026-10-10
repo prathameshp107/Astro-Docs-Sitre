@@ -94,7 +94,12 @@ const visualizerTopics = [
   { id: 'sliding-window','name': 'Sliding Window',            desc: 'Max sum subarray, longest substring' },
   { id: 'backtracking',  name: 'Backtracking',                desc: 'N-Queens, permutations, Sudoku solver' },
   { id: 'dp',            name: 'Dynamic Programming',         desc: 'Memoization, tabulation, knapsack' },
-  { id: 'arrays',        name: 'Arrays',                      desc: 'Insertion, deletion, traversal' },
+  { id: 'arrays',        name: 'Arrays',                      desc: 'Insertion, deletion, traversal, and the cost of shifting in contiguous memory' },
+  { id: 'trie',          name: 'Trie (Prefix Tree)',           desc: 'Character-by-character insertion, prefix search, and autocomplete' },
+  { id: 'dijkstra',      name: "Dijkstra's Shortest Path",    desc: 'Priority queue relaxation on weighted graphs' },
+  { id: 'bubble-sort',   name: 'Bubble Sort Step-by-Step',    desc: 'Adjacent comparisons and animated swaps' },
+  { id: 'knapsack',      name: '0/1 Knapsack DP Matrix',      desc: 'Cell-by-cell table filling and optimal traceback' },
+  { id: 'compare',       name: 'Algorithm Race & Comparison', desc: 'Side-by-side benchmark: Bubble Sort vs Merge Sort' },
 ];
 ---
 
@@ -118,6 +123,37 @@ const visualizerTopics = [
   <body class="mcq-body">
 
     <AppNav activeSection="visualizer" client:load />
+
+    <!--
+      Static SSR navigation grid — serves two audiences simultaneously:
+      1. Google: real crawlable HTML with topic names, descriptions, and links
+         shipped at build time (before any JS runs). Without this the page body
+         had near-zero indexable text because DSAVisualizerHub is client:load.
+      2. Users with JS disabled or slow connections: a full topic index that
+         works before React hydrates.
+      The grid is styled inline so it doesn't depend on the mcq-tailwind bundle.
+    -->
+    <nav
+      aria-label="All Algorithm Visualizer Topics"
+      style="max-width:1100px;margin:0 auto;padding:1.5rem 1rem 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;"
+    >
+      <h2 style="grid-column:1/-1;font-size:1rem;font-weight:700;color:var(--sl-color-text,#e2e8f0);margin:0 0 0.25rem;letter-spacing:0.05em;text-transform:uppercase;opacity:0.6;">
+        Quick Navigate — All Visualizers
+      </h2>
+      {visualizerTopics.map((t) => (
+        <a
+          href={`/visualizer/${t.id}/`}
+          style="display:block;padding:0.75rem 1rem;border-radius:0.75rem;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);text-decoration:none;transition:border-color 0.2s,background 0.2s;"
+          onmouseover="this.style.borderColor='rgba(245,158,11,0.5)';this.style.background='rgba(245,158,11,0.06)'"
+          onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.background='rgba(255,255,255,0.03)'"
+        >
+          <span style="display:block;font-weight:600;font-size:0.85rem;color:var(--sl-color-text,#e2e8f0);margin-bottom:0.2rem;">{t.name}</span>
+          <span style="display:block;font-size:0.72rem;color:var(--sl-color-text-accent,#94a3b8);line-height:1.4;">{t.desc}</span>
+        </a>
+      ))}
+    </nav>
+
+    <!-- Interactive hub — handles search, featured cards, and full topic UI -->
     <DSAVisualizerHub client:load />
   </body>
 </html>

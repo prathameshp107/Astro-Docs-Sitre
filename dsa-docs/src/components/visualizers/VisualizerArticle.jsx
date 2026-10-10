@@ -79,7 +79,7 @@ export default function VisualizerArticle({ topicId }) {
   const content = getVisualizerContent(topicId);
   if (!content) return null;
 
-  const { heading, intro, complexityHead, complexity, howTo, faqs, related } = content;
+  const { heading, intro, complexityHead, complexity, howTo, faqs, related, interviewTip } = content;
 
   return (
     <article className="sketch-border bg-[var(--sketch-bg-dim)] mt-10 mb-6 rounded-2xl p-5 md:p-8 font-sketch shadow-xl">
@@ -155,6 +155,18 @@ export default function VisualizerArticle({ topicId }) {
           <Faq key={f.q} q={f.q} a={f.a} />
         ))}
       </div>
+
+      {interviewTip && (
+        <>
+          <Heading icon="💡">Interview tip</Heading>
+          <div className="sketch-border bg-amber-500/8 border-amber-500/40 rounded-2xl p-5 md:p-6 shadow-md flex items-start gap-4">
+            <span className="shrink-0 text-2xl" aria-hidden="true">💡</span>
+            <p className="text-[var(--sketch-text)] text-base md:text-lg leading-relaxed font-sketch">
+              {interviewTip}
+            </p>
+          </div>
+        </>
+      )}
 
       <Heading icon="🔗">Related visualizers</Heading>
       <div className="flex flex-wrap gap-2">

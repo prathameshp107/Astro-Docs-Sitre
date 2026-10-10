@@ -1,0 +1,97 @@
+---
+import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
+import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import '../../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer/knapsack/`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: '0/1 Knapsack Visualizer — Dynamic Programming Table Animation',
+  description: 'Interactive step-by-step 0/1 Knapsack problem visualizer. Watch the 2D DP matrix fill cell-by-cell with include/exclude decision dependencies highlighted in real time.',
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Interactive Tool',
+  teaches: ['0/1 Knapsack problem', 'Dynamic programming table filling', 'Optimal substructure and state transitions', 'Pseudo-polynomial time complexity', 'Space optimization to 1D array'],
+  about: [{ '@type': 'Thing', name: 'Knapsack Problem' }, { '@type': 'Thing', name: 'Dynamic Programming' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Visualize the 0/1 Knapsack Algorithm',
+  description: 'Step-by-step guide to understanding the DP table filling process for 0/1 Knapsack',
+  url: PAGE_URL,
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Setup the DP Table', text: 'Rows represent items available, and columns represent knapsack capacities from 0 to W.' },
+    { '@type': 'HowToStep', position: 2, name: 'Evaluate Each Cell', text: 'For each item and capacity w, check if the item weight exceeds capacity w. If it does, inherit the value from the row above (exclude).' },
+    { '@type': 'HowToStep', position: 3, name: 'Compare Include vs Exclude', text: 'If the item fits, compute max(val[i] + dp[i-1][w - wt[i]], dp[i-1][w]) to find the optimal choice.' },
+    { '@type': 'HowToStep', position: 4, name: 'Traceback the Solution', text: 'The bottom-right cell contains the maximum value. Trace backwards to identify which exact items were selected.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the recurrence relation for 0/1 Knapsack?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'If wt[i-1] <= w: dp[i][w] = max(val[i-1] + dp[i-1][w - wt[i-1]], dp[i-1][w]). Otherwise: dp[i][w] = dp[i-1][w].',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is the time and space complexity of 0/1 Knapsack?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Time complexity is O(N × W), where N is the number of items and W is knapsack capacity (pseudo-polynomial). Space complexity is O(N × W) for the 2D table, which can be optimized to O(W) using a single 1D array traversed backwards.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Why must the 1D space-optimized array be traversed backwards?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Traversing capacity backwards from W down to wt[i] ensures that dp[w - wt[i]] represents the state from the PREVIOUS item, preventing the same item from being included multiple times (which would solve Unbounded Knapsack instead).',
+      },
+    },
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <PageSEO
+      title="0/1 Knapsack Visualizer — Dynamic Programming Table Animation | Interview Prep Buddy"
+      description="Interactive step-by-step 0/1 Knapsack problem visualizer. Watch the 2D DP matrix fill cell-by-cell with include/exclude decision dependencies highlighted in real time."
+      url={PAGE_URL}
+      keywords="knapsack visualizer, 0/1 knapsack visualizer, knapsack dynamic programming animation, knapsack DP table, knapsack algorithm step by step, dynamic programming visualizer"
+      ogType="article"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: '0/1 Knapsack', url: '/visualizer/knapsack' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="visualizer" client:load />
+    <DSAVisualizerPage topicId="dp" initialTrack="knapsack" client:load />
+  </body>
+</html>

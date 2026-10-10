@@ -11,6 +11,11 @@ const LLD_PROJECTS = [
     patterns: ['Singleton', 'Factory', 'Strategy', 'Observer'],
     desc: 'Multi-floor parking lot supporting different vehicle types (Compact, SUV, EV, Motorcycle), automated billing, and spot allocation strategies.',
     keyEntities: ['ParkingLot', 'ParkingFloor', 'ParkingSpot', 'Vehicle', 'Ticket', 'PaymentGate'],
+    umlFlow: `ParkingLot (Singleton)
+  └── ParkingFloor[] (has-a)
+        └── ParkingSpot[] (Compact, SUV, EV, Bike)
+              └── Vehicle (assigned-to)
+Ticket ──▶ ParkingSpot ──▶ FeeCalculator (Strategy) ──▶ Payment`,
     docLink: '/lld/projects/design-parking-lot',
   },
   {
@@ -21,6 +26,12 @@ const LLD_PROJECTS = [
     patterns: ['Strategy', 'Doubly LinkedList', 'HashMap', 'ReadWriteLock'],
     desc: 'High-concurrency in-memory Key-Value cache with configurable eviction policies (LRU, LFU, FIFO) and thread-safe operations.',
     keyEntities: ['Cache', 'EvictionPolicy', 'DoublyLinkedList', 'Node', 'ConcurrentHashMap'],
+    umlFlow: `Cache<K, V>
+  ├── HashMap<K, Node<K, V>> (O(1) lookup)
+  └── DoublyLinkedList (O(1) update)
+        └── Node (prev, next, key, val)
+EvictionPolicy (Strategy) ──▶ LRU / LFU / FIFO
+ReadWriteLock (Concurrency / Thread Safety)`,
     docLink: '/lld/projects/design-cache-system',
   },
   {
@@ -31,6 +42,10 @@ const LLD_PROJECTS = [
     patterns: ['Token Bucket', 'Sliding Window Log', 'Decorator'],
     desc: 'Rate limiting library for API endpoints supporting Token Bucket and Leaky Bucket algorithms with sub-millisecond thread safety.',
     keyEntities: ['RateLimiter', 'TokenBucket', 'SlidingWindow', 'RequestRules'],
+    umlFlow: `ClientRequest ──▶ RateLimiter
+                    ├── TokenBucket (RefillRate, Capacity)
+                    └── SlidingWindowLog (Timestamp Queue / Redis ZSET)
+RequestFilter (Decorator) ──▶ Allow / 429 Too Many Requests`,
     docLink: '/lld/projects/design-rate-limiter',
   },
   {
@@ -41,6 +56,12 @@ const LLD_PROJECTS = [
     patterns: ['State', 'Strategy', 'Dispatcher', 'Observer'],
     desc: 'Multi-elevator scheduling algorithm handling internal/external requests, floor direction states, and dispatching strategies (LOOK/SCAN).',
     keyEntities: ['ElevatorController', 'ElevatorCar', 'InternalButton', 'ExternalButton', 'DispatchStrategy'],
+    umlFlow: `ElevatorController (Singleton / Dispatcher)
+  ├── DispatchStrategy (LOOK / SCAN / FCFS)
+  └── ElevatorCar[]
+        ├── Direction (UP / DOWN / IDLE)
+        ├── InternalButtonPanel
+        └── FloorQueue (PriorityQueue)`,
     docLink: '/lld/projects/design-elevator-system',
   },
   {
@@ -51,6 +72,12 @@ const LLD_PROJECTS = [
     patterns: ['Composite', 'Observer', 'Min-Cost Graph Flow'],
     desc: 'Group expense tracking system supporting exact amounts, percentages, and bill simplification algorithms to minimize net transactions.',
     keyEntities: ['User', 'Group', 'Expense', 'Split', 'BalanceSheet', 'SimplificationEngine'],
+    umlFlow: `User ── Group ── Expense
+                  ├── EqualSplit
+                  ├── ExactSplit
+                  └── PercentageSplit
+BalanceSheet[] (Who owes whom)
+  └── SimplificationEngine (Min-Cost Flow Graph / Debt Cancellation)`,
     docLink: '/lld/projects/design-splitwise',
   },
   {
@@ -61,6 +88,10 @@ const LLD_PROJECTS = [
     patterns: ['Command', 'Concurrency Locks', 'Factory', 'State'],
     desc: 'Cinema ticketing platform supporting theater layouts, seat reservation holds, concurrent booking locks, and payment timeouts.',
     keyEntities: ['Cinema', 'Screen', 'Seat', 'Show', 'Booking', 'PaymentProcessor'],
+    umlFlow: `City ── CinemaHall ── Screen ── Seat[] (Silver, Gold, VIP)
+                        └── Show (Movie, StartTime)
+                              └── Booking (SeatLock, PaymentTimeout)
+                                    └── ConcurrencyLock (Pessimistic/Optimistic)`,
     docLink: '/lld/projects/design-bookmyshow',
   },
   {
@@ -71,6 +102,11 @@ const LLD_PROJECTS = [
     patterns: ['Command', 'Singleton', 'Strategy'],
     desc: 'Multiplayer board game supporting customizable board sizes, multiple dice, snakes, ladders, and win condition evaluation.',
     keyEntities: ['Board', 'Cell', 'Snake', 'Ladder', 'Dice', 'Player', 'GameEngine'],
+    umlFlow: `Game (Controller / State)
+  ├── Board (Cells 1..100)
+  │     └── Cell ── Snake / Ladder (Jump Destination)
+  ├── Dice (Roll: 1..6)
+  └── Queue<Player> (Turn Management)`,
     docLink: '/lld/projects/design-snake-and-ladder',
   },
   {
@@ -81,6 +117,11 @@ const LLD_PROJECTS = [
     patterns: ['Strategy', 'Observer', 'State'],
     desc: 'Scalable N x N Tic-Tac-Toe supporting dynamic board size, win evaluation in O(1) time per move, and bot players.',
     keyEntities: ['Board', 'Piece (X/O)', 'Player', 'Game', 'WinConditionChecker'],
+    umlFlow: `Game
+  ├── Board (N x N Grid)
+  │     └── Cell (Piece: X / O / Empty)
+  ├── Player[] (Human, AI Bot)
+  └── WinEvaluator (O(1) Row/Col/Diag Count Array)`,
     docLink: '/lld/projects/design-tic-tac-toe',
   },
   {
@@ -91,6 +132,12 @@ const LLD_PROJECTS = [
     patterns: ['State Pattern', 'Chain of Responsibility', 'Inventory'],
     desc: 'State-driven vending machine handling Ready, Idle, CoinInserted, Dispensing, and OutOfStock state transitions cleanly.',
     keyEntities: ['VendingMachine', 'State', 'Inventory', 'Item', 'Coin', 'ChangeCalculator'],
+    umlFlow: `VendingMachine ── State (State Pattern)
+                    ├── IdleState
+                    ├── HasMoneyState
+                    ├── DispenseState
+                    └── OutOfStockState
+Inventory ── Rack[] ── Item (Name, Price) ── CoinSlot`,
     docLink: '/lld/projects/design-vending-machine',
   },
   {
@@ -101,6 +148,10 @@ const LLD_PROJECTS = [
     patterns: ['State', 'Chain of Responsibility', 'Decorator'],
     desc: 'ATM banking interface with cash dispenser chain of responsibility ($100, $50, $20 notes), PIN authentication, and card reader.',
     keyEntities: ['ATM', 'Card', 'Account', 'CashDispenser', 'Transaction', 'BankServer'],
+    umlFlow: `ATM ── ATMState (CardInserted, Authenticated, Dispensing)
+CashDispenser (Chain of Responsibility)
+  ├── ₹2000Dispenser ──▶ ₹500Dispenser ──▶ ₹100Dispenser
+BankServer (Facade) ── CardReader ── CashSlot`,
     docLink: '/lld/projects/design-atm',
   },
   {
@@ -111,6 +162,11 @@ const LLD_PROJECTS = [
     patterns: ['Command', 'Factory', 'Strategy', 'Observer'],
     desc: 'Object-oriented Chess game with Piece movement validation (Pawn, Knight, Rook, Queen, King), Check/Checkmate logic, and move undo history.',
     keyEntities: ['ChessBoard', 'Piece', 'Move', 'Player', 'GameStatus', 'MoveHistory'],
+    umlFlow: `ChessBoard (8 x 8 Spots)
+  └── Spot ── Piece (Abstract)
+                ├── King, Queen, Rook, Bishop, Knight, Pawn
+Move ── MoveValidator (Validates legal moves, Pin, Check)
+Player (White / Black) ── MoveHistory (Undo / Redo Command)`,
     docLink: '/lld/projects/design-chess-game',
   },
   {
@@ -121,6 +177,11 @@ const LLD_PROJECTS = [
     patterns: ['Factory', 'State', 'Strategy'],
     desc: 'Hotel booking platform managing room types (Deluxe, Suite), housekeeping status, guest reservations, and checkout invoicing.',
     keyEntities: ['Hotel', 'Room', 'Guest', 'Reservation', 'Invoice', 'HousekeepingState'],
+    umlFlow: `Hotel
+  ├── Room[] (Standard, Deluxe, Suite)
+  │     └── HousekeepingState (Clean, Occupied, UnderMaintenance)
+  ├── Reservation (CheckIn, CheckOut, Guest)
+  └── InvoicingEngine (PricingStrategy, Taxes, Add-ons)`,
     docLink: '/lld/projects/design-hotel-management',
   },
   {
@@ -131,6 +192,11 @@ const LLD_PROJECTS = [
     patterns: ['Observer', 'Factory', 'Strategy'],
     desc: 'Book inventory management supporting barcode scanning, member reservations, fine calculations, and overdue notifications.',
     keyEntities: ['Library', 'Book', 'BookItem', 'Member', 'Librarian', 'FineCalculator'],
+    umlFlow: `Library
+  ├── BookItem[] ── Rack (Barcode, RFID)
+  ├── Member (BorrowLimit, ActiveLendings)
+  └── LendingTransaction (IssueDate, DueDate)
+        └── FineCalculator (Strategy: ₹5/day overdue)`,
     docLink: '/lld/projects/design-library-management',
   },
   {
@@ -141,6 +207,12 @@ const LLD_PROJECTS = [
     patterns: ['Chain of Responsibility', 'Singleton', 'Adapter'],
     desc: 'Logger framework supporting log levels (DEBUG, INFO, ERROR), chain of handlers (Console, File, Cloud), and async buffer flushes.',
     keyEntities: ['Logger', 'LogLevel', 'LogHandler', 'ConsoleAppender', 'FileAppender', 'LogMessage'],
+    umlFlow: `Logger (Singleton)
+  └── LogHandlerChain (Chain of Responsibility)
+        ├── ConsoleAppender (INFO+)
+        ├── FileAppender (WARN+)
+        └── CloudAppender (ERROR+)
+Formatter (Pattern: [TIMESTAMP] [THREAD] [LEVEL] MESSAGE)`,
     docLink: '/lld/projects/design-logging-framework',
   },
   {
@@ -151,6 +223,12 @@ const LLD_PROJECTS = [
     patterns: ['Observer', 'Factory', 'Strategy', 'Decorator'],
     desc: 'Notification engine delivering messages via Push, SMS, and Email with template interpolation, retry mechanisms, and rate limits.',
     keyEntities: ['NotificationService', 'ChannelStrategy', 'TemplateEngine', 'UserPreference', 'DeliveryStatus'],
+    umlFlow: `NotificationService
+  └── ChannelStrategy (Factory / Strategy)
+        ├── PushNotification (FCM / APNS)
+        ├── SMSNotification (Twilio)
+        └── EmailNotification (SES / SendGrid)
+TemplateEngine ── DeliveryObserver (Webhook / RetryQueue)`,
     docLink: '/lld/projects/design-notification-service',
   },
 ];
@@ -158,6 +236,7 @@ const LLD_PROJECTS = [
 export default function LLDHub() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [expandedUML, setExpandedUML] = useState({});
 
   const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
@@ -366,6 +445,28 @@ export default function LLDHub() {
                     {p.keyEntities.join(' · ')}
                   </div>
                 </div>
+
+                {/* UML Architecture Flow Toggle */}
+                {p.umlFlow && (
+                  <div className="mb-4">
+                    <button
+                      onClick={() => setExpandedUML((prev) => ({ ...prev, [p.slug]: !prev[p.slug] }))}
+                      className="text-[11px] font-mono font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1.5 transition-colors"
+                    >
+                      <span className="text-xs">
+                        {expandedUML[p.slug] ? '▼' : '▶'}
+                      </span>
+                      <span>
+                        {expandedUML[p.slug] ? 'Hide Architecture Flow' : 'Preview Architecture Flow (UML)'}
+                      </span>
+                    </button>
+                    {expandedUML[p.slug] && (
+                      <div className="mt-2 bg-[var(--sketch-bg)] border border-amber-500/30 p-3 rounded-xl font-mono text-[10px] text-amber-200/90 leading-relaxed whitespace-pre shadow-inner overflow-x-auto">
+                        {p.umlFlow}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Action Button */}

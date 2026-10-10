@@ -55,7 +55,7 @@ const EXPECTED_OUTPUTS = {
   'coin-change': 'dp[11] = 3 coins (5 + 5 + 1)',
 };
 
-export default function DPVisualizer() {
+export default function DPVisualizer({ initialTrack } = {}) {
   const {
     track,
     steps,
@@ -71,6 +71,14 @@ export default function DPVisualizer() {
   } = useDPStore();
 
   const step = steps[currentStep] || steps[0];
+
+  // Check initialTrack or URL parameters on mount to allow direct links to specific algorithms (e.g. ?track=knapsack)
+  useEffect(() => {
+    const trackToSet = initialTrack || (typeof window !== 'undefined' ? (new URLSearchParams(window.location.search).get('track') || new URLSearchParams(window.location.search).get('algo')) : null);
+    if (trackToSet && EXPECTED_OUTPUTS[trackToSet]) {
+      useDPStore.getState().setTrack(trackToSet);
+    }
+  }, [initialTrack]);
 
   // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {
