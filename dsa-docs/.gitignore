@@ -49,3 +49,21 @@ mcq-posts/
 .upload-status*.json
 scratch/
 
+# Video & Heavy Media Outputs
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.flac
+*.aac
+*.raw
+
+# Notes PDF Junction & Files
+notes-pdf/
+public/notes-pdf/
+public/notes-pdf
+
+

@@ -40,6 +40,7 @@ import {
   Menu as MenuIcon,
   X,
   Mail,
+  FileText,
 } from "lucide-react";
 
 import {
@@ -131,8 +132,20 @@ const companiesSubItems = [
   { label: "Swiggy", href: `${base}companies/swiggy`, companyId: "swiggy", color: "#fc8019" },
 ];
 
+const notesSubItems = [
+  { label: "Study Notes Hub (76 PDFs)", href: `${base}notes`, icon: BookOpen, color: "#6366f1" },
+  { label: "Complete DSA Master Handbook", href: `${base}notes?doc=dsa-complete-handbook`, icon: Sparkles, color: "#8b5cf6" },
+  { label: "System Design Blueprints", href: `${base}notes?doc=system-design-main-concepts`, icon: Network, color: "#f59e0b" },
+  { label: "LLM & AI Interview Handbook", href: `${base}notes?doc=llm-questions-handbook`, icon: Cpu, color: "#10b981" },
+  { label: "Docker Handwritten Notes", href: `${base}notes?doc=docker-handwritten-handbook`, icon: Server, color: "#0284c7" },
+  { label: "Backend 300 Q&A Handbook", href: `${base}notes?doc=backend-300-questions-handbook`, icon: Database, color: "#6366f1" },
+  { label: "Blinkit System Design Case Study", href: `${base}notes?doc=system-design-blinkit-case-study`, icon: Zap, color: "#eab308" },
+  { label: "WhatsApp Architecture Case Study", href: `${base}notes?doc=system-design-whatsapp`, icon: Layers, color: "#22c55e" },
+];
+
 const links = [
   { label: "Docs", href: `${base}overview/`, icon: BookOpen },
+  { label: "Notes", href: `${base}notes`, icon: FileText, hasDropdown: true, subItems: notesSubItems, dropdownTitle: "PDF Notes & Handbooks" },
   { label: "Visualizers", href: `${base}visualizer`, icon: Activity, hasDropdown: true, subItems: visualizerSubItems, dropdownTitle: "Algorithm Visualizers" },
   { label: "DSA Playground", href: `${base}dsa/problems`, icon: Code },
   { label: "Labs", href: `${base}labs`, icon: FlaskConical, hasDropdown: true, subItems: labsSubItems, dropdownTitle: "Practice Labs" },

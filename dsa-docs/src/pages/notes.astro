@@ -1,0 +1,147 @@
+---
+import NotesHub from '../components/notes/NotesHub.jsx';
+import AppNav from '../components/AppNav.jsx';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import { PDF_NOTES } from '../data/pdf-notes-data.js';
+import '../styles/landing.css';
+import '../styles/custom.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const SITE_NAME = 'Interview Prep Buddy';
+const OG_IMAGE = `${SITE_URL}/assets/og-image.png`;
+const PAGE_URL = `${SITE_URL}/notes/`;
+const PAGE_TITLE = 'Engineering Study Notes & Handbooks (76 PDFs) | Interview Prep Buddy';
+const PAGE_DESC = 'Access 76 curated high-yield engineering study guides, the complete 600-page DSA Master Handbook, System Design architecture blueprints, LLM internals, and handwritten interview case studies with an interactive modern PDF viewer.';
+
+const schemaGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: SITE_NAME,
+      description: 'Comprehensive DSA, System Design, AI and Technical Interview Preparation Platform',
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${PAGE_URL}#breadcrumb`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: `${SITE_URL}/`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Study Notes & Handbooks',
+          item: PAGE_URL,
+        },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      '@id': `${PAGE_URL}#webpage`,
+      url: PAGE_URL,
+      name: PAGE_TITLE,
+      description: PAGE_DESC,
+      isPartOf: { '@id': `${SITE_URL}/#website` },
+      breadcrumb: { '@id': `${PAGE_URL}#breadcrumb` },
+      inLanguage: 'en-US',
+      about: [
+        { '@type': 'Thing', name: 'Data Structures and Algorithms' },
+        { '@type': 'Thing', name: 'System Design' },
+        { '@type': 'Thing', name: 'Software Architecture' },
+        { '@type': 'Thing', name: 'Large Language Models' },
+        { '@type': 'Thing', name: 'Docker and Containerization' },
+        { '@type': 'Thing', name: 'Database Engineering' },
+      ],
+    },
+    {
+      '@type': 'LearningResource',
+      '@id': `${PAGE_URL}#learning-resource`,
+      name: 'Engineering Study Notes & Handbooks Collection',
+      description: PAGE_DESC,
+      educationalLevel: 'Beginner to Advanced',
+      learningResourceType: 'Study Guide / Handbook',
+      numberOfItems: PDF_NOTES.length,
+    },
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <GoogleAnalytics />
+    <script is:inline>
+      (function() {
+        var t = localStorage.getItem('starlight-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+        else if (window.matchMedia('(prefers-color-scheme:dark)').matches) document.documentElement.setAttribute('data-theme', 'dark');
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO Meta Tags -->
+    <title>{PAGE_TITLE}</title>
+    <meta name="description" content={PAGE_DESC} />
+    <link rel="canonical" href={PAGE_URL} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="keywords" content="DSA handwritten notes pdf, system design pdf, complete dsa handbook, llm interview notes pdf, docker handwritten handbook, blinkit system design case study, coding notes pdf, software engineering study notes" />
+    <meta name="author" content="Prathamesh Pawar" />
+    <meta name="theme-color" content="#121110" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={PAGE_TITLE} />
+    <meta property="og:description" content={PAGE_DESC} />
+    <meta property="og:url" content={PAGE_URL} />
+    <meta property="og:image" content={OG_IMAGE} />
+    <meta property="og:image:alt" content="Engineering Study Notes & Handbooks Collection" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={PAGE_TITLE} />
+    <meta name="twitter:description" content={PAGE_DESC} />
+    <meta name="twitter:image" content={OG_IMAGE} />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-background text-foreground antialiased min-h-screen flex flex-col">
+    <AppNav activeSection="notes" client:load />
+
+    <!-- Main Notes Studio & PDF Viewer -->
+    <main class="flex-1">
+      <NotesHub client:load />
+    </main>
+
+    <!-- Accessible Crawler Index for Search Engines -->
+    <noscript>
+      <section class="max-w-5xl mx-auto p-8 my-8 bg-zinc-950 text-zinc-100 rounded-2xl border border-zinc-800">
+        <h2 class="text-2xl font-bold mb-4">Complete Engineering Notes & Handbooks Catalog ({PDF_NOTES.length} PDFs)</h2>
+        <ul class="space-y-2">
+          {PDF_NOTES.map((note) => (
+            <li class="border-b border-zinc-800 pb-2">
+              <a href={note.url} class="font-bold text-indigo-400 hover:underline">{note.title}</a>
+              <span class="text-xs text-zinc-400 ml-2">({note.categoryLabel} • {note.sizeFormatted})</span>
+              <p class="text-xs text-zinc-300 mt-0.5">{note.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </noscript>
+  </body>
+</html>

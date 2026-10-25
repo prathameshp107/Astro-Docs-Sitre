@@ -1,6 +1,8 @@
 # Agents & AI
 .agents/
 .claude/
+.wrangler/
+
 
 # build output
 dist/
@@ -38,3 +40,97 @@ Thumbs.db
 
 nul
 graphify-out
+
+# Python & execution cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Heavy Video Formats
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.wmv
+*.flv
+*.m4v
+*.ts
+*.raw
+
+# Audio & Voiceover Tracks (TTS, recordings, mixed masters)
+*.wav
+*.mp3
+*.aac
+*.flac
+*.m4a
+*.ogg
+
+# Video Production, Reels & Animation Outputs
+pieces/
+production-ready/
+reels-out/
+mcq-posts/
+concept-reels/
+instagram-recreation/
+netflix-streaming-reel/
+netflix-video/
+pratham-reel/
+pratham-reel-2/
+ig_reference/
+scroll-work/
+scroll-world/
+animate/
+lemo-opuscar/
+scratch/
+render-cache/
+*-frames/
+*frames/
+.browser-session/
+.upload-status*.json
+
+# Video-Related Generated Images, Frames, Scene Assets & Thumbnails
+gallery.png
+frame_*.jpg
+frame_*.jpeg
+frame_*.png
+frame_*.webp
+*_frame_*.png
+*_frame_*.jpg
+*_scene*.jpg
+*_scene*.png
+*_scene*.webp
+url_scene*.jpg
+url_scene*.png
+cover*.jpg
+cover*.png
+
+# System Design Video Course Directory
+System-Design-Full-Course/
+
+# Video Automation Scripts, Tooling & Documentation
+*.py
+/scripts/
+/tools/
+/templates/
+/projects/
+/assets/
+generate_remaining_images.mjs
+dsa-docs/scripts/upload-instagram-course.mjs
+dsa-docs/scripts/upload-youtube-course.mjs
+VIDEO_PRODUCTION_PROCESS.md
+STYLE_DEFAULTS.md
+TOOLING.md
+
+# Notes PDF Directory & Junction (1.8GB PDFs kept out of git)
+notes-pdf/
+dsa-docs/public/notes-pdf/
+dsa-docs/public/notes-pdf
+
+# Preserve website & documentation assets in dsa-docs
+!dsa-docs/src/content/docs/assets/**
+!dsa-docs/src/assets/**
+!dsa-docs/public/**
+
+
