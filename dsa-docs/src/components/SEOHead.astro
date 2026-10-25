@@ -83,8 +83,8 @@ if (seoType === 'faq' && Array.isArray(fm.faqItems) && fm.faqItems.length > 0) {
     description: pageDescription,
     url: canonicalUrl,
     image: ogImage,
-    datePublished: fm.pubDate ?? fm.lastUpdated ?? '2024-01-01',
-    dateModified: fm.lastUpdated ?? fm.pubDate ?? new Date().toISOString().split('T')[0],
+    ...(fm.pubDate ? { datePublished: fm.pubDate } : {}),
+    ...(fm.lastUpdated ? { dateModified: fm.lastUpdated } : {}),
     author: authorRef,
     publisher: publisherRef,
     isPartOf: { '@type': 'WebSite', '@id': SITE_URL + '/#website', name: SITE_NAME, url: SITE_URL },
@@ -121,11 +121,7 @@ const breadcrumbString    = JSON.stringify(breadcrumbSchema);
 
 <GoogleAnalytics />
 
-<!-- Canonical URL -->
-<link rel="canonical" href={canonicalUrl} />
-
-<!-- robots: grant full snippet access for AI Overviews / SGE -->
-<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<!-- StarlightHead owns canonical and robots, including frontmatter overrides. -->
 <meta name="author" content="Prathamesh Pawar" />
 
 <script is:inline>

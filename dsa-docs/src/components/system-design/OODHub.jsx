@@ -79,9 +79,7 @@ export default function OODHub() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
 
-  const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
-    ? import.meta.env.BASE_URL.replace(/\/$/, '')
-    : '/DSA-Notes-Problems';
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
   const categories = ['All', 'Creational', 'Structural', 'Behavioral'];
 

@@ -1,6 +1,9 @@
 ---
 title: "Longest Substring Without Repeating Characters"
-description: "Detailed guide, approach, Mermaid diagram, brute force, and optimized solution for Longest Substring Without Repeating Characters."
+description: "Learn the sliding window solution to Longest Substring Without Repeating Characters with a step-by-step trace, code, and complexity."
+practice:
+  visualizer: /visualizer/sliding-window
+  mcq: /mcq/algorithms
 ---
 
 # Longest Substring Without Repeating Characters

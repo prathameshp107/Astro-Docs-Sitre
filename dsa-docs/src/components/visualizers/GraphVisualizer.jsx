@@ -108,7 +108,7 @@ const ADJACENCY_LIST = {
   5: [3, 4],
 };
 
-export default function GraphVisualizer() {
+export default function GraphVisualizer({ initialTrack } = {}) {
   const {
     track,
     steps,
@@ -125,6 +125,14 @@ export default function GraphVisualizer() {
 
   const step = steps[currentStep] || steps[0];
   const isCompleted = currentStep === steps.length - 1;
+
+  // Check initialTrack or URL parameters on mount to allow direct links to specific algorithms (e.g. ?track=dijkstra)
+  useEffect(() => {
+    const trackToSet = initialTrack || (typeof window !== 'undefined' ? (new URLSearchParams(window.location.search).get('track') || new URLSearchParams(window.location.search).get('algo')) : null);
+    if (trackToSet && TRACK_TITLES[trackToSet]) {
+      useGraphStore.getState().setTrack(trackToSet);
+    }
+  }, [initialTrack]);
 
   // Auto-play stepping timer loop with comfortable 2.2s base delay
   useEffect(() => {

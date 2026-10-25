@@ -102,9 +102,7 @@ export default function SystemDesignHub() {
     return sorted;
   }, [search, difficultyFilter, topicFilter, sortBy]);
 
-  const base = (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
-    ? import.meta.env.BASE_URL.replace(/\/$/, '')
-    : '/DSA-Notes-Problems';
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 
   return (
     <div className="sys-hub-container font-sketch max-w-6xl mx-auto px-4 py-8">
@@ -731,8 +729,8 @@ export default function SystemDesignHub() {
                 </a>
               </li>
               <li>
-                <a href={`${base}/mcq`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
-                  <span>•</span> MCQ Quiz Studio
+                <a href={`${base}/mcq/quiz/system-design`} className="hover:text-[var(--sketch-text)] hover:underline flex items-center gap-1.5">
+                  <span>•</span> System Design MCQ Quiz
                 </a>
               </li>
               <li>

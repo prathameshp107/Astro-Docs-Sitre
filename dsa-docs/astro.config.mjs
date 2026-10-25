@@ -32,6 +32,9 @@ const needsBase = isGH && !isVercel && !isCF;
 export default defineConfig({
   site,
   ...(needsBase ? { base: '/DSA-Notes-Problems' } : {}),
+  markdown: {
+    remarkPlugins: [[remarkPracticeLinks, { base: needsBase ? '/DSA-Notes-Problems' : '' }]],
+  },
   server: {
     host: 'localhost',
     port: 4321,
@@ -708,12 +711,15 @@ export default defineConfig({
       },
     ],
   }), mdx(), react(), sitemap({
-    // Exclude private/auth pages from sitemap
-    filter: (page) =>
-      !page.includes('/auth/') &&
-      !page.includes('/u/') &&
-      !page.includes('/review/') &&
-      !page.includes('/plans/'),
+    // Submit canonical, indexable destinations only. The legacy judge pages
+    // deliberately use noindex; redirect aliases and /landing are duplicates.
+    filter: (page) => {
+      const pathname = new URL(page).pathname.replace(/^\/DSA-Notes-Problems(?=\/)/, '').replace(/\/$/, '') || '/';
+      const excludedTrees = ['/auth', '/u', '/review', '/plans', '/practice', '/problems'];
+      const excludedPages = ['/mcq/dashboard', '/landing', '/css', '/git', '/html', '/mongodb', '/mysql', '/python'];
+      return !excludedTrees.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)) &&
+        !excludedPages.includes(pathname);
+    },
     // Serialize pages with priority/changefreq hints for Google
     serialize(item) {
       // Home and visualizer hub get highest priority

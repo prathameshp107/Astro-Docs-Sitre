@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import VisualizerArticle from './VisualizerArticle.jsx';
+import VisualizerQuiz from './VisualizerQuiz.jsx';
 import RecorderBridge from './RecorderBridge.jsx';
 import '../../styles/sketch-visualizer.css';
 import { DSA_TOPICS } from '../../data/visualizers/dsaTopics';
@@ -125,12 +126,13 @@ function AccordionItem({ question, difficulty, hint, index }) {
 import VisualizerSidebar from './VisualizerSidebar';
 import LogicSection from './LogicSection';
 
-export default function DSAVisualizerPage({ topicId }) {
+export default function DSAVisualizerPage({ topicId, initialTrack }) {
   const normalizedTopicId = topicId === 'heaps' ? 'heap' : topicId;
   const topic = DSA_TOPICS[topicId] || DSA_TOPICS[normalizedTopicId];
   const VisualizerComponent = VISUALIZER_MAP[topicId] || VISUALIZER_MAP[normalizedTopicId];
   const [activeSection, setActiveSection] = useState('visualizer');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [copied, setCopied] = useState(false);
   const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
 
   // NOTE: there was a `loading` state here, initialised to true and cleared by a
@@ -214,15 +216,34 @@ export default function DSAVisualizerPage({ topicId }) {
               Back to Visualizers Hub
             </a>
 
-            {/* Sidebar Toggle Button */}
-            <button
-              onClick={() => setIsSidebarOpen((prev) => !prev)}
-              className="sketch-button text-xs flex items-center gap-2 font-sketch"
-              title="Toggle sidebar (Ctrl+B or \)"
-            >
-              <span>{isSidebarOpen ? '◀ Hide Sidebar' : '▶ Show Sidebar'}</span>
-              <span className="font-mono text-[10px] opacity-60 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30">Ctrl+B</span>
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Quick Share Link */}
+              <button
+                onClick={() => {
+                  if (typeof navigator !== 'undefined') {
+                    navigator.clipboard.writeText(window.location.href);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2200);
+                  }
+                }}
+                className={`sketch-button text-xs flex items-center gap-1.5 font-sketch transition-all ${
+                  copied ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300' : ''
+                }`}
+                title="Share link to this algorithm visualizer"
+              >
+                <span>{copied ? '✓ Copied!' : '🔗 Share'}</span>
+              </button>
+
+              {/* Sidebar Toggle Button */}
+              <button
+                onClick={() => setIsSidebarOpen((prev) => !prev)}
+                className="sketch-button text-xs flex items-center gap-2 font-sketch"
+                title="Toggle sidebar (Ctrl+B or \)"
+              >
+                <span>{isSidebarOpen ? '◀ Hide Sidebar' : '▶ Show Sidebar'}</span>
+                <span className="font-mono text-[10px] opacity-60 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30">Ctrl+B</span>
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 mb-2">
@@ -257,11 +278,11 @@ export default function DSAVisualizerPage({ topicId }) {
         {activeSection === 'visualizer' && (
           <div className="mb-10">
             {topicId === 'two-pointers' || topicId === 'sliding-window' || topicId === 'backtracking' || topicId === 'arrays' || topicId === 'sorting' || topicId === 'searching' || topicId === 'linked-list' || topicId === 'trees' || topicId === 'graphs' || topicId === 'stack' || topicId === 'queue' || topicId === 'heaps' || topicId === 'recursion' || topicId === 'dp' || topicId === 'hash-table' || topicId === 'hash-tables' || topicId === 'trie' ? (
-              <VisualizerComponent />
+              <VisualizerComponent initialTrack={initialTrack} />
             ) : (
               <div className="sketch-border bg-[var(--sketch-bg-dim)] p-8 rounded-2xl text-center shadow-xl">
                 {VisualizerComponent ? (
-                  <VisualizerComponent />
+                  <VisualizerComponent initialTrack={initialTrack} />
                 ) : (
                   <div className="py-16 text-center font-sketch">
                     <div className="text-5xl mb-3">🚧</div>
@@ -382,18 +403,11 @@ export default function DSAVisualizerPage({ topicId }) {
           </Section>
         )}
 
-        {/*
-          Reference article. Hidden on the 'visualizer' tab so the animation has
-          the screen to itself; shown under every other section.
+        {/* Interactive Knowledge Check Quiz */}
+        <VisualizerQuiz topicId={topicId} />
 
-          Hidden with CSS rather than `activeSection !== 'visualizer' && ...`
-          on purpose: 'visualizer' is the default tab, so it is what renders on
-          the server. Conditional rendering would strip the article from the
-          served HTML and take these pages back to ~200 crawlable words. Kept in
-          the DOM, it stays indexable and the FAQPage schema keeps matching real
-          on-page content, while readers on the visualizer tab don't see it.
-        */}
-        <div className={activeSection === 'visualizer' ? 'hidden' : ''}>
+        {/* Reference article — visible on all tabs to reward scrolling and maximize dwell time */}
+        <div className="mt-8 border-t border-[var(--sketch-border)] pt-4">
           <VisualizerArticle topicId={topicId} />
         </div>
       </div>

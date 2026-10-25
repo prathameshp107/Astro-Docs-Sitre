@@ -11,24 +11,18 @@ export const RENDER = {
   width: 1080,
   height: 1920,
   fps: 30,
-  // Step duration follows caption length: a 20-word explanation needs longer on
-  // screen than "i = 0". Budgeted at readingWordsPerSecond and clamped, so no
-  // step flashes past unread and no short one drags.
-  readingWordsPerSecond: 2.4,
-  minStepSeconds: 2.2,
-  maxStepSeconds: 5.5,
-  // Added to every step on top of the reading time (glance + comprehension).
-  stepPadSeconds: 0.7,
-  // Extra hold on the first and last frame so the loop reads cleanly.
-  holdFirst: 2.0,
-  holdLast: 3.0,
-  // Cap so a 40-step track doesn't blow past the 90s Reels limit.
+  // Step duration capped at max 2.0s per user specification:
+  readingWordsPerSecond: 4.0,
+  minStepSeconds: 1.0,
+  maxStepSeconds: 2.0,
+  stepPadSeconds: 0.3,
+  // Opening/closing pause (also capped within the 2.0s max limit)
+  holdFirst: 0.5,
+  holdLast: 0.5,
+  // Cap so a 40-step track doesn't blow past the Reels limit.
   maxSteps: 22,
-  // Hard budget. Reels rejects over 90s, so if reading time for all steps
-  // exceeds this the per-step durations are scaled down to fit (never below
-  // floorStepSeconds — past that the script drops steps instead).
-  maxTotalSeconds: 84,
-  floorStepSeconds: 1.6,
+  maxTotalSeconds: 60,
+  floorStepSeconds: 0.8,
   // Warn when a reel exceeds this (Instagram Reels hard limit is 90s).
   warnOverSeconds: 88,
   // CRF 18 is visually lossless enough for flat UI; 23 halves the file size.

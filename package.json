@@ -1,0 +1,17 @@
+{
+  "name": "astro-docs-sitre-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "upload:status": "npm --prefix dsa-docs run upload:status",
+    "upload:status:all": "npm --prefix dsa-docs run upload:status:all",
+    "upload:status:yt": "npm --prefix dsa-docs run upload:status:yt",
+    "upload:status:ig": "npm --prefix dsa-docs run upload:status:ig",
+    "upload:reddit:status": "npm --prefix dsa-docs run upload:reddit:status",
+    "upload:yt": "npm --prefix dsa-docs run upload:yt",
+    "upload:ig": "npm --prefix dsa-docs run upload:ig",
+    "upload:login": "npm --prefix dsa-docs run upload:login",
+    "dev": "npm --prefix dsa-docs run dev",
+    "build": "npm --prefix dsa-docs run build"
+  }
+}

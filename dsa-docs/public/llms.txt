@@ -4,7 +4,7 @@
 
 ## What is this site?
 
-Interview Prep Buddy helps developers prepare for technical interviews at Google, Amazon, Meta, Microsoft, Apple, and other top tech companies. Built by Prathamesh Pawar, a full-stack software developer.
+Interview Prep Buddy helps developers prepare for technical interviews at Google, Amazon, Meta, Microsoft, Apple, and other top tech companies. Built by Prathamesh Pawar, a full-stack software developer. No login or payment required for any core feature.
 
 ## Key Pages
 
@@ -15,7 +15,8 @@ Interview Prep Buddy helps developers prepare for technical interviews at Google
 - [Algorithm Visualizer](https://interviewpreprationbuddy.in/visualizer) — Step-by-step interactive algorithm animations
 - [Interactive Labs](https://interviewpreprationbuddy.in/labs) — Browser-based coding environments for JS, React, DSA
 - [MCQ Quiz Hub](https://interviewpreprationbuddy.in/mcq) — Practice quizzes across 15+ technology categories
-- [System Design](https://interviewpreprationbuddy.in/system-design) — HLD and LLD interview preparation
+- [System Design (HLD)](https://interviewpreprationbuddy.in/system-design) — High-Level Design interview preparation
+- [Low-Level Design (LLD)](https://interviewpreprationbuddy.in/lld) — Machine coding and object-oriented design interview prep
 - [About](https://interviewpreprationbuddy.in/about) — Platform overview and tech stack
 
 ## Algorithm Visualizers
@@ -38,6 +39,40 @@ with synchronized pseudocode, a complexity table, and answers to common question
 - [Array Visualizer](https://interviewpreprationbuddy.in/visualizer/arrays/) — Indexing, insertion, deletion and the cost of shifting
 - [Two Pointers Visualizer](https://interviewpreprationbuddy.in/visualizer/two-pointers/) — Converging, fast/slow and same-direction pointer patterns
 - [Sliding Window Visualizer](https://interviewpreprationbuddy.in/visualizer/sliding-window/) — Fixed and variable windows, incremental aggregates
+- [Trie Visualizer](https://interviewpreprationbuddy.in/visualizer/trie/) — Character-by-character insertion, prefix search, and autocomplete
+- [Dijkstra Visualizer](https://interviewpreprationbuddy.in/visualizer/dijkstra/) — Priority queue relaxation and shortest paths on weighted graphs
+- [Bubble Sort Visualizer](https://interviewpreprationbuddy.in/visualizer/bubble-sort/) — Adjacent element comparisons and animated swapping
+- [0/1 Knapsack Visualizer](https://interviewpreprationbuddy.in/visualizer/knapsack/) — Dynamic programming table filling and optimal traceback
+- [Algorithm Comparison Visualizer](https://interviewpreprationbuddy.in/visualizer/compare/) — Side-by-side sorting algorithm race and Big-O benchmark
+
+## Low-Level Design (LLD) Machine Coding Projects
+
+Each project includes: class diagram, design patterns applied, SOLID principles, key entities, and complete implementation guide.
+
+- [Design a Parking Lot System](https://interviewpreprationbuddy.in/lld/projects/design-parking-lot/) — Singleton, Factory, Strategy, Observer; multi-floor lot with automated billing
+- [Design an In-Memory Cache (LRU/LFU)](https://interviewpreprationbuddy.in/lld/projects/design-cache-system/) — Strategy, Doubly LinkedList, HashMap, ReadWriteLock; configurable eviction
+- [Design a Distributed Rate Limiter](https://interviewpreprationbuddy.in/lld/projects/design-rate-limiter/) — Token Bucket, Sliding Window Log, Decorator; API rate limiting
+- [Design an Elevator Control System](https://interviewpreprationbuddy.in/lld/projects/design-elevator-system/) — State, Strategy, Dispatcher, Observer; LOOK/SCAN scheduling
+- [Design Expense Sharing (Splitwise)](https://interviewpreprationbuddy.in/lld/projects/design-splitwise/) — Composite, Observer, Min-Cost Graph Flow; bill simplification
+- [Design Movie Ticket Booking (BookMyShow)](https://interviewpreprationbuddy.in/lld/projects/design-bookmyshow/) — Command, Concurrency Locks, Factory, State; seat reservation
+- [Design Snake and Ladder Game](https://interviewpreprationbuddy.in/lld/projects/design-snake-and-ladder/) — Command, Singleton, Strategy; multiplayer board game
+- [Design Tic-Tac-Toe Game (N x N)](https://interviewpreprationbuddy.in/lld/projects/design-tic-tac-toe/) — Strategy, Observer, State; O(1) win evaluation
+- [Design a Vending Machine](https://interviewpreprationbuddy.in/lld/projects/design-vending-machine/) — State Pattern, Chain of Responsibility, Inventory; state transitions
+- [Design an ATM System](https://interviewpreprationbuddy.in/lld/projects/design-atm/) — State, Chain of Responsibility, Decorator; cash dispenser chain
+- [Design a Chess Game](https://interviewpreprationbuddy.in/lld/projects/design-chess-game/) — Command, Factory, Strategy, Observer; move validation, checkmate
+- [Design Hotel Room Management System](https://interviewpreprationbuddy.in/lld/projects/design-hotel-management/) — Factory, State, Strategy; room types, housekeeping, invoicing
+- [Design Library Management System](https://interviewpreprationbuddy.in/lld/projects/design-library-management/) — Observer, Factory, Strategy; barcode scanning, fine calculation
+- [Design a Custom Logging Framework](https://interviewpreprationbuddy.in/lld/projects/design-logging-framework/) — Chain of Responsibility, Singleton, Adapter; multi-handler logging
+- [Design a Notification Library](https://interviewpreprationbuddy.in/lld/projects/design-notification-service/) — Observer, Factory, Strategy, Decorator; Push, SMS, Email delivery
+
+## MCQ Practice Quizzes
+
+Topic-wise multiple-choice practice with explanations.
+
+- [System Design MCQ](https://interviewpreprationbuddy.in/mcq/quiz/system-design) — Scalability, caching, database sharding, CAP theorem
+- [JavaScript MCQ](https://interviewpreprationbuddy.in/mcq/quiz/javascript) — Closures, hoisting, async, event loop, prototype chain
+- [React MCQ](https://interviewpreprationbuddy.in/mcq/quiz/react) — Hooks, reconciliation, state, performance
+- [DSA MCQ](https://interviewpreprationbuddy.in/mcq/quiz/dsa) — Data structures, algorithm complexity, sorting, searching
 
 ## Documentation Topics
 

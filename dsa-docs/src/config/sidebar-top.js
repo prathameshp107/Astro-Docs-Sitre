@@ -26,5 +26,9 @@ const sidebar = [
           label: 'Interview Questions',
           link: '/interview-questions',
         },
+        {
+          label: 'Study Notes & Handbooks (PDFs)',
+          link: '/notes',
+        },
 ];
 export default sidebar;

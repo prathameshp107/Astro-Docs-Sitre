@@ -57,6 +57,7 @@ export const VISUALIZER_CONTENT = {
         a: 'A hash map gives O(1) average exact lookup and usually uses less memory, but it cannot answer prefix questions without scanning every key. A trie gives O(L) lookup regardless of dictionary size, natural prefix and autocomplete queries, sorted iteration, and shared storage for common prefixes — at the cost of pointer overhead and worse cache locality.',
       },
     ],
+    interviewTip: 'When asked to implement an autocomplete or prefix dictionary, interviewers often look for two things beyond the basic trie: (1) memory optimization — a naive 26-pointer array per node wastes memory; mention that a hash map or ternary search tree saves space for sparse keys. (2) Returning the top-k most frequent suggestions — storing the top-k suggestions pre-computed directly on each prefix node turns an expensive O(k log k) subtree traversal into an immediate O(L) response.',
     related: [V('trees', 'Binary Tree Visualizer'), V('hash-table', 'Hash Table Visualizer'), V('backtracking', 'Backtracking Visualizer'), V('graphs', 'Graph Visualizer')],
   },
 
@@ -99,6 +100,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Any algorithm that only compares pairs of elements builds a decision tree whose leaves are the n! possible orderings. A binary tree with n! leaves has height at least log₂(n!), which is Θ(n log n). Counting Sort and Radix Sort beat this only because they read the values themselves rather than comparing pairs.',
       },
     ],
+    interviewTip: 'In a live interview, when asked "implement merge sort", clarify whether in-place is required before coding — the interviewer may expect O(n) extra space (classic merge sort) or be testing if you know why in-place merge sort is rarely used in practice (O(n log² n) or complex pointer manipulation). Also mention Timsort: the real sorting algorithm in Python and Java, which is merge sort + insertion sort for small runs.',
     related: [V('searching', 'Binary Search Visualizer'), V('heaps', 'Heap Visualizer'), V('arrays', 'Array Visualizer'), V('two-pointers', 'Two Pointers Visualizer')],
   },
 
@@ -135,6 +137,7 @@ export const VISUALIZER_CONTENT = {
         a: 'O(log n) time and O(1) space when written iteratively. Each comparison discards half the remaining candidates, so an array of a million elements resolves in about 20 steps. A recursive implementation is also O(log n) time but uses O(log n) stack space.',
       },
     ],
+    interviewTip: 'The most common binary search bug is an infinite loop — it happens when the search space stops shrinking. Check: (1) does every branch of the if/else move at least one pointer? (2) Is mid computed without overflow? In Java/C++ use low + (high - low) / 2. The hardest variant to get right is "leftmost index of target" — the correct template exits with low, not mid, and never short-circuits on a match.',
     related: [V('sorting', 'Sorting Visualizer'), V('arrays', 'Array Visualizer'), V('trees', 'Binary Tree Visualizer'), V('two-pointers', 'Two Pointers Visualizer')],
   },
 
@@ -172,6 +175,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Use an array when you index randomly, iterate frequently, or care about cache locality — contiguous memory makes traversal dramatically faster in practice. Use a linked list when you insert and delete at known positions constantly and never need random access, since those operations are O(1) once you hold the node.',
       },
     ],
+    interviewTip: 'When an interviewer says "you have an unsorted array of n integers" and asks for something in O(1) space — think arrays first. Two moves often trip candidates: (1) forgetting that deleting from the middle is O(n) due to the shift cascade (show you know this even if you use splice()), (2) off-by-one on insert — insert at index i means elements from i onward shift right, so you fill from the back. Always narrate the shift for your interviewer.',
     related: [V('two-pointers', 'Two Pointers Visualizer'), V('sliding-window', 'Sliding Window Visualizer'), V('sorting', 'Sorting Visualizer'), V('linked-list', 'Linked List Visualizer')],
   },
 
@@ -209,6 +213,7 @@ export const VISUALIZER_CONTENT = {
         a: 'A dummy node placed before the real head removes the special case where you insert or delete at position zero. Every operation then has a predecessor to work with, so one code path handles the whole list. It is the standard trick for merge, partition, and remove-nth-from-end problems.',
       },
     ],
+    interviewTip: 'The sentinel (dummy head) pattern is the number one tool for eliminating null checks in linked-list questions. When deleting or rearranging nodes, initializing `dummy.next = head` guarantees you never need a special `if (head == target)` branch. Always mention cycle detection (Floyd\'s algorithm) and note that finding the intersection of two lists can be done in O(1) space by aligning lengths or looping pointers across both heads.',
     related: [V('arrays', 'Array Visualizer'), V('stack', 'Stack Visualizer'), V('queue', 'Queue Visualizer'), V('two-pointers', 'Two Pointers Visualizer')],
   },
 
@@ -246,6 +251,7 @@ export const VISUALIZER_CONTENT = {
         a: 'A stack is last-in-first-out: the most recently added element leaves first, and both ends of the operation are the same. A queue is first-in-first-out: elements leave in arrival order, entering at the tail and leaving at the head. Stacks suit backtracking and depth-first traversal; queues suit scheduling and breadth-first traversal.',
       },
     ],
+    interviewTip: 'Whenever a problem asks for "next greater element", "previous smaller element", or "largest rectangle in histogram", reach for a monotonic stack. The key insight to verbalize: every element is pushed once and popped at most once, making the overall time complexity strictly O(n) despite the nested while loop. Don\'t forget to clarify what happens when adjacent elements are equal (strictly greater vs. greater or equal).',
     related: [V('queue', 'Queue Visualizer'), V('recursion', 'Recursion Visualizer'), V('linked-list', 'Linked List Visualizer'), V('trees', 'Binary Tree Visualizer')],
   },
 
@@ -283,6 +289,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Breadth-first search on graphs and trees, level-order tree traversal, topological sorting via Kahn\'s algorithm, sliding-window maximum via a deque, and task scheduling. Anywhere you must process items in the order they were discovered, a queue is the structure.',
       },
     ],
+    interviewTip: 'In BFS questions, distinguish between using a plain queue (exploring node-by-node) and level-order traversal (capturing the size of the queue before the inner loop: `const levelSize = queue.length`). This snapshot prevents newly added neighbors from leaking into the current level. For sliding-window maximum in O(n), mention a monotonic double-ended queue (deque) storing indices rather than values.',
     related: [V('stack', 'Stack Visualizer'), V('graphs', 'Graph Visualizer'), V('trees', 'Binary Tree Visualizer'), V('heaps', 'Heap Visualizer')],
   },
 
@@ -320,6 +327,7 @@ export const VISUALIZER_CONTENT = {
         a: 'The load factor is the ratio of stored entries to buckets. As it rises, collisions become frequent and operations drift away from O(1). Most implementations resize — allocating a larger bucket array and rehashing every key — once the load factor passes a threshold, commonly 0.75.',
       },
     ],
+    interviewTip: 'In interviews, when using a hash map for frequency counting or prefix sums, beware of worst-case O(n) degradation under hash collisions. In C++, mentioning that `std::unordered_map` can be hacked to O(n²) with anti-hash test cases and proposing a custom splitmix64 hasher demonstrates senior-level systems depth. For 2-Sum and Subarray Sum Equals K, highlight that a running prefix sum map solves the problem in a single O(n) pass.',
     related: [V('arrays', 'Array Visualizer'), V('two-pointers', 'Two Pointers Visualizer'), V('sliding-window', 'Sliding Window Visualizer'), V('trees', 'Binary Tree Visualizer')],
   },
 
@@ -357,6 +365,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Maintain a min-heap of size k. Push each element, and whenever the heap exceeds k, pop the smallest. Every element costs at most O(log k), so the total is O(n log k) time and O(k) space — considerably better than sorting the whole array when k is small.',
       },
     ],
+    interviewTip: 'In top-K problems, candidates often reflexively reach for a max-heap to find top-K elements — but maintaining a MIN-heap of size K is far superior, keeping space to O(K) and time to O(n log K). When asked about heap creation, always explain why `buildHeap` (heapify) is O(n) using the geometric series summation across levels rather than O(n log n). Interviewers specifically test this theoretical distinction.',
     related: [V('trees', 'Binary Tree Visualizer'), V('sorting', 'Sorting Visualizer'), V('queue', 'Queue Visualizer'), V('graphs', 'Graph Visualizer')],
   },
 
@@ -394,6 +403,7 @@ export const VISUALIZER_CONTENT = {
         a: 'A BST\'s operations cost O(h), where h is the height. A balanced tree keeps h at Θ(log n), but inserting sorted data into a plain BST produces a linked list with h = n, degrading every operation to O(n). AVL and red-black trees restore balance through rotations on insert and delete, guaranteeing logarithmic height.',
       },
     ],
+    interviewTip: 'For binary tree recursion, always decide upfront whether the problem needs bottom-up (post-order: compute left, compute right, then combine — e.g. diameter, max path sum) or top-down (pre-order: pass parameters down — e.g. path sum target). For BST questions, remind the interviewer that an in-order traversal yields strictly ascending values, which turns problems like "find K-th smallest element" or "validate BST" into linear or early-exit scans.',
     related: [V('graphs', 'Graph Visualizer'), V('heaps', 'Heap Visualizer'), V('recursion', 'Recursion Visualizer'), V('searching', 'Binary Search Visualizer')],
   },
 
@@ -435,6 +445,7 @@ export const VISUALIZER_CONTENT = {
         a: 'In an undirected graph, run DFS and report a cycle if you reach a visited node that is not the immediate parent. In a directed graph, track nodes on the current recursion stack — an edge back to a node still on the stack is a back edge and proves a cycle. Alternatively, run Kahn\'s topological sort: if it emits fewer than V nodes, a cycle exists.',
       },
     ],
+    interviewTip: 'Always clarify if the graph is directed, undirected, cyclic, or disconnected. For BFS/DFS on grids, the most common bug is marking a cell as visited when dequeuing rather than when ENQUEUING — enqueuing without marking immediately leads to duplicate entries and exponential memory explosion. For topological sort, proactively compare Kahn\'s BFS algorithm (in-degree array) with DFS (post-order reverse + cycle stack).',
     related: [V('trees', 'Binary Tree Visualizer'), V('queue', 'Queue Visualizer'), V('backtracking', 'Backtracking Visualizer'), V('heaps', 'Heap Visualizer')],
   },
 
@@ -472,6 +483,7 @@ export const VISUALIZER_CONTENT = {
         a: 'A call is tail recursive when the recursive call is the very last operation, with nothing left to compute after it returns. Because the parent frame has no remaining work, a compiler can reuse it instead of allocating a new one, reducing stack usage to O(1). Scheme and Scala guarantee this optimisation; JavaScript engines and CPython generally do not.',
       },
     ],
+    interviewTip: 'Before writing any recursive function, explicitly state your base case, your recursive step, and your termination guarantee. Interviewers scrutinize the call stack: always calculate space complexity including the recursion depth (e.g. O(h) for tree height, O(n) for skewed tree). When optimizing recursion, know when to transition to memoization (top-down) or iteration with an explicit stack to prevent stack overflow on large inputs.',
     related: [V('backtracking', 'Backtracking Visualizer'), V('dp', 'Dynamic Programming Visualizer'), V('trees', 'Binary Tree Visualizer'), V('stack', 'Stack Visualizer')],
   },
 
@@ -509,6 +521,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Sort the input first, then within each recursion level skip a candidate if it equals the previous one and that previous one was not itself chosen at this level. This ensures duplicates are only ever used in one canonical order, which removes repeated subsets and permutations without a post-hoc deduplication pass.',
       },
     ],
+    interviewTip: 'The golden rule of backtracking: choose, explore, and UNCHOOSE. Always highlight where the undo step occurs. To prevent duplicate subsets or permutations when inputs contain duplicate values, sort the input upfront and prune with `if (i > start && nums[i] === nums[i - 1]) continue;`. Mentioning this pruning strategy upfront signals mastery of combinatorial search templates.',
     related: [V('recursion', 'Recursion Visualizer'), V('dp', 'Dynamic Programming Visualizer'), V('graphs', 'Graph Visualizer'), V('trees', 'Binary Tree Visualizer')],
   },
 
@@ -546,6 +559,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Check which previous rows or columns the recurrence actually reads. If each cell depends only on the row above, keep two rows and swap them, or iterate a single row backwards — that turns O(n × W) into O(W). Knapsack, LCS, and edit distance all admit this optimisation, at the cost of losing the full table needed to reconstruct the solution path.',
       },
     ],
+    interviewTip: 'Structure your DP response in 4 clear steps: (1) define the state `dp[i][j]`, (2) write the base cases, (3) state the transition recurrence, and (4) identify the order of computation. Always finish by analyzing if space can be compressed — e.g. if `dp[i]` only depends on `dp[i-1]`, explain how a 2D matrix collapses into two rows or a single 1D array traversed backwards (like in 0/1 Knapsack).',
     related: [V('recursion', 'Recursion Visualizer'), V('backtracking', 'Backtracking Visualizer'), V('arrays', 'Array Visualizer'), V('graphs', 'Graph Visualizer')],
   },
 
@@ -583,6 +597,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Two pointers advance through the same sequence at different rates, typically one step versus two. If a cycle exists the fast pointer laps the slow one and they meet; if not, fast reaches the end first. The same idea locates the middle of a linked list in one pass, since the slow pointer is halfway when the fast pointer finishes.',
       },
     ],
+    interviewTip: 'Two-pointer problems often hide a sorting prerequisite: "find two numbers that sum to target" only works with converging pointers if the array is sorted. Always ask if the input is sorted before assuming two pointers will work. For unsorted input, a hash set is O(n) and avoids the O(n log n) sort. Interviewers award extra points when you proactively mention both approaches and explain the trade-off.',
     related: [V('sliding-window', 'Sliding Window Visualizer'), V('arrays', 'Array Visualizer'), V('linked-list', 'Linked List Visualizer'), V('searching', 'Binary Search Visualizer')],
   },
 
@@ -620,6 +635,7 @@ export const VISUALIZER_CONTENT = {
         a: 'Use a sliding window when the answer is about a contiguous subarray or substring and you are tracking an aggregate over that range — a sum, a character count, a distinct-element count. Use two pointers when you are comparing or pairing individual elements, typically converging from both ends of sorted data.',
       },
     ],
+    interviewTip: 'The single most common sliding window mistake in interviews is resetting the aggregate on shrink rather than incrementally updating it. When the left pointer moves right, subtract the element leaving rather than recomputing the sum or hash map from scratch. Also: if an interviewer asks for the "minimum window substring", immediately say you will use a hash map to track character counts — this tells them you know the O(n) path without being asked.',
     related: [V('two-pointers', 'Two Pointers Visualizer'), V('hash-table', 'Hash Table Visualizer'), V('arrays', 'Array Visualizer'), V('queue', 'Queue Visualizer')],
   },
 };

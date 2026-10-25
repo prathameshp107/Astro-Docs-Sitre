@@ -41,3 +41,29 @@ reels-out/
 
 # MCQ image-post output (PNGs + captions)
 mcq-posts/
+
+# Browser session & uploader profiles (never commit credentials/cookies)
+.browser-session/
+
+# Local upload status tracking & scratch testing artifacts
+.upload-status*.json
+scratch/
+
+# Video & Heavy Media Outputs
+*.mp4
+*.mov
+*.webm
+*.avi
+*.mkv
+*.wav
+*.mp3
+*.flac
+*.aac
+*.raw
+
+# Notes PDF Junction & Files
+notes-pdf/
+public/notes-pdf/
+public/notes-pdf
+
+

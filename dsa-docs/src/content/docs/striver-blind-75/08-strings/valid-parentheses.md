@@ -1,6 +1,9 @@
 ---
 title: "Valid Parentheses"
-description: "Detailed guide, approach, Mermaid diagram, brute force, and optimized solution for Valid Parentheses."
+description: "Solve Valid Parentheses with a stack. Walk through matching brackets, edge cases, code, and the O(n) time complexity."
+practice:
+  visualizer: /visualizer/stack
+  mcq: /mcq/data-structures
 ---
 
 # Valid Parentheses

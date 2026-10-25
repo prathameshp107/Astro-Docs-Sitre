@@ -155,14 +155,14 @@ function toggleBookmark(id) {
 export default function MCQQuiz({ categoryId }) {
   const [loading, setLoading] = useState(false); // SSR-safe: effects do not run on the server, so an initial `true` made the server-rendered HTML a skeleton with no crawlable content.
   const [progress, setProgress] = useState(null);
-  const [allQuestions, setAllQuestions] = useState([]);
+  const [allQuestions, setAllQuestions] = useState(() => getQuestionsForCategory(categoryId));
 
   // Quiz config — read from URL client-side (fixes static build bug)
   const [initialTopic, setInitialTopic] = useState(null);
   const [initialMode, setInitialMode] = useState('practice');
 
   // Setup state
-  const [showSetup, setShowSetup] = useState(false);
+  const [showSetup, setShowSetup] = useState(true);
   const [mode, setMode] = useState('practice');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [questionCount, setQuestionCount] = useState(10);

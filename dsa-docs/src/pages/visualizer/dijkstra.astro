@@ -1,0 +1,97 @@
+---
+import DSAVisualizerPage from '../../components/visualizers/DSAVisualizerPage.jsx';
+import AppNav from '../../components/AppNav.jsx';
+import PageSEO from '../../components/PageSEO.astro';
+import '../../styles/mcq-tailwind.css';
+import '../../styles/landing.css';
+import '../../styles/sketch-visualizer.css';
+
+const SITE_URL = 'https://interviewpreprationbuddy.in';
+const PAGE_URL = `${SITE_URL}/visualizer/dijkstra/`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  name: "Dijkstra's Algorithm Visualizer — Shortest Path Animated",
+  description: "Interactive step-by-step Dijkstra shortest path algorithm visualizer. Watch distance relaxation, priority queue updates, and visited node processing on weighted graphs.",
+  url: PAGE_URL,
+  image: `${SITE_URL}/assets/og-image.png`,
+  educationalLevel: 'intermediate',
+  learningResourceType: 'Interactive Tool',
+  teaches: ["Dijkstra's algorithm", 'Shortest path on graphs', 'Edge relaxation', 'Priority queue / Min-heap implementation', 'Greedy graph algorithms'],
+  about: [{ '@type': 'Thing', name: "Dijkstra's Algorithm" }, { '@type': 'Thing', name: 'Shortest Path Problem' }],
+  author: { '@id': `${SITE_URL}/#author` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+  isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: "How to Use the Dijkstra's Algorithm Visualizer",
+  description: 'Step-by-step guide to visualizing Dijkstra shortest path with interactive animations',
+  url: PAGE_URL,
+  step: [
+    { '@type': 'HowToStep', position: 1, name: 'Observe the Start Node', text: 'Node 0 is the source node initialized with distance 0, while all other nodes start with distance infinity.' },
+    { '@type': 'HowToStep', position: 2, name: 'Select Min-Distance Node', text: 'At each step, the unvisited node with the smallest tentative distance is extracted from the priority queue.' },
+    { '@type': 'HowToStep', position: 3, name: 'Relax Neighbor Edges', text: 'Inspect adjacent edges: if the distance through the current node is shorter than the known distance, relax and update the neighbor.' },
+    { '@type': 'HowToStep', position: 4, name: 'Mark Node Visited', text: 'Once all outgoing edges are relaxed, the current node is finalized and marked visited.' },
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: "How does Dijkstra's algorithm work?",
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Dijkstra maintains tentative shortest distances from the source to every node. Repeatedly extract the unvisited node with the minimum distance, then relax its outgoing edges by checking if dist[u] + weight < dist[v]. When implemented with a binary min-heap, it runs in O((V + E) log V) time.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Why does Dijkstra fail with negative edge weights?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Dijkstra is a greedy algorithm that permanently finalizes a node once it is extracted from the queue, assuming no future path can be shorter. A negative edge can invalidate this assumption by making a longer route cheaper later. Use Bellman-Ford (O(V × E)) when negative edges exist.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: "What is the time complexity of Dijkstra's algorithm?",
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'With an adjacency list and binary min-heap (priority queue), time complexity is O((V + E) log V). Space complexity is O(V) for the distance array and priority queue.',
+      },
+    },
+  ],
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>(function(){var t=localStorage.getItem('starlight-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);else if(window.matchMedia('(prefers-color-scheme:dark)').matches)document.documentElement.setAttribute('data-theme','dark');})()</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <PageSEO
+      title="Dijkstra's Algorithm Visualizer — Shortest Path Animated | Interview Prep Buddy"
+      description="Interactive step-by-step Dijkstra shortest path algorithm visualizer. Watch distance relaxation, priority queue updates, and visited node processing on weighted graphs."
+      url={PAGE_URL}
+      keywords="dijkstra algorithm visualizer, dijkstra visualizer, dijkstra shortest path visualization, graph shortest path animation, dijkstra algorithm step by step, dijkstra priority queue, single source shortest path"
+      ogType="article"
+      schema={schema}
+      faqSchema={faqSchema}
+      breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Visualizer', url: '/visualizer' }, { name: "Dijkstra's Algorithm", url: '/visualizer/dijkstra' }]}
+      fontUrl="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600&family=Patrick+Hand&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
+  </head>
+  <body class="mcq-body">
+    <AppNav activeSection="visualizer" client:load />
+    <DSAVisualizerPage topicId="graphs" initialTrack="dijkstra" client:load />
+  </body>
+</html>

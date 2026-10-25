@@ -8,7 +8,7 @@ the animation one frame at a time, screenshots each step, and stitches the
 frames with ffmpeg. Because it records the actual site, a reel never drifts out
 of sync with the product: fix a visualizer, re-run, and every reel is current.
 
-Output: `dsa-docs/reels-out/<topic>-<track>.mp4`, 1080×1920, H.264.
+Output: `dsa-docs/reels-out/<topic>/<track>.mp4`, 1080×1920, H.264.
 
 ## Coverage
 
@@ -36,8 +36,8 @@ already rendered.
 | `scripts/reels.config.mjs` | Which reels to render + all timing/render settings |
 | `scripts/reel-captions.mjs` | Generates ready-to-paste post copy per reel |
 | `src/components/visualizers/RecorderBridge.jsx` | In-app hook exposing `window.__viz` (only under `?record=1`) |
-| `reels-out/` | Rendered MP4s + per-reel caption `.md` (git-ignored) |
-| `reels-out/captions/` | Caption files, plus `ALL-CAPTIONS.md` |
+| `reels-out/<topic>/` | Section-wise folders: rendered MP4s + per-reel caption `.md` |
+| `reels-out/captions/` | Centralized caption files, plus `ALL-CAPTIONS.md` |
 | `reels-out/.frames/` | Intermediate PNGs, deleted unless `--keep-frames` |
 
 ---
@@ -61,11 +61,15 @@ that one is used instead.
 ## Running
 
 ```bash
-npm run reels:captions  # post copy for every reel (fast, no browser needed)
-npm run reels:list      # show the queue and what's already rendered
-npm run reels:dev       # render all, from the dev server
-npm run reels:resume    # render only what's missing
-npm run reels           # render all, from dist/ (final output)
+npm run reels:captions    # post copy for every reel (fast, no browser needed)
+npm run reels:list        # show the queue and what's already rendered
+npm run reels:batch       # fast parallel multi-worker batch render (~4 mins)
+npm run reels:audio       # add random royalty-free music to all silent reels (10-15s)
+npm run reels:audio:force # reshuffle random background music across all reels
+npm run audio:download    # download/refresh royalty-free audio tracks
+npm run reels:dev         # render all, from the dev server
+npm run reels:resume      # render only what's missing
+npm run reels             # render all, from dist/ (final output)
 ```
 
 Direct invocation gives finer control:
@@ -111,6 +115,24 @@ npm run reels:dev
 
 ---
 
+## Background Music & Soundtrack
+
+Videos feature non-copyrighted, royalty-free background music to create an engaging experience on Instagram, TikTok, and YouTube Shorts without copyright flags.
+
+- **Storage**: `scripts/audio/` stores royalty-free `.mp3` tracks (`chill-*.mp3`, `cool-*.mp3`, `light-*.mp3`, `focus-*.mp3`).
+- **Random Selection**: When a video is recorded or remuxed, a track is picked at random.
+- **Audio Processing**:
+  - Automatically loops shorter tracks to match the reel duration (`-stream_loop -1`).
+  - Volume is normalized (`volume=0.35`) so speech/thinking is not overwhelmed.
+  - Smooth 1.5s fade-out at the end of every video (`afade=t=out:d=1.5`).
+- **Commands**:
+  - `npm run reels:audio` — Quickly adds music to all existing videos in seconds without re-rendering.
+  - `npm run reels:audio:force` — Reshuffles/replaces music across all reels.
+  - `npm run audio:download` — Downloads or updates the royalty-free track collection.
+- **Custom Tracks**: Drop any royalty-free `.mp3`, `.wav`, or `.m4a` file into `scripts/audio/` to add it to the rotation.
+
+---
+
 ## Captions
 
 Every reel needs post copy, so it is generated from the same content the site
@@ -120,16 +142,22 @@ renders rather than written by hand per platform.
 npm run reels:captions                            # all reels
 node scripts/reel-captions.mjs sorting            # one topic
 node scripts/reel-captions.mjs trie:insert        # one reel
-node scripts/reel-captions.mjs trie --stdout      # print, don't write files
 ```
 
-Output: `reels-out/captions/<topic>-<track>.md`, plus `ALL-CAPTIONS.md`
-containing all of them. **Recording a reel also writes its caption file**, so
-`npm run reels:dev` leaves every reel publish-ready — no second command needed.
+Output:
+- **Section Folders** (`reels-out/<topic>/`):
+  - `INSTAGRAM-CAPTIONS.md` — All videos in this section formatted specifically for Instagram & TikTok.
+  - `YOUTUBE-CAPTIONS.md` — All videos in this section with exact `<100` char Titles and Descriptions for YouTube Shorts.
+  - `CAPTIONS.md` — Combined master for the entire section.
+  - `<track>.md` — Individual per-video caption files.
+- **Global Central Archive** (`reels-out/captions/`):
+  - `ALL-INSTAGRAM-CAPTIONS.md` — All 80 reels for Instagram across all sections.
+  - `ALL-YOUTUBE-CAPTIONS.md` — All 80 reels for YouTube Shorts across all sections.
+  - `ALL-CAPTIONS.md` — Comprehensive master across all platforms.
 
-Captions need no browser and no ffmpeg, so regenerating all 21 takes about a
-second. Re-run after editing `visualizerContent.js` or `dsaTopics.js` and the
-copy follows.
+**Recording a reel automatically keeps its section captions current**, so `npm run reels:batch` leaves every reel and section publish-ready.
+
+Captions need no browser and no ffmpeg, so regenerating all 80 takes about 1 second. Re-run with `npm run reels:captions` anytime after editing visualizer content.
 
 ### Three variants per reel
 
@@ -365,13 +393,67 @@ The slug isn't in that store's `setTrack()`. The driver warns
 
 ---
 
+## Bulk Uploader & Social Media Scheduler
+
+Automates uploading and scheduling all 80 videos directly to **YouTube Shorts** and **Instagram Reels** using Playwright and your real browser profile.
+
+### Why this avoids Meta & YouTube API issues:
+- **Meta Business Suite**: Fails on bulk Reels upload and requires complex Facebook App review.
+- **YouTube API**: Has strict 10,000 units/day quota (only ~6 uploads/day).
+- **Playwright Bot**: Runs directly inside your browser window, uses your genuine Google Chrome, requires **zero API keys**, and lets you schedule 80 videos over weeks at custom daily times (e.g. 10 AM and 6 PM).
+
+### Quick Workflow:
+
+1. **Log in once:**
+   ```bash
+   npm run upload:login
+   ```
+   Opens Chrome with tabs for YouTube Studio and Instagram. Log into your accounts once. Cookies and credentials remain securely saved in `.browser-session/` (ignored by git).
+
+2. **Check upload status:**
+   ```bash
+   npm run upload:status
+   ```
+   Displays which videos are rendered and which are posted/scheduled on YouTube and Instagram.
+
+3. **Schedule to YouTube Shorts:**
+   ```bash
+   # Test upload 1 video as Unlisted first:
+   npm run upload:yt:test
+
+   # Bulk schedule all reels (2 per day spread across days):
+   npm run upload:yt
+
+   # Save all as drafts in YouTube Studio:
+   npm run upload:yt:draft
+   ```
+
+4. **Upload to Instagram Reels:**
+   ```bash
+   # Test run 1 video (dry-run, won't click final Share):
+   npm run upload:ig:test
+
+   # Bulk upload reels to Instagram:
+   npm run upload:ig
+   ```
+
+### Custom Options:
+```bash
+# Upload only sorting reels:
+node scripts/bulk-uploader.mjs --platform=youtube --topic=sorting
+
+# Upload only next 5 reels:
+node scripts/bulk-uploader.mjs --platform=youtube --limit=5
+
+# Run in background without browser window:
+node scripts/bulk-uploader.mjs --platform=youtube --headless
+```
+
+---
+
 ## Constraints
 
 - **90s hard limit** on Reels. The budget pass enforces 84s.
-- **Width-bound.** A row of array cards is wide and short; it already scales to
-  the full 1080px frame. Making it visually larger means fewer array elements in
-  the store's default data, not a recorder change.
-- **Sequential by design.** Parallel pages contend for CPU during screenshot and
-  encode, and interleaved failures are unreadable.
-- **No audio.** Add music in the Instagram composer — platform-native audio gets
-  better reach than a baked-in track.
+- **Max step duration $\le$ 2.0s**. Keeps animation snappy and dynamic.
+- **Royalty-free audio**. Randomly mixed from `scripts/audio/` with automatic volume normalization and 1.5s fade-out.
+

@@ -1,3 +1,5 @@
+import { buildSudokuSteps } from '../../../store/visualizers/backtrackingStore.js';
+
 export const backtrackingLogic = {
   'backtracking': {
     title: '1. Backtracking Concept - N-Queens (4x4)',
@@ -300,146 +302,17 @@ export const backtrackingLogic = {
       'Subgrid Check': 'Validates digit against row, column, and 2x2 subgrid.'
     },
     array: [1, 2, 3, 4],
-    steps: [
-      {
-        stepNum: 1,
-        title: 'Step 1: Cell (0, 1) Empty ➔ Try Digit 1 (Conflict ❌)',
-        left: 0,
-        right: 1,
-        grid: [
-          [1, 0, 3, 0],
-          [0, 0, 0, 2],
-          [0, 1, 0, 0],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [0, 1],
-        conflictCell: [0, 0],
-        computation: 'Row 0 already contains 1 at (0, 0)',
-        comparison: 'Row Conflict ❌',
-        action: 'Try Digit 2',
-        desc: 'Inspect empty cell (0, 1). Candidate digit 1 tested: Row 0 already contains digit 1 at index (0, 0). Row constraint violated! Row Conflict ❌. Prune digit 1 and try candidate digit 2.'
-      },
-      {
-        stepNum: 2,
-        title: 'Step 2: Try Digit 2 at (0, 1) ➔ Valid! ✅',
-        left: 0,
-        right: 1,
-        grid: [
-          [1, 2, 3, 0],
-          [0, 0, 0, 2],
-          [0, 1, 0, 0],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [0, 1],
-        computation: 'Row/Col/Box Valid',
-        comparison: 'Valid Placement ✅',
-        action: 'Place 2',
-        desc: 'Candidate digit 2 tested at cell (0, 1). Check Row 0, Column 1, and top-left 2x2 subgrid: No duplicate 2 exists in row, col, or box! Valid Placement ✅! Write digit 2 into cell (0, 1) and advance to next empty cell.'
-      },
-      {
-        stepNum: 3,
-        title: 'Step 3: Fill Cell (0, 3) with Digit 4 ➔ Row 1 Complete!',
-        left: 0,
-        right: 3,
-        grid: [
-          [1, 2, 3, 4],
-          [0, 0, 0, 2],
-          [0, 1, 0, 0],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [0, 3],
-        computation: 'Row 1 completed: [1, 2, 3, 4]',
-        comparison: 'Row 1 Valid ✅',
-        action: 'Recurse to Row 2',
-        desc: 'Inspect empty cell (0, 3). Candidate digit 4 tested. Row 0, Column 3, and top-right 2x2 box checked: Valid! Write digit 4 into cell (0, 3). Row 1 is now fully solved: [1, 2, 3, 4]!'
-      },
-      {
-        stepNum: 4,
-        title: 'Step 4: Fill Cell (1, 0) with Digit 3',
-        left: 1,
-        right: 0,
-        grid: [
-          [1, 2, 3, 4],
-          [3, 0, 0, 2],
-          [0, 1, 0, 0],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [1, 0],
-        computation: 'Try digit 3 at (1, 0)',
-        comparison: 'Valid Placement ✅',
-        action: 'Place 3',
-        desc: 'Inspect empty cell (1, 0). Candidate digit 3 tested. Check Row 1, Column 0, and top-left 2x2 subgrid: No duplicate 3 found. Valid! Write 3 into cell (1, 0).'
-      },
-      {
-        stepNum: 5,
-        title: 'Step 5: Fill Cell (1, 1) with Digit 4',
-        left: 1,
-        right: 1,
-        grid: [
-          [1, 2, 3, 4],
-          [3, 4, 0, 2],
-          [0, 1, 0, 0],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [1, 1],
-        computation: 'Try digit 4 at (1, 1)',
-        comparison: 'Valid Placement ✅',
-        action: 'Place 4',
-        desc: 'Inspect empty cell (1, 1). Candidate digit 4 tested. Check Row 1, Column 1, and top-left 2x2 box: No duplicate 4 found. Valid! Write 4 into cell (1, 1).'
-      },
-      {
-        stepNum: 6,
-        title: 'Step 6: Fill Cell (1, 2) with Digit 1 ➔ Row 2 Complete!',
-        left: 1,
-        right: 2,
-        grid: [
-          [1, 2, 3, 4],
-          [3, 4, 1, 2],
-          [0, 1, 0, 0],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [1, 2],
-        computation: 'Row 2 completed: [3, 4, 1, 2]',
-        comparison: 'Row 2 Valid ✅',
-        action: 'Recurse to Row 3',
-        desc: 'Inspect empty cell (1, 2). Candidate digit 1 tested. Check Row 1, Column 2, and top-right 2x2 box: Valid! Row 2 is now fully solved: [3, 4, 1, 2]!'
-      },
-      {
-        stepNum: 7,
-        title: 'Step 7: Solve Row 3 ➔ [2, 1, 4, 3]',
-        left: 2,
-        right: 3,
-        grid: [
-          [1, 2, 3, 4],
-          [3, 4, 1, 2],
-          [2, 1, 4, 3],
-          [4, 0, 0, 3]
-        ],
-        activeCell: [2, 3],
-        computation: 'Row 3 completed: [2, 1, 4, 3]',
-        comparison: 'Row 3 Valid ✅',
-        action: 'Recurse to Row 4',
-        desc: 'Recurse to Row 3 empty cells. Fill cell (2, 0) = 2, cell (2, 2) = 4, and cell (2, 3) = 3. All row, col, and subgrid constraints satisfied for Row 3: [2, 1, 4, 3]!'
-      },
-      {
-        stepNum: 8,
-        title: 'Step 8: Solve All Grid Cells ➔ Sudoku Complete! 🎉',
-        left: 0,
-        right: 3,
-        grid: [
-          [1, 2, 3, 4],
-          [3, 4, 1, 2],
-          [2, 1, 4, 3],
-          [4, 3, 2, 1]
-        ],
-        activeCell: [3, 3],
-        computation: 'Entire 4x4 Grid Filled',
-        comparison: 'SUDOKU PUZZLE SOLVED 🎉',
-        action: 'Return Grid',
-        isMatch: true,
-        desc: 'Recurse to Row 4 empty cells. Fill cell (3, 1) = 3, cell (3, 2) = 2, and cell (3, 3) = 1. Every single empty cell across the 4x4 grid is filled without constraint violation! SUDOKU PUZZLE SOLVED 🎉!'
-      }
-    ]
+    steps: buildSudokuSteps().map((step, index) => ({
+      ...step,
+      stepNum: index + 1,
+      title: `Step ${index + 1}: ${step.state.action}`,
+      left: step.row,
+      right: step.col,
+      activeCell: step.row === null ? null : [step.row, step.col],
+      computation: step.desc,
+      comparison: step.conflictCell ? 'Candidate conflicts with an existing digit' : 'Grid constraints preserved',
+      action: step.state.action,
+    })),
   },
 
   'backtracking-subsets': {
